@@ -19,6 +19,7 @@ from pathlib import Path
 
 import llm
 import pipeline
+import snapshot
 import tickets as ticket_files
 from common import WORK, git, load_config, log, read_json
 from db import DB
@@ -76,19 +77,31 @@ def cmd_run(args):
                     continue
                 break
             done, _ = cf.wait(running, timeout=60, return_when=cf.FIRST_COMPLETED)
+            finished = []
             for f in done:
                 slot, tid = running.pop(f)
                 free.append(slot)
+                finished.append(tid)
                 if f.exception():
                     log(f"{tid}: pipeline error: {f.exception()!r}")
                     db.note(tid, None, f"orchestrator error: {f.exception()!r}"[:500])
                     db.set_ticket(tid, status="open")
+            if finished:
+                # Version the run state (orch-runs branch) after every attempt.
+                snapshot.snapshot(cfg, ", ".join(sorted(finished)))
+    snapshot.snapshot(cfg, "orchestrator stopped")
     if STOP_FILE.exists():
         STOP_FILE.unlink(missing_ok=True)
         log("stopped on request")
     else:
         log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
     cmd_status(args)
+
+
+def cmd_snapshot(args):
+    """Commits the run state to the orch-runs branch now."""
+    snapshot.snapshot(load_config(), "manual snapshot")
+    print(f"run state committed to {snapshot.BRANCH} ({snapshot.REPO})")
 
 
 def cmd_stop(args):
@@ -192,6 +205,7 @@ def main():
     r.add_argument("--max-attempts", type=int, help="stop starting new attempts after N")
     r.set_defaults(fn=cmd_run)
     sub.add_parser("stop", help="finish in-flight attempts, then exit").set_defaults(fn=cmd_stop)
+    sub.add_parser("snapshot", help="commit the run state to the orch-runs branch").set_defaults(fn=cmd_snapshot)
     sub.add_parser("status").set_defaults(fn=cmd_status)
     sub.add_parser("usage", help="probe the plan's usage windows").set_defaults(fn=cmd_usage)
     s = sub.add_parser("show")
