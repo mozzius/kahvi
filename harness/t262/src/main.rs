@@ -169,12 +169,21 @@ fn normalize_filter(f: &str) -> String {
 fn find_root() -> Result<PathBuf, String> {
     let mut dir = std::env::current_dir().map_err(|e| e.to_string())?;
     loop {
-        if dir.join("vendor/test262/test").is_dir() {
+        if dir.join("conformance/skip.txt").is_file() {
             return Ok(dir);
         }
         if !dir.pop() {
-            return Err("run t262 inside the kahvi repository (vendor/test262 not found)".into());
+            return Err("run t262 inside the kahvi repository (conformance/skip.txt not found)".into());
         }
+    }
+}
+
+/// test262 lives in `vendor/` unless KAHVI_VENDOR points at another checkout
+/// (worker worktrees share the main checkout's read-only copy).
+fn vendor_dir(root: &Path) -> PathBuf {
+    match std::env::var_os("KAHVI_VENDOR") {
+        Some(v) if !v.is_empty() => PathBuf::from(v),
+        _ => root.join("vendor"),
     }
 }
 
@@ -395,7 +404,11 @@ fn real_main() -> Result<ExitCode, String> {
     }
     let opts = parse_options(rest)?;
     let root = find_root()?;
-    let test_dir = root.join("vendor/test262/test");
+    let vendor = vendor_dir(&root);
+    let test_dir = vendor.join("test262/test");
+    if !test_dir.is_dir() {
+        return Err(format!("{} not found (git submodule update --init?)", test_dir.display()));
+    }
     let skip = Skip::load(&root.join("conformance/skip.txt"))?;
 
     let engine_cmd = opts
@@ -428,7 +441,7 @@ fn real_main() -> Result<ExitCode, String> {
         std::env::temp_dir().join(format!("kahvi-t262-{}-{}", std::process::id(), rng.hex()));
     std::fs::create_dir_all(&tmp_root).map_err(|e| format!("temp dir: {e}"))?;
     let ctx = Arc::new(Ctx {
-        harness: Harness::new(root.join("vendor/test262/harness")),
+        harness: Harness::new(vendor.join("test262/harness")),
         test_dir: test_dir.clone(),
         engine: Engine {
             program,

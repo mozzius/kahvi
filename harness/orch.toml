@@ -1,0 +1,31 @@
+# Orchestrator configuration. Per-machine overrides go in work/orch.local.toml
+# (same keys; tables are merged), e.g. `slots = 8` on a bigger box.
+
+branch = "main"   # integration branch the merge bot advances
+slots = 2         # concurrent workers (Rust builds are the bottleneck: ~1 slot per 2-4 cores)
+push = false      # push the branch after every merge
+remote = "origin"
+
+[models]
+haiku = "claude-haiku-5-5"
+sonnet = "claude-sonnet-5-5"
+opus = "claude-opus-5-5"
+verifier = "claude-sonnet-5-5"
+
+[worker]
+max_turns = 60
+max_budget_usd = 1.0      # hard cap per attempt
+timeout_minutes = 40
+
+[verifier]
+max_budget_usd = 0.5
+effort = "high"
+
+[escalation]
+tiers = ["haiku", "sonnet", "opus"]
+strikes_per_tier = 2      # gate rejections / garbage verdicts before moving up a tier
+max_attempts = 6          # then the ticket goes to the architect
+
+[t262]
+timeout = 10              # seconds per test
+jobs = 0                  # 0 = one per CPU
