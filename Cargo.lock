@@ -5,6 +5,20 @@ version = 4
 [[package]]
 name = "kahvi-cli"
 version = "0.0.0"
+dependencies = [
+ "kahvi-parser",
+]
+
+[[package]]
+name = "kahvi-parser"
+version = "0.0.0"
+dependencies = [
+ "kahvi-unicode",
+]
+
+[[package]]
+name = "kahvi-unicode"
+version = "0.0.0"
 
 [[package]]
 name = "t262"

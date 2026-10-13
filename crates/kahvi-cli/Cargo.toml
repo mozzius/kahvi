@@ -7,3 +7,6 @@ publish.workspace = true
 [[bin]]
 name = "kahvi"
 path = "src/main.rs"
+
+[dependencies]
+kahvi-parser = { path = "../kahvi-parser" }

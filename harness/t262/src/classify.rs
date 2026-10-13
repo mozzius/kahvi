@@ -142,3 +142,50 @@ pub fn classify(meta: &Meta, nonce: Option<&str>, out: &Output, timeout_secs: u6
     }
     pass
 }
+
+/// Parse-only mode: a test passes if the engine's parser agrees with the
+/// test about whether the source has an early error.
+pub fn classify_parse_only(meta: &Meta, out: &Output, timeout_secs: u64) -> Verdict {
+    let code = match out.exit {
+        Exit::Timeout => {
+            return Verdict {
+                status: Status::Timeout,
+                reason: format!("timed out after {timeout_secs}s"),
+                not_implemented: None,
+            };
+        }
+        _ if out.is_crash() => {
+            return Verdict {
+                status: Status::Crash,
+                reason: crash_reason(out),
+                not_implemented: None,
+            };
+        }
+        Exit::Code(c) => c,
+        Exit::Signal => unreachable!("signals are crashes"),
+    };
+    let uncaught = uncaught_line(&out.stderr);
+    let expect_error = meta.negative.as_ref().filter(|n| n.phase == "parse");
+    let pass = Verdict {
+        status: Status::Pass,
+        reason: String::new(),
+        not_implemented: None,
+    };
+    let fail = |reason: String| Verdict {
+        status: Status::Fail,
+        reason: truncate(&reason, 300),
+        not_implemented: None,
+    };
+    match (expect_error, code, uncaught) {
+        (None, 0, None) => pass,
+        (None, _, Some(line)) => fail(format!("should parse: {line}")),
+        (None, c, None) => fail(format!("should parse: exit {c}")),
+        (Some(neg), 0, _) => fail(format!("expected early {} but it parsed", neg.error_type)),
+        (Some(neg), _, Some(line)) if error_type(line) == neg.error_type => pass,
+        (Some(neg), _, line) => fail(format!(
+            "expected early {}, got: {}",
+            neg.error_type,
+            line.unwrap_or("no error line")
+        )),
+    }
+}

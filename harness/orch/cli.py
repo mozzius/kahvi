@@ -1,7 +1,8 @@
 """kahvi orchestrator CLI. Run via ./orch from the repository root.
 
   ./orch run [--slots N] [--only T-0001,...] [--max-attempts N]   grind the ticket pool
-  ./orch status                                                   tickets, costs, verdicts
+  ./orch status                                                   tickets, costs, outcomes
+  ./orch usage                                                    the plan's usage windows right now
   ./orch show ATTEMPT                                             one attempt's artifacts
   ./orch reset TICKET [--tier haiku]                              put a ticket back in the pool
   ./orch triage [--fresh] [--top N]                               cluster test262 failures
@@ -118,6 +119,21 @@ def cmd_status(args):
         print(f"test262 at last merge: {summary['pass']}/{summary['runs']} runs passing")
 
 
+def cmd_usage(args):
+    """One tiny Haiku call to read the plan's current usage windows."""
+    cfg = load_config()
+    db = DB()
+    llm.LIMITS = None
+    r = llm.claude("Reply with: ok", model=cfg.model("haiku"), cwd=WORK, tools=[], max_turns=1)
+    info = r.get("rate_limit_info") or {}
+    if info:
+        db.kv_set("limits", json.dumps(info))
+    print(f"status: {info.get('status', 'unknown')}")
+    for name, w in (info.get("unifiedWindows") or {}).items():
+        reset = time.strftime("%a %H:%M", time.localtime(w["resetsAt"])) if w.get("resetsAt") else "?"
+        print(f"  {name:<10} {w.get('utilization', 0):>4.0%}  resets {reset}")
+
+
 def cmd_show(args):
     adir = WORK / "attempts" / str(args.attempt)
     for name in ("prompt.md", "gate.json", "verdict.json", "merge.json"):
@@ -160,6 +176,7 @@ def main():
     r.add_argument("--max-attempts", type=int, help="stop starting new attempts after N")
     r.set_defaults(fn=cmd_run)
     sub.add_parser("status").set_defaults(fn=cmd_status)
+    sub.add_parser("usage", help="probe the plan's usage windows").set_defaults(fn=cmd_usage)
     s = sub.add_parser("show")
     s.add_argument("attempt", type=int)
     s.set_defaults(fn=cmd_show)
