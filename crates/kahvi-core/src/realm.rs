@@ -14,7 +14,7 @@ pub struct RealmId(pub u32);
 #[derive(Debug)]
 pub struct Realm {
     /// [[Intrinsics]] by spec name, e.g. "%Array.prototype%".
-    pub intrinsics: HashMap<&'static str, Object>,
+    pub intrinsics: HashMap<Box<str>, Object>,
     /// [[GlobalObject]]
     pub global_object: Object,
     /// [[GlobalEnv]]
@@ -62,7 +62,7 @@ impl Agent {
     }
 
     /// Registers an intrinsic of `realm` under its spec name.
-    pub fn set_intrinsic(&mut self, realm: RealmId, name: &'static str, o: Object) {
-        self.realm_mut(realm).intrinsics.insert(name, o);
+    pub fn set_intrinsic(&mut self, realm: RealmId, name: &str, o: Object) {
+        self.realm_mut(realm).intrinsics.insert(name.into(), o);
     }
 }

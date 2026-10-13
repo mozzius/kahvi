@@ -1,0 +1,50 @@
+//! String.prototype.localeCompare ( _that_ [ , _reserved1_ [ , _reserved2_ ] ] )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-string.prototype.localecompare
+
+use kahvi_core::prelude::*;
+
+/// String.prototype.localeCompare
+pub(crate) fn prototype_locale_compare(
+    agent: &mut Agent,
+    this: Value,
+    args: &[Value],
+    new_target: Option<Object>,
+) -> JsResult<Value> {
+    // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
+    // This method returns a Number other than *NaN* representing the result of an implementation-defined locale-sensitive String comparison of the *this* value (converted to a String _string_) with _that_ (converted to a String _thatValue_). The result is intended to correspond with a sort order of String values according to conventions of the host environment's current locale, and will be negative when _string_ is ordered before _thatValue_, positive when _string_ is ordered after _thatValue_, and zero in all other cases (representing no relative ordering between _string_ and _thatValue_).
+    // Before performing the comparisons, this method performs the following steps to prepare the Strings:
+    //
+    // 1. Let _thisValue_ be the *this* value.
+    // 2. Perform ? RequireObjectCoercible(_thisValue_).
+    // 3. Let _string_ be ? ToString(_thisValue_).
+    // 4. Let _thatValue_ be ? ToString(_that_).
+    //
+    // The meaning of the optional second and third parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not assign any other interpretation to those parameter positions.
+    // The actual return values are implementation-defined to permit encoding additional information in them, but this method, when considered as a method of two arguments, is required to be a consistent comparator defining a total ordering on the set of all Strings. This method is also required to recognize and honour canonical equivalence according to the Unicode Standard, including returning *+0*_𝔽 when comparing distinguishable Strings that are canonically equivalent.
+    // NOTE:
+    // This method itself is not directly suitable as an argument to `Array.prototype.sort` because the latter requires a function of two arguments.
+    // NOTE:
+    // This method may rely on whatever language- and/or locale-sensitive comparison functionality is available to the ECMAScript environment from the host environment, and is intended to compare according to the conventions of the host environment's current locale. However, regardless of comparison capabilities, this method must recognize and honour canonical equivalence according to the Unicode Standard—for example, the following comparisons must all return *+0*_𝔽:
+    // // Å ANGSTROM SIGN vs.
+    // // Å LATIN CAPITAL LETTER A + COMBINING RING ABOVE
+    // "\u212B".localeCompare("A\u030A")
+    // // Ω OHM SIGN vs.
+    // // Ω GREEK CAPITAL LETTER OMEGA
+    // "\u2126".localeCompare("\u03A9")
+    // // ṩ LATIN SMALL LETTER S WITH DOT BELOW AND DOT ABOVE vs.
+    // // ṩ LATIN SMALL LETTER S + COMBINING DOT ABOVE + COMBINING DOT BELOW
+    // "\u1E69".localeCompare("s\u0307\u0323")
+    // // ḍ̇ LATIN SMALL LETTER D WITH DOT ABOVE + COMBINING DOT BELOW vs.
+    // // ḍ̇ LATIN SMALL LETTER D WITH DOT BELOW + COMBINING DOT ABOVE
+    // "\u1E0B\u0323".localeCompare("\u1E0D\u0307")
+    // // 가 HANGUL CHOSEONG KIYEOK + HANGUL JUNGSEONG A vs.
+    // // 가 HANGUL SYLLABLE GA
+    // "\u1100\u1161".localeCompare("\uAC00")
+    // For a definition and discussion of canonical equivalence see the Unicode Standard, chapters 2 and 3, as well as Unicode Standard Annex #15, Unicode Normalization Forms and Unicode Technical Note #5, Canonical Equivalence in Applications. Also see Unicode Technical Standard #10, Unicode Collation Algorithm.
+    // It is recommended that this method should not honour Unicode compatibility equivalents or compatibility decompositions as defined in the Unicode Standard, chapter 3, section 3.7.
+    // NOTE:
+    // This method is intentionally generic; it does not require that its *this* value be a String object. Therefore, it can be transferred to other kinds of objects for use as a method.
+    let _ = (this, args, new_target);
+    Err(agent.not_implemented("String.prototype.localeCompare"))
+}

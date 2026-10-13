@@ -30,7 +30,7 @@ pub struct GeneratorData {
 }
 
 /// EvaluateGeneratorBody steps 2-4: G = OrdinaryCreateFromConstructor(F,
-/// "%GeneratorFunction.prototype.prototype%"), then GeneratorStart.
+/// "%GeneratorPrototype%"), then GeneratorStart.
 pub(super) fn create_generator(agent: &mut Agent, f: Object, frame: Frame) -> JsResult<Object> {
     let data = GeneratorData {
         state: GeneratorState::SuspendedStart,
@@ -40,7 +40,7 @@ pub(super) fn create_generator(agent: &mut Agent, f: Object, frame: Frame) -> Js
     ops::ordinary_create_from_constructor(
         agent,
         f,
-        "%GeneratorFunction.prototype.prototype%",
+        "%GeneratorPrototype%",
         ObjectKind::Native(Box::new(data)),
     )
 }

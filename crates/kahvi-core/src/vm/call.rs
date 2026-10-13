@@ -101,9 +101,9 @@ pub fn create_closure(
         }
         (_, true) => {
             let intrinsic = if code.is_async {
-                "%AsyncGeneratorFunction.prototype.prototype%"
+                "%AsyncGeneratorPrototype%"
             } else {
-                "%GeneratorFunction.prototype.prototype%"
+                "%GeneratorPrototype%"
             };
             let proto_proto = agent.intrinsic(intrinsic);
             let prototype = agent.ordinary_object_create(Some(proto_proto));

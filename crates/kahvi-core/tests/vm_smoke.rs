@@ -111,8 +111,8 @@ fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
             configurable: true,
         },
     );
-    agent.set_intrinsic(realm, "%GeneratorFunction.prototype.prototype%", gp);
-    agent.set_intrinsic(realm, "%AsyncGeneratorFunction.prototype.prototype%", gp);
+    agent.set_intrinsic(realm, "%GeneratorPrototype%", gp);
+    agent.set_intrinsic(realm, "%AsyncGeneratorPrototype%", gp);
     for name in [
         "%Error.prototype%",
         "%EvalError.prototype%",
