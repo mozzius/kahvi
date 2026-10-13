@@ -103,6 +103,16 @@ pub struct EcmaFunction {
     pub class_field_initializer_name: Option<FieldName>,
     /// The class source text, for class constructors' toString.
     pub source_override: Option<(Arc<str>, u32, u32)>,
+    /// Static elements of a class still being defined (run by FinishClass).
+    pub class_pending: Option<Box<ClassPending>>,
+}
+
+/// The static parts of ClassDefinitionEvaluation that run after all
+/// elements are defined.
+#[derive(Debug, Default)]
+pub struct ClassPending {
+    pub static_private_methods: Vec<PrivateElement>,
+    pub static_elements: Vec<ClassFieldDefinition>,
 }
 
 impl EcmaFunction {

@@ -1,0 +1,794 @@
+//! ECMAScript function objects at run time: creation (§10.2.3), [[Call]]
+//! (§10.2.1), [[Construct]] (§10.2.2), super calls, and class definition
+//! support (§15.7).
+
+use std::sync::Arc;
+
+use super::{Frame, FrameResult, PrivateEnv, generator, instantiate, run_frame};
+use crate::agent::{Agent, ExecutionContext};
+use crate::compiler::{
+    ClassStatic, FieldDef, FunctionCode, FunctionFlavor, MethodDef, MethodKind, PrivateMethodDef,
+    TemplateInfo,
+};
+use crate::env::{EnvId, Environment};
+use crate::error::JsResult;
+use crate::function::{
+    ClassFieldDefinition, ClassPending, ConstructorKind, EcmaFunction, FieldName, PrivateElement,
+    PrivateElementKind, PrivateName, ThisMode, make_constructor, set_function_length,
+    set_function_name,
+};
+use crate::object::{ObjectData, ObjectKind, Property, PropertyDescriptor, PropertyKey};
+use crate::ops;
+use crate::value::{Object, Value};
+
+/// The intrinsic [[Prototype]] of a function with this code.
+fn function_prototype_intrinsic(code: &FunctionCode) -> &'static str {
+    match (code.is_async, code.is_generator) {
+        (false, false) => "%Function.prototype%",
+        (false, true) => "%GeneratorFunction.prototype%",
+        (true, false) => "%AsyncFunction.prototype%",
+        (true, true) => "%AsyncGeneratorFunction.prototype%",
+    }
+}
+
+/// OrdinaryFunctionCreate(functionPrototype, sourceText, ParameterList,
+/// Body, thisMode, env, privateEnv) (§10.2.3)
+pub(crate) fn ordinary_function_create(
+    agent: &mut Agent,
+    proto: Object,
+    code: Arc<FunctionCode>,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+) -> Object {
+    let realm = agent.current_realm();
+    let script_or_module = Some(crate::ScriptOrModule::Script(code.script));
+    let length = code.length;
+    let this_mode = code.this_mode;
+    let f = agent.alloc(ObjectData::new(
+        Some(proto),
+        ObjectKind::Function(Box::new(EcmaFunction {
+            code,
+            environment: env,
+            private_environment: private_env,
+            home_object: None,
+            this_mode,
+            constructor_kind: ConstructorKind::Base,
+            is_class_constructor: false,
+            constructor: false,
+            realm,
+            script_or_module,
+            fields: Vec::new(),
+            private_methods: Vec::new(),
+            class_field_initializer_name: None,
+            source_override: None,
+            class_pending: None,
+        })),
+    ));
+    // 22. Perform SetFunctionLength(F, len).
+    set_function_length(agent, f, length as f64);
+    f
+}
+
+/// Creates the function object for a function declaration or expression,
+/// arrow function, method or class field initializer
+/// (InstantiateFunctionObject, InstantiateOrdinaryFunctionExpression, …).
+/// `name` overrides the name for NamedEvaluation.
+pub fn create_closure(
+    agent: &mut Agent,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+    code: Arc<FunctionCode>,
+    name: Option<PropertyKey>,
+) -> JsResult<Object> {
+    let proto = agent.intrinsic(function_prototype_intrinsic(&code));
+    // A named function expression binds its own name in funcEnv.
+    let own_name = code.name.filter(|_| code.binds_own_name);
+    let func_env = match own_name {
+        Some(n) => {
+            let fe = Environment::new_declarative(agent, Some(env));
+            fe.create_immutable_binding(agent, n, false)?;
+            fe
+        }
+        None => env,
+    };
+    let f = ordinary_function_create(agent, proto, code.clone(), func_env, private_env);
+    let name = name.unwrap_or_else(|| PropertyKey::String(code.name.unwrap_or(agent.names.empty)));
+    set_function_name(agent, f, name, None);
+    match (code.is_async, code.is_generator) {
+        // Plain functions (not arrows or methods) are constructors.
+        (false, false) if code.flavor == FunctionFlavor::Normal => {
+            make_constructor(agent, f, true, None)
+        }
+        (_, true) => {
+            let intrinsic = if code.is_async {
+                "%AsyncGeneratorFunction.prototype.prototype%"
+            } else {
+                "%GeneratorFunction.prototype.prototype%"
+            };
+            let proto_proto = agent.intrinsic(intrinsic);
+            let prototype = agent.ordinary_object_create(Some(proto_proto));
+            let key = PropertyKey::String(agent.names.prototype);
+            agent.obj_mut(f).properties.insert(
+                key,
+                Property::Data {
+                    value: Value::Object(prototype),
+                    writable: true,
+                    enumerable: false,
+                    configurable: false,
+                },
+            );
+        }
+        _ => {}
+    }
+    if let Some(n) = own_name {
+        func_env.initialize_binding(agent, n, Value::Object(f))?;
+    }
+    Ok(f)
+}
+
+fn ecma(agent: &Agent, f: Object) -> &EcmaFunction {
+    match &agent.obj(f).kind {
+        ObjectKind::Function(e) => e,
+        _ => unreachable!("ECMAScript function object expected"),
+    }
+}
+
+fn ecma_mut(agent: &mut Agent, f: Object) -> &mut EcmaFunction {
+    match &mut agent.obj_mut(f).kind {
+        ObjectKind::Function(e) => e,
+        _ => unreachable!("ECMAScript function object expected"),
+    }
+}
+
+/// PrepareForOrdinaryCall(F, newTarget) (§10.2.1.1): pushes the callee
+/// context and returns the new function environment.
+fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) -> EnvId {
+    let e = ecma(agent, f);
+    let (realm, script_or_module, outer, lexical) = (
+        e.realm,
+        e.script_or_module,
+        e.environment,
+        e.this_mode == ThisMode::Lexical,
+    );
+    agent.contexts.push(ExecutionContext {
+        function: Some(f),
+        realm,
+        script_or_module,
+    });
+    Environment::new_function(agent, f, new_target, outer, lexical)
+}
+
+/// OrdinaryCallBindThis(F, calleeContext, thisArgument) (§10.2.1.2)
+fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value) -> JsResult<()> {
+    let (this_mode, realm) = {
+        let e = ecma(agent, f);
+        (e.this_mode, e.realm)
+    };
+    // 2. If thisMode is lexical, return unused.
+    if this_mode == ThisMode::Lexical {
+        return Ok(());
+    }
+    let this_value = if this_mode == ThisMode::Strict {
+        // 6. If thisMode is strict, let thisValue be thisArgument.
+        this
+    } else if this.is_nullish() {
+        // 7.a.i-iii The global environment's GlobalThisValue.
+        let global_env = agent.realm(realm).global_env;
+        global_env.get_this_binding(agent)?
+    } else {
+        // 7.b Let thisValue be ! ToObject(thisArgument).
+        Value::Object(ops::to_object(agent, this)?)
+    };
+    env.bind_this_value(agent, this_value)
+}
+
+/// OrdinaryCallEvaluateBody: runs the body in a new frame. Returns the
+/// frame's result; generator functions return their generator object.
+fn evaluate_body(
+    agent: &mut Agent,
+    f: Object,
+    env: EnvId,
+    args: &[Value],
+) -> JsResult<FrameResult> {
+    let (code, private_env) = {
+        let e = ecma(agent, f);
+        (e.code.clone(), e.private_environment.clone())
+    };
+    if code.is_async {
+        return Err(agent.not_implemented("async functions"));
+    }
+    let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
+    frame.args = args.to_vec();
+    // FunctionDeclarationInstantiation up to the parameter bindings.
+    instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
+    let result = run_frame(agent, &mut frame)?;
+    if code.is_generator {
+        // EvaluateGeneratorBody: the frame stopped at GeneratorStart.
+        let g = generator::create_generator(agent, f, frame)?;
+        return Ok(FrameResult::Return(Value::Object(g)));
+    }
+    Ok(result)
+}
+
+/// [[Call]] of an ECMAScript function object (§10.2.1).
+pub fn call_ecma_function(
+    agent: &mut Agent,
+    f: Object,
+    this: Value,
+    args: &[Value],
+) -> JsResult<Value> {
+    // 2. Let calleeContext be PrepareForOrdinaryCall(F, undefined).
+    let env = prepare_for_ordinary_call(agent, f, Value::Undefined);
+    // 4. If F.[[IsClassConstructor]] is true, then throw a TypeError (in the callee's realm).
+    if ecma(agent, f).is_class_constructor {
+        let err = agent.throw_type_error("Class constructor cannot be invoked without 'new'");
+        agent.contexts.pop();
+        return Err(err);
+    }
+    // 5. Perform OrdinaryCallBindThis(F, calleeContext, thisArgument).
+    let result = ordinary_call_bind_this(agent, f, env, this)
+        .and_then(|_| evaluate_body(agent, f, env, args));
+    // 7. Remove calleeContext from the execution context stack.
+    agent.contexts.pop();
+    match result? {
+        FrameResult::Return(v) => Ok(v),
+        FrameResult::Yield(_) | FrameResult::Await(_) => Ok(Value::Undefined),
+    }
+}
+
+/// [[Construct]] of an ECMAScript function object (§10.2.2).
+pub fn construct_ecma_function(
+    agent: &mut Agent,
+    f: Object,
+    args: &[Value],
+    new_target: Object,
+) -> JsResult<Object> {
+    // 2. Let kind be F.[[ConstructorKind]].
+    let kind = ecma(agent, f).constructor_kind;
+    // 3. If kind is base, then let thisArgument be ? OrdinaryCreateFromConstructor(newTarget, "%Object.prototype%").
+    let this_argument = if kind == ConstructorKind::Base {
+        Some(ops::ordinary_create_from_constructor(
+            agent,
+            new_target,
+            "%Object.prototype%",
+            ObjectKind::Ordinary,
+        )?)
+    } else {
+        None
+    };
+    // 4. Let calleeContext be PrepareForOrdinaryCall(F, newTarget).
+    let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target));
+    let result = (|| {
+        // 6. If kind is base, then
+        if let Some(this) = this_argument {
+            // a. Perform OrdinaryCallBindThis(F, calleeContext, thisArgument).
+            ordinary_call_bind_this(agent, f, env, Value::Object(this))?;
+            // b. Let initializeResult be Completion(InitializeInstanceElements(thisArgument, F)).
+            initialize_instance_elements(agent, this, f)?;
+        }
+        // 8. Let result be Completion(OrdinaryCallEvaluateBody(F, argumentsList)).
+        evaluate_body(agent, f, env, args)
+    })();
+    // 9. Remove calleeContext from the execution context stack.
+    agent.contexts.pop();
+    let FrameResult::Return(value) = result? else {
+        unreachable!("constructor frames return")
+    };
+    // 10. If result is a return completion, then
+    // a. If result.[[Value]] is an Object, return result.[[Value]].
+    if let Value::Object(o) = value {
+        return Ok(o);
+    }
+    // b. If kind is base, return thisArgument.
+    if let Some(this) = this_argument {
+        return Ok(this);
+    }
+    // c. If result.[[Value]] is not undefined, throw a TypeError exception.
+    if !value.is_undefined() {
+        return Err(
+            agent.throw_type_error("Derived constructors may only return object or undefined")
+        );
+    }
+    // 12. Let thisBinding be ? constructorEnv.GetThisBinding().
+    match env.get_this_binding(agent)? {
+        Value::Object(o) => Ok(o),
+        _ => Err(agent.throw_type_error("constructor did not initialize this")),
+    }
+}
+
+/// SuperCall evaluation after the arguments (§13.3.7.1 steps 5-11).
+pub(super) fn super_call(
+    agent: &mut Agent,
+    env: EnvId,
+    func: Value,
+    args: &[Value],
+) -> JsResult<Value> {
+    let this_env = agent.get_this_environment(env);
+    let (new_target, active) = match this_env.function_data(agent) {
+        Some(d) => (d.new_target, d.function_object),
+        None => return Err(agent.throw_syntax_error("'super' keyword unexpected here")),
+    };
+    // 5. If IsConstructor(func) is false, throw a TypeError exception.
+    let Value::Object(func) = func else {
+        return Err(agent.throw_type_error("Super constructor is not a constructor"));
+    };
+    if !func.is_constructor(agent) {
+        return Err(agent.throw_type_error("Super constructor is not a constructor"));
+    }
+    let Value::Object(new_target) = new_target else {
+        return Err(agent.throw_syntax_error("'super' keyword unexpected here"));
+    };
+    // 6. Let result be ? Construct(func, argList, newTarget).
+    let result = func.internal_construct(agent, args, new_target)?;
+    // 8. Perform ? thisER.BindThisValue(result).
+    this_env.bind_this_value(agent, Value::Object(result))?;
+    // 10. Perform ? InitializeInstanceElements(result, F).
+    initialize_instance_elements(agent, result, active)?;
+    Ok(Value::Object(result))
+}
+
+// ---- private elements (§7.3.27-32) ------------------------------------------------
+
+fn private_element_find(agent: &Agent, o: Object, p: PrivateName) -> Option<usize> {
+    agent
+        .obj(o)
+        .private_elements
+        .iter()
+        .position(|e| e.key == p)
+}
+
+fn private_name_error(agent: &mut Agent, p: PrivateName, what: &str) -> crate::error::JsError {
+    let msg = format!("{} {what}", agent.str_lossy(p.description));
+    agent.throw_type_error(&msg)
+}
+
+/// PrivateFieldAdd(O, P, value)
+pub fn private_field_add(
+    agent: &mut Agent,
+    o: Object,
+    p: PrivateName,
+    value: Value,
+) -> JsResult<()> {
+    if private_element_find(agent, o, p).is_some() {
+        return Err(private_name_error(
+            agent,
+            p,
+            "has already been declared on this object",
+        ));
+    }
+    agent.obj_mut(o).private_elements.push(PrivateElement {
+        key: p,
+        kind: PrivateElementKind::Field,
+        value,
+        get: Value::Undefined,
+        set: Value::Undefined,
+    });
+    Ok(())
+}
+
+/// PrivateMethodOrAccessorAdd(O, method)
+pub fn private_method_or_accessor_add(
+    agent: &mut Agent,
+    o: Object,
+    method: PrivateElement,
+) -> JsResult<()> {
+    if private_element_find(agent, o, method.key).is_some() {
+        return Err(private_name_error(
+            agent,
+            method.key,
+            "has already been declared on this object",
+        ));
+    }
+    agent.obj_mut(o).private_elements.push(method);
+    Ok(())
+}
+
+/// PrivateGet(O, P)
+pub fn private_get(agent: &mut Agent, o: Object, p: PrivateName) -> JsResult<Value> {
+    let Some(i) = private_element_find(agent, o, p) else {
+        return Err(private_name_error(
+            agent,
+            p,
+            "is not present on this object",
+        ));
+    };
+    let e = agent.obj(o).private_elements[i];
+    match e.kind {
+        PrivateElementKind::Field | PrivateElementKind::Method => Ok(e.value),
+        PrivateElementKind::Accessor => {
+            if e.get.is_undefined() {
+                return Err(private_name_error(agent, p, "was defined without a getter"));
+            }
+            ops::call(agent, e.get, Value::Object(o), &[])
+        }
+    }
+}
+
+/// PrivateSet(O, P, value)
+pub fn private_set(agent: &mut Agent, o: Object, p: PrivateName, value: Value) -> JsResult<()> {
+    let Some(i) = private_element_find(agent, o, p) else {
+        return Err(private_name_error(
+            agent,
+            p,
+            "is not present on this object",
+        ));
+    };
+    let e = agent.obj(o).private_elements[i];
+    match e.kind {
+        PrivateElementKind::Field => {
+            agent.obj_mut(o).private_elements[i].value = value;
+            Ok(())
+        }
+        PrivateElementKind::Method => Err(private_name_error(
+            agent,
+            p,
+            "is a method and cannot be assigned",
+        )),
+        PrivateElementKind::Accessor => {
+            if e.set.is_undefined() {
+                return Err(private_name_error(agent, p, "was defined without a setter"));
+            }
+            ops::call(agent, e.set, Value::Object(o), &[value])?;
+            Ok(())
+        }
+    }
+}
+
+/// DefineField(receiver, fieldRecord) (§7.3.33)
+pub fn define_field(
+    agent: &mut Agent,
+    receiver: Object,
+    field: &ClassFieldDefinition,
+) -> JsResult<()> {
+    // 3. If initializer is not empty, let initValue be ? Call(initializer, receiver).
+    let value = match field.initializer {
+        Some(init) => ops::call(agent, Value::Object(init), Value::Object(receiver), &[])?,
+        None => Value::Undefined,
+    };
+    match field.name {
+        // 5. If fieldName is a Private Name, perform ? PrivateFieldAdd(receiver, fieldName, initValue).
+        FieldName::Private(p) => private_field_add(agent, receiver, p, value),
+        // 6. Else, perform ? CreateDataPropertyOrThrow(receiver, fieldName, initValue).
+        FieldName::Key(k) => ops::create_data_property_or_throw(agent, receiver, k, value),
+    }
+}
+
+/// InitializeInstanceElements(O, constructor) (§7.3.34)
+pub fn initialize_instance_elements(
+    agent: &mut Agent,
+    o: Object,
+    constructor: Object,
+) -> JsResult<()> {
+    let (methods, fields) = match &agent.obj(constructor).kind {
+        ObjectKind::Function(e) => (e.private_methods.clone(), e.fields.clone()),
+        _ => return Ok(()),
+    };
+    // 2. For each PrivateElement method of methods, perform ? PrivateMethodOrAccessorAdd(O, method).
+    for m in methods {
+        private_method_or_accessor_add(agent, o, m)?;
+    }
+    // 4. For each element fieldRecord of fields, perform ? DefineField(O, fieldRecord).
+    for f in &fields {
+        define_field(agent, o, f)?;
+    }
+    Ok(())
+}
+
+// ---- object literal and class elements -------------------------------------------------
+
+/// MakeMethod plus DefineMethodProperty / the getter and setter cases of
+/// MethodDefinitionEvaluation (§15.4.4).
+pub(super) fn define_method_property(
+    agent: &mut Agent,
+    target: Object,
+    key: PropertyKey,
+    f: Object,
+    def: MethodDef,
+) -> JsResult<()> {
+    // MakeMethod(closure, object).
+    ecma_mut(agent, f).home_object = Some(target);
+    let desc = match def.kind {
+        MethodKind::Method => {
+            set_function_name(agent, f, key, None);
+            PropertyDescriptor::data(Value::Object(f), true, def.enumerable, true)
+        }
+        MethodKind::Getter => {
+            set_function_name(agent, f, key, Some("get"));
+            PropertyDescriptor {
+                get: Some(Value::Object(f)),
+                enumerable: Some(def.enumerable),
+                configurable: Some(true),
+                ..Default::default()
+            }
+        }
+        MethodKind::Setter => {
+            set_function_name(agent, f, key, Some("set"));
+            PropertyDescriptor {
+                set: Some(Value::Object(f)),
+                enumerable: Some(def.enumerable),
+                configurable: Some(true),
+                ..Default::default()
+            }
+        }
+    };
+    ops::define_property_or_throw(agent, target, key, desc)
+}
+
+/// ClassDefinitionEvaluation steps 8.a-h: the heritage. Returns
+/// (protoParent, constructorParent).
+pub(super) fn class_heritage(
+    agent: &mut Agent,
+    superclass: Value,
+) -> JsResult<(Option<Object>, Object)> {
+    match superclass {
+        // g. If superclass is null, then protoParent = null, constructorParent = %Function.prototype%.
+        Value::Null => Ok((None, agent.intrinsic("%Function.prototype%"))),
+        Value::Object(s) if s.is_constructor(agent) => {
+            // i. Let protoParent be ? Get(superclass, "prototype").
+            let key = PropertyKey::String(agent.names.prototype);
+            let proto_parent = ops::get(agent, s, key)?;
+            // ii. If protoParent is not an Object and not null, throw a TypeError exception.
+            match proto_parent {
+                Value::Object(p) => Ok((Some(p), s)),
+                Value::Null => Ok((None, s)),
+                _ => Err(agent.throw_type_error(
+                    "Class extends value does not have valid prototype property",
+                )),
+            }
+        }
+        // h. Else if IsConstructor(superclass) is false, throw a TypeError exception.
+        _ => Err(agent.throw_type_error("Class extends value is not a constructor or null")),
+    }
+}
+
+/// ClassDefinitionEvaluation steps 9-20: the prototype and constructor.
+pub(super) fn create_class(
+    agent: &mut Agent,
+    frame: &Frame,
+    ctor_code: Arc<FunctionCode>,
+    class: &ClassStatic,
+    name: Value,
+    proto_parent: Value,
+    ctor_parent: Value,
+) -> JsResult<(Object, Object)> {
+    // 9. Let proto be OrdinaryObjectCreate(protoParent).
+    let proto = agent.ordinary_object_create(proto_parent.as_object());
+    let Value::Object(ctor_parent) = ctor_parent else {
+        unreachable!("constructor parent")
+    };
+    let derived = ctor_code.flavor == FunctionFlavor::DerivedConstructor;
+    // 14-15. F is the constructor's closure: OrdinaryFunctionCreate(constructorParent, ...), MakeMethod(F, proto).
+    let f = ordinary_function_create(
+        agent,
+        ctor_parent,
+        ctor_code,
+        frame.env,
+        frame.private_env.clone(),
+    );
+    {
+        let e = ecma_mut(agent, f);
+        e.home_object = Some(proto);
+        // 16. Perform MakeClassConstructor(F).
+        e.is_class_constructor = true;
+        e.this_mode = ThisMode::Strict;
+        // 19. If ClassHeritage is present, set F.[[ConstructorKind]] to derived.
+        if derived {
+            e.constructor_kind = ConstructorKind::Derived;
+        }
+        e.class_pending = Some(Box::default());
+    }
+    let source = frame.code.source.clone();
+    ecma_mut(agent, f).source_override = Some((source, class.span.0, class.span.1));
+    // 17. Perform SetFunctionName(F, className).
+    let key = ops::to_property_key(agent, name)?;
+    set_function_name(agent, f, key, None);
+    // 18. Perform MakeConstructor(F, false, proto).
+    make_constructor(agent, f, false, Some(proto));
+    // 20. Perform CreateMethodProperty(proto, "constructor", F).
+    let key = PropertyKey::String(agent.names.constructor);
+    agent.obj_mut(proto).properties.insert(
+        key,
+        Property::Data {
+            value: Value::Object(f),
+            writable: true,
+            enumerable: false,
+            configurable: true,
+        },
+    );
+    Ok((f, proto))
+}
+
+/// ClassFieldDefinitionEvaluation / ClassStaticBlockDefinitionEvaluation:
+/// records a field on the class. Stack: [F proto key init] or [F proto block].
+pub(super) fn define_class_field(
+    agent: &mut Agent,
+    frame: &mut Frame,
+    def: FieldDef,
+) -> JsResult<()> {
+    let init = frame.pop();
+    let key = if def.static_block {
+        None
+    } else {
+        Some(frame.pop())
+    };
+    let n = frame.stack.len();
+    let (Value::Object(f), Value::Object(proto)) = (frame.stack[n - 2], frame.stack[n - 1]) else {
+        unreachable!("class under construction")
+    };
+    let home = if def.is_static { f } else { proto };
+    let name = match key {
+        None => FieldName::Key(PropertyKey::String(agent.names.empty)),
+        Some(Value::String(s)) if def.private => {
+            FieldName::Private(super::resolve_private(agent, frame, s)?)
+        }
+        Some(k) => FieldName::Key(ops::to_property_key(agent, k)?),
+    };
+    let initializer = init.as_object();
+    if let Some(i) = initializer {
+        let e = ecma_mut(agent, i);
+        e.home_object = Some(home);
+        e.class_field_initializer_name = Some(name);
+    }
+    let field = ClassFieldDefinition {
+        name,
+        initializer,
+        is_static_block: def.static_block,
+    };
+    let e = ecma_mut(agent, f);
+    if def.is_static {
+        e.class_pending
+            .get_or_insert_with(Box::default)
+            .static_elements
+            .push(field);
+    } else {
+        e.fields.push(field);
+    }
+    Ok(())
+}
+
+/// A private method or accessor (ClassElementEvaluation for private
+/// MethodDefinitions). Stack: [F proto closure] -> [F proto].
+pub(super) fn define_private_method(
+    agent: &mut Agent,
+    frame: &mut Frame,
+    def: PrivateMethodDef,
+) -> JsResult<()> {
+    let Value::Object(closure) = frame.pop() else {
+        unreachable!("method closure")
+    };
+    let n = frame.stack.len();
+    let (Value::Object(f), Value::Object(proto)) = (frame.stack[n - 2], frame.stack[n - 1]) else {
+        unreachable!("class under construction")
+    };
+    let p = super::resolve_private(agent, frame, def.name)?;
+    ecma_mut(agent, closure).home_object = Some(if def.is_static { f } else { proto });
+    let name = PropertyKey::String(def.name);
+    let element = match def.kind {
+        MethodKind::Method => {
+            set_function_name(agent, closure, name, None);
+            PrivateElement {
+                key: p,
+                kind: PrivateElementKind::Method,
+                value: Value::Object(closure),
+                get: Value::Undefined,
+                set: Value::Undefined,
+            }
+        }
+        MethodKind::Getter => {
+            set_function_name(agent, closure, name, Some("get"));
+            PrivateElement {
+                key: p,
+                kind: PrivateElementKind::Accessor,
+                value: Value::Undefined,
+                get: Value::Object(closure),
+                set: Value::Undefined,
+            }
+        }
+        MethodKind::Setter => {
+            set_function_name(agent, closure, name, Some("set"));
+            PrivateElement {
+                key: p,
+                kind: PrivateElementKind::Accessor,
+                value: Value::Undefined,
+                get: Value::Undefined,
+                set: Value::Object(closure),
+            }
+        }
+    };
+    let e = ecma_mut(agent, f);
+    let list = if def.is_static {
+        &mut e
+            .class_pending
+            .get_or_insert_with(Box::default)
+            .static_private_methods
+    } else {
+        &mut e.private_methods
+    };
+    // A getter and setter with the same name combine into one accessor.
+    match list
+        .iter_mut()
+        .find(|m| m.key == p && m.kind == PrivateElementKind::Accessor)
+    {
+        Some(existing) if element.kind == PrivateElementKind::Accessor => {
+            if !element.get.is_undefined() {
+                existing.get = element.get;
+            }
+            if !element.set.is_undefined() {
+                existing.set = element.set;
+            }
+        }
+        _ => list.push(element),
+    }
+    Ok(())
+}
+
+/// ClassDefinitionEvaluation steps 31-34: static private methods, then
+/// static fields and blocks in order.
+pub(super) fn finish_class(agent: &mut Agent, f: Object) -> JsResult<()> {
+    let pending: ClassPending = ecma_mut(agent, f)
+        .class_pending
+        .take()
+        .map(|b| *b)
+        .unwrap_or_default();
+    for m in pending.static_private_methods {
+        private_method_or_accessor_add(agent, f, m)?;
+    }
+    for element in &pending.static_elements {
+        if element.is_static_block {
+            if let Some(init) = element.initializer {
+                ops::call(agent, Value::Object(init), Value::Object(f), &[])?;
+            }
+        } else {
+            define_field(agent, f, element)?;
+        }
+    }
+    Ok(())
+}
+
+/// GetTemplateObject(templateLiteral) (§13.2.8.4)
+pub(super) fn get_template_object(
+    agent: &mut Agent,
+    code: &FunctionCode,
+    t: &TemplateInfo,
+) -> JsResult<Object> {
+    let realm = agent.current_realm();
+    let site = (code.script, t.site);
+    // 3. If templateRegistry contains an entry for this site, return it.
+    if let Some(&o) = agent.realm(realm).template_map.get(&site) {
+        return Ok(o);
+    }
+    let count = t.raw.len();
+    // 7-8. template and rawObj are arrays of length count.
+    let template = crate::object::array::array_create(agent, count as f64, None)?;
+    let raw = crate::object::array::array_create(agent, count as f64, None)?;
+    for i in 0..count {
+        let key = PropertyKey::Index(i as u32);
+        let cooked = t.cooked[i].map(Value::String).unwrap_or(Value::Undefined);
+        ops::define_property_or_throw(
+            agent,
+            template,
+            key,
+            PropertyDescriptor::data(cooked, false, true, false),
+        )?;
+        ops::define_property_or_throw(
+            agent,
+            raw,
+            key,
+            PropertyDescriptor::data(Value::String(t.raw[i]), false, true, false),
+        )?;
+    }
+    // 11. Perform ! SetIntegrityLevel(rawObj, frozen).
+    ops::set_integrity_level(agent, raw, ops::IntegrityLevel::Frozen)?;
+    // 12. Perform ! DefinePropertyOrThrow(template, "raw", ...).
+    let raw_key = agent.key("raw");
+    ops::define_property_or_throw(
+        agent,
+        template,
+        raw_key,
+        PropertyDescriptor::data(Value::Object(raw), false, false, false),
+    )?;
+    // 13. Perform ! SetIntegrityLevel(template, frozen).
+    ops::set_integrity_level(agent, template, ops::IntegrityLevel::Frozen)?;
+    agent.realm_mut(realm).template_map.insert(site, template);
+    Ok(template)
+}

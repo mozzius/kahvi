@@ -1,0 +1,517 @@
+//! The bytecode: a stack machine. Each function body compiles to one
+//! [`FunctionCode`]; nested functions are in [`FunctionCode::functions`].
+//!
+//! Stack effects are written `[before] -> [after]`, top of stack last.
+
+use std::sync::Arc;
+
+use crate::function::ThisMode;
+use crate::object::PropertyKey;
+use crate::value::{BigInt, JsString};
+
+/// Index of an instruction in [`FunctionCode::ops`].
+pub type Label = u32;
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Op {
+    // ---- constants -------------------------------------------------------
+    /// [] -> [undefined]
+    Undefined,
+    Null,
+    True,
+    False,
+    Number(f64),
+    String(JsString),
+    BigInt(BigInt),
+
+    // ---- stack -----------------------------------------------------------
+    /// [a] -> []
+    Pop,
+    /// [a] -> [a a]
+    Dup,
+    /// [a b] -> [a b a b]
+    Dup2,
+    /// [a b] -> [b a]
+    Swap,
+    /// [a b c] -> [c a b]
+    RotRight3,
+    /// [a b c d] -> [d a b c]
+    RotRight4,
+    /// [.. x (n values)] -> [.. x (n values) x]: copies the value `n` below the top.
+    Pick(u32),
+
+    // ---- completion value (script and eval code) ---------------------------
+    /// [v] -> []: the completion value of the code so far is `v`.
+    SetCompletion,
+
+    // ---- identifiers -------------------------------------------------------
+    /// [] -> [value]: ResolveBinding(name) then GetValue.
+    GetName(JsString),
+    /// [] -> [typeof value]: like GetName but unresolvable gives "undefined".
+    TypeofName(JsString),
+    /// [] -> [func this]: GetName plus the call's this value (with-object or undefined).
+    GetNameForCall(JsString),
+    /// [] -> []: ResolveBinding(name), pushed on the reference stack.
+    ResolveName(JsString),
+    /// [] -> [value]: GetValue of the top reference (it stays).
+    GetRef,
+    /// [value] -> [value]: PutValue to the top reference, which is popped.
+    PutRef,
+    /// [] -> []: pops the top reference without using it.
+    DropRef,
+    /// [value] -> []: InitializeReferencedBinding in the running lexical environment.
+    InitName(JsString),
+    /// [] -> [bool]: `delete name`.
+    DeleteName(JsString),
+
+    // ---- environments ------------------------------------------------------
+    /// BlockDeclarationInstantiation of [`FunctionCode::scopes`]`[i]` in a new
+    /// declarative environment, which becomes the running lexical environment.
+    PushScope(u32),
+    /// A new empty declarative environment (e.g. for a class body).
+    PushEmptyScope,
+    /// Restores the outer environment of the running lexical environment.
+    PopScope,
+    /// CreatePerIterationEnvironment: copies the running lexical environment.
+    CopyScope,
+    /// [obj] -> []: a `with` object environment becomes the running one.
+    PushWith,
+
+    // ---- properties --------------------------------------------------------
+    /// [base] -> [value]
+    GetProp(PropertyKey),
+    /// [base key] -> [value]: GetValue; ToObject(base) happens before ToPropertyKey(key).
+    GetElem,
+    /// [base key] -> [base propertyKey value]: GetElem keeping the converted key
+    /// for a following SetElem (compound assignment, update expressions).
+    GetElemForUpdate,
+    /// [base] -> [func base]: method lookup for calls.
+    GetPropForCall(PropertyKey),
+    /// [base key] -> [func base]
+    GetElemForCall,
+    /// [base value] -> [value]: PutValue to base.key.
+    SetProp(PropertyKey),
+    /// [base key value] -> [value]
+    SetElem,
+    /// [base] -> [bool]
+    DeleteProp(PropertyKey),
+    /// [base key] -> [bool]
+    DeleteElem,
+    /// [key] -> [property key value]: ToPropertyKey (as a String or Symbol).
+    ToPropertyKey,
+    /// [base] -> [base]: throws a TypeError if base is undefined or null.
+    RequireObjectCoercible,
+
+    // ---- super and private references -------------------------------------
+    /// [] -> [value]: super[key] with a static key.
+    GetSuperProp(PropertyKey),
+    /// [key] -> [value]
+    GetSuperElem,
+    /// [value] -> [value]
+    SetSuperProp(PropertyKey),
+    /// [key value] -> [value]
+    SetSuperElem,
+    /// [] -> [func this]
+    GetSuperPropForCall(PropertyKey),
+    /// [key] -> [func this]
+    GetSuperElemForCall,
+    /// [base] -> [value]: PrivateGet(base, #name).
+    GetPrivate(JsString),
+    /// [base value] -> [value]
+    SetPrivate(JsString),
+    /// [base] -> [func base]
+    GetPrivateForCall(JsString),
+    /// [obj] -> [bool]: `#name in obj`.
+    PrivateIn(JsString),
+
+    // ---- operators ---------------------------------------------------------
+    /// [a b] -> [a op b]
+    Binary(BinOp),
+    /// [a] -> [-a]
+    Neg,
+    /// [a] -> [+a] (ToNumber)
+    Plus,
+    /// [a] -> [~a]
+    BitNot,
+    /// [a] -> [!a]
+    Not,
+    /// [a] -> [typeof a]
+    Typeof,
+    /// [a] -> [ToNumeric(a)]
+    ToNumeric,
+    /// [n] -> [n + 1] for a Number or BigInt
+    Inc,
+    /// [n] -> [n - 1]
+    Dec,
+    /// [a] -> [ToString(a)] (template literals)
+    ToString,
+
+    // ---- control flow ------------------------------------------------------
+    Jump(Label),
+    /// [v] -> []
+    JumpIfFalse(Label),
+    /// [v] -> []
+    JumpIfTrue(Label),
+    /// [v] -> [v]: jumps if ToBoolean(v) is false; never pops.
+    JumpIfFalseKeep(Label),
+    JumpIfTrueKeep(Label),
+    /// [v] -> [v]: jumps if v is undefined or null.
+    JumpIfNullishKeep(Label),
+    /// [v] -> [v]: jumps unless v is undefined or null.
+    JumpIfNotNullishKeep(Label),
+    /// [v] -> [v]: jumps unless v is undefined.
+    JumpIfNotUndefined(Label),
+
+    // ---- exceptions and finally ----------------------------------------------
+    /// [v] -> throws v
+    Throw,
+    /// Throws a new TypeError/ReferenceError/SyntaxError with a message from
+    /// [`FunctionCode::messages`].
+    ThrowError(ErrorType, u32),
+    /// Installs an exception handler: on a throw, the stacks unwind to their
+    /// current heights, the lexical environment is restored, the thrown
+    /// value is pushed and execution continues at the label.
+    PushHandler(Label),
+    PopHandler,
+    /// [value kind] -> []: ends a finally block. `kind` is a Number:
+    /// 0 normal (value dropped, fall through), 1 throw (rethrow value),
+    /// n >= 2 jump to `FunctionCode::finally_targets[i][n - 2]` with value pushed.
+    EndFinally(u32),
+
+    // ---- functions and calls -------------------------------------------------
+    /// [] -> [closure of functions[i]] (InstantiateOrdinaryFunctionExpression etc.),
+    /// named after its own BindingIdentifier or "".
+    Closure(u32),
+    /// [name] -> [closure]: a closure named by NamedEvaluation (`name` is a
+    /// property key value: a String, or a Symbol giving "[description]").
+    ClosureNamed(u32),
+    /// [] -> [name]: the [[ClassFieldInitializerName]] of the running function.
+    FieldInitializerName,
+    /// [func this args...] -> [result]
+    Call(u32),
+    /// [func this argsArray] -> [result]
+    CallSpread,
+    /// [func this args...] -> [result]: a call that is a direct eval if func is %eval%.
+    CallEval(u32),
+    /// [func this argsArray] -> [result]
+    CallEvalSpread,
+    /// [ctor args...] -> [object]
+    New(u32),
+    /// [ctor argsArray] -> [object]
+    NewSpread,
+    /// [] -> [func]: GetSuperConstructor() (before the arguments are evaluated).
+    GetSuperConstructor,
+    /// [func args...] -> [this]
+    SuperCall(u32),
+    /// [func argsArray] -> [this]
+    SuperCallSpread,
+    /// [v] -> returns v (after the frame's own completion handling)
+    Return,
+    /// [] -> [this]: ResolveThisBinding.
+    This,
+    /// [] -> [new.target]
+    NewTarget,
+    /// [] -> [import.meta]
+    ImportMeta,
+    /// [specifier options] -> [promise]
+    ImportCall,
+    /// [] -> [args[i] or undefined]: the i-th argument of the running call.
+    GetArg(u32),
+    /// [] -> [array of args[i..]]
+    GetRestArgs(u32),
+    /// FunctionDeclarationInstantiation steps after parameter binding.
+    InstantiateFunctionBody,
+
+    // ---- object and array literals -------------------------------------------
+    /// [] -> [new ordinary object]
+    NewObject,
+    /// [] -> [new empty array]
+    NewArray,
+    /// [obj value] -> [obj]: CreateDataPropertyOrThrow(obj, key, value).
+    DefineField(PropertyKey),
+    /// [obj key value] -> [obj]
+    DefineFieldComputed,
+    /// [array value] -> [array]: appends value.
+    ArrayPush,
+    /// [array] -> [array]: appends a hole (an elision).
+    ArrayHole,
+    /// [array iterable] -> [array]: appends every value of the iterable.
+    ArraySpread,
+    /// [obj source] -> [obj]: CopyDataProperties(obj, source, «»).
+    CopyDataProperties,
+    /// [k1 .. kn target source] -> [target]: CopyDataProperties(target,
+    /// source, «k1 .. kn») (object rest patterns).
+    CopyDataPropertiesExcluding(u32),
+    /// [obj proto] -> [obj]: `__proto__: value` in an object literal.
+    SetPrototypeLiteral,
+    /// [obj key closure] -> [obj]: defines a method/getter/setter/field on obj
+    /// (the closure's [[HomeObject]] is set to obj).
+    DefineMethod(MethodDef),
+    /// [] -> [template object of templates[i]]
+    GetTemplateObject(u32),
+    /// [] -> [new RegExp]
+    RegExp(JsString, JsString),
+
+    // ---- iteration -------------------------------------------------------------
+    /// [iterable] -> []: GetIterator(sync), pushed on the iterator stack.
+    GetIterator,
+    /// [iterable] -> []: GetIterator(async).
+    GetAsyncIterator,
+    /// [] -> [value] or jumps when done: IteratorStepValue of the top iterator.
+    IteratorNext(Label),
+    /// [] -> [value]: IteratorStepValue for destructuring (undefined once done).
+    IteratorNextOrUndefined,
+    /// [] -> [array]: the remaining values of the top iterator.
+    IteratorRest,
+    /// [] -> []: pops the top iterator without closing it.
+    PopIterator,
+    /// [] -> []: IteratorClose(top, normal completion), then pops it.
+    IteratorClose,
+    /// [exception] -> [exception]: IteratorClose(top, throw completion) if not
+    /// done, pops it; the exception is rethrown by the following Throw.
+    IteratorCloseForThrow,
+    /// [obj] -> []: EnumerateObjectProperties(ToObject(obj)) on the iterator stack
+    /// (for undefined/null pushes an empty iteration).
+    ForInStart,
+    /// [] -> [key] or jumps when done.
+    ForInNext(Label),
+
+    // ---- generators and async --------------------------------------------------
+    /// [] -> []: initial suspension of a generator (after FunctionDeclarationInstantiation).
+    GeneratorStart,
+    /// [value] -> [received value] or a resumption with return/throw.
+    /// On resume, a return resumption jumps to the label with the value pushed.
+    Yield(Label),
+    /// [iterable] -> [result]: `yield*`; a return resumption jumps to the label.
+    YieldDelegate(Label),
+    /// [value] -> [awaited value]
+    Await,
+
+    // ---- classes -----------------------------------------------------------------
+    /// [superclass] -> [proto ctorParent] (or [] -> [proto ctorParent] when
+    /// the class has no `extends`): the heritage steps of ClassDefinitionEvaluation.
+    ClassHeritage(bool),
+    /// [name proto ctorParent] -> [ctor proto]: creates the constructor F from
+    /// functions[i] (or a default constructor when `None`) and names it.
+    CreateClass(ClassInfo),
+    /// Creates the class's PrivateEnvironment with the names of classes[i].
+    PushPrivateScope(u32),
+    PopPrivateScope,
+    /// [ctor proto key init] -> [ctor proto]: an instance or static field
+    /// (`init` is a closure or undefined); static blocks have no key: [ctor proto closure].
+    DefineClassField(FieldDef),
+    /// [ctor proto] -> [ctor proto]: a private method/accessor; closure on top.
+    DefinePrivateMethod(PrivateMethodDef),
+    /// [ctor] -> [ctor]: runs the static fields and blocks of the class.
+    FinishClass,
+    /// [] -> [this]: the body of a default derived constructor: super(...args)
+    /// forwarding the arguments without iterating them.
+    SuperCallForward,
+
+    // ---- misc -----------------------------------------------------------------
+    /// Throws an uncatchable "not implemented" error naming messages[i].
+    NotImplemented(u32),
+    Debugger,
+    Nop,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BinOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+    Exp,
+    Shl,
+    Shr,
+    UShr,
+    BitAnd,
+    BitOr,
+    BitXor,
+    Eq,
+    NotEq,
+    StrictEq,
+    StrictNotEq,
+    Lt,
+    Gt,
+    LtEq,
+    GtEq,
+    In,
+    InstanceOf,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ErrorType {
+    Type,
+    Reference,
+    Syntax,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MethodKind {
+    Method,
+    Getter,
+    Setter,
+}
+
+/// How [`Op::DefineMethod`] defines its property.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MethodDef {
+    pub kind: MethodKind,
+    /// Enumerable (object literals) or not (classes).
+    pub enumerable: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ClassInfo {
+    /// Index into `functions` of the explicit constructor, if any.
+    pub constructor: Option<u32>,
+    /// Index into `classes`.
+    pub class: u32,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FieldDef {
+    pub is_static: bool,
+    /// The key is a private name (a String on the stack).
+    pub private: bool,
+    pub static_block: bool,
+    /// An `accessor` field: defines the getter/setter pair as well.
+    pub auto_accessor: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PrivateMethodDef {
+    pub name: JsString,
+    pub kind: MethodKind,
+    pub is_static: bool,
+}
+
+/// What kind of code a [`FunctionCode`] is.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CodeKind {
+    Script,
+    Module,
+    Eval,
+    Function,
+}
+
+/// The kind of function, from the parser's FunctionKind plus async/generator.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FunctionFlavor {
+    Normal,
+    Arrow,
+    Method,
+    Getter,
+    Setter,
+    ClassConstructor,
+    DerivedConstructor,
+    ClassFieldInit,
+}
+
+/// A declaration to instantiate in a scope.
+#[derive(Debug, Clone)]
+pub struct ScopeInfo {
+    /// Lexically declared names: (name, is_const).
+    pub lexical: Vec<(JsString, bool)>,
+    /// Function declarations to initialize: (name, index into `functions`).
+    pub functions: Vec<(JsString, u32)>,
+}
+
+/// Declarations of a script, function body or eval code, for the
+/// declaration-instantiation algorithms.
+#[derive(Debug, Clone, Default)]
+pub struct Declarations {
+    /// VarDeclaredNames (without function declarations).
+    pub var_names: Vec<JsString>,
+    /// Var-scoped function declarations to initialize, last one per name wins:
+    /// (name, index into `functions`).
+    pub functions: Vec<(JsString, u32)>,
+    /// Top-level lexical declarations: (name, is_const).
+    pub lexical: Vec<(JsString, bool)>,
+    /// Annex B.3.2 function-in-block names hoisted to var scope (sloppy only).
+    pub annex_b_functions: Vec<JsString>,
+}
+
+/// Formal parameters, for FunctionDeclarationInstantiation.
+#[derive(Debug, Clone, Default)]
+pub struct Params {
+    /// BoundNames of the formals, in order (with duplicates).
+    pub names: Vec<JsString>,
+    pub simple: bool,
+    pub has_expressions: bool,
+    pub has_duplicates: bool,
+}
+
+/// A template literal site.
+#[derive(Debug, Clone)]
+pub struct TemplateInfo {
+    /// `None` where a tagged template had an invalid escape.
+    pub cooked: Vec<Option<JsString>>,
+    pub raw: Vec<JsString>,
+    /// Identifies the site for the realm's [[TemplateMap]].
+    pub site: u32,
+}
+
+/// The static parts of a class definition.
+#[derive(Debug, Clone, Default)]
+pub struct ClassStatic {
+    pub name: Option<JsString>,
+    /// Private names declared in the class body.
+    pub private_names: Vec<JsString>,
+    /// Source span of the class, for the constructor's toString.
+    pub span: (u32, u32),
+}
+
+/// Compiled code for a script, module, eval or function body.
+#[derive(Debug)]
+pub struct FunctionCode {
+    pub kind: CodeKind,
+    pub flavor: FunctionFlavor,
+    pub is_async: bool,
+    pub is_generator: bool,
+    pub strict: bool,
+    pub this_mode: ThisMode,
+    /// The function's own name (BindingIdentifier), if any.
+    pub name: Option<JsString>,
+    /// ExpectedArgumentCount, for the `length` property.
+    pub length: u32,
+    pub params: Params,
+    pub decls: Declarations,
+    /// Whether the body needs an arguments object if FunctionDeclarationInstantiation allows it.
+    pub uses_arguments: bool,
+    /// Whether the code contains a direct eval.
+    pub has_direct_eval: bool,
+    /// A named function expression binds its own name in a scope between it and its closure.
+    pub binds_own_name: bool,
+    pub ops: Vec<Op>,
+    /// (op index, source offset) pairs, ascending, for error positions.
+    pub positions: Vec<(u32, u32)>,
+    pub functions: Vec<Arc<FunctionCode>>,
+    pub scopes: Vec<ScopeInfo>,
+    pub templates: Vec<TemplateInfo>,
+    pub classes: Vec<ClassStatic>,
+    pub messages: Vec<String>,
+    pub finally_targets: Vec<Vec<Label>>,
+    /// The whole source text and this code's span in it (Function.prototype.toString).
+    pub source: Arc<str>,
+    pub span: (u32, u32),
+    /// Index of the script/module this code belongs to.
+    pub script: u32,
+}
+
+impl FunctionCode {
+    /// The source text of the function (for Function.prototype.toString).
+    pub fn source_text(&self) -> &str {
+        self.source
+            .get(self.span.0 as usize..self.span.1 as usize)
+            .unwrap_or("")
+    }
+
+    /// The source offset of the instruction at `pc`, if known.
+    pub fn position_of(&self, pc: usize) -> Option<u32> {
+        let i = self.positions.partition_point(|&(op, _)| op as usize <= pc);
+        i.checked_sub(1).map(|i| self.positions[i].1)
+    }
+}
