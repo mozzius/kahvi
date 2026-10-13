@@ -2,16 +2,17 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-date.now
 
+use crate::support::date;
 use kahvi_core::prelude::*;
 
 /// Date.now
 pub(crate) fn now(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function returns the time value designating the UTC date and time of the occurrence of the call to it.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Date.now"))
+    // 1. Return the time value (UTC) identifying the current time.
+    let _ = args;
+    Ok(Value::Number(date::now(agent)))
 }

@@ -65,6 +65,14 @@ fn detach_array_buffer(
     Err(agent.not_implemented("$262.detachArrayBuffer"))
 }
 
+/// The host clock for Date.now and new Date().
+pub fn now_ms() -> f64 {
+    match std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH) {
+        Ok(d) => d.as_millis() as f64,
+        Err(e) => -(e.duration().as_millis() as f64),
+    }
+}
+
 /// A new realm with the built-ins and host bindings.
 pub fn new_realm(agent: &mut Agent) -> JsResult<RealmId> {
     let realm = agent.create_realm()?;
