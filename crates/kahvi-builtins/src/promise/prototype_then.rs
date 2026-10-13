@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-promise.prototype.then
 
+use kahvi_core::ops::promise;
 use kahvi_core::prelude::*;
 
 /// Promise.prototype.then
@@ -9,22 +10,25 @@ pub(crate) fn prototype_then(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _promise_ be the *this* value.
-    // 2. If IsPromise(_promise_) is *false*, throw a *TypeError* exception.
-    // 3. Let _ctor_ be ? SpeciesConstructor(_promise_, %Promise%).
-    // 4. Let _resultCapability_ be ? NewPromiseCapability(_ctor_).
-    // 5. Return PerformPromiseThen(_promise_, _onFulfilled_, _onRejected_, _resultCapability_).
-    //
-    // [subclause sec-performpromisethen: PerformPromiseThen (
-    // _promise_: a Promise,
-    // _onFulfilled_: an ECMAScript language value,
-    // _onRejected_: an ECMAScript language value,
-    // optional _resultCapability_: a PromiseCapability Record,
-    // ): an Object or *undefined*]
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Promise.prototype.then"))
+    // 1. Let promise be the this value.
+    // 2. If IsPromise(promise) is false, throw a TypeError exception.
+    let p = match this {
+        Value::Object(o) if promise::is_promise(agent, this) => o,
+        _ => return Err(agent.throw_type_error("Promise.prototype.then called on a non-promise")),
+    };
+    // 3. Let C be ? SpeciesConstructor(promise, %Promise%).
+    let default = agent.intrinsic("%Promise%");
+    let c = ops::species_constructor(agent, p, default)?;
+    // 4. Let resultCapability be ? NewPromiseCapability(C).
+    let result_capability = promise::new_promise_capability(agent, Value::Object(c))?;
+    // 5. Return PerformPromiseThen(promise, onFulfilled, onRejected, resultCapability).
+    Ok(promise::perform_promise_then(
+        agent,
+        p,
+        args.get_or_undefined(0),
+        args.get_or_undefined(1),
+        Some(result_capability),
+    ))
 }

@@ -22,6 +22,8 @@ import pipeline
 import tickets as ticket_files
 from common import WORK, git, load_config, log, read_json
 from db import DB
+
+STOP_FILE = WORK / "stop"
 from limits import Limits
 
 
@@ -43,6 +45,7 @@ def cmd_run(args):
     pool = ticket_files.load_all(tickets_dir)
     db.sync_tickets(pool)
     started = 0
+    STOP_FILE.unlink(missing_ok=True)
     with cf.ThreadPoolExecutor(cfg.slots) as ex:
         free = list(range(cfg.slots))
         running = {}
@@ -54,7 +57,8 @@ def cmd_run(args):
                 log(f"ticket files invalid, keeping the previous set: {e}")
             # While paused (usage limits) nothing new starts; running work finishes or
             # waits inside its next model call.
-            while free and not limits.fatal and not limits.paused() and (
+            stopping = STOP_FILE.exists()
+            while free and not stopping and not limits.fatal and not limits.paused() and (
                 args.max_attempts is None or started < args.max_attempts
             ):
                 t = db.claim_next(pool, only)
@@ -64,7 +68,7 @@ def cmd_run(args):
                 running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
                 started += 1
             if not running:
-                if limits.fatal:
+                if limits.fatal or stopping:
                     break
                 if limits.paused():
                     if not limits.wait():
@@ -79,8 +83,20 @@ def cmd_run(args):
                     log(f"{tid}: pipeline error: {f.exception()!r}")
                     db.note(tid, None, f"orchestrator error: {f.exception()!r}"[:500])
                     db.set_ticket(tid, status="open")
-    log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
+    if STOP_FILE.exists():
+        STOP_FILE.unlink(missing_ok=True)
+        log("stopped on request")
+    else:
+        log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
     cmd_status(args)
+
+
+def cmd_stop(args):
+    """Asks a running `orch run` to start nothing new and exit once its
+    in-flight attempts (and merges) finish."""
+    STOP_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STOP_FILE.write_text("stop\n")
+    print(f"stop requested; `orch run` exits after its in-flight attempts ({STOP_FILE})")
 
 
 def cmd_status(args):
@@ -175,6 +191,7 @@ def main():
     r.add_argument("--tickets", help="ticket directory (default: tickets/)")
     r.add_argument("--max-attempts", type=int, help="stop starting new attempts after N")
     r.set_defaults(fn=cmd_run)
+    sub.add_parser("stop", help="finish in-flight attempts, then exit").set_defaults(fn=cmd_stop)
     sub.add_parser("status").set_defaults(fn=cmd_status)
     sub.add_parser("usage", help="probe the plan's usage windows").set_defaults(fn=cmd_usage)
     s = sub.add_parser("show")

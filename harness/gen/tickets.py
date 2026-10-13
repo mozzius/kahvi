@@ -36,13 +36,14 @@ SRC = gen.OUT
 # Groups whose built-ins workers can implement now.
 WORKER_GROUPS = {
     "object", "array", "array_iterator_prototype", "string", "number", "boolean", "symbol", "math", "json",
-    "reflect", "global", "error", "aggregate_error", "suppressed_error", "function",
+    "reflect", "global", "error", "aggregate_error", "suppressed_error", "function", "promise",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
     "Function": "CreateDynamicFunction needs parser entry points for parameters and bodies",
     "Array.fromAsync": "needs async functions and promises",
     "String.prototype.normalize": "needs Unicode normalization tables",
+    "Promise.try": "needs the Promise.try proposal semantics reviewed first",
 }
 
 STUB_MARKER = "let _ = (this, args, new_target);"
@@ -53,6 +54,11 @@ READ = [
     "crates/kahvi-builtins/src/array/prototype_map.rs",
     "crates/kahvi-builtins/src/object/define_property.rs",
 ]
+
+# Extra reading for some groups.
+EXTRA_READ = {
+    "promise": ["crates/kahvi-core/src/ops/promise.rs", "crates/kahvi-builtins/src/promise/prototype_then.rs"],
+}
 
 NOTES = """\
 Implement this built-in in its file, following the spec steps already in
@@ -126,7 +132,7 @@ def main(argv):
             'kind = "builtin"',
             'tier = "haiku"',
             f"scope = [{json.dumps(scope)}]",
-            "read = [" + ", ".join(json.dumps(r) for r in READ) + "]",
+            "read = [" + ", ".join(json.dumps(r) for r in READ + EXTRA_READ.get(fn.group, [])) + "]",
             f"spec = [{json.dumps(fn.id)}]",
             f"target = [{json.dumps(target)}]",
             f"priority = {priority}",

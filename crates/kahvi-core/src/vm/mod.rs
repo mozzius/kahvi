@@ -5,6 +5,8 @@
 //! just keeping its frame. Calls from JavaScript to JavaScript recurse on
 //! the Rust stack through [`call_ecma_function`].
 
+mod async_function;
+mod async_generator;
 mod call;
 mod eval;
 mod generator;
@@ -14,6 +16,9 @@ mod operators;
 use std::collections::{HashSet, VecDeque};
 use std::sync::Arc;
 
+pub use async_generator::{
+    AsyncGeneratorState, async_generator_next, async_generator_return, async_generator_throw,
+};
 pub use call::{
     call_ecma_function, construct_ecma_function, create_closure, define_field,
     initialize_instance_elements, private_get, private_set,
@@ -162,6 +167,12 @@ pub struct Frame {
     pub pending: PendingBody,
     /// Where a return resumption of the current `yield` continues.
     pub yield_return_pc: usize,
+    /// Suspended inside `yield*`: resumptions go to the inner iterator.
+    pub delegating: bool,
+    /// How a `yield*` was resumed: 0 normal, 1 throw, 2 return.
+    pub delegate_kind: u8,
+    /// Set by an instruction that must run again on resumption.
+    pub resume_pc: Option<usize>,
 }
 
 impl Frame {
@@ -186,6 +197,9 @@ impl Frame {
             completion: Value::Undefined,
             pending: PendingBody::default(),
             yield_return_pc: 0,
+            delegating: false,
+            delegate_kind: 0,
+            resume_pc: None,
         }
     }
 
@@ -237,6 +251,8 @@ pub enum FrameResult {
     Return(Value),
     /// A generator yielded (or reached GeneratorStart, with undefined).
     Yield(Value),
+    /// `yield*` yielded the inner iterator's result object as it is.
+    YieldDelegate(Value),
     Await(Value),
 }
 
@@ -257,7 +273,7 @@ pub fn run_frame(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> 
             Ok(Flow::Next) => frame.pc = pc + 1,
             Ok(Flow::Jump(target)) => frame.pc = target,
             Ok(Flow::Done(result)) => {
-                frame.pc = pc + 1;
+                frame.pc = frame.resume_pc.take().unwrap_or(pc + 1);
                 return Ok(result);
             }
             Err(JsError::Throw(v)) => {
@@ -1304,8 +1320,11 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.yield_return_pc = l as usize;
             return Ok(Flow::Done(FrameResult::Yield(v)));
         }
-        Op::YieldDelegate(_) => return Err(agent.not_implemented("yield*")),
-        Op::Await => return Err(agent.not_implemented("await")),
+        Op::YieldDelegate(ret) => return yield_delegate(agent, frame, ret as usize),
+        Op::Await => {
+            let v = frame.pop();
+            return Ok(Flow::Done(FrameResult::Await(v)));
+        }
 
         // ---- classes
         Op::ClassHeritage(has_heritage) => {
@@ -1372,6 +1391,77 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         Op::Debugger | Op::Nop => {}
     }
     Ok(Flow::Next)
+}
+
+/// One step of `yield*` in a sync generator (§15.5.5 steps 5-7). The
+/// delegate iterator is on the iterator stack and the received value on the
+/// operand stack; the step runs again each time the generator resumes.
+fn yield_delegate(agent: &mut Agent, frame: &mut Frame, ret: usize) -> JsResult<Flow> {
+    if frame.code.is_async {
+        return Err(agent.not_implemented("yield* in async generators"));
+    }
+    let received = frame.pop();
+    let kind = std::mem::replace(&mut frame.delegate_kind, 0);
+    let FrameIter::Iter(record) = frame.top_iter() else {
+        unreachable!("yield* iterator")
+    };
+    let record = *record;
+    let iterator = Value::Object(record.iterator);
+    let inner = match kind {
+        // a. If received is a normal completion, then
+        //    i. Let innerResult be ? Call(iteratorRecord.[[NextMethod]], iteratorRecord.[[Iterator]], « received.[[Value]] »).
+        0 => ops::call(agent, record.next_method, iterator, &[received])?,
+        // b. Else if received is a throw completion, then
+        1 => {
+            // i. Let throw be ? GetMethod(iterator, "throw").
+            let throw_key = PropertyKey::String(agent.names.throw);
+            let throw = ops::get_method(agent, iterator, throw_key)?;
+            // iii. Else (throw is undefined): close the iterator, then throw a TypeError.
+            if throw.is_undefined() {
+                frame.iters.pop();
+                ops::iterator_close(agent, &record, Ok(()))?;
+                return Err(
+                    agent.throw_type_error("The iterator does not provide a 'throw' method")
+                );
+            }
+            // ii.1 Let innerResult be ? Call(throw, iterator, « received.[[Value]] »).
+            ops::call(agent, throw, iterator, &[received])?
+        }
+        // c. Else (a return completion),
+        _ => {
+            // ii. Let return be ? GetMethod(iterator, "return").
+            let return_key = PropertyKey::String(agent.names.r#return);
+            let r = ops::get_method(agent, iterator, return_key)?;
+            // iii. If return is undefined, then return ReturnCompletion(received.[[Value]]).
+            if r.is_undefined() {
+                frame.iters.pop();
+                frame.push(received);
+                return Ok(Flow::Jump(ret));
+            }
+            // iv. Let innerReturnResult be ? Call(return, iterator, « received.[[Value]] »).
+            ops::call(agent, r, iterator, &[received])?
+        }
+    };
+    // If innerResult is not an Object, throw a TypeError exception.
+    let Value::Object(inner_obj) = inner else {
+        return Err(agent.throw_type_error("iterator result is not an object"));
+    };
+    // Let done be ? IteratorComplete(innerResult).
+    if ops::iterator_complete(agent, inner_obj)? {
+        // If done is true, return ? IteratorValue(innerResult) (a ReturnCompletion for return).
+        let value = ops::iterator_value(agent, inner_obj)?;
+        frame.iters.pop();
+        frame.push(value);
+        return Ok(if kind == 2 {
+            Flow::Jump(ret)
+        } else {
+            Flow::Next
+        });
+    }
+    // Set received to Completion(GeneratorYield(innerResult)).
+    frame.delegating = true;
+    frame.resume_pc = Some(frame.pc);
+    Ok(Flow::Done(FrameResult::YieldDelegate(inner)))
 }
 
 /// CreateAsyncFromSyncIterator(syncIteratorRecord) (§27.1.6.1)

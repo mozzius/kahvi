@@ -4,6 +4,7 @@ pub mod bigint;
 pub mod conversion;
 pub mod iteration;
 pub mod object;
+pub mod promise;
 pub mod testing;
 
 pub use conversion::*;

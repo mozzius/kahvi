@@ -113,7 +113,13 @@ impl Compiler<'_> {
             }
             Stmt::Return(arg, _) => {
                 match arg {
-                    Some(e) => self.compile_expr(e),
+                    Some(e) => {
+                        self.compile_expr(e);
+                        // In an async generator, `return x` awaits x.
+                        if self.code.is_async && self.code.is_generator {
+                            self.emit(Op::Await);
+                        }
+                    }
                     None => {
                         self.emit(Op::Undefined);
                     }
