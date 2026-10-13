@@ -1,0 +1,121 @@
+{
+  "ticket": "B-json-parse",
+  "base": "98485e40a4ec8d045376d2a919b6dd4f0142e3ea",
+  "head": "cdf9496441318b207585d01af32a898340b36276",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/json/parse.rs",
+      "added": 417,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 90,
+      "rule": "skipping something: check what and why",
+      "text": "parser.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 113,
+      "rule": "skipping something: check what and why",
+      "text": "fn skip_ws(&mut self) {"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 119,
+      "rule": "skipping something: check what and why",
+      "text": "fn skip_digits(&mut self) {"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 129,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_digits();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 148,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 184,
+      "rule": "skipping something: check what and why",
+      "text": "Some(0x31..=0x39) => self.skip_digits(),"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 263,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 271,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 298,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 303,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 308,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/json/parse.rs",
+      "line": 322,
+      "rule": "skipping something: check what and why",
+      "text": "self.skip_ws();"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 154,
+    "before": 8,
+    "after": 128,
+    "new_passes": 120,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 24,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/JSON/parse/length.js:sloppy  Uncaught Test262Error: length descriptor value should be 2; length value should be 2",
+      "built-ins/JSON/parse/length.js:strict  Uncaught Test262Error: length descriptor value should be 2; length value should be 2",
+      "built-ins/JSON/parse/revived-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/JSON/parse/revived-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/JSON/parse/reviver-array-define-prop-err.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-define-prop-err.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-delete-err.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-delete-err.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-length-coerce-err.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-length-coerce-err.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-length-get-err.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-array-length-get-err.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/parse/reviver-context-source-array-literal.js:sloppy  Uncaught InternalError: not implemented: Object.getOwnPropertySymbols",
+      "built-ins/JSON/parse/reviver-context-source-array-literal.js:strict  Uncaught InternalError: not implemented: Object.getOwnPropertySymbols",
+      "built-ins/JSON/parse/reviver-context-source-object-literal.js:sloppy  Uncaught InternalError: not implemented: Object.getOwnPropertySymbols"
+    ]
+  },
+  "decision": "pass"
+}

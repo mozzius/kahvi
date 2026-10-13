@@ -1,0 +1,114 @@
+{
+  "duration_api_ms": 125990,
+  "stop_reason": "end_turn",
+  "session_id": "78489891-2b3d-4d13-983e-57215cd56fff",
+  "total_cost_usd": 0.031649710000000005,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 48709,
+    "cache_read_input_tokens": 474391,
+    "output_tokens": 33495,
+    "output_tokens_details": {
+      "thinking_tokens": 21298
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 48709,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 540,
+        "cache_read_input_tokens": 55712,
+        "cache_creation_input_tokens": 477,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 477
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `JSON.parse` in `crates/kahvi-builtins/src/json/parse.rs`, including `ParseJSON`, the parse records and `InternalizeJSONProperty` with reviver support. `cargo build`, `cargo clippy` and `cargo fmt --check` are clean for the file. `./t262 built-ins/JSON/parse/` gives 128 of 154 runs passing, with 26 failing.\n\nThe remaining failures are outside this file:\n- `length.js` fails because `generated.rs` registers `JSON.parse` with `length: 1`; the spec requires 2.\n- The Proxy failures and the `Object.getOwnPropertySymbols` and `Array.prototype.shift` \"not implemented\" errors come from engine gaps elsewhere.\n\n`ParseJSON` is written as a helper in this file, and the file also has a small `JsonParseRecord` type. Other built-ins may need ParseJSON, so it could move to `support/` later. I did not edit any other file.\n\nBLOCKED: `generated.rs` sets `JSON.parse` `length` to 1 (required: 2); the `length.js` tests need that changed in a file outside my scope.",
+  "ttft_ms": 898,
+  "type": "result",
+  "duration_ms": 134528,
+  "uuid": "eae18a38-4f66-4561-b42c-38b3bbee5c40",
+  "ttft_stream_ms": 674,
+  "time_to_request_ms": 153,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 15,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 6,
+    "tool_pool_refresh": 7,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 41,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 103,
+  "time_to_request_cpu_ms": 191,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 674,
+  "time_to_request_from_spawn_ms": 7792266,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791926766992.3157,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "utilization": 0.9,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.9,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
