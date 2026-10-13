@@ -40,3 +40,8 @@
 [21:19:18] B-json-stringify: attempt 27 finished ($0.032, 20 turns)
 [21:20:26] B-json-stringify: verifier: accept The diff implements JSON.stringify in crates/kahvi-builtins/src/json/stringify.rs as a close transcription of the spec. I walked the top-level steps 1
 [21:21:42] B-promise-any: merged (+172, 58105 total)
+[21:21:43] B-promise-race: attempt on slot 1 with haiku
+[21:21:45] B-json-stringify: full test262 run for merge
+[21:22:12] B-promise-race: attempt 28 finished ($0.010, 11 turns)
+[21:22:52] B-promise-race: verifier: accept The diff implements Promise.race in race.rs and follows the spec steps in order. Step 1-2 call NewPromiseCapability with `?`. Step 3-4 wrap GetPromise
+[21:26:04] B-json-stringify: merged (+106, 58211 total)

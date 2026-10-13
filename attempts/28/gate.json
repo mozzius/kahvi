@@ -1,0 +1,37 @@
+{
+  "ticket": "B-promise-race",
+  "base": "0da8d3c0a7cfc573287f32416fd580d533dee4b9",
+  "head": "0fafa1d5a86e7ba692d232c61ffd2bc1e17bafd0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/race.rs",
+      "added": 115,
+      "removed": 27
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 188,
+    "before": 10,
+    "after": 184,
+    "new_passes": 174,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Promise/race/iter-arg-is-string-resolve.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/race/iter-arg-is-string-resolve.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/race/resolved-then-catch-finally.js:sloppy  Uncaught InternalError: not implemented: Promise.prototype.finally",
+      "built-ins/Promise/race/resolved-then-catch-finally.js:strict  Uncaught InternalError: not implemented: Promise.prototype.finally"
+    ]
+  },
+  "decision": "pass"
+}

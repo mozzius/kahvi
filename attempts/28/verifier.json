@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 24388,
+  "stop_reason": "tool_use",
+  "session_id": "f83d9023-b403-49c4-bc4a-9867eb330115",
+  "total_cost_usd": 0.00502476,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7684,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 5519,
+    "output_tokens_details": {
+      "thinking_tokens": 4838
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7684,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5519,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7684,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7684
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Promise.race in race.rs and follows the spec steps in order. Step 1-2 call NewPromiseCapability with `?`. Step 3-4 wrap GetPromiseResolve (Get \\\"resolve\\\" then IsCallable check) and route throw completions through reject_abrupt, which calls capability.[[Reject]] with `?` and returns the promise. Step 5-6 call GetIterator(sync) with the same IfAbruptRejectPromise handling. Step 7-8 run PerformPromiseRace (IteratorStepValue, Call promiseResolve with ctor as this, Invoke \\\"then\\\" with resolve/reject). On abrupt completion it calls IteratorClose only when iterator_record.done is false, then rejects. Step 9 returns the promise. The helpers (get_promise_resolve, perform_promise_race, reject_abrupt) are local to the file, which the ticket allows. There are no test-shaped branches, no swallowed errors, and no fabricated return values. The remaining test262 failures come from String iterator and Promise.prototype.finally, which are outside this ticket and throw not_implemented correctly. Minor nits only: the non-object `let Value::Object` branch is effectively unreachable because NewPromiseCapability already rejects non-constructors, and non-throw engine errors would pass through IteratorClose. Neither changes spec-observable behaviour for test262.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Promise.race in race.rs and follows the spec steps in order. Step 1-2 call NewPromiseCapability with `?`. Step 3-4 wrap GetPromiseResolve (Get \"resolve\" then IsCallable check) and route throw completions through reject_abrupt, which calls capability.[[Reject]] with `?` and returns the promise. Step 5-6 call GetIterator(sync) with the same IfAbruptRejectPromise handling. Step 7-8 run PerformPromiseRace (IteratorStepValue, Call promiseResolve with ctor as this, Invoke \"then\" with resolve/reject). On abrupt completion it calls IteratorClose only when iterator_record.done is false, then rejects. Step 9 returns the promise. The helpers (get_promise_resolve, perform_promise_race, reject_abrupt) are local to the file, which the ticket allows. There are no test-shaped branches, no swallowed errors, and no fabricated return values. The remaining test262 failures come from String iterator and Promise.prototype.finally, which are outside this ticket and throw not_implemented correctly. Minor nits only: the non-object `let Value::Object` branch is effectively unreachable because NewPromiseCapability already rejects non-constructors, and non-throw engine errors would pass through IteratorClose. Neither changes spec-observable behaviour for test262.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 21343,
+  "type": "result",
+  "duration_ms": 23861,
+  "uuid": "c3093387-d32b-45cf-96df-76d21fb6ab94",
+  "ttft_stream_ms": 1055,
+  "time_to_request_ms": 172,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 2,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 91,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 12,
+  "time_to_request_cpu_ms": 174,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1055,
+  "time_to_request_from_spawn_ms": 7564004,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791926538684.8079,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.88,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
