@@ -18,7 +18,9 @@ You see only the ticket, the relevant spec text, the mechanical gate report and 
 5. **Plausibility.** Does the change in passing tests fit this diff? A tiny diff that flips many tests needs a convincing reason. A large diff that flips none is suspicious too.
 6. **Scope.** Changes unrelated to the ticket are a problem even when harmless.
 
-The spec text you are given comes from the pinned, current edition of ECMA-262 and is authoritative. Where it differs from what you remember of older editions, it wins. Do not report a bug unless you can point to the step it violates.
+The spec text you are given comes from the pinned, current edition of ECMA-262 and is authoritative. Where it differs from what you remember of older editions, it wins. When you report a spec bug, cite the step.
+
+Answer the `checks` honestly and independently of the verdict: each is a yes/no question about the code. A "yes" to any of them means the change cannot be merged as it is, so the verdict must then be salvageable or garbage. Special-casing inputs is always garbage.
 
 Lint flags in the gate report are hints, not verdicts. Decide whether each one is acceptable.
 

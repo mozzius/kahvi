@@ -173,7 +173,9 @@ fn find_root() -> Result<PathBuf, String> {
             return Ok(dir);
         }
         if !dir.pop() {
-            return Err("run t262 inside the kahvi repository (conformance/skip.txt not found)".into());
+            return Err(
+                "run t262 inside the kahvi repository (conformance/skip.txt not found)".into(),
+            );
         }
     }
 }
@@ -407,7 +409,10 @@ fn real_main() -> Result<ExitCode, String> {
     let vendor = vendor_dir(&root);
     let test_dir = vendor.join("test262/test");
     if !test_dir.is_dir() {
-        return Err(format!("{} not found (git submodule update --init?)", test_dir.display()));
+        return Err(format!(
+            "{} not found (git submodule update --init?)",
+            test_dir.display()
+        ));
     }
     let skip = Skip::load(&root.join("conformance/skip.txt"))?;
 

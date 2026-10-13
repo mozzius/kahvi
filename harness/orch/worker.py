@@ -10,15 +10,18 @@ from dataclasses import dataclass
 
 import llm
 from common import PROMPTS, ROOT, WORK, git, run, tail
+from policy import matches
 
 SLOTS = WORK / "slots"
 ATTEMPTS = WORK / "attempts"
 
 WORKER_TOOLS = ["Read", "Edit", "Write", "Glob", "Grep", "Bash"]
+WORKER_COMMANDS = [
+    "cargo build", "cargo check", "cargo clippy", "cargo fmt", "./t262", "./spec", "git diff", "git status",
+    "target/debug/kahvi", "./target/debug/kahvi", "grep", "head", "tail", "wc", "echo",
+]
 WORKER_ALLOWED = ["Read", "Edit", "Write", "Glob", "Grep"] + [
-    f"Bash({c}{suffix})"
-    for c in ["cargo build", "cargo check", "cargo clippy", "cargo fmt", "./t262", "./spec", "git diff", "git status"]
-    for suffix in ("", " *")
+    f"Bash({c}{suffix})" for c in WORKER_COMMANDS for suffix in ("", " *")
 ]
 
 
@@ -169,7 +172,12 @@ def attempt(cfg, db, ticket, slot, tier, salvage_attempt=None):
     error = result.get("error") if result.get("is_error") and not result.get("result") else None
     blocked = blocked_reason(result.get("result", ""))
 
-    run(["cargo", "fmt"], cwd=path, check=False)
+    # Format only what the worker touched (and may touch): formatting anything
+    # else would put files outside the scope into the diff.
+    touched = run(["git", "status", "--porcelain", "--untracked-files=all"], cwd=path).stdout.splitlines()
+    rust_files = [l[3:] for l in touched if l[3:].endswith(".rs") and matches(l[3:], ticket.scope)]
+    if rust_files:
+        run(["rustfmt", "--edition", "2024", *rust_files], cwd=path, check=False)
     git("add", "-A", cwd=path)
     head = None
     if run(["git", "diff", "--cached", "--quiet"], cwd=path, check=False).returncode != 0:

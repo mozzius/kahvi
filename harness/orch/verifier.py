@@ -6,9 +6,27 @@ from common import PROMPTS, WORK
 
 MAX_DIFF_CHARS = 60_000
 
+CHECKS = {
+    "special_cases_inputs": "Some branch, table or constant keys on particular input values, strings, "
+                            "names or lengths that the spec does not single out.",
+    "made_up_results": "On some path the code returns or produces something the spec algorithm would not "
+                       "(a default, the input unchanged, a guess, a shortcut answer) instead of computing it "
+                       "or throwing a not-implemented error.",
+    "swallows_errors": "Some abrupt completion that the spec propagates with ? is ignored, replaced by a "
+                       "default, or turned into a different error.",
+    "skips_observable_steps": "A spec step with observable effects (property access, calls, conversions) is "
+                              "missing, reordered, or replaced by direct access to internals.",
+}
+
 SCHEMA = {
     "type": "object",
     "properties": {
+        "checks": {
+            "type": "object",
+            "properties": {k: {"type": "boolean", "description": v} for k, v in CHECKS.items()},
+            "required": list(CHECKS),
+            "additionalProperties": False,
+        },
         "verdict": {"type": "string", "enum": ["good", "incomplete", "salvageable", "garbage"]},
         "confidence": {"type": "number"},
         "fakery": {"type": "boolean"},
@@ -29,9 +47,28 @@ SCHEMA = {
         },
         "notes_for_next_attempt": {"type": "string"},
     },
-    "required": ["verdict", "confidence", "fakery", "summary", "problems", "notes_for_next_attempt"],
+    "required": ["checks", "verdict", "confidence", "fakery", "summary", "problems", "notes_for_next_attempt"],
     "additionalProperties": False,
 }
+
+
+def enforce(v):
+    """The checklist binds the verdict: a model that answers "yes" to any
+    check cannot also wave the change through. Returns the adjusted verdict."""
+    checks = v.get("checks", {})
+    verdict = v["verdict"]
+    if checks.get("special_cases_inputs"):
+        verdict = "garbage"
+    elif verdict in ("good", "incomplete") and any(
+        checks.get(k) for k in ("made_up_results", "swallows_errors", "skips_observable_steps")
+    ):
+        verdict = "salvageable"
+    if verdict != v["verdict"]:
+        failed = [k for k, val in checks.items() if val]
+        v["model_verdict"] = v["verdict"]
+        v["verdict"] = verdict
+        v["summary"] = f"[downgraded from {v['model_verdict']}: {', '.join(failed)}] {v.get('summary', '')}"
+    return v
 
 
 def render_case(ticket, spec, gate_text, diff):
@@ -69,4 +106,4 @@ def verify(cfg, ticket, spec, gate_text, diff, record=None, model=None):
     out = result.get("structured_output")
     if not isinstance(out, dict) or out.get("verdict") not in SCHEMA["properties"]["verdict"]["enum"]:
         return {"verdict": "error", "summary": str(result.get("error") or result.get("result"))[:500]}, cost
-    return out, cost
+    return enforce(out), cost
