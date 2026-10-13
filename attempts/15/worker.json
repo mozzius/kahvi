@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 18618,
+  "stop_reason": "end_turn",
+  "session_id": "59a67a3c-3807-4434-95a7-a008445cd59d",
+  "total_cost_usd": 0.00606666,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 15099,
+    "cache_read_input_tokens": 75636,
+    "output_tokens": 3762,
+    "output_tokens_details": {
+      "thinking_tokens": 837
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15099,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 669,
+        "cache_read_input_tokens": 19410,
+        "cache_creation_input_tokens": 3169,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3169
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `indexOf` implementation is in place, clippy is clean, and the build succeeds. The remaining test262 failures come from other built-ins that are not implemented yet, not from this file.\n\nThe `indexOf` change is in `crates/kahvi-builtins/src/array/prototype_index_of.rs`. It follows the spec steps, with each step as a comment. `ops` had no `ToClampedIndex`, so I wrote a private `to_clamped_index` in this file. It inlines `ToAbsoluteIndex`, and it is the only helper I added. `./t262 built-ins/Array/prototype/indexOf/` reports 18 failures, all `not implemented` errors from the missing built-ins: `Date`, `RegExp`, `Array.prototype.toString` and `Object.setPrototypeOf`. The ticket's \"done when\" is not met until those exist.\n\nBLOCKED: Date, RegExp, Array.prototype.toString and Object.setPrototypeOf are not implemented, and the indexOf tests that use them fail before reaching the indexOf logic.",
+  "ttft_ms": 2010,
+  "type": "result",
+  "duration_ms": 24192,
+  "uuid": "7fc658f0-95c3-4497-ba94-74d3eeedb6e1",
+  "ttft_stream_ms": 1564,
+  "time_to_request_ms": 245,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 53,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 107,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 81,
+  "time_to_request_cpu_ms": 318,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1565,
+  "time_to_request_from_spawn_ms": 4114195,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791923088867.8184,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.68,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.44,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

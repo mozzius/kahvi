@@ -1,8 +1,5 @@
-[20:14:30] building trusted runner; integration branch m1-spine, 2 slots
-[20:14:30] B-set-constructor: attempt on slot 1 with haiku
-[20:14:30] B-array-prototype-every: attempt on slot 0 with haiku
-[20:15:01] B-array-prototype-every: attempt 12 finished ($0.006, 14 turns)
-[20:15:06] B-set-constructor: attempt 13 finished ($0.007, 9 turns)
-[20:15:40] B-array-prototype-every: verifier: accept The diff implements Array.prototype.every in the spec's order: ToObject(this), LengthOfArrayLike, the IsCallable check that throws a TypeError, then t
-[20:15:48] B-array-prototype-every: full test262 run for merge
-[20:15:49] B-set-constructor: verifier: accept The Set constructor follows the spec order: TypeError when NewTarget is undefined, then create_collection (OrdinaryCreateFromConstructor with [[SetDat
+[20:24:48] building trusted runner; integration branch m1-spine, 2 slots
+[20:24:48] B-set-constructor: attempt on slot 1 with haiku
+[20:24:48] B-array-prototype-index-of: attempt on slot 0 with haiku
+[20:25:17] B-set-constructor: attempt 14 finished ($0.006, 7 turns)
+[20:25:17] B-set-constructor: blocked: `Set.prototype.add` (src/set/prototype_add.rs), which every constructor test with an iterable depends on, plus the other Set.prototype methods, `get Set.prototype.size`, `WeakSet`, and the `Function` constructor needed by `proto-from-ctor-realm.js`.

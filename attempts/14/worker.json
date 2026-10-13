@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 17411,
+  "stop_reason": "end_turn",
+  "session_id": "78574bc7-2312-48ce-9981-fa8e9fbd6d68",
+  "total_cost_usd": 0.005943080000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 16914,
+    "cache_read_input_tokens": 86138,
+    "output_tokens": 2289,
+    "output_tokens_details": {
+      "thinking_tokens": 885
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16914,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 294,
+        "cache_read_input_tokens": 24043,
+        "cache_creation_input_tokens": 351,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 351
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 7,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The Set constructor in `crates/kahvi-builtins/src/set/constructor.rs` was already fully implemented on this branch, so I made no changes and the diff is empty. Clippy is clean, and `./t262 built-ins/Set/` gives 168 pass, 596 fail, all from unimplemented built-ins outside this file: `Set.prototype.add`, `has`, `clear`, `delete`, `entries`, `values`, `forEach`, `size`, the set-algebra methods, `WeakSet`, and `Function` (used by the realm test).\n\nBLOCKED: `Set.prototype.add` (src/set/prototype_add.rs), which every constructor test with an iterable depends on, plus the other Set.prototype methods, `get Set.prototype.size`, `WeakSet`, and the `Function` constructor needed by `proto-from-ctor-realm.js`.",
+  "ttft_ms": 1374,
+  "type": "result",
+  "duration_ms": 27678,
+  "uuid": "37518bd9-b6df-4655-a009-b808ae9a6f53",
+  "ttft_stream_ms": 1126,
+  "time_to_request_ms": 204,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 17,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 96,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 48,
+  "time_to_request_cpu_ms": 276,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1127,
+  "time_to_request_from_spawn_ms": 4114117,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791923088861.5178,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.68,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.44,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
