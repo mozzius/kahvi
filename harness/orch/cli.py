@@ -10,15 +10,18 @@
 
 import argparse
 import concurrent.futures as cf
+import json
 import sys
 import time
 from collections import Counter
 from pathlib import Path
 
+import llm
 import pipeline
 import tickets as ticket_files
-from common import ROOT, WORK, git, load_config, log, read_json
+from common import WORK, git, load_config, log, read_json
 from db import DB
+from limits import Limits
 
 
 def cmd_run(args):
@@ -32,6 +35,8 @@ def cmd_run(args):
     pipeline.build_tools(cfg)
     db = DB()
     db.release_stale_claims()
+    limits = Limits(cfg, db)
+    llm.LIMITS = limits
     only = set(args.only.split(",")) if args.only else None
     tickets_dir = Path(args.tickets) if args.tickets else ticket_files.TICKETS
     pool = ticket_files.load_all(tickets_dir)
@@ -46,7 +51,11 @@ def cmd_run(args):
                 db.sync_tickets(pool)
             except ValueError as e:
                 log(f"ticket files invalid, keeping the previous set: {e}")
-            while free and (args.max_attempts is None or started < args.max_attempts):
+            # While paused (usage limits) nothing new starts; running work finishes or
+            # waits inside its next model call.
+            while free and not limits.fatal and not limits.paused() and (
+                args.max_attempts is None or started < args.max_attempts
+            ):
                 t = db.claim_next(pool, only)
                 if t is None:
                     break
@@ -54,6 +63,12 @@ def cmd_run(args):
                 running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
                 started += 1
             if not running:
+                if limits.fatal:
+                    break
+                if limits.paused():
+                    if not limits.wait():
+                        break
+                    continue
                 break
             done, _ = cf.wait(running, timeout=60, return_when=cf.FIRST_COMPLETED)
             for f in done:
@@ -63,7 +78,7 @@ def cmd_run(args):
                     log(f"{tid}: pipeline error: {f.exception()!r}")
                     db.note(tid, None, f"orchestrator error: {f.exception()!r}"[:500])
                     db.set_ticket(tid, status="open")
-    log("nothing left to do")
+    log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
     cmd_status(args)
 
 
@@ -87,6 +102,17 @@ def cmd_status(args):
         outcomes = Counter((a["tier"], a["outcome"]) for a in att)
         for (tier, outcome), n in sorted(outcomes.items(), key=lambda x: (x[0][0], str(x[0][1]))):
             print(f"  {tier:<7} {str(outcome):<12} {n}")
+    paused = float(db.kv_get("paused_until") or 0)
+    if paused > time.time():
+        print(f"PAUSED until {time.strftime('%Y-%m-%d %H:%M', time.localtime(paused))}: {db.kv_get('pause_reason')}")
+    info = db.kv_get("limits")
+    if info:
+        info = json.loads(info)
+        windows = ", ".join(
+            f"{name} {w.get('utilization', 0):.0%} (resets {time.strftime('%a %H:%M', time.localtime(w['resetsAt']))})"
+            for name, w in (info.get("unifiedWindows") or {}).items() if w.get("resetsAt")
+        )
+        print(f"plan usage at last run: {info.get('status')}" + (f"; {windows}" if windows else ""))
     summary = read_json(WORK / "last-full-summary.json")
     if summary:
         print(f"test262 at last merge: {summary['pass']}/{summary['runs']} runs passing")

@@ -36,6 +36,7 @@ class Attempt:
     blocked: str | None
     error: str | None
     dir: str
+    kind: str | None = None  # llm result kind: None, "exhausted", an interruption, or "error"
 
 
 def slot_dir(i):
@@ -169,8 +170,9 @@ def attempt(cfg, db, ticket, slot, tier, salvage_attempt=None):
     )
     cost = float(result.get("total_cost_usd") or 0)
     turns = int(result.get("num_turns") or 0)
-    error = result.get("error") if result.get("is_error") and not result.get("result") else None
-    blocked = blocked_reason(result.get("result", ""))
+    kind = result.get("kind")
+    error = str(result.get("error") or result.get("result") or "unknown error") if kind == "error" else None
+    blocked = blocked_reason(result.get("result", "")) if kind in (None, "exhausted") else None
 
     # Format only what the worker touched (and may touch): formatting anything
     # else would put files outside the scope into the diff.
@@ -187,6 +189,8 @@ def attempt(cfg, db, ticket, slot, tier, salvage_attempt=None):
             cwd=path,
         )
         head = git("rev-parse", "HEAD", cwd=path)
+        # Keep the commit reachable: later stages (and salvage) may need it after the slot moves on.
+        git("update-ref", f"refs/kahvi/{db.instance()}/attempts/{aid}", head, cwd=path)
         (adir / "diff.patch").write_text(run(["git", "diff", base, head], cwd=path).stdout)
     db.set_attempt(aid, head=head, worker_cost=cost, turns=turns)
-    return Attempt(aid, str(path), base, head, cost, turns, blocked, error, str(adir))
+    return Attempt(aid, str(path), base, head, cost, turns, blocked, error, str(adir), kind)

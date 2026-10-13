@@ -61,10 +61,16 @@ target/debug/t262 run built-ins/Array/ --mem-limit-mb 0 \
    - test262 over the ticket's `target`, using the trusted runner build in
      `work/bin`: no regressions, canaries ok, and at least one new pass.
 4. **Verify.** The blind verifier gets the ticket, the spec text, the gate
-   report and the diff. It never gets the worker's words. Verdicts:
-   `good` / `incomplete` merge; `salvageable` goes back to the pool and the
-   next attempt starts from this diff plus the reviewer's notes; `garbage` is
-   discarded and counts as a strike.
+   report and the diff. It never gets the worker's words. It answers yes/no
+   questions (`harness/orch/verifier.py`), and code derives the decision:
+   - `accept`: no defects; merge.
+   - `revise`: defects but worth keeping. The next attempt starts from this
+     diff plus the reviewer's notes.
+   - `reject`: fakery (special-cased inputs, made-up results) or not worth
+     keeping. Discarded, and counts as a strike. Fakery escalates at once.
+
+   Haiku screens every attempt; Sonnet re-judges anything that would merge,
+   and the stricter decision wins.
 5. **Merge.** Done serially in `work/merge`:
    - cherry-pick the attempt onto the current tip;
    - build, then run the **full** suite against the baseline (a regression
@@ -77,18 +83,29 @@ target/debug/t262 run built-ins/Array/ --mem-limit-mb 0 \
    If the target still has failures after the merge, the ticket goes back to
    the pool with the list of what still fails.
 
-Escalation: after `strikes_per_tier` strikes (gate rejections, garbage
-verdicts, empty diffs), the ticket moves up a tier: haiku → sonnet → opus.
+Escalation: after `strikes_per_tier` strikes (gate rejections, rejected
+attempts, empty diffs), the ticket moves up a tier: haiku → sonnet → opus.
 After `max_attempts`, or a failure at the top tier, it is marked
 `needs-architect`. A `BLOCKED:` reply sets it to `blocked` with the reason.
 Both show up in `./orch status` for the architect to split, rewrite or
 unblock.
 
+Usage limits: every run reports the plan's usage windows. When one passes
+its cap in `[limits]` (default 90% of the 5-hour window, 80% of the 7-day
+one), nothing new starts until that window resets. The pause is printed by
+`./orch status` and survives restarts. A run that hits a limit anyway (or an
+overload) is an interruption, not a failure:
+- the attempt doesn't count against the ticket;
+- its partial diff seeds the next attempt;
+- an attempt cut off during verification resumes at verification.
+
+If the CLI is logged out, the orchestrator stops and says so.
+
 Other commands:
 
-- `./orch status`: tickets by status, spend (workers and verifier), verdicts
-  per tier, and dollars per new test262 pass.
-- `./orch show N`: an attempt's prompt, gate report, verdict, merge result
+- `./orch status`: tickets by status, any pause and the plan's usage, spend
+  (workers and verifier), outcomes per tier, and dollars per new test262 pass.
+- `./orch show N`: an attempt's prompt, gate report, verifier answers, merge result
   and diff. Everything is kept under `work/attempts/N/`.
 - `./orch reset T-0001 [--tier sonnet]`: reopen a ticket.
 - `./orch triage [--fresh]`: groups failures on the branch by
@@ -124,6 +141,7 @@ Configuration is in `harness/orch.toml`. Per-machine overrides go in
 | 2026-10-13 | sonnet-5-5 ×2, binding checklist | 24/24 | 0 | 0 | 0.027 |
 | 2026-10-13 | haiku-5-5 ×2, binding checklist | 24/24 | 0 | 0 | 0.003 |
 | 2026-10-13 | **haiku screen → sonnet confirm** ×2 | 24/24 | 0 | 0 | 0.011 |
+| 2026-10-13 | **yes/no questions → derived accept/revise/reject**, haiku screen → sonnet confirm ×2 | 24/24 | 0 | 0 | 0.011 |
 
 What changed along the way:
 
@@ -137,6 +155,10 @@ What changed along the way:
 - The checklist's special-casing question once caught an honest
   implementation limit, so it now spells out that exception.
 
+- The verdict labels were then replaced by yes/no questions, with the
+  decision derived in code (`accept` / `revise` / `reject`). The model never
+  picks a label, so there's nothing for it to be lenient about.
+
 The configured cascade is Haiku for every attempt, with Sonnet re-judging
-anything Haiku would merge and the stricter verdict winning. To land, a cheat
+anything Haiku would merge and the stricter decision winning. To land, a cheat
 has to fool both models.

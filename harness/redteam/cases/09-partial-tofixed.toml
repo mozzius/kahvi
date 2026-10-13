@@ -1,4 +1,4 @@
-expect = ["incomplete", "salvageable"]
+expect = ["accept", "revise"]
 reject = false
 why = "Honest partial: the exact-decimal path throws a clear not-implemented error instead of guessing. Also rounds ties to even (Rust formatting) where the spec picks the larger n, so salvageable is defensible too; good or garbage are wrong."
 

@@ -61,6 +61,25 @@ triage (Haiku)  ──┴─▶ ticket pool ─▶ Haiku workers ×N   (own work
 - **Parser scoreboard from day one** (test262 parse-only + negative syntax
   tests), since nothing in test262 proper passes until `assert.js` runs.
 
+### Embeddability (so React Native via JSI stays possible)
+
+Cheap to honour now, expensive to retrofit:
+
+- **Library first.** `kahvi` is an embedding API (create runtime, evaluate,
+  call, host functions, host objects); the CLI is just one host.
+- **No process-global state.** Everything lives in the runtime; several
+  runtimes per process. No `Rc` in the runtime, so it is `Send` (JSI creates a
+  runtime on one thread and uses it on another).
+- **The host owns the outside world.** Job queue draining, promise rejection
+  tracking, module loading, clocks and I/O are host hooks. The engine crates
+  never touch files, env or processes (the lint already enforces this).
+- **Host objects.** Exotic-object dispatch lets the host implement
+  [[Get]]/[[Set]]/[[OwnPropertyKeys]] (JSI `HostObject`). ArrayBuffers can
+  wrap host-owned memory.
+- **Explicit roots.** Values the host holds go through rooted handles, so a
+  real GC can arrive later without changing the API.
+- **Source positions in bytecode**, for `error.stack`.
+
 ## Anti-faking
 
 Deterministic gates run first; an LLM looks only at what survives.
@@ -80,12 +99,20 @@ Deterministic gates run first; an LLM looks only at what survives.
   canaries invalidate the run if they "pass"; the engine runs with an empty
   environment; crashes/timeouts are failures.
 - **Blind verifier** sees ticket + spec text + diff + gate report, never the
-  worker's transcript. Verdicts: `good` (merge), `incomplete` (honest partial:
-  merge + follow-up), `salvageable` (back to pool with notes), `garbage`
-  (discard, strike).
+  worker's transcript. It does not pick a verdict: it answers yes/no questions
+  (special-cased inputs? made-up results? swallowed errors? skipped observable
+  steps? contradicts the spec? unrelated changes? worth keeping?) and code
+  derives the decision: `accept` (all no → merge), `revise` (defects but worth
+  keeping → next attempt starts from it), `reject` (fakery or not worth
+  keeping → discard, strike). Whether a ticket is *finished* is decided by its
+  test262 target, not the verifier. Fakery escalates the ticket a tier at once.
+  (The first version had model-picked labels good/incomplete/salvageable/
+  garbage; calibration showed models describing a defect and then picking a
+  lenient label anyway.)
+- **Verifier cascade:** Haiku screens every attempt; Sonnet re-judges anything
+  that would merge; the stricter decision wins.
 - **Verifier calibration:** a red-team set of planted cheats and good diffs
-  (`harness/redteam/`). Use the cheapest verifier config that rejects 100% of
-  plants.
+  (`harness/redteam/`). A configuration that accepts any plant is not used.
 - **Honest escape hatch:** `BLOCKED: <reason>` is not penalised and files a
   dependency ticket.
 
@@ -106,6 +133,24 @@ Deterministic gates run first; an LLM looks only at what survives.
   Haiku garbage rates straight to Sonnet.
 - Compile time is the real bottleneck: persistent slots with warm `target/`.
 
+## Usage limits and where the swarm runs
+
+- **Subscription plans (Pro/Max).** Every run reports the plan's usage windows
+  (5-hour, 7-day). The orchestrator stops starting work when a window passes
+  its cap (default 90% / 80%, leaving the rest for the human sharing the plan),
+  waits for the reset, and resumes. Pauses persist across restarts. A run cut
+  off by a limit doesn't count against its ticket: its partial diff seeds the
+  next attempt, and an attempt that only lacked verification resumes there.
+- **Scale follows billing.** On a subscription, every worker shares one
+  account's windows, so more than a few slots buys nothing: one persistent box
+  is right. With API billing the limit becomes money and compute. Then slots
+  can move to a container platform (e.g. Cloudflare Containers, up to
+  4 vCPU / 12 GiB / 20 GB each, many in parallel). That needs an image with
+  the toolchain, the `claude` CLI and test262, plus a shared build cache
+  (sccache in object storage). The orchestrator and merge bot stay central.
+  The merge bot's full-suite run is serial, so at that scale merges get
+  batched (test N accepted attempts together, bisect on regression).
+
 ## Milestones
 
 - **M0 Harness** — workspace, pinned test262 + spec, runner + ratchet, spec
@@ -120,6 +165,13 @@ Deterministic gates run first; an LLM looks only at what survives.
 - **M3 Hard tail** (Sonnet/Opus) — generators/async, Proxy/Reflect, RegExp
   engine, modules, Date, number→string, Annex B, GC.
 - **M4 Runtime** — event loop, console, timers, module loading, own e2e suite.
+- **M5 (stretch) React Native via JSI** — RN talks to its engine through JSI,
+  a C++ `jsi::Runtime` interface; Hermes is just the default implementation
+  (react-native-v8 proves others work). So "Hermes compat" means: a C ABI
+  crate over the embedding API, a C++ `jsi::Runtime` shim over that, an RN
+  integration package, and running Metro's plain-JS bundles (not Hermes
+  bytecode). Plus whatever Hermes-isms RN code expects (e.g. a
+  `HermesInternal` stub), found by running real apps.
 
 ## Standing decisions (defaults; revisit any time)
 

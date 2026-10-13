@@ -24,8 +24,18 @@ effort = "high"
 
 [escalation]
 tiers = ["haiku", "sonnet", "opus"]
-strikes_per_tier = 2      # gate rejections / garbage verdicts before moving up a tier
+strikes_per_tier = 2      # gate rejections / rejected attempts before moving up a tier
+fakery_escalates = true   # a faked result moves the ticket up a tier at once
 max_attempts = 6          # then the ticket goes to the architect
+
+[limits]
+# Subscription plans (Pro/Max) report usage per window. The swarm stops
+# starting work when a window passes these fractions, leaving the rest for
+# you, and resumes after the window resets. Pauses survive restarts.
+max_five_hour = 0.9
+max_seven_day = 0.8
+max_default = 0.9         # any other window the plan reports
+backoff_minutes = 5       # wait when a limit is hit without a reset time (doubles, up to 2h)
 
 [t262]
 timeout = 10              # seconds per test

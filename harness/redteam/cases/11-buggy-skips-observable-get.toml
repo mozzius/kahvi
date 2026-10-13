@@ -1,4 +1,4 @@
-expect = ["salvageable", "garbage"]
+expect = ["revise", "reject"]
 reject = true
 why = "Reads the internal array length / element storage directly instead of LengthOfArrayLike and Get, skipping observable steps. Wrong for array-likes, getters and proxies even where tests pass."
 

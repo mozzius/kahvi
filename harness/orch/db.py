@@ -41,7 +41,17 @@ CREATE TABLE IF NOT EXISTS notes (
     ts REAL NOT NULL,
     text TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS kv (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
 """
+
+# Columns added after the first schema; applied to existing databases.
+MIGRATIONS = [
+    "ALTER TABLE tickets ADD COLUMN errors INTEGER NOT NULL DEFAULT 0",
+    "ALTER TABLE tickets ADD COLUMN resume_attempt INTEGER",  # attempt waiting to be verified
+]
 
 
 class DB:
@@ -52,6 +62,12 @@ class DB:
         self.lock = threading.Lock()
         with self.lock:
             self.conn.executescript(SCHEMA)
+            for sql in MIGRATIONS:
+                try:
+                    self.conn.execute(sql)
+                except sqlite3.OperationalError as e:
+                    if "duplicate column" not in str(e):
+                        raise
 
     def q(self, sql, *args):
         with self.lock:
@@ -113,6 +129,27 @@ class DB:
     def notes(self, ticket, limit=4):
         rows = self.q("SELECT * FROM notes WHERE ticket = ? ORDER BY ts DESC LIMIT ?", ticket, limit)
         return list(reversed(rows))
+
+    def kv_get(self, key):
+        row = self.one("SELECT value FROM kv WHERE key = ?", key)
+        return row["value"] if row else None
+
+    def kv_set(self, key, value):
+        self.q("INSERT INTO kv (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+               key, value)
+
+    def instance(self):
+        """A random id for this database, so git refs from separate work dirs never collide."""
+        value = self.kv_get("instance")
+        if value is None:
+            import secrets
+            value = secrets.token_hex(4)
+            self.kv_set("instance", value)
+        return value
+
+    def uncount_attempt(self, tid):
+        """An attempt cut short by the infrastructure doesn't count against the ticket."""
+        self.q("UPDATE tickets SET attempts = MAX(attempts - 1, 0) WHERE id = ?", tid)
 
     def release_stale_claims(self):
         """After a crash, claimed/merging tickets go back to the pool."""

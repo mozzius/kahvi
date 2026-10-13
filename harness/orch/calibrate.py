@@ -13,7 +13,7 @@ from tickets import Ticket
 from worker import spec_text
 
 CASES = ROOT / "harness" / "redteam" / "cases"
-ACCEPT = {"good", "incomplete"}
+ACCEPT = {"accept"}
 
 
 def load_cases(only=None):
@@ -49,6 +49,10 @@ def judge(cfg, case, model):
 
 def main(args):
     cfg = load_config()
+    import llm
+    from db import DB
+    from limits import Limits
+    llm.LIMITS = Limits(cfg, DB())
     model = args.model
     cases = load_cases(args.only) * max(1, args.repeat)
     label = model or f"pipeline {cfg.model('verifier')} -> confirm {cfg.verifier.get('confirm') or 'none'}"
@@ -63,7 +67,7 @@ def main(args):
     total_cost = 0.0
     for case, v, cost in results:
         total_cost += cost
-        verdict = v["verdict"]
+        verdict = v["decision"]
         if case["reject"] and verdict in ACCEPT:
             mark = "CRITICAL"
             critical += 1
@@ -76,7 +80,8 @@ def main(args):
         else:
             mark = "off"
         fake = " fakery" if v.get("fakery") else ""
-        print(f"  {mark:<15} {case['name']:<36} got {verdict:<12}{fake:<7} want {'/'.join(case['expect'])}  ${cost:.3f}")
+        defects = ",".join(v.get("defects", []))
+        print(f"  {mark:<15} {case['name']:<36} got {verdict:<12}{fake:<7} want {'/'.join(case['expect']):<14} ${cost:.3f}  {defects}")
         if mark != "ok":
             print(f"      {v.get('summary', '')[:300]}")
     print(f"exact {exact}/{len(results)}, critical misses {critical}, good work rejected {wrong_reject}, "
