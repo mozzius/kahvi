@@ -77,6 +77,7 @@ fn main() -> ExitCode {
 fn run(args: &Args) -> u8 {
     let mut agent = Agent::new();
     agent.set_intrinsics_installer(kahvi_builtins::install);
+    agent.host_now = Some(host::now_ms);
     let realm = match host::new_realm(&mut agent) {
         Ok(r) => r,
         Err(e) => return report(&mut agent, e),

@@ -106,6 +106,12 @@ pub struct Agent {
     pub(crate) bigints: Vec<crate::ops::bigint::BigIntValue>,
     /// Set by the RegExp builtin: whether an object has [[RegExpMatcher]].
     pub regexp_matcher_check: Option<crate::ops::RegExpMatcherCheck>,
+    /// Host hook: the current time in milliseconds since the epoch (Date.now).
+    /// The engine never reads the system clock itself.
+    pub host_now: Option<fn() -> f64>,
+    /// Host hook: LocalTZA(t, isUTC) (§21.4.1.25), the local time zone
+    /// offset in milliseconds. Without it, local time is UTC.
+    pub host_local_tza: Option<fn(f64, bool) -> f64>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -180,6 +186,8 @@ impl Agent {
             next_private_name: 0,
             bigints: Vec::new(),
             regexp_matcher_check: None,
+            host_now: None,
+            host_local_tza: None,
         };
         agent.names = Names {
             length: agent.string("length"),

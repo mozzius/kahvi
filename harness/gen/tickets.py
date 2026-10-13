@@ -38,7 +38,7 @@ WORKER_GROUPS = {
     "object", "array", "array_iterator_prototype", "string", "number", "boolean", "symbol", "math", "json",
     "reflect", "global", "error", "aggregate_error", "suppressed_error", "function", "promise",
     "map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype",
-    "string_iterator_prototype",
+    "string_iterator_prototype", "date",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
@@ -75,6 +75,7 @@ for _g in ("map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_
         "crates/kahvi-builtins/src/map/prototype_set.rs",
         "crates/kahvi-builtins/src/map_iterator_prototype/next.rs",
     ]
+EXTRA_READ["date"] = ["crates/kahvi-builtins/src/support/date.rs", "crates/kahvi-builtins/src/date/constructor.rs"]
 EXTRA_READ["string_iterator_prototype"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
 EXTRA_READ["string"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
 
