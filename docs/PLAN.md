@@ -38,7 +38,7 @@ triage (Haiku)  ──┴─▶ ticket pool ─▶ Haiku workers ×N   (own work
 | Architect | Opus | phase starts, every ~50 merges, escalations | spine code, docs, skeleton, writes/splits tickets |
 | Triage | Haiku | continuously | clusters failures by error → drafts tickets from a template |
 | Worker | Haiku | the bulk | one ticket, one scope, fresh session |
-| Verifier | Sonnet (or Haiku ×3 if calibration allows) | every submission | blind verdict |
+| Verifier | Haiku screens every submission; Sonnet confirms anything that would merge | every submission | blind verdict, binding checklist |
 | Auditor | Opus | every ~50 merges | samples merged code for rot, tightens lints |
 | Merge bot | script | every verdict | rebase, full suite, ratchet, merge |
 

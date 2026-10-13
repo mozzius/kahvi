@@ -39,17 +39,20 @@ def judge(cfg, case, model):
     t = case["ticket"]
     ticket = Ticket(id=t["id"], title=t["title"], scope=t["scope"], spec=t.get("spec", []),
                     target=t.get("target", []), body=t.get("body", ""))
-    record = WORK / "calibration" / f"{case['name']}.json"
-    v, cost = verifier.verify(cfg, ticket, spec_text(ticket.spec), case["gate"].strip(), build_diff(case),
-                              record=record, model=model)
-    return v, cost
+    args = (cfg, ticket, spec_text(ticket.spec), case["gate"].strip(), build_diff(case))
+    if model is None:
+        out = WORK / "calibration" / case["name"]
+        out.mkdir(parents=True, exist_ok=True)
+        return verifier.verify_pipeline(*args, record_dir=out)
+    return verifier.verify(*args, record=WORK / "calibration" / f"{case['name']}.json", model=model)
 
 
 def main(args):
     cfg = load_config()
-    model = args.model or cfg.model("verifier")
+    model = args.model
     cases = load_cases(args.only) * max(1, args.repeat)
-    print(f"calibrating verifier {model} on {len(cases)} cases")
+    label = model or f"pipeline {cfg.model('verifier')} -> confirm {cfg.verifier.get('confirm') or 'none'}"
+    print(f"calibrating verifier {label} on {len(cases)} cases")
     results = []
     with cf.ThreadPoolExecutor(4) as ex:
         futures = {ex.submit(judge, cfg, c, model): c for c in cases}

@@ -75,8 +75,8 @@ def process(cfg, db, ticket, slot):
         return
 
     diff = Path(att.dir, "diff.patch").read_text()
-    v, vcost = verifier.verify(cfg, ticket, worker.spec_text(ticket.spec), gate_text, diff,
-                               record=Path(att.dir) / "verifier.json")
+    v, vcost = verifier.verify_pipeline(cfg, ticket, worker.spec_text(ticket.spec), gate_text, diff,
+                                        record_dir=Path(att.dir))
     write_json(Path(att.dir) / "verdict.json", v)
     verdict = v["verdict"]
     db.set_attempt(att.id, outcome=verdict, verifier_cost=vcost)

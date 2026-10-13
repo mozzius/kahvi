@@ -119,10 +119,24 @@ Configuration is in `harness/orch.toml`. Per-machine overrides go in
 
 | date | verifier | exact | critical misses | good work rejected | $/case |
 |---|---|---|---|---|---|
-| 2026-10-13 | claude-sonnet-5-5 | 10/12 | 0 | 0 | 0.031 |
-| 2026-10-13 | claude-haiku-5-5 (×2) | 20/24 | 0 | 2 | 0.003 |
+| 2026-10-13 | sonnet-5-5, free verdict | 10/12 | 0 (1 on a rerun) | 0 | 0.031 |
+| 2026-10-13 | haiku-5-5 ×2, free verdict | 20/24 | 0 | 2 | 0.003 |
+| 2026-10-13 | sonnet-5-5 ×2, binding checklist | 24/24 | 0 | 0 | 0.027 |
+| 2026-10-13 | haiku-5-5 ×2, binding checklist | 24/24 | 0 | 0 | 0.003 |
+| 2026-10-13 | **haiku screen → sonnet confirm** ×2 | 24/24 | 0 | 0 | 0.011 |
 
-Haiku's two rejections of good work came from trusting its memory of an older
-spec edition over the provided text. After that run, short referenced
-operations were added to the spec text (`--refs`), and the verifier prompt
-now says the provided spec is authoritative.
+What changed along the way:
+
+- Haiku rejected good work by trusting its memory of an older spec edition.
+  Fix: short referenced operations are now appended to the spec text
+  (`--refs`), and the prompt says the provided spec is authoritative.
+- On one rerun, Sonnet labelled a "return the input unchanged" fake as
+  `incomplete`, although its own summary described the problem. Fix: the
+  verifier answers four yes/no checks, and code enforces them. Any "yes"
+  blocks a merge; special-casing inputs is always garbage.
+- The checklist's special-casing question once caught an honest
+  implementation limit, so it now spells out that exception.
+
+The configured cascade is Haiku for every attempt, with Sonnet re-judging
+anything Haiku would merge and the stricter verdict winning. To land, a cheat
+has to fool both models.
