@@ -2,27 +2,40 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-weakmap-iterable
 
+use crate::support::collections::{WeakMapData, add_entries_from_iterable, create_collection};
 use kahvi_core::prelude::*;
 
 /// WeakMap
 pub(crate) fn constructor(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. If NewTarget is *undefined*, throw a *TypeError* exception.
-    // 2. Let _map_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%WeakMap.prototype%"*, « [[WeakMapData]] »).
-    // 3. Set _map_.[[WeakMapData]] to a new empty List.
-    // 4. If _iterable_ is either *undefined* or *null*, return _map_.
-    // 5. Let _adder_ be ? Get(_map_, *"set"*).
-    // 6. If IsCallable(_adder_) is *false*, throw a *TypeError* exception.
-    // 7. Return ? AddEntriesFromIterable(_map_, _iterable_, _adder_).
-    //
-    // NOTE:
-    // If the parameter _iterable_ is present, it is expected to be an object that implements a %Symbol.iterator% method that returns an iterator object that produces a two element array-like object whose first element is a value that will be used as a WeakMap key and whose second element is the value to associate with that key.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("WeakMap"))
+    // 1. If NewTarget is undefined, throw a TypeError exception.
+    let Some(new_target) = new_target else {
+        return Err(agent.throw_type_error("Constructor WeakMap requires 'new'"));
+    };
+    // 2. Let map be ? OrdinaryCreateFromConstructor(NewTarget, "%WeakMap.prototype%", « [[WeakMapData]] »).
+    // 3. Set map.[[WeakMapData]] to a new empty List.
+    let map = create_collection(
+        agent,
+        new_target,
+        "%WeakMap.prototype%",
+        WeakMapData::default(),
+    )?;
+    // 4. If iterable is either undefined or null, return map.
+    let iterable = args.get_or_undefined(0);
+    if iterable.is_nullish() {
+        return Ok(Value::Object(map));
+    }
+    // 5. Let adder be ? Get(map, "set").
+    let set_key = PropertyKey::String(agent.names.set);
+    let adder = ops::get(agent, map, set_key)?;
+    // 6. If IsCallable(adder) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, adder) {
+        return Err(agent.throw_type_error("WeakMap.prototype.set is not a function"));
+    }
+    // 7. Return ? AddEntriesFromIterable(map, iterable, adder).
+    add_entries_from_iterable(agent, map, iterable, adder)
 }
