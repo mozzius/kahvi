@@ -1,0 +1,7 @@
+#!/bin/sh
+# Build the engine + runner, then run test262. Usage: ./t262 [FILTER]... [options]
+# e.g. ./t262 built-ins/Array/prototype/flatMap/      (see ./t262 --help)
+set -e
+cd "$(dirname "$0")"
+cargo build -q -p kahvi-cli -p t262
+exec target/debug/t262 run "$@"

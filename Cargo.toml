@@ -1,0 +1,12 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "harness/t262"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[profile.dev]
+# test262 runs use dev builds; -O1 keeps them fast without hurting incremental builds much.
+opt-level = 1

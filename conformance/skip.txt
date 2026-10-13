@@ -1,0 +1,57 @@
+# What the t262 runner does not run (yet). Owned by the architect.
+# Lines are `feature: X` (test262 frontmatter feature), `flag: X` or
+# `path: X` (prefix under vendor/test262/test/). Removing a line widens scope.
+
+# Out of scope until much later.
+path: intl402/
+path: staging/
+path: annexB/
+
+# Stage 3 proposals (top section of vendor/test262/features.txt).
+feature: Intl.Era-monthcode
+feature: Intl.Locale-info
+feature: Intl.NumberFormat-v3
+feature: legacy-regexp
+feature: ShadowRealm
+feature: decorators
+feature: source-phase-imports
+feature: source-phase-imports-module-source
+feature: import-defer
+feature: export-defer
+feature: import-text
+feature: immutable-arraybuffer
+feature: import-bytes
+feature: nonextensible-applies-to-private
+feature: await-dictionary
+feature: error-stack-accessor
+feature: Iterator.prototype.join
+
+# Standard, but deferred.
+feature: Temporal
+feature: canonical-tz
+feature: SharedArrayBuffer
+feature: Atomics
+feature: Atomics.waitAsync
+feature: Atomics.pause
+feature: IsHTMLDDA
+feature: tail-call-optimization
+feature: host-gc-required
+flag: CanBlockIsTrue
+flag: CanBlockIsFalse
+
+# ECMA-402 features that leak outside intl402/.
+feature: Intl-enumeration
+feature: intl-normative-optional
+feature: Intl.DateTimeFormat-datetimestyle
+feature: Intl.DateTimeFormat-dayPeriod
+feature: Intl.DateTimeFormat-extend-timezonename
+feature: Intl.DateTimeFormat-formatRange
+feature: Intl.DateTimeFormat-fractionalSecondDigits
+feature: Intl.DisplayNames
+feature: Intl.DisplayNames-v2
+feature: Intl.DurationFormat
+feature: Intl.ListFormat
+feature: Intl.Locale
+feature: Intl.NumberFormat-unified
+feature: Intl.RelativeTimeFormat
+feature: Intl.Segmenter

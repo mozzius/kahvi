@@ -1,0 +1,184 @@
+"""kahvi orchestrator CLI. Run via ./orch from the repository root.
+
+  ./orch run [--slots N] [--only T-0001,...] [--max-attempts N]   grind the ticket pool
+  ./orch status                                                   tickets, costs, verdicts
+  ./orch show ATTEMPT                                             one attempt's artifacts
+  ./orch reset TICKET [--tier haiku]                              put a ticket back in the pool
+  ./orch triage [--fresh] [--top N]                               cluster test262 failures
+  ./orch calibrate [--model M] [--only CASE]                      run the verifier red-team set
+"""
+
+import argparse
+import concurrent.futures as cf
+import json
+import sys
+import time
+from collections import Counter
+from pathlib import Path
+
+import llm
+import pipeline
+import tickets as ticket_files
+from common import WORK, git, load_config, log, read_json
+from db import DB
+from limits import Limits
+
+
+def cmd_run(args):
+    cfg = load_config()
+    if args.slots:
+        cfg.slots = args.slots
+    if args.branch:
+        cfg.branch = args.branch
+    git("rev-parse", "--verify", cfg.branch)
+    log(f"building trusted runner; integration branch {cfg.branch}, {cfg.slots} slots")
+    pipeline.build_tools(cfg)
+    db = DB()
+    db.release_stale_claims()
+    limits = Limits(cfg, db)
+    llm.LIMITS = limits
+    only = set(args.only.split(",")) if args.only else None
+    tickets_dir = Path(args.tickets) if args.tickets else ticket_files.TICKETS
+    pool = ticket_files.load_all(tickets_dir)
+    db.sync_tickets(pool)
+    started = 0
+    with cf.ThreadPoolExecutor(cfg.slots) as ex:
+        free = list(range(cfg.slots))
+        running = {}
+        while True:
+            try:
+                pool = ticket_files.load_all(tickets_dir)
+                db.sync_tickets(pool)
+            except ValueError as e:
+                log(f"ticket files invalid, keeping the previous set: {e}")
+            # While paused (usage limits) nothing new starts; running work finishes or
+            # waits inside its next model call.
+            while free and not limits.fatal and not limits.paused() and (
+                args.max_attempts is None or started < args.max_attempts
+            ):
+                t = db.claim_next(pool, only)
+                if t is None:
+                    break
+                slot = free.pop()
+                running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
+                started += 1
+            if not running:
+                if limits.fatal:
+                    break
+                if limits.paused():
+                    if not limits.wait():
+                        break
+                    continue
+                break
+            done, _ = cf.wait(running, timeout=60, return_when=cf.FIRST_COMPLETED)
+            for f in done:
+                slot, tid = running.pop(f)
+                free.append(slot)
+                if f.exception():
+                    log(f"{tid}: pipeline error: {f.exception()!r}")
+                    db.note(tid, None, f"orchestrator error: {f.exception()!r}"[:500])
+                    db.set_ticket(tid, status="open")
+    log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
+    cmd_status(args)
+
+
+def cmd_status(args):
+    db = DB()
+    rows = db.q("SELECT * FROM tickets ORDER BY id")
+    by = Counter(r["status"] for r in rows)
+    print("tickets: " + ", ".join(f"{k} {v}" for k, v in sorted(by.items())) if rows else "tickets: none")
+    for r in rows:
+        if r["status"] != "done":
+            reason = f"  {r['reason'][:90]}" if r["reason"] else ""
+            print(f"  {r['id']:<10} {r['status']:<16} tier={r['tier']:<7} attempts={r['attempts']} strikes={r['strikes']}{reason}")
+    att = db.q("SELECT * FROM attempts")
+    if att:
+        cost = sum(a["worker_cost"] + a["verifier_cost"] for a in att)
+        wcost = sum(a["worker_cost"] for a in att)
+        new = sum(a["new_passes"] for a in att if a["merged"])
+        print(f"attempts: {len(att)}  merged: {sum(a['merged'] for a in att)}  "
+              f"spend: ${cost:.2f} (workers ${wcost:.2f}, verifier ${cost - wcost:.2f})  "
+              f"new test262 passes: {new}" + (f"  (${cost / new:.3f} per pass)" if new else ""))
+        outcomes = Counter((a["tier"], a["outcome"]) for a in att)
+        for (tier, outcome), n in sorted(outcomes.items(), key=lambda x: (x[0][0], str(x[0][1]))):
+            print(f"  {tier:<7} {str(outcome):<12} {n}")
+    paused = float(db.kv_get("paused_until") or 0)
+    if paused > time.time():
+        print(f"PAUSED until {time.strftime('%Y-%m-%d %H:%M', time.localtime(paused))}: {db.kv_get('pause_reason')}")
+    info = db.kv_get("limits")
+    if info:
+        info = json.loads(info)
+        windows = ", ".join(
+            f"{name} {w.get('utilization', 0):.0%} (resets {time.strftime('%a %H:%M', time.localtime(w['resetsAt']))})"
+            for name, w in (info.get("unifiedWindows") or {}).items() if w.get("resetsAt")
+        )
+        print(f"plan usage at last run: {info.get('status')}" + (f"; {windows}" if windows else ""))
+    summary = read_json(WORK / "last-full-summary.json")
+    if summary:
+        print(f"test262 at last merge: {summary['pass']}/{summary['runs']} runs passing")
+
+
+def cmd_show(args):
+    adir = WORK / "attempts" / str(args.attempt)
+    for name in ("prompt.md", "gate.json", "verdict.json", "merge.json"):
+        p = adir / name
+        if p.exists():
+            print(f"===== {name}")
+            print(p.read_text()[:6000])
+    if (adir / "diff.patch").exists():
+        print("===== diff.patch")
+        print((adir / "diff.patch").read_text()[:8000])
+
+
+def cmd_reset(args):
+    db = DB()
+    fields = {"status": "open", "strikes": 0, "reason": "", "salvage_attempt": None}
+    if args.tier:
+        fields["tier"] = args.tier
+    db.set_ticket(args.ticket, **fields)
+    print(f"{args.ticket} reopened")
+
+
+def cmd_triage(args):
+    import triage
+    triage.main(args)
+
+
+def cmd_calibrate(args):
+    import calibrate
+    sys.exit(calibrate.main(args))
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="orch", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    r = sub.add_parser("run")
+    r.add_argument("--slots", type=int)
+    r.add_argument("--branch")
+    r.add_argument("--only")
+    r.add_argument("--tickets", help="ticket directory (default: tickets/)")
+    r.add_argument("--max-attempts", type=int, help="stop starting new attempts after N")
+    r.set_defaults(fn=cmd_run)
+    sub.add_parser("status").set_defaults(fn=cmd_status)
+    s = sub.add_parser("show")
+    s.add_argument("attempt", type=int)
+    s.set_defaults(fn=cmd_show)
+    rs = sub.add_parser("reset")
+    rs.add_argument("ticket")
+    rs.add_argument("--tier")
+    rs.set_defaults(fn=cmd_reset)
+    t = sub.add_parser("triage")
+    t.add_argument("--fresh", action="store_true", help="run the full suite on the branch first")
+    t.add_argument("--top", type=int, default=25)
+    t.set_defaults(fn=cmd_triage)
+    c = sub.add_parser("calibrate")
+    c.add_argument("--model")
+    c.add_argument("--only")
+    c.add_argument("--repeat", type=int, default=1)
+    c.set_defaults(fn=cmd_calibrate)
+    args = ap.parse_args()
+    args.fn(args)
+
+
+if __name__ == "__main__":
+    main()
