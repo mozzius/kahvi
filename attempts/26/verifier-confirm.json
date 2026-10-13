@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 19252,
+  "stop_reason": "tool_use",
+  "session_id": "a54d1ec7-9fc1-47ce-a0be-b7513854e0e6",
+  "total_cost_usd": 0.0674454,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10277,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2515,
+    "output_tokens_details": {
+      "thinking_tokens": 2070
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10277,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2515,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10277,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10277
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Promise.any implementation follows the spec closely. It covers NewPromiseCapability, GetPromiseResolve, GetIterator, PerformPromiseAny, IteratorClose on abrupt completion when the iterator isn't done, and IfAbruptRejectPromise. The reject element function has the correct AlreadyCalled/Index/errors/remaining-count semantics, length 1 and an empty name. The gate shows 184 of 188 runs passing with no regressions. The 4 failures come from a different built-in, String.prototype[Symbol.iterator], which throws not-implemented. Only the one in-scope file changed. I found no special-casing, swallowed errors, or made-up values.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Promise.any implementation follows the spec closely. It covers NewPromiseCapability, GetPromiseResolve, GetIterator, PerformPromiseAny, IteratorClose on abrupt completion when the iterator isn't done, and IfAbruptRejectPromise. The reject element function has the correct AlreadyCalled/Index/errors/remaining-count semantics, length 1 and an empty name. The gate shows 184 of 188 runs passing with no regressions. The 4 failures come from a different built-in, String.prototype[Symbol.iterator], which throws not-implemented. Only the one in-scope file changed. I found no special-casing, swallowed errors, or made-up values.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 16186,
+  "type": "result",
+  "duration_ms": 18541,
+  "uuid": "0697cca8-bfc7-48a2-8d95-a9b4debee16e",
+  "ttft_stream_ms": 1938,
+  "time_to_request_ms": 217,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 1,
+    "resume_other": 2,
+    "process_user_input": 6,
+    "input_attachments": 23,
+    "input_hooks": 5,
+    "tool_pool_refresh": 5,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 108,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 4,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 193,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1939,
+  "time_to_request_from_spawn_ms": 7209141,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791926183629.7764,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.87,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

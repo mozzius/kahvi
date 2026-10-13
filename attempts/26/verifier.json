@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 43182,
+  "stop_reason": "tool_use",
+  "session_id": "210fc8d0-8d08-472c-9510-ecc941718db5",
+  "total_cost_usd": 0.00780926,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10269,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 9534,
+    "output_tokens_details": {
+      "thinking_tokens": 8656
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10269,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 9534,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10269,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10269
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Promise.any in crates/kahvi-builtins/src/promise/any.rs and touches no other file. I walked each step of Promise.any, PerformPromiseAny and the Promise.any Reject Element Functions against the pinned spec text. Step order and abrupt-completion handling match. Observable operations (Get \\\"resolve\\\", GetIterator, Call of promiseResolve, Invoke \\\"then\\\", the AlreadyCalled and remainingElementsCount bookkeeping, and the AggregateError creation) are performed in spec order. Nothing is keyed on test inputs and no values are fabricated. The not_implemented returns are only defensive invariant checks, which the ticket allows. Two equivalences hold: PerformPromiseAny calls reject directly instead of returning a ThrowCompletion for step 8 to reject, and with the iterator already done that gives the same observable result. Gate results (+172 passing, 0 regressions) fit a diff of this size. I could not see the ops source, so I have not verified that iterator_step_value sets done on throw, that iterator_close returns the original completion, or that the %AggregateError.prototype% intrinsic exists.\",\"problems\":[],\"notes_for_next_attempt\":\"The change looks correct as far as I can tell from the diff alone. Before merging, check these, since the ops source was not visible to me: (1) ops::iterator_step_value must set iteratorRecord.[[Done]] to true when next() or the value getter throws, otherwise step 8a will wrongly call IteratorClose. (2) ops::iterator_close with a throw completion must return the original completion. (3) agent.intrinsic(\\\"%AggregateError.prototype%\\\") must exist and must not panic. A local get_promise_resolve helper duplicates the GetPromiseResolve abstract op. If kahvi_core::ops::promise already provides it, switch to that; if not, keep the local helper and say so in the report, since Promise.all, allSettled and race will need it too. The saturating_sub calls are harmless because the counts cannot underflow on reachable paths.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Promise.any in crates/kahvi-builtins/src/promise/any.rs and touches no other file. I walked each step of Promise.any, PerformPromiseAny and the Promise.any Reject Element Functions against the pinned spec text. Step order and abrupt-completion handling match. Observable operations (Get \"resolve\", GetIterator, Call of promiseResolve, Invoke \"then\", the AlreadyCalled and remainingElementsCount bookkeeping, and the AggregateError creation) are performed in spec order. Nothing is keyed on test inputs and no values are fabricated. The not_implemented returns are only defensive invariant checks, which the ticket allows. Two equivalences hold: PerformPromiseAny calls reject directly instead of returning a ThrowCompletion for step 8 to reject, and with the iterator already done that gives the same observable result. Gate results (+172 passing, 0 regressions) fit a diff of this size. I could not see the ops source, so I have not verified that iterator_step_value sets done on throw, that iterator_close returns the original completion, or that the %AggregateError.prototype% intrinsic exists.",
+    "problems": [],
+    "notes_for_next_attempt": "The change looks correct as far as I can tell from the diff alone. Before merging, check these, since the ops source was not visible to me: (1) ops::iterator_step_value must set iteratorRecord.[[Done]] to true when next() or the value getter throws, otherwise step 8a will wrongly call IteratorClose. (2) ops::iterator_close with a throw completion must return the original completion. (3) agent.intrinsic(\"%AggregateError.prototype%\") must exist and must not panic. A local get_promise_resolve helper duplicates the GetPromiseResolve abstract op. If kahvi_core::ops::promise already provides it, switch to that; if not, keep the local helper and say so in the report, since Promise.all, allSettled and race will need it too. The saturating_sub calls are harmless because the counts cannot underflow on reachable paths."
+  },
+  "ttft_ms": 37212,
+  "type": "result",
+  "duration_ms": 40879,
+  "uuid": "260d2218-8161-41ff-b9c7-59e681196a88",
+  "ttft_stream_ms": 2452,
+  "time_to_request_ms": 155,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 22,
+    "input_hooks": 7,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 67,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 186,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2453,
+  "time_to_request_from_spawn_ms": 7166442,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791926141148.6802,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.87,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Promise.any in crates/kahvi-builtins/src/promise/any.rs and touches no other file. I walked each step of Promise.any, PerformPromiseAny and the Promise.any Reject Element Functions against the pinned spec text. Step order and abrupt-completion handling match. Observable operations (Get \"resolve\", GetIterator, Call of promiseResolve, Invoke \"then\", the AlreadyCalled and remainingElementsCount bookkeeping, and the AggregateError creation) are performed in spec order. Nothing is keyed on test inputs and no values are fabricated. The not_implemented returns are only defensive invariant checks, which the ticket allows. Two equivalences hold: PerformPromiseAny calls reject directly instead of returning a ThrowCompletion for step 8 to reject, and with the iterator already done that gives the same observable result. Gate results (+172 passing, 0 regressions) fit a diff of this size. I could not see the ops source, so I have not verified that iterator_step_value sets done on throw, that iterator_close returns the original completion, or that the %AggregateError.prototype% intrinsic exists.",
+  "problems": [],
+  "notes_for_next_attempt": "The change looks correct as far as I can tell from the diff alone. Before merging, check these, since the ops source was not visible to me: (1) ops::iterator_step_value must set iteratorRecord.[[Done]] to true when next() or the value getter throws, otherwise step 8a will wrongly call IteratorClose. (2) ops::iterator_close with a throw completion must return the original completion. (3) agent.intrinsic(\"%AggregateError.prototype%\") must exist and must not panic. A local get_promise_resolve helper duplicates the GetPromiseResolve abstract op. If kahvi_core::ops::promise already provides it, switch to that; if not, keep the local helper and say so in the report, since Promise.all, allSettled and race will need it too. The saturating_sub calls are harmless because the counts cannot underflow on reachable paths.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
