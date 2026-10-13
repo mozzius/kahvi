@@ -52,12 +52,15 @@ def process(cfg, db, ticket, slot):
         db.note(ticket.id, att.id, f"worker run failed: {att.error[:300]}")
         db.set_ticket(ticket.id, status="open")
         return
-    if att.blocked:
+    if att.blocked and not att.head:
         db.set_attempt(att.id, outcome="blocked", finished=_now())
         db.note(ticket.id, att.id, f"BLOCKED: {att.blocked}")
         db.set_ticket(ticket.id, status="blocked", reason=att.blocked)
         log(f"{ticket.id}: blocked: {att.blocked}")
         return
+    if att.blocked:
+        # A diff still gets judged on its merits; the reason is kept for context.
+        db.note(ticket.id, att.id, f"worker reported BLOCKED but changed files: {att.blocked}")
     if not att.head:
         db.set_attempt(att.id, outcome="no-diff", finished=_now())
         strike(cfg, db, ticket, att.id, "produced no changes")
