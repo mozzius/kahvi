@@ -1,0 +1,41 @@
+{
+  "ticket": "B-object-is-extensible",
+  "base": "f43a8fd5edb495bd782cbd7e4370d1a6800d1b1c",
+  "head": "f9d7b6deed704120057b529d7e0006b05d3c1685",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/is_extensible.rs",
+      "added": 8,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 76,
+    "before": 8,
+    "after": 68,
+    "new_passes": 60,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/isExtensible/15.2.3.13-2-23.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-23.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-25.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-25.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-26.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-26.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-27.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Object/isExtensible/15.2.3.13-2-27.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,19 @@
+diff --git a/crates/kahvi-builtins/src/object/is_extensible.rs b/crates/kahvi-builtins/src/object/is_extensible.rs
+index b87a842..990f0ee 100644
+--- a/crates/kahvi-builtins/src/object/is_extensible.rs
++++ b/crates/kahvi-builtins/src/object/is_extensible.rs
+@@ -15,6 +15,12 @@ pub(crate) fn is_extensible(
+     //
+     // 1. If _obj_ is not an Object, return *false*.
+     // 2. Return ? IsExtensible(_obj_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.isExtensible"))
++    let _ = (this, new_target);
++    // 1. If _obj_ is not an Object, return *false*.
++    let Value::Object(obj) = args.get_or_undefined(0) else {
++        return Ok(Value::Boolean(false));
++    };
++    // 2. Return ? IsExtensible(_obj_).
++    let extensible = ops::is_extensible(agent, obj)?;
++    Ok(Value::Boolean(extensible))
+ }
