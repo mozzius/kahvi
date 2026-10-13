@@ -17,6 +17,11 @@ if [ -f "$WORK/orch.pid" ] && ps -p "$(cat "$WORK/orch.pid")" >/dev/null 2>&1; t
 fi
 
 before=$(git rev-parse HEAD)
+# vendor/ is protected: never land a branch that changes it.
+if ! git diff --quiet "$before" "$BRANCH" -- vendor; then
+  echo "land: $BRANCH changes vendor/; refusing" >&2
+  exit 1
+fi
 git show HEAD:conformance/expected-pass.txt > "$WORK/land-baseline.txt"
 git merge --no-edit -q "$BRANCH"
 cargo build -q -p kahvi-cli
@@ -26,6 +31,7 @@ if ! ./t262 built-ins/ language/ annexB/ intl402/ staging/ harness/ --show 20 \
   echo "land: regressions; undoing the merge" >&2
   git checkout -q -- conformance
   git reset -q --hard "$before"
+  git submodule update --init -q
   exit 1
 fi
 grep -E "pass |baseline" "$WORK/land.log"
