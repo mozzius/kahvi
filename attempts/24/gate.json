@@ -1,0 +1,45 @@
+{
+  "ticket": "B-array-prototype-splice",
+  "base": "aa0d15bad385b8053f486361688adb6d70b228cc",
+  "head": "ef286aa00a2206462d77049848d930c15a78b391",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_splice.rs",
+      "added": 146,
+      "removed": 52
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 162,
+    "before": 8,
+    "after": 150,
+    "new_passes": 142,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 12,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/splice/create-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/create-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/create-revoked-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/splice/create-revoked-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/splice/create-species-length-exceeding-integer-limit.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/create-species-length-exceeding-integer-limit.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/create-species-undef-invalid-len.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/create-species-undef-invalid-len.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/splice/property-traps-order-with-species.js:sloppy  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/splice/property-traps-order-with-species.js:strict  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/splice/target-array-non-extensible.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Array/prototype/splice/target-array-non-extensible.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions"
+    ]
+  },
+  "decision": "pass"
+}

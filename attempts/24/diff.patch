@@ -1,0 +1,222 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_splice.rs b/crates/kahvi-builtins/src/array/prototype_splice.rs
+index 9993c37..be06abd 100644
+--- a/crates/kahvi-builtins/src/array/prototype_splice.rs
++++ b/crates/kahvi-builtins/src/array/prototype_splice.rs
+@@ -9,71 +9,165 @@ pub(crate) fn prototype_splice(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // NOTE:
+-    // This method deletes the _deleteCount_ elements of the array starting at integer index _start_ and replaces them with the elements of _items_. It returns an Array containing the deleted elements (if any).
+-    // This method performs the following steps when called:
+-    //
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
++    let length = ops::length_of_array_like(agent, obj)?;
+     // 3. Let _actualStart_ be ? ToClampedIndex(_start_, _length_).
++    let actual_start = to_clamped_index(agent, args.get_or_undefined(0), length)?;
+     // 4. Let _itemCount_ be the number of elements in _items_.
+-    // 5. If _start_ is not present, then
+-    //    a. Let _actualDeleteCount_ be 0.
+-    // 6. Else if _deleteCount_ is not present, then
+-    //    a. Let _actualDeleteCount_ be _length_ - _actualStart_.
+-    //    b. Assert: _actualDeleteCount_ ≥ 0.
+-    // 7. Else,
+-    //    a. Let _dc_ be ? ToIntegerOrInfinity(_deleteCount_).
+-    //    b. Let _actualDeleteCount_ be the result of clamping _dc_ between 0 and _length_ - _actualStart_.
++    let items = args.get(2..).unwrap_or(&[]);
++    let item_count = items.len() as f64;
++    let actual_delete_count = if args.is_empty() {
++        // 5. If _start_ is not present, then
++        //    a. Let _actualDeleteCount_ be 0.
++        0.0
++    } else if args.len() < 2 {
++        // 6. Else if _deleteCount_ is not present, then
++        //    a. Let _actualDeleteCount_ be _length_ - _actualStart_.
++        //    b. Assert: _actualDeleteCount_ ≥ 0.
++        length - actual_start
++    } else {
++        // 7. Else,
++        //    a. Let _dc_ be ? ToIntegerOrInfinity(_deleteCount_).
++        let dc = ops::to_integer_or_infinity(agent, args.get_or_undefined(1))?;
++        //    b. Let _actualDeleteCount_ be the result of clamping _dc_ between 0 and _length_ - _actualStart_.
++        dc.max(0.0).min(length - actual_start)
++    };
+     // 8. If _length_ + _itemCount_ - _actualDeleteCount_ > 2^53 - 1, throw a *TypeError* exception.
++    if length + item_count - actual_delete_count > 9_007_199_254_740_991.0 {
++        return Err(agent.throw_type_error("Array.prototype.splice length exceeds 2^53 - 1"));
++    }
+     // 9. Let _deletedArray_ be ? ArraySpeciesCreate(_obj_, _actualDeleteCount_).
++    let deleted_array = ops::array_species_create(agent, obj, actual_delete_count)?;
+     // 10. Let _k_ be 0.
++    let mut k = 0.0;
+     // 11. Repeat, while _k_ < _actualDeleteCount_,
+-    //    a. Let _from_ be ! ToString(𝔽(_actualStart_ + _k_)).
+-    //    b. If ? HasProperty(_obj_, _from_) is *true*, then
+-    //       i. Let _fromValue_ be ? Get(_obj_, _from_).
+-    //       ii. Perform ? CreateDataPropertyOrThrow(_deletedArray_, ! ToString(𝔽(_k_)), _fromValue_).
+-    //    c. Set _k_ to _k_ + 1.
++    while k < actual_delete_count {
++        // a. Let _from_ be ! ToString(𝔽(_actualStart_ + _k_)).
++        let from = agent.key_from_index(actual_start + k);
++        // b. If ? HasProperty(_obj_, _from_) is *true*, then
++        if ops::has_property(agent, obj, from)? {
++            // i. Let _fromValue_ be ? Get(_obj_, _from_).
++            let from_value = ops::get(agent, obj, from)?;
++            // ii. Perform ? CreateDataPropertyOrThrow(_deletedArray_, ! ToString(𝔽(_k_)), _fromValue_).
++            let to = agent.key_from_index(k);
++            ops::create_data_property_or_throw(agent, deleted_array, to, from_value)?;
++        }
++        // c. Set _k_ to _k_ + 1.
++        k += 1.0;
++    }
+     // 12. Perform ? Set(_deletedArray_, *"length"*, 𝔽(_actualDeleteCount_), *true*).
++    ops::set(
++        agent,
++        deleted_array,
++        PropertyKey::String(agent.names.length),
++        Value::Number(actual_delete_count),
++        true,
++    )?;
+     // 13. If _itemCount_ < _actualDeleteCount_, then
+-    //    a. Set _k_ to _actualStart_.
+-    //    b. Repeat, while _k_ < (_length_ - _actualDeleteCount_),
+-    //       i. Let _from_ be ! ToString(𝔽(_k_ + _actualDeleteCount_)).
+-    //       ii. Let _to_ be ! ToString(𝔽(_k_ + _itemCount_)).
+-    //       iii. If ? HasProperty(_obj_, _from_) is *true*, then
+-    //          1. Let _fromValue_ be ? Get(_obj_, _from_).
+-    //          2. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
+-    //       iv. Else,
+-    //          1. Perform ? DeletePropertyOrThrow(_obj_, _to_).
+-    //       v. Set _k_ to _k_ + 1.
+-    //    c. Set _k_ to _length_.
+-    //    d. Repeat, while _k_ > (_length_ - _actualDeleteCount_ + _itemCount_),
+-    //       i. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_k_ - 1))).
+-    //       ii. Set _k_ to _k_ - 1.
+-    // 14. Else if _itemCount_ > _actualDeleteCount_, then
+-    //    a. Set _k_ to (_length_ - _actualDeleteCount_).
+-    //    b. Repeat, while _k_ > _actualStart_,
+-    //       i. Let _from_ be ! ToString(𝔽(_k_ + _actualDeleteCount_ - 1)).
+-    //       ii. Let _to_ be ! ToString(𝔽(_k_ + _itemCount_ - 1)).
+-    //       iii. If ? HasProperty(_obj_, _from_) is *true*, then
+-    //          1. Let _fromValue_ be ? Get(_obj_, _from_).
+-    //          2. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
+-    //       iv. Else,
+-    //          1. Perform ? DeletePropertyOrThrow(_obj_, _to_).
+-    //       v. Set _k_ to _k_ - 1.
++    if item_count < actual_delete_count {
++        // a. Set _k_ to _actualStart_.
++        k = actual_start;
++        // b. Repeat, while _k_ < (_length_ - _actualDeleteCount_),
++        while k < length - actual_delete_count {
++            // i. Let _from_ be ! ToString(𝔽(_k_ + _actualDeleteCount_)).
++            let from = agent.key_from_index(k + actual_delete_count);
++            // ii. Let _to_ be ! ToString(𝔽(_k_ + _itemCount_)).
++            let to = agent.key_from_index(k + item_count);
++            // iii. If ? HasProperty(_obj_, _from_) is *true*, then
++            if ops::has_property(agent, obj, from)? {
++                // 1. Let _fromValue_ be ? Get(_obj_, _from_).
++                let from_value = ops::get(agent, obj, from)?;
++                // 2. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
++                ops::set(agent, obj, to, from_value, true)?;
++            } else {
++                // iv. Else,
++                //    1. Perform ? DeletePropertyOrThrow(_obj_, _to_).
++                ops::delete_property_or_throw(agent, obj, to)?;
++            }
++            // v. Set _k_ to _k_ + 1.
++            k += 1.0;
++        }
++        // c. Set _k_ to _length_.
++        k = length;
++        // d. Repeat, while _k_ > (_length_ - _actualDeleteCount_ + _itemCount_),
++        while k > length - actual_delete_count + item_count {
++            // i. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_k_ - 1))).
++            let key = agent.key_from_index(k - 1.0);
++            ops::delete_property_or_throw(agent, obj, key)?;
++            // ii. Set _k_ to _k_ - 1.
++            k -= 1.0;
++        }
++    } else if item_count > actual_delete_count {
++        // 14. Else if _itemCount_ > _actualDeleteCount_, then
++        //    a. Set _k_ to (_length_ - _actualDeleteCount_).
++        k = length - actual_delete_count;
++        // b. Repeat, while _k_ > _actualStart_,
++        while k > actual_start {
++            // i. Let _from_ be ! ToString(𝔽(_k_ + _actualDeleteCount_ - 1)).
++            let from = agent.key_from_index(k + actual_delete_count - 1.0);
++            // ii. Let _to_ be ! ToString(𝔽(_k_ + _itemCount_ - 1)).
++            let to = agent.key_from_index(k + item_count - 1.0);
++            // iii. If ? HasProperty(_obj_, _from_) is *true*, then
++            if ops::has_property(agent, obj, from)? {
++                // 1. Let _fromValue_ be ? Get(_obj_, _from_).
++                let from_value = ops::get(agent, obj, from)?;
++                // 2. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
++                ops::set(agent, obj, to, from_value, true)?;
++            } else {
++                // iv. Else,
++                //    1. Perform ? DeletePropertyOrThrow(_obj_, _to_).
++                ops::delete_property_or_throw(agent, obj, to)?;
++            }
++            // v. Set _k_ to _k_ - 1.
++            k -= 1.0;
++        }
++    }
+     // 15. Set _k_ to _actualStart_.
++    k = actual_start;
+     // 16. For each element _item_ of _items_, do
+-    //    a. Perform ? Set(_obj_, ! ToString(𝔽(_k_)), _item_, *true*).
+-    //    b. Set _k_ to _k_ + 1.
++    for item in items {
++        // a. Perform ? Set(_obj_, ! ToString(𝔽(_k_)), _item_, *true*).
++        let key = agent.key_from_index(k);
++        ops::set(agent, obj, key, *item, true)?;
++        // b. Set _k_ to _k_ + 1.
++        k += 1.0;
++    }
+     // 17. Perform ? Set(_obj_, *"length"*, 𝔽(_length_ - _actualDeleteCount_ + _itemCount_), *true*).
++    ops::set(
++        agent,
++        obj,
++        PropertyKey::String(agent.names.length),
++        Value::Number(length - actual_delete_count + item_count),
++        true,
++    )?;
+     // 18. Return _deletedArray_.
+-    //
+-    // NOTE:
+-    // The explicit setting of the *"length"* property in steps [step-array-proto-splice-set-length] and [step-array-proto-splice-set-length-2] is intended to ensure the lengths are correct even when the objects are not built-in Arrays.
+-    // NOTE:
+-    // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.splice"))
++    Ok(Value::Object(deleted_array))
++}
++
++/// ToClampedIndex ( _value_, _length_ )
++///
++/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
++///
++/// Not yet in `ops`; only this built-in needs it so far.
++fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
++    //    ToAbsoluteIndex ( _start_, _length_ ):
++    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
++    let relative_index = ops::to_integer_or_infinity(agent, value)?;
++    //    2. If _relativeIndex_ is -∞, return +0𝔽.
++    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
++    //    4. Else, return min(_relativeIndex_, _length_).
++    let index = if relative_index == f64::NEG_INFINITY {
++        0.0
++    } else if relative_index < 0.0 {
++        (length + relative_index).max(0.0)
++    } else {
++        relative_index.min(length)
++    };
++    // 2. Return the result of clamping _index_ between 0 and _length_.
++    Ok(index.max(0.0).min(length))
+ }
