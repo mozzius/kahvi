@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 17369,
+  "stop_reason": "tool_use",
+  "session_id": "f81b4c9c-0456-4866-98a6-7b658e2085d5",
+  "total_cost_usd": 0.00397196,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7392,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3588,
+    "output_tokens_details": {
+      "thinking_tokens": 2968
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7392,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3588,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7392,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7392
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.indexOf steps 1-6 in order: ToObject, LengthOfArrayLike, the length-zero early return, ToClampedIndex, the HasProperty/Get/IsStrictlyEqual loop with k incremented each pass, and the final -1. Every abstract operation call is followed by `?`. The local to_clamped_index helper matches ToAbsoluteIndex plus the clamp, including the -inf and negative-offset branches. No test-shaped special cases, no hardcoded results, and no swallowed errors. The only other changes are the `_new_target` rename, which is needed because the variable is no longer used, and the removal of the trailing spec NOTE comment from the stub.\",\"problems\":[],\"notes_for_next_attempt\":\"No blocking issues. Optional cleanups: (1) if kahvi_core::ops already has a ToAbsoluteIndex or ToClampedIndex helper, use it instead of the local to_clamped_index copy, as the ticket asks; (2) restore the stub's trailing spec NOTE (\\\"This method is intentionally generic...\\\") comment that the diff removed; (3) the step numbering in the helper's comments is slightly out of order (1, 1, 2, 3, 4, then 2) and could be tidied.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.indexOf steps 1-6 in order: ToObject, LengthOfArrayLike, the length-zero early return, ToClampedIndex, the HasProperty/Get/IsStrictlyEqual loop with k incremented each pass, and the final -1. Every abstract operation call is followed by `?`. The local to_clamped_index helper matches ToAbsoluteIndex plus the clamp, including the -inf and negative-offset branches. No test-shaped special cases, no hardcoded results, and no swallowed errors. The only other changes are the `_new_target` rename, which is needed because the variable is no longer used, and the removal of the trailing spec NOTE comment from the stub.",
+    "problems": [],
+    "notes_for_next_attempt": "No blocking issues. Optional cleanups: (1) if kahvi_core::ops already has a ToAbsoluteIndex or ToClampedIndex helper, use it instead of the local to_clamped_index copy, as the ticket asks; (2) restore the stub's trailing spec NOTE (\"This method is intentionally generic...\") comment that the diff removed; (3) the step numbering in the helper's comments is slightly out of order (1, 1, 2, 3, 4, then 2) and could be tidied."
+  },
+  "ttft_ms": 13719,
+  "type": "result",
+  "duration_ms": 16135,
+  "uuid": "97c42b66-6a40-4330-8a8b-943169c2aa65",
+  "ttft_stream_ms": 1412,
+  "time_to_request_ms": 155,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 77,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 176,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1413,
+  "time_to_request_from_spawn_ms": 4151501,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791923126289.05,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.69,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.45,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

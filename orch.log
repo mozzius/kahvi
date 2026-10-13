@@ -3,3 +3,7 @@
 [20:24:48] B-array-prototype-index-of: attempt on slot 0 with haiku
 [20:25:17] B-set-constructor: attempt 14 finished ($0.006, 7 turns)
 [20:25:17] B-set-constructor: blocked: `Set.prototype.add` (src/set/prototype_add.rs), which every constructor test with an iterable depends on, plus the other Set.prototype methods, `get Set.prototype.size`, `WeakSet`, and the `Function` constructor needed by `proto-from-ctor-realm.js`.
+[20:25:20] B-array-prototype-index-of: attempt 15 finished ($0.006, 8 turns)
+[20:25:56] B-array-prototype-index-of: verifier: accept The diff implements Array.prototype.indexOf steps 1-6 in order: ToObject, LengthOfArrayLike, the length-zero early return, ToClampedIndex, the HasProp
+[20:25:58] B-array-prototype-index-of: full test262 run for merge
+[20:30:10] B-array-prototype-index-of: merged (+399, 55784 total)

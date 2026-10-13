@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-index-of",
+  "base": "2f02a743cac457c196c4da2880c15e88ca0affca",
+  "head": "8a8aa8395d127d36f58ab4cbd65c1574663bf0d6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_index_of.rs",
+      "added": 45,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 401,
+    "before": 8,
+    "after": 383,
+    "new_passes": 375,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 18,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/indexOf/15.4.4.14-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-4-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-4-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-9-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/indexOf/15.4.4.14-9-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js:sloppy  Uncaught InternalError: not implemented: Object.setPrototypeOf",
+      "built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js:strict  Uncaught InternalError: not implemented: Object.setPrototypeOf",
+      "built-ins/Array/prototype/indexOf/coerced-searchelement-fromindex-grow.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/indexOf/coerced-searchelement-fromindex-grow.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/indexOf/coerced-searchelement-fromindex-shrink.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/indexOf/coerced-searchelement-fromindex-shrink.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/indexOf/resizable-buffer-special-float-values.js:sloppy  Uncaught InternalError: not implemented: Function"
+    ]
+  },
+  "decision": "pass"
+}
