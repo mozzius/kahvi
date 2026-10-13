@@ -9,16 +9,12 @@ pub(crate) fn prototype_has_own_property(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _propertyKey_ be ? ToPropertyKey(_value_).
-    // 2. Let _obj_ be ? ToObject(*this* value).
-    // 3. Return ? HasOwnProperty(_obj_, _propertyKey_).
-    //
-    // NOTE:
-    // The ordering of steps [step-hasownproperty-topropertykey] and [step-hasownproperty-toobject] is chosen to ensure that any exception that would have been thrown by step [step-hasownproperty-topropertykey] in previous editions of this specification will continue to be thrown even if the *this* value is *undefined* or *null*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.prototype.hasOwnProperty"))
+    // 1. Let P be ? ToPropertyKey(V).
+    let p = ops::to_property_key(agent, args.get_or_undefined(0))?;
+    // 2. Let O be ? ToObject(this value).
+    let o = ops::to_object(agent, this)?;
+    // 3. Return ? HasOwnProperty(O, P).
+    Ok(Value::Boolean(ops::has_own_property(agent, o, p)?))
 }

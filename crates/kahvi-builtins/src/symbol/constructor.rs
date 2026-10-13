@@ -7,16 +7,20 @@ use kahvi_core::prelude::*;
 /// Symbol
 pub(crate) fn constructor(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. If NewTarget is not *undefined*, throw a *TypeError* exception.
-    // 2. If _description_ is *undefined*, let _descString_ be *undefined*.
-    // 3. Else, let _descString_ be ? ToString(_description_).
-    // 4. Return a new Symbol whose [[Description]] is _descString_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Symbol"))
+    // 1. If NewTarget is not undefined, throw a TypeError exception.
+    if new_target.is_some() {
+        return Err(agent.throw_type_error("Symbol is not a constructor"));
+    }
+    // 2. If description is undefined, let descString be undefined.
+    // 3. Else, let descString be ? ToString(description).
+    let desc = match args.get_or_undefined(0) {
+        Value::Undefined => None,
+        d => Some(ops::to_string(agent, d)?),
+    };
+    // 4. Return a new Symbol whose [[Description]] is descString.
+    Ok(Value::Symbol(agent.new_symbol(desc)))
 }

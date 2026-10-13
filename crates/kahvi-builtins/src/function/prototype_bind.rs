@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-function.prototype.bind
 
+use kahvi_core::function::{bound_function_create, set_function_length, set_function_name};
 use kahvi_core::prelude::*;
 
 /// Function.prototype.bind
@@ -9,36 +10,51 @@ pub(crate) fn prototype_bind(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _target_ be the *this* value.
-    // 2. If IsCallable(_target_) is *false*, throw a *TypeError* exception.
-    // 3. Let _boundFunc_ be ? BoundFunctionCreate(_target_, _thisArg_, _args_).
-    // 4. Let _length_ be 0.
-    // 5. Let _targetHasLength_ be ? HasOwnProperty(_target_, *"length"*).
-    // 6. If _targetHasLength_ is *true*, then
-    //    a. Let _targetLength_ be ? Get(_target_, *"length"*).
-    //    b. If _targetLength_ is a Number, then
-    //       i. Let _targetLengthAsInt_ be ! ToIntegerOrInfinity(_targetLength_).
-    //       ii. If _targetLengthAsInt_ = +∞, then
-    //          1. Set _length_ to +∞.
-    //       iii. Else if _targetLengthAsInt_ = -∞, then
-    //          1. Set _length_ to 0.
-    //       iv. Else,
-    //          1. Let _argCount_ be the number of elements in _args_.
-    //          2. Set _length_ to max(_targetLengthAsInt_ - _argCount_, 0).
-    // 7. Perform SetFunctionLength(_boundFunc_, _length_).
-    // 8. Let _targetName_ be ? Get(_target_, *"name"*).
-    // 9. If _targetName_ is not a String, set _targetName_ to the empty String.
-    // 10. Perform SetFunctionName(_boundFunc_, _targetName_, *"bound"*).
-    // 11. Return _boundFunc_.
-    //
-    // NOTE:
-    // Function objects created using `Function.prototype.bind` are exotic objects. They also do not have a *"prototype"* property.
-    // NOTE:
-    // If _target_ is either an arrow function or a bound function exotic object, then the _thisArg_ passed to this method will not be used by subsequent calls to _func_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Function.prototype.bind"))
+    // 1. Let Target be the this value.
+    // 2. If IsCallable(Target) is false, throw a TypeError exception.
+    let target = match this {
+        Value::Object(o) if o.is_callable(agent) => o,
+        _ => return Err(agent.throw_type_error("Bind must be called on a function")),
+    };
+    let this_arg = args.get_or_undefined(0);
+    let bound_args: Vec<Value> = args.get(1..).unwrap_or(&[]).to_vec();
+    let arg_count = bound_args.len() as f64;
+    // 3. Let F be ? BoundFunctionCreate(Target, thisArg, args).
+    let f = bound_function_create(agent, target, this_arg, bound_args)?;
+    // 4. Let L be 0.
+    let mut l = 0.0;
+    // 5. Let targetHasLength be ? HasOwnProperty(Target, "length").
+    let length_key = PropertyKey::String(agent.names.length);
+    // 6. If targetHasLength is true, then
+    if ops::has_own_property(agent, target, length_key)? {
+        // a. Let targetLen be ? Get(Target, "length").
+        // b. If targetLen is a Number, then
+        if let Value::Number(target_len) = ops::get(agent, target, length_key)? {
+            if target_len == f64::INFINITY {
+                // i. If targetLen is +∞𝔽, set L to +∞.
+                l = f64::INFINITY;
+            } else if target_len == f64::NEG_INFINITY {
+                // ii. Else if targetLen is -∞𝔽, set L to 0.
+                l = 0.0;
+            } else {
+                // iii.1 Let targetLenAsInt be ! ToIntegerOrInfinity(targetLen).
+                let as_int = ops::integer_or_infinity(target_len);
+                // iii.3 Set L to max(targetLenAsInt - argCount, 0).
+                l = (as_int - arg_count).max(0.0);
+            }
+        }
+    }
+    // 7. Perform SetFunctionLength(F, L).
+    set_function_length(agent, f, l);
+    // 8. Let targetName be ? Get(Target, "name").
+    let name_key = PropertyKey::String(agent.names.name);
+    let target_name = ops::get(agent, target, name_key)?;
+    // 9. If targetName is not a String, set targetName to the empty String.
+    let target_name = target_name.as_string().unwrap_or(agent.names.empty);
+    // 10. Perform SetFunctionName(F, targetName, "bound").
+    set_function_name(agent, f, PropertyKey::String(target_name), Some("bound"));
+    // 11. Return F.
+    Ok(Value::Object(f))
 }

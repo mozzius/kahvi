@@ -8,12 +8,9 @@ use kahvi_core::prelude::*;
 pub(crate) fn prototype_value_of(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Return ? ToObject(*this* value).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.prototype.valueOf"))
+    // 1. Return ? ToObject(this value).
+    Ok(Value::Object(ops::to_object(agent, this)?))
 }

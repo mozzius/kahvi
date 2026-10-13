@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-number.prototype.tostring
 
+use crate::support::this_value::this_number_value;
 use kahvi_core::prelude::*;
 
 /// Number.prototype.toString
@@ -9,19 +10,23 @@ pub(crate) fn prototype_to_string(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // NOTE:
-    // The optional _radix_ should be an integral Number value in the inclusive interval from *2*_𝔽 to *36*_𝔽. If _radix_ is *undefined* then *10*_𝔽 is used as the value of _radix_.
-    // This method performs the following steps when called:
-    //
-    // 1. Let _x_ be ? ThisNumberValue(*this* value).
-    // 2. If _radix_ is *undefined*, let _radixMV_ be 10.
-    // 3. Else, let _radixMV_ be ? SnapToInteger(_radix_, ~truncate~, 2, 36).
-    // 4. Return Number::toString(_x_, _radixMV_).
-    //
-    // This method is not generic; it throws a *TypeError* exception if its *this* value is not a Number or a Number object. Therefore, it cannot be transferred to other kinds of objects for use as a method.
-    // The *"length"* property of this method is *1*_𝔽.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.prototype.toString"))
+    // 1. Let x be ? ThisNumberValue(this value).
+    let x = this_number_value(agent, this)?;
+    // 2. If radix is undefined, let radixMV be 10.
+    // 3. Else, let radixMV be ? ToIntegerOrInfinity(radix).
+    let radix = match args.get_or_undefined(0) {
+        Value::Undefined => 10.0,
+        r => ops::to_integer_or_infinity(agent, r)?,
+    };
+    // 4. If radixMV is not in the inclusive interval from 2 to 36, throw a RangeError exception.
+    if !(2.0..=36.0).contains(&radix) {
+        return Err(agent.throw_range_error("toString() radix must be between 2 and 36"));
+    }
+    // 5. Return Number::toString(x, radixMV).
+    if radix == 10.0 {
+        return Ok(Value::String(ops::number_to_js_string(agent, x)));
+    }
+    Err(agent.not_implemented("Number::toString with a radix other than 10"))
 }

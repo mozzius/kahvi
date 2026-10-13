@@ -3,19 +3,19 @@
 //! Spec: https://tc39.es/ecma262/#sec-math.pow
 
 use kahvi_core::prelude::*;
+use kahvi_core::vm;
 
 /// Math.pow
 pub(crate) fn pow(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Set _base_ to ? ToNumber(_base_).
-    // 2. Set _exponent_ to ? ToNumber(_exponent_).
-    // 3. Return Number::exponentiate(_base_, _exponent_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.pow"))
+    // 1. Set base to ? ToNumber(base).
+    let base = ops::to_number(agent, args.get_or_undefined(0))?;
+    // 2. Set exponent to ? ToNumber(exponent).
+    let exponent = ops::to_number(agent, args.get_or_undefined(1))?;
+    // 3. Return Number::exponentiate(base, exponent).
+    Ok(Value::Number(vm::number_exponentiate(base, exponent)))
 }

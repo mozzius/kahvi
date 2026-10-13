@@ -7,13 +7,13 @@ use kahvi_core::prelude::*;
 /// Array.isArray
 pub(crate) fn is_array(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Return ? IsArray(_arg_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.isArray"))
+    // 1. Return ? IsArray(arg).
+    Ok(Value::Boolean(ops::is_array(
+        agent,
+        args.get_or_undefined(0),
+    )?))
 }

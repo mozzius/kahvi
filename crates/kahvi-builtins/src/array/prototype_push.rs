@@ -9,25 +9,28 @@ pub(crate) fn prototype_push(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // NOTE:
-    // This method appends the arguments to the end of the array, in the order in which they appear. It returns the new length of the array.
-    // This method performs the following steps when called:
-    //
-    // 1. Let _obj_ be ? ToObject(*this* value).
-    // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
-    // 3. Let _argCount_ be the number of elements in _items_.
-    // 4. If _length_ + _argCount_ > 2^53 - 1, throw a *TypeError* exception.
-    // 5. For each element _item_ of _items_, do
-    //    a. Perform ? Set(_obj_, ! ToString(𝔽(_length_)), _item_, *true*).
-    //    b. Set _length_ to _length_ + 1.
-    // 6. Perform ? Set(_obj_, *"length"*, 𝔽(_length_), *true*).
-    // 7. Return 𝔽(_length_).
-    //
-    // The *"length"* property of this method is *1*_𝔽.
-    // NOTE:
-    // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.prototype.push"))
+    // 1. Let O be ? ToObject(this value).
+    let o = ops::to_object(agent, this)?;
+    // 2. Let len be ? LengthOfArrayLike(O).
+    let mut len = ops::length_of_array_like(agent, o)?;
+    // 3. Let argCount be the number of elements in items.
+    // 4. If len + argCount > 2^53 - 1, throw a TypeError exception.
+    if len + args.len() as f64 > 9007199254740991.0 {
+        return Err(agent.throw_type_error("Pushing too many elements"));
+    }
+    // 5. For each element E of items, do
+    for e in args {
+        // a. Perform ? Set(O, ! ToString(𝔽(len)), E, true).
+        let key = agent.key_from_index(len);
+        ops::set(agent, o, key, *e, true)?;
+        // b. Set len to len + 1.
+        len += 1.0;
+    }
+    // 6. Perform ? Set(O, "length", 𝔽(len), true).
+    let length_key = PropertyKey::String(agent.names.length);
+    ops::set(agent, o, length_key, Value::Number(len), true)?;
+    // 7. Return 𝔽(len).
+    Ok(Value::Number(len))
 }

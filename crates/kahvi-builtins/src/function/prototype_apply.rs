@@ -9,23 +9,23 @@ pub(crate) fn prototype_apply(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _func_ be the *this* value.
-    // 2. If IsCallable(_func_) is *false*, throw a *TypeError* exception.
-    // 3. If _argArray_ is either *undefined* or *null*, then
-    //    a. Perform PrepareForTailCall().
-    //    b. Return ? Call(_func_, _thisArg_).
-    // 4. Let _argList_ be ? CreateListFromArrayLike(_argArray_).
-    // 5. Perform PrepareForTailCall().
-    // 6. Return ? Call(_func_, _thisArg_, _argList_).
-    //
-    // NOTE:
-    // The _thisArg_ value is passed without modification as the *this* value. This is a change from Edition 3, where an *undefined* or *null* _thisArg_ is replaced with the global object and ToObject is applied to all other values and that result is passed as the *this* value. Even though the _thisArg_ is passed without modification, non-strict functions still perform these transformations upon entry to the function.
-    // NOTE:
-    // If _func_ is either an arrow function or a bound function exotic object, then the _thisArg_ will be ignored by the function [[Call]] in step [step-function-proto-apply-call].
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Function.prototype.apply"))
+    // 1. Let func be the this value.
+    let func = this;
+    // 2. If IsCallable(func) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, func) {
+        return Err(agent.throw_type_error("Function.prototype.apply called on a non-function"));
+    }
+    let this_arg = args.get_or_undefined(0);
+    let arg_array = args.get_or_undefined(1);
+    // 3. If argArray is either undefined or null, then
+    if arg_array.is_nullish() {
+        // b. Return ? Call(func, thisArg).
+        return ops::call(agent, func, this_arg, &[]);
+    }
+    // 4. Let argList be ? CreateListFromArrayLike(argArray).
+    let arg_list = ops::create_list_from_array_like(agent, arg_array, false)?;
+    // 6. Return ? Call(func, thisArg, argList).
+    ops::call(agent, func, this_arg, &arg_list)
 }

@@ -7,18 +7,20 @@ use kahvi_core::prelude::*;
 /// Object.defineProperty
 pub(crate) fn define_property(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function adds an own property and/or updates the attributes of an existing own property of an object.
-    // It performs the following steps when called:
-    //
-    // 1. If _obj_ is not an Object, throw a *TypeError* exception.
-    // 2. Let _propertyKey_ be ? ToPropertyKey(_key_).
-    // 3. Let _propertyDesc_ be ? ToPropertyDescriptor(_attrs_).
-    // 4. Perform ? DefinePropertyOrThrow(_obj_, _propertyKey_, _propertyDesc_).
-    // 5. Return _obj_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.defineProperty"))
+    // 1. If O is not an Object, throw a TypeError exception.
+    let Value::Object(o) = args.get_or_undefined(0) else {
+        return Err(agent.throw_type_error("Object.defineProperty called on non-object"));
+    };
+    // 2. Let key be ? ToPropertyKey(P).
+    let key = ops::to_property_key(agent, args.get_or_undefined(1))?;
+    // 3. Let desc be ? ToPropertyDescriptor(Attributes).
+    let desc = ops::to_property_descriptor(agent, args.get_or_undefined(2))?;
+    // 4. Perform ? DefinePropertyOrThrow(O, key, desc).
+    ops::define_property_or_throw(agent, o, key, desc)?;
+    // 5. Return O.
+    Ok(Value::Object(o))
 }

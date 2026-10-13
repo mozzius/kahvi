@@ -7,15 +7,14 @@ use kahvi_core::prelude::*;
 /// Object.keys
 pub(crate) fn keys(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Let _coerced_ be ? ToObject(_obj_).
-    // 2. Let _keyList_ be ? EnumerableOwnProperties(_coerced_, ~key~).
-    // 3. Return CreateArrayFromList(_keyList_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.keys"))
+    // 1. Let obj be ? ToObject(O).
+    let obj = ops::to_object(agent, args.get_or_undefined(0))?;
+    // 2. Let keyList be ? EnumerableOwnProperties(obj, key).
+    let key_list = ops::enumerable_own_properties(agent, obj, ops::EnumerableKind::Key)?;
+    // 3. Return CreateArrayFromList(keyList).
+    Ok(Value::Object(ops::create_array_from_list(agent, &key_list)))
 }

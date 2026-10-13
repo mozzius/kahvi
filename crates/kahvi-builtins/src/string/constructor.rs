@@ -2,24 +2,35 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-string-constructor-string-value
 
+use crate::support::this_value::symbol_descriptive_string;
 use kahvi_core::prelude::*;
 
 /// String
 pub(crate) fn constructor(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. If _value_ is not present, then
-    //    a. Let _string_ be the empty String.
-    // 2. Else,
-    //    a. If NewTarget is *undefined* and _value_ is a Symbol, return SymbolDescriptiveString(_value_).
-    //    b. Let _string_ be ? ToString(_value_).
-    // 3. If NewTarget is *undefined*, return _string_.
-    // 4. Return StringCreate(_string_, ? GetPrototypeFromConstructor(NewTarget, *"%String.prototype%"*)).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String"))
+    // 1. If value is not present, then let s be the empty String.
+    let s = match args.first() {
+        None => agent.names.empty,
+        Some(&value) => {
+            // 2.a If NewTarget is undefined and value is a Symbol, return SymbolDescriptiveString(value).
+            if new_target.is_none()
+                && let Value::Symbol(sym) = value
+            {
+                return Ok(Value::String(symbol_descriptive_string(agent, sym)));
+            }
+            // 2.b Let s be ? ToString(value).
+            ops::to_string(agent, value)?
+        }
+    };
+    // 3. If NewTarget is undefined, return s.
+    let Some(new_target) = new_target else {
+        return Ok(Value::String(s));
+    };
+    // 4. Return StringCreate(s, ? GetPrototypeFromConstructor(NewTarget, "%String.prototype%")).
+    let proto = ops::get_prototype_from_constructor(agent, new_target, "%String.prototype%")?;
+    Ok(Value::Object(ops::string_create(agent, s, proto)))
 }

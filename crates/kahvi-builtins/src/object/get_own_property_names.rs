@@ -7,13 +7,20 @@ use kahvi_core::prelude::*;
 /// Object.getOwnPropertyNames
 pub(crate) fn get_own_property_names(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Return CreateArrayFromList(? GetOwnPropertyKeys(_obj_, ~string~)).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.getOwnPropertyNames"))
+    // 1. Return CreateArrayFromList(? GetOwnPropertyKeys(O, string)).
+    // GetOwnPropertyKeys: 1. Let obj be ? ToObject(O).
+    let obj = ops::to_object(agent, args.get_or_undefined(0))?;
+    // 2. Let keys be ? obj.[[OwnPropertyKeys]]().
+    let keys = obj.internal_own_property_keys(agent)?;
+    // 3-4. The keys that are Strings.
+    let names: Vec<Value> = keys
+        .into_iter()
+        .filter(|k| !k.is_symbol())
+        .map(|k| agent.key_to_value(k))
+        .collect();
+    Ok(Value::Object(ops::create_array_from_list(agent, &names)))
 }

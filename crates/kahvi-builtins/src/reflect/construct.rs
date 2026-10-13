@@ -7,17 +7,31 @@ use kahvi_core::prelude::*;
 /// Reflect.construct
 pub(crate) fn construct(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. If IsConstructor(_target_) is *false*, throw a *TypeError* exception.
-    // 2. If _newTarget_ is not present, set _newTarget_ to _target_.
-    // 3. Else if IsConstructor(_newTarget_) is *false*, throw a *TypeError* exception.
-    // 4. Let _argList_ be ? CreateListFromArrayLike(_args_).
-    // 5. Return ? Construct(_target_, _argList_, _newTarget_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Reflect.construct"))
+    // 1. If IsConstructor(target) is false, throw a TypeError exception.
+    let target = match args.get_or_undefined(0) {
+        Value::Object(t) if t.is_constructor(agent) => t,
+        _ => return Err(agent.throw_type_error("Reflect.construct target is not a constructor")),
+    };
+    // 2. If newTarget is not present, set newTarget to target.
+    // 3. Else if IsConstructor(newTarget) is false, throw a TypeError exception.
+    let new_target = match args.get(2) {
+        None => target,
+        Some(Value::Object(nt)) if nt.is_constructor(agent) => *nt,
+        Some(_) => {
+            return Err(agent.throw_type_error("Reflect.construct newTarget is not a constructor"));
+        }
+    };
+    // 4. Let args be ? CreateListFromArrayLike(argumentsList).
+    let list = ops::create_list_from_array_like(agent, args.get_or_undefined(1), false)?;
+    // 5. Return ? Construct(target, args, newTarget).
+    Ok(Value::Object(ops::construct(
+        agent,
+        target,
+        &list,
+        Some(new_target),
+    )?))
 }

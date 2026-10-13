@@ -20,7 +20,7 @@ pub use call::{
 };
 pub use eval::{ParsedScript, evaluate_script, line_col, parse_script, perform_eval};
 pub use generator::{GeneratorData, GeneratorState, generator_resume, generator_resume_abrupt};
-pub use operators::{apply_binary_operator, type_of};
+pub use operators::{apply_binary_operator, number_exponentiate, type_of};
 
 use crate::ScriptOrModule;
 use crate::agent::Agent;

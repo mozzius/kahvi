@@ -206,6 +206,28 @@ pub fn create_builtin_function(
     func
 }
 
+/// BoundFunctionCreate(targetFunction, boundThis, boundArgs) (§10.4.1.3)
+pub fn bound_function_create(
+    agent: &mut Agent,
+    target: Object,
+    bound_this: Value,
+    bound_args: Vec<Value>,
+) -> JsResult<Object> {
+    // 1. Let proto be ? targetFunction.[[GetPrototypeOf]]().
+    let proto = target.internal_get_prototype_of(agent)?;
+    // 2-9. A new bound function exotic object with [[BoundTargetFunction]],
+    // [[BoundThis]] and [[BoundArguments]]; it has [[Construct]] exactly
+    // when the target does (Object::is_constructor checks the target).
+    Ok(agent.alloc(ObjectData::new(
+        proto,
+        ObjectKind::BoundFunction(Box::new(BoundFunction {
+            target,
+            bound_this,
+            bound_args,
+        })),
+    )))
+}
+
 /// Shorthand for the common case: a function in the current realm.
 pub fn builtin(agent: &mut Agent, behaviour: NativeFn, length: u32, name: &str) -> Object {
     let key = agent.key(name);

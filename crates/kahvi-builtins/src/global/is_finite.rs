@@ -7,16 +7,12 @@ use kahvi_core::prelude::*;
 /// isFinite
 pub(crate) fn is_finite(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function is the %isFinite% intrinsic object.
-    // It performs the following steps when called:
-    //
-    // 1. Let _number_ be ? ToNumber(_value_).
-    // 2. If _number_ is a finite Number, return *true*.
-    // 3. Return *false*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("isFinite"))
+    // 1. Let num be ? ToNumber(number).
+    let num = ops::to_number(agent, args.get_or_undefined(0))?;
+    // 2. If num is not finite, return false. 3. Otherwise, return true.
+    Ok(Value::Boolean(num.is_finite()))
 }

@@ -7,14 +7,15 @@ use kahvi_core::prelude::*;
 /// Object.getPrototypeOf
 pub(crate) fn get_prototype_of(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Let _coerced_ be ? ToObject(_obj_).
-    // 2. Return ? _coerced_.[[GetPrototypeOf]]().
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.getPrototypeOf"))
+    // 1. Let obj be ? ToObject(O).
+    let obj = ops::to_object(agent, args.get_or_undefined(0))?;
+    // 2. Return ? obj.[[GetPrototypeOf]]().
+    Ok(obj
+        .internal_get_prototype_of(agent)?
+        .map(Value::Object)
+        .unwrap_or(Value::Null))
 }

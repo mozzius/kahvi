@@ -225,6 +225,408 @@ const ALIASES: &[(&str, Key, &str)] = &[
     ("%Number%", Key::Str("parseInt"), "%parseInt%"),
 ];
 
+/// A data property whose value is not a function.
+#[derive(Clone, Copy)]
+enum Val {
+    Str(&'static str),
+    Num(f64),
+    /// Another intrinsic object.
+    Intrinsic(&'static str),
+}
+
+/// Value properties: (owner, key, value, writable, enumerable, configurable).
+const VALUES: &[(&str, Key, Val, bool, bool, bool)] = &[
+    (
+        "%Error.prototype%",
+        Key::Str("name"),
+        Val::Str("Error"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%Error.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%EvalError.prototype%",
+        Key::Str("name"),
+        Val::Str("EvalError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%EvalError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%RangeError.prototype%",
+        Key::Str("name"),
+        Val::Str("RangeError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%RangeError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%ReferenceError.prototype%",
+        Key::Str("name"),
+        Val::Str("ReferenceError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%ReferenceError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%SyntaxError.prototype%",
+        Key::Str("name"),
+        Val::Str("SyntaxError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%SyntaxError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%TypeError.prototype%",
+        Key::Str("name"),
+        Val::Str("TypeError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%TypeError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%URIError.prototype%",
+        Key::Str("name"),
+        Val::Str("URIError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%URIError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%AggregateError.prototype%",
+        Key::Str("name"),
+        Val::Str("AggregateError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%AggregateError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%SuppressedError.prototype%",
+        Key::Str("name"),
+        Val::Str("SuppressedError"),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%SuppressedError.prototype%",
+        Key::Str("message"),
+        Val::Str(""),
+        true,
+        false,
+        true,
+    ),
+    (
+        "%Number%",
+        Key::Str("EPSILON"),
+        Val::Num(f64::EPSILON),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("MAX_SAFE_INTEGER"),
+        Val::Num(9007199254740991.0),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("MAX_VALUE"),
+        Val::Num(f64::MAX),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("MIN_SAFE_INTEGER"),
+        Val::Num(-9007199254740991.0),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("MIN_VALUE"),
+        Val::Num(5e-324),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("NaN"),
+        Val::Num(f64::NAN),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("NEGATIVE_INFINITY"),
+        Val::Num(f64::NEG_INFINITY),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Number%",
+        Key::Str("POSITIVE_INFINITY"),
+        Val::Num(f64::INFINITY),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("E"),
+        Val::Num(std::f64::consts::E),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("LN10"),
+        Val::Num(std::f64::consts::LN_10),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("LN2"),
+        Val::Num(std::f64::consts::LN_2),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("LOG10E"),
+        Val::Num(std::f64::consts::LOG10_E),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("LOG2E"),
+        Val::Num(std::f64::consts::LOG2_E),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("PI"),
+        Val::Num(std::f64::consts::PI),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("SQRT1_2"),
+        Val::Num(std::f64::consts::FRAC_1_SQRT_2),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%Math%",
+        Key::Str("SQRT2"),
+        Val::Num(std::f64::consts::SQRT_2),
+        false,
+        false,
+        false,
+    ),
+    // GeneratorFunction.prototype.prototype and friends (§27.3.3, §27.4.3).
+    (
+        "%GeneratorFunction.prototype%",
+        Key::Str("prototype"),
+        Val::Intrinsic("%GeneratorPrototype%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%GeneratorPrototype%",
+        Key::Str("constructor"),
+        Val::Intrinsic("%GeneratorFunction.prototype%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%AsyncGeneratorFunction.prototype%",
+        Key::Str("prototype"),
+        Val::Intrinsic("%AsyncGeneratorPrototype%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%AsyncGeneratorPrototype%",
+        Key::Str("constructor"),
+        Val::Intrinsic("%AsyncGeneratorFunction.prototype%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%GeneratorFunction%",
+        Key::Str("prototype"),
+        Val::Intrinsic("%GeneratorFunction.prototype%"),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%GeneratorFunction.prototype%",
+        Key::Str("constructor"),
+        Val::Intrinsic("%GeneratorFunction%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%AsyncGeneratorFunction%",
+        Key::Str("prototype"),
+        Val::Intrinsic("%AsyncGeneratorFunction.prototype%"),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%AsyncGeneratorFunction.prototype%",
+        Key::Str("constructor"),
+        Val::Intrinsic("%AsyncGeneratorFunction%"),
+        false,
+        false,
+        true,
+    ),
+    (
+        "%AsyncFunction%",
+        Key::Str("prototype"),
+        Val::Intrinsic("%AsyncFunction.prototype%"),
+        false,
+        false,
+        false,
+    ),
+    (
+        "%AsyncFunction.prototype%",
+        Key::Str("constructor"),
+        Val::Intrinsic("%AsyncFunction%"),
+        false,
+        false,
+        true,
+    ),
+];
+
+/// [Symbol.toStringTag] values: { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: true }.
+const TO_STRING_TAGS: &[(&str, &str)] = &[
+    ("%Math%", "Math"),
+    ("%JSON%", "JSON"),
+    ("%Reflect%", "Reflect"),
+    ("%Atomics%", "Atomics"),
+    ("%Symbol.prototype%", "Symbol"),
+    ("%BigInt.prototype%", "BigInt"),
+    ("%Map.prototype%", "Map"),
+    ("%Set.prototype%", "Set"),
+    ("%WeakMap.prototype%", "WeakMap"),
+    ("%WeakSet.prototype%", "WeakSet"),
+    ("%WeakRef.prototype%", "WeakRef"),
+    ("%FinalizationRegistry.prototype%", "FinalizationRegistry"),
+    ("%Promise.prototype%", "Promise"),
+    ("%ArrayBuffer.prototype%", "ArrayBuffer"),
+    ("%SharedArrayBuffer.prototype%", "SharedArrayBuffer"),
+    ("%DataView.prototype%", "DataView"),
+    ("%ArrayIteratorPrototype%", "Array Iterator"),
+    ("%MapIteratorPrototype%", "Map Iterator"),
+    ("%SetIteratorPrototype%", "Set Iterator"),
+    ("%StringIteratorPrototype%", "String Iterator"),
+    ("%RegExpStringIteratorPrototype%", "RegExp String Iterator"),
+    ("%IteratorHelperPrototype%", "Iterator Helper"),
+    ("%GeneratorPrototype%", "Generator"),
+    ("%AsyncGeneratorPrototype%", "AsyncGenerator"),
+    ("%GeneratorFunction.prototype%", "GeneratorFunction"),
+    (
+        "%AsyncGeneratorFunction.prototype%",
+        "AsyncGeneratorFunction",
+    ),
+    ("%AsyncFunction.prototype%", "AsyncFunction"),
+    ("%DisposableStack.prototype%", "DisposableStack"),
+    ("%AsyncDisposableStack.prototype%", "AsyncDisposableStack"),
+];
+
 /// Namespace objects installed on the global object.
 const NAMESPACES: &[&str] = &["Math", "JSON", "Reflect", "Atomics"];
 
@@ -470,6 +872,31 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         };
         let key = key_of(agent, key);
         define(agent, o, key, Value::Object(f), true, false, true);
+    }
+
+    // Value properties.
+    for &(owner, key, value, w, e, c) in VALUES {
+        let Some(&o) = agent.realm(realm).intrinsics.get(owner) else {
+            continue;
+        };
+        let value = match value {
+            Val::Str(s) => Value::String(agent.string(s)),
+            Val::Num(n) => Value::Number(n),
+            Val::Intrinsic(name) => match agent.realm(realm).intrinsics.get(name) {
+                Some(&v) => Value::Object(v),
+                None => continue,
+            },
+        };
+        let key = key_of(agent, key);
+        define(agent, o, key, value, w, e, c);
+    }
+    for &(owner, tag) in TO_STRING_TAGS {
+        let Some(&o) = agent.realm(realm).intrinsics.get(owner) else {
+            continue;
+        };
+        let key = symbol_key(agent, "toStringTag");
+        let value = Value::String(agent.string(tag));
+        define(agent, o, key, value, false, false, true);
     }
 
     // %ThrowTypeError% (§10.2.4.1): frozen, with non-configurable length and name.

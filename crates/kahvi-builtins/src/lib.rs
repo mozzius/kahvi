@@ -7,6 +7,7 @@
 //! Helpers shared by several built-ins go in `support/`.
 
 mod generated;
+mod support;
 mod table;
 
 pub use table::install;

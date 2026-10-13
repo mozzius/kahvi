@@ -7,16 +7,17 @@ use kahvi_core::prelude::*;
 /// Reflect.apply
 pub(crate) fn apply(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. If IsCallable(_target_) is *false*, throw a *TypeError* exception.
-    // 2. Let _argList_ be ? CreateListFromArrayLike(_args_).
-    // 3. Perform PrepareForTailCall().
-    // 4. Return ? Call(_target_, _thisArg_, _argList_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Reflect.apply"))
+    let target = args.get_or_undefined(0);
+    // 1. If IsCallable(target) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, target) {
+        return Err(agent.throw_type_error("Reflect.apply target is not callable"));
+    }
+    // 2. Let args be ? CreateListFromArrayLike(argumentsList).
+    let list = ops::create_list_from_array_like(agent, args.get_or_undefined(2), false)?;
+    // 4. Return ? Call(target, thisArgument, args).
+    ops::call(agent, target, args.get_or_undefined(1), &list)
 }
