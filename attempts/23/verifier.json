@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 32858,
+  "stop_reason": "tool_use",
+  "session_id": "3f12205c-922f-4193-80dc-d15f5035d614",
+  "total_cost_usd": 0.00665866,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9870,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 7480,
+    "output_tokens_details": {
+      "thinking_tokens": 6941
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9870,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 7480,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 9870,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9870
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Promise.all in its file only. I walked it against the spec and found no defect. Promise.all matches steps 1-9, including IfAbruptRejectPromise via reject_abrupt and the IteratorClose-only-if-not-done logic in step 8. PerformPromiseAll matches the spec order: the remainingElementsCount starts at 1, values is appended before nextPromise is computed, Call(promiseResolve, ctor, next) is used, and Invoke(nextPromise, \\\"then\\\", ...) is called with the reject capability. The resolve element function matches steps a-k, including AlreadyCalled, the shared values list, and the final Call of resolve on the values array. No test-shaped branches, no hardcoded values, and no swallowed errors. Unreachable-looking branches throw not_implemented or TypeError rather than inventing values. The two gate-reported failures are honest not-implemented errors from String.prototype[Symbol.iterator], which is outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Promise.all in its file only. I walked it against the spec and found no defect. Promise.all matches steps 1-9, including IfAbruptRejectPromise via reject_abrupt and the IteratorClose-only-if-not-done logic in step 8. PerformPromiseAll matches the spec order: the remainingElementsCount starts at 1, values is appended before nextPromise is computed, Call(promiseResolve, ctor, next) is used, and Invoke(nextPromise, \"then\", ...) is called with the reject capability. The resolve element function matches steps a-k, including AlreadyCalled, the shared values list, and the final Call of resolve on the values array. No test-shaped branches, no hardcoded values, and no swallowed errors. Unreachable-looking branches throw not_implemented or TypeError rather than inventing values. The two gate-reported failures are honest not-implemented errors from String.prototype[Symbol.iterator], which is outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 30529,
+  "type": "result",
+  "duration_ms": 32437,
+  "uuid": "246a2f99-fb43-4046-934c-4ca0bf9035c9",
+  "ttft_stream_ms": 1386,
+  "time_to_request_ms": 165,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 62,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 65,
+  "time_to_request_cpu_ms": 140,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1387,
+  "time_to_request_from_spawn_ms": 6561207,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791925535448.7197,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.86,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

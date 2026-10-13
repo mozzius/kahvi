@@ -1,0 +1,35 @@
+{
+  "ticket": "B-promise-all",
+  "base": "db4e2efc05e61a980b3d9429337c6dcaa3b8c3dc",
+  "head": "a0baa3a8ac79e0aa877c29aa9acc97442830d5b6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/all.rs",
+      "added": 264,
+      "removed": 28
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 196,
+    "before": 10,
+    "after": 194,
+    "new_passes": 184,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Promise/all/iter-arg-is-string-resolve.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/all/iter-arg-is-string-resolve.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]"
+    ]
+  },
+  "decision": "pass"
+}
