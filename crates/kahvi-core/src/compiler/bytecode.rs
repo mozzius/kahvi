@@ -270,6 +270,21 @@ pub enum Op {
     /// [exception] -> [exception]: IteratorClose(top, throw completion) if not
     /// done, pops it; the exception is rethrown by the following Throw.
     IteratorCloseForThrow,
+    /// [] -> [result]: Call(next, iterator) of the top (async) iterator, unchecked.
+    IteratorCallNext,
+    /// [result] -> [value], or jumps when done: the result-object checks of
+    /// an awaited `for await` step (not an Object is a TypeError).
+    IteratorResultUnwrap(Label),
+    /// [] -> [innerResult], or jumps: AsyncIteratorClose for a normal completion.
+    /// Pops the top iterator; jumps when it has no `return` method. Followed by
+    /// Await and IteratorCheckObject.
+    AsyncIteratorClose(Label),
+    /// [exception] -> [exception innerResult], or jumps: AsyncIteratorClose for a
+    /// throw completion. Pops the top iterator; jumps (ignoring errors) when there
+    /// is nothing to await.
+    AsyncIteratorCloseForThrow(Label),
+    /// [v] -> []: TypeError unless v is an Object (iterator.return() results).
+    IteratorCheckObject,
     /// [obj] -> []: EnumerateObjectProperties(ToObject(obj)) on the iterator stack
     /// (for undefined/null pushes an empty iteration).
     ForInStart,
@@ -286,6 +301,22 @@ pub enum Op {
     YieldDelegate(Label),
     /// [value] -> [awaited value]
     Await,
+    /// `yield*` in async generators (§15.5.5 with generatorKind async): the
+    /// resumption kind (0 normal, 1 throw, 2 return) lives in the frame.
+    SetDelegateKind(u8),
+    JumpIfDelegateKind(u8, Label),
+    /// [received] -> [innerResult]: Call(next) or Call(throw) on the delegate;
+    /// jumps (stack unchanged) when a throw resumption finds no `throw` method.
+    AsyncDelegateCall(Label),
+    /// [received] -> [innerReturnResult]: Call(return); jumps (stack unchanged)
+    /// when there is no `return` method.
+    AsyncDelegateReturn(Label),
+    /// [innerResult] -> [value]: the result checks; when done, pops the
+    /// delegate iterator and jumps.
+    AsyncDelegateResult(Label),
+    /// [value] -> [received]: AsyncGeneratorYield(value); the resumption
+    /// kind is stored for the loop.
+    DelegateYield,
 
     // ---- classes -----------------------------------------------------------------
     /// [superclass] -> [proto ctorParent] (or [] -> [proto ctorParent] when

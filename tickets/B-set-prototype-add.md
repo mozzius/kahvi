@@ -1,13 +1,13 @@
 +++
-id = "B-string-prototype-trim-left"
-title = "String.prototype.trimLeft"
+id = "B-set-prototype-add"
+title = "Set.prototype.add"
 kind = "builtin"
 tier = "haiku"
-scope = ["crates/kahvi-builtins/src/string/prototype_trim_left.rs"]
-read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
-spec = ["String.prototype.trimleft"]
-target = ["annexB/built-ins/String/prototype/trimLeft/"]
-priority = 0
+scope = ["crates/kahvi-builtins/src/set/prototype_add.rs"]
+read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/collections.rs", "crates/kahvi-builtins/src/map/prototype_set.rs", "crates/kahvi-builtins/src/map_iterator_prototype/next.rs"]
+spec = ["sec-set.prototype.add"]
+target = ["built-ins/Set/prototype/add/"]
+priority = 18
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

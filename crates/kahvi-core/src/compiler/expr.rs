@@ -332,6 +332,10 @@ impl Compiler<'_> {
                 if async_gen && !*delegate {
                     self.emit(Op::Await);
                 }
+                if *delegate && async_gen {
+                    self.compile_async_yield_star();
+                    return;
+                }
                 // yield*: the delegate iterator, and undefined as the first received value.
                 if *delegate {
                     self.emit(Op::GetIterator);
@@ -360,6 +364,67 @@ impl Compiler<'_> {
             }
             Expr::Paren(inner, _) => self.compile_expr(inner),
         }
+    }
+
+    /// `yield*` in an async generator (§15.5.5 steps 5-8 with generatorKind
+    /// async), the value to delegate to on the stack: [iterable] -> [result].
+    fn compile_async_yield_star(&mut self) {
+        self.emit(Op::GetAsyncIterator);
+        // received = NormalCompletion(undefined).
+        self.emit(Op::Undefined);
+        self.emit(Op::SetDelegateKind(0));
+        let top = self.here();
+        let to_return = self.emit(Op::JumpIfDelegateKind(2, 0));
+        // a/b: next, or throw; b.iii when there is no throw method: close, then a TypeError.
+        let no_throw = self.emit(Op::AsyncDelegateCall(0));
+        let to_await = self.emit(Op::Jump(0));
+        self.patch(no_throw);
+        self.emit(Op::Pop);
+        let skip = self.emit(Op::AsyncIteratorClose(0));
+        self.emit(Op::Await);
+        self.emit(Op::IteratorCheckObject);
+        self.patch(skip);
+        self.throw_error(
+            ErrorType::Type,
+            "The iterator does not provide a 'throw' method",
+        );
+        // c: a return resumption.
+        self.patch(to_return);
+        let no_return = self.emit(Op::AsyncDelegateReturn(0));
+        let to_await2 = self.emit(Op::Jump(0));
+        // c.iii: no return method: return ? Await(received.[[Value]]).
+        self.patch(no_return);
+        self.emit(Op::Await);
+        self.emit(Op::PopIterator);
+        self.emit_return();
+        // innerResult = ? Await(innerResult), then the result checks.
+        self.patch(to_await);
+        self.patch(to_await2);
+        self.emit(Op::Await);
+        let done = self.emit(Op::AsyncDelegateResult(0));
+        // received = Completion(AsyncGeneratorYield(? IteratorValue(innerResult))).
+        self.emit(Op::DelegateYield);
+        let unwrap = self.emit(Op::JumpIfDelegateKind(2, 0));
+        self.emit(Op::Jump(top));
+        // AsyncGeneratorUnwrapYieldResumption: a return resumption awaits its
+        // value; a rejection becomes a throw completion.
+        self.patch(unwrap);
+        let caught = self.emit(Op::PushHandler(0));
+        self.emit(Op::Await);
+        self.emit(Op::PopHandler);
+        self.emit(Op::Jump(top));
+        self.patch(caught);
+        self.emit(Op::Swap);
+        self.emit(Op::Pop);
+        self.emit(Op::SetDelegateKind(1));
+        self.emit(Op::Jump(top));
+        // Done: the value is the result of yield*, or the return value.
+        self.patch(done);
+        let as_return = self.emit(Op::JumpIfDelegateKind(2, 0));
+        let after = self.emit(Op::Jump(0));
+        self.patch(as_return);
+        self.emit_return();
+        self.patch(after);
     }
 
     /// Inside an optional chain: if the value on top is undefined or null,

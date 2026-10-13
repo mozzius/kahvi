@@ -361,20 +361,33 @@ pub(super) fn resume(agent: &mut Agent, g: Object, mut how: Completion) -> JsRes
                 at_start,
             )
         };
-        // Deliver the completion at the suspension point.
-        let early = match how {
-            Completion::Normal(v) => {
-                if !at_start {
-                    frame.stack.push(v);
+        // Deliver the completion at the suspension point. Inside an async
+        // yield*, the delegation loop handles every kind of completion.
+        let early = if frame.delegating {
+            frame.delegating = false;
+            let (v, kind) = match how {
+                Completion::Normal(v) => (v, 0),
+                Completion::Throw(v) => (v, 1),
+                Completion::Return(v) => (v, 2),
+            };
+            frame.stack.push(v);
+            frame.delegate_kind = kind;
+            None
+        } else {
+            match how {
+                Completion::Normal(v) => {
+                    if !at_start {
+                        frame.stack.push(v);
+                    }
+                    None
                 }
-                None
+                Completion::Return(v) => {
+                    frame.stack.push(v);
+                    frame.pc = frame.yield_return_pc;
+                    None
+                }
+                Completion::Throw(e) => (!frame.handle_throw(e)).then_some(Err(JsError::Throw(e))),
             }
-            Completion::Return(v) => {
-                frame.stack.push(v);
-                frame.pc = frame.yield_return_pc;
-                None
-            }
-            Completion::Throw(e) => (!frame.handle_throw(e)).then_some(Err(JsError::Throw(e))),
         };
         let result = match early {
             Some(r) => r,

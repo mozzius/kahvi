@@ -37,13 +37,23 @@ SRC = gen.OUT
 WORKER_GROUPS = {
     "object", "array", "array_iterator_prototype", "string", "number", "boolean", "symbol", "math", "json",
     "reflect", "global", "error", "aggregate_error", "suppressed_error", "function", "promise",
+    "map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype",
+    "string_iterator_prototype",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
     "Function": "CreateDynamicFunction needs parser entry points for parameters and bodies",
-    "Array.fromAsync": "needs async functions and promises",
     "String.prototype.normalize": "needs Unicode normalization tables",
     "Promise.try": "needs the Promise.try proposal semantics reviewed first",
+}
+
+# Installed as aliases of another built-in (see ALIASES in table.rs): the stub
+# is never reachable, so no ticket.
+ALIASED = {
+    "Array.prototype[Symbol.iterator]", "Map.prototype[Symbol.iterator]", "Set.prototype[Symbol.iterator]",
+    "Set.prototype.keys", "String.prototype.trimLeft", "String.prototype.trimRight",
+    "Date.prototype.toGMTString", "Number.parseFloat", "Number.parseInt",
+    "%TypedArray%.prototype[Symbol.iterator]",
 }
 
 STUB_MARKER = "let _ = (this, args, new_target);"
@@ -59,6 +69,14 @@ READ = [
 EXTRA_READ = {
     "promise": ["crates/kahvi-core/src/ops/promise.rs", "crates/kahvi-builtins/src/promise/prototype_then.rs"],
 }
+for _g in ("map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype"):
+    EXTRA_READ[_g] = [
+        "crates/kahvi-builtins/src/support/collections.rs",
+        "crates/kahvi-builtins/src/map/prototype_set.rs",
+        "crates/kahvi-builtins/src/map_iterator_prototype/next.rs",
+    ]
+EXTRA_READ["string_iterator_prototype"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
+EXTRA_READ["string"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
 
 NOTES = """\
 Implement this built-in in its file, following the spec steps already in
@@ -100,6 +118,69 @@ def test_dir(fn):
     return None
 
 
+# Engine internals that are ticket-sized: (id, title, scope file, spec id, test262 target).
+PROXY_TRAPS = [
+    ("get_prototype_of", "[[GetPrototypeOf]]", "getprototypeof", "getPrototypeOf"),
+    ("set_prototype_of", "[[SetPrototypeOf]]", "setprototypeof-v", "setPrototypeOf"),
+    ("is_extensible", "[[IsExtensible]]", "isextensible", "isExtensible"),
+    ("prevent_extensions", "[[PreventExtensions]]", "preventextensions", "preventExtensions"),
+    ("get_own_property", "[[GetOwnProperty]]", "getownproperty-p", "getOwnPropertyDescriptor"),
+    ("define_own_property", "[[DefineOwnProperty]]", "defineownproperty-p-desc", "defineProperty"),
+    ("has_property", "[[HasProperty]]", "hasproperty-p", "has"),
+    ("get", "[[Get]]", "get-p-receiver", "get"),
+    ("set", "[[Set]]", "set-p-v-receiver", "set"),
+    ("delete", "[[Delete]]", "delete-p", "deleteProperty"),
+    ("own_property_keys", "[[OwnPropertyKeys]]", "ownpropertykeys", "ownKeys"),
+    ("call", "[[Call]]", "call-thisargument-argumentslist", "apply"),
+    ("construct", "[[Construct]]", "construct-argumentslist-newtarget", "construct"),
+]
+
+PROXY_NOTES = """\
+Implement this Proxy internal method in its file, following the spec steps
+already in the stub: keep each step as a comment directly above the code.
+
+- `p.validate_non_revoked(agent)?` is ValidateNonRevokedProxy and gives
+  (target, handler). Call the target's internal methods directly
+  (`target.internal_get(agent, key, receiver)`); a property key becomes a
+  value for the trap call with `agent.key_to_value(key)`.
+- Property descriptors: `ops::from_property_descriptor`,
+  `ops::to_property_descriptor`, `ops::complete_property_descriptor`; the
+  invariant checks use IsCompatiblePropertyDescriptor, which is
+  `kahvi_core::object::internal::validate_and_apply_property_descriptor`
+  called with `None` as the object.
+- Anything you cannot finish must still return
+  `Err(agent.not_implemented("..."))`. No new Rust tests.
+"""
+
+
+def proxy_tickets(counts):
+    out = []
+    for f, method, cid, test_dir in PROXY_TRAPS:
+        title = f"Proxy {method}"
+        tid = "C-proxy-" + f.replace("_", "-")
+        scope = f"crates/kahvi-core/src/object/proxy/{f}.rs"
+        target = f"built-ins/Proxy/{test_dir}/"
+        if STUB_MARKER_PROXY not in (ROOT / scope).read_text():
+            continue
+        meta = [
+            f'id = "{tid}"',
+            f"title = {json.dumps(title)}",
+            'kind = "builtin"',
+            'tier = "haiku"',
+            f"scope = [{json.dumps(scope)}]",
+            "read = [" + ", ".join(json.dumps(r) for r in ["docs/API.md", "crates/kahvi-core/src/object/proxy/mod.rs", "crates/kahvi-core/src/object/internal.rs"]) + "]",
+            f'spec = ["sec-proxy-object-internal-methods-and-internal-slots-{cid}"]',
+            f"target = [{json.dumps(target)}]",
+            # Blocked runs were counted under the constructor before the traps existed.
+            f"priority = {max(counts.get(title, 0), counts.get('Proxy', 0) // len(PROXY_TRAPS))}",
+        ]
+        out.append((tid, "+++\n" + "\n".join(meta) + "\n+++\n" + PROXY_NOTES))
+    return out
+
+
+STUB_MARKER_PROXY = "let _ = (o, p);"
+
+
 def ticket_id(fn):
     return "B-" + re.sub(r"[^a-z0-9]+", "-", f"{fn.group}-{fn.file}".lower()).strip("-")
 
@@ -116,6 +197,11 @@ def main(argv):
         stub = SRC / fn.group / f"{fn.file}.rs"
         if not stub.exists() or STUB_MARKER not in stub.read_text():
             continue  # already implemented
+        if fn.display in ALIASED:
+            stale = TICKETS / f"{ticket_id(fn)}.md"
+            if stale.exists():
+                stale.unlink()
+            continue
         if fn.display in ARCHITECT_FIRST:
             skipped.append(f"{fn.display}: {ARCHITECT_FIRST[fn.display]}")
             continue
@@ -138,6 +224,9 @@ def main(argv):
             f"priority = {priority}",
         ]
         (TICKETS / f"{tid}.md").write_text("+++\n" + "\n".join(meta) + "\n+++\n" + NOTES)
+        written += 1
+    for tid, text in proxy_tickets(counts):
+        (TICKETS / f"{tid}.md").write_text(text)
         written += 1
     print(f"{written} tickets written")
     for s in skipped:

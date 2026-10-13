@@ -1,13 +1,13 @@
 +++
-id = "B-string-prototype-trim-right"
-title = "String.prototype.trimRight"
+id = "B-map-group-by"
+title = "Map.groupBy"
 kind = "builtin"
 tier = "haiku"
-scope = ["crates/kahvi-builtins/src/string/prototype_trim_right.rs"]
-read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
-spec = ["String.prototype.trimright"]
-target = ["annexB/built-ins/String/prototype/trimRight/"]
-priority = 0
+scope = ["crates/kahvi-builtins/src/map/group_by.rs"]
+read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/collections.rs", "crates/kahvi-builtins/src/map/prototype_set.rs", "crates/kahvi-builtins/src/map_iterator_prototype/next.rs"]
+spec = ["sec-map.groupby"]
+target = ["built-ins/Map/groupBy/"]
+priority = 24
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

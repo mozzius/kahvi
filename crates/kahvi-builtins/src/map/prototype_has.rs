@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-map.prototype.has
 
+use crate::support::collections::{collection_key, map_table, this_map};
 use kahvi_core::prelude::*;
 
 /// Map.prototype.has
@@ -9,16 +10,13 @@ pub(crate) fn prototype_has(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _map_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_map_, [[MapData]]).
-    // 3. Set _key_ to CanonicalizeKeyedCollectionKey(_key_).
-    // 4. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
-    //    a. If _entry_.[[Key]] is not ~empty~ and SameValue(_entry_.[[Key]], _key_) is *true*, return *true*.
-    // 5. Return *false*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Map.prototype.has"))
+    // 1. Let M be the this value.
+    // 2. Perform ? RequireInternalSlot(M, [[MapData]]).
+    let m = this_map(agent, this)?;
+    // 3. Set key to CanonicalizeKeyedCollectionKey(key).
+    let key = collection_key(agent, args.get_or_undefined(0));
+    // 4-5. Return true if some p.[[Key]] is SameValue to key; otherwise false.
+    Ok(Value::Boolean(map_table(agent, m).has(&key)))
 }
