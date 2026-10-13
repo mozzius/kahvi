@@ -1,0 +1,40 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": true,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change is a mostly faithful Promise.any implementation (GetPromiseResolve, GetIterator, the Some(next) branch order, IfAbruptRejectPromise, IteratorClose on abrupt results, and the reject element functions all follow the spec). One real deviation: in PerformPromiseAny's done branch, when remainingElementsCount hits 0 the code calls resultCapability.[[Reject]] directly and propagates its error with `?`. Promise.any then sees an abrupt completion while iteratorRecord.[[Done]] is true and routes it through reject_abrupt, which calls [[Reject]] a second time (with the thrown value, not an AggregateError) and returns the promise instead of throwing. The spec has PerformPromiseAny throw the AggregateError and lets Promise.any's IfAbruptRejectPromise make the single Call(reject). This is observable when [[Reject]] throws (possible with a user-supplied constructor), so the double call and the swallowed throw are defects. Everything else I checked looks correct, and the code is not special-cased or hardcoded.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/promise/any.rs",
+      "line": 176,
+      "question": "contradicts_spec",
+      "issue": "In PerformPromiseAny step 4.b.ii the done branch calls ops::call(agent, reject, ..., &[aggregate_error])? directly. The spec returns ThrowCompletion(error) here and lets Promise.any's IfAbruptRejectPromise (step 8.b) make the one Call(capability.[[Reject]]). Because iteratorRecord.[[Done]] is true at this point, the error reaches reject_abrupt in Promise.any, which calls [[Reject]] a second time with the thrown value and returns the promise. If [[Reject]] throws, the spec propagates that throw out of Promise.any, but this code returns a promise instead. [[Reject]] is therefore called twice."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/any.rs",
+      "line": 94,
+      "question": "swallows_errors",
+      "issue": "reject_abrupt turns a throw from the earlier Call(capability.[[Reject]]) into a second reject call and a normal return of capability.[[Promise]]. The original abrupt completion from the done branch is replaced rather than propagated, which is the same defect as the done-branch reject call above."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/any.rs",
+      "line": 78,
+      "question": "contradicts_spec",
+      "issue": "Promise.any step 8 (IfAbruptRejectPromise) is applied to an error that PerformPromiseAny has already acted on by calling [[Reject]]. The spec's PerformPromiseAny only returns ThrowCompletion(error) in this case, so the rejection is performed exactly once by step 8.b."
+    }
+  ],
+  "notes_for_next_attempt": "Fix the done branch of perform_promise_any (around line 170-178). When remainingElementsCount reaches 0, build the AggregateError and return Err(JsError::Throw(aggregate_error)) without calling reject. Let Promise.any's IfAbruptRejectPromise (step 8.b via reject_abrupt) make the single Call(capability.[[Reject]], undefined, \u00ab error \u00bb) with `?` semantics. Keep the reject element function's direct `return ops::call(reject, ...)` (spec: Return ? Call(...)). Check that ops::iterator_step_value sets iterator_record.done on both exhaustion and throw, since the step 8.a logic depends on it. Also check that the GC traces Values held inside ObjectKind::Native state (PromiseAnyState.errors/reject and ElementRecord), because the code keeps them only in Rust-side boxes. In the reject element, the silent no-op `if let Some(slot) = errors.get_mut(...)` should be an error or assert rather than being silently ignored. The remaining test262 failures are the honest String.prototype[Symbol.iterator] not-implemented paths and are acceptable.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "swallows_errors",
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

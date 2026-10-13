@@ -1,0 +1,37 @@
+{
+  "ticket": "B-promise-any",
+  "base": "630cb1951ff3efc3b7fbe57f65b59911668d08be",
+  "head": "638036a2809890ec6b77b500fa0f1d8215e29804",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/any.rs",
+      "added": 265,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 188,
+    "before": 12,
+    "after": 184,
+    "new_passes": 172,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Promise/any/iter-arg-is-empty-string-reject.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/any/iter-arg-is-empty-string-reject.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/any/iter-arg-is-string-resolve.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/any/iter-arg-is-string-resolve.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]"
+    ]
+  },
+  "decision": "pass"
+}

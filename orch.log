@@ -27,3 +27,7 @@
 [21:09:18] B-array-prototype-splice: attempt 24 finished ($0.011, 11 turns)
 [21:10:02] B-array-prototype-splice: verifier: accept The diff implements all 18 steps of Array.prototype.splice in order. Observable operations match the spec: ToObject, LengthOfArrayLike, ToClampedIndex
 [21:12:50] B-promise-all: merged (+474, 57791 total)
+[21:12:52] B-promise-any: attempt on slot 1 with haiku
+[21:12:52] B-array-prototype-splice: full test262 run for merge
+[21:13:45] B-promise-any: attempt 25 finished ($0.016, 13 turns)
+[21:14:55] B-promise-any: verifier: revise The change is a mostly faithful Promise.any implementation (GetPromiseResolve, GetIterator, the Some(next) branch order, IfAbruptRejectPromise, Iterat
