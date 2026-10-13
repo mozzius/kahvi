@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 110350,
+  "stop_reason": "end_turn",
+  "session_id": "2ee06f8a-12eb-467d-856f-779b2c7cf004",
+  "total_cost_usd": 0.032171570000000003,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 56431,
+    "cache_read_input_tokens": 587347,
+    "output_tokens": 28678,
+    "output_tokens_details": {
+      "thinking_tokens": 15262
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 56431,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 881,
+        "cache_read_input_tokens": 63249,
+        "cache_creation_input_tokens": 662,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 662
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_016UQghjHRVz4zptowT22zQF",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2021 crates/kahvi-builtins/src/json/stringify.rs 2>&1 | head -40; echo FMT_DONE",
+        "description": "Check formatting of the stringify file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Running `rustfmt` was denied, and `cargo fmt` would reformat the whole crate, so I'm leaving formatting as is. Final check of the test run and clippy has already passed.\n\n`JSON.stringify` is implemented in `crates/kahvi-builtins/src/json/stringify.rs`. The `json/stringify/` run is at 108 of 134 passing, up from 8 on main, and clippy is clean.\n\nThe 26 remaining failures are outside this file:\n- `length.js` (2 runs): `generated.rs` registers `stringify` with `length: 1`, and the spec requires 3.\n- The Proxy `[[Get]]` tests (16 runs of \"not implemented\") hit an engine gap: Proxy `[[Get]]` is unimplemented, so they throw the not-implemented error.\n- The rest are other not-implemented paths: `BigInt`, `RegExp` and `Array.prototype.reverse` in the test262 suite.\n\nI did not run `rustfmt`/`cargo fmt` (the first was denied, and the second would touch files outside scope), so formatting is unchecked. The helpers `serialize_json_property`, `serialize_json_object`, `serialize_json_array`, `quote_json_string` and `unicode_escape` are private to this file; other built-ins may need them later, so they may be worth moving into `support/` at that point.\n\nBLOCKED: `length: 1` for JSON.stringify in crates/kahvi-builtins/src/generated.rs must be 3 (outside this ticket's file scope); Proxy [[Get]] is not implemented in the engine (needed by 16 of the test262 runs)",
+  "ttft_ms": 1508,
+  "type": "result",
+  "duration_ms": 117080,
+  "uuid": "67bae7b0-0f43-42ea-bd13-b8961c3bb7a7",
+  "ttft_stream_ms": 1103,
+  "time_to_request_ms": 205,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 20,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 4,
+    "tool_pool_refresh": 4,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 66,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 156,
+  "time_to_request_cpu_ms": 222,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1104,
+  "time_to_request_from_spawn_ms": 7264906,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791926239629.0735,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.88,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "ticket": "B-json-stringify",
+  "base": "0703d7ad8f83446e23ed148d625e7691ba9406da",
+  "head": "b49c4aa4f10a8797168c195906407b84bf65e91b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/json/stringify.rs",
+      "added": 459,
+      "removed": 82
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 134,
+    "before": 8,
+    "after": 108,
+    "new_passes": 100,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 24,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/JSON/stringify/length.js:sloppy  Uncaught Test262Error: length descriptor value should be 3; length value should be 3",
+      "built-ins/JSON/stringify/length.js:strict  Uncaught Test262Error: length descriptor value should be 3; length value should be 3",
+      "built-ins/JSON/stringify/replacer-array-abrupt.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/replacer-array-abrupt.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/replacer-array-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/replacer-array-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/replacer-array-wrong-type.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/replacer-array-wrong-type.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-abrupt.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-abrupt.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-proxy-revoked.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-proxy-revoked.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-array-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/JSON/stringify/value-bigint-cross-realm.js:sloppy  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
