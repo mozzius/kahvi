@@ -242,7 +242,10 @@ impl Compiler<'_> {
     fn bind_array(&mut self, elements: &[Option<PatternElem>], rest: Option<&Pattern>, mode: Mode) {
         self.emit(Op::GetIterator);
         let handler = self.emit(Op::PushHandler(0));
-        self.scopes.push(JumpScope::Iterator { close: true });
+        self.scopes.push(JumpScope::Iterator {
+            close: true,
+            is_async: false,
+        });
         self.scopes.push(JumpScope::Handler);
         for el in elements {
             match el {

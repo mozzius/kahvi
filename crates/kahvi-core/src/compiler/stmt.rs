@@ -292,10 +292,6 @@ impl Compiler<'_> {
         is_await: bool,
     ) {
         self.reset_completion();
-        if is_await {
-            self.not_implemented("for await");
-            return;
-        }
         let index = self.push_breakable(true, true);
 
         // ForIn/OfHeadEvaluation: the expression sees the loop's lexical
@@ -347,14 +343,30 @@ impl Compiler<'_> {
             (self.code.scopes.len() - 1) as u32
         });
 
-        if is_of {
+        if is_await {
+            self.emit(Op::GetAsyncIterator);
+            self.scopes.push(JumpScope::Iterator {
+                close: true,
+                is_async: true,
+            });
+        } else if is_of {
             self.emit(Op::GetIterator);
-            self.scopes.push(JumpScope::Iterator { close: true });
+            self.scopes.push(JumpScope::Iterator {
+                close: true,
+                is_async: false,
+            });
         } else {
             self.emit(Op::ForInStart);
-            self.scopes.push(JumpScope::Iterator { close: false });
+            self.scopes.push(JumpScope::Iterator {
+                close: false,
+                is_async: false,
+            });
         }
-        let handler = is_of.then(|| {
+        // Sync for-of: one handler around the whole loop (a throwing next()
+        // marks the iterator done, so it is not closed). for await: the
+        // handler covers only the body, since the awaited next() result must
+        // not close the iterator either.
+        let handler = (is_of && !is_await).then(|| {
             let h = self.emit(Op::PushHandler(0));
             self.scopes.push(JumpScope::Handler);
             h
@@ -362,11 +374,22 @@ impl Compiler<'_> {
         self.set_continue_depth_here(index);
 
         let next = self.here();
-        let done = self.emit(if is_of {
-            Op::IteratorNext(0)
+        let (done, handler) = if is_await {
+            // nextResult = ? Call(next); nextResult = ? Await(nextResult); checks; done?
+            self.emit(Op::IteratorCallNext);
+            self.emit(Op::Await);
+            let done = self.emit(Op::IteratorResultUnwrap(0));
+            let h = self.emit(Op::PushHandler(0));
+            self.scopes.push(JumpScope::Handler);
+            (done, Some(h))
         } else {
-            Op::ForInNext(0)
-        });
+            let done = self.emit(if is_of {
+                Op::IteratorNext(0)
+            } else {
+                Op::ForInNext(0)
+            });
+            (done, handler)
+        };
         if let Some(scope) = iteration_scope {
             self.emit(Op::PushScope(scope));
             self.scopes.push(JumpScope::Env);
@@ -388,22 +411,46 @@ impl Compiler<'_> {
             self.scopes.pop();
             self.emit(Op::PopScope);
         }
+        if is_await {
+            self.scopes.pop();
+            self.emit(Op::PopHandler);
+        }
         self.patch_continues_here(index);
         self.emit(Op::Jump(next));
 
         // Done: the iterator is exhausted.
         self.patch(done);
-        if handler.is_some() {
+        if handler.is_some() && !is_await {
             self.scopes.pop();
             self.emit(Op::PopHandler);
         }
         self.scopes.pop();
         self.emit(Op::PopIterator);
         let end = self.emit(Op::Jump(0));
-        if let Some(h) = handler {
-            self.patch(h);
-            self.emit(Op::IteratorCloseForThrow);
-            self.emit(Op::Throw);
+        match handler {
+            Some(h) if is_await => {
+                // AsyncIteratorClose(iteratorRecord, throw completion): errors
+                // while closing are ignored and the original exception rethrown.
+                self.patch(h);
+                let skip = self.emit(Op::AsyncIteratorCloseForThrow(0));
+                let ignore = self.emit(Op::PushHandler(0));
+                self.emit(Op::Await);
+                self.emit(Op::PopHandler);
+                self.emit(Op::Pop);
+                let to_throw = self.emit(Op::Jump(0));
+                self.patch(ignore);
+                self.emit(Op::Pop);
+                self.emit(Op::Pop);
+                self.patch(skip);
+                self.patch(to_throw);
+                self.emit(Op::Throw);
+            }
+            Some(h) => {
+                self.patch(h);
+                self.emit(Op::IteratorCloseForThrow);
+                self.emit(Op::Throw);
+            }
+            None => {}
         }
         self.patch(end);
         self.pop_breakable(None);

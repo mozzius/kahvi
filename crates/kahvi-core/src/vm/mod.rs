@@ -5,6 +5,7 @@
 //! just keeping its frame. Calls from JavaScript to JavaScript recurse on
 //! the Rust stack through [`call_ecma_function`].
 
+mod async_from_sync;
 mod async_function;
 mod async_generator;
 mod call;
@@ -16,6 +17,10 @@ mod operators;
 use std::collections::{HashSet, VecDeque};
 use std::sync::Arc;
 
+pub use async_from_sync::{
+    async_from_sync_next, async_from_sync_return, async_from_sync_throw,
+    create_async_from_sync_iterator,
+};
 pub use async_generator::{
     AsyncGeneratorState, async_generator_next, async_generator_return, async_generator_throw,
 };
@@ -1208,7 +1213,157 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let record = ops::get_iterator(agent, v, ops::IteratorKind::Sync)?;
             frame.iters.push(FrameIter::Iter(record));
         }
-        Op::GetAsyncIterator => return Err(agent.not_implemented("async iteration")),
+        Op::GetAsyncIterator => {
+            let v = frame.pop();
+            let record = ops::get_iterator(agent, v, ops::IteratorKind::Async)?;
+            frame.iters.push(FrameIter::Iter(record));
+        }
+        Op::IteratorCallNext => {
+            let FrameIter::Iter(record) = frame.top_iter() else {
+                unreachable!("iterator expected")
+            };
+            let record = *record;
+            let r = ops::call(
+                agent,
+                record.next_method,
+                Value::Object(record.iterator),
+                &[],
+            );
+            if r.is_err()
+                && let FrameIter::Iter(top) = frame.top_iter()
+            {
+                top.done = true;
+            }
+            frame.push(r?);
+        }
+        Op::IteratorResultUnwrap(l) => {
+            let result = frame.pop();
+            // If nextResult is not an Object, throw a TypeError exception.
+            let unwrapped = match result {
+                Value::Object(o) => match ops::iterator_complete(agent, o) {
+                    // Let done be ? IteratorComplete(nextResult). If done is true, the loop ends.
+                    Ok(true) => Ok(None),
+                    // Let nextValue be ? IteratorValue(nextResult).
+                    Ok(false) => ops::iterator_value(agent, o).map(Some),
+                    Err(e) => Err(e),
+                },
+                _ => Err(agent.throw_type_error("iterator result is not an object")),
+            };
+            let finished = !matches!(unwrapped, Ok(Some(_)));
+            if finished && let FrameIter::Iter(top) = frame.top_iter() {
+                top.done = true;
+            }
+            match unwrapped? {
+                Some(v) => frame.push(v),
+                None => return Ok(Flow::Jump(l as usize)),
+            }
+        }
+        Op::AsyncIteratorClose(l) => {
+            let Some(FrameIter::Iter(record)) = frame.iters.pop() else {
+                unreachable!("iterator expected")
+            };
+            // 3. Let innerResult be Completion(GetMethod(iterator, "return")).
+            let return_key = PropertyKey::String(agent.names.r#return);
+            let r = ops::get_method(agent, Value::Object(record.iterator), return_key)?;
+            // 4.b If return is undefined, return ? completion.
+            if r.is_undefined() {
+                return Ok(Flow::Jump(l as usize));
+            }
+            // 4.c Set innerResult to Completion(Call(return, iterator)); the Await follows.
+            let inner = ops::call(agent, r, Value::Object(record.iterator), &[])?;
+            frame.push(inner);
+        }
+        Op::AsyncIteratorCloseForThrow(l) => {
+            let Some(FrameIter::Iter(record)) = frame.iters.pop() else {
+                unreachable!("iterator expected")
+            };
+            if record.done {
+                return Ok(Flow::Jump(l as usize));
+            }
+            // With a throw completion, errors while closing are ignored.
+            let return_key = PropertyKey::String(agent.names.r#return);
+            let r = match ops::get_method(agent, Value::Object(record.iterator), return_key) {
+                Ok(r) if !r.is_undefined() => r,
+                Err(JsError::NotImplemented(m)) => return Err(JsError::NotImplemented(m)),
+                _ => return Ok(Flow::Jump(l as usize)),
+            };
+            match ops::call(agent, r, Value::Object(record.iterator), &[]) {
+                Ok(inner) => frame.push(inner),
+                Err(JsError::NotImplemented(m)) => return Err(JsError::NotImplemented(m)),
+                Err(_) => return Ok(Flow::Jump(l as usize)),
+            }
+        }
+        Op::SetDelegateKind(k) => frame.delegate_kind = k,
+        Op::JumpIfDelegateKind(k, l) => {
+            if frame.delegate_kind == k {
+                return Ok(Flow::Jump(l as usize));
+            }
+        }
+        Op::AsyncDelegateCall(l) => {
+            let received = frame.peek();
+            let FrameIter::Iter(record) = frame.top_iter() else {
+                unreachable!("yield* iterator")
+            };
+            let record = *record;
+            let iterator = Value::Object(record.iterator);
+            let inner = if frame.delegate_kind == 1 {
+                // b.i Let throw be ? GetMethod(iterator, "throw").
+                let throw_key = PropertyKey::String(agent.names.throw);
+                let throw = ops::get_method(agent, iterator, throw_key)?;
+                if throw.is_undefined() {
+                    return Ok(Flow::Jump(l as usize));
+                }
+                // b.ii.1 Let innerResult be ? Call(throw, iterator, « received.[[Value]] »).
+                ops::call(agent, throw, iterator, &[received])?
+            } else {
+                // a.i Let innerResult be ? Call(iteratorRecord.[[NextMethod]], iteratorRecord.[[Iterator]], « received.[[Value]] »).
+                ops::call(agent, record.next_method, iterator, &[received])?
+            };
+            frame.pop();
+            frame.push(inner);
+        }
+        Op::AsyncDelegateReturn(l) => {
+            let received = frame.peek();
+            let FrameIter::Iter(record) = frame.top_iter() else {
+                unreachable!("yield* iterator")
+            };
+            let iterator = Value::Object(record.iterator);
+            // c.ii Let return be ? GetMethod(iterator, "return").
+            let return_key = PropertyKey::String(agent.names.r#return);
+            let r = ops::get_method(agent, iterator, return_key)?;
+            if r.is_undefined() {
+                return Ok(Flow::Jump(l as usize));
+            }
+            // c.iv Let innerReturnResult be ? Call(return, iterator, « received.[[Value]] »).
+            let inner = ops::call(agent, r, iterator, &[received])?;
+            frame.pop();
+            frame.push(inner);
+        }
+        Op::AsyncDelegateResult(l) => {
+            // If innerResult is not an Object, throw a TypeError exception.
+            let Value::Object(inner) = frame.pop() else {
+                return Err(agent.throw_type_error("iterator result is not an object"));
+            };
+            // Let done be ? IteratorComplete(innerResult).
+            let done = ops::iterator_complete(agent, inner)?;
+            // ? IteratorValue(innerResult)
+            let value = ops::iterator_value(agent, inner)?;
+            frame.push(value);
+            if done {
+                frame.iters.pop();
+                return Ok(Flow::Jump(l as usize));
+            }
+        }
+        Op::DelegateYield => {
+            let v = frame.pop();
+            frame.delegating = true;
+            return Ok(Flow::Done(FrameResult::Yield(v)));
+        }
+        Op::IteratorCheckObject => {
+            if !frame.pop().is_object() {
+                return Err(agent.throw_type_error("iterator.return() did not return an object"));
+            }
+        }
         Op::IteratorNext(l) => {
             let FrameIter::Iter(record) = frame.top_iter() else {
                 unreachable!("iterator expected")
@@ -1462,14 +1617,6 @@ fn yield_delegate(agent: &mut Agent, frame: &mut Frame, ret: usize) -> JsResult<
     frame.delegating = true;
     frame.resume_pc = Some(frame.pc);
     Ok(Flow::Done(FrameResult::YieldDelegate(inner)))
-}
-
-/// CreateAsyncFromSyncIterator(syncIteratorRecord) (§27.1.6.1)
-pub fn create_async_from_sync_iterator(
-    agent: &mut Agent,
-    _sync: IteratorRecord,
-) -> JsResult<IteratorRecord> {
-    Err(agent.not_implemented("CreateAsyncFromSyncIterator"))
 }
 
 /// Call(func, this, args) with a TypeError naming non-callables.

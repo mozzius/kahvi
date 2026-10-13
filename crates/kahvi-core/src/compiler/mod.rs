@@ -47,7 +47,7 @@ enum JumpScope {
     Handler,
     /// An iterator on the iterator stack. for-of closes it on exit, for-in
     /// and destructuring just pop it.
-    Iterator { close: bool },
+    Iterator { close: bool, is_async: bool },
     /// Values left on the operand stack (switch discriminant, finally state).
     Stack(u32),
     /// A finally block: jumps leaving its try/catch go through it first.
@@ -170,6 +170,13 @@ impl<'a> Compiler<'a> {
             | Op::JumpIfNotUndefined(l)
             | Op::PushHandler(l)
             | Op::IteratorNext(l)
+            | Op::IteratorResultUnwrap(l)
+            | Op::JumpIfDelegateKind(_, l)
+            | Op::AsyncDelegateCall(l)
+            | Op::AsyncDelegateReturn(l)
+            | Op::AsyncDelegateResult(l)
+            | Op::AsyncIteratorClose(l)
+            | Op::AsyncIteratorCloseForThrow(l)
             | Op::ForInNext(l)
             | Op::Yield(l)
             | Op::YieldDelegate(l) => *l = target,
@@ -221,10 +228,23 @@ impl<'a> Compiler<'a> {
                 JumpScope::Handler => {
                     self.emit(Op::PopHandler);
                 }
-                JumpScope::Iterator { close: true } => {
+                JumpScope::Iterator {
+                    close: true,
+                    is_async: false,
+                } => {
                     self.emit(Op::IteratorClose);
                 }
-                JumpScope::Iterator { close: false } => {
+                JumpScope::Iterator {
+                    close: true,
+                    is_async: true,
+                } => {
+                    // AsyncIteratorClose(iteratorRecord, completion): await return()'s result.
+                    let skip = self.emit(Op::AsyncIteratorClose(0));
+                    self.emit(Op::Await);
+                    self.emit(Op::IteratorCheckObject);
+                    self.patch(skip);
+                }
+                JumpScope::Iterator { close: false, .. } => {
                     self.emit(Op::PopIterator);
                 }
                 JumpScope::Stack(n) => {
