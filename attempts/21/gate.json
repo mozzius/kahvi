@@ -1,0 +1,37 @@
+{
+  "ticket": "B-promise-all-settled",
+  "base": "779e15c1e324271edc958791e8624cc07ce5f1b3",
+  "head": "aef8d3b82845d587d9c2ac613f7f029a625a3abc",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/all_settled.rs",
+      "added": 277,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 208,
+    "before": 10,
+    "after": 204,
+    "new_passes": 194,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Promise/allSettled/iter-arg-is-string-resolve.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/allSettled/iter-arg-is-string-resolve.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Promise/allSettled/resolved-then-catch-finally.js:sloppy  Uncaught InternalError: not implemented: Promise.prototype.finally",
+      "built-ins/Promise/allSettled/resolved-then-catch-finally.js:strict  Uncaught InternalError: not implemented: Promise.prototype.finally"
+    ]
+  },
+  "decision": "pass"
+}

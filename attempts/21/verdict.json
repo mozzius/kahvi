@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff is a faithful implementation of Promise.allSettled and its helpers (PerformPromiseAllSettled, the Resolve/Reject Element Functions, and GetPromiseResolve). Each spec step is commented and implemented in order. The abrupt-completion handling matches the spec: NewPromiseCapability uses `?`, IfAbruptRejectPromise is applied after GetPromiseResolve and GetIterator, and step 8 closes the iterator only when it is not done. Element functions share the AlreadyCalled record between the fulfilled and rejected pair, as the spec requires. The remaining-elements counting (start at 1, +1 before Invoke, -1 on each settle and on DONE) matches the spec. No test-shaped branches or made-up values appear. The only deviation is representational: `values` is an Array object created up front and filled as elements settle, rather than a List converted at the end. That is not observable, because the array is only reachable through the resolve call, which happens after every index is set. Unverified from the diff alone: the step 8 path relies on `ops::iterator_step_value` setting `iterator_record.done` when `next` throws. The gate's failing tests are all blocked by other unimplemented built-ins (String iterator, Promise.prototype.finally), not by this file.",
+  "problems": [],
+  "notes_for_next_attempt": "Nothing to fix in this file. Two follow-ups for the architect. (1) Confirm that ops::iterator_step_value sets iterator_record.done = true when next() or the result getters throw, since step 8a depends on it. (2) The local get_promise_resolve helper could move into kahvi_core::ops, since Promise.all, Promise.race and Promise.any need it too. The helper is spec-faithful as written.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

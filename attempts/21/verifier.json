@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 46419,
+  "stop_reason": "tool_use",
+  "session_id": "034bfdc2-4eae-4870-adcd-5ca67d0ba0c8",
+  "total_cost_usd": 0.00842936,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10256,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 10788,
+    "output_tokens_details": {
+      "thinking_tokens": 10013
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10256,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 10788,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10256,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10256
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff is a faithful implementation of Promise.allSettled and its helpers (PerformPromiseAllSettled, the Resolve/Reject Element Functions, and GetPromiseResolve). Each spec step is commented and implemented in order. The abrupt-completion handling matches the spec: NewPromiseCapability uses `?`, IfAbruptRejectPromise is applied after GetPromiseResolve and GetIterator, and step 8 closes the iterator only when it is not done. Element functions share the AlreadyCalled record between the fulfilled and rejected pair, as the spec requires. The remaining-elements counting (start at 1, +1 before Invoke, -1 on each settle and on DONE) matches the spec. No test-shaped branches or made-up values appear. The only deviation is representational: `values` is an Array object created up front and filled as elements settle, rather than a List converted at the end. That is not observable, because the array is only reachable through the resolve call, which happens after every index is set. Unverified from the diff alone: the step 8 path relies on `ops::iterator_step_value` setting `iterator_record.done` when `next` throws. The gate's failing tests are all blocked by other unimplemented built-ins (String iterator, Promise.prototype.finally), not by this file.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing to fix in this file. Two follow-ups for the architect. (1) Confirm that ops::iterator_step_value sets iterator_record.done = true when next() or the result getters throw, since step 8a depends on it. (2) The local get_promise_resolve helper could move into kahvi_core::ops, since Promise.all, Promise.race and Promise.any need it too. The helper is spec-faithful as written.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff is a faithful implementation of Promise.allSettled and its helpers (PerformPromiseAllSettled, the Resolve/Reject Element Functions, and GetPromiseResolve). Each spec step is commented and implemented in order. The abrupt-completion handling matches the spec: NewPromiseCapability uses `?`, IfAbruptRejectPromise is applied after GetPromiseResolve and GetIterator, and step 8 closes the iterator only when it is not done. Element functions share the AlreadyCalled record between the fulfilled and rejected pair, as the spec requires. The remaining-elements counting (start at 1, +1 before Invoke, -1 on each settle and on DONE) matches the spec. No test-shaped branches or made-up values appear. The only deviation is representational: `values` is an Array object created up front and filled as elements settle, rather than a List converted at the end. That is not observable, because the array is only reachable through the resolve call, which happens after every index is set. Unverified from the diff alone: the step 8 path relies on `ops::iterator_step_value` setting `iterator_record.done` when `next` throws. The gate's failing tests are all blocked by other unimplemented built-ins (String iterator, Promise.prototype.finally), not by this file.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing to fix in this file. Two follow-ups for the architect. (1) Confirm that ops::iterator_step_value sets iterator_record.done = true when next() or the result getters throw, since step 8a depends on it. (2) The local get_promise_resolve helper could move into kahvi_core::ops, since Promise.all, Promise.race and Promise.any need it too. The helper is spec-faithful as written."
+  },
+  "ttft_ms": 42621,
+  "type": "result",
+  "duration_ms": 45753,
+  "uuid": "9adecd8a-7449-4146-804a-b6407f889a76",
+  "ttft_stream_ms": 1025,
+  "time_to_request_ms": 230,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 3,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 20,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 14,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 104,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 7,
+    "client_creation": 10,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 197,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1026,
+  "time_to_request_from_spawn_ms": 6055839,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791925030202.196,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.85,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
