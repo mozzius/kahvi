@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 11319,
+  "stop_reason": "tool_use",
+  "session_id": "5b1cd5c8-359d-4b2c-920d-031b53c8d197",
+  "total_cost_usd": 0.0028251599999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6188,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2023,
+    "output_tokens_details": {
+      "thinking_tokens": 1182
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6188,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2023,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6188,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6188
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff replaces the not-implemented stub in crates/kahvi-builtins/src/weak_map/constructor.rs with a implementation of WeakMap ( [ iterable ] ) that follows the spec steps in order. Step 1 throws a TypeError when NewTarget is undefined. Step 2 and 3 go through create_collection(agent, new_target, \\\"%WeakMap.prototype%\\\", WeakMapData::default()) with ? propagation. Step 4 returns the map when iterable is nullish. Step 5 does ops::get(agent, map, \\\"set\\\") with ?. Step 6 throws a TypeError when the adder is not callable. Step 7 returns ? add_entries_from_iterable(...). Every abrupt completion is propagated with ?. There are no test-shaped branches, no defaults returned in place of computed values, and no changes outside the one file. The helpers (create_collection, add_entries_from_iterable, WeakMapData) are not in the diff, so I am assuming they already exist and behave per spec. Their internals were not visible to me. Minor: the step comments are lightly reworded (for example \\\"map\\\" instead of \\\"_map_\\\", and \\\"throw a TypeError exception\\\" without the emphasis markup). This does not change behaviour. The unimplemented WeakMap.prototype.set and Symbol.for paths surface as honest not-implemented errors from the engine, not made-up values.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the constructor. The remaining failures (WeakMap.prototype.set, Symbol.for, Function realm handling) are honest not-implemented errors in other ticket areas. If this ticket is revisited, confirm that support::collections::create_collection calls OrdinaryCreateFromConstructor with the [[WeakMapData]] slot and that add_entries_from_iterable follows AddEntriesFromIterable step 2 with IteratorClose on abrupt completions. Neither helper is in this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff replaces the not-implemented stub in crates/kahvi-builtins/src/weak_map/constructor.rs with a implementation of WeakMap ( [ iterable ] ) that follows the spec steps in order. Step 1 throws a TypeError when NewTarget is undefined. Step 2 and 3 go through create_collection(agent, new_target, \"%WeakMap.prototype%\", WeakMapData::default()) with ? propagation. Step 4 returns the map when iterable is nullish. Step 5 does ops::get(agent, map, \"set\") with ?. Step 6 throws a TypeError when the adder is not callable. Step 7 returns ? add_entries_from_iterable(...). Every abrupt completion is propagated with ?. There are no test-shaped branches, no defaults returned in place of computed values, and no changes outside the one file. The helpers (create_collection, add_entries_from_iterable, WeakMapData) are not in the diff, so I am assuming they already exist and behave per spec. Their internals were not visible to me. Minor: the step comments are lightly reworded (for example \"map\" instead of \"_map_\", and \"throw a TypeError exception\" without the emphasis markup). This does not change behaviour. The unimplemented WeakMap.prototype.set and Symbol.for paths surface as honest not-implemented errors from the engine, not made-up values.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the constructor. The remaining failures (WeakMap.prototype.set, Symbol.for, Function realm handling) are honest not-implemented errors in other ticket areas. If this ticket is revisited, confirm that support::collections::create_collection calls OrdinaryCreateFromConstructor with the [[WeakMapData]] slot and that add_entries_from_iterable follows AddEntriesFromIterable step 2 with IteratorClose on abrupt completions. Neither helper is in this diff."
+  },
+  "ttft_ms": 7451,
+  "type": "result",
+  "duration_ms": 10919,
+  "uuid": "c417b5d3-d0d1-4be0-8877-5aab4cafb74d",
+  "ttft_stream_ms": 1957,
+  "time_to_request_ms": 514,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 442,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 210,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1958,
+  "time_to_request_from_spawn_ms": 5675969,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791924650432.6062,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.83,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.46,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

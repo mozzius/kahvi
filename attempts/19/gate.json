@@ -1,0 +1,48 @@
+{
+  "ticket": "B-weak-map-constructor",
+  "base": "6bb3f661c238d69abfce8cea22511021907d2809",
+  "head": "6be66601465723cb5124c9fdde29d233ea45f4ac",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_map/constructor.rs",
+      "added": 28,
+      "removed": 15
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 281,
+    "before": 48,
+    "after": 88,
+    "new_passes": 40,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 193,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakMap/iterable-with-object-keys.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/iterable-with-object-keys.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/iterable-with-symbol-keys.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/iterable-with-symbol-keys.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/iterator-items-are-not-object-close-iterator.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/iterator-items-are-not-object-close-iterator.js:strict  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/iterator-items-keys-cannot-be-held-weakly.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/iterator-items-keys-cannot-be-held-weakly.js:strict  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/proto-from-ctor-realm.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/WeakMap/proto-from-ctor-realm.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/WeakMap/prototype/delete/delete-entry-with-object-key-initial-iterable.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/prototype/delete/delete-entry-with-object-key-initial-iterable.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/prototype/delete/delete-entry-with-object-key.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/prototype/delete/delete-entry-with-object-key.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.set",
+      "built-ins/WeakMap/prototype/delete/delete-entry-with-symbol-key-initial-iterable.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.set"
+    ]
+  },
+  "decision": "pass"
+}

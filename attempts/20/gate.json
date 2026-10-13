@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-from-char-code",
+  "base": "6bb3f661c238d69abfce8cea22511021907d2809",
+  "head": "c6498e0da2c66fdf3ec5fc7f6a7c6030758ddf92",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/from_char_code.rs",
+      "added": 12,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 6,
+    "after": 16,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 16,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/fromCharCode/S15.5.3.2_A1.js:sloppy  Uncaught Test262Error: #3: String.fromCharCode.length === 1. Actual: String.fromCharCode.length ===0",
+      "built-ins/String/fromCharCode/S15.5.3.2_A1.js:strict  Uncaught Test262Error: #3: String.fromCharCode.length === 1. Actual: String.fromCharCode.length ===0",
+      "built-ins/String/fromCharCode/S9.7_A1.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A1.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A2.1.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A2.1.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A2.2.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A2.2.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T1.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T1.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T2.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T2.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T3.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T3.js:strict  Uncaught InternalError: not implemented: String.prototype.charCodeAt",
+      "built-ins/String/fromCharCode/S9.7_A3.1_T4.js:sloppy  Uncaught InternalError: not implemented: String.prototype.charCodeAt"
+    ]
+  },
+  "decision": "pass"
+}

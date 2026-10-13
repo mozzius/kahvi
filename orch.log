@@ -1,16 +1,9 @@
-[20:30:19] building trusted runner; integration branch m1-spine, 2 slots
-[20:30:19] B-array-prototype-last-index-of: attempt on slot 1 with haiku
-[20:30:19] B-string-prototype-trim: attempt on slot 0 with haiku
-[20:30:57] B-string-prototype-trim: attempt 17 finished ($0.010, 20 turns)
-[20:31:12] B-array-prototype-last-index-of: attempt 16 finished ($0.008, 15 turns)
-[20:31:28] B-string-prototype-trim: verifier: accept The change implements String.prototype.trim and a TrimString helper in the ticket's file only. Steps follow the spec: this value is passed through, Re
-[20:31:31] B-string-prototype-trim: full test262 run for merge
-[20:31:41] B-array-prototype-last-index-of: verifier: accept The change implements Array.prototype.lastIndexOf in its own file, following the spec steps 1 to 6 in order. ToObject and LengthOfArrayLike run first,
-[20:35:47] B-string-prototype-trim: merged (+248, 56032 total)
-[20:35:50] B-object-is-extensible: attempt on slot 0 with haiku
-[20:35:50] B-array-prototype-last-index-of: full test262 run for merge
-[20:36:08] B-object-is-extensible: attempt 18 finished ($0.004, 12 turns)
-[20:36:26] B-object-is-extensible: verifier: accept The change implements Object.isExtensible in the existing stub, and it matches the spec. Step 1 returns false for non-Object arguments, and step 2 pro
-[20:40:11] B-array-prototype-last-index-of: merged (+371, 56403 total)
-[20:40:13] B-object-is-extensible: full test262 run for merge
-[20:44:19] B-object-is-extensible: merged (+124, 56527 total)
+[20:49:58] building trusted runner; integration branch m1-spine, 2 slots
+[20:49:58] B-string-from-char-code: attempt on slot 1 with haiku
+[20:49:58] B-weak-map-constructor: attempt on slot 0 with haiku
+[20:50:26] B-string-from-char-code: attempt 20 finished ($0.004, 11 turns)
+[20:50:37] B-weak-map-constructor: attempt 19 finished ($0.007, 10 turns)
+[20:50:51] B-string-from-char-code: verifier: accept The diff implements String.fromCharCode in its own file. It iterates the arguments in order and calls ops::to_uint16 on each one with `?`, so the ToUi
+[20:51:00] B-string-from-char-code: full test262 run for merge
+[20:51:10] B-weak-map-constructor: verifier: accept The diff replaces the not-implemented stub in crates/kahvi-builtins/src/weak_map/constructor.rs with a implementation of WeakMap ( [ iterable ] ) that
+[20:55:20] B-string-from-char-code: merged (+36, 56911 total)
