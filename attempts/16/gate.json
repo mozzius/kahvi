@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-last-index-of",
+  "base": "7c938a7f93189eb3a6ed71b34ad6fd0910eba21c",
+  "head": "2015b864308d8a455000041e31819b0c18e9a93a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_last_index_of.rs",
+      "added": 47,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 395,
+    "before": 8,
+    "after": 377,
+    "new_passes": 369,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 18,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-4-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-4-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-5-21.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-5-21.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-8-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/lastIndexOf/15.4.4.15-8-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/lastIndexOf/calls-only-has-on-prototype-after-length-zeroed.js:sloppy  Uncaught InternalError: not implemented: Object.setPrototypeOf",
+      "built-ins/Array/prototype/lastIndexOf/calls-only-has-on-prototype-after-length-zeroed.js:strict  Uncaught InternalError: not implemented: Object.setPrototypeOf",
+      "built-ins/Array/prototype/lastIndexOf/coerced-position-grow.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/lastIndexOf/coerced-position-grow.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/lastIndexOf/coerced-position-shrink.js:sloppy  Uncaught InternalError: not implemented: Function"
+    ]
+  },
+  "decision": "pass"
+}

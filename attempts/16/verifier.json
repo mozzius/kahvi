@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 13197,
+  "stop_reason": "tool_use",
+  "session_id": "40f2eeff-2bbe-4a3e-91ad-86b89d08258f",
+  "total_cost_usd": 0.00352666,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7025,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2915,
+    "output_tokens_details": {
+      "thinking_tokens": 2262
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7025,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2915,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7025,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7025
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.lastIndexOf in its own file, following the spec steps 1 to 6 in order. ToObject and LengthOfArrayLike run first, and the len = 0 early return comes before fromIndex is handled. The fromIndex handling uses args.len() < 2 to mean \\\"not present\\\", which matches the spec. Otherwise it computes min(ToAbsoluteIndex(fromIndex, len), len - 1), with the ToAbsoluteIndex helper following spec steps 1 to 3 (finite negative values are offset by length; infinities pass through). The loop runs while k >= 0 and performs HasProperty, then Get only when present, then IsStrictlyEqual, and it decrements k. Every fallible operation uses ?, with no swallowed errors, defaults or test-specific branches. The only non-functional edit is renaming the unused new_target parameter to _new_target, which is needed once the stub's placeholder use is removed. The gate's 18 not-implemented failures come from other built-ins (Date, RegExp, Function, Object.setPrototypeOf, Array.prototype.toString), not from this code. One thing I could not verify from the diff: whether ops already exposes a to_absolute_index helper, in which case the local copy would be a duplicate. That is a style concern, not a spec defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.lastIndexOf in its own file, following the spec steps 1 to 6 in order. ToObject and LengthOfArrayLike run first, and the len = 0 early return comes before fromIndex is handled. The fromIndex handling uses args.len() < 2 to mean \"not present\", which matches the spec. Otherwise it computes min(ToAbsoluteIndex(fromIndex, len), len - 1), with the ToAbsoluteIndex helper following spec steps 1 to 3 (finite negative values are offset by length; infinities pass through). The loop runs while k >= 0 and performs HasProperty, then Get only when present, then IsStrictlyEqual, and it decrements k. Every fallible operation uses ?, with no swallowed errors, defaults or test-specific branches. The only non-functional edit is renaming the unused new_target parameter to _new_target, which is needed once the stub's placeholder use is removed. The gate's 18 not-implemented failures come from other built-ins (Date, RegExp, Function, Object.setPrototypeOf, Array.prototype.toString), not from this code. One thing I could not verify from the diff: whether ops already exposes a to_absolute_index helper, in which case the local copy would be a duplicate. That is a style concern, not a spec defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10321,
+  "type": "result",
+  "duration_ms": 12856,
+  "uuid": "d3acfd7b-f98e-4c20-ad11-5f61e9422520",
+  "ttft_stream_ms": 651,
+  "time_to_request_ms": 171,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 98,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 12,
+  "time_to_request_cpu_ms": 149,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 652,
+  "time_to_request_from_spawn_ms": 4502633,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791923477535.3528,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.71,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.45,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

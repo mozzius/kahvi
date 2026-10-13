@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 28658,
+  "stop_reason": "end_turn",
+  "session_id": "a57bb959-8cb0-40fb-a677-828bfb30dad8",
+  "total_cost_usd": 0.00997518,
+  "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 21126,
+    "cache_read_input_tokens": 238938,
+    "output_tokens": 6224,
+    "output_tokens_details": {
+      "thinking_tokens": 1716
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21126,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 381,
+        "cache_read_input_tokens": 27831,
+        "cache_creation_input_tokens": 775,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 775
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_0178BzYvT7NNozra4WsVvJzy",
+      "tool_input": {
+        "command": "grep -rn \"edition\" Cargo.toml crates/kahvi-builtins/Cargo.toml; rustfmt --edition 2024 crates/kahvi-builtins/src/string/prototype_trim.rs && git status --short",
+        "description": "Format the edited file and check git status"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.trim` is implemented in `crates/kahvi-builtins/src/string/prototype_trim.rs`, and 4 of the 8 `built-ins/String/prototype/trim/` runs pass. The other 4 fail because they call `Array.prototype.toString` (2 runs) and `RegExp` (2 runs), which are not implemented, so the \"every run passes\" bar is not met. Clippy and `cargo fmt --check` are clean.\n\nI added a private `trim_string` and `TrimWhere` enum in the same file, since `TrimString` is not in `ops` yet. `trimStart`, `trimEnd`, `parseInt` and `parseFloat` will need it too, so it may be worth moving to `support/` later. Its white-space predicate duplicates the lexer's, because `kahvi-builtins` does not depend on `kahvi-parser`.\n\nBLOCKED: test262 files `built-ins/String/prototype/trim/15.5.4.20-2-34.js` need `Array.prototype.toString` and `15.5.4.20-2-49.js` needs `RegExp`; neither is implemented in the engine.",
+  "ttft_ms": 953,
+  "type": "result",
+  "duration_ms": 36608,
+  "uuid": "bfea7e3c-b966-4667-9526-57ad9204e4a1",
+  "ttft_stream_ms": 732,
+  "time_to_request_ms": 214,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 16,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 117,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 63,
+  "time_to_request_cpu_ms": 203,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 732,
+  "time_to_request_from_spawn_ms": 4444980,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791923419673.484,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.71,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.45,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

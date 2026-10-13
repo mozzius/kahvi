@@ -1,0 +1,37 @@
+{
+  "ticket": "B-string-prototype-trim",
+  "base": "7c938a7f93189eb3a6ed71b34ad6fd0910eba21c",
+  "head": "358df6645732b8d0add4e4ef9158262536ca86bf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_trim.rs",
+      "added": 60,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 258,
+    "before": 8,
+    "after": 254,
+    "new_passes": 246,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/trim/15.5.4.20-2-34.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/trim/15.5.4.20-2-34.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/trim/15.5.4.20-2-49.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/trim/15.5.4.20-2-49.js:strict  Uncaught InternalError: not implemented: RegExp"
+    ]
+  },
+  "decision": "pass"
+}
