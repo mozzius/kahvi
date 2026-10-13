@@ -9,7 +9,7 @@ pub(crate) fn prototype_filter(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // NOTE:
     // _callback_ should be a function that accepts three arguments and returns a value that is coercible to a Boolean value. `filter` calls _callback_ once for each element in the array, in ascending order, and constructs a new array of all the values for which _callback_ returns *true*. _callback_ is called only for elements of the array which actually exist; it is not called for missing elements of the array.
@@ -39,6 +39,51 @@ pub(crate) fn prototype_filter(
     //
     // NOTE:
     // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.prototype.filter"))
+
+    // 1. Let O be ? ToObject(this value).
+    let o = ops::to_object(agent, this)?;
+    // 2. Let len be ? LengthOfArrayLike(O).
+    let len = ops::length_of_array_like(agent, o)?;
+    // 3. If IsCallable(callback) is false, throw a TypeError exception.
+    let callback = args.get_or_undefined(0);
+    if !ops::is_callable(agent, callback) {
+        return Err(agent.throw_type_error("Array.prototype.filter callback is not a function"));
+    }
+    let this_arg = args.get_or_undefined(1);
+    // 4. Let A be ? ArraySpeciesCreate(O, 0).
+    let a = ops::array_species_create(agent, o, 0.0)?;
+    // 5. Let k be 0.
+    let mut k = 0.0;
+    // 6. Let to be 0.
+    let mut to = 0.0;
+    // 7. Repeat, while k < len,
+    while k < len {
+        // a. Let Pk be ! ToString(𝔽(k)).
+        let pk = agent.key_from_index(k);
+        // b. Let kPresent be ? HasProperty(O, Pk).
+        // c. If kPresent is true, then
+        if ops::has_property(agent, o, pk)? {
+            // i. Let kValue be ? Get(O, Pk).
+            let k_value = ops::get(agent, o, pk)?;
+            // ii. Let selected be ToBoolean(? Call(callback, thisArg, « kValue, 𝔽(k), O »)).
+            let selected = ops::call(
+                agent,
+                callback,
+                this_arg,
+                &[k_value, Value::Number(k), Value::Object(o)],
+            )?;
+            // iii. If selected is true, then
+            if ops::to_boolean(agent, selected) {
+                // 1. Perform ? CreateDataPropertyOrThrow(A, ! ToString(𝔽(to)), kValue).
+                let to_key = agent.key_from_index(to);
+                ops::create_data_property_or_throw(agent, a, to_key, k_value)?;
+                // 2. Set to to to + 1.
+                to += 1.0;
+            }
+        }
+        // d. Set k to k + 1.
+        k += 1.0;
+    }
+    // 8. Return A.
+    Ok(Value::Object(a))
 }
