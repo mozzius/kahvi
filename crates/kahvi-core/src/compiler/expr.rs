@@ -327,6 +327,16 @@ impl Compiler<'_> {
                     }
                 }
                 self.position(*span);
+                let async_gen = self.code.is_async && self.code.is_generator;
+                // In an async generator: AsyncGeneratorYield(? Await(value)).
+                if async_gen && !*delegate {
+                    self.emit(Op::Await);
+                }
+                // yield*: the delegate iterator, and undefined as the first received value.
+                if *delegate {
+                    self.emit(Op::GetIterator);
+                    self.emit(Op::Undefined);
+                }
                 let y = self.emit(if *delegate {
                     Op::YieldDelegate(0)
                 } else {
@@ -336,6 +346,10 @@ impl Compiler<'_> {
                 // resumption lands on the stub with the value pushed.
                 let after = self.emit(Op::Jump(0));
                 self.patch(y);
+                // AsyncGeneratorUnwrapYieldResumption: a return resumption awaits its value.
+                if async_gen && !*delegate {
+                    self.emit(Op::Await);
+                }
                 self.emit_return();
                 self.patch(after);
             }

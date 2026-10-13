@@ -85,21 +85,33 @@ fn resume(agent: &mut Agent, g: Object, how: Resumption) -> JsResult<Value> {
         )
     };
     let started = frame.pc > 0;
-    match how {
-        Resumption::Next(v) => {
-            if started && frame.code.ops[frame.pc - 1] != crate::compiler::Op::GeneratorStart {
-                frame.stack.push(v);
+    if frame.delegating {
+        // Suspended in yield*: the step re-runs and forwards the completion.
+        frame.delegating = false;
+        let (v, kind) = match how {
+            Resumption::Next(v) => (v, 0),
+            Resumption::Throw(v) => (v, 1),
+            Resumption::Return(v) => (v, 2),
+        };
+        frame.stack.push(v);
+        frame.delegate_kind = kind;
+    } else {
+        match how {
+            Resumption::Next(v) => {
+                if started && frame.code.ops[frame.pc - 1] != crate::compiler::Op::GeneratorStart {
+                    frame.stack.push(v);
+                }
             }
-        }
-        Resumption::Return(v) => {
-            frame.stack.push(v);
-            frame.pc = frame.yield_return_pc;
-        }
-        Resumption::Throw(v) => {
-            if !frame.handle_throw(v) {
-                let data = data_mut(agent, g);
-                data.state = GeneratorState::Completed;
-                return Err(JsError::Throw(v));
+            Resumption::Return(v) => {
+                frame.stack.push(v);
+                frame.pc = frame.yield_return_pc;
+            }
+            Resumption::Throw(v) => {
+                if !frame.handle_throw(v) {
+                    let data = data_mut(agent, g);
+                    data.state = GeneratorState::Completed;
+                    return Err(JsError::Throw(v));
+                }
             }
         }
     }
@@ -122,6 +134,13 @@ fn resume(agent: &mut Agent, g: Object, how: Resumption) -> JsResult<Value> {
     agent.call_depth -= 1;
     agent.contexts.pop();
     match result {
+        // yield* hands the inner result object through unchanged.
+        Ok(FrameResult::YieldDelegate(r)) => {
+            let data = data_mut(agent, g);
+            data.state = GeneratorState::SuspendedYield;
+            data.frame = Some(frame);
+            Ok(r)
+        }
         Ok(FrameResult::Yield(v)) => {
             let data = data_mut(agent, g);
             data.state = GeneratorState::SuspendedYield;

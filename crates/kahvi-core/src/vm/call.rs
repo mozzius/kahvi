@@ -194,14 +194,11 @@ fn evaluate_body(
         let e = ecma(agent, f);
         (e.code.clone(), e.private_environment.clone())
     };
-    if code.is_async && code.is_generator {
-        return Err(agent.not_implemented("async generators"));
-    }
     let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
     frame.args = args.to_vec();
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
-    if code.is_async {
+    if code.is_async && !code.is_generator {
         // EvaluateAsyncFunctionBody: errors reject the returned promise.
         let promise = super::async_function::start_async_function(agent, f, frame, decl)?;
         return Ok(FrameResult::Return(promise));
@@ -209,8 +206,12 @@ fn evaluate_body(
     decl?;
     let result = run_frame(agent, &mut frame)?;
     if code.is_generator {
-        // EvaluateGeneratorBody: the frame stopped at GeneratorStart.
-        let g = generator::create_generator(agent, f, frame)?;
+        // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
+        let g = if code.is_async {
+            super::async_generator::create_async_generator(agent, f, frame)?
+        } else {
+            generator::create_generator(agent, f, frame)?
+        };
         return Ok(FrameResult::Return(Value::Object(g)));
     }
     Ok(result)
@@ -238,7 +239,9 @@ pub fn call_ecma_function(
     agent.contexts.pop();
     match result? {
         FrameResult::Return(v) => Ok(v),
-        FrameResult::Yield(_) | FrameResult::Await(_) => Ok(Value::Undefined),
+        FrameResult::Yield(_) | FrameResult::YieldDelegate(_) | FrameResult::Await(_) => {
+            Ok(Value::Undefined)
+        }
     }
 }
 

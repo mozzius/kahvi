@@ -126,7 +126,9 @@ fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
                 }
             }
             // AsyncBlockStart 2.e-f: a normal or return completion resolves the promise.
-            Ok(FrameResult::Return(v)) | Ok(FrameResult::Yield(v)) => {
+            Ok(FrameResult::Return(v))
+            | Ok(FrameResult::Yield(v))
+            | Ok(FrameResult::YieldDelegate(v)) => {
                 call(agent, capability.resolve, Value::Undefined, &[v])?;
                 return Ok(());
             }
@@ -141,7 +143,8 @@ fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
 }
 
 /// Await(value) (§27.7.5.3) steps 2-9, after the frame has been suspended.
-fn await_value(agent: &mut Agent, ctx: Object, value: Value) -> JsResult<()> {
+/// `ctx` is the suspended async function context or async generator.
+pub(super) fn await_value(agent: &mut Agent, ctx: Object, value: Value) -> JsResult<()> {
     // 2. Let promise be ? PromiseResolve(%Promise%, value).
     let promise_ctor = agent.intrinsic("%Promise%");
     let promise = promise_resolve(agent, promise_ctor, value)?;
@@ -196,7 +199,12 @@ fn await_fulfilled(
     let Some(ctx) = context_of_active(agent) else {
         return Ok(Value::Undefined);
     };
-    resume(agent, ctx, Resumption::Normal(args.get_or_undefined(0)))?;
+    let v = args.get_or_undefined(0);
+    if super::async_generator::is_async_generator(agent, ctx) {
+        super::async_generator::resume(agent, ctx, super::async_generator::Completion::Normal(v))?;
+    } else {
+        resume(agent, ctx, Resumption::Normal(v))?;
+    }
     Ok(Value::Undefined)
 }
 
@@ -210,6 +218,11 @@ fn await_rejected(
     let Some(ctx) = context_of_active(agent) else {
         return Ok(Value::Undefined);
     };
-    resume(agent, ctx, Resumption::Throw(args.get_or_undefined(0)))?;
+    let e = args.get_or_undefined(0);
+    if super::async_generator::is_async_generator(agent, ctx) {
+        super::async_generator::resume(agent, ctx, super::async_generator::Completion::Throw(e))?;
+    } else {
+        resume(agent, ctx, Resumption::Throw(e))?;
+    }
     Ok(Value::Undefined)
 }
