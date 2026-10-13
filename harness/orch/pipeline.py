@@ -6,6 +6,7 @@ fault: the attempt doesn't count, partial work is kept for the next attempt,
 and a finished attempt that only lacks its verification resumes there.
 """
 
+import re
 import os
 import shutil
 import threading
@@ -158,8 +159,9 @@ def judge(cfg, db, ticket, att, rep):
                 # implemented. Other leftovers are usually blocked on other
                 # tickets or engine work: retrying would only escalate and burn
                 # budget, so they wait for triage (`orch reset` reopens).
-                own = f"not implemented: {ticket.title}"
-                if any(own in r for r in m["remaining"]):
+                # The exact name: "Set" must not match "Set.prototype.add".
+                own = re.compile(rf"not implemented: {re.escape(ticket.title)}(?![\w.\[])")
+                if any(own.search(r) for r in m["remaining"]):
                     db.set_ticket(ticket.id, status="open", strikes=0, salvage_attempt=None)
                 else:
                     db.set_ticket(ticket.id, status="partial", strikes=0, salvage_attempt=None,
