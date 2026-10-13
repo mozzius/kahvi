@@ -6,7 +6,7 @@
 # (the merge is undone). Otherwise writes the new baseline, commits, pushes
 # and restarts the swarm. Run from the main checkout.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "${KAHVI_ROOT:-$(dirname "$0")/..}"
 BRANCH="${1:-arch}"
 WORK="${KAHVI_WORK:-$PWD/work}"
 current=$(git rev-parse --abbrev-ref HEAD)
