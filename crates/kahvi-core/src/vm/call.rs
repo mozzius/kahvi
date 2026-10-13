@@ -194,13 +194,19 @@ fn evaluate_body(
         let e = ecma(agent, f);
         (e.code.clone(), e.private_environment.clone())
     };
-    if code.is_async {
-        return Err(agent.not_implemented("async functions"));
+    if code.is_async && code.is_generator {
+        return Err(agent.not_implemented("async generators"));
     }
     let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
     frame.args = args.to_vec();
     // FunctionDeclarationInstantiation up to the parameter bindings.
-    instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
+    let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
+    if code.is_async {
+        // EvaluateAsyncFunctionBody: errors reject the returned promise.
+        let promise = super::async_function::start_async_function(agent, f, frame, decl)?;
+        return Ok(FrameResult::Return(promise));
+    }
+    decl?;
     let result = run_frame(agent, &mut frame)?;
     if code.is_generator {
         // EvaluateGeneratorBody: the frame stopped at GeneratorStart.

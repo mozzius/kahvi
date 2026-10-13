@@ -9,12 +9,15 @@ pub(crate) fn prototype_catch(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _promise_ be the *this* value.
-    // 2. Return ? Invoke(_promise_, *"then"*, « *undefined*, _onRejected_ »).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Promise.prototype.catch"))
+    // 1. Let promise be the this value.
+    // 2. Return ? Invoke(promise, "then", « undefined, onRejected »).
+    let then = PropertyKey::String(agent.names.then);
+    ops::invoke(
+        agent,
+        this,
+        then,
+        &[Value::Undefined, args.get_or_undefined(0)],
+    )
 }

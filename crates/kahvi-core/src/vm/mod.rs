@@ -5,6 +5,7 @@
 //! just keeping its frame. Calls from JavaScript to JavaScript recurse on
 //! the Rust stack through [`call_ecma_function`].
 
+mod async_function;
 mod call;
 mod eval;
 mod generator;
@@ -1305,7 +1306,10 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             return Ok(Flow::Done(FrameResult::Yield(v)));
         }
         Op::YieldDelegate(_) => return Err(agent.not_implemented("yield*")),
-        Op::Await => return Err(agent.not_implemented("await")),
+        Op::Await => {
+            let v = frame.pop();
+            return Ok(Flow::Done(FrameResult::Await(v)));
+        }
 
         // ---- classes
         Op::ClassHeritage(has_heritage) => {
