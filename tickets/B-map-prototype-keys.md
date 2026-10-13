@@ -1,13 +1,13 @@
 +++
-id = "B-number-parse-float"
-title = "Number.parseFloat"
+id = "B-map-prototype-keys"
+title = "Map.prototype.keys"
 kind = "builtin"
 tier = "haiku"
-scope = ["crates/kahvi-builtins/src/number/parse_float.rs"]
-read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
-spec = ["sec-number.parsefloat"]
-target = ["built-ins/Number/parseFloat/"]
-priority = 0
+scope = ["crates/kahvi-builtins/src/map/prototype_keys.rs"]
+read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/collections.rs", "crates/kahvi-builtins/src/map/prototype_set.rs", "crates/kahvi-builtins/src/map_iterator_prototype/next.rs"]
+spec = ["sec-map.prototype.keys"]
+target = ["built-ins/Map/prototype/keys/"]
+priority = 2
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

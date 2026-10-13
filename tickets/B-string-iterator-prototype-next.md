@@ -1,12 +1,12 @@
 +++
-id = "B-array-prototype-symbol-iterator"
-title = "Array.prototype[Symbol.iterator]"
+id = "B-string-iterator-prototype-next"
+title = "StringIteratorPrototype.next"
 kind = "builtin"
 tier = "haiku"
-scope = ["crates/kahvi-builtins/src/array/prototype_symbol_iterator.rs"]
-read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
-spec = ["sec-array.prototype-%symbol.iterator%"]
-target = ["built-ins/Array/prototype/Symbol.iterator/"]
+scope = ["crates/kahvi-builtins/src/string_iterator_prototype/next.rs"]
+read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/string_iterator.rs"]
+spec = ["sec-%stringiteratorprototype%.next"]
+target = ["built-ins/StringIteratorPrototype/next/"]
 priority = 0
 +++
 Implement this built-in in its file, following the spec steps already in

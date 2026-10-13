@@ -37,13 +37,23 @@ SRC = gen.OUT
 WORKER_GROUPS = {
     "object", "array", "array_iterator_prototype", "string", "number", "boolean", "symbol", "math", "json",
     "reflect", "global", "error", "aggregate_error", "suppressed_error", "function", "promise",
+    "map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype",
+    "string_iterator_prototype",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
     "Function": "CreateDynamicFunction needs parser entry points for parameters and bodies",
-    "Array.fromAsync": "needs async functions and promises",
     "String.prototype.normalize": "needs Unicode normalization tables",
     "Promise.try": "needs the Promise.try proposal semantics reviewed first",
+}
+
+# Installed as aliases of another built-in (see ALIASES in table.rs): the stub
+# is never reachable, so no ticket.
+ALIASED = {
+    "Array.prototype[Symbol.iterator]", "Map.prototype[Symbol.iterator]", "Set.prototype[Symbol.iterator]",
+    "Set.prototype.keys", "String.prototype.trimLeft", "String.prototype.trimRight",
+    "Date.prototype.toGMTString", "Number.parseFloat", "Number.parseInt",
+    "%TypedArray%.prototype[Symbol.iterator]",
 }
 
 STUB_MARKER = "let _ = (this, args, new_target);"
@@ -59,6 +69,14 @@ READ = [
 EXTRA_READ = {
     "promise": ["crates/kahvi-core/src/ops/promise.rs", "crates/kahvi-builtins/src/promise/prototype_then.rs"],
 }
+for _g in ("map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype"):
+    EXTRA_READ[_g] = [
+        "crates/kahvi-builtins/src/support/collections.rs",
+        "crates/kahvi-builtins/src/map/prototype_set.rs",
+        "crates/kahvi-builtins/src/map_iterator_prototype/next.rs",
+    ]
+EXTRA_READ["string_iterator_prototype"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
+EXTRA_READ["string"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
 
 NOTES = """\
 Implement this built-in in its file, following the spec steps already in
@@ -116,6 +134,11 @@ def main(argv):
         stub = SRC / fn.group / f"{fn.file}.rs"
         if not stub.exists() or STUB_MARKER not in stub.read_text():
             continue  # already implemented
+        if fn.display in ALIASED:
+            stale = TICKETS / f"{ticket_id(fn)}.md"
+            if stale.exists():
+                stale.unlink()
+            continue
         if fn.display in ARCHITECT_FIRST:
             skipped.append(f"{fn.display}: {ARCHITECT_FIRST[fn.display]}")
             continue

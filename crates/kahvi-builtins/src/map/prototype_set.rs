@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-map.prototype.set
 
+use crate::support::collections::{collection_key, map_table, this_map};
 use kahvi_core::prelude::*;
 
 /// Map.prototype.set
@@ -9,20 +10,16 @@ pub(crate) fn prototype_set(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _map_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_map_, [[MapData]]).
-    // 3. Set _key_ to CanonicalizeKeyedCollectionKey(_key_).
-    // 4. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
-    //    a. If _entry_.[[Key]] is not ~empty~ and SameValue(_entry_.[[Key]], _key_) is *true*, then
-    //       i. Set _entry_.[[Value]] to _value_.
-    //       ii. Return _map_.
-    // 5. Let _entry_ be the Record { [[Key]]: _key_, [[Value]]: _value_ }.
-    // 6. Append _entry_ to _map_.[[MapData]].
-    // 7. Return _map_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Map.prototype.set"))
+    // 1. Let M be the this value.
+    // 2. Perform ? RequireInternalSlot(M, [[MapData]]).
+    let m = this_map(agent, this)?;
+    // 3. Set key to CanonicalizeKeyedCollectionKey(key).
+    let key = collection_key(agent, args.get_or_undefined(0));
+    // 4. For each Record p of M.[[MapData]]: if SameValue(p.[[Key]], key), set p.[[Value]] to value.
+    // 5-6. Otherwise append the Record { [[Key]]: key, [[Value]]: value } to M.[[MapData]].
+    map_table(agent, m).set(key, args.get_or_undefined(1));
+    // 4.a.ii / 7. Return M.
+    Ok(Value::Object(m))
 }

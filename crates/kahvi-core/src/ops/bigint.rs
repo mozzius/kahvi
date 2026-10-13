@@ -11,7 +11,7 @@ use crate::value::{BigInt, JsString};
 
 /// Sign and magnitude, magnitude as little-endian base-2^32 limbs with no
 /// trailing zero limbs (so zero is an empty magnitude, never negative).
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct BigIntValue {
     pub negative: bool,
     pub magnitude: Vec<u32>,
