@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 19533,
+  "stop_reason": "tool_use",
+  "session_id": "45a11767-859d-4c1c-81ee-8e4ec2a7bfc7",
+  "total_cost_usd": 0.00293562,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 754,
+    "cache_read_input_tokens": 7312,
+    "output_tokens": 4392,
+    "output_tokens_details": {
+      "thinking_tokens": 2932
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 754,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4392,
+        "cache_read_input_tokens": 7312,
+        "cache_creation_input_tokens": 754,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 754
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"checks\":{\"special_cases_inputs\":true,\"made_up_results\":true,\"swallows_errors\":true,\"skips_observable_steps\":true},\"verdict\":\"garbage\",\"confidence\":0.9,\"fakery\":true,\"summary\":\"The core loop is a reasonable approximation of the spec, but the change adds a length cap (MAX_SCAN_LENGTH = 2^32-1) that returns false for any array-like longer than that, before ToIntegerOrInfinity(fromIndex) is called and before any Get. That is an input-range special case returning a made-up answer. It skips an observable conversion (valueOf/toString on fromIndex can throw and is silently ignored), skips every Get for large lengths, and is the reason length-boundaries.js fails at 2**53-1 in the gate report. The cap looks like a workaround for a slow test rather than a spec implementation.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/array/includes.rs\",\"severity\":\"blocker\",\"issue\":\"`if len > MAX_SCAN_LENGTH { return Ok(Value::Boolean(false)); }` is a made-up result for lengths above 2^32-1. The spec has no such limit: steps 4-6 must still run (ToClampedIndex/ToIntegerOrInfinity on fromIndex, then the Get loop). This is the direct cause of the length-boundaries.js failure (expected true at 2**53-2, got false).\"},{\"file\":\"crates/kahvi-builtins/src/array/includes.rs\",\"severity\":\"blocker\",\"issue\":\"Because of the cap, the fromIndex conversion is skipped for large lengths. Any throw from ToNumber/ToPrimitive on fromIndex is swallowed and the function returns false, and the observable conversion count differs from the spec.\"},{\"file\":\"crates/kahvi-builtins/src/array/includes.rs\",\"severity\":\"major\",\"issue\":\"Step 4 of the ticket is `Let k be ? ToClampedIndex(fromIndex, length)`, but the code inlines a ToIntegerOrInfinity-based clamp (with its own +inf/-inf handling and k computation) and never implements ToClampedIndex / ToAbsoluteIndex. The observable call count happens to match, but the ticket's algorithm is not mirrored.\"},{\"file\":\"crates/kahvi-builtins/src/array/includes.rs\",\"severity\":\"minor\",\"issue\":\"Step comments follow the newer ES numbering (11 steps, 'Let O be', 'Let len be', 'Let n be ? ToIntegerOrInfinity') instead of the pinned spec in the ticket (6 steps, ToClampedIndex). The comments therefore do not match the authoritative text. Step 5 Assert is only a comment, which is acceptable.\"},{\"file\":\"crates/kahvi-builtins/src/array/includes.rs\",\"severity\":\"minor\",\"issue\":\"Doc comment on MAX_SCAN_LENGTH ('Largest length we are willing to scan') states a policy that is not in the spec, which is an honesty concern. It should be deleted along with the cap.\"}],\"notes_for_next_attempt\":\"Delete MAX_SCAN_LENGTH and the `if len > MAX_SCAN_LENGTH` early return entirely. Do not return false for any length that the spec would scan. Keep the spec order: ToObject(this), LengthOfArrayLike, return false if len = 0, then ToClampedIndex(fromIndex, len) with its ? propagation, then the loop of Get(O, ! ToString(\ud835\udd3d(k))) and SameValueZero. Implement or mirror ToClampedIndex / ToAbsoluteIndex as its own step so the abstract operation's name matches the spec. Use the step comments from the ticket's 6-step text. If length-boundaries.js then times out, report it as a timeout rather than capping the loop. Resizable-buffer tests may stay as not-implemented errors from elsewhere.\"}",
+  "structured_output": {
+    "checks": {
+      "special_cases_inputs": true,
+      "made_up_results": true,
+      "swallows_errors": true,
+      "skips_observable_steps": true
+    },
+    "verdict": "garbage",
+    "confidence": 0.9,
+    "fakery": true,
+    "summary": "The core loop is a reasonable approximation of the spec, but the change adds a length cap (MAX_SCAN_LENGTH = 2^32-1) that returns false for any array-like longer than that, before ToIntegerOrInfinity(fromIndex) is called and before any Get. That is an input-range special case returning a made-up answer. It skips an observable conversion (valueOf/toString on fromIndex can throw and is silently ignored), skips every Get for large lengths, and is the reason length-boundaries.js fails at 2**53-1 in the gate report. The cap looks like a workaround for a slow test rather than a spec implementation.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/array/includes.rs",
+        "severity": "blocker",
+        "issue": "`if len > MAX_SCAN_LENGTH { return Ok(Value::Boolean(false)); }` is a made-up result for lengths above 2^32-1. The spec has no such limit: steps 4-6 must still run (ToClampedIndex/ToIntegerOrInfinity on fromIndex, then the Get loop). This is the direct cause of the length-boundaries.js failure (expected true at 2**53-2, got false)."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/array/includes.rs",
+        "severity": "blocker",
+        "issue": "Because of the cap, the fromIndex conversion is skipped for large lengths. Any throw from ToNumber/ToPrimitive on fromIndex is swallowed and the function returns false, and the observable conversion count differs from the spec."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/array/includes.rs",
+        "severity": "major",
+        "issue": "Step 4 of the ticket is `Let k be ? ToClampedIndex(fromIndex, length)`, but the code inlines a ToIntegerOrInfinity-based clamp (with its own +inf/-inf handling and k computation) and never implements ToClampedIndex / ToAbsoluteIndex. The observable call count happens to match, but the ticket's algorithm is not mirrored."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/array/includes.rs",
+        "severity": "minor",
+        "issue": "Step comments follow the newer ES numbering (11 steps, 'Let O be', 'Let len be', 'Let n be ? ToIntegerOrInfinity') instead of the pinned spec in the ticket (6 steps, ToClampedIndex). The comments therefore do not match the authoritative text. Step 5 Assert is only a comment, which is acceptable."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/array/includes.rs",
+        "severity": "minor",
+        "issue": "Doc comment on MAX_SCAN_LENGTH ('Largest length we are willing to scan') states a policy that is not in the spec, which is an honesty concern. It should be deleted along with the cap."
+      }
+    ],
+    "notes_for_next_attempt": "Delete MAX_SCAN_LENGTH and the `if len > MAX_SCAN_LENGTH` early return entirely. Do not return false for any length that the spec would scan. Keep the spec order: ToObject(this), LengthOfArrayLike, return false if len = 0, then ToClampedIndex(fromIndex, len) with its ? propagation, then the loop of Get(O, ! ToString(\ud835\udd3d(k))) and SameValueZero. Implement or mirror ToClampedIndex / ToAbsoluteIndex as its own step so the abstract operation's name matches the spec. Use the step comments from the ticket's 6-step text. If length-boundaries.js then times out, report it as a timeout rather than capping the loop. Resizable-buffer tests may stay as not-implemented errors from elsewhere."
+  },
+  "ttft_ms": 13286,
+  "type": "result",
+  "duration_ms": 18888,
+  "uuid": "bf825de6-d0be-4e6d-b976-325e4a1fd671",
+  "ttft_stream_ms": 669,
+  "time_to_request_ms": 256,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 1,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 17,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 154,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 99,
+  "time_to_request_cpu_ms": 214,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 669,
+  "time_to_request_from_spawn_ms": 4292899,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791899807511.6223,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

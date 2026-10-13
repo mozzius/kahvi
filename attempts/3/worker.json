@@ -1,0 +1,115 @@
+{
+  "duration_api_ms": 8197,
+  "stop_reason": "end_turn",
+  "session_id": "5e854a7f-cfa4-471d-aaa7-38393798dcb6",
+  "total_cost_usd": 0.005255270000000001,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 15513,
+    "cache_read_input_tokens": 65397,
+    "output_tokens": 1507,
+    "output_tokens_details": {
+      "thinking_tokens": 498
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15513,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 318,
+        "cache_read_input_tokens": 22441,
+        "cache_creation_input_tokens": 552,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 552
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Array.prototype.concat` was already fully implemented in `prototype_concat.rs` on this branch, so I made no changes. It builds, clippy is clean, and `./t262 built-ins/Array/prototype/concat/` gives 113 pass and 24 fail. All 24 failures come from engine features that are missing elsewhere, so the \"done when\" condition (every concat test passing) cannot be met from this file.\n\nBLOCKED: Proxy (and Proxy.revocable), Array.prototype.forEach, RegExp, and Object.preventExtensions are not implemented; the concat tests that use them cannot pass.",
+  "ttft_ms": 634,
+  "type": "result",
+  "duration_ms": 11323,
+  "uuid": "3d2c8c96-542e-4048-9f92-8fb6c53d7e61",
+  "ttft_stream_ms": 539,
+  "time_to_request_ms": 162,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 12,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 3,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 92,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 8,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 133,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 540,
+  "time_to_request_from_spawn_ms": 1802266,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791910538513.235,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1791918600,
+    "rateLimitType": "five_hour",
+    "utilization": 0.91,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.9,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.91,
+        "resetsAt": 1791918600
+      },
+      "seven_day": {
+        "utilization": 0.35,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

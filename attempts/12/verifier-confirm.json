@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 7097,
+  "stop_reason": "tool_use",
+  "session_id": "df6d35d9-2866-4f3d-9423-105b4fb3f27b",
+  "total_cost_usd": 0.0367535,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7196,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 709,
+    "output_tokens_details": {
+      "thinking_tokens": 295
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7196,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 709,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7196,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7196
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.every step by step as the spec describes. The order is ToObject, then LengthOfArrayLike, then the IsCallable check, then the loop with HasProperty, Get, Call and ToBoolean. Every fallible operation uses `?`. The early return of false and the final true are correct. There are no special cases or swallowed errors. The only other change is renaming `new_target` to `_new_target`, which silences the unused-parameter warning. The remaining 24 target failures come from other built-ins that are not implemented (Date, RegExp, parseInt, Array.prototype.toString).\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.every step by step as the spec describes. The order is ToObject, then LengthOfArrayLike, then the IsCallable check, then the loop with HasProperty, Get, Call and ToBoolean. Every fallible operation uses `?`. The early return of false and the final true are correct. There are no special cases or swallowed errors. The only other change is renaming `new_target` to `_new_target`, which silences the unused-parameter warning. The remaining 24 target failures come from other built-ins that are not implemented (Date, RegExp, parseInt, Array.prototype.toString).",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4080,
+  "type": "result",
+  "duration_ms": 6216,
+  "uuid": "5fe1e0c5-7c8c-49b8-b63d-38b2b4e2a7ac",
+  "ttft_stream_ms": 1543,
+  "time_to_request_ms": 198,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 126,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 47,
+  "time_to_request_cpu_ms": 141,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1544,
+  "time_to_request_from_spawn_ms": 3557960,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791922532801.111,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.44,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

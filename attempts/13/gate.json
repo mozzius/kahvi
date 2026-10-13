@@ -1,0 +1,48 @@
+{
+  "ticket": "B-set-constructor",
+  "base": "f8290c521a6e755a51f4a6cfa135c5a03f545cd4",
+  "head": "1e780390cc498af4b247a5895de127d7cfa273d2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/constructor.rs",
+      "added": 50,
+      "removed": 17
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 764,
+    "before": 134,
+    "after": 168,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 596,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/bigint-number-same-value.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/bigint-number-same-value.js:strict  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/proto-from-ctor-realm.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Set/proto-from-ctor-realm.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-array.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-array.js:strict  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-map.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-map.js:strict  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-object.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-object.js:strict  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-set-prototype.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-set-prototype.js:strict  Uncaught InternalError: not implemented: Set.prototype.add",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-weakset.js:sloppy  Uncaught InternalError: not implemented: WeakSet",
+      "built-ins/Set/prototype/add/does-not-have-setdata-internal-slot-weakset.js:strict  Uncaught InternalError: not implemented: WeakSet",
+      "built-ins/Set/prototype/add/preserves-insertion-order.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.add"
+    ]
+  },
+  "decision": "pass"
+}

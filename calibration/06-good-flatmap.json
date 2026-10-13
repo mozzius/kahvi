@@ -1,0 +1,114 @@
+{
+  "duration_api_ms": 15806,
+  "stop_reason": "tool_use",
+  "session_id": "989d2d2b-0d66-4739-94dc-b6837e9d03fe",
+  "total_cost_usd": 0.0020938099999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 752,
+    "cache_read_input_tokens": 9831,
+    "output_tokens": 2153,
+    "output_tokens_details": {
+      "thinking_tokens": 1317
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 752,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2153,
+        "cache_read_input_tokens": 9831,
+        "cache_creation_input_tokens": 752,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 752
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"checks\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false},\"verdict\":\"good\",\"confidence\":0.75,\"fakery\":false,\"summary\":\"The diff implements Array.prototype.flatMap as six spec steps in the correct order: ToObject(this), LengthOfArrayLike, the IsCallable check that throws TypeError, ArraySpeciesCreate(O, 0), then FlattenIntoArray(A, O, sourceLen, 0, 1, mapper, thisArg), then return A. Every fallible call uses `?`. Nothing is special-cased and no error is swallowed. The only file changed is flat_map.rs, and the work is delegated to the shared FlattenIntoArray helper in flat.rs. I could not read flat.rs or the helper definitions (to_object, length_of_array_like, array_species_create, is_callable), so the diff's correctness depends on them. The gate report shows 37 new passes, no regressions, and the two remaining failures are honest \\\"not implemented: Proxy\\\" errors that come from an engine limitation outside this ticket.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/array/flat_map.rs\",\"severity\":\"minor\",\"issue\":\"Not verifiable from the diff alone: the correctness of the 2^53-1 TypeError check, CreateDataPropertyOrThrow, and the depth/IsArray handling lives in the shared flat.rs helper, which is not in this diff. The gate's 37 new passing tests suggest it works, but a reviewer should confirm the helper matches FlattenIntoArray steps 4.a-4.d.\"}],\"notes_for_next_attempt\":\"The diff looks complete for this ticket and can merge. Before merging, confirm that the shared flatten_into_array in flat.rs performs the 2^53-1 check and CreateDataPropertyOrThrow, and that its signature matches the call here. The two Proxy-based test262 failures are blocked by the engine's unimplemented Proxy and should be tracked separately.\"}",
+  "structured_output": {
+    "checks": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false
+    },
+    "verdict": "good",
+    "confidence": 0.75,
+    "fakery": false,
+    "summary": "The diff implements Array.prototype.flatMap as six spec steps in the correct order: ToObject(this), LengthOfArrayLike, the IsCallable check that throws TypeError, ArraySpeciesCreate(O, 0), then FlattenIntoArray(A, O, sourceLen, 0, 1, mapper, thisArg), then return A. Every fallible call uses `?`. Nothing is special-cased and no error is swallowed. The only file changed is flat_map.rs, and the work is delegated to the shared FlattenIntoArray helper in flat.rs. I could not read flat.rs or the helper definitions (to_object, length_of_array_like, array_species_create, is_callable), so the diff's correctness depends on them. The gate report shows 37 new passes, no regressions, and the two remaining failures are honest \"not implemented: Proxy\" errors that come from an engine limitation outside this ticket.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/array/flat_map.rs",
+        "severity": "minor",
+        "issue": "Not verifiable from the diff alone: the correctness of the 2^53-1 TypeError check, CreateDataPropertyOrThrow, and the depth/IsArray handling lives in the shared flat.rs helper, which is not in this diff. The gate's 37 new passing tests suggest it works, but a reviewer should confirm the helper matches FlattenIntoArray steps 4.a-4.d."
+      }
+    ],
+    "notes_for_next_attempt": "The diff looks complete for this ticket and can merge. Before merging, confirm that the shared flatten_into_array in flat.rs performs the 2^53-1 check and CreateDataPropertyOrThrow, and that its signature matches the call here. The two Proxy-based test262 failures are blocked by the engine's unimplemented Proxy and should be tracked separately."
+  },
+  "ttft_ms": 10689,
+  "type": "result",
+  "duration_ms": 13693,
+  "uuid": "6eb31a3a-1373-4ca6-89c7-4ff5bacaab57",
+  "ttft_stream_ms": 4677,
+  "time_to_request_ms": 285,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 2,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 18,
+    "input_hooks": 14,
+    "tool_pool_refresh": 5,
+    "init_message": 19,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 167,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 72,
+  "time_to_request_cpu_ms": 227,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4678,
+  "time_to_request_from_spawn_ms": 4302738,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791899817295.9521,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 17452,
+  "stop_reason": "end_turn",
+  "session_id": "3e4571b7-8137-4f05-a715-e7f71697acfa",
+  "total_cost_usd": 0.006251210000000001,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 16397,
+    "cache_read_input_tokens": 100981,
+    "output_tokens": 3013,
+    "output_tokens_details": {
+      "thinking_tokens": 681
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16397,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 558,
+        "cache_read_input_tokens": 22118,
+        "cache_creation_input_tokens": 1759,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1759
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Array.prototype.some` is implemented in `prototype_some.rs` and follows the spec steps. The `some/` tests don't all pass yet, but the 24 failures are all \"not implemented\" errors raised by other built-ins (Date, RegExp, Function, parseInt, ArrayBuffer, Array.prototype.toString), so they can't be fixed from this file. Build, clippy and fmt are clean.\n\nResults from `./t262 run built-ins/Array/prototype/some/`: 410 pass, 24 fail (all not-implemented). That run reported 434 runs across 219 files, which is more than the `some/` directory alone, so the filter may not have been applied; I didn't dig into why. I used the `run` subcommand because the bare form rejected `--verbose`. I did not run the tests against the `main` branch for comparison.\n\nBLOCKED: the remaining `some/` failures need Date, RegExp, Function (for the resizable-buffer tests), parseInt, ArrayBuffer and Array.prototype.toString to be implemented.",
+  "ttft_ms": 1548,
+  "type": "result",
+  "duration_ms": 29396,
+  "uuid": "991797f0-f08f-4b54-a224-270e044f5e25",
+  "ttft_stream_ms": 1114,
+  "time_to_request_ms": 205,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 28,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 48,
+    "autocompact": 2,
+    "query_setup": 6,
+    "model_gates": 1,
+    "tool_schema_build": 24,
+    "message_normalization": 4,
+    "client_creation": 16,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 82,
+  "time_to_request_cpu_ms": 202,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1115,
+  "time_to_request_from_spawn_ms": 2600485,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791921574949.2158,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.31,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.4,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

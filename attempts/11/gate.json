@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-some",
+  "base": "24b6297d6187cac7863e071a718b345a52713b5c",
+  "head": "edcf142c9264d0caa399dfd1fd6fe53f3d1dc3c6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_some.rs",
+      "added": 40,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 434,
+    "before": 10,
+    "after": 410,
+    "new_passes": 400,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 24,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/some/15.4.4.17-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-2-18.js:sloppy  Uncaught InternalError: not implemented: parseInt",
+      "built-ins/Array/prototype/some/15.4.4.17-2-18.js:strict  Uncaught InternalError: not implemented: parseInt",
+      "built-ins/Array/prototype/some/15.4.4.17-5-15.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-5-15.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-5-16.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-5-16.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-7-c-iii-21.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-7-c-iii-21.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/some/15.4.4.17-7-c-iii-22.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-7-c-iii-22.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/some/15.4.4.17-8-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

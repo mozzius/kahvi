@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements Array.prototype.some in its own file, following the spec. Steps 1 to 6 are all present and in order: ToObject, LengthOfArrayLike, the IsCallable check that throws TypeError, the k loop with ! ToString(k) as the key, HasProperty, Get, Call with (kValue, k, O) and thisArg, ToBoolean, early return true, and the final return false. Errors propagate with `?`. There are no test-specific branches, no hardcoded values and no swallowed errors. The renaming of new_target to _new_target is needed because the parameter is no longer referenced. The remaining test262 failures come from other built-ins (Date, RegExp, parseInt, Array.prototype.toString) that are not implemented, and they surface as not-implemented errors from the harness, not from this code.",
+  "problems": [],
+  "notes_for_next_attempt": "The logic matches the pinned spec and can be merged as is. Cosmetic only: the step comments use older spec naming (O, len, Pk, kPresent, kValue, testResult). The pinned text uses obj, length, propertyKey, kPresent, kValue and testResult, so the comments could be aligned with the pinned wording. This does not affect behaviour.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

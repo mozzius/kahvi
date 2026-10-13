@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-concat",
+  "base": "f510109153f43f4b84cd178ac429a08292468b31",
+  "head": "f38d352717364e69bfab3891143d5390bafcc54e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_concat.rs",
+      "added": 78,
+      "removed": 33
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 137,
+    "before": 8,
+    "after": 113,
+    "new_passes": 105,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 22,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/concat/Array.prototype.concat_large-typed-array.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Array/prototype/concat/Array.prototype.concat_large-typed-array.js:strict  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Array/prototype/concat/Array.prototype.concat_small-typed-array.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Array/prototype/concat/Array.prototype.concat_small-typed-array.js:strict  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Array/prototype/concat/Array.prototype.concat_spreadable-reg-exp.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/concat/Array.prototype.concat_spreadable-reg-exp.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/concat/arg-length-exceeding-integer-limit.js:sloppy  Uncaught InternalError: not implemented: Proxy",
+      "built-ins/Array/prototype/concat/arg-length-exceeding-integer-limit.js:strict  Uncaught InternalError: not implemented: Proxy",
+      "built-ins/Array/prototype/concat/create-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy",
+      "built-ins/Array/prototype/concat/create-proxy.js:strict  Uncaught InternalError: not implemented: Proxy",
+      "built-ins/Array/prototype/concat/create-revoked-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy.revocable",
+      "built-ins/Array/prototype/concat/create-revoked-proxy.js:strict  Uncaught InternalError: not implemented: Proxy.revocable",
+      "built-ins/Array/prototype/concat/create-species-non-extensible-spreadable.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Array/prototype/concat/create-species-non-extensible-spreadable.js:strict  Uncaught InternalError: not implemented: Object.preventExtensions",
+      "built-ins/Array/prototype/concat/create-species-non-extensible.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 20606,
+  "stop_reason": "end_turn",
+  "session_id": "d10067d8-e330-40fe-a04c-8b7aebf70962",
+  "total_cost_usd": 0.00800316,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 19801,
+    "cache_read_input_tokens": 134326,
+    "output_tokens": 4458,
+    "output_tokens_details": {
+      "thinking_tokens": 787
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19801,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 394,
+        "cache_read_input_tokens": 26027,
+        "cache_creation_input_tokens": 1254,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1254
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Array.prototype.reduceRight` in its file, following the spec steps, with clippy and formatting clean. The reduceRight tests are not all passing: the 22 failures each throw \"not implemented\" from Date, RegExp, Array.prototype.toString, or Function, which are other built-ins outside this ticket's scope.\n\nBLOCKED: Date, RegExp, Array.prototype.toString, and Function built-ins are not implemented, so the remaining reduceRight test262 failures cannot pass.",
+  "ttft_ms": 1985,
+  "type": "result",
+  "duration_ms": 46359,
+  "uuid": "4b9491f2-a3bd-476f-bf46-db9646cce971",
+  "ttft_stream_ms": 1728,
+  "time_to_request_ms": 141,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 15,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 32,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 92,
+  "time_to_request_cpu_ms": 179,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1728,
+  "time_to_request_from_spawn_ms": 1854671,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791920829464.6309,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.39,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 14843,
+  "stop_reason": "end_turn",
+  "session_id": "2a3ba26f-4d64-4977-b801-e4fcb8b5e596",
+  "total_cost_usd": 0.00664783,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 18386,
+    "cache_read_input_tokens": 107843,
+    "output_tokens": 2990,
+    "output_tokens_details": {
+      "thinking_tokens": 447
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18386,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 272,
+        "cache_read_input_tokens": 25486,
+        "cache_creation_input_tokens": 380,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 380
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented the `Set` constructor in `set/constructor.rs` following the spec steps, with each step kept as a comment. It builds, is clippy- and fmt-clean, and the Set suite is at 168 of 764 runs passing. The \"every Set test passes\" bar is not met: most failures are `Set.prototype.add` and the other prototype methods still being stubs, which belong to other tickets.\n\nI wrote `AddValuesFromIterable` as a private helper in my file, because `support::collections` only has the Map version. Other built-ins don't need it yet, so I didn't move it.\n\nBLOCKED: Set.prototype.add (and the other Set.prototype methods, plus `WeakSet` and `get Set.prototype.size`) are not implemented, so the constructor's adder call and most Set tests cannot pass yet.",
+  "ttft_ms": 1532,
+  "type": "result",
+  "duration_ms": 33484,
+  "uuid": "ba506b80-11e7-46df-a8ad-e79ed802e5a3",
+  "ttft_stream_ms": 1042,
+  "time_to_request_ms": 255,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 38,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 139,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 10,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 53,
+  "time_to_request_cpu_ms": 228,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1043,
+  "time_to_request_from_spawn_ms": 3496285,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791922471069.834,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.43,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

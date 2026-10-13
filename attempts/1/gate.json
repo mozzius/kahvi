@@ -1,0 +1,48 @@
+{
+  "ticket": "B-object-define-properties",
+  "base": "f510109153f43f4b84cd178ac429a08292468b31",
+  "head": "b170bbc8ea1f32b841bc0bfaaa3581d606c07d4b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/define_properties.rs",
+      "added": 43,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 1264,
+    "before": 8,
+    "after": 1208,
+    "new_passes": 1200,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 56,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/defineProperties/15.2.3.7-2-12.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-2-12.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-2-13.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-2-13.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-5-a-13.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-a-13.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-a-14.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-5-a-14.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-103.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-103.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-104.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-104.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-131.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-131.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/defineProperties/15.2.3.7-5-b-132.js:sloppy  Uncaught InternalError: not implemented: RegExp"
+    ]
+  },
+  "decision": "pass"
+}

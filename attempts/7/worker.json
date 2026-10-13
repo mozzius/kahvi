@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 22486,
+  "stop_reason": "end_turn",
+  "session_id": "6d1b5e60-0068-4b0e-9e38-1f67c6e38830",
+  "total_cost_usd": 0.00706823,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 16944,
+    "cache_read_input_tokens": 84803,
+    "output_tokens": 4733,
+    "output_tokens_details": {
+      "thinking_tokens": 1520
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16944,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 909,
+        "cache_read_input_tokens": 23472,
+        "cache_creation_input_tokens": 952,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 952
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Array.prototype.reduce` in `prototype_reduce.rs`, following the spec steps with each step as a comment. `cargo build` and `cargo clippy` are clean. The test262 run reports 22 failures, all from `not implemented` errors in other built-ins: Array.prototype.toString (6), Function (6), Date (4), RegExp (4), ArrayBuffer (2). The first 10 failures are reduce tests; I did not confirm that the other 12 are too. The runner ignored the path prefix and ran 260 files, so I could not isolate the reduce directory.\n\nBLOCKED: the reduce tests that fail need Array.prototype.toString, Function, Date, RegExp and ArrayBuffer implemented; none of these is in this ticket's scope.",
+  "ttft_ms": 1676,
+  "type": "result",
+  "duration_ms": 34893,
+  "uuid": "01b7ecc4-d42f-4802-8387-ed7531313275",
+  "ttft_stream_ms": 1114,
+  "time_to_request_ms": 163,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 30,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 15,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 28,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 14,
+    "message_normalization": 6,
+    "client_creation": 13,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 113,
+  "time_to_request_cpu_ms": 179,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1114,
+  "time_to_request_from_spawn_ms": 461160,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791919435727.1926,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.13,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.37,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

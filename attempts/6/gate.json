@@ -1,0 +1,35 @@
+{
+  "ticket": "B-string-from-code-point",
+  "base": "cb9a8e472a86d9d4600c1b770665da4c6125ab72",
+  "head": "de7e3032c7e1e2d54c19f5a26efb339e8170c703",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/from_code_point.rs",
+      "added": 39,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 6,
+    "after": 20,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/fromCodePoint/length.js:sloppy  Uncaught Test262Error: length descriptor value should be 1; length value should be 1",
+      "built-ins/String/fromCodePoint/length.js:strict  Uncaught Test262Error: length descriptor value should be 1; length value should be 1"
+    ]
+  },
+  "decision": "pass"
+}

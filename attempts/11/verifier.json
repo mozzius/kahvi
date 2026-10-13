@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 12571,
+  "stop_reason": "tool_use",
+  "session_id": "8247cd03-8545-4239-817b-263c6c2ae99f",
+  "total_cost_usd": 0.00345066,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7192,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2668,
+    "output_tokens_details": {
+      "thinking_tokens": 2068
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7192,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2668,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7192,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7192
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.some in its own file, following the spec. Steps 1 to 6 are all present and in order: ToObject, LengthOfArrayLike, the IsCallable check that throws TypeError, the k loop with ! ToString(k) as the key, HasProperty, Get, Call with (kValue, k, O) and thisArg, ToBoolean, early return true, and the final return false. Errors propagate with `?`. There are no test-specific branches, no hardcoded values and no swallowed errors. The renaming of new_target to _new_target is needed because the parameter is no longer referenced. The remaining test262 failures come from other built-ins (Date, RegExp, parseInt, Array.prototype.toString) that are not implemented, and they surface as not-implemented errors from the harness, not from this code.\",\"problems\":[],\"notes_for_next_attempt\":\"The logic matches the pinned spec and can be merged as is. Cosmetic only: the step comments use older spec naming (O, len, Pk, kPresent, kValue, testResult). The pinned text uses obj, length, propertyKey, kPresent, kValue and testResult, so the comments could be aligned with the pinned wording. This does not affect behaviour.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.some in its own file, following the spec. Steps 1 to 6 are all present and in order: ToObject, LengthOfArrayLike, the IsCallable check that throws TypeError, the k loop with ! ToString(k) as the key, HasProperty, Get, Call with (kValue, k, O) and thisArg, ToBoolean, early return true, and the final return false. Errors propagate with `?`. There are no test-specific branches, no hardcoded values and no swallowed errors. The renaming of new_target to _new_target is needed because the parameter is no longer referenced. The remaining test262 failures come from other built-ins (Date, RegExp, parseInt, Array.prototype.toString) that are not implemented, and they surface as not-implemented errors from the harness, not from this code.",
+    "problems": [],
+    "notes_for_next_attempt": "The logic matches the pinned spec and can be merged as is. Cosmetic only: the step comments use older spec naming (O, len, Pk, kPresent, kValue, testResult). The pinned text uses obj, length, propertyKey, kPresent, kValue and testResult, so the comments could be aligned with the pinned wording. This does not affect behaviour."
+  },
+  "ttft_ms": 9951,
+  "type": "result",
+  "duration_ms": 12198,
+  "uuid": "b8cdf723-c300-4f98-819a-9cf18ed1344d",
+  "ttft_stream_ms": 905,
+  "time_to_request_ms": 169,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 30,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 51,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 5,
+    "message_normalization": 1,
+    "client_creation": 12,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 44,
+  "time_to_request_cpu_ms": 165,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 905,
+  "time_to_request_from_spawn_ms": 2641818,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791921616074.6804,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.31,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.4,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

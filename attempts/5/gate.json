@@ -1,0 +1,48 @@
+{
+  "ticket": "B-object-create",
+  "base": "cb9a8e472a86d9d4600c1b770665da4c6125ab72",
+  "head": "1cb05c939a93fe7022cde123aa8640c5eb6c127f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/create.rs",
+      "added": 53,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 640,
+    "before": 8,
+    "after": 582,
+    "new_passes": 574,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 58,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/create/15.2.3.5-3-1.js:sloppy  Uncaught InternalError: not implemented: Object.prototype.isPrototypeOf",
+      "built-ins/Object/create/15.2.3.5-3-1.js:strict  Uncaught InternalError: not implemented: Object.prototype.isPrototypeOf",
+      "built-ins/Object/create/15.2.3.5-4-1.js:sloppy  Uncaught InternalError: not implemented: Object.prototype.isPrototypeOf",
+      "built-ins/Object/create/15.2.3.5-4-1.js:strict  Uncaught InternalError: not implemented: Object.prototype.isPrototypeOf",
+      "built-ins/Object/create/15.2.3.5-4-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/create/15.2.3.5-4-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/create/15.2.3.5-4-118.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/create/15.2.3.5-4-118.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Object/create/15.2.3.5-4-119.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/create/15.2.3.5-4-119.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/create/15.2.3.5-4-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/create/15.2.3.5-4-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/create/15.2.3.5-4-14.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Object/create/15.2.3.5-4-14.js:strict  Uncaught InternalError: not implemented: Array.prototype.forEach",
+      "built-ins/Object/create/15.2.3.5-4-143.js:sloppy  Uncaught InternalError: not implemented: Date"
+    ]
+  },
+  "decision": "pass"
+}

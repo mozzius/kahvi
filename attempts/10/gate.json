@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-for-each",
+  "base": "347ac35584b03913f66be64fef2bef1145322727",
+  "head": "21b48446825cf0b0546ca4ab0bb587095abf60c0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_for_each.rs",
+      "added": 35,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 376,
+    "before": 10,
+    "after": 352,
+    "new_passes": 342,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 24,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/forEach/15.4.4.18-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/forEach/15.4.4.18-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/forEach/15.4.4.18-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/forEach/15.4.4.18-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/forEach/15.4.4.18-5-15.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/forEach/15.4.4.18-5-15.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/forEach/15.4.4.18-5-16.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/forEach/15.4.4.18-5-16.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/forEach/15.4.4.18-8-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/forEach/15.4.4.18-8-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/forEach/15.4.4.18-8-9.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/forEach/15.4.4.18-8-9.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/forEach/S15.4.4.18_A1.js:sloppy  Uncaught InternalError: not implemented: Object.freeze",
+      "built-ins/Array/prototype/forEach/S15.4.4.18_A1.js:strict  Uncaught InternalError: not implemented: Object.freeze",
+      "built-ins/Array/prototype/forEach/S15.4.4.18_A2.js:sloppy  Uncaught InternalError: not implemented: Object.freeze"
+    ]
+  },
+  "decision": "pass"
+}

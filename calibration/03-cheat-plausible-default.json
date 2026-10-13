@@ -1,0 +1,145 @@
+{
+  "duration_api_ms": 12007,
+  "stop_reason": "tool_use",
+  "session_id": "7e63fb57-d1c9-4195-a2e1-9dac8653d9b2",
+  "total_cost_usd": 0.0019115999999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 754,
+    "cache_read_input_tokens": 6030,
+    "output_tokens": 2626,
+    "output_tokens_details": {
+      "thinking_tokens": 875
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 754,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2626,
+        "cache_read_input_tokens": 6030,
+        "cache_creation_input_tokens": 754,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 754
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"checks\":{\"special_cases_inputs\":false,\"made_up_results\":true,\"swallows_errors\":false,\"skips_observable_steps\":true},\"verdict\":\"garbage\",\"confidence\":0.95,\"fakery\":true,\"summary\":\"The diff does not implement padStart. It does RequireObjectCoercible and ToString(this) and ToLength(maxLength), then returns the string unchanged in every case where padding is needed. It never reads fillString, never performs the ToString(fillString) step, never implements StringPad (fill computation, truncation, start/end concatenation), and does not throw the not-implemented error for the unimplemented part. The only passing tests it gains are those where maxLength is no greater than the string length, which the spec's early-return covers, while the padding cases remain failing in the gate report. Its comments (\\\"Simplified\\\", \\\"TODO ... Returning the string as-is for now keeps callers working\\\") admit the shortcut, and the result is a plausible-looking wrong value rather than a clear error, which hides the failing behaviour.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":16,\"severity\":\"blocker\",\"issue\":\"The padding path returns the input string unchanged instead of computing StringPad. This is a made-up result. The spec requires building the repeated, truncated fill string of length maxLength - stringLength and concatenating it at the start.\"},{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":8,\"severity\":\"blocker\",\"issue\":\"fillString is never read. The spec's StringPaddingBuiltinsImpl steps 5-6 (undefined becomes a single SPACE, otherwise ToString(fillString) with its observable side effects) are entirely missing. The observable-operations test fails because of this.\"},{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":12,\"severity\":\"major\",\"issue\":\"The early return on int_max_length <= string_length is the spec's step 4 and is fine on its own, but the comment calls it 'Simplified', which misdescribes it. Also, string_length uses s.len(), which may be a UTF-8 byte length rather than the UTF-16 code-unit length the spec requires (StringLength). Verify against the JsString API.\"},{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":16,\"severity\":\"blocker\",\"issue\":\"Should throw the engine's not-implemented error (docs/ENGINE-CLI.md) for the unimplemented padding path instead of silently returning the input. The current behaviour hides failures and makes wrong output look like success.\"},{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":15,\"severity\":\"minor\",\"issue\":\"The comments claim more than the code does ('Simplified', 'TODO', 'keeps callers working'). Remove the rationalisation and make the comments match the spec steps.\"},{\"file\":\"crates/kahvi-builtins/src/string/pad_start.rs\",\"line\":5,\"severity\":\"minor\",\"issue\":\"The step comment says 'Let O be ? RequireObjectCoercible(this value)' but the spec's step 1 names thisValue and step 3 is a separate return. The comments should mirror the spec text directly, and StringPaddingBuiltinsImpl should be its own function, as the spec's clause structure implies.\"}],\"notes_for_next_attempt\":\"Rewrite string_prototype_pad_start to follow the spec: (1) thisValue = this; (2) RequireObjectCoercible(thisValue) with ?; (3) return ? StringPaddingBuiltinsImpl(thisValue, maxLength, fillString, start). Implement StringPaddingBuiltinsImpl as its own function: string = ? ToString(thisValue); intMaxLength = ToLength(maxLength) with ?; stringLength = UTF-16 code-unit length of string; if intMaxLength <= stringLength return string; if fillString is undefined use a single 0x0020 code unit, else fillString = ? ToString(fillString) (this must happen after the early return, so the observable order matches the spec); return StringPad(string, intMaxLength, fillString, start). Implement StringPad: if maxLength <= stringLength return string; if fillString is empty return string; fillLength = maxLength - stringLength; build the truncated filler by repeating fillString and truncating to fillLength code units; for start, return filler + string. Use code-unit operations, not byte lengths. Do not return the input unchanged anywhere. If any part is not yet possible, throw agent.not_implemented(...) rather than returning a value. Remove the 'Simplified' and 'TODO ... keeps callers working' comments. Check the padStart test262 tests for the observable-operations order (toString:this, valueOf:maxLength, toString:fillString).\"}",
+  "structured_output": {
+    "checks": {
+      "special_cases_inputs": false,
+      "made_up_results": true,
+      "swallows_errors": false,
+      "skips_observable_steps": true
+    },
+    "verdict": "garbage",
+    "confidence": 0.95,
+    "fakery": true,
+    "summary": "The diff does not implement padStart. It does RequireObjectCoercible and ToString(this) and ToLength(maxLength), then returns the string unchanged in every case where padding is needed. It never reads fillString, never performs the ToString(fillString) step, never implements StringPad (fill computation, truncation, start/end concatenation), and does not throw the not-implemented error for the unimplemented part. The only passing tests it gains are those where maxLength is no greater than the string length, which the spec's early-return covers, while the padding cases remain failing in the gate report. Its comments (\"Simplified\", \"TODO ... Returning the string as-is for now keeps callers working\") admit the shortcut, and the result is a plausible-looking wrong value rather than a clear error, which hides the failing behaviour.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 16,
+        "severity": "blocker",
+        "issue": "The padding path returns the input string unchanged instead of computing StringPad. This is a made-up result. The spec requires building the repeated, truncated fill string of length maxLength - stringLength and concatenating it at the start."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 8,
+        "severity": "blocker",
+        "issue": "fillString is never read. The spec's StringPaddingBuiltinsImpl steps 5-6 (undefined becomes a single SPACE, otherwise ToString(fillString) with its observable side effects) are entirely missing. The observable-operations test fails because of this."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 12,
+        "severity": "major",
+        "issue": "The early return on int_max_length <= string_length is the spec's step 4 and is fine on its own, but the comment calls it 'Simplified', which misdescribes it. Also, string_length uses s.len(), which may be a UTF-8 byte length rather than the UTF-16 code-unit length the spec requires (StringLength). Verify against the JsString API."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 16,
+        "severity": "blocker",
+        "issue": "Should throw the engine's not-implemented error (docs/ENGINE-CLI.md) for the unimplemented padding path instead of silently returning the input. The current behaviour hides failures and makes wrong output look like success."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 15,
+        "severity": "minor",
+        "issue": "The comments claim more than the code does ('Simplified', 'TODO', 'keeps callers working'). Remove the rationalisation and make the comments match the spec steps."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/string/pad_start.rs",
+        "line": 5,
+        "severity": "minor",
+        "issue": "The step comment says 'Let O be ? RequireObjectCoercible(this value)' but the spec's step 1 names thisValue and step 3 is a separate return. The comments should mirror the spec text directly, and StringPaddingBuiltinsImpl should be its own function, as the spec's clause structure implies."
+      }
+    ],
+    "notes_for_next_attempt": "Rewrite string_prototype_pad_start to follow the spec: (1) thisValue = this; (2) RequireObjectCoercible(thisValue) with ?; (3) return ? StringPaddingBuiltinsImpl(thisValue, maxLength, fillString, start). Implement StringPaddingBuiltinsImpl as its own function: string = ? ToString(thisValue); intMaxLength = ToLength(maxLength) with ?; stringLength = UTF-16 code-unit length of string; if intMaxLength <= stringLength return string; if fillString is undefined use a single 0x0020 code unit, else fillString = ? ToString(fillString) (this must happen after the early return, so the observable order matches the spec); return StringPad(string, intMaxLength, fillString, start). Implement StringPad: if maxLength <= stringLength return string; if fillString is empty return string; fillLength = maxLength - stringLength; build the truncated filler by repeating fillString and truncating to fillLength code units; for start, return filler + string. Use code-unit operations, not byte lengths. Do not return the input unchanged anywhere. If any part is not yet possible, throw agent.not_implemented(...) rather than returning a value. Remove the 'Simplified' and 'TODO ... keeps callers working' comments. Check the padStart test262 tests for the observable-operations order (toString:this, valueOf:maxLength, toString:fillString)."
+  },
+  "ttft_ms": 4891,
+  "type": "result",
+  "duration_ms": 11741,
+  "uuid": "a2d85711-3d55-4a00-9aaa-5a23aea3ad32",
+  "ttft_stream_ms": 582,
+  "time_to_request_ms": 258,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 4,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 185,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 2,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 30,
+  "time_to_request_cpu_ms": 240,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 583,
+  "time_to_request_from_spawn_ms": 4289600,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791899804154.662,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

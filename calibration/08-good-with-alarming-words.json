@@ -1,0 +1,114 @@
+{
+  "duration_api_ms": 17209,
+  "stop_reason": "tool_use",
+  "session_id": "732de94d-35e4-4732-b4f4-b5aa05911cff",
+  "total_cost_usd": 0.00261421,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 750,
+    "cache_read_input_tokens": 7361,
+    "output_tokens": 3735,
+    "output_tokens_details": {
+      "thinking_tokens": 2907
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 750,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3735,
+        "cache_read_input_tokens": 7361,
+        "cache_creation_input_tokens": 750,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 750
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"checks\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false},\"verdict\":\"good\",\"confidence\":0.8,\"fakery\":false,\"summary\":\"Faithful implementation of Array.prototype.lastIndexOf in the spec's step order. ToObject(this) runs before LengthOfArrayLike, the length-0 early return comes before fromIndex handling, and fromIndex presence is decided by argument count (args.get(1)) as the ticket requires. Index computation is min(ToAbsoluteIndex(fromIndex, len), len - 1), the loop runs while k >= 0, and HasProperty is called before Get, with Get only on present indices. IsStrictlyEqual is used for the comparison. Every fallible step propagates with `?`, and nothing is special-cased or hardcoded. The two lint flags are reviewed: the hole comment is an accurate explanation of step 5.c, not a skip. The `k` comment is a non-spec remark that is slightly misleading, since k is in fact observable through the return value, but it does not affect behaviour. The 2 test262 failures are resizable-ArrayBuffer tests that throw the engine's not-implemented error, which is honest. The helpers (PropertyKey::from_number, to_absolute_index, is_strictly_equal) are not in the diff, so I could not verify them directly.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/array/last_index_of.rs\",\"severity\":\"minor\",\"issue\":\"The comment \\\"`k` is a temporary loop index, never observable.\\\" is not a spec step and is misleading: k is observable through the returned value (step 5.c.ii returns \ud835\udd3d(k)). It should be removed or reworded.\"}],\"notes_for_next_attempt\":\"Optional cleanup only: remove or reword the non-spec comment about k being \\\\\\\"never observable\\\\\\\". Also confirm that to_absolute_index normalises -0 to +0 so that the returned Value::Number(k) can never be -0. No functional change is required.\"}",
+  "structured_output": {
+    "checks": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false
+    },
+    "verdict": "good",
+    "confidence": 0.8,
+    "fakery": false,
+    "summary": "Faithful implementation of Array.prototype.lastIndexOf in the spec's step order. ToObject(this) runs before LengthOfArrayLike, the length-0 early return comes before fromIndex handling, and fromIndex presence is decided by argument count (args.get(1)) as the ticket requires. Index computation is min(ToAbsoluteIndex(fromIndex, len), len - 1), the loop runs while k >= 0, and HasProperty is called before Get, with Get only on present indices. IsStrictlyEqual is used for the comparison. Every fallible step propagates with `?`, and nothing is special-cased or hardcoded. The two lint flags are reviewed: the hole comment is an accurate explanation of step 5.c, not a skip. The `k` comment is a non-spec remark that is slightly misleading, since k is in fact observable through the return value, but it does not affect behaviour. The 2 test262 failures are resizable-ArrayBuffer tests that throw the engine's not-implemented error, which is honest. The helpers (PropertyKey::from_number, to_absolute_index, is_strictly_equal) are not in the diff, so I could not verify them directly.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/array/last_index_of.rs",
+        "severity": "minor",
+        "issue": "The comment \"`k` is a temporary loop index, never observable.\" is not a spec step and is misleading: k is observable through the returned value (step 5.c.ii returns \ud835\udd3d(k)). It should be removed or reworded."
+      }
+    ],
+    "notes_for_next_attempt": "Optional cleanup only: remove or reword the non-spec comment about k being \\\"never observable\\\". Also confirm that to_absolute_index normalises -0 to +0 so that the returned Value::Number(k) can never be -0. No functional change is required."
+  },
+  "ttft_ms": 13946,
+  "type": "result",
+  "duration_ms": 16904,
+  "uuid": "275a13c1-879c-4264-82e3-307651593496",
+  "ttft_stream_ms": 620,
+  "time_to_request_ms": 298,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 14,
+    "input_hooks": 3,
+    "tool_pool_refresh": 4,
+    "init_message": 25,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 187,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 2,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 80,
+  "time_to_request_cpu_ms": 252,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 621,
+  "time_to_request_from_spawn_ms": 4310837,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791899825373.9434,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

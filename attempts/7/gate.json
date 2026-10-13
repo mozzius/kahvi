@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-reduce",
+  "base": "0ef4533c9d87399ed50da3be07ce874d8606c987",
+  "head": "880b565aecafd418b74aebb2b5c58e7613d14cdd",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_reduce.rs",
+      "added": 63,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 517,
+    "before": 10,
+    "after": 495,
+    "new_passes": 485,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 22,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/reduce/15.4.4.21-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/reduce/15.4.4.21-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/reduce/15.4.4.21-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/reduce/15.4.4.21-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/reduce/15.4.4.21-5-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-5-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-7-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-7-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-7-9.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-7-9.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/reduce/15.4.4.21-9-c-ii-31.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/reduce/15.4.4.21-9-c-ii-31.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/reduce/15.4.4.21-9-c-ii-32.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/reduce/15.4.4.21-9-c-ii-32.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/reduce/callbackfn-resize-arraybuffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer"
+    ]
+  },
+  "decision": "pass"
+}

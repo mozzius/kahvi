@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 12234,
+  "stop_reason": "end_turn",
+  "session_id": "9bef199d-2ca8-4c20-8a16-3437102a409d",
+  "total_cost_usd": 0.0061502399999999995,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 15251,
+    "cache_read_input_tokens": 122044,
+    "output_tokens": 2848,
+    "output_tokens_details": {
+      "thinking_tokens": 403
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15251,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 304,
+        "cache_read_input_tokens": 22504,
+        "cache_creation_input_tokens": 227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_018AuB5nh2mWT7EuKqrpCEiu",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2021 crates/kahvi-builtins/src/array/prototype_every.rs",
+        "description": "Check formatting of the edited file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Array.prototype.every` in `crates/kahvi-builtins/src/array/prototype_every.rs`, following the spec steps with each step as a comment. Clippy and formatting are clean, but 24 of the 433 runs under `built-ins/Array/prototype/every/` still fail, so the \"done when\" condition is not met.\n\nThe 24 failures are all `not implemented` errors from other built-ins the tests call: Date (6), Function (6), RegExp (6), Array.prototype.toString (2), ArrayBuffer (2) and parseInt (2). None of them are in my file's scope, so I left them alone. The rest of the implementation runs without errors.\n\nBLOCKED: the tests under built-ins/Array/prototype/every/ also need Date, Function, RegExp, Array.prototype.toString, ArrayBuffer and parseInt to be implemented; these are outside this ticket's file scope.",
+  "ttft_ms": 737,
+  "type": "result",
+  "duration_ms": 29139,
+  "uuid": "974c4fca-5746-4fc5-9d94-e2786d0620e7",
+  "ttft_stream_ms": 512,
+  "time_to_request_ms": 133,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 13,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 12,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 35,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 4,
+    "client_creation": 4,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 83,
+  "time_to_request_cpu_ms": 174,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 512,
+  "time_to_request_from_spawn_ms": 3496159,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791922471035.373,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.43,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

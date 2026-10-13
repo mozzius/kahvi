@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-filter",
+  "base": "dc5d049ad23db0eb11322836d58277985728f78a",
+  "head": "b6361729b5313049291bce4fd506c69aaa9bd8df",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_filter.rs",
+      "added": 48,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 480,
+    "before": 10,
+    "after": 452,
+    "new_passes": 442,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 28,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/filter/15.4.4.20-1-11.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-1-11.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-1-12.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/15.4.4.20-1-12.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/15.4.4.20-5-15.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-5-15.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-5-16.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/15.4.4.20-5-16.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/15.4.4.20-6-8.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/filter/15.4.4.20-6-8.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/Array/prototype/filter/15.4.4.20-9-c-iii-22.js:sloppy  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-9-c-iii-22.js:strict  Uncaught InternalError: not implemented: Date",
+      "built-ins/Array/prototype/filter/15.4.4.20-9-c-iii-23.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/15.4.4.20-9-c-iii-23.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/filter/callbackfn-resize-arraybuffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer"
+    ]
+  },
+  "decision": "pass"
+}

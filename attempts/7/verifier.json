@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 12237,
+  "stop_reason": "tool_use",
+  "session_id": "f010e34b-4bdf-42bf-8456-5c87a9cc37b4",
+  "total_cost_usd": 0.00370456,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8468,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2409,
+    "output_tokens_details": {
+      "thinking_tokens": 1744
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8468,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2409,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8468,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8468
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.reduce in spec order: ToObject, LengthOfArrayLike, IsCallable check (TypeError), the empty-array-without-initialValue TypeError, then the initialValue branch or the kPresent search loop (HasProperty and Get only while kPresent is false and k < length, TypeError if none found), then the main loop (HasProperty, Get, Call with accumulator, kValue, k, obj), returning accumulator. Every abstract operation call propagates with `?`. initialValue presence is taken from args.len() >= 2, which matches \\\"is present\\\". No test-shaped branches, hardcoded values or swallowed errors. The gate's +485 passing tests is plausible for a complete reduce. The remaining failures are on unimplemented Date, RegExp, ArrayBuffer and Array.prototype.toString, which throw not-implemented as they should. Minor cosmetic point: the trailing spec NOTE comment about genericity was dropped from the stub. That is not a behavioural defect.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Optionally restore the trailing \\\"NOTE: This method is intentionally generic...\\\" comment from the stub so the file matches the other built-ins' layout. The helper `agent.key_from_index` is assumed to be the infallible ToString(\ud835\udd3d(k)) and should be checked once in review, since it is not in the spec-named ops list.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.reduce in spec order: ToObject, LengthOfArrayLike, IsCallable check (TypeError), the empty-array-without-initialValue TypeError, then the initialValue branch or the kPresent search loop (HasProperty and Get only while kPresent is false and k < length, TypeError if none found), then the main loop (HasProperty, Get, Call with accumulator, kValue, k, obj), returning accumulator. Every abstract operation call propagates with `?`. initialValue presence is taken from args.len() >= 2, which matches \"is present\". No test-shaped branches, hardcoded values or swallowed errors. The gate's +485 passing tests is plausible for a complete reduce. The remaining failures are on unimplemented Date, RegExp, ArrayBuffer and Array.prototype.toString, which throw not-implemented as they should. Minor cosmetic point: the trailing spec NOTE comment about genericity was dropped from the stub. That is not a behavioural defect.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Optionally restore the trailing \"NOTE: This method is intentionally generic...\" comment from the stub so the file matches the other built-ins' layout. The helper `agent.key_from_index` is assumed to be the infallible ToString(\ud835\udd3d(k)) and should be checked once in review, since it is not in the spec-named ops list."
+  },
+  "ttft_ms": 8966,
+  "type": "result",
+  "duration_ms": 11839,
+  "uuid": "3f66cb71-2fae-400a-84fc-09152a63ac89",
+  "ttft_stream_ms": 986,
+  "time_to_request_ms": 164,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 43,
+    "input_hooks": 9,
+    "tool_pool_refresh": 5,
+    "init_message": 12,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 20,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 12,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 114,
+  "time_to_request_cpu_ms": 155,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 31,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 987,
+  "time_to_request_from_spawn_ms": 509183,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791919483269.7246,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.13,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.37,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

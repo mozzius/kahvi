@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 6371,
+  "stop_reason": "tool_use",
+  "session_id": "f47cd63e-0ca8-4f83-9320-2ce460b52f4e",
+  "total_cost_usd": 0.034244000000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6869,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 636,
+    "output_tokens_details": {
+      "thinking_tokens": 286
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6869,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 636,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 6869,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6869
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order. Each argument is converted with `to_number` and propagated with `?`, then checked for integrality and range, each failing with a RangeError. Encoding goes through a local UTF16EncodeCodePoint that matches the spec. I found no special-casing, swallowed errors or unrelated edits. The `length.js` failures look like registration of the function's `length` property outside the files in scope.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order. Each argument is converted with `to_number` and propagated with `?`, then checked for integrality and range, each failing with a RangeError. Encoding goes through a local UTF16EncodeCodePoint that matches the spec. I found no special-casing, swallowed errors or unrelated edits. The `length.js` failures look like registration of the function's `length` property outside the files in scope.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4379,
+  "type": "result",
+  "duration_ms": 6060,
+  "uuid": "01db43f3-90e5-4f78-b287-40369210aa5f",
+  "ttft_stream_ms": 1530,
+  "time_to_request_ms": 182,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 108,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 28,
+  "time_to_request_cpu_ms": 171,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1531,
+  "time_to_request_from_spawn_ms": 117274,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791919091966.6802,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.11,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.37,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

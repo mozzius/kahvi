@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 10124,
+  "stop_reason": "tool_use",
+  "session_id": "d6b5831d-22b0-4c39-8e01-4f008350aa9c",
+  "total_cost_usd": 0.0018242699999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 752,
+    "cache_read_input_tokens": 7277,
+    "output_tokens": 2156,
+    "output_tokens_details": {
+      "thinking_tokens": 1573
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 752,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2156,
+        "cache_read_input_tokens": 7277,
+        "cache_creation_input_tokens": 752,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 752
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.lastIndexOf in the single in-scope file, following the spec steps in order. ToObject and LengthOfArrayLike come first, and len = 0 returns -1 before fromIndex is converted, as step 3 requires. The presence of fromIndex is detected with args.get(1), so it is decided by argument count, as the ticket asks. ToAbsoluteIndex is wrapped in min(..., len - 1), with its ? propagated. The descending loop performs HasProperty, then Get and IsStrictlyEqual only when the property is present, then decrements k. The ToString(\ud835\udd3d(k)) step is replaced by PropertyKey::from_number(k). That is an equivalent, side-effect-free conversion for integer indices, so it is not a skipped observable step. The two lint flags are acceptable: the hole-skipping comment matches step 5.c, and the \\\"never observable\\\" comment is loose wording but not a defect. No test-shaped branches, no swallowed errors, and no unrelated files changed. The gate shows only the resizable-buffer tests failing, which is a not-implemented path.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.lastIndexOf in the single in-scope file, following the spec steps in order. ToObject and LengthOfArrayLike come first, and len = 0 returns -1 before fromIndex is converted, as step 3 requires. The presence of fromIndex is detected with args.get(1), so it is decided by argument count, as the ticket asks. ToAbsoluteIndex is wrapped in min(..., len - 1), with its ? propagated. The descending loop performs HasProperty, then Get and IsStrictlyEqual only when the property is present, then decrements k. The ToString(\ud835\udd3d(k)) step is replaced by PropertyKey::from_number(k). That is an equivalent, side-effect-free conversion for integer indices, so it is not a skipped observable step. The two lint flags are acceptable: the hole-skipping comment matches step 5.c, and the \"never observable\" comment is loose wording but not a defect. No test-shaped branches, no swallowed errors, and no unrelated files changed. The gate shows only the resizable-buffer tests failing, which is a not-implemented path.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7608,
+  "type": "result",
+  "duration_ms": 9807,
+  "uuid": "7ec8a8b7-6886-4f91-a40d-0cd6c292162b",
+  "ttft_stream_ms": 953,
+  "time_to_request_ms": 232,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 17,
+    "engine_pickup": 5,
+    "message_prep": 1,
+    "model_config_wait": 146,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 9,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 24,
+  "time_to_request_cpu_ms": 185,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 954,
+  "time_to_request_from_spawn_ms": 5197556,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791900712210.5872,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791918600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.04,
+        "resetsAt": 1791918600
+      },
+      "seven_day": {
+        "utilization": 0.24,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

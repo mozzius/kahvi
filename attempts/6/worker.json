@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 16889,
+  "stop_reason": "end_turn",
+  "session_id": "deee50a6-61d5-4f84-ab32-a7c574d570fc",
+  "total_cost_usd": 0.007276730000000001,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 18213,
+    "cache_read_input_tokens": 150443,
+    "output_tokens": 3774,
+    "output_tokens_details": {
+      "thinking_tokens": 718
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18213,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 272,
+        "cache_read_input_tokens": 22412,
+        "cache_creation_input_tokens": 689,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 689
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `String.fromCodePoint` in its file, with each spec step kept as a comment. 20 of 22 test262 runs under `built-ins/String/fromCodePoint/` pass, and clippy is clean. The two remaining failures are `length.js` (sloppy and strict), which check that the function's length is 1. The registration in `crates/kahvi-builtins/src/generated.rs` sets it to 0, and that file is outside my scope.\n\nI also added a local `utf16_encode_code_point` helper in my file, since `ops` has no UTF16EncodeCodePoint. Other built-ins that need it could share it later.\n\nBLOCKED: `generated.rs` registers `String.fromCodePoint` with `length: 0`; it must be 1 for `built-ins/String/fromCodePoint/length.js`.",
+  "ttft_ms": 1033,
+  "type": "result",
+  "duration_ms": 50491,
+  "uuid": "7d2958c8-26a9-44d5-9fa8-d245e07a9814",
+  "ttft_stream_ms": 703,
+  "time_to_request_ms": 178,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 15,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 58,
+    "autocompact": 3,
+    "query_setup": 2,
+    "model_gates": 1,
+    "tool_schema_build": 17,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 75,
+  "time_to_request_cpu_ms": 255,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 34,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 704,
+  "time_to_request_from_spawn_ms": 39310,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791919013624.5159,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.1,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.37,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

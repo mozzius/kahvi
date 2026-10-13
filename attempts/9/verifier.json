@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 11490,
+  "stop_reason": "tool_use",
+  "session_id": "5cb024fb-e4af-4e6f-b8e7-0b3128128b6a",
+  "total_cost_usd": 0.00370746,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8593,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2338,
+    "output_tokens_details": {
+      "thinking_tokens": 1706
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8593,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2338,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8593,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8593
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.reduceRight in the order the spec gives. ToObject, then LengthOfArrayLike, then the IsCallable check, then the empty-array TypeError. Step 8 (the search for an initial element) and step 9 (the reverse traversal) use HasProperty, Get and Call with the spec's operation order and `?` propagation. Step 7 uses args.len() > 1 for \\\"present\\\". Nothing is special-cased, hardcoded or swallowed, and the not-implemented paths in the gate report come from missing engine parts (Date, RegExp, ArrayBuffer, Array.prototype.toString), not from this file. The only non-step change is the renamed `_new_target` parameter, which is needed because the parameter is now unused. The spec NOTE at the bottom of the stub was dropped; that is cosmetic.\",\"problems\":[],\"notes_for_next_attempt\":\"The implementation looks spec-faithful and can be merged as is. Minor: the trailing spec NOTE (\\\"This method is intentionally generic...\\\") was removed from the stub comments. Restoring it would keep the file closer to the stub. The helper `agent.key_from_index` is used but is not defined in this diff. Confirm it exists in the codebase and performs ! ToString(\ud835\udd3d(k)) for k \u2265 0.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.reduceRight in the order the spec gives. ToObject, then LengthOfArrayLike, then the IsCallable check, then the empty-array TypeError. Step 8 (the search for an initial element) and step 9 (the reverse traversal) use HasProperty, Get and Call with the spec's operation order and `?` propagation. Step 7 uses args.len() > 1 for \"present\". Nothing is special-cased, hardcoded or swallowed, and the not-implemented paths in the gate report come from missing engine parts (Date, RegExp, ArrayBuffer, Array.prototype.toString), not from this file. The only non-step change is the renamed `_new_target` parameter, which is needed because the parameter is now unused. The spec NOTE at the bottom of the stub was dropped; that is cosmetic.",
+    "problems": [],
+    "notes_for_next_attempt": "The implementation looks spec-faithful and can be merged as is. Minor: the trailing spec NOTE (\"This method is intentionally generic...\") was removed from the stub comments. Restoring it would keep the file closer to the stub. The helper `agent.key_from_index` is used but is not defined in this diff. Confirm it exists in the codebase and performs ! ToString(\ud835\udd3d(k)) for k \u2265 0."
+  },
+  "ttft_ms": 8673,
+  "type": "result",
+  "duration_ms": 11073,
+  "uuid": "1552a86f-e3c7-4dd9-b5f1-104481e4bce9",
+  "ttft_stream_ms": 1025,
+  "time_to_request_ms": 135,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 1,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 20,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 40,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 29,
+  "time_to_request_cpu_ms": 180,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1025,
+  "time_to_request_from_spawn_ms": 1920464,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791920895120.9526,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.39,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
