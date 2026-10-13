@@ -154,7 +154,16 @@ def judge(cfg, db, ticket, att, rep):
             else:
                 left = "\n".join(m["remaining"][:10])
                 db.note(ticket.id, att.id, f"merged partial progress. Still failing:\n{left}")
-                db.set_ticket(ticket.id, status="open", strikes=0, salvage_attempt=None)
+                # Reopen only if the ticket's own function still reports not
+                # implemented. Other leftovers are usually blocked on other
+                # tickets or engine work: retrying would only escalate and burn
+                # budget, so they wait for triage (`orch reset` reopens).
+                own = f"not implemented: {ticket.title}"
+                if any(own in r for r in m["remaining"]):
+                    db.set_ticket(ticket.id, status="open", strikes=0, salvage_attempt=None)
+                else:
+                    db.set_ticket(ticket.id, status="partial", strikes=0, salvage_attempt=None,
+                                  reason=f"{len(m['remaining'])} target runs still failing, none in its own code path")
     elif decision == "revise":
         db.note(ticket.id, att.id, f"not merged ({', '.join(v['defects'])}); continue from this diff. {notes}")
         row = db.ticket(ticket.id)

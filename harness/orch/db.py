@@ -10,7 +10,7 @@ from common import WORK
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS tickets (
     id TEXT PRIMARY KEY,
-    status TEXT NOT NULL DEFAULT 'open',  -- open | claimed | merging | done | blocked | needs-architect
+    status TEXT NOT NULL DEFAULT 'open',  -- open | claimed | merging | done | partial | blocked | needs-architect
     tier TEXT NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
     strikes INTEGER NOT NULL DEFAULT 0,
