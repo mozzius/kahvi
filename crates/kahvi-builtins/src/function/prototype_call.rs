@@ -9,7 +9,7 @@ pub(crate) fn prototype_call(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method performs the following steps when called:
     //
@@ -22,6 +22,11 @@ pub(crate) fn prototype_call(
     // The _thisArg_ value is passed without modification as the *this* value. This is a change from Edition 3, where an *undefined* or *null* _thisArg_ is replaced with the global object and ToObject is applied to all other values and that result is passed as the *this* value. Even though the _thisArg_ is passed without modification, non-strict functions still perform these transformations upon entry to the function.
     // NOTE:
     // If _func_ is either an arrow function or a bound function exotic object, then the _thisArg_ will be ignored by the function [[Call]] in step [step-function-proto-call-call].
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Function.prototype.call"))
+    let func = this;
+    if !ops::is_callable(agent, func) {
+        return Err(agent.throw_type_error("Function.prototype.call called on a non-function"));
+    }
+    let this_arg = args.get_or_undefined(0);
+    let rest = args.get(1..).unwrap_or(&[]);
+    ops::call(agent, func, this_arg, rest)
 }

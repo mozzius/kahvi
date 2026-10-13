@@ -9,13 +9,13 @@ pub(crate) fn prototype_symbol_iterator(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This function performs the following steps when called:
     //
     // 1. Return the *this* value.
     //
     // The value of the *"name"* property of this function is *"[Symbol.iterator]"*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Iterator.prototype[Symbol.iterator]"))
+    let _ = (agent, args);
+    Ok(this)
 }

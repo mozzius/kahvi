@@ -9,7 +9,7 @@ pub(crate) fn prototype_symbol_has_instance(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method performs the following steps when called:
     //
@@ -25,6 +25,6 @@ pub(crate) fn prototype_symbol_has_instance(
     // A constructor function can control which objects are recognized as its instances by `instanceof` by exposing a different `%Symbol.hasInstance%` method on the function.
     // This property is non-writable and non-configurable to prevent tampering that could be used to globally expose the target function of a bound function.
     // The value of the *"name"* property of this method is *"[Symbol.hasInstance]"*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Function.prototype[Symbol.hasInstance]"))
+    let v = args.get_or_undefined(0);
+    Ok(Value::Boolean(ops::ordinary_has_instance(agent, this, v)?))
 }
