@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 50456,
+  "stop_reason": "end_turn",
+  "session_id": "f92f7bb3-99d4-4827-974b-80ed310d6429",
+  "total_cost_usd": 0.014610120000000002,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 30216,
+    "cache_read_input_tokens": 274922,
+    "output_tokens": 10446,
+    "output_tokens_details": {
+      "thinking_tokens": 4674
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 30216,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 283,
+        "cache_read_input_tokens": 36629,
+        "cache_creation_input_tokens": 1067,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1067
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01QD4QcyGRMXWzvA55JKaLSF",
+      "tool_input": {
+        "command": "cd crates/kahvi-builtins/src/string && grep -ln \"require_object_coercible\" *.rs | head -3; f=$(grep -ln \"require_object_coercible\" *.rs | head -1); sed -n 1,40p $f; grep -rn \"symbols_wk\\.\\(match\\|replace\\|iterator\\)\" /home/user/kahvi/work/slots/slot-0/crates | head -3; grep -n \"pub fn call\\b\\|pub fn call(\" -A1 /home/user/kahvi/work/slots/slot-0/crates/kahvi-core/src/ops/*.rs | head",
+        "description": "Inspect a finished String built-in and key helper usage"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 19,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `String.prototype.split` in `crates/kahvi-builtins/src/string/prototype_split.rs`, with each spec step as a comment above its code and `StringIndexOf` as a private helper in the same file. The build and clippy are clean, and the split suite now runs 168 of 240 passing, with no failures other than not-implemented errors. The ticket's \"every test passes\" bar is not met: the remaining 72 runs need `RegExp`, `String.prototype.substring`, `String.prototype.charAt` and `Array.prototype.toString`, none of which are in scope.\n\nBLOCKED: `RegExp` (`RegExp.prototype[Symbol.split]`, and RegExp construction used by the tests), plus `String.prototype.substring`, `String.prototype.charAt` and `Array.prototype.toString` are not implemented.",
+  "ttft_ms": 1569,
+  "type": "result",
+  "duration_ms": 58754,
+  "uuid": "838af838-9bcc-47bd-b54d-07d21c7f9f4f",
+  "ttft_stream_ms": 1362,
+  "time_to_request_ms": 146,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 21,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 43,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 96,
+  "time_to_request_cpu_ms": 206,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1363,
+  "time_to_request_from_spawn_ms": 6219746,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791925194165.6094,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.85,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

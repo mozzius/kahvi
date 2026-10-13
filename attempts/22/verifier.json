@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 16494,
+  "stop_reason": "tool_use",
+  "session_id": "c7821cd5-d7d1-470c-89c8-1aca73aa3038",
+  "total_cost_usd": 0.00483796,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10354,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3547,
+    "output_tokens_details": {
+      "thinking_tokens": 2919
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10354,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3547,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10354,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10354
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.split in prototype_split.rs and follows the spec's 18 steps in order. Step 2 is RequireObjectCoercible, and step 3 does GetMethod(separator, @@split) and then Call(splitter, separator, [this, limit]) when the splitter is defined. Step 4 is ToString(this), and step 5 is the lim computation (2^32-1 for undefined, otherwise ToUint32). Step 6 is ToString(separator), which runs even when separator is undefined, as the spec requires. Steps 7 to 18 cover lim=0, undefined separator, the empty-separator code-unit split with clamping, the empty-string case, and the StringIndexOf loop with the lim early return and the final tail substring. The private helper string_index_of mirrors StringIndexOf, including the empty-search rule and the not-found result. Bounds in the helper are safe, and no errors are swallowed. The only deviation I noticed is cosmetic: the NOTE comment blocks from the stub were removed. They are not algorithm steps, so I did not flag them. The gate's 72 remaining failures are all the RegExp not-implemented error, which is an honest, correct throw. There is no special-casing and no hardcoded result.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.split in prototype_split.rs and follows the spec's 18 steps in order. Step 2 is RequireObjectCoercible, and step 3 does GetMethod(separator, @@split) and then Call(splitter, separator, [this, limit]) when the splitter is defined. Step 4 is ToString(this), and step 5 is the lim computation (2^32-1 for undefined, otherwise ToUint32). Step 6 is ToString(separator), which runs even when separator is undefined, as the spec requires. Steps 7 to 18 cover lim=0, undefined separator, the empty-separator code-unit split with clamping, the empty-string case, and the StringIndexOf loop with the lim early return and the final tail substring. The private helper string_index_of mirrors StringIndexOf, including the empty-search rule and the not-found result. Bounds in the helper are safe, and no errors are swallowed. The only deviation I noticed is cosmetic: the NOTE comment blocks from the stub were removed. They are not algorithm steps, so I did not flag them. The gate's 72 remaining failures are all the RegExp not-implemented error, which is an honest, correct throw. There is no special-casing and no hardcoded result.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 13490,
+  "type": "result",
+  "duration_ms": 15879,
+  "uuid": "15e1e720-8df0-49b5-94ff-a1f5fa5ff3ff",
+  "ttft_stream_ms": 838,
+  "time_to_request_ms": 135,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 55,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 19,
+  "time_to_request_cpu_ms": 160,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 839,
+  "time_to_request_from_spawn_ms": 6286627,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791925261291.4639,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791936600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.86,
+        "resetsAt": 1791936600
+      },
+      "seven_day": {
+        "utilization": 0.47,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-prototype-split",
+  "base": "d983ece2a867d921b8c2df40b1003af6fa9dd180",
+  "head": "627e9673971cdf1ec87ed211494d1b6cf701e13f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_split.rs",
+      "added": 117,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 240,
+    "before": 16,
+    "after": 168,
+    "new_passes": 152,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 72,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/split/argument-is-new-reg-exp-and-instance-is-string-hello.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-new-reg-exp-and-instance-is-string-hello.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-reg-exp-a-z-and-instance-is-string-abc.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-reg-exp-a-z-and-instance-is-string-abc.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-a-z-and-instance-is-string-abc.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-a-z-and-instance-is-string-abc.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-and-instance-is-number.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-and-instance-is-number.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-d-and-instance-is-string-dfe23iu-34-65.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-d-and-instance-is-string-dfe23iu-34-65.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-l-and-instance-is-string-hello.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-l-and-instance-is-string-hello.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-reg-exp-d-and-instance-is-string-dfe23iu-34-65.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-reg-exp-d-and-instance-is-string-dfe23iu-34-65.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/String/prototype/split/argument-is-regexp-s-and-instance-is-string-a-b-c-de-f.js:sloppy  Uncaught InternalError: not implemented: RegExp"
+    ]
+  },
+  "decision": "pass"
+}

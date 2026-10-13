@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements String.prototype.split in prototype_split.rs and follows the spec's 18 steps in order. Step 2 is RequireObjectCoercible, and step 3 does GetMethod(separator, @@split) and then Call(splitter, separator, [this, limit]) when the splitter is defined. Step 4 is ToString(this), and step 5 is the lim computation (2^32-1 for undefined, otherwise ToUint32). Step 6 is ToString(separator), which runs even when separator is undefined, as the spec requires. Steps 7 to 18 cover lim=0, undefined separator, the empty-separator code-unit split with clamping, the empty-string case, and the StringIndexOf loop with the lim early return and the final tail substring. The private helper string_index_of mirrors StringIndexOf, including the empty-search rule and the not-found result. Bounds in the helper are safe, and no errors are swallowed. The only deviation I noticed is cosmetic: the NOTE comment blocks from the stub were removed. They are not algorithm steps, so I did not flag them. The gate's 72 remaining failures are all the RegExp not-implemented error, which is an honest, correct throw. There is no special-casing and no hardcoded result.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
