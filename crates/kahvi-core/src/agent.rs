@@ -384,6 +384,8 @@ impl Agent {
         if let Some(id) = self.string_index.find(&self.strings, units) {
             if self.gc.pinning {
                 self.gc.pinned_strings.insert(id);
+            } else if let Some(unit) = &mut self.gc.compiling {
+                unit.strings.push(id);
             }
             return JsString(id);
         }
@@ -402,6 +404,8 @@ impl Agent {
         self.string_index.insert(&self.strings, id);
         if self.gc.pinning {
             self.gc.pinned_strings.insert(id);
+        } else if let Some(unit) = &mut self.gc.compiling {
+            unit.strings.push(id);
         }
         JsString(id)
     }

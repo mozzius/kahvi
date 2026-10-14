@@ -44,6 +44,14 @@ impl BitSet {
 
 /// Marks reachable handles. Objects, environments and symbols found live are
 /// queued and their contents traced by the collector's drain loop.
+/// What the compiler has referred to so far in the unit being compiled.
+#[derive(Default)]
+pub(crate) struct CompileUnit {
+    pub(crate) constants: Arc<crate::compiler::CodeConstants>,
+    pub(crate) strings: Vec<u32>,
+    pub(crate) bigints: Vec<u32>,
+}
+
 #[derive(Default)]
 pub struct Tracer {
     pub(crate) objects: BitSet,
@@ -56,6 +64,10 @@ pub struct Tracer {
     pub(crate) symbol_work: Vec<u32>,
     /// (key, value) pairs whose value is live only if the key is.
     pub(crate) ephemerons: Vec<(Value, Value)>,
+    /// Compilation units whose constants are already marked.
+    pub(crate) code_seen: crate::hash::FxHashSet<usize>,
+    /// Script records some live code belongs to.
+    pub(crate) scripts: BitSet,
 }
 
 impl Tracer {
@@ -87,6 +99,16 @@ impl Tracer {
 
     pub fn bigint(&mut self, b: BigInt) {
         self.bigints.insert(b.0);
+    }
+
+    /// Marks the constants of `code`'s compilation unit (once per collection).
+    pub fn code(&mut self, code: &crate::compiler::FunctionCode) {
+        if self.code_seen.insert(Arc::as_ptr(&code.constants) as usize) {
+            self.scripts.insert(code.script);
+            for &v in code.constants.values() {
+                self.value(v);
+            }
+        }
     }
 
     pub fn env(&mut self, e: EnvId) {
@@ -342,14 +364,20 @@ pub(crate) struct GcState {
     pub(crate) is_free_symbol: BitSet,
     pub(crate) is_free_bigint: BitSet,
     pub(crate) is_free_env: BitSet,
-    /// Strings and BigInts in compiled code (and the agent's common names):
-    /// compiled code is never collected yet, so neither are they.
+    /// The agent's common names and other strings and BigInts made during
+    /// its setup: never collected.
     pub(crate) pinned_strings: BitSet,
     pub(crate) pinned_bigints: BitSet,
     /// Symbols below this index (the well-known symbols) are never collected.
     pub(crate) pinned_symbols: u32,
-    /// While set, new and looked-up strings and BigInts are pinned (compiling).
+    /// While set, new and looked-up strings and BigInts are pinned (the
+    /// agent's setup: common names).
     pub(crate) pinning: bool,
+    /// The compilation unit being compiled: the strings and BigInts it
+    /// creates or looks up become its constants.
+    pub(crate) compiling: Option<CompileUnit>,
+    /// Freed eval and dynamic-function script records, by (realm, name).
+    pub(crate) free_scripts: std::collections::HashMap<(u32, String), Vec<u32>>,
     /// Allocations since the last collection, and the count that triggers one.
     pub(crate) allocated: usize,
     pub(crate) threshold: usize,
@@ -380,6 +408,8 @@ impl Default for GcState {
             pinned_bigints: BitSet::default(),
             pinned_symbols: 0,
             pinning: false,
+            compiling: None,
+            free_scripts: Default::default(),
             allocated: 0,
             threshold: MIN_THRESHOLD,
             holds: 0,
@@ -600,6 +630,28 @@ impl Agent {
                 self.bigints[i as usize] = crate::ops::bigint::BigIntValue::zero();
                 self.gc.is_free_bigint.insert(i);
                 self.gc.free_bigints.push(i);
+            }
+        }
+        // Eval and dynamic-function script records no live code belongs to:
+        // drop their source and template objects, and reuse the index.
+        let mut freed = crate::hash::FxHashSet::default();
+        for (i, r) in self.scripts.iter_mut().enumerate() {
+            let i = i as u32;
+            if r.collectable && !t.scripts.get(i) && !r.source.is_empty() {
+                r.source = Arc::from("");
+                freed.insert(i);
+                self.gc
+                    .free_scripts
+                    .entry((r.realm.0, r.name.clone()))
+                    .or_default()
+                    .push(i);
+            }
+        }
+        if !freed.is_empty() {
+            for realm in &mut self.realms {
+                realm
+                    .template_map
+                    .retain(|&(script, _), _| !freed.contains(&script));
             }
         }
         live_count

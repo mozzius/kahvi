@@ -95,9 +95,17 @@ the frame for the duration.
   namespaces, cycle roots, async capabilities), the job queue, the job
   being run, the symbol registry, well-known symbols and common names, the
   rejection tracker, explicit roots (`push_root`), the [[KeptAlive]] list.
-- Compiled code is not collected yet, so the strings and BigInts it refers
-  to are **pinned**: everything the compiler interns is marked pinned and
-  never swept (as are the agent's common names and the well-known symbols).
+- Compiled code: each compilation unit (a script, module, eval or dynamic
+  function, with every function nested in it) records the strings and
+  BigInts the compiler created or looked up while compiling it
+  (`CodeConstants`, shared by all of the unit's `FunctionCode`s). Function
+  objects, frames and modules trace their code's constants
+  (`Tracer::code`, once per unit per collection). The code itself is
+  reference-counted (`Arc`) and freed with its last holder. Only the
+  agent's common names and the well-known symbols are pinned.
+- Script records of eval and dynamic functions are freed once no live code
+  belongs to them (their template objects go too), and the index is reused
+  by a new record with the same realm and name.
 
 ## Tracing
 
@@ -133,5 +141,4 @@ marking with a liveness test.
 
 Each arena keeps mark bits. Sweep frees every unmarked slot: the slot's
 data is dropped (freeing property maps and native boxes) and its index
-pushed on the arena's free list. Realms and compiled scripts are not
-collected yet.
+pushed on the arena's free list. Realms are not collected yet.

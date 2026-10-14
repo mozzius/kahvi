@@ -61,6 +61,9 @@ pub struct ScriptRecord {
     pub name: String,
     /// The module this is the source of, for module code.
     pub module: Option<u32>,
+    /// An eval or dynamic function's record: freed (and its index reused by
+    /// a record with the same realm and name) once no code refers to it.
+    pub collectable: bool,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.
@@ -1959,7 +1962,7 @@ impl Trace for PendingBody {
 
 impl Trace for Frame {
     fn trace(&self, t: &mut Tracer) {
-        // The code's constants are pinned when compiled.
+        t.code(&self.code);
         self.stack.trace(t);
         self.refs.trace(t);
         self.iters.trace(t);

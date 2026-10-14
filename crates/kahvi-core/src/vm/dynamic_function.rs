@@ -89,7 +89,7 @@ pub fn create_dynamic_function(
     // 27. Let privateEnv be null.
     // 28. Let F be OrdinaryFunctionCreate(funcProto, sourceText, params, body, non-lexical-this, envRecord, privateEnv).
     let source: Arc<str> = Arc::from(source_string);
-    let script = register_script(agent, current_realm, source.clone(), "anonymous");
+    let script = register_script(agent, current_realm, source.clone(), "anonymous", true);
     let code = compiler::compile_dynamic_function(agent, &f, source, script);
     let func = ordinary_function_create(agent, func_proto, code, env, None);
     // 29. Perform SetFunctionName(F, "anonymous").

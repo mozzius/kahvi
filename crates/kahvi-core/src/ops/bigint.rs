@@ -125,6 +125,8 @@ impl Agent {
         };
         if self.gc.pinning {
             self.gc.pinned_bigints.insert(id);
+        } else if let Some(unit) = &mut self.gc.compiling {
+            unit.bigints.push(id);
         }
         BigInt(id)
     }
