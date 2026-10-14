@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-get-int16",
+  "base": "4c21d5fc38bcb86c7fb068346ddc367e38155a90",
+  "head": "a9e11452dda8ac40fc56ad6a8e820a2507ec0dfa",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_int16.rs",
+      "added": 13,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 6,
+    "after": 36,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

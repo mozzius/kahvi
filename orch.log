@@ -1010,3 +1010,11 @@ test262 at last merge: 72953/81183 runs passing
 [18:17:21] B-data-view-prototype-get-float16: verifier: accept The diff implements DataView.prototype.getFloat16 by delegating to the shared get_view_value helper with ElementType::Float16. Step 1 binds this to vi
 [18:17:28] stack: #3 merged; the stack now sits on main
 [18:17:33] B-data-view-prototype-get-float32: attempt on slot 2 with haiku
+[18:17:36] B-data-view-prototype-get-float64: attempt on slot 3 with haiku[18:17:36] B-data-view-prototype-get-int16: attempt on slot 0 with haiku
+
+[18:17:36] B-data-view-prototype-get-int32: attempt on slot 1 with haiku
+[18:18:15] B-data-view-prototype-get-float32: attempt 279 finished ($0.009, 11 turns)
+[18:18:28] B-data-view-prototype-get-float64: attempt 281 finished ($0.006, 14 turns)
+[18:18:30] B-data-view-prototype-get-int32: attempt 282 finished ($0.006, 11 turns)
+[18:18:34] B-data-view-prototype-get-int16: attempt 280 finished ($0.006, 11 turns)
+[18:19:17] B-data-view-prototype-get-float32: verifier: accept The change is a minimal, spec-faithful implementation of DataView.prototype.getFloat32. Step 1 binds this to view, and step 2 defaults littleEndian to
