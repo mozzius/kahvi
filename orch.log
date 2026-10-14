@@ -4075,3 +4075,9 @@ test262 at last merge: 76432/81183 runs passing
 [19:38:56] B-string-prototype-sup: attempt on slot 0 with haiku
 [19:38:56] B-string-prototype-small: verifier: accept The diff implements String.prototype.small by binding this to `string` (step 1) and returning create_html(agent, string, "small", "", <attr value>) (s
 [19:38:58] B-data-view-prototype-set-big-uint64: attempt on slot 3 with haiku
+[19:39:03] B-json-is-raw-json: attempt on slot 2 with haiku
+[19:39:19] B-string-prototype-sub: attempt 446 finished ($0.005, 10 turns)
+[19:39:23] B-string-prototype-sup: attempt 447 finished ($0.004, 11 turns)
+[19:39:24] B-data-view-prototype-set-big-uint64: attempt 448 finished ($0.004, 8 turns)
+[19:39:47] B-json-is-raw-json: attempt 449 finished ($0.008, 20 turns)
+[19:39:50] B-string-prototype-sub: verifier: accept The diff implements String.prototype.sub as a thin wrapper: step 1 binds `this` to `string`, and step 2 calls `create_html(agent, string, "sub", "", e

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-set-big-uint64",
+  "base": "18c5ab9d59c8a594985d3107d6a2e806d54c5a9e",
+  "head": "fd38fc895879661d28d68bfec13895646f57f355",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_set_big_uint64.rs",
+      "added": 22,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 4,
+    "before": 2,
+    "after": 4,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

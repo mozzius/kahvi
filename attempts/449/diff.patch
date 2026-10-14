@@ -1,0 +1,32 @@
+diff --git a/crates/kahvi-builtins/src/json/is_raw_json.rs b/crates/kahvi-builtins/src/json/is_raw_json.rs
+index 9ab3286..71d0917 100644
+--- a/crates/kahvi-builtins/src/json/is_raw_json.rs
++++ b/crates/kahvi-builtins/src/json/is_raw_json.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use super::raw_json::RawJsonData;
++
+ /// JSON.isRawJSON
+ pub(crate) fn is_raw_json(
+     agent: &mut Agent,
+@@ -11,10 +13,16 @@ pub(crate) fn is_raw_json(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = (this, new_target);
++    let obj = args.get_or_undefined(0);
+     // This function performs the following steps when called:
+     //
+     // 1. If _obj_ is an Object and _obj_ has an [[IsRawJSON]] internal slot, return *true*.
++    if let Value::Object(o) = obj {
++        if agent.native::<RawJsonData>(o).is_some() {
++            return Ok(Value::Boolean(true));
++        }
++    }
+     // 2. Return *false*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("JSON.isRawJSON"))
++    Ok(Value::Boolean(false))
+ }

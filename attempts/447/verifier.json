@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7924,
+  "stop_reason": "tool_use",
+  "session_id": "315ebb5e-2014-4a4b-aaf9-dd8cdf74d693",
+  "total_cost_usd": 0.00172518,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3508,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1414,
+    "output_tokens_details": {
+      "thinking_tokens": 775
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3508,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1414,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3508,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3508
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.sup by keeping the spec's two steps as comments: it binds `this` to `string`, then returns `?` CreateHTML(string, \\\"sup\\\", \\\"\\\", undefined) via `create_html` imported from the sibling `prototype_anchor` module. Passing an empty attr with Value::Undefined as attrValue matches the spec, since ToString(attrValue) only runs when attr is non-empty. Nothing is special-cased, hardcoded, or swallowed, and the not-implemented stub is gone. Renaming the unused parameters to `_args`/`_new_target` is a small, related cleanup. The gate report shows build and clippy passing, with 4 new test262 passes and no regressions. I did not see the body of `create_html`, which lives in a file outside this diff. Its correctness is only inferred from the passing tests and from other built-ins relying on it.\",\"problems\":[],\"notes_for_next_attempt\":\"The change looks correct as far as the diff shows. The one thing the diff does not show is the body of `create_html` in prototype_anchor.rs. A reviewer could confirm it performs RequireObjectCoercible, then ToString(contents), skips ToString(attrValue) when attr is empty, and escapes quotes only when attr is non-empty. The 4 new passing tests suggest it does. No other changes are needed.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.sup by keeping the spec's two steps as comments: it binds `this` to `string`, then returns `?` CreateHTML(string, \"sup\", \"\", undefined) via `create_html` imported from the sibling `prototype_anchor` module. Passing an empty attr with Value::Undefined as attrValue matches the spec, since ToString(attrValue) only runs when attr is non-empty. Nothing is special-cased, hardcoded, or swallowed, and the not-implemented stub is gone. Renaming the unused parameters to `_args`/`_new_target` is a small, related cleanup. The gate report shows build and clippy passing, with 4 new test262 passes and no regressions. I did not see the body of `create_html`, which lives in a file outside this diff. Its correctness is only inferred from the passing tests and from other built-ins relying on it.",
+    "problems": [],
+    "notes_for_next_attempt": "The change looks correct as far as the diff shows. The one thing the diff does not show is the body of `create_html` in prototype_anchor.rs. A reviewer could confirm it performs RequireObjectCoercible, then ToString(contents), skips ToString(attrValue) when attr is empty, and escapes quotes only when attr is non-empty. The 4 new passing tests suggest it does. No other changes are needed."
+  },
+  "ttft_ms": 5200,
+  "type": "result",
+  "duration_ms": 7602,
+  "uuid": "f48170cb-598d-4ec9-b6a7-bd6ac034afae",
+  "ttft_stream_ms": 1316,
+  "time_to_request_ms": 560,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 332,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 18,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 5,
+    "model_config_wait": 106,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 19,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 149,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 833,
+  "process_wall_ms_turn": 7596,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1318,
+  "time_to_request_from_spawn_ms": 27319961,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006779976.747,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

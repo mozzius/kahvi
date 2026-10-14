@@ -1,0 +1,28 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_sup.rs b/crates/kahvi-builtins/src/string/prototype_sup.rs
+index da6d047..c8f111b 100644
+--- a/crates/kahvi-builtins/src/string/prototype_sup.rs
++++ b/crates/kahvi-builtins/src/string/prototype_sup.rs
+@@ -4,17 +4,19 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use super::prototype_anchor::create_html;
++
+ /// String.prototype.sup
+ pub(crate) fn prototype_sup(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _string_ be the *this* value.
++    let string = this;
+     // 2. Return ? CreateHTML(_string_, *"sup"*, *""*, *""*).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.sup"))
++    create_html(agent, string, "sup", "", Value::Undefined)
+ }

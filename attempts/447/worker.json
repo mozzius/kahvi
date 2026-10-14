@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11360,
+  "stop_reason": "end_turn",
+  "session_id": "908282aa-0bd1-4b6b-a32d-654e0968414b",
+  "total_cost_usd": 0.00446632,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 12872,
+    "cache_read_input_tokens": 75462,
+    "output_tokens": 1791,
+    "output_tokens_details": {
+      "thinking_tokens": 57
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12872,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 184,
+        "cache_read_input_tokens": 19910,
+        "cache_creation_input_tokens": 605,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 605
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.sup` is implemented in `crates/kahvi-builtins/src/string/prototype_sup.rs`. It now calls the existing `create_html` helper from `prototype_anchor.rs`, the same way `prototype_blink.rs` does, and the file has the spec steps as comments. All 12 test262 runs under `annexB/built-ins/String/prototype/sup/` pass (up from 8 on main), `cargo build` succeeds, and `cargo clippy` is clean. I changed only the one file.\n\nBLOCKED: none",
+  "ttft_ms": 1606,
+  "type": "result",
+  "duration_ms": 25414,
+  "uuid": "df052a61-43d6-4ed0-8b41-441a5b86ad98",
+  "ttft_stream_ms": 1375,
+  "time_to_request_ms": 496,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 318,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 91,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 53,
+  "time_to_request_cpu_ms": 381,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2516,
+  "process_wall_ms_turn": 25413,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1376,
+  "time_to_request_from_spawn_ms": 27276078,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006736470.1748,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
