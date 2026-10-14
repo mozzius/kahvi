@@ -2,12 +2,11 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p
 
-#![allow(unused_imports)]
-
 use super::ProxyData;
 use crate::agent::Agent;
 use crate::error::JsResult;
-use crate::object::{PropertyDescriptor, PropertyKey};
+use crate::object::PropertyKey;
+use crate::ops;
 use crate::value::{Object, Value};
 
 /// The [[Delete]] internal method of the Proxy exotic object `o` with slots `p`.
@@ -20,30 +19,52 @@ pub(crate) fn delete(
     // for: a Proxy exotic object _obj_
     //
     // 1. Perform ? ValidateNonRevokedProxy(_obj_).
+    let _ = o;
+    let (target, handler) = p.validate_non_revoked(agent)?;
     // 2. Let _target_ be _obj_.[[ProxyTarget]].
     // 3. Let _handler_ be _obj_.[[ProxyHandler]].
     // 4. Assert: _handler_ is an Object.
     // 5. Let _trap_ be ? GetMethod(_handler_, *"deleteProperty"*).
+    let trap_key = agent.key("deleteProperty");
+    let trap = ops::get_method(agent, Value::Object(handler), trap_key)?;
     // 6. If _trap_ is *undefined*, then
-    //    a. Return ? _target_.[[Delete]](_propertyKey_).
+    if matches!(trap, Value::Undefined) {
+        // a. Return ? _target_.[[Delete]](_propertyKey_).
+        return target.internal_delete(agent, key);
+    }
     // 7. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, « _target_, _propertyKey_ »)).
+    let key_value = agent.key_to_value(key);
+    let trap_result = ops::call(
+        agent,
+        trap,
+        Value::Object(handler),
+        &[Value::Object(target), key_value],
+    )?;
+    let bool_trap_result = ops::to_boolean(agent, trap_result);
     // 8. If _boolTrapResult_ is *false*, return *false*.
+    if !bool_trap_result {
+        return Ok(false);
+    }
     // 9. Let _targetDesc_ be ? _target_.[[GetOwnProperty]](_propertyKey_).
+    let target_desc = target.internal_get_own_property(agent, key)?;
     // 10. If _targetDesc_ is *undefined*, return *true*.
+    let Some(target_desc) = target_desc else {
+        return Ok(true);
+    };
     // 11. If _targetDesc_.[[Configurable]] is *false*, throw a *TypeError* exception.
+    if target_desc.configurable == Some(false) {
+        return Err(agent.throw_type_error(
+            "Proxy deleteProperty trap returned true for non-configurable property",
+        ));
+    }
     // 12. Let _extensibleTarget_ be ? IsExtensible(_target_).
+    let extensible_target = ops::is_extensible(agent, target)?;
     // 13. If _extensibleTarget_ is *false*, throw a *TypeError* exception.
+    if !extensible_target {
+        return Err(agent.throw_type_error(
+            "Proxy deleteProperty trap returned true for property of non-extensible target",
+        ));
+    }
     // 14. Return *true*.
-    //
-    // NOTE:
-    // [[Delete]] for Proxy objects enforces the following invariants:
-    // -
-    // The result of [[Delete]] is a Boolean value.
-    // -
-    // A property cannot be reported as deleted, if it exists as a non-configurable own property of the target object.
-    // -
-    // A property cannot be reported as deleted, if it exists as an own property of the target object and the target object is non-extensible.
-    let _ = (o, p);
-    let _ = key;
-    Err(agent.not_implemented("Proxy [[Delete]]"))
+    Ok(true)
 }
