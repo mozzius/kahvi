@@ -2,38 +2,104 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.subarray
 
+use kahvi_core::object::typed_array::{
+    is_typed_array_out_of_bounds, make_ta_record, typed_array_data, typed_array_length,
+};
 use kahvi_core::prelude::*;
+
+use crate::support::typed_array::{typed_array_species_create, viewed_buffer};
+
+/// ToClampedIndex(_value_, _length_)
+///
+/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
+///
+/// Not yet in `ops`; only the TypedArray and Array built-ins need it so far.
+fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
+    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
+    //    ToAbsoluteIndex ( _start_, _length_ ):
+    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
+    let relative_index = ops::to_integer_or_infinity(agent, value)?;
+    //    2. If _relativeIndex_ is -∞, return +0𝔽.
+    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
+    //    4. Else, return min(_relativeIndex_, _length_).
+    let index = if relative_index == f64::NEG_INFINITY {
+        0.0
+    } else if relative_index < 0.0 {
+        (length + relative_index).max(0.0)
+    } else {
+        relative_index.min(length)
+    };
+    // 2. Return the result of clamping _index_ between 0 and _length_.
+    Ok(index.clamp(0.0, length))
+}
 
 /// TypedArray.prototype.subarray
 pub(crate) fn prototype_subarray(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method returns a new _TypedArray_ whose element type is the element type of this _TypedArray_ and whose ArrayBuffer is the ArrayBuffer of this _TypedArray_, referencing the elements in the interval from _start_ (inclusive) to _end_ (exclusive). If either _start_ or _end_ is negative, it refers to an index from the end of the array, as opposed to from the beginning.
     // It performs the following steps when called:
     //
     // 1. Let _obj_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_obj_, [[TypedArrayName]]).
+    let obj = match this {
+        Value::Object(o) if typed_array_data(agent, o).is_some() => o,
+        _ => return Err(agent.throw_type_error("not a TypedArray")),
+    };
     // 3. Assert: _obj_ has a [[ViewedArrayBuffer]] internal slot.
     // 4. Let _buffer_ be _obj_.[[ViewedArrayBuffer]].
+    let buffer = viewed_buffer(agent, obj);
     // 5. Let _sourceRecord_ be MakeTypedArrayWithBufferWitnessRecord(_obj_, ~seq-cst~).
+    let source_record = make_ta_record(agent, obj);
     // 6. If IsTypedArrayOutOfBounds(_sourceRecord_) is *true*, then
-    //    a. Let _sourceLength_ be 0.
-    // 7. Else,
-    //    a. Let _sourceLength_ be TypedArrayLength(_sourceRecord_).
+    let source_length = if is_typed_array_out_of_bounds(agent, source_record) {
+        // a. Let _sourceLength_ be 0.
+        0.0
+    } else {
+        // 7. Else,
+        // a. Let _sourceLength_ be TypedArrayLength(_sourceRecord_).
+        typed_array_length(agent, source_record) as f64
+    };
     // 8. Let _startIndex_ be ? ToClampedIndex(_start_, _sourceLength_).
+    let start_index = to_clamped_index(agent, args.get_or_undefined(0), source_length)?;
     // 9. Let _elementSize_ be TypedArrayElementSize(_obj_).
+    let data = typed_array_data(agent, obj).expect("a TypedArray");
+    let element_size = data.kind.size() as f64;
     // 10. Let _sourceByteOffset_ be _obj_.[[ByteOffset]].
+    let source_byte_offset = data.byte_offset as f64;
     // 11. Let _beginByteOffset_ be _sourceByteOffset_ + (_startIndex_ × _elementSize_).
+    let begin_byte_offset = source_byte_offset + start_index * element_size;
     // 12. If _obj_.[[ArrayLength]] is ~auto~ and _end_ is *undefined*, then
-    //    a. Return ? TypedArraySpeciesCreate(_obj_, « _buffer_, 𝔽(_beginByteOffset_) »).
+    let end = args.get_or_undefined(1);
+    if data.array_length.is_none() && end.is_undefined() {
+        // a. Return ? TypedArraySpeciesCreate(_obj_, « _buffer_, 𝔽(_beginByteOffset_) »).
+        let result = typed_array_species_create(
+            agent,
+            obj,
+            &[Value::Object(buffer), Value::Number(begin_byte_offset)],
+        )?;
+        return Ok(Value::Object(result));
+    }
     // 13. If _end_ is *undefined*, let _endIndex_ be _sourceLength_; else let _endIndex_ be ? ToClampedIndex(_end_, _sourceLength_).
+    let end_index = if end.is_undefined() {
+        source_length
+    } else {
+        to_clamped_index(agent, end, source_length)?
+    };
     // 14. Let _newLength_ be max(_endIndex_ - _startIndex_, 0).
+    let new_length = (end_index - start_index).max(0.0);
     // 15. Return ? TypedArraySpeciesCreate(_obj_, « _buffer_, 𝔽(_beginByteOffset_), 𝔽(_newLength_) »).
-    //
-    // This method is not generic. The *this* value must be an object with a [[TypedArrayName]] internal slot.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("TypedArray.prototype.subarray"))
+    let result = typed_array_species_create(
+        agent,
+        obj,
+        &[
+            Value::Object(buffer),
+            Value::Number(begin_byte_offset),
+            Value::Number(new_length),
+        ],
+    )?;
+    Ok(Value::Object(result))
 }
