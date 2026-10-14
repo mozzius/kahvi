@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-date.parse
 
+use crate::support::date;
 use kahvi_core::prelude::*;
 
 /// Date.parse
@@ -21,6 +22,114 @@ pub(crate) fn parse(
     // However, the expression
     // Date.parse(x.toLocaleString())
     // is not required to produce the same Number value as the preceding three expressions and, in general, the value produced by this function is implementation-defined when given any String value that does not conform to the Date Time String Format ([sec-date-time-string-format]) and that could not be produced in that implementation by the `toString` or `toUTCString` method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Date.parse"))
+    let _ = (this, new_target);
+    // This function applies the ToString operator to its argument. If ToString results in an abrupt completion the Completion Record is immediately returned. Otherwise, this function interprets the resulting String as a date and time; it returns a Number, the UTC time value corresponding to the date and time. The String may be interpreted as a local time, a UTC time, or a time in some other time zone, depending on the contents of the String. The function first attempts to parse the String according to the format described in Date Time String Format ([sec-date-time-string-format]), including expanded years. If the String does not conform to that format the function may fall back to any implementation-specific heuristics or implementation-specific date formats. Strings that are unrecognizable or contain out-of-bounds format element values shall cause this function to return *NaN*.
+    let string = ops::to_string(agent, args.get_or_undefined(0))?;
+    let text = agent.str_lossy(string);
+    // If the String conforms to the Date Time String Format, substitute values take the place of absent format elements. When the `MM` or `DD` elements are absent, *"01"* is used. When the `HH`, `mm`, or `ss` elements are absent, *"00"* is used. When the `sss` element is absent, *"000"* is used. When the UTC offset representation is absent, date-only forms are interpreted as a UTC time and date-time forms are interpreted as a local time.
+    // The substitution and the time value are computed by `parse_iso`. Strings that do not conform fall back to NaN, which the spec allows.
+    let tv = date::parse_iso(agent, &text)
+        .or_else(|| parse_date_string(agent, &text))
+        .unwrap_or(f64::NAN);
+    Ok(Value::Number(tv))
+}
+
+const MONTH_NAMES: [&str; 12] = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/// Parses the output of toString ("Www Mmm DD YYYY HH:mm:ss GMT+HHMM (name)") and
+/// toUTCString ("Www, DD Mmm YYYY HH:mm:ss GMT"), an implementation-specific format
+/// the spec allows Date.parse to fall back to. None if `s` is not one of them.
+fn parse_date_string(agent: &Agent, s: &str) -> Option<f64> {
+    // Drop a trailing parenthesized time zone name, as toString adds one.
+    let s = match s.find('(') {
+        Some(i) => &s[..i],
+        None => s,
+    };
+    let mut tokens = s
+        .split_whitespace()
+        .map(|t| t.trim_end_matches(','))
+        .filter(|t| !t.is_empty())
+        .peekable();
+    // The weekday is informative only; skip it when present.
+    let is_weekday = |t: &str| ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].contains(&t);
+    if tokens.peek().is_some_and(|t| is_weekday(t)) {
+        tokens.next();
+    }
+    let month_index = |t: &str| MONTH_NAMES.iter().position(|m| *m == t);
+    // Either "Mmm DD YYYY" (toString) or "DD Mmm YYYY" (toUTCString).
+    let first = tokens.next()?;
+    let (month, day, year) = match month_index(first) {
+        Some(m) => (m, tokens.next()?, tokens.next()?),
+        None => {
+            let day = first;
+            let month = month_index(tokens.next()?)?;
+            (month, day, tokens.next()?)
+        }
+    };
+    let day = parse_digits(day)?;
+    let year = parse_signed_digits(year)?;
+    let time = tokens.next()?;
+    let mut hms = time.split(':').map(parse_digits);
+    let (hour, minute, second) = (hms.next()??, hms.next()??, hms.next()??);
+    if hms.next().is_some() {
+        return None;
+    }
+    // The zone is "GMT", "UTC", or "GMT+HHMM"; without one the time is local.
+    let offset = match tokens.next() {
+        None => None,
+        Some("GMT" | "UTC") => Some(0.0),
+        Some(zone) => {
+            let rest = zone.strip_prefix("GMT")?;
+            let sign = match rest.as_bytes().first()? {
+                b'+' => 1.0,
+                b'-' => -1.0,
+                _ => return None,
+            };
+            let digits = &rest[1..];
+            if digits.len() != 4 {
+                return None;
+            }
+            let oh = parse_digits(&digits[..2])?;
+            let om = parse_digits(&digits[2..])?;
+            if oh > 23.0 || om > 59.0 {
+                return None;
+            }
+            Some(sign * (oh * date::MS_PER_HOUR + om * date::MS_PER_MINUTE))
+        }
+    };
+    if tokens.next().is_some() {
+        return None;
+    }
+    // Field ranges, as in parse_iso.
+    if !(1.0..=31.0).contains(&day) || hour > 23.0 || minute > 59.0 || second > 59.0 {
+        return None;
+    }
+    let t = date::make_date(
+        date::make_day(year, month as f64, day),
+        date::make_time(hour, minute, second, 0.0),
+    );
+    let t = match offset {
+        Some(o) => t - o,
+        None => date::utc(agent, t),
+    };
+    let t = date::time_clip(t);
+    (!t.is_nan()).then_some(t)
+}
+
+/// A non-empty run of ASCII digits as a Number.
+fn parse_digits(s: &str) -> Option<f64> {
+    if s.is_empty() || !s.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    s.parse::<f64>().ok()
+}
+
+/// An optionally negative run of ASCII digits as a Number.
+fn parse_signed_digits(s: &str) -> Option<f64> {
+    match s.strip_prefix('-') {
+        Some(rest) => parse_digits(rest).map(|y| -y),
+        None => parse_digits(s),
+    }
 }
