@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10456,
+  "stop_reason": "tool_use",
+  "session_id": "a796feeb-c8e1-4e5d-8607-1c645b723930",
+  "total_cost_usd": 0.00213478,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4048,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1907,
+    "output_tokens_details": {
+      "thinking_tokens": 1436
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4048,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1907,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4048,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4048
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Set.prototype.delete in its own file. It follows the spec order: this_set(agent, this)? performs RequireInternalSlot(set, [[SetData]]) with the error propagated; collection_key(...) performs CanonicalizeKeyedCollectionKey; the table delete returns a boolean that is wrapped in Ok(Value::Boolean). There are no test-shaped branches, no hardcoded results, and no swallowed errors. The step comments sit directly above their code. The only removed comments are the header and the NOTE, which are not steps. The ~empty~ replacement is delegated to the shared collection table, whose delete is not visible in this diff. I did not verify that it preserves live-iterator behaviour, but nothing in the diff suggests a defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Set.prototype.delete in its own file. It follows the spec order: this_set(agent, this)? performs RequireInternalSlot(set, [[SetData]]) with the error propagated; collection_key(...) performs CanonicalizeKeyedCollectionKey; the table delete returns a boolean that is wrapped in Ok(Value::Boolean). There are no test-shaped branches, no hardcoded results, and no swallowed errors. The step comments sit directly above their code. The only removed comments are the header and the NOTE, which are not steps. The ~empty~ replacement is delegated to the shared collection table, whose delete is not visible in this diff. I did not verify that it preserves live-iterator behaviour, but nothing in the diff suggests a defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8360,
+  "type": "result",
+  "duration_ms": 10202,
+  "uuid": "14aaca18-54a6-4bc9-a5a8-db51576db55f",
+  "ttft_stream_ms": 1280,
+  "time_to_request_ms": 572,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 329,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 50,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 10,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 121,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 114,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 767,
+  "process_wall_ms_turn": 10197,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 44,
+    "cpu_ms": 40,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1282,
+  "time_to_request_from_spawn_ms": 21467715,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000927696.5312,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
