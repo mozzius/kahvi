@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19373,
+  "stop_reason": "end_turn",
+  "session_id": "a850d454-15c1-42f5-91fc-5c17c27a4b04",
+  "total_cost_usd": 0.00625469,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 15453,
+    "cache_read_input_tokens": 141929,
+    "output_tokens": 2789,
+    "output_tokens_details": {
+      "thinking_tokens": 626
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15453,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 205,
+        "cache_read_input_tokens": 22468,
+        "cache_creation_input_tokens": 628,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 628
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`DataView.prototype.getUint32` is implemented in `crates/kahvi-builtins/src/data_view/prototype_get_uint32.rs`, the only file changed. All 36 test262 runs under `built-ins/DataView/prototype/getUint32/` pass, and clippy is clean.\n\nThe method calls the existing `get_view_value` helper in `support/typed_array.rs` with `ElementType::Uint32`, so the GetViewValue steps are not duplicated here. Step 2 (default `littleEndian` to `false`) is written out explicitly. No helpers were missing, and nothing is blocked.",
+  "ttft_ms": 1828,
+  "type": "result",
+  "duration_ms": 39867,
+  "uuid": "42fc8a2f-d369-44e6-b4de-bbcd6cdf3e9c",
+  "ttft_stream_ms": 1450,
+  "time_to_request_ms": 566,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 362,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 21,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 16,
+    "engine_pickup": 6,
+    "message_prep": 2,
+    "model_config_wait": 87,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 77,
+  "time_to_request_cpu_ms": 280,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3071,
+  "process_wall_ms_turn": 39866,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1451,
+  "time_to_request_from_spawn_ms": 22515869,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001975083.1443,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7116,
+  "stop_reason": "tool_use",
+  "session_id": "833c9a44-78e0-466e-a875-d9ce5eb57878",
+  "total_cost_usd": 0.00170918,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3753,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1230,
+    "output_tokens_details": {
+      "thinking_tokens": 599
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1230,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff makes DataView.prototype.getInt8 follow the spec: it keeps step 1 (view = this) and step 2 as comments, and delegates to the existing support helper get_view_value with byteOffset, Boolean(true) for isLittleEndian, and ElementType::Int8. The argument mapping matches the spec. No special-casing, no swallowed errors, no made-up values, and no not-implemented path left in the function. The only other edit is renaming an unused parameter to _new_target, which is needed for the lint. The GetViewValue steps (RequireInternalSlot, ToIndex, bounds checks, GetValueFromBuffer) live in the helper, which is outside this diff, so I could not inspect them. I judged them on the assumption that the helper is correct; the gate's 28 new passes in the getInt8 directory are consistent with that.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. The GetViewValue steps (RequireInternalSlot, ToIndex, ToBoolean, IsViewOutOfBounds TypeError, RangeError check, GetValueFromBuffer) are in crates/kahvi-builtins/src/support/typed_array.rs, which this diff does not touch. Confirm that helper implements them in spec order if it has not already been reviewed.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff makes DataView.prototype.getInt8 follow the spec: it keeps step 1 (view = this) and step 2 as comments, and delegates to the existing support helper get_view_value with byteOffset, Boolean(true) for isLittleEndian, and ElementType::Int8. The argument mapping matches the spec. No special-casing, no swallowed errors, no made-up values, and no not-implemented path left in the function. The only other edit is renaming an unused parameter to _new_target, which is needed for the lint. The GetViewValue steps (RequireInternalSlot, ToIndex, bounds checks, GetValueFromBuffer) live in the helper, which is outside this diff, so I could not inspect them. I judged them on the assumption that the helper is correct; the gate's 28 new passes in the getInt8 directory are consistent with that.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. The GetViewValue steps (RequireInternalSlot, ToIndex, ToBoolean, IsViewOutOfBounds TypeError, RangeError check, GetValueFromBuffer) are in crates/kahvi-builtins/src/support/typed_array.rs, which this diff does not touch. Confirm that helper implements them in spec order if it has not already been reviewed."
+  },
+  "ttft_ms": 4617,
+  "type": "result",
+  "duration_ms": 7156,
+  "uuid": "a69441f4-8a7e-4008-a3a7-e9f19d16e353",
+  "ttft_stream_ms": 1876,
+  "time_to_request_ms": 926,
+  "time_to_request_phases_ms": {
+    "other": 73,
+    "system_prompt": 499,
+    "resume_other": 0,
+    "process_user_input": 26,
+    "input_attachments": 65,
+    "input_hooks": 19,
+    "tool_pool_refresh": 3,
+    "init_message": 24,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 108,
+    "autocompact": 7,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 27,
+    "message_normalization": 3,
+    "client_creation": 20,
+    "request_build": 37
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 202,
+  "time_to_request_cpu_ms": 420,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 792,
+  "process_wall_ms_turn": 7156,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 57,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1877,
+  "time_to_request_from_spawn_ms": 22550978,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002009886.4043,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

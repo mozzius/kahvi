@@ -1024,3 +1024,9 @@ test262 at last merge: 72953/81183 runs passing
 [18:19:31] B-data-view-prototype-get-uint16: attempt on slot 1 with haiku
 [18:19:32] B-data-view-prototype-get-int16: verifier: accept The change implements DataView.prototype.getInt16 as a thin wrapper that follows the three spec steps: `this` is taken as view, a missing littleEndian
 [18:19:34] B-data-view-prototype-get-uint32: attempt on slot 3 with haiku
+[18:19:37] B-date-prototype-set-date: attempt on slot 0 with haiku
+[18:19:50] B-data-view-prototype-get-int8: attempt 283 finished ($0.008, 13 turns)
+[18:20:00] B-data-view-prototype-get-uint16: attempt 284 finished ($0.005, 10 turns)
+[18:20:13] B-date-prototype-set-date: attempt 286 finished ($0.008, 9 turns)
+[18:20:18] B-data-view-prototype-get-uint32: attempt 285 finished ($0.006, 11 turns)
+[18:20:29] B-data-view-prototype-get-int8: verifier: accept The diff makes DataView.prototype.getInt8 follow the spec: it keeps step 1 (view = this) and step 2 as comments, and delegates to the existing support

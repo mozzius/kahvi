@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-get-uint16",
+  "base": "27a21bc1840dcfa5568e560feca47d05951f13d1",
+  "head": "87a7783fd8b1edf51ddea80a30610a87aae1e9a6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_uint16.rs",
+      "added": 17,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 6,
+    "after": 36,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
