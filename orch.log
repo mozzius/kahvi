@@ -340,3 +340,7 @@
 [17:42:25] B-string-prototype-trim-start: attempt 202 finished ($0.008, 16 turns)
 [17:42:52] B-weak-map-prototype-has: attempt 203 finished ($0.006, 9 turns)
 [17:42:59] B-string-prototype-trim-start: verifier: accept The diff is a small, spec-faithful implementation of String.prototype.trimStart. It keeps the spec steps as comments, takes `this` as the string, and 
+[17:43:03] B-data-view-prototype-set-int8: attempt on slot 0 with haiku
+[17:43:21] B-array-prototype-unshift: attempt 205 finished ($0.010, 12 turns)
+[17:43:24] B-aggregate-error-constructor: attempt 204 finished ($0.013, 23 turns)
+[17:43:34] B-weak-map-prototype-has: verifier: accept The diff implements WeakMap.prototype.has in its file. Step order matches the spec: this_weak_map (RequireInternalSlot) with `?`, then can_be_held_wea

@@ -1,0 +1,41 @@
+{
+  "ticket": "B-weak-map-prototype-has",
+  "base": "73a809ddb402608d39e713fae6781e3f8fced874",
+  "head": "edc3b61492b79881c2cf72162669dfb7c4bb3d9f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_map/prototype_has.rs",
+      "added": 14,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 32,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakMap/prototype/has/returns-false-when-key-cannot-be-held-weakly.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/prototype/has/returns-false-when-key-cannot-be-held-weakly.js:strict  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/prototype/has/returns-false-when-object-key-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.delete",
+      "built-ins/WeakMap/prototype/has/returns-false-when-object-key-not-present.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.delete",
+      "built-ins/WeakMap/prototype/has/returns-false-when-symbol-key-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.delete",
+      "built-ins/WeakMap/prototype/has/returns-false-when-symbol-key-not-present.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.delete",
+      "built-ins/WeakMap/prototype/has/returns-true-when-symbol-key-present.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.delete",
+      "built-ins/WeakMap/prototype/has/returns-true-when-symbol-key-present.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.delete"
+    ]
+  },
+  "decision": "pass"
+}
