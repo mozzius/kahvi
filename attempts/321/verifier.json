@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6914,
+  "stop_reason": "tool_use",
+  "session_id": "e9d7f79b-1283-42a4-a3c5-a4905246d63a",
+  "total_cost_usd": 0.0018695799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4483,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1112,
+    "output_tokens_details": {
+      "thinking_tokens": 609
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4483,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1112,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4483,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4483
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all six steps of Object.prototype.__defineSetter__ in order: ToObject(this) with `?`, IsCallable check throwing TypeError, PropertyDescriptor with set/enumerable/configurable true, ToPropertyKey(key) with `?` after the callable check, DefinePropertyOrThrow with `?`, and return undefined. Errors propagate with `?`, nothing is special-cased, and no made-up values are returned. The only non-spec change is renaming the unused `new_target` parameter to `_new_target`, which is needed because it is no longer used. The gate report shows 16 new passing test262 runs and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found; all answers are no. The change can be merged as is. Only cosmetic point: the TypeError `return Err(...)` block is wrapped in a way rustfmt may reformat, which is not a correctness issue.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all six steps of Object.prototype.__defineSetter__ in order: ToObject(this) with `?`, IsCallable check throwing TypeError, PropertyDescriptor with set/enumerable/configurable true, ToPropertyKey(key) with `?` after the callable check, DefinePropertyOrThrow with `?`, and return undefined. Errors propagate with `?`, nothing is special-cased, and no made-up values are returned. The only non-spec change is renaming the unused `new_target` parameter to `_new_target`, which is needed because it is no longer used. The gate report shows 16 new passing test262 runs and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found; all answers are no. The change can be merged as is. Only cosmetic point: the TypeError `return Err(...)` block is wrapped in a way rustfmt may reformat, which is not a correctness issue."
+  },
+  "ttft_ms": 5144,
+  "type": "result",
+  "duration_ms": 7023,
+  "uuid": "4510965d-66ed-499d-87c4-05bad6270537",
+  "ttft_stream_ms": 2299,
+  "time_to_request_ms": 1041,
+  "time_to_request_phases_ms": {
+    "other": 301,
+    "system_prompt": 434,
+    "resume_other": 4,
+    "process_user_input": 22,
+    "input_attachments": 113,
+    "input_hooks": 26,
+    "tool_pool_refresh": 9,
+    "init_message": 24,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 2,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 7,
+    "client_creation": 64,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 415,
+  "time_to_request_cpu_ms": 413,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 879,
+  "process_wall_ms_turn": 7023,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 79,
+    "cpu_ms": 47,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2300,
+  "time_to_request_from_spawn_ms": 23781947,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003239559.136,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.19,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

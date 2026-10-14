@@ -1,0 +1,32 @@
+{
+  "ticket": "B-promise-with-resolvers",
+  "base": "9e980f3b6e1253e878a7dc279df012768a2b622d",
+  "head": "a6e89a726aeeda9aede1a6e1c8b523fd7156215c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/with_resolvers.rs",
+      "added": 14,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 0,
+    "after": 12,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

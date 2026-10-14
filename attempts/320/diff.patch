@@ -1,0 +1,46 @@
+diff --git a/crates/kahvi-builtins/src/object/prototype_define_getter.rs b/crates/kahvi-builtins/src/object/prototype_define_getter.rs
+index f53b5a3..041d1c3 100644
+--- a/crates/kahvi-builtins/src/object/prototype_define_getter.rs
++++ b/crates/kahvi-builtins/src/object/prototype_define_getter.rs
+@@ -9,16 +9,33 @@ pub(crate) fn prototype_define_getter(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
+-    // 2. If IsCallable(_getter_) is *false*, throw a *TypeError* exception.
+-    // 3. Let _propertyDesc_ be PropertyDescriptor { [[Getter]]: _getter_, [[Enumerable]]: *true*, [[Configurable]]: *true* }.
+-    // 4. Let _propertyKey_ be ? ToPropertyKey(_key_).
+-    // 5. Perform ? DefinePropertyOrThrow(_obj_, _propertyKey_, _propertyDesc_).
+-    // 6. Return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.prototype.__defineGetter__"))
++    let obj = ops::to_object(agent, this)?;
++    let key = args.get_or_undefined(0);
++    let getter = args.get_or_undefined(1);
++    // The key conversion may collect garbage: obj, key and getter stay rooted.
++    agent.with_roots(&[Value::Object(obj), key, getter], |agent| {
++        // 2. If IsCallable(_getter_) is *false*, throw a *TypeError* exception.
++        if !ops::is_callable(agent, getter) {
++            return Err(agent
++                .throw_type_error("Object.prototype.__defineGetter__ getter is not a function"));
++        }
++        // 3. Let _propertyDesc_ be PropertyDescriptor { [[Getter]]: _getter_, [[Enumerable]]: *true*, [[Configurable]]: *true* }.
++        let property_desc = PropertyDescriptor {
++            get: Some(getter),
++            enumerable: Some(true),
++            configurable: Some(true),
++            ..Default::default()
++        };
++        // 4. Let _propertyKey_ be ? ToPropertyKey(_key_).
++        let property_key = ops::to_property_key(agent, key)?;
++        // 5. Perform ? DefinePropertyOrThrow(_obj_, _propertyKey_, _propertyDesc_).
++        ops::define_property_or_throw(agent, obj, property_key, property_desc)?;
++        // 6. Return *undefined*.
++        Ok(Value::Undefined)
++    })
+ }

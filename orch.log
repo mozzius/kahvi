@@ -1868,3 +1868,10 @@ test262 at last merge: 74349/81183 runs passing
 [18:38:17] B-math-trunc: verifier: accept Math.trunc implementation follows all five spec steps in order. Step 1 uses ops::to_number with `?`, so ToNumber's abrupt completions propagate. Step 
 [18:38:48] B-object-prototype-define-getter: attempt on slot 0 with haiku
 [18:38:51] B-object-prototype-define-setter: attempt on slot 2 with haiku
+[18:38:54] B-string-prototype-at: attempt on slot 3 with haiku
+[18:38:54] B-promise-with-resolvers: attempt on slot 1 with haiku
+[18:39:50] B-string-prototype-at: attempt 323 finished ($0.006, 13 turns)
+[18:39:52] B-object-prototype-define-setter: attempt 321 finished ($0.008, 19 turns)
+[18:39:54] B-promise-with-resolvers: attempt 322 finished ($0.011, 17 turns)
+[18:40:04] B-object-prototype-define-getter: attempt 320 finished ($0.009, 22 turns)
+[18:40:56] B-object-prototype-define-setter: verifier: accept The diff implements all six steps of Object.prototype.__defineSetter__ in order: ToObject(this) with `?`, IsCallable check throwing TypeError, Propert

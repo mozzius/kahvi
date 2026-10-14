@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 27370,
+  "stop_reason": "end_turn",
+  "session_id": "275b2aa7-1e81-40ce-bb2d-4d0d7d95f4f8",
+  "total_cost_usd": 0.00923237,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 21596,
+    "cache_read_input_tokens": 215527,
+    "output_tokens": 4910,
+    "output_tokens_details": {
+      "thinking_tokens": 739
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21596,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 264,
+        "cache_read_input_tokens": 29008,
+        "cache_creation_input_tokens": 231,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 231
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01CiGKAePq9Eua5upeL6NjMu",
+      "tool_input": {
+        "command": "rustfmt --edition 2021 crates/kahvi-builtins/src/object/prototype_define_getter.rs",
+        "description": "Format the edited file only"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Object.prototype.__defineGetter__` in `crates/kahvi-builtins/src/object/prototype_define_getter.rs`, following the spec steps with each step as a comment. All 22 runs under `built-ins/Object/prototype/__defineGetter__/` pass (up from 6 on main), and clippy and `cargo fmt --check` are clean. The only changed file is that one.\n\nThe key conversion can run user code, so `obj`, `key` and `getter` are rooted with `with_roots`, as `Array.prototype.map` does. No helpers were missing, so nothing needed adding to shared code.\n\nA `rustfmt` call on the single file was denied, so I formatted the block by hand to match `cargo fmt`'s output. `cargo fmt -- --check` then passed.",
+  "ttft_ms": 2089,
+  "type": "result",
+  "duration_ms": 73010,
+  "uuid": "63b6c065-29fb-4db9-a771-39bb84cfa645",
+  "ttft_stream_ms": 1884,
+  "time_to_request_ms": 638,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 365,
+    "resume_other": 0,
+    "process_user_input": 17,
+    "input_attachments": 34,
+    "input_hooks": 9,
+    "tool_pool_refresh": 6,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 104,
+    "autocompact": 6,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 3,
+    "client_creation": 18,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 158,
+  "time_to_request_cpu_ms": 428,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 260,
+  "process_anon_mib_result": 140,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 4629,
+  "process_wall_ms_turn": 73009,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1897,
+  "time_to_request_from_spawn_ms": 23669184,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003128946.3562,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.19,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

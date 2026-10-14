@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-prototype-define-getter",
+  "base": "d5914b14a11f8e056b3b0b4c3bb2912214bee368",
+  "head": "b8a41238693f6067da40bfcf95aeb825b186b792",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_define_getter.rs",
+      "added": 25,
+      "removed": 8
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 6,
+    "after": 22,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
