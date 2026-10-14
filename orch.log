@@ -302,3 +302,9 @@
 [17:38:42] B-array-prototype-find-last-index: attempt on slot 3 with haiku
 [17:38:48] B-data-view-prototype-set-big-int64: attempt on slot 2 with haiku
 [17:39:00] B-array-prototype-find-last: verifier: accept The diff implements Array.prototype.findLast per spec. findLast runs ToObject, then LengthOfArrayLike, then FindViaPredicate, then returns the record'
+[17:39:03] B-date-prototype-set-hours: attempt on slot 1 with haiku
+[17:39:09] B-array-prototype-flat-map: attempt 194 finished ($0.013, 13 turns)
+[17:39:25] B-array-prototype-find-last-index: attempt 195 finished ($0.007, 12 turns)
+[17:39:26] B-data-view-prototype-set-big-int64: attempt 196 finished ($0.007, 13 turns)
+[17:39:54] B-date-prototype-set-hours: attempt 197 finished ($0.012, 12 turns)
+[17:40:00] B-array-prototype-flat-map: verifier: accept The diff implements Array.prototype.flatMap and its FlattenIntoArray helper in the scoped file. I walked the spec steps for flatMap (ToObject, LengthO

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 30966,
+  "stop_reason": "end_turn",
+  "session_id": "8ec5faae-b3a2-43e6-9fdb-8ff59a43cfe6",
+  "total_cost_usd": 0.011520390000000002,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 28758,
+    "cache_read_input_tokens": 253129,
+    "output_tokens": 5611,
+    "output_tokens_details": {
+      "thinking_tokens": 2928
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 28758,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 226,
+        "cache_read_input_tokens": 36201,
+        "cache_creation_input_tokens": 200,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 200
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.setHours` in its file, following the spec steps with each step as a comment. 42 of 46 setHours runs pass; clippy and fmt are clean, and only that file changed.\n\nThe 4 remaining failures are the `date-value-read-before-tonumber-*` tests, which call `Date.prototype.setTime`, still a not-implemented stub in another file. Making them pass needs that built-in, which is outside this ticket's scope.\n\nBLOCKED: Date.prototype.setTime (needed by built-ins/Date/prototype/setHours/date-value-read-before-tonumber-when-date-is-{valid,invalid}.js, 4 runs)",
+  "ttft_ms": 1703,
+  "type": "result",
+  "duration_ms": 48316,
+  "uuid": "66396e45-2beb-4df5-8e1b-137ba3819449",
+  "ttft_stream_ms": 1640,
+  "time_to_request_ms": 587,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 417,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 7,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 101,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 1,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 98,
+  "time_to_request_cpu_ms": 437,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 119,
+  "process_rss_mib_result": 256,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3491,
+  "process_wall_ms_turn": 48315,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 8,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1641,
+  "time_to_request_from_spawn_ms": 20083661,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999543475.0337,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

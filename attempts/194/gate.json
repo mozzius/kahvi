@@ -1,0 +1,42 @@
+{
+  "ticket": "B-array-prototype-flat-map",
+  "base": "b0f40573b9381d291dbc30f657c937e9b9a64166",
+  "head": "8a53f93193d8966a0ae7be0ea33ab4bb0b148b08",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_flat_map.rs",
+      "added": 125,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_flat_map.rs",
+      "line": 108,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"IsArray returned true for a non-object\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 47,
+    "before": 8,
+    "after": 45,
+    "new_passes": 37,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/flatMap/proxy-access-count.js:sloppy  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Array/prototype/flatMap/proxy-access-count.js:strict  Uncaught InternalError: not implemented: Reflect.get"
+    ]
+  },
+  "decision": "pass"
+}
