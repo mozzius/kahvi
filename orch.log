@@ -39,3 +39,6 @@
 [17:03:02] B-typed-array-prototype-reduce: attempt 115 finished ($0.011, 9 turns)
 [17:03:13] B-typed-array-prototype-reduce-right: attempt 113 finished ($0.015, 16 turns)
 [17:03:14] B-typed-array-prototype-reduce-right: gate rejected attempt 113: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 
+[17:03:17] B-typed-array-prototype-reduce: gate rejected attempt 115: clippy failed
+[17:03:17] B-typed-array-prototype-reduce: escalating haiku -> sonnet
+[17:03:17] B-typed-array-prototype-reduce: attempt on slot 3 with sonnet

@@ -1,0 +1,21 @@
+{
+  "ticket": "B-typed-array-prototype-reduce",
+  "base": "2090de58e11e935d202d1a12fc2b7b032a83ebc7",
+  "head": "b82a4c5cacfdd8784fc53b17b98efca6b5895226",
+  "reject": [
+    "clippy failed"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_reduce.rs",
+      "added": 53,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "error: value assigned to `accumulator` is never read\n  --> crates/kahvi-builtins/src/typed_array/prototype_reduce.rs:43:27\n   |\n43 |     let mut accumulator = Value::Undefined;\n   |                           ^^^^^^^^^^^^^^^^ this value is reassigned later and never used\n...\n51 |         accumulator = typed_array_get_element(agent, obj, k);\n   |         ---------------------------------------------------- `accumulator` is overwritten here before the previous value is read\n   |\n   = note: `-D unused-assignments` implied by `-D warnings`\n   = help: to override `-D warnings` add `#[allow(unused_assignments)]`\n\nerror: could not compile `kahvi-builtins` (lib) due to 1 previous error\nerror: could not compile `kahvi-builtins` (lib test) due to 1 previous error\n",
+  "decision": "reject"
+}
