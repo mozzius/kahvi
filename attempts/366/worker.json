@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 9311,
+  "stop_reason": "end_turn",
+  "session_id": "90b3aa06-cc7e-4ee5-ba7d-285c26aa0158",
+  "total_cost_usd": 0.004297189999999999,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 13473,
+    "cache_read_input_tokens": 61529,
+    "output_tokens": 1186,
+    "output_tokens_details": {
+      "thinking_tokens": 364
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13473,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 249,
+        "cache_read_input_tokens": 20437,
+        "cache_creation_input_tokens": 679,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 679
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `[[PreventExtensions]]` implementation in `prevent_extensions.rs` was already present and committed, so I made no changes. The build succeeds, clippy is clean, and all 23 runs under `built-ins/Proxy/preventExtensions/` pass (0 failures). The old attempt notes about `Reflect.preventExtensions` being missing no longer apply on this branch.",
+  "ttft_ms": 1810,
+  "type": "result",
+  "duration_ms": 22044,
+  "uuid": "276615fd-b72d-4810-9597-ae6df8713419",
+  "ttft_stream_ms": 1580,
+  "time_to_request_ms": 660,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 383,
+    "resume_other": 1,
+    "process_user_input": 26,
+    "input_attachments": 32,
+    "input_hooks": 15,
+    "tool_pool_refresh": 6,
+    "init_message": 14,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 102,
+    "autocompact": 3,
+    "query_setup": 6,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 12,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 149,
+  "time_to_request_cpu_ms": 326,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 2137,
+  "process_wall_ms_turn": 22043,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1586,
+  "time_to_request_from_spawn_ms": 25076122,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004533892.5413,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

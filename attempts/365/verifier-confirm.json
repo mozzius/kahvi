@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5822,
+  "stop_reason": "tool_use",
+  "session_id": "92316eba-20f0-40d2-b094-0d5587e7ff01",
+  "total_cost_usd": 0.0227646,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3997,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 608,
+    "output_tokens_details": {
+      "thinking_tokens": 220
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3997,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 608,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3997,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3997
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements the get accessor and RegExpHasFlag as the spec describes. It checks for a non-object, then for a missing [[OriginalFlags]] slot, which it models as RegExpData. For a missing slot it returns undefined when the value is %RegExp.prototype% and throws TypeError otherwise. It then checks whether the flags contain 'y'. Spec step comments are present. Only the in-scope file changed, and the helper is local to it. The gate report shows 16 of 16 tests passing, with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements the get accessor and RegExpHasFlag as the spec describes. It checks for a non-object, then for a missing [[OriginalFlags]] slot, which it models as RegExpData. For a missing slot it returns undefined when the value is %RegExp.prototype% and throws TypeError otherwise. It then checks whether the flags contain 'y'. Spec step comments are present. Only the in-scope file changed, and the helper is local to it. The gate report shows 16 of 16 tests passing, with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3821,
+  "type": "result",
+  "duration_ms": 5912,
+  "uuid": "664a93fe-ac0c-4006-8df8-5d7d526e13a8",
+  "ttft_stream_ms": 1799,
+  "time_to_request_ms": 757,
+  "time_to_request_phases_ms": {
+    "other": 62,
+    "system_prompt": 549,
+    "resume_other": 1,
+    "process_user_input": 19,
+    "input_attachments": 37,
+    "input_hooks": 9,
+    "tool_pool_refresh": 23,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 5,
+    "model_config_wait": 1,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 4,
+    "client_creation": 3,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 150,
+  "time_to_request_cpu_ms": 483,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 804,
+  "process_wall_ms_turn": 5911,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1800,
+  "time_to_request_from_spawn_ms": 25092751,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004552410.626,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

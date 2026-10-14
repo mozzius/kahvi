@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements get RegExp.prototype.sticky as the spec describes. The getter sets regexp to this, sets codeUnit to 0x0079, and returns RegExpHasFlag(regexp, codeUnit) with ?. The helper follows RegExpHasFlag steps 1\u20135 in order: a non-object throws a TypeError; a missing [[OriginalFlags]] (RegExpData native) returns undefined when the value is %RegExp.prototype% and otherwise throws a TypeError; otherwise it returns whether the flags string contains the code unit. Step comments are kept, there are no test-specific branches, no swallowed errors, and no unrelated edits. The 10 new passing test262 runs are plausible for this small change.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found. The RegExpHasFlag helper lives in prototype_get_sticky.rs. Other flag getters (global, ignoreCase, multiline, etc.) need the same helper, so it may be moved to a shared location by the architect. Nothing else needs changing.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
