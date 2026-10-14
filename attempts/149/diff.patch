@@ -1,0 +1,67 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_to_locale_string.rs b/crates/kahvi-builtins/src/typed_array/prototype_to_locale_string.rs
+index 2b6eb72..bdcc2e1 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_to_locale_string.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_to_locale_string.rs
+@@ -2,19 +2,58 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.tolocalestring
+ 
++use crate::support::typed_array::{length, validate_typed_array};
+ use kahvi_core::prelude::*;
+ 
+ /// TypedArray.prototype.toLocaleString
+ pub(crate) fn prototype_to_locale_string(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This is a distinct method that implements the same algorithm as `Array.prototype.toLocaleString` as defined in [sec-array.prototype.tolocalestring] except that TypedArrayLength is called in place of performing a [[Get]] of *"length"*. The implementation of the algorithm may be optimized with the knowledge that the *this* value has a fixed length when the underlying buffer is not resizable and whose integer-indexed properties are not sparse. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.
+     // This method is not generic. ValidateTypedArray is called with the *this* value and ~seq-cst~ as arguments prior to evaluating the algorithm. If its result is an abrupt completion that exception is thrown instead of evaluating the algorithm.
+     // NOTE:
+     // If the ECMAScript implementation includes the ECMA-402 Internationalization API this method is based upon the algorithm for `Array.prototype.toLocaleString` that is in ECMA-402.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.toLocaleString"))
++    // 1. Let array be the this value.
++    // 2. Let taRecord be ? ValidateTypedArray(array, seq-cst).
++    let ta_record = validate_typed_array(agent, this)?;
++    let array = ta_record.object;
++    // 3. Let len be TypedArrayLength(taRecord).
++    let len = length(agent, ta_record) as f64;
++    // 4. Let separator be the implementation-defined list-separator String value appropriate for the host environment's current locale (such as ", ").
++    let separator: Vec<u16> = vec![u16::from(b',')];
++    // 5. Let result be the empty String.
++    let mut result: Vec<u16> = Vec::new();
++    // The callbacks may collect garbage: array stays rooted.
++    agent.with_roots(&[Value::Object(array)], |agent| {
++        // 6. Let k be 0.
++        let mut k = 0.0;
++        // 7. Repeat, while k < len,
++        while k < len {
++            // a. If k > 0, set result to the string-concatenation of result and separator.
++            if k > 0.0 {
++                result.extend_from_slice(&separator);
++            }
++            // b. Let element be ? Get(array, ! ToString(𝔽(k))).
++            let key = agent.key_from_index(k);
++            let element = ops::get(agent, array, key)?;
++            // c. If element is neither undefined nor null, then
++            if !matches!(element, Value::Undefined | Value::Null) {
++                // i. Let S be ? ToString(? Invoke(element, "toLocaleString")).
++                let mark = agent.push_root(element);
++                let to_locale_string = agent.key("toLocaleString");
++                let invoked = ops::invoke(agent, element, to_locale_string, &[]);
++                agent.pop_roots(mark);
++                let s = ops::to_string(agent, invoked?)?;
++                // ii. Set result to the string-concatenation of result and S.
++                result.extend_from_slice(agent.str(s));
++            }
++            // d. Set k to k + 1.
++            k += 1.0;
++        }
++        // 8. Return result.
++        Ok(Value::String(agent.intern(&result)))
++    })
+ }

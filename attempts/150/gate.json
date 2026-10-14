@@ -1,0 +1,32 @@
+{
+  "ticket": "B-array-prototype-pop",
+  "base": "0a284a64beff75ca09ee0595a7364c809b9e3be4",
+  "head": "8fd88710f7261ab1870623d8b3ca792997001ead",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_pop.rs",
+      "added": 34,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 8,
+    "after": 46,
+    "new_passes": 38,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,150 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_take.rs b/crates/kahvi-builtins/src/iterator/prototype_take.rs
+index 8c188f9..9b90b09 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_take.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_take.rs
+@@ -4,44 +4,111 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use kahvi_core::ops::IteratorRecord;
++
++use crate::support::iterator_helper::{
++    HelperClosure, create_iterator_helper, if_abrupt_close_iterator,
++};
++
+ /// Iterator.prototype.take
+ pub(crate) fn prototype_take(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+-    // 1. Let _obj_ be the *this* value.
+-    // 2. If _obj_ is not an Object, throw a *TypeError* exception.
+-    // 3. Let _iterated_ be the Iterator Record { [[Iterator]]: _obj_, [[NextMethod]]: *undefined*, [[Done]]: *false* }.
+-    // 4. Let _numberLimit_ be Completion(ToNumber(_limit_)).
+-    // 5. IfAbruptCloseIterator(_numberLimit_, _iterated_).
+-    // 6. If _numberLimit_ is *NaN*, then
+-    //    a. Let _error_ be ThrowCompletion(a newly created *RangeError* object).
+-    //    b. Return ? IteratorClose(_iterated_, _error_).
+-    // 7. If _numberLimit_ is finite and _numberLimit_ > 𝔽(2^53 - 1), then
+-    //    a. Let _error_ be ThrowCompletion(a newly created *RangeError* object).
+-    //    b. Return ? IteratorClose(_iterated_, _error_).
+-    // 8. Let _intLimit_ be ! ToIntegerOrInfinity(_numberLimit_).
+-    // 9. If _intLimit_ < 0, then
+-    //    a. Let _error_ be ThrowCompletion(a newly created *RangeError* object).
+-    //    b. Return ? IteratorClose(_iterated_, _error_).
+-    // 10. Set _iterated_ to ? GetIteratorDirect(_obj_).
+-    // 11. Let _closure_ be a new Abstract Closure with no parameters that captures _iterated_ and _intLimit_ and performs the following steps when called:
+-    //    a. Let _remaining_ be 𝔽(_intLimit_).
+-    //    b. Repeat,
+-    //       i. If _remaining_ is *+0*_𝔽, then
+-    //          1. Return ? IteratorClose(_iterated_, ReturnCompletion(*undefined*)).
+-    //       ii. Set _remaining_ to _remaining_ - *1*_𝔽.
+-    //       iii. Let _value_ be ? IteratorStepValue(_iterated_).
+-    //       iv. If _value_ is ~done~, return ReturnCompletion(*undefined*).
+-    //       v. Let _completion_ be Completion(Yield(_value_)).
+-    //       vi. IfAbruptCloseIterator(_completion_, _iterated_).
+-    // 12. Let _result_ be CreateIteratorFromClosure(_closure_, *"Iterator Helper"*, %IteratorHelperPrototype%, « [[UnderlyingIterators]] »).
+-    // 13. Set _result_.[[UnderlyingIterators]] to « _iterated_ ».
+-    // 14. Return _result_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Iterator.prototype.take"))
++    let limit = args.get_or_undefined(0);
++    // 1. Let obj be the this value.
++    // 2. If obj is not an Object, throw a TypeError exception.
++    let Value::Object(obj) = this else {
++        return Err(agent.throw_type_error("Iterator.prototype.take called on a non-object"));
++    };
++    // 3. Let iterated be the Iterator Record { [[Iterator]]: obj, [[NextMethod]]: undefined, [[Done]]: false }.
++    let iterated = IteratorRecord {
++        iterator: obj,
++        next_method: Value::Undefined,
++        done: false,
++    };
++    // 4. Let numberLimit be Completion(ToNumber(limit)).
++    let number_limit = ops::to_number(agent, limit);
++    // 5. IfAbruptCloseIterator(numberLimit, iterated).
++    let number_limit = if_abrupt_close_iterator(agent, number_limit, &iterated)?;
++    // 6. If numberLimit is NaN, then
++    if number_limit.is_nan() {
++        // a. Let error be ThrowCompletion(a newly created RangeError object).
++        let error = agent.throw_range_error("Iterator.prototype.take: limit is NaN");
++        // b. Return ? IteratorClose(iterated, error).
++        return ops::iterator_close(agent, &iterated, Err(error));
++    }
++    // 7. If numberLimit is finite and numberLimit > 𝔽(2^53 - 1), then
++    if number_limit.is_finite() && number_limit > 9007199254740991.0 {
++        // a. Let error be ThrowCompletion(a newly created RangeError object).
++        let error = agent.throw_range_error("Iterator.prototype.take: limit is too large");
++        // b. Return ? IteratorClose(iterated, error).
++        return ops::iterator_close(agent, &iterated, Err(error));
++    }
++    // 8. Let intLimit be ! ToIntegerOrInfinity(numberLimit).
++    let int_limit = ops::to_integer_or_infinity(agent, Value::Number(number_limit))?;
++    // 9. If intLimit < 0, then
++    if int_limit < 0.0 {
++        // a. Let error be ThrowCompletion(a newly created RangeError object).
++        let error = agent.throw_range_error("Iterator.prototype.take: limit is negative");
++        // b. Return ? IteratorClose(iterated, error).
++        return ops::iterator_close(agent, &iterated, Err(error));
++    }
++    // 10. Set iterated to ? GetIteratorDirect(obj).
++    let iterated = ops::get_iterator_direct(agent, obj)?;
++    // 11. Let closure be a new Abstract Closure with no parameters that captures iterated and intLimit
++    //     and performs the following steps when called:
++    let closure = TakeClosure {
++        remaining: int_limit,
++    };
++    // 12-13. Let result be CreateIteratorFromClosure(closure, "Iterator Helper", %IteratorHelperPrototype%,
++    //        « [[UnderlyingIterators]] »), with [[UnderlyingIterators]] « iterated ».
++    // 14. Return result.
++    Ok(Value::Object(create_iterator_helper(
++        agent,
++        Box::new(closure),
++        vec![iterated],
++    )))
++}
++
++/// Step 11's closure: captures iterated and intLimit.
++#[derive(Debug)]
++struct TakeClosure {
++    /// a. Let remaining be 𝔽(intLimit). (Updated by step b.ii.)
++    remaining: f64,
++}
++
++impl HelperClosure for TakeClosure {
++    // b. Repeat,
++    fn resume(
++        &mut self,
++        agent: &mut Agent,
++        underlying: &mut [IteratorRecord],
++    ) -> JsResult<Option<Value>> {
++        let iterated = &mut underlying[0];
++        // i. If remaining is +0𝔽, then
++        if self.remaining == 0.0 {
++            // 1. Return ? IteratorClose(iterated, ReturnCompletion(undefined)).
++            ops::iterator_close(agent, iterated, Ok(Value::Undefined))?;
++            return Ok(None);
++        }
++        // ii. Set remaining to remaining - 1𝔽.
++        self.remaining -= 1.0;
++        // iii. Let value be ? IteratorStepValue(iterated).
++        let Some(value) = ops::iterator_step_value(agent, iterated)? else {
++            // iv. If value is done, return ReturnCompletion(undefined).
++            return Ok(None);
++        };
++        // v. Let completion be Completion(Yield(value)).
++        // vi. IfAbruptCloseIterator(completion, iterated): HelperClosure::on_return.
++        Ok(Some(value))
++    }
++}
++
++impl kahvi_core::gc::Trace for TakeClosure {
++    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {
++        // Captures only numbers: nothing to report to the collector.
++    }
+ }

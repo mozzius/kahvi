@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-take",
+  "base": "0cee2cf22d1f2292014291de83c3daca133d5a4e",
+  "head": "a4afdbec496b8b463292d2dbef76f2a1316916cd",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_take.rs",
+      "added": 101,
+      "removed": 34
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 66,
+    "before": 12,
+    "after": 66,
+    "new_passes": 54,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
