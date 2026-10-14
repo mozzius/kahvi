@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 16403,
+  "stop_reason": "end_turn",
+  "session_id": "b581487a-3da1-4034-a88f-d1d998429432",
+  "total_cost_usd": 0.00735295,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 19937,
+    "cache_read_input_tokens": 138075,
+    "output_tokens": 3169,
+    "output_tokens_details": {
+      "thinking_tokens": 696
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19937,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 576,
+        "cache_read_input_tokens": 26064,
+        "cache_creation_input_tokens": 1353,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1353
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The WeakSet constructor is implemented per the spec steps, and it builds, passes clippy and formatting. The WeakSet suite is at 66 passing, up from 38, but not all of it passes: the remaining 104 runs are `WeakSet.prototype.add`, `has` and `delete`, which are still stubs in files outside this ticket's scope.\n\nBLOCKED: WeakSet.prototype.add (plus has and delete) is still a not-implemented stub in crates/kahvi-builtins/src/weak_set/prototype_add.rs, so the built-ins/WeakSet/ \"all pass\" condition cannot be met from this file.",
+  "ttft_ms": 1113,
+  "type": "result",
+  "duration_ms": 27433,
+  "uuid": "2beffe0f-1230-411d-ba93-715db1bf3b5d",
+  "ttft_stream_ms": 922,
+  "time_to_request_ms": 223,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 9,
+    "resume_other": 0,
+    "process_user_input": 2,
+    "input_attachments": 7,
+    "input_hooks": 2,
+    "tool_pool_refresh": 10,
+    "init_message": 20,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 104,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 1,
+    "client_creation": 4,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 122,
+  "time_to_request_cpu_ms": 141,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 4,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 922,
+  "time_to_request_from_spawn_ms": 19681289,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791938655878.5923,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.51,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

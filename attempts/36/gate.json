@@ -1,0 +1,48 @@
+{
+  "ticket": "B-weak-set-constructor",
+  "base": "a130fab07698a0fe73d11bfeffa07941852a1747",
+  "head": "ed97b0860511846f7dd96708164dc6774cc03c34",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_set/constructor.rs",
+      "added": 33,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 170,
+    "before": 38,
+    "after": 66,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 104,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakSet/iterable-with-object-values.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/iterable-with-object-values.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/iterable-with-symbol-values.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/iterable-with-symbol-values.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/adds-object-element.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/adds-object-element.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/adds-symbol-element.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/adds-symbol-element.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-array.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-array.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-map.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-map.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-object.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-object.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.add",
+      "built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-set.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.add"
+    ]
+  },
+  "decision": "pass"
+}
