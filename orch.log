@@ -8,3 +8,8 @@
 [16:04:27] B-math-floor: verifier: accept Math.floor now follows all five spec steps in order. ToNumber is called with `?`. Non-finite values and ±0 are returned as-is, and the (0,1) range ret
 [16:04:30] B-reg-exp-prototype-get-has-indices: verifier: accept The diff implements get RegExp.prototype.hasIndices as the spec describes. The getter binds this to regexp, uses code unit 0x0064, and calls RegExpHas
 [16:04:56] B-typed-array-prototype-filter: verifier: accept The diff implements %TypedArray%.prototype.filter steps 1-12 in spec order, with each step kept as a comment above its code. ValidateTypedArray and Ty
+[16:05:27] full test262 run for merge: B-math-floor
+[16:29:54] B-math-floor: merged (+456, 71203 total)
+[16:30:00] full test262 run for merge: B-reg-exp-prototype-get-has-indices, B-typed-array-prototype-filter
+[16:53:51] B-reg-exp-prototype-get-has-indices: merged (+10, 71374 total)
+[16:53:51] B-typed-array-prototype-filter: merged (+158, 71374 total)
