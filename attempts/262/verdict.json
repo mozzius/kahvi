@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements AsyncDisposableStack.prototype.defer in the specified order: RequireInternalSlot via require_async_disposable_stack (step 2, propagated with ?), the disposed check throwing ReferenceError (step 3), the IsCallable check throwing TypeError (step 4), AddDisposableResource with undefined value, async kind and the callback as method (step 5, propagated with ?), then returning undefined (step 6). Each step keeps its spec comment above its code. No test-specific branches, hardcoded values, swallowed errors or unrelated edits are visible. Build, clippy and the test262 target (14 new passes, 0 regressions) are reported green. I could not see the helper definitions in crate::support::disposable_stack, so I am relying on the build passing for their existence and signatures.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

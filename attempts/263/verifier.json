@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8276,
+  "stop_reason": "tool_use",
+  "session_id": "ffd538ab-c07a-4e6f-aa8e-31018f101ce9",
+  "total_cost_usd": 0.0017963799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3776,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1392,
+    "output_tokens_details": {
+      "thinking_tokens": 792
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3776,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1392,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3776,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3776
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements DataView.prototype.getUint8 as a thin wrapper. It keeps the spec step comments, passes this as view, passes args[0] as the byte offset, passes Value::Boolean(true) for isLittleEndian, and passes ElementType::Uint8 to the shared get_view_value helper in crate::support::typed_array. The helper is not part of this diff, so the GetViewValue steps (RequireInternalSlot, ToIndex, bounds checks, GetValueFromBuffer) are assumed to live there and were not reviewed. The only other edit is renaming the unused new_target parameter to _new_target. No special-casing, swallowed errors, or made-up values are visible. The gate reports 28 new passes with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. Reviewers should confirm that crate::support::typed_array::get_view_value implements GetViewValue steps 1-13 in order (RequireInternalSlot, ToIndex before ToBoolean, IsViewOutOfBounds TypeError, RangeError check, GetValueFromBuffer with unordered and isLittleEndian). That helper is outside this diff and was not reviewed here.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements DataView.prototype.getUint8 as a thin wrapper. It keeps the spec step comments, passes this as view, passes args[0] as the byte offset, passes Value::Boolean(true) for isLittleEndian, and passes ElementType::Uint8 to the shared get_view_value helper in crate::support::typed_array. The helper is not part of this diff, so the GetViewValue steps (RequireInternalSlot, ToIndex, bounds checks, GetValueFromBuffer) are assumed to live there and were not reviewed. The only other edit is renaming the unused new_target parameter to _new_target. No special-casing, swallowed errors, or made-up values are visible. The gate reports 28 new passes with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. Reviewers should confirm that crate::support::typed_array::get_view_value implements GetViewValue steps 1-13 in order (RequireInternalSlot, ToIndex before ToBoolean, IsViewOutOfBounds TypeError, RangeError check, GetValueFromBuffer with unordered and isLittleEndian). That helper is outside this diff and was not reviewed here."
+  },
+  "ttft_ms": 5745,
+  "type": "result",
+  "duration_ms": 8129,
+  "uuid": "c1322302-e816-4682-997d-6492896c0263",
+  "ttft_stream_ms": 1871,
+  "time_to_request_ms": 638,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 404,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 29,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 91,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 64,
+  "time_to_request_cpu_ms": 509,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 960,
+  "process_wall_ms_turn": 8127,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1873,
+  "time_to_request_from_spawn_ms": 21945900,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001405467.6675,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
