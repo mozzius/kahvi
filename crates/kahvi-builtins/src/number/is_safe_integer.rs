@@ -18,6 +18,17 @@ pub(crate) fn is_safe_integer(
     // 1. If _number_ is an integral Number, then
     //    a. If abs(ℝ(_number_)) ≤ 2^53 - 1, return *true*.
     // 2. Return *false*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.isSafeInteger"))
+    let _ = (agent, this, new_target);
+    // 1. If _number_ is an integral Number, then
+    let number = args.get_or_undefined(0);
+    if ops::is_integral_number(number) {
+        if let Value::Number(n) = number {
+            // a. If abs(ℝ(_number_)) ≤ 2^53 - 1, return *true*.
+            if n.abs() <= 9_007_199_254_740_991.0 {
+                return Ok(Value::Boolean(true));
+            }
+        }
+    }
+    // 2. Return *false*.
+    Ok(Value::Boolean(false))
 }
