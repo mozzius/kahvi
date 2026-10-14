@@ -24,11 +24,19 @@ The entry file is an ES module (ESM only: no CommonJS, no `require`).
 
 - **Globals:** `console` (`log`, `info`, `debug` to stdout; `warn`, `error`,
   `trace` to stderr; `assert`), `setTimeout`, `setInterval`,
-  `clearTimeout`, `clearInterval`, `queueMicrotask`, `globalThis`.
+  `clearTimeout`, `clearInterval`, `queueMicrotask`, `globalThis`,
+  `structuredClone` (no `transfer`; a DataCloneError is an `Error` named
+  `DataCloneError`, there being no DOMException), and `process.env` (the
+  environment variables; nothing else of Node's `process`).
 - **Modules:** `./` and `../` specifiers resolve against the importing
   file, `/...` and `file://` URLs are absolute; JSON modules with
   `with { type: 'json' }`. `import.meta.url`, `.filename`, `.dirname`.
-  Bare specifiers (packages) are not resolved yet.
+- **Packages:** a bare specifier (`name`, `@scope/name`, optionally with a
+  subpath) is looked up in `node_modules` in the importing module's
+  directory and each one above it. `package.json` `"exports"` decides what a
+  package exposes (strings, arrays, the `kahvi`, `import` and `default`
+  conditions, subpaths, `*` patterns, `null`); without it, `"main"` or
+  `index.js`. `"imports"` (`#name`) and self-references are not supported.
 - **Event loop:** evaluate the entry module; run microtasks; then repeatedly
   run the next due timer (by due time, then creation order) followed by the
   microtasks it queued, until no timers are left.
@@ -54,4 +62,4 @@ stay test262's job. They are architect-owned.
 
 - `error.stack` (source positions are already in the bytecode).
 - More host APIs as real programs need them (`TextEncoder`, `URL`,
-  `fetch`, `structuredClone`), each with e2e tests.
+  `fetch`), each with e2e tests.

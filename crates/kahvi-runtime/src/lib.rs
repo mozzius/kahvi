@@ -1,15 +1,17 @@
 //! kahvi's runtime: a host for running ES modules from the file system, with
-//! `console`, timers, `queueMicrotask` and an event loop (milestone M4).
+//! `console`, timers, `queueMicrotask`, `structuredClone`, `process.env` and an event loop (milestone M4).
 //!
 //! The entry file is a module (ESM only). The loop: evaluate the module, run
 //! microtasks (promise jobs), then run due timers one at a time, each
 //! followed by the microtasks it queued, until no timers are left. An
 //! uncaught exception or an unhandled promise rejection ends the process.
 
+pub mod clone;
 pub mod console;
 pub mod inspect;
 pub mod loader;
 pub mod package;
+pub mod process;
 pub mod timers;
 
 use std::path::Path;
@@ -42,6 +44,8 @@ impl Host {
         let timers = Arc::new(Mutex::new(Timers::new()));
         console::install(&mut rt);
         timers::install(&mut rt, &timers);
+        clone::install(&mut rt);
+        process::install(&mut rt);
         let global = rt.global();
         rt.set_global("globalThis", Value::Object(global));
         Host { rt, timers }
