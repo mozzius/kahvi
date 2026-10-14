@@ -843,3 +843,7 @@ test262 at last merge: 72953/81183 runs passing
 [17:58:46] B-object-prototype-lookup-setter: attempt 237 finished ($0.006, 13 turns)
 [17:59:07] B-symbol-for: attempt 238 finished ($0.006, 11 turns)
 [17:59:25] B-object-prototype-lookup-setter: verifier: accept The diff implements Object.prototype.__lookupSetter__ as the spec describes. ToObject(this) runs first, then ToPropertyKey(key), both with `?`. The lo
+[17:59:27] B-weak-set-prototype-has: attempt 240 finished ($0.008, 11 turns)
+[17:59:28] C-proxy-call: attempt on slot 1 with haiku
+[17:59:34] B-typed-array-prototype-entries: attempt 239 finished ($0.008, 14 turns)
+[17:59:52] B-symbol-for: verifier: accept Symbol.for is implemented in crates/kahvi-builtins/src/symbol/for.rs and follows the spec steps in order. Step 1 calls ops::to_string(agent, key)? and

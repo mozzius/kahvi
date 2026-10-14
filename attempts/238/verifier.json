@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13691,
+  "stop_reason": "tool_use",
+  "session_id": "503bea4b-018f-4d61-81ef-c937c3cb5c8b",
+  "total_cost_usd": 0.00238908,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3993,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2452,
+    "output_tokens_details": {
+      "thinking_tokens": 1825
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3993,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2452,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3993,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3993
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Symbol.for is implemented in crates/kahvi-builtins/src/symbol/for.rs and follows the spec steps in order. Step 1 calls ops::to_string(agent, key)? and propagates errors. Step 4 is a linear scan of agent.symbol_registry, matching by string content, and returns the existing symbol. Steps 6 and 7 create a symbol with agent.new_symbol(Some(string_key)) and push (key, symbol) onto the registry. Step 8 returns the new symbol. Each step keeps its spec comment directly above its code. Renaming this and new_target to underscore-prefixed names is needed because the old `let _ = (...)` line was removed, so it is not an unrelated change. No test-shaped branches, no swallowed errors, and no made-up values. The gate report (build, clippy, 10 new test262 passes, no regressions) is consistent with the diff. Caveat: I could not see the Agent definitions of symbol_registry, str or new_symbol, so their semantics are inferred from the build passing and from their use here.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The lookup is O(n) with a string allocation per entry if agent.str allocates, which is a performance concern only and not a spec issue. Nothing else to fix in this ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Symbol.for is implemented in crates/kahvi-builtins/src/symbol/for.rs and follows the spec steps in order. Step 1 calls ops::to_string(agent, key)? and propagates errors. Step 4 is a linear scan of agent.symbol_registry, matching by string content, and returns the existing symbol. Steps 6 and 7 create a symbol with agent.new_symbol(Some(string_key)) and push (key, symbol) onto the registry. Step 8 returns the new symbol. Each step keeps its spec comment directly above its code. Renaming this and new_target to underscore-prefixed names is needed because the old `let _ = (...)` line was removed, so it is not an unrelated change. No test-shaped branches, no swallowed errors, and no made-up values. The gate report (build, clippy, 10 new test262 passes, no regressions) is consistent with the diff. Caveat: I could not see the Agent definitions of symbol_registry, str or new_symbol, so their semantics are inferred from the build passing and from their use here.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The lookup is O(n) with a string allocation per entry if agent.str allocates, which is a performance concern only and not a spec issue. Nothing else to fix in this ticket."
+  },
+  "ttft_ms": 10719,
+  "type": "result",
+  "duration_ms": 13281,
+  "uuid": "9930883f-2275-4c40-9805-b469bb706115",
+  "ttft_stream_ms": 1721,
+  "time_to_request_ms": 638,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 425,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 42,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 62,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 32,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 103,
+  "time_to_request_cpu_ms": 361,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 962,
+  "process_wall_ms_turn": 13276,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1722,
+  "time_to_request_from_spawn_ms": 21306784,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000766258.1733,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

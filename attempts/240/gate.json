@@ -1,0 +1,39 @@
+{
+  "ticket": "B-weak-set-prototype-has",
+  "base": "4bfba54eb6d3f6c1d29123e57e7a778736294e6a",
+  "head": "afbeefdeb61ac63dfdb0f1b438914a0d3667ebdb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_set/prototype_has.rs",
+      "added": 14,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakSet/prototype/has/returns-false-when-object-value-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+      "built-ins/WeakSet/prototype/has/returns-false-when-object-value-not-present.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+      "built-ins/WeakSet/prototype/has/returns-false-when-symbol-value-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+      "built-ins/WeakSet/prototype/has/returns-false-when-symbol-value-not-present.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+      "built-ins/WeakSet/prototype/has/returns-false-when-value-cannot-be-held-weakly.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakSet/prototype/has/returns-false-when-value-cannot-be-held-weakly.js:strict  Uncaught InternalError: not implemented: Symbol.for"
+    ]
+  },
+  "decision": "pass"
+}
