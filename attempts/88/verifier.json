@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15246,
+  "stop_reason": "tool_use",
+  "session_id": "a6caf9b8-2017-4460-97a6-e0e623a948ce",
+  "total_cost_usd": 0.00429126,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9003,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3254,
+    "output_tokens_details": {
+      "thinking_tokens": 2484
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9003,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3254,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 9003,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9003
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Proxy [[DefineOwnProperty]] step by step, with each spec step kept as a comment above its code. Steps 1-5 use validate_non_revoked and get_method with \\\"defineProperty\\\". Step 6a forwards to the target. Steps 7-9 build the descriptor object, call the trap with ToBoolean, and return false when the result is falsy. Steps 10-11 call [[GetOwnProperty]] then IsExtensible in spec order. Steps 12-15 cover the settingConfigurableFalse checks, the undefined-target branch, IsCompatiblePropertyDescriptor via validate_and_apply with None, and the two non-configurable/non-writable invariants. Step 16 returns true. Errors propagate with ?. There are no test-shaped branches and no unrelated edits. Only the imports were added outside the function. The gate's remaining failures are in other tickets (Proxy [[Set]], Reflect.defineProperty), not in this change. One minor deviation: step 15a passes the property key where the spec passes \\\"\\\". That only affects the name used in validation, not observable behaviour. I did not see the signatures of validate_and_apply_property_descriptor or is_data_descriptor, so I am relying on the build passing and the gate's test results for those.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The remaining test262 failures in built-ins/Proxy/defineProperty/ come from Proxy [[Set]] and Reflect.defineProperty, which are not implemented and belong to other tickets. The only possible nit is that step 15a passes `key` to validate_and_apply_property_descriptor where the spec passes \\\"\\\". Check that this is not observable if that function ever uses the key beyond error text.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Proxy [[DefineOwnProperty]] step by step, with each spec step kept as a comment above its code. Steps 1-5 use validate_non_revoked and get_method with \"defineProperty\". Step 6a forwards to the target. Steps 7-9 build the descriptor object, call the trap with ToBoolean, and return false when the result is falsy. Steps 10-11 call [[GetOwnProperty]] then IsExtensible in spec order. Steps 12-15 cover the settingConfigurableFalse checks, the undefined-target branch, IsCompatiblePropertyDescriptor via validate_and_apply with None, and the two non-configurable/non-writable invariants. Step 16 returns true. Errors propagate with ?. There are no test-shaped branches and no unrelated edits. Only the imports were added outside the function. The gate's remaining failures are in other tickets (Proxy [[Set]], Reflect.defineProperty), not in this change. One minor deviation: step 15a passes the property key where the spec passes \"\". That only affects the name used in validation, not observable behaviour. I did not see the signatures of validate_and_apply_property_descriptor or is_data_descriptor, so I am relying on the build passing and the gate's test results for those.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The remaining test262 failures in built-ins/Proxy/defineProperty/ come from Proxy [[Set]] and Reflect.defineProperty, which are not implemented and belong to other tickets. The only possible nit is that step 15a passes `key` to validate_and_apply_property_descriptor where the spec passes \"\". Check that this is not observable if that function ever uses the key beyond error text."
+  },
+  "ttft_ms": 11343,
+  "type": "result",
+  "duration_ms": 14484,
+  "uuid": "2ae7b540-8bd4-42d9-b619-3b7e0f718370",
+  "ttft_stream_ms": 830,
+  "time_to_request_ms": 166,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 2,
+    "message_prep": 0,
+    "model_config_wait": 102,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 14,
+  "time_to_request_cpu_ms": 127,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 241,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 241,
+  "process_cpu_ms_turn": 778,
+  "process_wall_ms_turn": 14483,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 830,
+  "time_to_request_from_spawn_ms": 30316366,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791978193607.4148,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.76,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.76,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

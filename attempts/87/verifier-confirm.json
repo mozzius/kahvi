@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7934,
+  "stop_reason": "tool_use",
+  "session_id": "cab86743-f14f-4ac3-85a0-33bd75c14078",
+  "total_cost_usd": 0.046490100000000006,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9180,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 869,
+    "output_tokens_details": {
+      "thinking_tokens": 481
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9180,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 869,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 9180,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9180
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u201318 in order. Each step is a comment above its code. All `?` operations propagate errors. \\\"Present\\\" is checked by argument count, so an explicit `undefined` counts as present. ToClampedIndex and ToAbsoluteIndex are written locally, which the ticket allows. The three lint flags are legitimate: `.skip(2)` skips the start and skipCount arguments, and the other two flagged lines are the clamp of skipCount. The target went from 8 to 60 passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u201318 in order. Each step is a comment above its code. All `?` operations propagate errors. \"Present\" is checked by argument count, so an explicit `undefined` counts as present. ToClampedIndex and ToAbsoluteIndex are written locally, which the ticket allows. The three lint flags are legitimate: `.skip(2)` skips the start and skipCount arguments, and the other two flagged lines are the clamp of skipCount. The target went from 8 to 60 passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5493,
+  "type": "result",
+  "duration_ms": 7309,
+  "uuid": "2c67ed30-cc59-491b-9401-b265e06e883b",
+  "ttft_stream_ms": 1586,
+  "time_to_request_ms": 171,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 100,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 14,
+  "time_to_request_cpu_ms": 144,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 440,
+  "process_wall_ms_turn": 7309,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1586,
+  "time_to_request_from_spawn_ms": 30340846,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791978217699.164,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

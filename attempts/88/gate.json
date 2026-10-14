@@ -1,0 +1,48 @@
+{
+  "ticket": "C-proxy-define-own-property",
+  "base": "566d8ccf80a4da7fdff7ed142fa94058cc474347",
+  "head": "a333e044f389da8bdbffb15830b78313b46ce5d6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/define_own_property.rs",
+      "added": 93,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 48,
+    "before": 0,
+    "after": 30,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 18,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/defineProperty/desc-realm.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/desc-realm.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/null-handler-realm.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/null-handler-realm.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/return-boolean-and-define-target.js:sloppy  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/return-boolean-and-define-target.js:strict  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/targetdesc-not-configurable-writable-desc-not-writable.js:sloppy  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/targetdesc-not-configurable-writable-desc-not-writable.js:strict  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/targetdesc-undefined-target-is-not-extensible-realm.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/targetdesc-undefined-target-is-not-extensible-realm.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/defineProperty/trap-is-missing-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/trap-is-missing-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/trap-is-null-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/trap-is-null-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.defineProperty",
+      "built-ins/Proxy/defineProperty/trap-is-undefined-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.defineProperty"
+    ]
+  },
+  "decision": "pass"
+}

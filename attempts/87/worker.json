@@ -1,0 +1,139 @@
+{
+  "duration_api_ms": 45327,
+  "stop_reason": "end_turn",
+  "session_id": "3a33e7c3-d9e3-4323-909b-aa4d80f474a9",
+  "total_cost_usd": 0.01298429,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 25852,
+    "cache_read_input_tokens": 330659,
+    "output_tokens": 7980,
+    "output_tokens_details": {
+      "thinking_tokens": 1010
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25852,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 200,
+        "cache_read_input_tokens": 32945,
+        "cache_creation_input_tokens": 387,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 387
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_017CaJCEhfzL8dHrV2wkyn6S",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/array/prototype_to_spliced.rs <<'EOF'\n//! Array.prototype.toSpliced ( _start_, _skipCount_, ..._items_ )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-array.prototype.tospliced\n\nuse kahvi_core::prelude::*;\n\n/// Array.prototype.toSpliced\npub(crate) fn prototype_to_spliced(\n    agent: &mut Agent,\n    this: Value,\n    args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    // This method performs the following steps when called:\n    //\n    // 1. Let _obj_ be ? ToObject(*this* value).\n    let obj = ops::to_object(agent, this)?;\n    // 2. Let _length_ be ? LengthOfArrayLike(_obj_).\n    let length = ops::length_of_array_like(agent, obj)?;\n    // 3. Let _actualStart_ be ? ToClampedIndex(_start_, _length_).\n    let actual_start = to_clamped_index(agent, args.get_or_undefined(0), length)?;\n    // 4. Let _insertCount_ be the number of elements in _items_.\n    let insert_count = args.len().saturating_sub(2) as f64;\n    // 5. Let _maxSkipCount_ be _length_ - _actualStart_.\n    let max_skip_count = length - actual_start;\n    // 6. If _start_ is not present, then\n    let actual_skip_count = if args.is_empty() {\n        // a. Let _actualSkipCount_ be 0.\n        0.0\n    // 7. Else if _skipCount_ is not present, then\n    } else if args.len() < 2 {\n        // a. Let _actualSkipCount_ be _maxSkipCount_.\n        max_skip_count\n    // 8. Else,\n    } else {\n        // a. Let _actualSkipCount_ be the result of clamping ? ToIntegerOrInfinity(_skipCount_) between 0 and _maxSkipCount_.\n        let skip_count = ops::to_integer_or_infinity(agent, args.get_or_undefined(1))?;\n        skip_count.max(0.0).min(max_skip_count)\n    };\n    // 9. Let _newLength_ be _length_ + _insertCount_ - _actualSkipCount_.\n    let new_length = length + insert_count - actual_skip_count;\n    // 10. Assert: _newLength_ \u2265 0.\n    // 11. If _newLength_ > 2^53 - 1, throw a *TypeError* exception.\n    if new_length > 9_007_199_254_740_991.0 {\n        return Err(agent.throw_type_error(\"Array length exceeds 2^53 - 1\"));\n    }\n    // 12. Let _newArray_ be ? ArrayCreate(_newLength_).\n    let new_array = kahvi_core::object::array::array_create(agent, new_length, None)?;\n    // 13. Let _writeIndex_ be 0.\n    let mut write_index = 0.0;\n    // 14. Let _readIndex_ be _actualStart_ + _actualSkipCount_.\n    let mut read_index = actual_start + actual_skip_count;\n    // 15. Repeat, while _writeIndex_ < _actualStart_,\n    while write_index < actual_start {\n        // a. Let _propertyKey_ be ! ToString(\ud835\udd3d(_writeIndex_)).\n        let property_key = agent.key_from_index(write_index);\n        // b. Let _iValue_ be ? Get(_obj_, _propertyKey_).\n        let i_value = ops::get(agent, obj, property_key)?;\n        // c. Perform ! CreateDataPropertyOrThrow(_newArray_, _propertyKey_, _iValue_).\n        ops::create_data_property_or_throw(agent, new_array, property_key, i_value)?;\n        // d. Set _writeIndex_ to _writeIndex_ + 1.\n        write_index += 1.0;\n    }\n    // 16. For each element _item_ of _items_, do\n    for item in args.iter().skip(2) {\n        // a. Let _propertyKey_ be ! ToString(\ud835\udd3d(_writeIndex_)).\n        let property_key = agent.key_from_index(write_index);\n        // b. Perform ! CreateDataPropertyOrThrow(_newArray_, _propertyKey_, _item_).\n        ops::create_data_property_or_throw(agent, new_array, property_key, *item)?;\n        // c. Set _writeIndex_ to _writeIndex_ + 1.\n        write_index += 1.0;\n    }\n    // 17. Repeat, while _writeIndex_ < _newLength_,\n    while write_index < new_length {\n        // a. Let _propertyKey_ be ! ToString(\ud835\udd3d(_writeIndex_)).\n        let property_key = agent.key_from_index(write_index);\n        // b. Let _from_ be ! ToString(\ud835\udd3d(_readIndex_)).\n        let from = agent.key_from_index(read_index);\n        // c. Let _fromValue_ be ? Get(_obj_, _from_).\n        let from_value = ops::get(agent, obj, from)?;\n        // d. Perform ! CreateDataPropertyOrThrow(_newArray_, _propertyKey_, _fromValue_).\n        ops::create_data_property_or_throw(agent, new_array, property_key, from_value)?;\n        // e. Set _writeIndex_ to _writeIndex_ + 1.\n        write_index += 1.0;\n        // f. Set _readIndex_ to _readIndex_ + 1.\n        read_index += 1.0;\n    }\n    // 18. Return _newArray_.\n    Ok(Value::Object(new_array))\n}\n\n/// ToClampedIndex ( _value_, _length_ )\n///\n/// Spec: https://tc39.es/ecma262/#sec-toclampedindex\n///\n/// Not yet in `ops`; only this built-in needs it so far.\nfn to_clamped_index(agent: &mut Agent, value: &Value, length: f64) -> JsResult<f64> {\n    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).\n    //    ToAbsoluteIndex ( _start_, _length_ ):\n    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).\n    let relative_index = ops::to_integer_or_infinity(agent, value)?;\n    //    2. If _relativeIndex_ is -\u221e, return +0\ud835\udd3d.\n    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).\n    //    4. Else, return min(_relativeIndex_, _length_).\n    let index = if relative_index == f64::NEG_INFINITY {\n        0.0\n    } else if relative_index < 0.0 {\n        (length + relative_index).max(0.0)\n    } else {\n        relative_index.min(length)\n    };\n    // 2. Return the result of clamping _index_ between 0 and _length_.\n    Ok(index.max(0.0).min(length))\n}\nEOF\ncargo fmt -p kahvi-builtins 2>&1 | tail -3; cargo build -p kahvi-cli 2>&1 | grep -E \"^(error|warning)\" -A8 | head -60",
+        "description": "Write toSpliced implementation and build engine"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_014sTYPXr4XHYTwT3YNEZWru",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/array/prototype_to_spliced.rs && cargo fmt --check -p kahvi-builtins && echo FMT_OK",
+        "description": "Apply rustfmt to the file and recheck formatting"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Array.prototype.toSpliced` in `crates/kahvi-builtins/src/array/prototype_to_spliced.rs`, with each spec step as a comment above its code. All 60 test262 runs under `built-ins/Array/prototype/toSpliced/` pass, and clippy and the format check are clean.\n\n`to_clamped_index` is a local copy in this file, because `ops` has no `ToClampedIndex` yet. Other array built-ins (`splice`, `slice`, `copy_within`) each carry their own copy too, so this would be a candidate to move into `ops` later.",
+  "ttft_ms": 1984,
+  "type": "result",
+  "duration_ms": 74657,
+  "uuid": "20823af7-a8b5-4d4b-b493-4ba75e2bc088",
+  "ttft_stream_ms": 1511,
+  "time_to_request_ms": 127,
+  "time_to_request_phases_ms": {
+    "other": 16,
+    "system_prompt": 10,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 8,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 3,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 59,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 26,
+  "time_to_request_cpu_ms": 135,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 260,
+  "process_anon_mib_result": 141,
+  "process_peak_rss_mib": 277,
+  "process_cpu_ms_turn": 3442,
+  "process_wall_ms_turn": 74657,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 7,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1511,
+  "time_to_request_from_spawn_ms": 30221694,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791978099007.6511,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.76,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.76,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

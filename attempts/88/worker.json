@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 47060,
+  "stop_reason": "end_turn",
+  "session_id": "03e629c1-4997-4103-a073-4fe381b53df9",
+  "total_cost_usd": 0.01419221,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 33081,
+    "cache_read_input_tokens": 294371,
+    "output_tokens": 8257,
+    "output_tokens_details": {
+      "thinking_tokens": 935
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 33081,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 265,
+        "cache_read_input_tokens": 40035,
+        "cache_creation_input_tokens": 526,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 526
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_014WZi1ehPbKMTcBz7MXCAyb",
+      "tool_input": {
+        "command": "cat > /tmp/x 2>/dev/null; python3 - <<'EOF'\nimport re\np='crates/kahvi-core/src/object/proxy/define_own_property.rs'\ns=open(p).read()\nhead,rest=s.split('    let _ = (o, p);',1)\n# keep the spec comment block from the stub, drop the stub body\nbody='''    let _ = o;\n    // 1. Perform ? ValidateNonRevokedProxy(_obj_).\n    let (target, handler) = p.validate_non_revoked(agent)?;\n    // 2. Let _target_ be _obj_.[[ProxyTarget]].\n    // 3. Let _handler_ be _obj_.[[ProxyHandler]].\n    // 4. Assert: _handler_ is an Object.\n    // 5. Let _trap_ be ? GetMethod(_handler_, *\"defineProperty\"*).\n    let trap_key = agent.key(\"defineProperty\");\n    let trap = ops::get_method(agent, Value::Object(handler), trap_key)?;\n    // 6. If _trap_ is *undefined*, then\n    if matches!(trap, Value::Undefined) {\n        // a. Return ? _target_.[[DefineOwnProperty]](_propertyKey_, _propertyDesc_).\n        return target.internal_define_own_property(agent, key, desc);\n    }\n    // 7. Let _propertyDescObj_ be FromPropertyDescriptor(_propertyDesc_).\n    let property_desc_obj = ops::from_property_descriptor(agent, Some(desc));\n    // 8. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, \u00ab _target_, _propertyKey_, _propertyDescObj_ \u00bb)).\n    let key_value = agent.key_to_value(key);\n    let trap_result = ops::call(\n        agent,\n        trap,\n        Value::Object(handler),\n        &[Value::Object(target), key_value, property_desc_obj],\n    )?;\n    let bool_trap_result = ops::to_boolean(agent, trap_result);\n    // 9. If _boolTrapResult_ is *false*, return *false*.\n    if !bool_trap_result {\n        return Ok(false);\n    }\n    // 10. Let _targetDesc_ be ? _target_.[[GetOwnProperty]](_propertyKey_).\n    let target_desc = target.internal_get_own_property(agent, key)?;\n    // 11. Let _extensibleTarget_ be ? IsExtensible(_target_).\n    let extensible_target = ops::is_extensible(agent, target)?;\n    // 12. If _propertyDesc_ has a [[Configurable]] field and _propertyDesc_.[[Configurable]] is *false*, then\n    // a. Let _settingConfigurableFalse_ be *true*.\n    // 13. Else,\n    // a. Let _settingConfigurableFalse_ be *false*.\n    let setting_configurable_false = desc.configurable == Some(false);\n    // 14. If _targetDesc_ is *undefined*, then\n    let Some(target_desc) = target_desc else {\n        // a. If _extensibleTarget_ is *false*, throw a *TypeError* exception.\n        if !extensible_target {\n            return Err(agent.throw_type_error(\n                \"Proxy defineProperty trap added a property to a non-extensible target\",\n            ));\n        }\n        // b. If _settingConfigurableFalse_ is *true*, throw a *TypeError* exception.\n        if setting_configurable_false {\n            return Err(agent.throw_type_error(\n                \"Proxy defineProperty trap defined a non-configurable property missing on the target\",\n            ));\n        }\n        // NOTE: the Ok below is reached only after the checks above pass.\n        return Ok(true);\n    };\n    // 15. Else,\n    // a. If IsCompatiblePropertyDescriptor(_extensibleTarget_, _propertyDesc_, _targetDesc_) is *false*, throw a *TypeError* exception.\n    let compatible = validate_and_apply_property_descriptor(\n        agent,\n        None,\n        key,\n        extensible_target,\n        desc,\n        Some(target_desc),\n    );\n    if !compatible {\n        return Err(agent.throw_type_error(\n            \"Proxy defineProperty trap returned an incompatible descriptor\",\n        ));\n    }\n    // b. If _settingConfigurableFalse_ is *true* and _targetDesc_.[[Configurable]] is *true*, throw a *TypeError* exception.\n    if setting_configurable_false && target_desc.configurable == Some(true) {\n        return Err(agent.throw_type_error(\n            \"Proxy defineProperty trap defined a non-configurable property that is configurable on the target\",\n        ));\n    }\n    // c. If IsDataDescriptor(_targetDesc_) is *true*, _targetDesc_.[[Configurable]] is *false*, and _targetDesc_.[[Writable]] is *true*, then\n    if target_desc.is_data_descriptor()\n        && target_desc.configurable == Some(false)\n        && target_desc.writable == Some(true)\n    {\n        // i. If _propertyDesc_ has a [[Writable]] field and _propertyDesc_.[[Writable]] is *false*, throw a *TypeError* exception.\n        if desc.writable == Some(false) {\n            return Err(agent.throw_type_error(\n                \"Proxy defineProperty trap made a writable non-configurable property non-writable\",\n            ));\n        }\n    }\n    // 16. Return *true*.\n    Ok(true)\n}\n'''\nhead=head.replace('use crate::object::{PropertyDescriptor, PropertyKey};','use crate::object::internal::validate_and_apply_property_descriptor;\\nuse crate::object::{PropertyDescriptor, PropertyKey};\\nuse crate::ops;')\nopen(p,'w').write(head+body)\nEOF\nrm -f /tmp/x; cargo build -p kahvi-cli 2>&1 | tail -30",
+        "description": "Write define_own_property implementation and build"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented Proxy [[DefineOwnProperty]] in `crates/kahvi-core/src/object/proxy/define_own_property.rs`, following the spec steps with each one commented above its code. The build, clippy and formatting are clean. `./t262 built-ins/Proxy/defineProperty/` passes 30 of 48 runs, up from 0.\n\nThe 18 remaining runs fail with not-implemented errors outside this file: 12 from `Reflect.defineProperty` and 6 from `Proxy [[Set]]`. Those are the missing pieces, so this ticket is not blocked.\n\nBLOCKED: Reflect.defineProperty and Proxy [[Set]] are not implemented, so the remaining 18 defineProperty tests cannot pass in this ticket's scope.",
+  "ttft_ms": 2096,
+  "type": "result",
+  "duration_ms": 68780,
+  "uuid": "37087b47-22d0-4bb1-acae-84db5cd6d2aa",
+  "ttft_stream_ms": 1784,
+  "time_to_request_ms": 153,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 11,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 6,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 78,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 53,
+  "time_to_request_cpu_ms": 153,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 257,
+  "process_anon_mib_result": 138,
+  "process_peak_rss_mib": 277,
+  "process_cpu_ms_turn": 3064,
+  "process_wall_ms_turn": 68780,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 4,
+    "cpu_ms": 7,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1785,
+  "time_to_request_from_spawn_ms": 30221725,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791978099012.5342,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.76,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.76,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
