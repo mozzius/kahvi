@@ -78,6 +78,8 @@ pub(crate) struct Compiler<'a> {
     completion: bool,
     /// Jumps to the short-circuit exit of each enclosing optional chain.
     optional_exits: Vec<Vec<usize>>,
+    /// Binding caches handed out so far (`name_cache`).
+    name_cache_count: u32,
 }
 
 /// Errors detected while compiling (things the parser accepts but that are
@@ -128,16 +130,58 @@ impl<'a> Compiler<'a> {
                 span: (span.start, span.end),
                 script,
                 constants,
+                name_caches: Box::default(),
             },
             scopes: Vec::new(),
             pending_labels: Vec::new(),
             completion: false,
             optional_exits: Vec::new(),
+            name_cache_count: 0,
         }
     }
 
-    fn finish(self) -> Arc<FunctionCode> {
+    fn finish(mut self) -> Arc<FunctionCode> {
+        self.code.name_caches = (0..self.name_cache_count)
+            .map(|_| std::sync::atomic::AtomicU64::new(0))
+            .collect();
         Arc::new(self.code)
+    }
+
+    /// A binding cache for a name instruction about to be emitted, unless
+    /// the environment chain here can gain bindings at run time.
+    fn name_cache(&mut self) -> u32 {
+        let dynamic = self.code.kind == CodeKind::Eval
+            || self
+                .agent
+                .gc
+                .compiling
+                .as_ref()
+                .is_some_and(|u| u.dynamic_scopes > 0);
+        if dynamic {
+            return NO_NAME_CACHE;
+        }
+        self.name_cache_count += 1;
+        self.name_cache_count - 1
+    }
+
+    /// Compiles `f` with the environments around it marked dynamic (a `with`
+    /// object, a function with a direct eval): name instructions inside get
+    /// no binding cache, nor do those of the functions nested in it.
+    fn dynamic_scope<T>(&mut self, f: impl FnOnce(&mut Self) -> T) -> T {
+        self.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes += 1;
+        let r = f(self);
+        self.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes -= 1;
+        r
     }
 
     // ---- emitting -----------------------------------------------------------

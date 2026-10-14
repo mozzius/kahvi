@@ -33,7 +33,7 @@ pub struct Bindings {
 const INDEX_FROM: usize = 16;
 
 impl Bindings {
-    fn position(&self, name: &JsString) -> Option<usize> {
+    pub(crate) fn position(&self, name: &JsString) -> Option<usize> {
         match &self.index {
             Some(ix) => ix.get(name).copied(),
             None => self.list.iter().position(|(n, _)| n == name),
@@ -673,6 +673,44 @@ impl EnvId {
 
     pub fn outer(self, agent: &Agent) -> Option<EnvId> {
         agent.env(self).outer()
+    }
+
+    /// The slot of `name` among a declarative record's own bindings (an
+    /// import binding has none), for the interpreter's binding caches.
+    pub(crate) fn binding_slot(self, agent: &Agent, name: JsString) -> Option<usize> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.position(&name),
+            _ => None,
+        }
+    }
+
+    /// GetBindingValue of the binding in `slot` of a declarative record (one
+    /// `binding_slot` returned): its value, or the error for its temporal
+    /// dead zone.
+    pub(crate) fn binding_value_at(self, agent: &mut Agent, slot: usize) -> JsResult<Value> {
+        let Environment::Declarative { bindings, .. } = agent.env(self) else {
+            unreachable!("a binding slot of a declarative record")
+        };
+        let (name, binding) = &bindings.list[slot];
+        match binding.value {
+            Some(v) => Ok(v),
+            None => {
+                let name = *name;
+                let msg = format!(
+                    "cannot access '{}' before initialization",
+                    agent.str_lossy(name)
+                );
+                Err(agent.throw_reference_error(&msg))
+            }
+        }
+    }
+
+    /// The name of the binding in `slot` of a declarative record.
+    pub(crate) fn binding_name_at(self, agent: &Agent, slot: usize) -> Option<JsString> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.list.get(slot).map(|(n, _)| *n),
+            _ => None,
+        }
     }
 
     /// The record's [[DisposableResourceStack]] (declarative records only).

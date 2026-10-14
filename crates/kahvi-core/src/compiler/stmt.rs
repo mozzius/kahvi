@@ -147,7 +147,7 @@ impl Compiler<'_> {
                 self.compile_expr(object);
                 self.emit(Op::PushWith);
                 self.scopes.push(JumpScope::With);
-                self.compile_stmt(body);
+                self.dynamic_scope(|c| c.compile_stmt(body));
                 self.scopes.pop();
                 self.emit(Op::PopScope);
             }
@@ -285,7 +285,10 @@ impl Compiler<'_> {
                     let Some(init) = &d.init else { continue };
                     if let Pattern::Ident(id) = &d.target {
                         let name = self.string(&id.name);
-                        self.emit(Op::ResolveName(name));
+                        {
+                            let ic = self.name_cache();
+                            self.emit(Op::ResolveName(name, ic));
+                        }
                         self.compile_named_expr(init, &d.target);
                         self.emit(Op::PutRef);
                         self.emit(Op::Pop);
@@ -458,7 +461,10 @@ impl Compiler<'_> {
         } = left
         {
             let name = self.string(&id.name);
-            self.emit(Op::ResolveName(name));
+            {
+                let ic = self.name_cache();
+                self.emit(Op::ResolveName(name, ic));
+            }
             self.compile_named_expr(init, &Pattern::Ident(id.clone()));
             self.emit(Op::PutRef);
             self.emit(Op::Pop);
@@ -550,7 +556,10 @@ impl Compiler<'_> {
             ForHead::Assign(target) => match target {
                 Pattern::Ident(id) => {
                     let name = self.string(&id.name);
-                    self.emit(Op::ResolveName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::ResolveName(name, ic));
+                    }
                     self.emit(Op::PutRef);
                     self.emit(Op::Pop);
                 }

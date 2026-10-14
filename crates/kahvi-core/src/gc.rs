@@ -50,6 +50,9 @@ pub(crate) struct CompileUnit {
     pub(crate) constants: Arc<crate::compiler::CodeConstants>,
     pub(crate) strings: Vec<u32>,
     pub(crate) bigints: Vec<u32>,
+    /// Nesting depth of `with` bodies and direct-eval functions being
+    /// compiled (no binding caches inside; see `FunctionCode::name_caches`).
+    pub(crate) dynamic_scopes: u32,
 }
 
 #[derive(Default)]

@@ -35,7 +35,10 @@ impl Compiler<'_> {
                 if mode == Mode::Init {
                     self.emit(Op::InitName(name));
                 } else {
-                    self.emit(Op::ResolveName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::ResolveName(name, ic));
+                    }
                     self.emit(Op::PutRef);
                     self.emit(Op::Pop);
                 }
@@ -172,7 +175,10 @@ impl Compiler<'_> {
         {
             // ResolveBinding happens before the value is fetched.
             let name = self.string(&id.name);
-            self.emit(Op::ResolveName(name));
+            {
+                let ic = self.name_cache();
+                self.emit(Op::ResolveName(name, ic));
+            }
             fetch(self, 0);
             self.apply_default(elem);
             self.emit(Op::PutRef);

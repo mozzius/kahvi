@@ -81,6 +81,16 @@ pub(super) fn compile_function(
     };
     c.collect_declarations(body);
 
+    // A direct eval can add bindings to this function's environments: no
+    // binding caches in it or in the functions nested in it.
+    if f.has_direct_eval {
+        c.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes += 1;
+    }
     // FunctionDeclarationInstantiation steps 24-28: bind the parameters.
     c.compile_parameters(f);
     // Steps 29-36.
@@ -111,6 +121,14 @@ pub(super) fn compile_function(
             }
             c.emit(Op::Return);
         }
+    }
+    if f.has_direct_eval {
+        c.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes -= 1;
     }
     c.finish()
 }

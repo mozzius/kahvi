@@ -384,6 +384,65 @@ pub fn resolve_binding(agent: &mut Agent, env: EnvId, name: JsString) -> JsResul
     Ok(Reference::Unresolvable(name))
 }
 
+/// ResolveBinding(name) for a name instruction with binding cache `ic` (see
+/// `FunctionCode::name_caches`): a binding found before is looked for first
+/// in the same place, without searching the environments in between. The
+/// compiler only gives a cache where no environment in between can gain a
+/// binding at run time, so the result is the one the search would find.
+fn resolve_binding_cached(
+    agent: &mut Agent,
+    code: &FunctionCode,
+    env: EnvId,
+    name: JsString,
+    ic: u32,
+) -> JsResult<Reference> {
+    use std::sync::atomic::Ordering::Relaxed;
+    let Some(cache) = code.name_caches.get(ic as usize) else {
+        return resolve_binding(agent, env, name);
+    };
+    if let Some((id, _)) = cached_binding(agent, code, env, name, ic) {
+        return Ok(Reference::Env(id, name));
+    }
+    let mut e = Some(env);
+    let mut hops = 0u64;
+    while let Some(id) = e {
+        if id.has_binding(agent, name)? {
+            if let Some(slot) = id.binding_slot(agent, name) {
+                cache.store(((hops << 32) | slot as u64) + 1, Relaxed);
+            }
+            return Ok(Reference::Env(id, name));
+        }
+        e = id.outer(agent);
+        hops += 1;
+    }
+    Ok(Reference::Unresolvable(name))
+}
+
+/// The environment and slot where name instruction `ic` found `name` last
+/// time, if it is still there (see `resolve_binding_cached`).
+#[inline]
+fn cached_binding(
+    agent: &Agent,
+    code: &FunctionCode,
+    env: EnvId,
+    name: JsString,
+    ic: u32,
+) -> Option<(EnvId, usize)> {
+    let cached = code
+        .name_caches
+        .get(ic as usize)?
+        .load(std::sync::atomic::Ordering::Relaxed);
+    if cached == 0 {
+        return None;
+    }
+    let (hops, slot) = ((cached - 1) >> 32, (cached - 1) as u32 as usize);
+    let mut id = env;
+    for _ in 0..hops {
+        id = id.outer(agent)?;
+    }
+    (id.binding_name_at(agent, slot) == Some(name)).then_some((id, slot))
+}
+
 fn not_defined(agent: &mut Agent, name: JsString) -> JsError {
     let msg = format!("{} is not defined", agent.str_lossy(name));
     agent.throw_reference_error(&msg)
@@ -673,13 +732,18 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         Op::GetCompletion => frame.push(frame.completion),
 
         // ---- identifiers
-        Op::GetName(name) => {
-            let r = resolve_binding(agent, frame.env, name)?;
-            let v = get_reference(agent, r, frame.strict())?;
+        Op::GetName(name, ic) => {
+            let v = match cached_binding(agent, &frame.code, frame.env, name, ic) {
+                Some((env, slot)) => env.binding_value_at(agent, slot)?,
+                None => {
+                    let r = resolve_binding_cached(agent, &frame.code, frame.env, name, ic)?;
+                    get_reference(agent, r, frame.strict())?
+                }
+            };
             frame.push(v);
         }
-        Op::TypeofName(name) => {
-            let r = resolve_binding(agent, frame.env, name)?;
+        Op::TypeofName(name, ic) => {
+            let r = resolve_binding_cached(agent, &frame.code, frame.env, name, ic)?;
             let v = match r {
                 Reference::Unresolvable(_) => Value::Undefined,
                 r => get_reference(agent, r, frame.strict())?,
@@ -687,8 +751,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let t = type_of(agent, v);
             frame.push(Value::String(t));
         }
-        Op::GetNameForCall(name) => {
-            let r = resolve_binding(agent, frame.env, name)?;
+        Op::GetNameForCall(name, ic) => {
+            let r = resolve_binding_cached(agent, &frame.code, frame.env, name, ic)?;
             let v = get_reference(agent, r, frame.strict())?;
             let this = match r {
                 Reference::Env(env, _) => env.with_base_object(agent),
@@ -697,8 +761,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(v);
             frame.push(this);
         }
-        Op::ResolveName(name) => {
-            let r = resolve_binding(agent, frame.env, name)?;
+        Op::ResolveName(name, ic) => {
+            let r = resolve_binding_cached(agent, &frame.code, frame.env, name, ic)?;
             frame.refs.push(r);
         }
         Op::GetRef => {

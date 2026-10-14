@@ -49,14 +49,16 @@ pub enum Op {
     GetCompletion,
 
     // ---- identifiers -------------------------------------------------------
-    /// [] -> [value]: ResolveBinding(name) then GetValue.
-    GetName(JsString),
+    /// [] -> [value]: ResolveBinding(name) then GetValue. The `u32` of the
+    /// name instructions is their binding cache ([`FunctionCode::name_caches`],
+    /// [`NO_NAME_CACHE`] for none).
+    GetName(JsString, u32),
     /// [] -> [typeof value]: like GetName but unresolvable gives "undefined".
-    TypeofName(JsString),
+    TypeofName(JsString, u32),
     /// [] -> [func this]: GetName plus the call's this value (with-object or undefined).
-    GetNameForCall(JsString),
+    GetNameForCall(JsString, u32),
     /// [] -> []: ResolveBinding(name), pushed on the reference stack.
-    ResolveName(JsString),
+    ResolveName(JsString, u32),
     /// [] -> [value]: GetValue of the top reference (it stays).
     GetRef,
     /// [value] -> [value]: PutValue to the top reference, which is popped.
@@ -578,7 +580,17 @@ pub struct FunctionCode {
     pub script: u32,
     /// The handles the compilation unit's code refers to.
     pub constants: Arc<CodeConstants>,
+    /// Where each name instruction found its binding last time: the number
+    /// of environments out from the running one and the binding's slot in
+    /// it, as `(hops << 32 | slot) + 1`, 0 when unknown. Only instructions
+    /// whose environment chain cannot gain bindings at run time (no `with`,
+    /// no direct eval in or around them, not eval code) get one: there a
+    /// binding, once found, is always found in the same place.
+    pub name_caches: Box<[std::sync::atomic::AtomicU64]>,
 }
+
+/// The cache index of a name instruction that has no binding cache.
+pub const NO_NAME_CACHE: u32 = u32::MAX;
 
 impl FunctionCode {
     /// The source text of the function (for Function.prototype.toString).
