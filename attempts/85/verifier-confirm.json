@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 5743,
+  "stop_reason": "tool_use",
+  "session_id": "bcc0c5da-7772-454b-bac9-7ac88224965c",
+  "total_cost_usd": 0.0187884,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3273,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 521,
+    "output_tokens_details": {
+      "thinking_tokens": 140
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3273,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 521,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 3273,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3273
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Reflect.has as the three spec steps in order. It throws a TypeError for a non-object target. It then calls ops::to_property_key with `?`, then ops::has_property with `?`, and returns the boolean. The 10 new passes fit the size of the change. The two remaining failures come from a not-implemented Proxy [[HasProperty]] in the core ops, outside this ticket's file. The only other edits are the `_this` and `_new_target` renames, which silence unused-variable warnings.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Reflect.has as the three spec steps in order. It throws a TypeError for a non-object target. It then calls ops::to_property_key with `?`, then ops::has_property with `?`, and returns the boolean. The 10 new passes fit the size of the change. The two remaining failures come from a not-implemented Proxy [[HasProperty]] in the core ops, outside this ticket's file. The only other edits are the `_this` and `_new_target` renames, which silence unused-variable warnings.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3162,
+  "type": "result",
+  "duration_ms": 5182,
+  "uuid": "7d8b5d3f-f86d-4154-bbc3-4bbe901c4f5a",
+  "ttft_stream_ms": 1660,
+  "time_to_request_ms": 216,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 1,
+    "message_prep": 0,
+    "model_config_wait": 142,
+    "autocompact": 1,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 11,
+  "time_to_request_cpu_ms": 113,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 223,
+  "process_anon_mib_result": 105,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 372,
+  "process_wall_ms_turn": 5181,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1661,
+  "time_to_request_from_spawn_ms": 26418475,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791974295209.4285,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791990600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.73,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

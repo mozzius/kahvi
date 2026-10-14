@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reflect-has",
+  "base": "c60c9d365a1c92d57b4b9318d7d1ed8f4f7b955b",
+  "head": "2a5ac1d4a2743447182b8d5dd1e25d5c6d54f02b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/has.rs",
+      "added": 8,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Reflect/has/return-abrupt-from-result.js:sloppy  Uncaught InternalError: not implemented: Proxy [[HasProperty]]",
+      "built-ins/Reflect/has/return-abrupt-from-result.js:strict  Uncaught InternalError: not implemented: Proxy [[HasProperty]]"
+    ]
+  },
+  "decision": "pass"
+}

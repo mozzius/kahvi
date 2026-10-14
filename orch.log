@@ -75,3 +75,8 @@
 [10:22:30] C-proxy-has-property: attempt 84 finished ($0.007, 11 turns)
 [10:22:57] C-proxy-has-property: verifier: accept The diff implements Proxy [[HasProperty]] steps 1-9 in order. It calls ValidateNonRevokedProxy via validate_non_revoked with ?, GetMethod(handler, "ha
 [10:37:13] B-reflect-set: merged (+81, 68985 total)
+[10:37:15] B-reflect-has: attempt on slot 1 with haiku
+[10:37:16] C-proxy-has-property: full test262 run for merge
+[10:37:55] B-reflect-has: attempt 85 finished ($0.004, 11 turns)
+[10:38:21] B-reflect-has: verifier: accept The diff implements Reflect.has in the three spec steps, in order. Step 1 throws a TypeError when target is not an Object. Step 2 calls ops::to_proper
+[11:01:33] C-proxy-has-property: merged (+48, 69033 total)
