@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 71206,
+  "stop_reason": "end_turn",
+  "session_id": "cc3b28b4-9082-4836-82a0-e03da9889091",
+  "total_cost_usd": 0.018769289999999998,
+  "usage": {
+    "input_tokens": 34,
+    "cache_creation_input_tokens": 33082,
+    "cache_read_input_tokens": 485999,
+    "output_tokens": 13935,
+    "output_tokens_details": {
+      "thinking_tokens": 6718
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 33082,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 336,
+        "cache_read_input_tokens": 39948,
+        "cache_creation_input_tokens": 614,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 614
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01PjeHaVEmi5bGoqBBrgudP2",
+      "tool_input": {
+        "command": "ls /home/user/kahvi/work/slots/slot-0/crates/kahvi-builtins/src/global/ && git -C /home/user/kahvi/work/slots/slot-0 log --oneline -3",
+        "description": "List global built-ins and recent commits"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01X3LNCfwXzd5NLfx4BwCd5c",
+      "tool_input": {
+        "command": "mkdir -p /tmp/claude-0/-home-user-kahvi-work-slots-slot-0/cc3b28b4-9082-4836-82a0-e03da9889091/scratchpad && printf 'var s = \"%%E4%%BD%%A0\";\\nfor (var i = 0; i < 1000000; i++) { decodeURIComponent(s); }\\n' > /tmp/claude-0/-home-user-kahvi-work-slots-slot-0/cc3b28b4-9082-4836-82a0-e03da9889091/scratchpad/bench_decode.js && printf 'var s = \"abc\";\\nfor (var i = 0; i < 1000000; i++) { s.length; }\\n' > /tmp/claude-0/-home-user-kahvi-work-slots-slot-0/cc3b28b4-9082-4836-82a0-e03da9889091/scratchpad/bench_base.js && time target/debug/kahvi /tmp/claude-0/-home-user-kahvi-work-slots-slot-0/cc3b28b4-9082-4836-82a0-e03da9889091/scratchpad/bench_base.js && time target/debug/kahvi /tmp/claude-0/-home-user-kahvi-work-slots-slot-0/cc3b28b4-9082-4836-82a0-e03da9889091/scratchpad/bench_decode.js",
+        "timeout": 600000,
+        "description": "Benchmark decode loop against a baseline loop"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 25,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `decodeURIComponent` in its own file and added the spec's `Decode` operation there as a private helper, since no shared version exists yet. `decodeURI` will need the same helper, so it should move to `kahvi_core::ops` when that ticket lands. `./t262 built-ins/decodeURIComponent/` gives 110 of 112 runs passing, with 2 timeouts (`S15.1.3.2_A2.5_T1.js`, sloppy and strict). That test makes about a million calls in a debug build, so I believe the timeouts come from interpreter speed rather than this code, but I did not confirm that. `cargo clippy` is clean and the diff touches only the one file.",
+  "ttft_ms": 1193,
+  "type": "result",
+  "duration_ms": 104623,
+  "uuid": "0844d1ea-038b-4d26-b463-bc7f21aecc22",
+  "ttft_stream_ms": 970,
+  "time_to_request_ms": 127,
+  "time_to_request_phases_ms": {
+    "other": 16,
+    "system_prompt": 9,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 52,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 8,
+    "message_normalization": 4,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 20,
+  "time_to_request_cpu_ms": 138,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 970,
+  "time_to_request_from_spawn_ms": 28573696,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791947548767.6526,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 34633,
+  "stop_reason": "tool_use",
+  "session_id": "5eb6bf70-ca82-49cd-abb6-18154c7eafe1",
+  "total_cost_usd": 0.00566436,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5939,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 7848,
+    "output_tokens_details": {
+      "thinking_tokens": 6757
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5939,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 7848,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 5939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":true,\"unrelated_changes\":false},\"problems\":[{\"file\":\"crates/kahvi-builtins/src/global/decode_uri_component.rs\",\"question\":\"contradicts_spec\",\"line\":73,\"issue\":\"Decode step 4.c.vii.2.a says 'Let S be the substring of string from start to k + 1', where substring ranges are start-inclusive and end-exclusive. After 'k += 2' (step v), k is the index of the second hex digit, so the escape is exactly indices start..=k, i.e. start..k+1. The code uses `units[start..=k + 1]`, which is inclusive and appends one extra code unit after the escape. Because the following unit is also processed in the main loop, it would be duplicated in the output. On the last index, `k + 1 == str_len`, this slice panics. The branch is unreachable for decodeURIComponent, since its preserveEscapeSet is always empty, but the helper is shared with decodeURI and is written to take the set as a parameter, so it is a latent defect (for example decodeURI(\\\"%23\\\") would panic). Fix: `units[start..k + 1].to_vec()`.\"}],\"worth_keeping\":true,\"summary\":\"The diff is a faithful implementation of decodeURIComponent and the Decode abstract operation. ToString goes through ops::to_string, the URIError checks (k+2 \u2265 strLen, hex validation, n=1 or n>4, k+3(n-1) \u2265 strLen, the '%' check per continuation, and UTF-8 validity) follow the spec in order, and errors propagate with `?`. No test-shaped special cases, no made-up values, and no swallowed errors. The one defect is latent: the preserveEscapeSet branch slices `units[start..=k + 1]` where the spec's substring is end-exclusive (`start..k + 1`). That branch is unreachable for decodeURIComponent but is wrong in the shared helper that decodeURI will need. The two sloppy/strict timeouts look like interpreter speed on a heavy loop test, not a defect in this code.\",\"notes_for_next_attempt\":\"Change line ~73 of crates/kahvi-builtins/src/global/decode_uri_component.rs from `units[start..=k + 1].to_vec()` to `units[start..k + 1].to_vec()`. The spec's 'substring from start to k + 1' is end-exclusive, and after `k += 2` the escape occupies start..=k. The inclusive form duplicates the following code unit and can panic when k + 1 == len. Everything else matches the spec step by step and can be kept as is. Re-run built-ins/decodeURIComponent/ after the fix. The timeouts in S15.1.3.2_A2.5_T1 are likely interpreter speed, not this code, but check them separately.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": true,
+      "unrelated_changes": false
+    },
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/global/decode_uri_component.rs",
+        "question": "contradicts_spec",
+        "line": 73,
+        "issue": "Decode step 4.c.vii.2.a says 'Let S be the substring of string from start to k + 1', where substring ranges are start-inclusive and end-exclusive. After 'k += 2' (step v), k is the index of the second hex digit, so the escape is exactly indices start..=k, i.e. start..k+1. The code uses `units[start..=k + 1]`, which is inclusive and appends one extra code unit after the escape. Because the following unit is also processed in the main loop, it would be duplicated in the output. On the last index, `k + 1 == str_len`, this slice panics. The branch is unreachable for decodeURIComponent, since its preserveEscapeSet is always empty, but the helper is shared with decodeURI and is written to take the set as a parameter, so it is a latent defect (for example decodeURI(\"%23\") would panic). Fix: `units[start..k + 1].to_vec()`."
+      }
+    ],
+    "worth_keeping": true,
+    "summary": "The diff is a faithful implementation of decodeURIComponent and the Decode abstract operation. ToString goes through ops::to_string, the URIError checks (k+2 \u2265 strLen, hex validation, n=1 or n>4, k+3(n-1) \u2265 strLen, the '%' check per continuation, and UTF-8 validity) follow the spec in order, and errors propagate with `?`. No test-shaped special cases, no made-up values, and no swallowed errors. The one defect is latent: the preserveEscapeSet branch slices `units[start..=k + 1]` where the spec's substring is end-exclusive (`start..k + 1`). That branch is unreachable for decodeURIComponent but is wrong in the shared helper that decodeURI will need. The two sloppy/strict timeouts look like interpreter speed on a heavy loop test, not a defect in this code.",
+    "notes_for_next_attempt": "Change line ~73 of crates/kahvi-builtins/src/global/decode_uri_component.rs from `units[start..=k + 1].to_vec()` to `units[start..k + 1].to_vec()`. The spec's 'substring from start to k + 1' is end-exclusive, and after `k += 2` the escape occupies start..=k. The inclusive form duplicates the following code unit and can panic when k + 1 == len. Everything else matches the spec step by step and can be kept as is. Re-run built-ins/decodeURIComponent/ after the fix. The timeouts in S15.1.3.2_A2.5_T1 are likely interpreter speed, not this code, but check them separately."
+  },
+  "ttft_ms": 30078,
+  "type": "result",
+  "duration_ms": 34370,
+  "uuid": "fcb62fac-d455-44f8-8990-fa737d4b1e6a",
+  "ttft_stream_ms": 1448,
+  "time_to_request_ms": 178,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 2,
+    "input_attachments": 28,
+    "input_hooks": 7,
+    "tool_pool_refresh": 1,
+    "init_message": 15,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 41,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 3,
+    "message_normalization": 6,
+    "client_creation": 9,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 127,
+  "time_to_request_cpu_ms": 110,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "environment",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1448,
+  "time_to_request_from_spawn_ms": 28711692,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791947686271.6663,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
