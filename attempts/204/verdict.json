@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements all seven AggregateError steps in order, each with its spec comment above the code: NewTarget fallback, OrdinaryCreateFromConstructor with the [[ErrorData]] slot, the message ToString and non-enumerable define, InstallErrorCause, GetIterator plus IteratorToList, CreateArrayFromList, and the errors property define with writable, non-enumerable, configurable. Errors propagate with `?`, and nothing is special-cased or faked. The one gate lint is the `.expect(\"a built-in runs with an active function\")` on the NewTarget fallback. I judge it unreachable from JS, since a built-in always runs with an active function, so I am not counting it as a defect. Helper signatures in kahvi_core::ops and PropertyDescriptor::data argument order are not visible to me; I rely on the clean build and the 30 new passing test262 tests for those. Minor: step 6 uses `?` where the spec uses `!`, which is not observable for a fresh ordinary object.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
