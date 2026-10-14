@@ -55,3 +55,8 @@
 [09:31:16] B-reg-exp-prototype-get-source: attempt 80 finished ($0.011, 14 turns)
 [09:31:59] B-reg-exp-prototype-get-source: verifier: accept The change implements get RegExp.prototype.source in its file and follows the spec steps. Step 2 throws a TypeError for non-objects. Step 3 checks the
 [09:43:37] B-iterator-zip: merged (+50, 68778 total)
+[09:43:39] B-set-prototype-values: attempt on slot 1 with haiku
+[09:43:39] B-reg-exp-prototype-get-source: full test262 run for merge
+[09:44:00] B-set-prototype-values: attempt 81 finished ($0.005, 12 turns)
+[09:44:23] B-set-prototype-values: verifier: accept The diff replaces the not-implemented stub in Set.prototype.values with a call to this_set (RequireInternalSlot on [[SetData]]) followed by create_col
+[09:56:16] B-reg-exp-prototype-get-source: merged (+36, 68814 total)
