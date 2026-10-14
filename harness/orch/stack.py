@@ -557,8 +557,10 @@ class Stacker:
         with self.lock:
             if any(not i["composed"] for i in self.queue()):
                 self.compose(incremental=True)
-            self.sync()
+            # CI first: a layer Samuel merges as soon as it turns green must
+            # still be judged (tickets done, partials), not just marked merged.
             self.poll()
+            self.sync()
             self.push_next()
 
     def run_forever(self):
