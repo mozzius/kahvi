@@ -1,0 +1,140 @@
+{
+  "duration_api_ms": 33767,
+  "stop_reason": "end_turn",
+  "session_id": "94749393-72e8-46b8-b965-68965c66533f",
+  "total_cost_usd": 0.00735185,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 13795,
+    "cache_read_input_tokens": 163865,
+    "output_tokens": 5285,
+    "output_tokens_details": {
+      "thinking_tokens": 2229
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13795,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 510,
+        "cache_read_input_tokens": 20541,
+        "cache_creation_input_tokens": 897,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 897
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01GDAt6j41RJce92wfoWtHNe",
+      "tool_input": {
+        "command": "cargo clippy -p kahvi-builtins 2>&1 | tail -5; ./t262 built-ins/Date/prototype/toLocaleDateString/ 2>&1 | tail -4; cargo fmt --check 2>&1 | head -5; printf 'print(new Date(2020, 0, 15).toLocaleDateString()); print(new Date(NaN).toLocaleDateString());' > $TMPDIR/x.js 2>/dev/null; echo ok",
+        "timeout": 600000,
+        "description": "Run clippy, target tests, and format check"
+      }
+    },
+    {
+      "tool_name": "Write",
+      "tool_use_id": "toolu_01WgH1bwsk9oq61brU3JHsWN",
+      "tool_input": {
+        "file_path": "/tmp/claude-0/-home-user-kahvi-work-slots-slot-1/94749393-72e8-46b8-b965-68965c66533f/scratchpad/locale_date.js",
+        "content": "print(new Date(2020, 0, 15).toLocaleDateString());\nprint(new Date(NaN).toLocaleDateString());\nprint(new Date(-1, 11, 31).toLocaleDateString());\n"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I replaced the `toLocaleDateString` stub with a real implementation of the non-ECMA-402 fallback: it returns `\"Invalid Date\"` for NaN, otherwise the local date as `M/D/YYYY`. It builds, clippy and `cargo fmt --check` are clean, and `./t262 built-ins/Date/prototype/toLocaleDateString/` still reports 8/8.\n\nThe target tests already passed on the stub, because they only check `length`, `name`, `prop-desc` and not-a-constructor, so this change adds no new passes; that is likely why attempt 467 was rejected. I could not run the new path end to end: the scope guard blocked writing a scratch script outside the ticket file, so the runtime output is unverified.",
+  "ttft_ms": 1647,
+  "type": "result",
+  "duration_ms": 62067,
+  "uuid": "e0c88872-f65f-459c-9f6f-385ad5b13fcf",
+  "ttft_stream_ms": 1361,
+  "time_to_request_ms": 415,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 307,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 17,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 284,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 263,
+  "process_anon_mib_result": 145,
+  "process_peak_rss_mib": 264,
+  "process_cpu_ms_turn": 3785,
+  "process_wall_ms_turn": 62066,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1362,
+  "time_to_request_from_spawn_ms": 27695638,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007156216.1597,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.63,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
