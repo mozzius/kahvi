@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/symbol/prototype_symbol_to_primitive.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-symbol.prototype-%symbol.toprimitive%"]
 target = ["built-ins/Symbol/prototype/Symbol.toPrimitive/"]
-priority = 32
+priority = 36
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.
