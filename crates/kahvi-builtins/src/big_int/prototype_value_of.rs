@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::this_value::this_big_int_value;
+
 /// BigInt.prototype.valueOf
 pub(crate) fn prototype_value_of(
     agent: &mut Agent,
@@ -11,11 +13,11 @@ pub(crate) fn prototype_value_of(
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let _ = (args, new_target);
     // 1. Return ? ThisBigIntValue(*this* value).
+    Ok(Value::BigInt(this_big_int_value(agent, this)?))
     //
     // [subclause sec-thisbigintvalue: ThisBigIntValue (
     // _arg_: an ECMAScript language value,
     // ): either a normal completion containing a BigInt or a throw completion]
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("BigInt.prototype.valueOf"))
 }
