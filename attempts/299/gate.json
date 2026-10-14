@@ -1,0 +1,39 @@
+{
+  "ticket": "B-disposable-stack-prototype-adopt",
+  "base": "d3b68def52230b5c4134a1b39cbab0f4abac3fb1",
+  "head": "d151c8fffc8a2b1f3af895e96b0a1767108c6a79",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/disposable_stack/prototype_adopt.rs",
+      "added": 50,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/disposable_stack/prototype_adopt.rs",
+      "line": 67,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let f = agent.active_function().expect(\"a running built-in\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 8,
+    "after": 24,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

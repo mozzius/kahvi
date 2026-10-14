@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9008,
+  "stop_reason": "tool_use",
+  "session_id": "647987dc-ff63-441a-abdf-4c579d94db56",
+  "total_cost_usd": 0.032405199999999995,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6016,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 744,
+    "output_tokens_details": {
+      "thinking_tokens": 340
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6016,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 744,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6016,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6016
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for Date.prototype.setMilliseconds. It reads [[DateValue]] before calling ToNumber. It returns NaN for an invalid date only after ToNumber has run. It then applies LocalTime, MakeTime, MakeDate, UTC and TimeClip in order, stores the result and returns it. Every fallible call is propagated with `?`. It uses existing shared date helpers and edits only the one file in scope. The four remaining failures are not-implemented errors for Date.prototype.setTime, which the tests call. They are not caused by this change.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for Date.prototype.setMilliseconds. It reads [[DateValue]] before calling ToNumber. It returns NaN for an invalid date only after ToNumber has run. It then applies LocalTime, MakeTime, MakeDate, UTC and TimeClip in order, stores the result and returns it. Every fallible call is propagated with `?`. It uses existing shared date helpers and edits only the one file in scope. The four remaining failures are not-implemented errors for Date.prototype.setTime, which the tests call. They are not caused by this change.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6639,
+  "type": "result",
+  "duration_ms": 8541,
+  "uuid": "a1020976-28e5-4885-aa38-6362afadc273",
+  "ttft_stream_ms": 3488,
+  "time_to_request_ms": 1379,
+  "time_to_request_phases_ms": {
+    "other": 84,
+    "system_prompt": 820,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 59,
+    "input_hooks": 17,
+    "tool_pool_refresh": 15,
+    "init_message": 50,
+    "engine_pickup": 5,
+    "message_prep": 21,
+    "model_config_wait": 133,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 14,
+    "tool_schema_build": 17,
+    "message_normalization": 15,
+    "client_creation": 85,
+    "request_build": 29
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 374,
+  "time_to_request_cpu_ms": 313,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 683,
+  "process_wall_ms_turn": 8536,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3489,
+  "time_to_request_from_spawn_ms": 23021218,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002479467.0813,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.11,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

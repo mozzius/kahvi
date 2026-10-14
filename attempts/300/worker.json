@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18082,
+  "stop_reason": "end_turn",
+  "session_id": "3fc5ea17-dda3-4e37-adef-75d7508e5f25",
+  "total_cost_usd": 0.00564723,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 18444,
+    "cache_read_input_tokens": 70393,
+    "output_tokens": 1762,
+    "output_tokens_details": {
+      "thinking_tokens": 313
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18444,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 169,
+        "cache_read_input_tokens": 25850,
+        "cache_creation_input_tokens": 237,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 237
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Map.prototype.getOrInsert` in `crates/kahvi-builtins/src/map/prototype_get_or_insert.rs`, with each spec step kept as a comment above its code. All 28 runs under `built-ins/Map/prototype/getOrInsert/` pass, clippy is clean, and the file is formatted. Canonicalization and the lookup use the existing `collection_key`, `this_map` and `map_table` helpers, and I changed no other files.\n\nBLOCKED: none",
+  "ttft_ms": 3403,
+  "type": "result",
+  "duration_ms": 37402,
+  "uuid": "89f4016c-35b3-49ee-8876-85954a2f865c",
+  "ttft_stream_ms": 3177,
+  "time_to_request_ms": 1458,
+  "time_to_request_phases_ms": {
+    "other": 523,
+    "system_prompt": 367,
+    "resume_other": 1,
+    "process_user_input": 20,
+    "input_attachments": 17,
+    "input_hooks": 15,
+    "tool_pool_refresh": 2,
+    "init_message": 24,
+    "engine_pickup": 1,
+    "message_prep": 6,
+    "model_config_wait": 222,
+    "autocompact": 2,
+    "query_setup": 9,
+    "model_gates": 0,
+    "tool_schema_build": 176,
+    "message_normalization": 9,
+    "client_creation": 22,
+    "request_build": 42
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 843,
+  "time_to_request_cpu_ms": 359,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 118,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2358,
+  "process_wall_ms_turn": 37402,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3178,
+  "time_to_request_from_spawn_ms": 22988521,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002446206.1497,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.11,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "ticket": "B-date-prototype-set-year",
+  "base": "a6a85e4fd25b91bd92a4e312543a6a0928e2b05b",
+  "head": "a521c79e50aa3faee090ad21b93412db180f3be8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_year.rs",
+      "added": 22,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "annexB/built-ins/Date/prototype/setYear/date-value-read-before-tonumber-when-date-is-invalid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "annexB/built-ins/Date/prototype/setYear/date-value-read-before-tonumber-when-date-is-invalid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "annexB/built-ins/Date/prototype/setYear/date-value-read-before-tonumber-when-date-is-valid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "annexB/built-ins/Date/prototype/setYear/date-value-read-before-tonumber-when-date-is-valid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "annexB/built-ins/Date/prototype/setYear/year-number-absolute.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.getFullYear",
+      "annexB/built-ins/Date/prototype/setYear/year-number-absolute.js:strict  Uncaught InternalError: not implemented: Date.prototype.getFullYear",
+      "annexB/built-ins/Date/prototype/setYear/year-number-relative.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.getFullYear",
+      "annexB/built-ins/Date/prototype/setYear/year-number-relative.js:strict  Uncaught InternalError: not implemented: Date.prototype.getFullYear"
+    ]
+  },
+  "decision": "pass"
+}
