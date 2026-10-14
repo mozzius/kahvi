@@ -1,0 +1,79 @@
+{
+  "ticket": "B-typed-array-prototype-slice",
+  "base": "40519c2c6dcfbe87dfed246971703b2d1114becc",
+  "head": "db675621fb5af9750a97f3de28a7dfe400b2dc91",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "added": 123,
+      "removed": 36
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "line": 51,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "line": 77,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let source_data = typed_array_data(agent, obj).expect(\"a TypedArray\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "line": 80,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let target_data = typed_array_data(agent, result_array).expect(\"a TypedArray\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "line": 86,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let source_buffer = source_data.buffer.expect(\"initialized\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_slice.rs",
+      "line": 88,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let target_buffer = target_data.buffer.expect(\"initialized\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 182,
+    "before": 8,
+    "after": 38,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 144,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-custom-ctor-other-targettype.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-custom-ctor-other-targettype.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-custom-ctor-same-targettype.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-custom-ctor-same-targettype.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-get-ctor.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-get-ctor.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-speciesctor-get-species-custom-ctor-throws.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-speciesctor-get-species-custom-ctor-throws.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-zero-count-custom-ctor-other-targettype.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-zero-count-custom-ctor-other-targettype.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-zero-count-custom-ctor-same-targettype.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer-zero-count-custom-ctor-same-targettype.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/detached-buffer.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/slice/BigInt/infinity.js:sloppy  Uncaught InternalError: not implemented: Math.floor"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 13331,
+  "stop_reason": "tool_use",
+  "session_id": "fce1204f-36c8-44f2-88ea-476753a7d530",
+  "total_cost_usd": 0.0694849,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 12947,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1624,
+    "output_tokens_details": {
+      "thinking_tokens": 1208
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12947,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1624,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 12947,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 12947
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order, with each step as a comment above its code. ToClampedIndex is a local helper that matches ToAbsoluteIndex plus the clamp. Abrupt completions from ToIntegerOrInfinity, species create, bounds validation and set-element are propagated with `?`. The byte-copy and element-copy branches match steps 8f and 8g. The 5 lint flags are `unreachable!` and `expect` calls, and each guards an invariant the code has already established. I judged them acceptable. I did not run the code or check the repo. This verdict rests on reading the diff and the spec.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order, with each step as a comment above its code. ToClampedIndex is a local helper that matches ToAbsoluteIndex plus the clamp. Abrupt completions from ToIntegerOrInfinity, species create, bounds validation and set-element are propagated with `?`. The byte-copy and element-copy branches match steps 8f and 8g. The 5 lint flags are `unreachable!` and `expect` calls, and each guards an invariant the code has already established. I judged them acceptable. I did not run the code or check the repo. This verdict rests on reading the diff and the spec.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11037,
+  "type": "result",
+  "duration_ms": 13168,
+  "uuid": "620b3aa5-e2c6-4418-a198-ca82c279cf7a",
+  "ttft_stream_ms": 1631,
+  "time_to_request_ms": 493,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 5,
+    "resume_other": 0,
+    "process_user_input": 22,
+    "input_attachments": 102,
+    "input_hooks": 11,
+    "tool_pool_refresh": 1,
+    "init_message": 29,
+    "engine_pickup": 18,
+    "message_prep": 8,
+    "model_config_wait": 169,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 16,
+    "message_normalization": 2,
+    "client_creation": 45,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 278,
+  "time_to_request_cpu_ms": 156,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 546,
+  "process_wall_ms_turn": 13167,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 85,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1631,
+  "time_to_request_from_spawn_ms": 12788611,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791960664567.9575,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.73,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.68,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
