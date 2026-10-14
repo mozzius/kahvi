@@ -1836,3 +1836,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:33:32] B-map-prototype-values: attempt 308 finished ($0.005, 9 turns)
 [18:34:13] B-string-prototype-pad-end: attempt 310 finished ($0.011, 20 turns)
 [18:34:14] B-string-prototype-pad-end: gate rejected attempt 310: lint: lint suppression is architect-only at crates/kahvi-builtins/src/string/prototype_pad_end.rs:36: #[allow(dead_code)]
+[18:34:17] B-string-prototype-pad-end: attempt on slot 1 with haiku
+[18:34:17] B-object-prototype-to-locale-string: verifier: accept The diff replaces the not-implemented stub for Object.prototype.toLocaleString with the two spec steps: keep the this value, then return ? Invoke(this

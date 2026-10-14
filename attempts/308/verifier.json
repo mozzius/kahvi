@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11574,
+  "stop_reason": "tool_use",
+  "session_id": "bfc39c90-c906-4911-9bfb-bda9d73d61c2",
+  "total_cost_usd": 0.00221238,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3902,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2153,
+    "output_tokens_details": {
+      "thinking_tokens": 1418
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3902,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2153,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3902,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3902
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff is a small, plausible implementation of Map.prototype.values. It keeps the spec step comments, calls this_map (which stands in for RequireInternalSlot(map, [[MapData]]), and that step runs before the iterator is created), and delegates the closure and CreateIteratorFromClosure steps to the shared create_collection_iterator helper with CollectionIterKind::Value. Errors propagate with `?`. There are no test-shaped branches, hardcoded values, or unrelated edits. The one lint flag is a false positive: it fires on a comment that describes deleted-entry skipping, which is the helper's behaviour. I could only see the diff, not the helper in support/collections, so the review relies on the helper's behaviour being correct. Nothing in the diff shows it is not.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes required from the diff itself. Before merging, a reviewer with access to the source should confirm two things in crates/kahvi-builtins/src/support/collections: (1) create_collection_iterator walks the map's [[MapData]] by index, re-reads the entry count on every step so entries added during iteration are visited, skips empty (deleted) keys, and yields a Value-kind result of [[Value]] via CreateIteratorResultObject(false); (2) its boolean argument is the one the call site assumes (Map, not Set), and the iterator's prototype is %MapIteratorPrototype%. Also confirm this_map performs RequireInternalSlot and throws a TypeError for non-Map receivers. The lint flag at prototype_values.rs:23 is a comment false positive and can be ignored.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff is a small, plausible implementation of Map.prototype.values. It keeps the spec step comments, calls this_map (which stands in for RequireInternalSlot(map, [[MapData]]), and that step runs before the iterator is created), and delegates the closure and CreateIteratorFromClosure steps to the shared create_collection_iterator helper with CollectionIterKind::Value. Errors propagate with `?`. There are no test-shaped branches, hardcoded values, or unrelated edits. The one lint flag is a false positive: it fires on a comment that describes deleted-entry skipping, which is the helper's behaviour. I could only see the diff, not the helper in support/collections, so the review relies on the helper's behaviour being correct. Nothing in the diff shows it is not.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes required from the diff itself. Before merging, a reviewer with access to the source should confirm two things in crates/kahvi-builtins/src/support/collections: (1) create_collection_iterator walks the map's [[MapData]] by index, re-reads the entry count on every step so entries added during iteration are visited, skips empty (deleted) keys, and yields a Value-kind result of [[Value]] via CreateIteratorResultObject(false); (2) its boolean argument is the one the call site assumes (Map, not Set), and the iterator's prototype is %MapIteratorPrototype%. Also confirm this_map performs RequireInternalSlot and throws a TypeError for non-Map receivers. The lint flag at prototype_values.rs:23 is a comment false positive and can be ignored."
+  },
+  "ttft_ms": 8559,
+  "type": "result",
+  "duration_ms": 11514,
+  "uuid": "cf152df5-dd58-4b61-9858-153f9767126c",
+  "ttft_stream_ms": 1863,
+  "time_to_request_ms": 666,
+  "time_to_request_phases_ms": {
+    "other": 74,
+    "system_prompt": 381,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 25,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 7,
+    "message_prep": 12,
+    "model_config_wait": 68,
+    "autocompact": 3,
+    "query_setup": 5,
+    "model_gates": 5,
+    "tool_schema_build": 14,
+    "message_normalization": 3,
+    "client_creation": 27,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 168,
+  "time_to_request_cpu_ms": 353,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 118,
+  "process_peak_rss_mib": 247,
+  "process_cpu_ms_turn": 867,
+  "process_wall_ms_turn": 11513,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1864,
+  "time_to_request_from_spawn_ms": 23383569,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002842943.0273,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.16,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

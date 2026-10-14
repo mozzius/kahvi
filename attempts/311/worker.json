@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 37278,
+  "stop_reason": "end_turn",
+  "session_id": "a31f88d8-7ba9-4a86-a68f-9334dfa94ae8",
+  "total_cost_usd": 0.01005552,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 22515,
+    "cache_read_input_tokens": 166352,
+    "output_tokens": 7238,
+    "output_tokens_details": {
+      "thinking_tokens": 2678
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22515,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 230,
+        "cache_read_input_tokens": 29079,
+        "cache_creation_input_tokens": 1079,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1079
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.padStart` is implemented in `crates/kahvi-builtins/src/string/prototype_pad_start.rs`. All 26 runs under `built-ins/String/prototype/padStart/` pass, and clippy is clean.\n\nI wrote `StringPaddingBuiltinsImpl` and `StringPad` as private helpers in this file, because nothing shared exists yet. `padEnd` will need the same logic, so its ticket can reuse them once they move to a shared location. The `Placement` enum's `End` variant is marked `#[allow(dead_code)]` until `padEnd` lands. The helper also throws a RangeError above the same length cap that `repeat` uses.",
+  "ttft_ms": 2297,
+  "type": "result",
+  "duration_ms": 73146,
+  "uuid": "75cec28c-54e6-4c0f-8a0b-5cb147942526",
+  "ttft_stream_ms": 2057,
+  "time_to_request_ms": 785,
+  "time_to_request_phases_ms": {
+    "other": 62,
+    "system_prompt": 482,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 20,
+    "input_hooks": 9,
+    "tool_pool_refresh": 7,
+    "init_message": 23,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 96,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 23,
+    "message_normalization": 5,
+    "client_creation": 20,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 216,
+  "time_to_request_cpu_ms": 437,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 229,
+  "process_anon_mib_turn_start": 113,
+  "process_rss_mib_result": 268,
+  "process_anon_mib_result": 148,
+  "process_peak_rss_mib": 270,
+  "process_cpu_ms_turn": 4109,
+  "process_wall_ms_turn": 73145,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2058,
+  "time_to_request_from_spawn_ms": 23323745,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002782515.3237,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.16,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
