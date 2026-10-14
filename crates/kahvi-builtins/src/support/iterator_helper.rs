@@ -12,7 +12,7 @@ use kahvi_core::ops::IteratorRecord;
 use kahvi_core::prelude::*;
 
 /// The steps of an Abstract Closure given to CreateIteratorFromClosure.
-pub(crate) trait HelperClosure: std::fmt::Debug + Send {
+pub(crate) trait HelperClosure: std::fmt::Debug + Send + kahvi_core::gc::Trace {
     /// Runs to the next Yield (`Some(value)`) or to a return (`None`).
     /// `underlying` is [[UnderlyingIterators]].
     fn resume(
@@ -239,5 +239,20 @@ pub(crate) fn wrapped_iterated(agent: &mut Agent, o: Value) -> JsResult<Iterator
             None => Err(agent.throw_type_error("not a wrapped iterator")),
         },
         _ => Err(agent.throw_type_error("not a wrapped iterator")),
+    }
+}
+
+// ---- garbage collection ----------------------------------------------------
+
+impl kahvi_core::gc::Trace for IteratorHelper {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.underlying.trace(t);
+        self.closure.trace(t);
+    }
+}
+
+impl kahvi_core::gc::Trace for WrapForValidIterator {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.iterated.trace(t);
     }
 }

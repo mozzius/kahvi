@@ -20,3 +20,9 @@ pub(crate) fn create_string_iterator(agent: &mut Agent, s: JsString) -> Object {
     };
     agent.object_with_kind(Some(proto), ObjectKind::Native(Box::new(state)))
 }
+
+impl kahvi_core::gc::Trace for StringIterator {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.string.trace(t);
+    }
+}

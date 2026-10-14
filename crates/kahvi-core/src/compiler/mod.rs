@@ -451,11 +451,13 @@ pub fn compile_script(
     source: Arc<str>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
-    let mut c = Compiler::new(agent, CodeKind::Script, source, script_id, script.span);
-    c.code.strict = script.strict;
-    c.completion = true;
-    c.compile_toplevel(&script.body);
-    c.finish()
+    pinned(agent, |agent| {
+        let mut c = Compiler::new(agent, CodeKind::Script, source, script_id, script.span);
+        c.code.strict = script.strict;
+        c.completion = true;
+        c.compile_toplevel(&script.body);
+        c.finish()
+    })
 }
 
 /// Compiles eval code. `strict` is the strictness of the eval code itself
@@ -466,11 +468,13 @@ pub fn compile_eval(
     source: Arc<str>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
-    let mut c = Compiler::new(agent, CodeKind::Eval, source, script_id, script.span);
-    c.code.strict = script.strict;
-    c.completion = true;
-    c.compile_toplevel(&script.body);
-    c.finish()
+    pinned(agent, |agent| {
+        let mut c = Compiler::new(agent, CodeKind::Eval, source, script_id, script.span);
+        c.code.strict = script.strict;
+        c.completion = true;
+        c.compile_toplevel(&script.body);
+        c.finish()
+    })
 }
 
 /// Compiles module code; the module's declarations are in `decls`.
@@ -480,12 +484,14 @@ pub fn compile_module(
     source: Arc<str>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
-    let mut c = Compiler::new(agent, CodeKind::Module, source, script_id, module.span);
-    c.code.strict = true;
-    c.compile_module_body(&module.body);
-    // [[HasTLA]]: the module's own code awaits.
-    c.code.is_async = c.code.ops.iter().any(|op| matches!(op, Op::Await));
-    c.finish()
+    pinned(agent, |agent| {
+        let mut c = Compiler::new(agent, CodeKind::Module, source, script_id, module.span);
+        c.code.strict = true;
+        c.compile_module_body(&module.body);
+        // [[HasTLA]]: the module's own code awaits.
+        c.code.is_async = c.code.ops.iter().any(|op| matches!(op, Op::Await));
+        c.finish()
+    })
 }
 
 /// Compiles a standalone function (CreateDynamicFunction).
@@ -495,5 +501,17 @@ pub fn compile_dynamic_function(
     source: Arc<str>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
-    function::compile_function(agent, f, source, script_id, false)
+    pinned(agent, |agent| {
+        function::compile_function(agent, f, source, script_id, false)
+    })
+}
+
+/// Runs `f` with the strings and BigInts it creates or looks up pinned:
+/// compiled code refers to them and is not collected (docs/GC.md).
+fn pinned<T>(agent: &mut Agent, f: impl FnOnce(&mut Agent) -> T) -> T {
+    let was = agent.gc.pinning;
+    agent.gc.pinning = true;
+    let r = f(agent);
+    agent.gc.pinning = was;
+    r
 }

@@ -401,3 +401,10 @@ fn make_match_indices_index_pair_array(
     // 10. Return A.
     Ok(array)
 }
+
+impl kahvi_core::gc::Trace for RegExpData {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        t.string(self.original_source);
+        t.string(self.original_flags);
+    }
+}

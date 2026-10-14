@@ -52,7 +52,8 @@ fn eval_script(agent: &mut Agent, _: Value, args: &[Value], _: Option<Object>) -
     vm::evaluate_script(agent, &script)
 }
 
-fn gc(_: &mut Agent, _: Value, _: &[Value], _: Option<Object>) -> JsResult<Value> {
+fn gc(agent: &mut Agent, _: Value, _: &[Value], _: Option<Object>) -> JsResult<Value> {
+    agent.collect_garbage_if_safe();
     Ok(Value::Undefined)
 }
 

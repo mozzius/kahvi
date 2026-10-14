@@ -28,5 +28,6 @@ pub(crate) fn prototype_call(
     }
     let this_arg = args.get_or_undefined(0);
     let rest = args.get(1..).unwrap_or(&[]);
-    ops::call(agent, func, this_arg, rest)
+    // A tail call: nothing here is used after it (docs/GC.md).
+    ops::call_rooted(agent, func, this_arg, rest)
 }

@@ -34,3 +34,9 @@ pub(crate) fn create_array_iterator(
     };
     agent.object_with_kind(Some(proto), ObjectKind::Native(Box::new(state)))
 }
+
+impl kahvi_core::gc::Trace for ArrayIterator {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.iterated.trace(t);
+    }
+}

@@ -76,6 +76,14 @@ enum Resumption {
 
 /// Runs the generator's frame from its suspension point.
 fn resume(agent: &mut Agent, g: Object, how: Resumption) -> JsResult<Value> {
+    // The generator holds the frame's home while it runs: keep it rooted.
+    let roots = agent.push_root(Value::Object(g));
+    let r = resume_rooted(agent, g, how);
+    agent.pop_roots(roots);
+    r
+}
+
+fn resume_rooted(agent: &mut Agent, g: Object, how: Resumption) -> JsResult<Value> {
     let (mut frame, function) = {
         let data = data_mut(agent, g);
         data.state = GeneratorState::Executing;
@@ -216,4 +224,11 @@ pub fn generator_resume_abrupt(
             Resumption::Throw(value)
         },
     )
+}
+
+impl crate::gc::Trace for GeneratorData {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        self.frame.trace(t);
+        t.object(self.function);
+    }
 }

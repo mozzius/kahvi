@@ -3,12 +3,11 @@
 //! They live in the core because `await` needs them; the Promise built-ins
 //! (constructor, then, combinators) are in kahvi-builtins and call these.
 
-use crate::agent::{Agent, ExecutionContext};
+use crate::agent::{Agent, ExecutionContext, Job};
 use crate::error::{JsError, JsResult};
 use crate::function::{builtin_slots, create_builtin_function, get_function_realm};
 use crate::object::{ObjectKind, PropertyKey};
-use crate::ops::{call, construct, get, is_callable};
-use crate::realm::RealmId;
+use crate::ops::{call, call_rooted, construct, get, is_callable};
 use crate::value::{Args, Object, Value};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -224,23 +223,11 @@ fn promise_resolve_function(
         Value::Object(t) => get_function_realm(agent, t).unwrap_or_else(|_| agent.current_realm()),
         _ => agent.current_realm(),
     };
-    enqueue_promise_job(agent, realm, move |agent| {
-        // NewPromiseResolveThenableJob: a. Let resolvingFunctions be CreateResolvingFunctions(promiseToResolve).
-        let (resolve, reject) = create_resolving_functions(agent, promise);
-        // b. Let thenCallResult be Completion(HostCallJobCallback(then, thenable, « resolve, reject »)).
-        match call(
-            agent,
-            then,
-            resolution,
-            &[Value::Object(resolve), Value::Object(reject)],
-        ) {
-            Ok(_) => Ok(()),
-            // c. If thenCallResult is an abrupt completion, then return ? Call(reject, undefined, « thenCallResult.[[Value]] »).
-            Err(JsError::Throw(e)) => {
-                call(agent, Value::Object(reject), Value::Undefined, &[e]).map(|_| ())
-            }
-            Err(e) => Err(e),
-        }
+    agent.enqueue_job(Job::PromiseResolveThenable {
+        realm,
+        promise,
+        thenable: resolution,
+        then,
     });
     Ok(Value::Undefined)
 }
@@ -303,25 +290,8 @@ fn host_promise_rejection_tracker(agent: &mut Agent, promise: Object, handled: b
     agent.rejection_tracker.push((promise, handled));
 }
 
-/// HostEnqueuePromiseJob(job, realm): runs `job` later in an execution context for `realm`.
-pub fn enqueue_promise_job(
-    agent: &mut Agent,
-    realm: RealmId,
-    job: impl FnOnce(&mut Agent) -> JsResult<()> + Send + 'static,
-) {
-    agent.enqueue_job(Box::new(move |agent: &mut Agent| {
-        agent.contexts.push(ExecutionContext {
-            function: None,
-            realm,
-            script_or_module: None,
-        });
-        let r = job(agent);
-        agent.contexts.pop();
-        r
-    }));
-}
-
-/// NewPromiseReactionJob(reaction, argument) (§27.2.2.1), enqueued.
+/// NewPromiseReactionJob(reaction, argument) (§27.2.2.1), enqueued with
+/// HostEnqueuePromiseJob.
 fn new_promise_reaction_job(agent: &mut Agent, reaction: PromiseReaction, argument: Value) {
     // 3-5. The job's realm is the handler's function realm if it can be found.
     let realm = match reaction.handler {
@@ -330,32 +300,104 @@ fn new_promise_reaction_job(agent: &mut Agent, reaction: PromiseReaction, argume
         }
         _ => agent.current_realm(),
     };
-    enqueue_promise_job(agent, realm, move |agent| {
-        // 1.a-c Let handlerResult be the handler's completion (or argument when the handler is empty).
-        let handler_result = match reaction.handler {
-            None => match reaction.kind {
-                ReactionType::Fulfill => Ok(argument),
-                ReactionType::Reject => Err(JsError::Throw(argument)),
-            },
-            Some(h) => call(agent, h, Value::Undefined, &[argument]),
-        };
-        // 1.f If promiseCapability is undefined, return empty.
-        let Some(capability) = reaction.capability else {
-            return match handler_result {
-                Err(JsError::NotImplemented(m)) => Err(JsError::NotImplemented(m)),
-                _ => Ok(()),
-            };
-        };
-        match handler_result {
-            // 1.h Else, return ? Call(promiseCapability.[[Resolve]], undefined, « handlerResult.[[Value]] »).
-            Ok(v) => call(agent, capability.resolve, Value::Undefined, &[v]).map(|_| ()),
-            // 1.g If handlerResult is an abrupt completion, return ? Call(promiseCapability.[[Reject]], ...).
-            Err(JsError::Throw(e)) => {
-                call(agent, capability.reject, Value::Undefined, &[e]).map(|_| ())
-            }
-            Err(e) => Err(e),
-        }
+    agent.enqueue_job(Job::PromiseReaction {
+        realm,
+        reaction,
+        argument,
     });
+}
+
+/// Runs a job (HostEnqueuePromiseJob: in an execution context for its realm).
+pub(crate) fn run_job(agent: &mut Agent, job: Job) -> JsResult<()> {
+    let realm = match job {
+        Job::PromiseReaction { realm, .. }
+        | Job::PromiseResolveThenable { realm, .. }
+        | Job::FinalizationRegistryCleanup { realm, .. } => realm,
+    };
+    agent.contexts.push(ExecutionContext {
+        function: None,
+        realm,
+        script_or_module: None,
+    });
+    let r = match job {
+        Job::PromiseReaction {
+            reaction, argument, ..
+        } => promise_reaction_job(agent, reaction, argument),
+        Job::PromiseResolveThenable {
+            promise,
+            thenable,
+            then,
+            ..
+        } => promise_resolve_thenable_job(agent, promise, thenable, then),
+        Job::FinalizationRegistryCleanup { registry, .. } => {
+            // 1-2. Errors from the callback are reported to the host.
+            crate::object::weak::cleanup_finalization_registry(agent, registry)
+        }
+    };
+    agent.contexts.pop();
+    r
+}
+
+/// The Job Abstract Closure of NewPromiseReactionJob (§27.2.2.1 step 1).
+fn promise_reaction_job(
+    agent: &mut Agent,
+    reaction: PromiseReaction,
+    argument: Value,
+) -> JsResult<()> {
+    // 1.a-c Let handlerResult be the handler's completion (or argument when the handler is empty).
+    let handler_result = match reaction.handler {
+        None => match reaction.kind {
+            ReactionType::Fulfill => Ok(argument),
+            ReactionType::Reject => Err(JsError::Throw(argument)),
+        },
+        // The job's data is a root while it runs (docs/GC.md).
+        Some(h) => call_rooted(agent, h, Value::Undefined, &[argument]),
+    };
+    // 1.f If promiseCapability is undefined, return empty.
+    let Some(capability) = reaction.capability else {
+        return match handler_result {
+            Err(JsError::NotImplemented(m)) => Err(JsError::NotImplemented(m)),
+            _ => Ok(()),
+        };
+    };
+    match handler_result {
+        // 1.h Else, return ? Call(promiseCapability.[[Resolve]], undefined, « handlerResult.[[Value]] »).
+        Ok(v) => call_rooted(agent, capability.resolve, Value::Undefined, &[v]).map(|_| ()),
+        // 1.g If handlerResult is an abrupt completion, return ? Call(promiseCapability.[[Reject]], ...).
+        Err(JsError::Throw(e)) => {
+            call_rooted(agent, capability.reject, Value::Undefined, &[e]).map(|_| ())
+        }
+        Err(e) => Err(e),
+    }
+}
+
+/// The Job Abstract Closure of NewPromiseResolveThenableJob (§27.2.2.2 step 1).
+fn promise_resolve_thenable_job(
+    agent: &mut Agent,
+    promise: Object,
+    thenable: Value,
+    then: Value,
+) -> JsResult<()> {
+    // a. Let resolvingFunctions be CreateResolvingFunctions(promiseToResolve).
+    let (resolve, reject) = create_resolving_functions(agent, promise);
+    // b. Let thenCallResult be Completion(HostCallJobCallback(then, thenable, « resolve, reject »)).
+    // (reject is used again if the call throws: keep it rooted.)
+    let roots = agent.push_root(Value::Object(reject));
+    let r = call_rooted(
+        agent,
+        then,
+        thenable,
+        &[Value::Object(resolve), Value::Object(reject)],
+    );
+    agent.pop_roots(roots);
+    match r {
+        Ok(_) => Ok(()),
+        // c. If thenCallResult is an abrupt completion, then return ? Call(reject, undefined, « thenCallResult.[[Value]] »).
+        Err(JsError::Throw(e)) => {
+            call_rooted(agent, Value::Object(reject), Value::Undefined, &[e]).map(|_| ())
+        }
+        Err(e) => Err(e),
+    }
 }
 
 // ---- capabilities and then (§27.2.1.5, §27.2.5.4.1) ----------------------------------------
@@ -525,4 +567,42 @@ pub fn promise_state(agent: &Agent, promise: Object) -> Option<(PromiseState, Va
     agent
         .native::<PromiseData>(promise)
         .map(|d| (d.state, d.result))
+}
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for PromiseCapability {
+    fn trace(&self, t: &mut Tracer) {
+        t.value(self.promise);
+        t.value(self.resolve);
+        t.value(self.reject);
+    }
+}
+
+impl Trace for PromiseReaction {
+    fn trace(&self, t: &mut Tracer) {
+        self.capability.trace(t);
+        self.handler.trace(t);
+    }
+}
+
+impl Trace for PromiseData {
+    fn trace(&self, t: &mut Tracer) {
+        t.value(self.result);
+        self.fulfill_reactions.trace(t);
+        self.reject_reactions.trace(t);
+    }
+}
+
+impl Trace for AlreadyResolved {
+    fn trace(&self, _t: &mut Tracer) {}
+}
+
+impl Trace for CapabilityCells {
+    fn trace(&self, t: &mut Tracer) {
+        self.resolve.trace(t);
+        self.reject.trace(t);
+    }
 }

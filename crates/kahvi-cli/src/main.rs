@@ -76,6 +76,8 @@ fn main() -> ExitCode {
 /// Evaluates the preludes and the file in one realm, then drains the job queue.
 fn run(args: &Args) -> u8 {
     let mut agent = Agent::new();
+    // KAHVI_GC_STRESS=1 collects at every safe point (finds rooting bugs).
+    agent.gc_stress = std::env::var_os("KAHVI_GC_STRESS").is_some();
     agent.set_intrinsics_installer(kahvi_builtins::install);
     agent.host_now = Some(host::now_ms);
     let realm = match host::new_realm(&mut agent) {

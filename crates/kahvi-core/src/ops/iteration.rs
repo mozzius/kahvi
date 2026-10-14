@@ -235,3 +235,10 @@ pub fn iterator_to_list(agent: &mut Agent, record: &mut IteratorRecord) -> JsRes
     }
     Ok(values)
 }
+
+impl crate::gc::Trace for IteratorRecord {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        t.object(self.iterator);
+        t.value(self.next_method);
+    }
+}

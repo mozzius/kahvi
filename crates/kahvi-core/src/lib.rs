@@ -8,6 +8,7 @@ pub mod compiler;
 pub mod env;
 pub mod error;
 pub mod function;
+pub mod gc;
 pub mod hash;
 pub mod object;
 pub mod ops;

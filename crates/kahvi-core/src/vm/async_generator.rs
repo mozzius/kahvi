@@ -349,7 +349,15 @@ fn await_return_rejected(
 /// after an await inside the body: runs the frame until it awaits, yields,
 /// returns or throws, handling each as AsyncGeneratorStart and
 /// AsyncGeneratorYield specify.
-pub(super) fn resume(agent: &mut Agent, g: Object, mut how: Completion) -> JsResult<()> {
+pub(super) fn resume(agent: &mut Agent, g: Object, how: Completion) -> JsResult<()> {
+    // The generator holds the frame's home while it runs: keep it rooted.
+    let roots = agent.push_root(Value::Object(g));
+    let r = resume_rooted(agent, g, how);
+    agent.pop_roots(roots);
+    r
+}
+
+fn resume_rooted(agent: &mut Agent, g: Object, mut how: Completion) -> JsResult<()> {
     loop {
         let (mut frame, function, at_start) = {
             let d = data(agent, g);
@@ -469,4 +477,31 @@ pub(super) fn resume(agent: &mut Agent, g: Object, mut how: Completion) -> JsRes
 /// Whether an await-resumption target is an async generator.
 pub(super) fn is_async_generator(agent: &Agent, o: Object) -> bool {
     agent.native::<AsyncGeneratorData>(o).is_some()
+}
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for Completion {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Completion::Normal(v) | Completion::Return(v) | Completion::Throw(v) => t.value(*v),
+        }
+    }
+}
+
+impl Trace for Request {
+    fn trace(&self, t: &mut Tracer) {
+        self.completion.trace(t);
+        self.capability.trace(t);
+    }
+}
+
+impl Trace for AsyncGeneratorData {
+    fn trace(&self, t: &mut Tracer) {
+        self.queue.trace(t);
+        self.frame.trace(t);
+        t.object(self.function);
+    }
 }

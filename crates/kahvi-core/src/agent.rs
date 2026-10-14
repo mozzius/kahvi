@@ -26,8 +26,50 @@ pub struct ExecutionContext {
     pub script_or_module: Option<crate::ScriptOrModule>,
 }
 
-/// A pending job (§9.5): a closure run when the stack is empty.
-pub type Job = Box<dyn FnOnce(&mut Agent) -> JsResult<()> + Send>;
+/// A pending job (§9.5), run when the execution context stack is empty.
+/// Jobs are data (not closures) so the collector can trace them.
+#[derive(Debug, Clone, Copy)]
+pub enum Job {
+    /// NewPromiseReactionJob(reaction, argument)
+    PromiseReaction {
+        realm: RealmId,
+        reaction: crate::ops::promise::PromiseReaction,
+        argument: Value,
+    },
+    /// NewPromiseResolveThenableJob(promiseToResolve, thenable, then)
+    PromiseResolveThenable {
+        realm: RealmId,
+        promise: Object,
+        thenable: Value,
+        then: Value,
+    },
+    /// HostEnqueueFinalizationRegistryCleanupJob(finalizationRegistry)
+    FinalizationRegistryCleanup { realm: RealmId, registry: Object },
+}
+
+impl crate::gc::Trace for Job {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        match self {
+            Job::PromiseReaction {
+                reaction, argument, ..
+            } => {
+                reaction.trace(t);
+                t.value(*argument);
+            }
+            Job::PromiseResolveThenable {
+                promise,
+                thenable,
+                then,
+                ..
+            } => {
+                t.object(*promise);
+                t.value(*thenable);
+                t.value(*then);
+            }
+            Job::FinalizationRegistryCleanup { registry, .. } => t.object(*registry),
+        }
+    }
+}
 
 /// The well-known symbols (§6.1.5.1).
 #[derive(Debug, Clone, Copy)]
@@ -84,14 +126,26 @@ pub struct Names {
 pub type IntrinsicsInstaller = fn(&mut Agent, RealmId) -> JsResult<()>;
 
 pub struct Agent {
-    objects: Vec<ObjectData>,
-    strings: Vec<Box<[u16]>>,
-    string_index: crate::hash::ContentHashMap<Box<[u16]>, u32>,
-    symbols: Vec<SymbolData>,
+    pub(crate) objects: Vec<ObjectData>,
+    pub(crate) strings: Vec<Box<[u16]>>,
+    pub(crate) string_index: crate::hash::ContentHashMap<Box<[u16]>, u32>,
+    pub(crate) symbols: Vec<SymbolData>,
+    /// The garbage collector's state (docs/GC.md).
+    pub(crate) gc: crate::gc::GcState,
+    /// Collect at every safe point (finds rooting bugs; set by the host).
+    pub gc_stress: bool,
+    /// [[KeptAlive]]: WeakRef targets kept until the end of the current job.
+    pub(crate) kept_objects: Vec<Object>,
+    pub(crate) kept_symbols: Vec<Value>,
+    /// Live FinalizationRegistry objects (held weakly), for cleanup scheduling.
+    pub(crate) finalization_registries: Vec<Object>,
     pub(crate) envs: Vec<Environment>,
     pub realms: Vec<Realm>,
     pub contexts: Vec<ExecutionContext>,
     pub jobs: VecDeque<Job>,
+    /// The jobs being run (a job can run others only through the host, so
+    /// this is at most a few deep); their data is a root.
+    pub(crate) running_jobs: Vec<Job>,
     /// [[GlobalSymbolRegistry]]: Symbol.for keys.
     pub symbol_registry: Vec<(JsString, Symbol)>,
     pub symbols_wk: WellKnownSymbols,
@@ -141,10 +195,16 @@ impl Agent {
             strings: Vec::new(),
             string_index: Default::default(),
             symbols: Vec::new(),
+            gc: Default::default(),
+            gc_stress: false,
+            kept_objects: Vec::new(),
+            kept_symbols: Vec::new(),
+            finalization_registries: Vec::new(),
             envs: Vec::new(),
             realms: Vec::new(),
             contexts: Vec::new(),
             jobs: VecDeque::new(),
+            running_jobs: Vec::new(),
             symbol_registry: Vec::new(),
             symbols_wk: WellKnownSymbols {
                 async_iterator: Symbol(0),
@@ -205,6 +265,8 @@ impl Agent {
             host_now: None,
             host_local_tza: None,
         };
+        // The common names and well-known symbols live as long as the agent.
+        agent.gc.pinning = true;
         agent.names = Names {
             length: agent.string("length"),
             prototype: agent.string("prototype"),
@@ -253,6 +315,8 @@ impl Agent {
             dispose: wk(&mut agent, "Symbol.dispose"),
             async_dispose: wk(&mut agent, "Symbol.asyncDispose"),
         };
+        agent.gc.pinning = false;
+        agent.gc.pinned_symbols = agent.symbols.len() as u32;
         agent
     }
 
@@ -264,6 +328,12 @@ impl Agent {
     // ---- objects -------------------------------------------------------
 
     pub fn alloc(&mut self, data: ObjectData) -> Object {
+        self.gc.allocated += 1;
+        if let Some(i) = self.gc.free_objects.pop() {
+            self.gc.is_free_object.remove(i);
+            self.objects[i as usize] = data;
+            return Object(i);
+        }
         self.objects.push(data);
         Object((self.objects.len() - 1) as u32)
     }
@@ -311,11 +381,27 @@ impl Agent {
     /// Interns UTF-16 code units.
     pub fn intern(&mut self, units: &[u16]) -> JsString {
         if let Some(&id) = self.string_index.get(units) {
+            if self.gc.pinning {
+                self.gc.pinned_strings.insert(id);
+            }
             return JsString(id);
         }
-        let id = self.strings.len() as u32;
-        self.strings.push(units.into());
+        self.gc.allocated += 1;
+        let id = match self.gc.free_strings.pop() {
+            Some(i) => {
+                self.gc.is_free_string.remove(i);
+                self.strings[i as usize] = units.into();
+                i
+            }
+            None => {
+                self.strings.push(units.into());
+                (self.strings.len() - 1) as u32
+            }
+        };
         self.string_index.insert(units.into(), id);
+        if self.gc.pinning {
+            self.gc.pinned_strings.insert(id);
+        }
         JsString(id)
     }
 
@@ -371,6 +457,12 @@ impl Agent {
     }
 
     pub fn new_symbol(&mut self, description: Option<JsString>) -> Symbol {
+        self.gc.allocated += 1;
+        if let Some(i) = self.gc.free_symbols.pop() {
+            self.gc.is_free_symbol.remove(i);
+            self.symbols[i as usize] = SymbolData { description };
+            return Symbol(i);
+        }
         self.symbols.push(SymbolData { description });
         Symbol((self.symbols.len() - 1) as u32)
     }
@@ -469,6 +561,12 @@ impl Agent {
     // ---- environments ------------------------------------------------------
 
     pub fn alloc_env(&mut self, env: Environment) -> EnvId {
+        self.gc.allocated += 1;
+        if let Some(i) = self.gc.free_envs.pop() {
+            self.gc.is_free_env.remove(i);
+            self.envs[i as usize] = env;
+            return EnvId(i);
+        }
         self.envs.push(env);
         EnvId((self.envs.len() - 1) as u32)
     }
@@ -535,8 +633,19 @@ impl Agent {
 
     /// Runs queued jobs until the queue is empty.
     pub fn run_jobs(&mut self) -> JsResult<()> {
+        // ClearKeptObjects(): the synchronous run that queued these jobs is over.
+        self.kept_objects.clear();
+        self.kept_symbols.clear();
         while let Some(job) = self.jobs.pop_front() {
-            job(self)?;
+            self.running_jobs.push(job);
+            let r = crate::ops::promise::run_job(self, job);
+            self.running_jobs.pop();
+            // ClearKeptObjects(): the job is over.
+            self.kept_objects.clear();
+            self.kept_symbols.clear();
+            r?;
+            // Between jobs nothing but the roots holds handles.
+            self.gc_safe_point();
         }
         Ok(())
     }

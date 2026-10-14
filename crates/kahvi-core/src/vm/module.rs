@@ -1658,3 +1658,52 @@ pub fn run_module(agent: &mut Agent, realm: RealmId, key: &str, source: &str) ->
     link(agent, module)?;
     evaluate(agent, module)
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for ModuleRequest {
+    fn trace(&self, t: &mut Tracer) {
+        t.string(self.specifier);
+        self.attributes.trace(t);
+    }
+}
+
+impl Trace for ImportEntry {
+    fn trace(&self, t: &mut Tracer) {
+        if let ImportName::Name(n) = self.import_name {
+            t.string(n);
+        }
+        t.string(self.local_name);
+    }
+}
+
+impl Trace for ExportEntry {
+    fn trace(&self, t: &mut Tracer) {
+        self.export_name.trace(t);
+        if let ExportImport::Name(n) = self.import_name {
+            t.string(n);
+        }
+        self.local_name.trace(t);
+    }
+}
+
+impl Trace for ModuleRecord {
+    fn trace(&self, t: &mut Tracer) {
+        self.environment.trace(t);
+        self.namespace.trace(t);
+        self.evaluation_error.trace(t);
+        self.requested_modules.trace(t);
+        for (r, _) in &self.loaded_modules {
+            r.trace(t);
+        }
+        self.top_level_capability.trace(t);
+        self.import_meta.trace(t);
+        self.synthetic_default.trace(t);
+        self.import_entries.trace(t);
+        self.local_export_entries.trace(t);
+        self.indirect_export_entries.trace(t);
+        self.star_export_entries.trace(t);
+    }
+}

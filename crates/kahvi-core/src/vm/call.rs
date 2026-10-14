@@ -398,7 +398,8 @@ pub(super) fn super_call(
         return Err(agent.throw_syntax_error("'super' keyword unexpected here"));
     };
     // 6. Let result be ? Construct(func, argList, newTarget).
-    let result = func.internal_construct(agent, args, new_target)?;
+    // (The caller's frame roots func and the arguments; see docs/GC.md.)
+    let result = func.internal_construct_rooted(agent, args, new_target)?;
     // 8. Perform ? thisER.BindThisValue(result).
     this_env.bind_this_value(agent, Value::Object(result))?;
     // 10. Perform ? InitializeInstanceElements(result, F).

@@ -6,8 +6,11 @@ pub mod internal;
 pub mod namespace;
 pub mod proxy;
 pub mod typed_array;
+pub mod weak;
 
 use std::any::Any;
+
+use crate::gc::{Liveness, Trace, Tracer};
 
 use crate::value::{BigInt, JsString, Object, Symbol, Value};
 
@@ -383,13 +386,14 @@ pub enum ObjectKind {
     Native(Box<dyn NativeData>),
 }
 
-/// Data for built-in objects whose internal methods are all ordinary.
-pub trait NativeData: Any + std::fmt::Debug + Send {
+/// Data for built-in objects whose internal methods are all ordinary. It
+/// must report its handles to the garbage collector ([`Trace`]).
+pub trait NativeData: Any + std::fmt::Debug + Send + Trace {
     fn as_any(&self) -> &dyn Any;
     fn as_any_mut(&mut self) -> &mut dyn Any;
 }
 
-impl<T: Any + std::fmt::Debug + Send> NativeData for T {
+impl<T: Any + std::fmt::Debug + Send + Trace> NativeData for T {
     fn as_any(&self) -> &dyn Any {
         self
     }
@@ -408,6 +412,74 @@ pub struct ObjectData {
     /// [[PrivateElements]]
     pub private_elements: Vec<crate::function::PrivateElement>,
     pub kind: ObjectKind,
+}
+
+impl Trace for Property {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Property::Data { value, .. } => t.value(*value),
+            Property::Accessor { get, set, .. } => {
+                t.value(*get);
+                t.value(*set);
+            }
+        }
+    }
+}
+
+impl Trace for PropertyMap {
+    fn trace(&self, t: &mut Tracer) {
+        for p in self.elements.iter().flatten() {
+            p.trace(t);
+        }
+        for (k, p) in self.entries.iter().flatten() {
+            t.key(*k);
+            p.trace(t);
+        }
+    }
+}
+
+impl Trace for ObjectKind {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            ObjectKind::Ordinary
+            | ObjectKind::Array
+            | ObjectKind::Error
+            | ObjectKind::BooleanObject(_)
+            | ObjectKind::NumberObject(_)
+            | ObjectKind::ImmutablePrototype => {}
+            ObjectKind::Function(f) => f.trace(t),
+            ObjectKind::Builtin(f) => f.trace(t),
+            ObjectKind::BoundFunction(f) => f.trace(t),
+            ObjectKind::Arguments(a) => a.trace(t),
+            ObjectKind::ModuleNamespace(n) => n.exports.trace(t),
+            ObjectKind::ArrayBuffer(b) => t.value(b.detach_key),
+            ObjectKind::TypedArray(a) => a.buffer.trace(t),
+            ObjectKind::DataView(v) => t.object(v.buffer),
+            ObjectKind::StringObject(s) => t.string(*s),
+            ObjectKind::SymbolObject(s) => t.symbol(*s),
+            ObjectKind::BigIntObject(b) => t.bigint(*b),
+            ObjectKind::Native(d) => d.trace(t),
+        }
+    }
+
+    fn sweep_weak(&mut self, live: &Liveness) {
+        if let ObjectKind::Native(d) = self {
+            d.sweep_weak(live);
+        }
+    }
+}
+
+impl Trace for ObjectData {
+    fn trace(&self, t: &mut Tracer) {
+        self.prototype.trace(t);
+        self.properties.trace(t);
+        self.private_elements.trace(t);
+        self.kind.trace(t);
+    }
+
+    fn sweep_weak(&mut self, live: &Liveness) {
+        self.kind.sweep_weak(live);
+    }
 }
 
 impl ObjectData {

@@ -169,6 +169,33 @@ pub fn call(agent: &mut Agent, f: Value, this: Value, args: &[Value]) -> JsResul
     fo.internal_call(agent, this, args)
 }
 
+/// Call(F, V, argumentsList) for a caller that needs nothing it holds after
+/// the call returns, other than what is rooted elsewhere (`this` and the
+/// arguments of a built-in called by the interpreter are rooted by the
+/// caller's frame): the JavaScript it runs may collect garbage. Tail calls
+/// (Function.prototype.call, Reflect.apply) and jobs use it; see docs/GC.md.
+pub fn call_rooted(agent: &mut Agent, f: Value, this: Value, args: &[Value]) -> JsResult<Value> {
+    let Value::Object(fo) = f else {
+        return Err(agent.throw_type_error("not a function"));
+    };
+    if !fo.is_callable(agent) {
+        return Err(agent.throw_type_error("not a function"));
+    }
+    fo.internal_call_rooted(agent, this, args)
+}
+
+/// Construct(F, argumentsList, newTarget) for a caller whose handles are
+/// rooted (see `call_rooted`).
+pub fn construct_rooted(
+    agent: &mut Agent,
+    f: Object,
+    args: &[Value],
+    new_target: Option<Object>,
+) -> JsResult<Object> {
+    let new_target = new_target.unwrap_or(f);
+    f.internal_construct_rooted(agent, args, new_target)
+}
+
 /// Construct(F [, argumentsList [, newTarget]]) (§7.3.15)
 pub fn construct(
     agent: &mut Agent,

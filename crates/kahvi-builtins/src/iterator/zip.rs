@@ -404,3 +404,9 @@ fn get_iterator_flattenable_reject_primitives(
 fn is_string_value(agent: &Agent, v: Value, expected: &str) -> bool {
     matches!(v, Value::String(s) if agent.str(s).iter().copied().eq(expected.encode_utf16()))
 }
+
+impl kahvi_core::gc::Trace for ZipClosure {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.padding.trace(t);
+    }
+}
