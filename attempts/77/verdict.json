@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements String.prototype.search steps 1 to 6 in spec order, with each step kept as a comment above its code. RequireObjectCoercible, the IsObject check, GetMethod on %Symbol.search% with the undefined fall-through, ToString(this), RegExpCreate(pattern, undefined) and Invoke(regexp, %Symbol.search%, \u00ab string \u00bb) all use the ops helpers and propagate errors with `?`. No special-casing, no made-up values, no swallowed errors. The 60 remaining failures come from RegExp.prototype[Symbol.search] throwing the engine's not-implemented error, which is the honest outcome. The only non-functional change is that the NOTE comment from the stub was dropped; it is not a spec step and does not affect behaviour.",
+  "problems": [],
+  "notes_for_next_attempt": "Nothing blocking. The diff matches the spec. Optionally restore the stub's NOTE comment about the method being generic, for fidelity to the stub. The remaining test262 failures depend on RegExp.prototype[Symbol.search] (a separate ticket).",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

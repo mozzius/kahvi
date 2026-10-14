@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-prototype-search",
+  "base": "307e059813a6848d9342f3b4ec8e0dfb50f45d9e",
+  "head": "ce448199bad7e4bc670ab90643d8c4d0b746b47e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_search.rs",
+      "added": 26,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 86,
+    "before": 16,
+    "after": 26,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 60,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/search/S15.5.4.12_A1.1_T1.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1.1_T1.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T1.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T1.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T10.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T10.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T13.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T13.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T14.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T14.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T2.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T2.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T4.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T4.js:strict  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]",
+      "built-ins/String/prototype/search/S15.5.4.12_A1_T5.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype[Symbol.search]"
+    ]
+  },
+  "decision": "pass"
+}

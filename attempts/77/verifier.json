@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 9026,
+  "stop_reason": "tool_use",
+  "session_id": "796f3d5b-df65-4d05-a189-39da0c63092f",
+  "total_cost_usd": 0.00271496,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6318,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1722,
+    "output_tokens_details": {
+      "thinking_tokens": 1162
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6318,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1722,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6318,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6318
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.search steps 1 to 6 in spec order, with each step kept as a comment above its code. RequireObjectCoercible, the IsObject check, GetMethod on %Symbol.search% with the undefined fall-through, ToString(this), RegExpCreate(pattern, undefined) and Invoke(regexp, %Symbol.search%, \u00ab string \u00bb) all use the ops helpers and propagate errors with `?`. No special-casing, no made-up values, no swallowed errors. The 60 remaining failures come from RegExp.prototype[Symbol.search] throwing the engine's not-implemented error, which is the honest outcome. The only non-functional change is that the NOTE comment from the stub was dropped; it is not a spec step and does not affect behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. The diff matches the spec. Optionally restore the stub's NOTE comment about the method being generic, for fidelity to the stub. The remaining test262 failures depend on RegExp.prototype[Symbol.search] (a separate ticket).\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.search steps 1 to 6 in spec order, with each step kept as a comment above its code. RequireObjectCoercible, the IsObject check, GetMethod on %Symbol.search% with the undefined fall-through, ToString(this), RegExpCreate(pattern, undefined) and Invoke(regexp, %Symbol.search%, \u00ab string \u00bb) all use the ops helpers and propagate errors with `?`. No special-casing, no made-up values, no swallowed errors. The 60 remaining failures come from RegExp.prototype[Symbol.search] throwing the engine's not-implemented error, which is the honest outcome. The only non-functional change is that the NOTE comment from the stub was dropped; it is not a spec step and does not affect behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. The diff matches the spec. Optionally restore the stub's NOTE comment about the method being generic, for fidelity to the stub. The remaining test262 failures depend on RegExp.prototype[Symbol.search] (a separate ticket)."
+  },
+  "ttft_ms": 6414,
+  "type": "result",
+  "duration_ms": 8469,
+  "uuid": "1a117632-be71-419e-8ba5-1269d1660257",
+  "ttft_stream_ms": 1157,
+  "time_to_request_ms": 260,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 47,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 143,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 4,
+    "client_creation": 8,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 51,
+  "time_to_request_cpu_ms": 165,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 223,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 524,
+  "process_wall_ms_turn": 8469,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 50,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1158,
+  "time_to_request_from_spawn_ms": 20052096,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791967929177.6987,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.79,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
