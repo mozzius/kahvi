@@ -30,6 +30,9 @@ pub struct ParseOptions {
     pub in_class_field_init: bool,
     /// Private names of enclosing classes (direct eval inside a class body).
     pub private_names: Vec<String>,
+    /// Lone surrogates in the original UTF-16 source, which `src` holds as
+    /// U+FFFD: (byte offset in `src`, code unit), sorted by offset.
+    pub lone_surrogates: Vec<(usize, u16)>,
 }
 
 impl Default for ParseOptions {
@@ -42,6 +45,7 @@ impl Default for ParseOptions {
             allow_arguments: true,
             in_class_field_init: false,
             private_names: Vec::new(),
+            lone_surrogates: Vec::new(),
         }
     }
 }
@@ -204,6 +208,7 @@ pub(crate) struct Parser<'a> {
 impl<'a> Parser<'a> {
     fn new(src: &'a str, module: bool, opts: &ParseOptions) -> PResult<Parser<'a>> {
         let mut lx = Lexer::new(src, module);
+        lx.lone_surrogates = opts.lone_surrogates.clone();
         let tok = lx.next_token()?;
         let mut top = FnCtx::top(opts);
         top.is_eval_like = opts.allow_new_target || opts.allow_super_property;
