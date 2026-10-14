@@ -1,0 +1,37 @@
+{
+  "ticket": "C-proxy-set",
+  "base": "bb6822b4ddcdfeebd5d28f14ac467ce9332587a7",
+  "head": "82cc5228b064e263097ffc9080ddecc5ca96e026",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/set.rs",
+      "added": 46,
+      "removed": 18
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 54,
+    "before": 0,
+    "after": 50,
+    "new_passes": 50,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls-index.js:sloppy  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+      "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls-index.js:strict  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+      "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls.js:sloppy  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+      "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls.js:strict  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor"
+    ]
+  },
+  "decision": "pass"
+}

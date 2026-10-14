@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8744,
+  "stop_reason": "tool_use",
+  "session_id": "b2f1c766-66f4-4abc-b387-bed74243b4af",
+  "total_cost_usd": 0.0028437000000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7984,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1722,
+    "output_tokens_details": {
+      "thinking_tokens": 1125
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7984,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1722,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 7984,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7984
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.charCodeAt steps 1-7 in order inside prototype_char_code_at.rs. Each step is kept as a comment above its code. RequireObjectCoercible and ToString run on this, ToIntegerOrInfinity runs on position, and the NaN range check comes before the code-unit read. The index is safe after that check, because position is an integer in [0, size). No test-shaped branches, no swallowed errors, no fabricated values. The only other change is renaming the unused new_target parameter to _new_target, which is needed now that it is unused. I could not verify that the helpers used (ops::require_object_coercible, ops::to_string, ops::to_integer_or_infinity, agent.str_len, agent.str, args.get_or_undefined) exist with the signatures assumed, but the build gate passed and the test262 result (+34, no regressions) is consistent with a correct implementation.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Nothing needs fixing. Optional: confirm that agent.str_len and agent.str return UTF-16 code-unit counts and slices, since the spec's \\\"length\\\" and \\\"code unit\\\" are defined in code units. The test262 result suggests they do.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.charCodeAt steps 1-7 in order inside prototype_char_code_at.rs. Each step is kept as a comment above its code. RequireObjectCoercible and ToString run on this, ToIntegerOrInfinity runs on position, and the NaN range check comes before the code-unit read. The index is safe after that check, because position is an integer in [0, size). No test-shaped branches, no swallowed errors, no fabricated values. The only other change is renaming the unused new_target parameter to _new_target, which is needed now that it is unused. I could not verify that the helpers used (ops::require_object_coercible, ops::to_string, ops::to_integer_or_infinity, agent.str_len, agent.str, args.get_or_undefined) exist with the signatures assumed, but the build gate passed and the test262 result (+34, no regressions) is consistent with a correct implementation.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Nothing needs fixing. Optional: confirm that agent.str_len and agent.str return UTF-16 code-unit counts and slices, since the spec's \"length\" and \"code unit\" are defined in code units. The test262 result suggests they do."
+  },
+  "ttft_ms": 7043,
+  "type": "result",
+  "duration_ms": 9301,
+  "uuid": "ff27d80e-3a4b-46ae-9317-aec7f31f4364",
+  "ttft_stream_ms": 1899,
+  "time_to_request_ms": 1031,
+  "time_to_request_phases_ms": {
+    "other": 83,
+    "system_prompt": 582,
+    "resume_other": 1,
+    "process_user_input": 31,
+    "input_attachments": 80,
+    "input_hooks": 15,
+    "tool_pool_refresh": 12,
+    "init_message": 33,
+    "engine_pickup": 7,
+    "message_prep": 7,
+    "model_config_wait": 118,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 4,
+    "client_creation": 11,
+    "request_build": 28
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 200,
+  "time_to_request_cpu_ms": 498,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 889,
+  "process_wall_ms_turn": 9298,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 63,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1900,
+  "time_to_request_from_spawn_ms": 9705354,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791989164629.1243,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

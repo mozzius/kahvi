@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6133,
+  "stop_reason": "tool_use",
+  "session_id": "edcbc692-9e26-4688-8d30-d72e49f8c3cb",
+  "total_cost_usd": 0.0379657,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7989,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 562,
+    "output_tokens_details": {
+      "thinking_tokens": 150
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7989,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 562,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 7989,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7989
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements all 7 spec steps in order, each with its comment above the code. Every fallible operation (require_object_coercible, to_string, to_integer_or_infinity) propagates with `?`. ToString runs before ToIntegerOrInfinity, as the spec orders them. The bounds check in step 6 uses f64, so \u00b1Infinity is handled. The `position as usize` cast only happens after the check, so it is safe. The only other edit is renaming `new_target` to `_new_target`, which is needed to avoid an unused-variable warning. The gate report shows 34 new passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements all 7 spec steps in order, each with its comment above the code. Every fallible operation (require_object_coercible, to_string, to_integer_or_infinity) propagates with `?`. ToString runs before ToIntegerOrInfinity, as the spec orders them. The bounds check in step 6 uses f64, so \u00b1Infinity is handled. The `position as usize` cast only happens after the check, so it is safe. The only other edit is renaming `new_target` to `_new_target`, which is needed to avoid an unused-variable warning. The gate report shows 34 new passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3902,
+  "type": "result",
+  "duration_ms": 6048,
+  "uuid": "8f461b8a-40f9-4adb-8c21-d146ad433449",
+  "ttft_stream_ms": 2442,
+  "time_to_request_ms": 709,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 453,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 18,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 145,
+    "autocompact": 3,
+    "query_setup": 4,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 12,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 107,
+  "time_to_request_cpu_ms": 443,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 680,
+  "process_wall_ms_turn": 6048,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2448,
+  "time_to_request_from_spawn_ms": 9716921,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791989176127.3462,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 27938,
+  "stop_reason": "end_turn",
+  "session_id": "0995c645-c57e-4569-8134-b80327aa4ec5",
+  "total_cost_usd": 0.01226026,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 32451,
+    "cache_read_input_tokens": 267146,
+    "output_tokens": 5390,
+    "output_tokens_details": {
+      "thinking_tokens": 1502
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32451,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 279,
+        "cache_read_input_tokens": 36926,
+        "cache_creation_input_tokens": 413,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 413
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented Proxy [[Set]] in `crates/kahvi-core/src/object/proxy/set.rs`, with each spec step kept as a comment above its code. `cargo build` and `cargo clippy -p kahvi-core` are clean, and only that file is changed. `./t262 built-ins/Proxy/set/` gives 50 pass and 4 fail. The 4 failures are all `Reflect.getOwnPropertyDescriptor not implemented`, which the test harness calls, so the ticket's \"every test passes\" condition isn't met.\n\nBLOCKED: `Reflect.getOwnPropertyDescriptor` (a built-in outside this ticket's file scope) is not implemented; the 4 remaining `built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls*` runs need it.",
+  "ttft_ms": 1636,
+  "type": "result",
+  "duration_ms": 61817,
+  "uuid": "7655343a-5cdc-4db1-afaf-78eee765282f",
+  "ttft_stream_ms": 1436,
+  "time_to_request_ms": 550,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 396,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 59,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 59,
+  "time_to_request_cpu_ms": 443,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 261,
+  "process_anon_mib_result": 142,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 4236,
+  "process_wall_ms_turn": 61816,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1437,
+  "time_to_request_from_spawn_ms": 9607161,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791989067308.716,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
