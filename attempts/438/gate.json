@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-to-time-string",
+  "base": "1f24e3ab482d4ee794e0786b8a219d4297a491ad",
+  "head": "823b85150d163de2f6657d46a4db0ae14267c70d",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_time_string.rs",
+      "added": 22,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 8,
+    "after": 12,
+    "new_passes": 4,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
