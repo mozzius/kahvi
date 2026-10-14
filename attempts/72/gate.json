@@ -1,0 +1,35 @@
+{
+  "ticket": "B-object-is-sealed",
+  "base": "5c530127f0b7a7a409ecc401af65d64dc16738ec",
+  "head": "8fb9f2a2c690c0e07467afbc22a16caa088eabdf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/is_sealed.rs",
+      "added": 7,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 66,
+    "before": 8,
+    "after": 64,
+    "new_passes": 56,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/isSealed/proxy-no-ownkeys-returned-keys-order.js:sloppy  Uncaught InternalError: not implemented: Proxy [[IsExtensible]]",
+      "built-ins/Object/isSealed/proxy-no-ownkeys-returned-keys-order.js:strict  Uncaught InternalError: not implemented: Proxy [[IsExtensible]]"
+    ]
+  },
+  "decision": "pass"
+}
