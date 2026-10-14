@@ -300,3 +300,5 @@
 [17:38:39] B-weak-map-prototype-get-or-insert-computed: verifier: accept The diff implements WeakMap.prototype.getOrInsertComputed in the stub's file, following the spec steps 1-11 in order. RequireInternalSlot, CanBeHeldWe
 [17:38:40] B-array-prototype-find: verifier: accept Implements Array.prototype.find per spec: ToObject, LengthOfArrayLike, then a private FindViaPredicate helper (ascending only) doing IsCallable check,
 [17:38:42] B-array-prototype-find-last-index: attempt on slot 3 with haiku
+[17:38:48] B-data-view-prototype-set-big-int64: attempt on slot 2 with haiku
+[17:39:00] B-array-prototype-find-last: verifier: accept The diff implements Array.prototype.findLast per spec. findLast runs ToObject, then LengthOfArrayLike, then FindViaPredicate, then returns the record'
