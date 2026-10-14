@@ -1,0 +1,35 @@
+{
+  "ticket": "B-typed-array-prototype-join",
+  "base": "967fee1438b37a46a04f46a7ab690743a0aa8aa5",
+  "head": "4ddb3a6ab97b92556fcb819c09938f11c1566b68",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_join.rs",
+      "added": 36,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 64,
+    "before": 8,
+    "after": 62,
+    "new_passes": 54,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/join/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/join/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
