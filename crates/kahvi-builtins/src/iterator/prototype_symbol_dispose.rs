@@ -11,15 +11,18 @@ pub(crate) fn prototype_symbol_dispose(
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let _ = (args, new_target);
     // This method performs the following steps when called:
     //
     // 1. Let _obj_ be the *this* value.
+    let obj = this;
     // 2. Let _return_ be ? GetMethod(_obj_, *"return"*).
+    let ret = ops::get_method(agent, obj, PropertyKey::String(agent.names.r#return))?;
     // 3. If _return_ is not *undefined*, then
-    //    a. Perform ? Call(_return_, _obj_).
+    if !ret.is_undefined() {
+        // a. Perform ? Call(_return_, _obj_).
+        ops::call(agent, ret, obj, &[])?;
+    }
     // 4. Return *undefined*.
-    //
-    // The value of the *"name"* property of this method is *"[Symbol.dispose]"*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Iterator.prototype[Symbol.dispose]"))
+    Ok(Value::Undefined)
 }
