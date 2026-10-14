@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15917,
+  "stop_reason": "tool_use",
+  "session_id": "959b82e4-2159-4616-9618-d5a26096f21f",
+  "total_cost_usd": 0.00351278,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6406,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3245,
+    "output_tokens_details": {
+      "thinking_tokens": 2744
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6406,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3245,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6406,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6406
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.lastIndexOf in its own file, following spec steps 1-14 in order. Each step is commented, and every abstract operation is called with `?` in the spec order: RequireObjectCoercible, ToString(this), ToString(searchString), ToNumber(position). The NaN and clamp logic in step 10 is correct, including the \u00b1Infinity and -0 cases. StringLastIndexOf is a private helper in the same file that compares UTF-16 code units and scans downward from the clamped start. Edge cases check out: empty searchString returns start, and an empty string with an empty search returns 0. There are no test-shaped branches and no made-up values. The only unreachable branch returns not-found where the spec has an assert, but the caller already rules it out. The trailing NOTE comment from the stub was dropped, which is a comment-only change inside the same function.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.lastIndexOf in its own file, following spec steps 1-14 in order. Each step is commented, and every abstract operation is called with `?` in the spec order: RequireObjectCoercible, ToString(this), ToString(searchString), ToNumber(position). The NaN and clamp logic in step 10 is correct, including the \u00b1Infinity and -0 cases. StringLastIndexOf is a private helper in the same file that compares UTF-16 code units and scans downward from the clamped start. Edge cases check out: empty searchString returns start, and an empty string with an empty search returns 0. There are no test-shaped branches and no made-up values. The only unreachable branch returns not-found where the spec has an assert, but the caller already rules it out. The trailing NOTE comment from the stub was dropped, which is a comment-only change inside the same function.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 14092,
+  "type": "result",
+  "duration_ms": 15943,
+  "uuid": "a14eaab3-d8b9-4402-b3e1-86ff6dfda3d2",
+  "ttft_stream_ms": 1683,
+  "time_to_request_ms": 593,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 415,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 15,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 61,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 6,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 65,
+  "time_to_request_cpu_ms": 312,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 854,
+  "process_wall_ms_turn": 15933,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1684,
+  "time_to_request_from_spawn_ms": 19905503,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999365406.7031,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

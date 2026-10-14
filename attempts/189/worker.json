@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19451,
+  "stop_reason": "end_turn",
+  "session_id": "abe6be1b-9418-44de-8f0a-ca8612235df3",
+  "total_cost_usd": 0.004824340000000001,
+  "usage": {
+    "input_tokens": 11,
+    "cache_creation_input_tokens": 11776,
+    "cache_read_input_tokens": 88614,
+    "output_tokens": 2722,
+    "output_tokens_details": {
+      "thinking_tokens": 662
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11776,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 322,
+        "cache_read_input_tokens": 18750,
+        "cache_creation_input_tokens": 669,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 669
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.toLocaleLowerCase` now delegates to the existing `toLowerCase` implementation, as the spec allows when ECMA-402 is absent. The change is confined to `crates/kahvi-builtins/src/string/prototype_to_locale_lower_case.rs`. Build, clippy and `cargo fmt --check` are clean. `./t262 built-ins/String/prototype/toLocaleLowerCase/` gives 54 of 56 runs passing. The two failures are `S15.5.4.17_A1_T14.js` (sloppy and strict), which hit `RegExp.prototype.toString`, still unimplemented in another built-in. The \"done when\" condition is therefore not met, but this ticket cannot fix it without touching files outside its scope.\n\nBLOCKED: `RegExp.prototype.toString` (needed by built-ins/String/prototype/toLocaleLowerCase/S15.5.4.17_A1_T14.js)",
+  "ttft_ms": 3136,
+  "type": "result",
+  "duration_ms": 35469,
+  "uuid": "0c8c5488-413e-46ff-a19e-595753ceaaf8",
+  "ttft_stream_ms": 2868,
+  "time_to_request_ms": 793,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 394,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 24,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 262,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 32,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 108,
+  "time_to_request_cpu_ms": 417,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 225,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2636,
+  "process_wall_ms_turn": 35464,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2870,
+  "time_to_request_from_spawn_ms": 19898901,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999357484.3142,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

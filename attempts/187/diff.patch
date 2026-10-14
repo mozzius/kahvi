@@ -1,0 +1,118 @@
+diff --git a/crates/kahvi-builtins/src/set/prototype_is_superset_of.rs b/crates/kahvi-builtins/src/set/prototype_is_superset_of.rs
+index bbfbf66..d79785e 100644
+--- a/crates/kahvi-builtins/src/set/prototype_is_superset_of.rs
++++ b/crates/kahvi-builtins/src/set/prototype_is_superset_of.rs
+@@ -2,30 +2,95 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-set.prototype.issupersetof
+ 
++use crate::support::collections::{collection_key, set_table, this_set};
+ use kahvi_core::prelude::*;
+ 
++/// GetSetRecord(obj) (§24.2.1.2). Returns the fields of a Set Record
++/// (§24.2.1.1) as ([[SetObject]], [[Size]], [[Has]], [[Keys]]). Local to this
++/// file until other Set methods need it too.
++fn get_set_record(agent: &mut Agent, obj: Value) -> JsResult<(Object, f64, Value, Value)> {
++    // 1. If obj is not an Object, throw a TypeError exception.
++    let Value::Object(obj) = obj else {
++        return Err(agent.throw_type_error("Set operation argument is not an object"));
++    };
++    // 2. Let rawSize be ? Get(obj, "size").
++    let size_key = agent.key("size");
++    let raw_size = ops::get(agent, obj, size_key)?;
++    // 3. Let numberSize be ? ToNumber(rawSize).
++    let number_size = ops::to_number(agent, raw_size)?;
++    // 4. NOTE: If rawSize is undefined, then numberSize will be NaN.
++    // 5. If numberSize is NaN, throw a TypeError exception.
++    if number_size.is_nan() {
++        return Err(agent.throw_type_error("Set operation size is NaN"));
++    }
++    // 6. Let intSize be ! ToIntegerOrInfinity(numberSize).
++    let int_size = ops::to_integer_or_infinity(agent, Value::Number(number_size))?;
++    // 7. If intSize < 0, throw a RangeError exception.
++    if int_size < 0.0 {
++        return Err(agent.throw_range_error("Set operation size is negative"));
++    }
++    // 8. Let has be ? Get(obj, "has").
++    let has_key = agent.key("has");
++    let has = ops::get(agent, obj, has_key)?;
++    // 9. If IsCallable(has) is false, throw a TypeError exception.
++    if !ops::is_callable(agent, has) {
++        return Err(agent.throw_type_error("Set operation 'has' is not callable"));
++    }
++    // 10. Let keys be ? Get(obj, "keys").
++    let keys_key = agent.key("keys");
++    let keys = ops::get(agent, obj, keys_key)?;
++    // 11. If IsCallable(keys) is false, throw a TypeError exception.
++    if !ops::is_callable(agent, keys) {
++        return Err(agent.throw_type_error("Set operation 'keys' is not callable"));
++    }
++    // 12. Return a new Set Record { [[SetObject]]: obj, [[Size]]: intSize, [[Has]]: has, [[Keys]]: keys }.
++    Ok((obj, int_size, has, keys))
++}
++
+ /// Set.prototype.isSupersetOf
+ pub(crate) fn prototype_is_superset_of(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+-    // 1. Let _set_ be the *this* value.
+-    // 2. Perform ? RequireInternalSlot(_set_, [[SetData]]).
+-    // 3. Let _otherRecord_ be ? GetSetRecord(_other_).
+-    // 4. If SetDataSize(_set_.[[SetData]]) < _otherRecord_.[[Size]], return *false*.
+-    // 5. Let _keysIterator_ be ? GetIteratorFromMethod(_otherRecord_.[[SetObject]], _otherRecord_.[[Keys]]).
+-    // 6. Let _next_ be ~not-started~.
+-    // 7. Repeat, while _next_ is not ~done~,
+-    //    a. Set _next_ to ? IteratorStepValue(_keysIterator_).
+-    //    b. If _next_ is not ~done~, then
+-    //       i. If SetDataHas(_set_.[[SetData]], _next_) is *false*, then
+-    //          1. Perform ? IteratorClose(_keysIterator_, NormalCompletion(~unused~)).
+-    //          2. Return *false*.
+-    // 8. Return *true*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Set.prototype.isSupersetOf"))
++    // 1. Let set be the this value.
++    // 2. Perform ? RequireInternalSlot(set, [[SetData]]).
++    let set = this_set(agent, this)?;
++    // 3. Let otherRecord be ? GetSetRecord(other).
++    let (set_object, size, _has, keys) = get_set_record(agent, args.get_or_undefined(0))?;
++    // 4. If SetDataSize(set.[[SetData]]) < otherRecord.[[Size]], return false.
++    let this_size = set_table(agent, set).len();
++    if (this_size as f64) < size {
++        return Ok(Value::Boolean(false));
++    }
++    // 5. Let keysIterator be ? GetIteratorFromMethod(otherRecord.[[SetObject]], otherRecord.[[Keys]]).
++    let mut keys_iterator = ops::get_iterator_from_method(agent, Value::Object(set_object), keys)?;
++    // The iterator (and its next method) stays rooted while IteratorStepValue
++    // calls next(), which may collect garbage.
++    let roots = [
++        Value::Object(keys_iterator.iterator),
++        keys_iterator.next_method,
++    ];
++    agent.with_roots(&roots, |agent| -> JsResult<Value> {
++        // 6. Let next be not-started.
++        // 7. Repeat, while next is not done,
++        loop {
++            // a. Set next to ? IteratorStepValue(keysIterator).
++            let Some(next) = ops::iterator_step_value_rooted(agent, &mut keys_iterator)? else {
++                // b. (next is done) the loop ends.
++                break;
++            };
++            // b. If next is not done, then
++            //    i. If SetDataHas(set.[[SetData]], next) is false, then
++            let key = collection_key(agent, next);
++            if !set_table(agent, set).has(&key) {
++                //       1. Perform ? IteratorClose(keysIterator, NormalCompletion(unused)).
++                //       2. Return false.
++                return ops::iterator_close(agent, &keys_iterator, Ok(Value::Boolean(false)));
++            }
++        }
++        // 8. Return true.
++        Ok(Value::Boolean(true))
++    })
+ }

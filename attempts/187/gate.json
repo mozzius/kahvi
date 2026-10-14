@@ -1,0 +1,47 @@
+{
+  "ticket": "B-set-prototype-is-superset-of",
+  "base": "b3ce0d1512ad2fdb40a77b7dd06368868677e2f6",
+  "head": "fb48d05f176b3989ef6f0f9041cb0e021e43b795",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_is_superset_of.rs",
+      "added": 83,
+      "removed": 18
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 50,
+    "before": 10,
+    "after": 36,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/isSupersetOf/compares-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-same-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/compares-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/set-like-class-mutation.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/isSupersetOf/set-like-class-mutation.js:strict  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/isSupersetOf/subclass-receiver-methods.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/isSupersetOf/subclass-receiver-methods.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}
