@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 12741,
+  "stop_reason": "end_turn",
+  "session_id": "6bbc0ee2-b19c-4780-bd01-36222831c357",
+  "total_cost_usd": 0.00436566,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 10581,
+    "cache_read_input_tokens": 97366,
+    "output_tokens": 2025,
+    "output_tokens_details": {
+      "thinking_tokens": 626
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10581,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 260,
+        "cache_read_input_tokens": 17572,
+        "cache_creation_input_tokens": 489,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 489
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I applied the reviewer's fix at `decode_uri_component.rs:73`, changing the slice to `units[start..k + 1]`. `./t262 built-ins/decodeURIComponent/` now gives 110 of 112 runs passing, with no failures and 2 timeouts. Clippy and `cargo fmt --check` are clean.\n\nThe two timeouts are both S15.1.3.2_A2.5_T1 (sloppy and strict). That test runs about 1.3M iterations of string building and calls, so they look like interpreter throughput rather than this code. I did not time it separately.\n\nBLOCKED: S15.1.3.2_A2.5_T1 times out at 10s (about 1.3M loop iterations); needs interpreter speed-up or a longer test timeout to pass.",
+  "ttft_ms": 1066,
+  "type": "result",
+  "duration_ms": 42365,
+  "uuid": "bad7672a-3bb3-4b9f-95e2-5c90eba9de81",
+  "ttft_stream_ms": 866,
+  "time_to_request_ms": 191,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 49,
+    "resume_other": 1,
+    "process_user_input": 2,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 76,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 1,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 75,
+  "time_to_request_cpu_ms": 166,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 866,
+  "time_to_request_from_spawn_ms": 28749934,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791947724263.7144,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

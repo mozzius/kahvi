@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 12221,
+  "stop_reason": "tool_use",
+  "session_id": "b64d2f84-12c9-43a4-9d8c-f634487e2245",
+  "total_cost_usd": 0.019514500000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 753,
+    "cache_read_input_tokens": 7382,
+    "output_tokens": 1523,
+    "output_tokens_details": {
+      "thinking_tokens": 1046
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1523,
+        "cache_read_input_tokens": 7382,
+        "cache_creation_input_tokens": 753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements decodeURIComponent and a local Decode abstract operation that follows the spec. I checked each step against the spec and found no defects. ToString runs first and propagates errors. The empty preserve set is passed through. The bounds checks match the spec arithmetic. The multi-byte loop re-checks for '%' and hex digits. n=1 or n>4 throws URIError. Overlong forms and surrogates are rejected by the UTF-8 validation. `char::to_digit(16)` accepts only ASCII hex digits. The `n == 0` branch handles the preserve-set case correctly. The two timeouts are on one heavy exhaustive-loop test, and the code is O(length) per call. Nothing is special-cased and no errors are swallowed. The diff touches only the one file in scope.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements decodeURIComponent and a local Decode abstract operation that follows the spec. I checked each step against the spec and found no defects. ToString runs first and propagates errors. The empty preserve set is passed through. The bounds checks match the spec arithmetic. The multi-byte loop re-checks for '%' and hex digits. n=1 or n>4 throws URIError. Overlong forms and surrogates are rejected by the UTF-8 validation. `char::to_digit(16)` accepts only ASCII hex digits. The `n == 0` branch handles the preserve-set case correctly. The two timeouts are on one heavy exhaustive-loop test, and the code is O(length) per call. Nothing is special-cased and no errors are swallowed. The diff touches only the one file in scope.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8834,
+  "type": "result",
+  "duration_ms": 11668,
+  "uuid": "0b100731-d1cb-45c4-8bef-c15f9abb9ef8",
+  "ttft_stream_ms": 1133,
+  "time_to_request_ms": 140,
+  "time_to_request_phases_ms": {
+    "other": 16,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 85,
+    "autocompact": 1,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 40,
+  "time_to_request_cpu_ms": 109,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 553,
+  "process_wall_ms_turn": 11668,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1134,
+  "time_to_request_from_spawn_ms": 200672,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791948077981.8271,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.78,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

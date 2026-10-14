@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 20230,
+  "stop_reason": "tool_use",
+  "session_id": "6e670331-104e-4a6c-abe0-365a51404976",
+  "total_cost_usd": 0.00472746,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8904,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 4189,
+    "output_tokens_details": {
+      "thinking_tokens": 3497
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8904,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4189,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8904,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8904
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements RegExp.prototype[Symbol.match] in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object this. Step 3 converts the argument with ToString before Get(regexp, \\\"flags\\\"). Steps 5 to 10 follow the spec, including the empty-match lastIndex advance via ToLength, AdvanceStringIndex and Set(..., true). Every abstract operation propagates errors with `?`. Nothing is special-cased, hardcoded or defaulted. The only remaining failures in the gate report come from the RegExp.prototype.flags getter, which lives in another file and throws the honest not-implemented error. Minor differences from the spec's `!` assertions (ArrayCreate(0) and CreateDataPropertyOrThrow use `?`) cannot fail on these inputs, so they have no observable effect. The `_new_target` rename and the removed non-step NOTE/name comments are harmless. I could not read the imported helpers (support::regexp::regexp_exec and advance_string_index) because they are outside the diff, so I did not verify their internals.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in this diff. Once RegExp.prototype.flags is implemented in its own file, the remaining Symbol.match tests should be re-run to confirm they pass. The imported helpers in support::regexp (regexp_exec, advance_string_index) were not visible in this review and should be checked separately if they are not already covered by other tickets.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements RegExp.prototype[Symbol.match] in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object this. Step 3 converts the argument with ToString before Get(regexp, \"flags\"). Steps 5 to 10 follow the spec, including the empty-match lastIndex advance via ToLength, AdvanceStringIndex and Set(..., true). Every abstract operation propagates errors with `?`. Nothing is special-cased, hardcoded or defaulted. The only remaining failures in the gate report come from the RegExp.prototype.flags getter, which lives in another file and throws the honest not-implemented error. Minor differences from the spec's `!` assertions (ArrayCreate(0) and CreateDataPropertyOrThrow use `?`) cannot fail on these inputs, so they have no observable effect. The `_new_target` rename and the removed non-step NOTE/name comments are harmless. I could not read the imported helpers (support::regexp::regexp_exec and advance_string_index) because they are outside the diff, so I did not verify their internals.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in this diff. Once RegExp.prototype.flags is implemented in its own file, the remaining Symbol.match tests should be re-run to confirm they pass. The imported helpers in support::regexp (regexp_exec, advance_string_index) were not visible in this review and should be checked separately if they are not already covered by other tickets."
+  },
+  "ttft_ms": 16350,
+  "type": "result",
+  "duration_ms": 19058,
+  "uuid": "fe9be5d7-f8a7-4452-a339-70d7c40ce21a",
+  "ttft_stream_ms": 1398,
+  "time_to_request_ms": 160,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 59,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 183,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 118,
+  "process_peak_rss_mib": 245,
+  "process_cpu_ms_turn": 807,
+  "process_wall_ms_turn": 19058,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1398,
+  "time_to_request_from_spawn_ms": 149426,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791948026435.768,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.78,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

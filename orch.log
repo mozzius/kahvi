@@ -1,36 +1,9 @@
-[02:13:46] building trusted runner; integration branch m1-spine, 2 slots
-[02:13:46] B-array-from-async: attempt on slot 1 with haiku
-[02:13:46] B-object-seal: attempt on slot 0 with haiku
-[02:14:16] B-object-seal: attempt 44 finished ($0.004, 9 turns)
-[02:14:47] B-object-seal: verifier: accept The diff implements Object.seal in crates/kahvi-builtins/src/object/seal.rs and matches the spec's four steps in order. Step 1 returns non-objects unc
-[02:14:58] B-object-seal: full test262 run for merge
-[02:16:33] B-array-from-async: attempt 43 finished ($0.041, 16 turns)
-[02:18:07] B-array-from-async: verifier: revise The state-machine design is sound and most steps match the spec in order: GetMethod lookups, sync-to-async wrapping, Construct/ArrayCreate branches, t
-[02:18:10] B-array-from-async: attempt on slot 1 with haiku
-[02:19:05] B-array-from-async: attempt 45 finished ($0.008, 10 turns)
-[02:21:12] B-array-from-async: verifier: accept Reviewed the Array.fromAsync implementation in from_async.rs against the pinned spec steps 1-9 and the AsyncIteratorClose, Await, and IsConstructor/Ge
-[02:26:53] B-object-seal: merged (+110, 65210 total)
-[02:26:55] B-object-is-frozen: attempt on slot 0 with haiku
-[02:26:56] B-array-from-async: full test262 run for merge
-[02:27:18] B-object-is-frozen: attempt 46 finished ($0.005, 12 turns)
-[02:27:39] B-object-is-frozen: verifier: accept The change implements Object.isFrozen as the spec describes. Step 1 returns true for non-objects. Step 2 calls the existing ops::test_integrity_level 
-[02:38:43] B-array-from-async: merged (+149, 65359 total)
-[02:38:45] B-reg-exp-prototype-symbol-replace: attempt on slot 1 with haiku
-[02:38:45] B-object-is-frozen: full test262 run for merge
-[02:40:47] B-reg-exp-prototype-symbol-replace: attempt 47 finished ($0.030, 16 turns)
-[02:42:15] B-reg-exp-prototype-symbol-replace: verifier: accept I walked RegExp.prototype[Symbol.replace] steps 1-17 and the GetSubstitution steps against the pinned spec text. The steps are implemented in order, w
-[02:50:24] B-object-is-frozen: merged (+136, 65495 total)
-[02:50:26] B-object-has-own: attempt on slot 0 with haiku
-[02:50:28] B-reg-exp-prototype-symbol-replace: full test262 run for merge
-[02:51:15] B-object-has-own: attempt 48 finished ($0.005, 12 turns)
-[02:51:35] B-object-has-own: verifier: accept The diff implements Object.hasOwn in has_own.rs in three steps that follow the spec: ToObject(obj) with `?`, then ToPropertyKey(key) with `?`, then Ha
-[03:01:48] B-reg-exp-prototype-symbol-replace: merged (+12, 65507 total)
-[03:01:50] B-reg-exp-prototype-symbol-match: attempt on slot 1 with haiku
-[03:01:50] B-object-has-own: full test262 run for merge
-[03:02:18] B-reg-exp-prototype-symbol-match: attempt 49 finished ($0.009, 13 turns)
-[03:02:52] B-reg-exp-prototype-symbol-match: verifier: accept The diff implements RegExp.prototype[Symbol.match] steps 1–10 in spec order with each step kept as a comment. Step 2 throws a TypeError before ToStrin
-[03:12:26] B-object-has-own: merged (+116, 65623 total)
-[03:12:28] B-reg-exp-prototype-symbol-match: full test262 run for merge
-[03:12:28] B-global-decode-uri-component: attempt on slot 0 with haiku
-[03:14:14] B-global-decode-uri-component: attempt 50 finished ($0.019, 25 turns)
-[03:15:22] B-global-decode-uri-component: verifier: revise The diff is a faithful implementation of decodeURIComponent and the Decode abstract operation. ToString goes through ops::to_string, the URIError chec
+[03:18:47] building trusted runner; integration branch m1-spine, 2 slots
+[03:18:49] B-reg-exp-prototype-symbol-match: attempt on slot 1 with haiku
+[03:18:49] B-global-decode-uri-component: attempt on slot 0 with haiku
+[03:19:57] B-reg-exp-prototype-symbol-match: attempt 53 finished ($0.010, 13 turns)
+[03:20:10] B-global-decode-uri-component: attempt 52 finished ($0.004, 9 turns)
+[03:20:55] B-reg-exp-prototype-symbol-match: verifier: accept The change implements RegExp.prototype[Symbol.match] in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object th
+[03:21:10] B-reg-exp-prototype-symbol-match: full test262 run for merge
+[03:21:30] B-global-decode-uri-component: verifier: accept The diff implements decodeURIComponent per the pinned spec. It does ToString on the argument, then Decode with an empty preserveEscapeSet, and follows
+[03:32:26] B-reg-exp-prototype-symbol-match: merged (+12, 65635 total)

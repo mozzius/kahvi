@@ -1,0 +1,48 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-match",
+  "base": "14159acda1feb9767e4393552f8c605a598e8b3a",
+  "head": "3bbb81b920f6d6dc27be5165b54735508ca162b3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_match.rs",
+      "added": 54,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 106,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 86,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/prototype/Symbol.match/builtin-coerce-lastindex.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-coerce-lastindex.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-g-set-lastindex-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-g-set-lastindex-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-g-set-lastindex.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-g-set-lastindex.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-return-val.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-return-val.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-return-val.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-return-val.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-set-lastindex-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-set-lastindex-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-set-lastindex.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-failure-y-set-lastindex.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.match/builtin-infer-unicode.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags"
+    ]
+  },
+  "decision": "pass"
+}
