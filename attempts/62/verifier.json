@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 32369,
+  "stop_reason": "tool_use",
+  "session_id": "de057628-ec22-4086-bbd2-9ba14853e449",
+  "total_cost_usd": 0.007157460000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 11461,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 7517,
+    "output_tokens_details": {
+      "thinking_tokens": 6896
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11461,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 7517,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 11461,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11461
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.replaceAll step by step, with the spec step comments kept above their code. Steps 1-17 run in spec order with correct abrupt-completion propagation: RequireObjectCoercible, IsRegExp, the Get of \\\"flags\\\", the flags check for \\\"g\\\", GetMethod on %Symbol.replace%, the Call to the replacer, the ToString ordering (this, searchValue, replaceValue only when not callable), and the StringIndexOf loop. The empty-search case yields matches at 0..=length, as the spec does. GetSubstitution is implemented with the spec's branch order. With no captures and no named captures, the $n and $< forms are literal, which matches the spec's output. Match-position slicing cannot underflow, because the advance step is at least the search length. The 18 remaining failures come from the engine's own not-implemented RegExp.prototype.flags getter, which is an honest path and not a fake result.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Once RegExp.prototype.flags is implemented, the remaining replaceAll tests that depend on it should pass without changes to this file. get_substitution is file-local; String.prototype.replace will likely need the same helper, so it may be worth moving it to a shared place when that ticket is worked.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.replaceAll step by step, with the spec step comments kept above their code. Steps 1-17 run in spec order with correct abrupt-completion propagation: RequireObjectCoercible, IsRegExp, the Get of \"flags\", the flags check for \"g\", GetMethod on %Symbol.replace%, the Call to the replacer, the ToString ordering (this, searchValue, replaceValue only when not callable), and the StringIndexOf loop. The empty-search case yields matches at 0..=length, as the spec does. GetSubstitution is implemented with the spec's branch order. With no captures and no named captures, the $n and $< forms are literal, which matches the spec's output. Match-position slicing cannot underflow, because the advance step is at least the search length. The 18 remaining failures come from the engine's own not-implemented RegExp.prototype.flags getter, which is an honest path and not a fake result.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Once RegExp.prototype.flags is implemented, the remaining replaceAll tests that depend on it should pass without changes to this file. get_substitution is file-local; String.prototype.replace will likely need the same helper, so it may be worth moving it to a shared place when that ticket is worked."
+  },
+  "ttft_ms": 29576,
+  "type": "result",
+  "duration_ms": 32023,
+  "uuid": "e081795c-3576-40d4-8b96-a8e312922ce3",
+  "ttft_stream_ms": 1106,
+  "time_to_request_ms": 96,
+  "time_to_request_phases_ms": {
+    "other": 16,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 3,
+    "message_prep": 1,
+    "model_config_wait": 38,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 97,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 824,
+  "process_wall_ms_turn": 32023,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1107,
+  "time_to_request_from_spawn_ms": 6542875,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791954420091.0505,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.83,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

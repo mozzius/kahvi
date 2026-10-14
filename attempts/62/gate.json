@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-prototype-replace-all",
+  "base": "5843447d82085aac629a38cd97346afeb7e1302f",
+  "head": "dcede9f92f40cc6d7460550b9e5590c7ddb92772",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_replace_all.rs",
+      "added": 188,
+      "removed": 23
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 90,
+    "before": 8,
+    "after": 72,
+    "new_passes": 64,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 18,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024-0x003C.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024-0x003C.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024N.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024N.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024NN.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/getSubstitution-0x0024NN.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-flags-no-g-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-flags-no-g-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-RegExp-call-fn.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-RegExp-call-fn.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-RegExp-call.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-RegExp-call.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-before-tostring.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-before-tostring.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/String/prototype/replaceAll/searchValue-replacer-call.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags"
+    ]
+  },
+  "decision": "pass"
+}

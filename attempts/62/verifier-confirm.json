@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 13265,
+  "stop_reason": "tool_use",
+  "session_id": "5b76b517-a9da-4f57-9eef-4b31c8863e91",
+  "total_cost_usd": 0.0627562,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 11467,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1558,
+    "output_tokens_details": {
+      "thinking_tokens": 1190
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11467,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1558,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 11467,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11467
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.replaceAll step by step in the spec's order. Every `?` step propagates its error. The two local helpers, `string_index_of` and `get_substitution`, match their spec algorithms. With empty captures and undefined namedCaptures, the `$n` and `$<` forms correctly stay literal. The 18 remaining failures come from the unimplemented `get RegExp.prototype.flags` getter, which is outside this ticket's file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.replaceAll step by step in the spec's order. Every `?` step propagates its error. The two local helpers, `string_index_of` and `get_substitution`, match their spec algorithms. With empty captures and undefined namedCaptures, the `$n` and `$<` forms correctly stay literal. The 18 remaining failures come from the unimplemented `get RegExp.prototype.flags` getter, which is outside this ticket's file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10753,
+  "type": "result",
+  "duration_ms": 12461,
+  "uuid": "b0772445-206f-48f4-b3e1-298ca9150f43",
+  "ttft_stream_ms": 1754,
+  "time_to_request_ms": 193,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 24,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 13,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 64,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 4,
+    "tool_schema_build": 9,
+    "message_normalization": 7,
+    "client_creation": 8,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 94,
+  "time_to_request_cpu_ms": 128,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 223,
+  "process_anon_mib_result": 105,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 542,
+  "process_wall_ms_turn": 12461,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1759,
+  "time_to_request_from_spawn_ms": 6576713,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791954453344.4995,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.83,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
