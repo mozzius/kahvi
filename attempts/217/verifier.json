@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 26511,
+  "stop_reason": "tool_use",
+  "session_id": "a3c5ed75-ac1d-478f-9e91-4e6cda7a6edc",
+  "total_cost_usd": 0.00503918,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7241,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 5796,
+    "output_tokens_details": {
+      "thinking_tokens": 5116
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7241,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5796,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7241,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7241
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements ArrayBuffer.prototype.transfer and a local ArrayBufferCopyAndDetach helper in the one in-scope file. I walked the spec steps in order. RequireInternalSlot throws TypeError. The SharedArrayBuffer check (step 2) is omitted, which is correct because the engine has no shared buffers, and a comment says so. ToIndex runs before the detached check. The max-length and detach-key checks come in spec order. AllocateArrayBuffer is called with %ArrayBuffer%. Copy length is the min of the two lengths. The source is detached last. All fallible calls propagate with `?`. There are no test-shaped branches, no hardcoded results and no swallowed errors. The three lint flags are `expect` calls on invariants (object already checked as an ArrayBuffer, data not detached). None looks reachable: no user code runs between the checks and the copy. They are still panics rather than error returns, so a reviewer may want them tightened, but they do not change behaviour. The helper is written locally, as the ticket allows, and the file's doc comment says it is not yet in `ops`. The 16 remaining failures come from the unimplemented `ArrayBuffer.prototype.resizable` getter in another built-in, not from this diff. I could not verify `typed_array` internals (for example that the data Vec is at least byte_length long for resizable buffers) from the diff alone.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements ArrayBuffer.prototype.transfer and a local ArrayBufferCopyAndDetach helper in the one in-scope file. I walked the spec steps in order. RequireInternalSlot throws TypeError. The SharedArrayBuffer check (step 2) is omitted, which is correct because the engine has no shared buffers, and a comment says so. ToIndex runs before the detached check. The max-length and detach-key checks come in spec order. AllocateArrayBuffer is called with %ArrayBuffer%. Copy length is the min of the two lengths. The source is detached last. All fallible calls propagate with `?`. There are no test-shaped branches, no hardcoded results and no swallowed errors. The three lint flags are `expect` calls on invariants (object already checked as an ArrayBuffer, data not detached). None looks reachable: no user code runs between the checks and the copy. They are still panics rather than error returns, so a reviewer may want them tightened, but they do not change behaviour. The helper is written locally, as the ticket allows, and the file's doc comment says it is not yet in `ops`. The 16 remaining failures come from the unimplemented `ArrayBuffer.prototype.resizable` getter in another built-in, not from this diff. I could not verify `typed_array` internals (for example that the data Vec is at least byte_length long for resizable buffers) from the diff alone.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 23480,
+  "type": "result",
+  "duration_ms": 26538,
+  "uuid": "e10f600f-d127-4b40-8953-6d3f140afcc1",
+  "ttft_stream_ms": 1461,
+  "time_to_request_ms": 565,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 415,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 23,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 49,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 126,
+  "time_to_request_cpu_ms": 394,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1259,
+  "process_wall_ms_turn": 26538,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1462,
+  "time_to_request_from_spawn_ms": 20796339,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000256440.4075,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

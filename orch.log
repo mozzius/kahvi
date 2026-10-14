@@ -785,3 +785,6 @@ test262 at last merge: 72953/81183 runs passing
 [17:50:42] B-array-prototype-find-index: verifier: accept The diff implements Array.prototype.findIndex as specified. Steps 1 and 2 use ops::to_object and ops::length_of_array_like, and step 3 calls a local f
 [17:50:51] B-array-prototype-with: attempt on slot 1 with haiku
 [17:51:12] B-array-prototype-to-sorted: verifier: accept The diff implements Array.prototype.toSorted in its own file and follows the spec steps in order. Step 1 checks the comparator before ToObject, and st
+[17:51:15] B-date-prototype-symbol-to-primitive: attempt on slot 0 with haiku
+[17:51:26] B-array-prototype-with: attempt 221 finished ($0.007, 10 turns)
+[17:51:28] B-array-buffer-prototype-transfer-to-fixed-length: verifier: accept The diff implements ArrayBuffer.prototype.transferToFixedLength through a local ArrayBufferCopyAndDetach helper, with spec steps kept as comments in o

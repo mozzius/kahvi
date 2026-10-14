@@ -1,0 +1,86 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_with.rs b/crates/kahvi-builtins/src/array/prototype_with.rs
+index 48dbb70..e4a0b41 100644
+--- a/crates/kahvi-builtins/src/array/prototype_with.rs
++++ b/crates/kahvi-builtins/src/array/prototype_with.rs
+@@ -2,30 +2,68 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-array.prototype.with
+ 
++use kahvi_core::object::array::array_create;
+ use kahvi_core::prelude::*;
+ 
++/// ToAbsoluteIndex(_value_, _length_), which is not yet in `ops`.
++///
++/// Spec: https://tc39.es/ecma262/#sec-toabsoluteindex
++fn to_absolute_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _int_ be ? ToIntegerOrInfinity(_value_).
++    let mut int = ops::to_integer_or_infinity(agent, value)?;
++    // 2. If _int_ is finite and _int_ < 0, set _int_ to _length_ + _int_.
++    if int.is_finite() && int < 0.0 {
++        int += length;
++    }
++    // 3. Return _int_.
++    Ok(int)
++}
++
+ /// Array.prototype.with
+ pub(crate) fn prototype_with(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
++    let index = args.get_or_undefined(0);
++    let value = args.get_or_undefined(1);
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
++    let length = ops::length_of_array_like(agent, obj)?;
+     // 3. Let _actualIndex_ be ? ToAbsoluteIndex(_index_, _length_).
++    let actual_index = to_absolute_index(agent, index, length)?;
+     // 4. If _actualIndex_ < 0 or _actualIndex_ ≥ _length_, throw a *RangeError* exception.
++    if actual_index < 0.0 || actual_index >= length {
++        return Err(agent.throw_range_error("Array.prototype.with index is out of range"));
++    }
+     // 5. Let _array_ be ? ArrayCreate(_length_).
+-    // 6. Let _k_ be 0.
+-    // 7. Repeat, while _k_ < _length_,
+-    //    a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
+-    //    b. If _k_ = _actualIndex_, let _fromValue_ be _value_.
+-    //    c. Else, let _fromValue_ be ? Get(_obj_, _propertyKey_).
+-    //    d. Perform ! CreateDataPropertyOrThrow(_array_, _propertyKey_, _fromValue_).
+-    //    e. Set _k_ to _k_ + 1.
+-    // 8. Return _array_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.with"))
++    let array = array_create(agent, length, None)?;
++    // The loop may collect garbage: obj, value and array stay rooted.
++    agent.with_roots(
++        &[Value::Object(obj), value, Value::Object(array)],
++        |agent| {
++            // 6. Let _k_ be 0.
++            let mut k = 0.0;
++            // 7. Repeat, while _k_ < _length_,
++            while k < length {
++                // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
++                let property_key = agent.key_from_index(k);
++                // b. If _k_ = _actualIndex_, let _fromValue_ be _value_.
++                let from_value = if k == actual_index {
++                    value
++                } else {
++                    // c. Else, let _fromValue_ be ? Get(_obj_, _propertyKey_).
++                    ops::get(agent, obj, property_key)?
++                };
++                // d. Perform ! CreateDataPropertyOrThrow(_array_, _propertyKey_, _fromValue_).
++                ops::create_data_property_or_throw(agent, array, property_key, from_value)?;
++                // e. Set _k_ to _k_ + 1.
++                k += 1.0;
++            }
++            // 8. Return _array_.
++            Ok(Value::Object(array))
++        },
++    )
+ }
