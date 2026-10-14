@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/reflect/own_keys.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-reflect.ownkeys"]
 target = ["built-ins/Reflect/ownKeys/"]
-priority = 12
+priority = 26
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

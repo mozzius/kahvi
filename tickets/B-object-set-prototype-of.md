@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/object/set_prototype_of.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-object.setprototypeof"]
 target = ["built-ins/Object/setPrototypeOf/"]
-priority = 76
+priority = 114
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

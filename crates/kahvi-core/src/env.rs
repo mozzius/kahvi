@@ -1,8 +1,6 @@
 //! Environment Records (ECMA-262 §9.1). Implemented literally: bindings are
 //! looked up by name, which keeps `eval` and `with` simple and correct.
 
-use std::collections::{HashMap, HashSet};
-
 use crate::agent::Agent;
 use crate::error::JsResult;
 use crate::object::PropertyKey;
@@ -20,6 +18,73 @@ pub struct Binding {
     /// Immutable binding that throws on assignment even in sloppy code.
     pub strict: bool,
     pub deletable: bool,
+}
+
+/// A declarative record's bindings: a short list searched linearly (most
+/// scopes have a handful of names), with a hash index once it grows.
+#[derive(Debug, Clone, Default)]
+pub struct Bindings {
+    list: Vec<(JsString, Binding)>,
+    index: Option<crate::hash::FxHashMap<JsString, usize>>,
+}
+
+/// The size at which a scope's bindings get a hash index.
+const INDEX_FROM: usize = 16;
+
+impl Bindings {
+    fn position(&self, name: &JsString) -> Option<usize> {
+        match &self.index {
+            Some(ix) => ix.get(name).copied(),
+            None => self.list.iter().position(|(n, _)| n == name),
+        }
+    }
+
+    pub fn get(&self, name: &JsString) -> Option<&Binding> {
+        self.position(name).map(|i| &self.list[i].1)
+    }
+
+    pub fn get_mut(&mut self, name: &JsString) -> Option<&mut Binding> {
+        self.position(name).map(|i| &mut self.list[i].1)
+    }
+
+    pub fn contains_key(&self, name: &JsString) -> bool {
+        self.position(name).is_some()
+    }
+
+    /// Adds or replaces a binding.
+    pub fn insert(&mut self, name: JsString, binding: Binding) -> Option<Binding> {
+        if let Some(i) = self.position(&name) {
+            return Some(std::mem::replace(&mut self.list[i].1, binding));
+        }
+        self.list.push((name, binding));
+        if let Some(ix) = &mut self.index {
+            ix.insert(name, self.list.len() - 1);
+        } else if self.list.len() >= INDEX_FROM {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+        None
+    }
+
+    pub fn remove(&mut self, name: &JsString) -> Option<Binding> {
+        let i = self.position(name)?;
+        let (_, b) = self.list.remove(i);
+        if self.index.is_some() {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+        Some(b)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -42,11 +107,11 @@ pub struct FunctionEnvData {
 pub enum Environment {
     /// Declarative (and function, and module) environment records.
     Declarative {
-        bindings: HashMap<JsString, Binding>,
+        bindings: Bindings,
         outer: Option<EnvId>,
         function: Option<Box<FunctionEnvData>>,
         /// Module environments resolve imports through other modules' environments.
-        imports: HashMap<JsString, (EnvId, JsString)>,
+        imports: crate::hash::FxHashMap<JsString, (EnvId, JsString)>,
         is_module: bool,
     },
     /// Object environment records (`with` and the global object part).
@@ -60,7 +125,7 @@ pub enum Environment {
         object_record: EnvId,
         global_this: Object,
         declarative_record: EnvId,
-        var_names: HashSet<JsString>,
+        var_names: crate::hash::FxHashSet<JsString>,
     },
 }
 
@@ -81,10 +146,10 @@ enum Kind {
 impl Environment {
     pub fn new_declarative(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer,
             function: None,
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: false,
         })
     }
@@ -98,7 +163,7 @@ impl Environment {
         lexical_this: bool,
     ) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer: Some(outer),
             function: Some(Box::new(FunctionEnvData {
                 this_value: Value::Undefined,
@@ -110,17 +175,17 @@ impl Environment {
                 function_object: f,
                 new_target,
             })),
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: false,
         })
     }
 
     pub fn new_module(agent: &mut Agent, outer: EnvId) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer: Some(outer),
             function: None,
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: true,
         })
     }
@@ -142,7 +207,7 @@ impl Environment {
             object_record,
             global_this: this_value,
             declarative_record,
-            var_names: HashSet::new(),
+            var_names: Default::default(),
         })
     }
 
@@ -240,7 +305,7 @@ impl EnvId {
         }
     }
 
-    fn decl_bindings(self, agent: &mut Agent) -> &mut HashMap<JsString, Binding> {
+    fn decl_bindings(self, agent: &mut Agent) -> &mut Bindings {
         match agent.env_mut(self) {
             Environment::Declarative { bindings, .. } => bindings,
             _ => unreachable!("declarative environment expected"),

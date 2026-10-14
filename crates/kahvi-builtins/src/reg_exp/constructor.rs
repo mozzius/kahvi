@@ -4,37 +4,83 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::regexp::{RegExpData, regexp_alloc, regexp_initialize};
+
 /// RegExp
 pub(crate) fn constructor(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
-    // 1. Let _patternIsRegExp_ be ? IsRegExp(_patternOrRegexp_).
-    // 2. If NewTarget is *undefined*, then
-    //    a. Let _newTarget_ be the active function object.
-    //    b. If _patternIsRegExp_ is *true* and _flags_ is *undefined*, then
-    //       i. Let _patternCtor_ be ? Get(_patternOrRegexp_, *"constructor"*).
-    //       ii. If SameValue(_newTarget_, _patternCtor_) is *true*, return _patternOrRegexp_.
-    // 3. Else,
-    //    a. Let _newTarget_ be NewTarget.
-    // 4. If _patternOrRegexp_ is an Object and _patternOrRegexp_ has a [[RegExpMatcher]] internal slot, then
-    //    a. Let _patternSource_ be _patternOrRegexp_.[[OriginalSource]].
-    //    b. If _flags_ is *undefined*, set _flags_ to _patternOrRegexp_.[[OriginalFlags]].
-    // 5. Else if _patternIsRegExp_ is *true*, then
-    //    a. Let _patternSource_ be ? Get(_patternOrRegexp_, *"source"*).
-    //    b. If _flags_ is *undefined*, then
-    //       i. Set _flags_ to ? Get(_patternOrRegexp_, *"flags"*).
-    // 6. Else,
-    //    a. Let _patternSource_ be _patternOrRegexp_.
-    // 7. Let _obj_ be ? RegExpAlloc(_newTarget_).
-    // 8. Return ? RegExpInitialize(_obj_, _patternSource_, _flags_).
-    //
-    // NOTE:
-    // If pattern is supplied using a |StringLiteral|, the usual escape sequence substitutions are performed before the String is processed by this function. If pattern must contain an escape sequence to be recognized by this function, any U+005C (REVERSE SOLIDUS) code points must be escaped within the |StringLiteral| to prevent them being removed when the contents of the |StringLiteral| are formed.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("RegExp"))
+    let pattern_or_regexp = args.get_or_undefined(0);
+    let mut flags = args.get_or_undefined(1);
+    // 1. Let patternIsRegExp be ? IsRegExp(patternOrRegexp).
+    let pattern_is_regexp = ops::is_regexp(agent, pattern_or_regexp)?;
+    // 2. If NewTarget is undefined, then
+    let new_target = match new_target {
+        None => {
+            // a. Let newTarget be the active function object.
+            let active = agent
+                .active_function()
+                .expect("a built-in constructor runs as the active function");
+            // b. If patternIsRegExp is true and flags is undefined, then
+            if pattern_is_regexp && flags.is_undefined() {
+                // i. Let patternCtor be ? Get(patternOrRegexp, "constructor").
+                let Value::Object(p) = pattern_or_regexp else {
+                    unreachable!("IsRegExp is only true for objects");
+                };
+                let key = PropertyKey::String(agent.names.constructor);
+                let pattern_ctor = ops::get(agent, p, key)?;
+                // ii. If SameValue(newTarget, patternCtor) is true, return patternOrRegexp.
+                if ops::same_value(agent, Value::Object(active), pattern_ctor) {
+                    return Ok(pattern_or_regexp);
+                }
+            }
+            active
+        }
+        // 3. Else, let newTarget be NewTarget.
+        Some(nt) => nt,
+    };
+    // 4. If patternOrRegexp is an Object and patternOrRegexp has a [[RegExpMatcher]] internal slot, then
+    let existing = match pattern_or_regexp {
+        Value::Object(o) => agent
+            .native::<RegExpData>(o)
+            .map(|d| (d.original_source, d.original_flags)),
+        _ => None,
+    };
+    let pattern_source = if let Some((source, original_flags)) = existing {
+        // a. Let P be patternOrRegexp.[[OriginalSource]].
+        // b. If flags is undefined, let F be patternOrRegexp.[[OriginalFlags]]; else let F be flags.
+        if flags.is_undefined() {
+            flags = Value::String(original_flags);
+        }
+        Value::String(source)
+    } else if pattern_is_regexp {
+        // 5. Else if patternIsRegExp is true, then
+        let Value::Object(p) = pattern_or_regexp else {
+            unreachable!("IsRegExp is only true for objects");
+        };
+        // a. Let P be ? Get(patternOrRegexp, "source").
+        let key = agent.key("source");
+        let source = ops::get(agent, p, key)?;
+        // b. If flags is undefined, then let F be ? Get(patternOrRegexp, "flags").
+        if flags.is_undefined() {
+            let key = agent.key("flags");
+            flags = ops::get(agent, p, key)?;
+        }
+        source
+    } else {
+        // 6. Else, let P be patternOrRegexp and F be flags.
+        pattern_or_regexp
+    };
+    // 7. Let O be ? RegExpAlloc(newTarget).
+    let o = regexp_alloc(agent, new_target)?;
+    // 8. Return ? RegExpInitialize(O, P, F).
+    Ok(Value::Object(regexp_initialize(
+        agent,
+        o,
+        pattern_source,
+        flags,
+    )?))
 }

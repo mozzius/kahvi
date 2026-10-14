@@ -1,7 +1,7 @@
 //! The agent (ECMA-262 §9.7): owns the heap, realms, the execution context
 //! stack and the job queue. Every engine operation takes `&mut Agent`.
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
@@ -86,7 +86,7 @@ pub type IntrinsicsInstaller = fn(&mut Agent, RealmId) -> JsResult<()>;
 pub struct Agent {
     objects: Vec<ObjectData>,
     strings: Vec<Box<[u16]>>,
-    string_index: HashMap<Box<[u16]>, u32>,
+    string_index: crate::hash::ContentHashMap<Box<[u16]>, u32>,
     symbols: Vec<SymbolData>,
     pub(crate) envs: Vec<Environment>,
     pub realms: Vec<Realm>,
@@ -128,7 +128,7 @@ impl Agent {
         let mut agent = Agent {
             objects: Vec::new(),
             strings: Vec::new(),
-            string_index: HashMap::new(),
+            string_index: Default::default(),
             symbols: Vec::new(),
             envs: Vec::new(),
             realms: Vec::new(),

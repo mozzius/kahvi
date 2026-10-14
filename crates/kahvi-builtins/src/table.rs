@@ -701,6 +701,7 @@ fn intrinsic_or_create(agent: &mut Agent, realm: RealmId, name: &str) -> Object 
 /// CreateIntrinsics + SetDefaultGlobalBindings for `realm`. Pass this to
 /// `Agent::set_intrinsics_installer`.
 pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
+    agent.regexp_matcher_check = Some(crate::support::regexp::has_regexp_matcher);
     // The objects with special shapes, in order.
     for &(name, proto, shape) in OBJECTS {
         let proto = proto.map(|p| agent.intrinsic_in(realm, p));

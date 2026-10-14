@@ -4,21 +4,25 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::regexp::regexp_exec;
+
 /// RegExp.prototype.test
 pub(crate) fn prototype_test(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _regexp_ be the *this* value.
-    // 2. If _regexp_ is not an Object, throw a *TypeError* exception.
-    // 3. Set _string_ to ? ToString(_string_).
-    // 4. Let _match_ be ? RegExpExec(_regexp_, _string_).
-    // 5. If _match_ is *null*, return *false*.
-    // 6. Return *true*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("RegExp.prototype.test"))
+    // 1. Let R be the this value.
+    // 2. If R is not an Object, throw a TypeError exception.
+    let Value::Object(r) = this else {
+        return Err(agent.throw_type_error("RegExp.prototype.test called on a non-object"));
+    };
+    // 3. Let string be ? ToString(string).
+    let s = ops::to_string(agent, args.get_or_undefined(0))?;
+    // 4. Let match be ? RegExpExec(R, string).
+    let m = regexp_exec(agent, r, s)?;
+    // 5. If match is null, return false.
+    // 6. Return true.
+    Ok(Value::Boolean(!matches!(m, Value::Null)))
 }

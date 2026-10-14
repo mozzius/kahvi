@@ -4,10 +4,10 @@ title = "String.prototype.slice"
 kind = "builtin"
 tier = "haiku"
 scope = ["crates/kahvi-builtins/src/string/prototype_slice.rs"]
-read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/string_iterator.rs"]
+read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/string_iterator.rs", "crates/kahvi-builtins/src/support/regexp.rs"]
 spec = ["sec-string.prototype.slice"]
 target = ["built-ins/String/prototype/slice/"]
-priority = 62
+priority = 86
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

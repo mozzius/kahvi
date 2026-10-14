@@ -7,7 +7,7 @@ scope = ["crates/kahvi-core/src/object/proxy/own_property_keys.rs"]
 read = ["docs/API.md", "crates/kahvi-core/src/object/proxy/mod.rs", "crates/kahvi-core/src/object/internal.rs"]
 spec = ["sec-proxy-object-internal-methods-and-internal-slots-ownpropertykeys"]
 target = ["built-ins/Proxy/ownKeys/"]
-priority = 57
+priority = 86
 +++
 Implement this Proxy internal method in its file, following the spec steps
 already in the stub: keep each step as a comment directly above the code.
