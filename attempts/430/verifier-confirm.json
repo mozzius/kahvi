@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5961,
+  "stop_reason": "tool_use",
+  "session_id": "a933328f-2012-4ffa-a31f-ce8dc8b0e046",
+  "total_cost_usd": 0.0274602,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5111,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 621,
+    "output_tokens_details": {
+      "thinking_tokens": 242
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5111,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 621,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 5111,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5111
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for Date.prototype.toDateString. It uses `this_time_value` for the RequireInternalSlot check and returns \\\"Invalid Date\\\" for NaN. It then applies `local_time` and builds DateString with the correct day and month names, a 2-digit day, a sign for negative years and a 4-digit padded year. Errors propagate with `?`. Nothing is keyed on test inputs. The build and clippy pass, and the target went from 8 to 14 passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for Date.prototype.toDateString. It uses `this_time_value` for the RequireInternalSlot check and returns \"Invalid Date\" for NaN. It then applies `local_time` and builds DateString with the correct day and month names, a 2-digit day, a sign for negative years and a 4-digit padded year. Errors propagate with `?`. Nothing is keyed on test inputs. The build and clippy pass, and the target went from 8 to 14 passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4431,
+  "type": "result",
+  "duration_ms": 6113,
+  "uuid": "f5f348d3-3846-44b1-ba21-108399d69768",
+  "ttft_stream_ms": 1980,
+  "time_to_request_ms": 700,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 305,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 326,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 22,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 602,
+  "process_wall_ms_turn": 6113,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1981,
+  "time_to_request_from_spawn_ms": 26166106,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005626000.5417,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.5,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
