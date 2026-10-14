@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 15456,
+  "stop_reason": "end_turn",
+  "session_id": "1fed1b9e-281e-4641-84a3-82cfa2b1d456",
+  "total_cost_usd": 0.006206639999999999,
+  "usage": {
+    "input_tokens": 11,
+    "cache_creation_input_tokens": 17215,
+    "cache_read_input_tokens": 104744,
+    "output_tokens": 2661,
+    "output_tokens_details": {
+      "thinking_tokens": 569
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17215,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 764,
+        "cache_read_input_tokens": 23597,
+        "cache_creation_input_tokens": 1261,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1261
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `setFloat16` implementation is in place and builds, but the ticket's done-condition is not met. The 14 remaining failures are all `not implemented` errors from `DataView.prototype.getFloat16` and `getFloat32`, which are stubs in other files that this ticket may not touch.\n\nSummary:\n- **Implemented** `crates/kahvi-builtins/src/data_view/prototype_set_float16.rs` following the spec steps. It calls the existing `support::typed_array::set_view_value` with `ElementType::Float16`, and passes `false` for `littleEndian` when the argument is absent. Each step is kept as a comment.\n- **Build and lint:** `cargo build -p kahvi-cli` and `cargo clippy -p kahvi-builtins` both pass with no warnings.\n- **test262:** 32 of 46 runs pass. The 14 failures all come from the getter stubs (`getFloat16` in 12 runs, `getFloat32` in 2). Those stubs throw `not implemented`, so tests that read back the written value fail.\n\nBLOCKED: `DataView.prototype.getFloat16` (crates/kahvi-builtins/src/data_view/prototype_get_float16.rs) and `DataView.prototype.getFloat32` (prototype_get_float32.rs) are still not-implemented stubs; they need implementing (via `get_view_value` with `Float16`/`Float32`) before every `built-ins/DataView/prototype/setFloat16/` test can pass.",
+  "ttft_ms": 1624,
+  "type": "result",
+  "duration_ms": 39843,
+  "uuid": "d88a76e7-f79f-48b8-b1e5-0cd8e2aecb31",
+  "ttft_stream_ms": 1124,
+  "time_to_request_ms": 447,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 309,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 20,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 88,
+  "time_to_request_cpu_ms": 272,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 2833,
+  "process_wall_ms_turn": 39842,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1125,
+  "time_to_request_from_spawn_ms": 19647154,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999107448.1912,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

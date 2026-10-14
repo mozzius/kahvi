@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 24272,
+  "stop_reason": "end_turn",
+  "session_id": "2dd4a577-1890-4756-8f1b-18dbe58b2ee8",
+  "total_cost_usd": 0.012030460000000001,
+  "usage": {
+    "input_tokens": 17,
+    "cache_creation_input_tokens": 32906,
+    "cache_read_input_tokens": 270576,
+    "output_tokens": 4648,
+    "output_tokens_details": {
+      "thinking_tokens": 1118
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32906,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 409,
+        "cache_read_input_tokens": 40091,
+        "cache_creation_input_tokens": 458,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 458
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `String.prototype.matchAll` in its file, following the spec steps with each step kept as a comment. `cargo clippy` is clean and `cargo fmt --check` passes. The matchAll suite is at 18 of 50 runs passing (up from 8 on main). The other 32 fail because `RegExp.prototype.global` is a stub (`crates/kahvi-builtins/src/reg_exp/prototype_get_global.rs`), so the \"all pass\" condition can't be met from this ticket's file.\n\nBLOCKED: `RegExp.prototype.global` getter (crates/kahvi-builtins/src/reg_exp/prototype_get_global.rs) is not implemented; 32 of the matchAll tests fail with \"not implemented: get RegExp.prototype.global\".",
+  "ttft_ms": 1701,
+  "type": "result",
+  "duration_ms": 42104,
+  "uuid": "df24469a-20c6-4b2c-9998-16395865f018",
+  "ttft_stream_ms": 1453,
+  "time_to_request_ms": 676,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 415,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 151,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 18,
+    "message_normalization": 2,
+    "client_creation": 10,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 71,
+  "time_to_request_cpu_ms": 412,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 262,
+  "process_cpu_ms_turn": 4116,
+  "process_wall_ms_turn": 42103,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1454,
+  "time_to_request_from_spawn_ms": 19625303,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999085416.34,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

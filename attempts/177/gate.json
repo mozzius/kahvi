@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-prototype-match-all",
+  "base": "dd652c1f37dfc6739cf596e2b163c8df3e251256",
+  "head": "03c734717fa6d84eaf17f1a5e7600bd890db3829",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_match_all.rs",
+      "added": 42,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 50,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 32,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-bigint-primitive.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-bigint-primitive.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-boolean-primitive.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-boolean-primitive.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-number-primitive.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-number-primitive.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-string-primitive.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/cstm-matchall-on-string-primitive.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/flags-nonglobal-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/flags-nonglobal-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/regexp-get-matchAll-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/regexp-get-matchAll-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/regexp-is-null.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/regexp-is-null.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "built-ins/String/prototype/matchAll/regexp-is-undefined.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global"
+    ]
+  },
+  "decision": "pass"
+}

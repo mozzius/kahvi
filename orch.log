@@ -251,3 +251,9 @@
 [17:31:43] B-global-encode-uri-component: verifier: accept The diff implements encodeURIComponent per the pinned spec: ToString on the argument, empty extraUnescaped, then Encode. Encode and CodePointAt are wr
 [17:31:45] B-iterator-prototype-for-each: verifier: accept The change implements Iterator.prototype.forEach following the spec steps in order: the TypeError for a non-object this, the IsCallable check with Ite
 [17:31:47] B-data-view-prototype-set-float16: attempt on slot 2 with haiku
+[17:31:53] B-data-view-prototype-set-float32: attempt on slot 0 with haiku
+[17:32:09] B-string-prototype-match-all: attempt 177 finished ($0.012, 17 turns)
+[17:32:30] C-proxy-prevent-extensions: attempt 178 finished ($0.009, 18 turns)
+[17:32:30] B-data-view-prototype-set-float16: attempt 179 finished ($0.006, 9 turns)
+[17:32:46] B-data-view-prototype-set-float32: attempt 180 finished ($0.006, 12 turns)
+[17:33:06] B-string-prototype-match-all: verifier: accept The diff implements all six steps of String.prototype.matchAll in order. Step 2 calls RequireObjectCoercible. Step 3 runs IsRegExp, then Get "flags", 

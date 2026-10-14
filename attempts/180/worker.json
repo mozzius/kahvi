@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 16402,
+  "stop_reason": "end_turn",
+  "session_id": "b16a4b4f-0963-4e07-99c6-7239ebe9bfec",
+  "total_cost_usd": 0.0057408699999999995,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 14064,
+    "cache_read_input_tokens": 109907,
+    "output_tokens": 2896,
+    "output_tokens_details": {
+      "thinking_tokens": 432
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14064,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 339,
+        "cache_read_input_tokens": 20075,
+        "cache_creation_input_tokens": 1632,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1632
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`DataView.prototype.setFloat32` is implemented in its file and builds, clippy and fmt are clean, and 32 of 46 runs pass. The 14 failing runs all fail inside `getFloat32`, which is still a stub, because the tests read values back through it. Those tests can't pass until `prototype_get_float32.rs` is implemented, and that file is outside this ticket's scope.\n\nThe implementation delegates to the existing `set_view_value` helper, with `littleEndian` defaulting to `false` when absent.\n\nBLOCKED: DataView.prototype.getFloat32 (crates/kahvi-builtins/src/data_view/prototype_get_float32.rs) is still a not-implemented stub, which fails the 14 setFloat32 read-back runs.",
+  "ttft_ms": 1617,
+  "type": "result",
+  "duration_ms": 48853,
+  "uuid": "5ecc88f9-1dea-4af5-94e4-5246f608a318",
+  "ttft_stream_ms": 1313,
+  "time_to_request_ms": 564,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 326,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 12,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 125,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 98,
+  "time_to_request_cpu_ms": 309,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 225,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 3252,
+  "process_wall_ms_turn": 48852,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1314,
+  "time_to_request_from_spawn_ms": 19654597,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999114111.1155,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

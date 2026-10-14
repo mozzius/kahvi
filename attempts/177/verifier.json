@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12906,
+  "stop_reason": "tool_use",
+  "session_id": "0f5a98e0-e540-4241-80dc-eaf4dc78fd95",
+  "total_cost_usd": 0.0035991800000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7687,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2654,
+    "output_tokens_details": {
+      "thinking_tokens": 2005
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7687,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2654,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7687,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7687
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all six steps of String.prototype.matchAll in order. Step 2 calls RequireObjectCoercible. Step 3 runs IsRegExp, then Get \\\"flags\\\", then RequireObjectCoercible and ToString on the flags, then the \\\"g\\\" check that throws a TypeError, then GetMethod for %Symbol.matchAll% and Call when the matcher is defined. Step 4 is ToString(this). Step 5 is RegExpCreate with \\\"g\\\". Step 6 is Invoke with %Symbol.matchAll%. Errors propagate with `?` throughout, nothing is swallowed, no inputs are special-cased, and no values are made up. The remaining test262 failures come from the unimplemented RegExp.prototype.global getter, which correctly surfaces as a not-implemented error rather than a fake result. Minor: the spec NOTE comments were dropped from the stub, which is cosmetic and not a step. The `_new_target` rename is a harmless stub cleanup.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Once RegExp.prototype.global (and the related RegExp String Iterator machinery used by %RegExp.prototype%[@@matchAll]) is implemented, the remaining matchAll tests should pass without further changes to this file. Optionally restore the two NOTE comments from the stub for fidelity.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all six steps of String.prototype.matchAll in order. Step 2 calls RequireObjectCoercible. Step 3 runs IsRegExp, then Get \"flags\", then RequireObjectCoercible and ToString on the flags, then the \"g\" check that throws a TypeError, then GetMethod for %Symbol.matchAll% and Call when the matcher is defined. Step 4 is ToString(this). Step 5 is RegExpCreate with \"g\". Step 6 is Invoke with %Symbol.matchAll%. Errors propagate with `?` throughout, nothing is swallowed, no inputs are special-cased, and no values are made up. The remaining test262 failures come from the unimplemented RegExp.prototype.global getter, which correctly surfaces as a not-implemented error rather than a fake result. Minor: the spec NOTE comments were dropped from the stub, which is cosmetic and not a step. The `_new_target` rename is a harmless stub cleanup.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Once RegExp.prototype.global (and the related RegExp String Iterator machinery used by %RegExp.prototype%[@@matchAll]) is implemented, the remaining matchAll tests should pass without further changes to this file. Optionally restore the two NOTE comments from the stub for fidelity."
+  },
+  "ttft_ms": 10811,
+  "type": "result",
+  "duration_ms": 13187,
+  "uuid": "9e7faa50-99a5-486f-8bc1-507d2accd08c",
+  "ttft_stream_ms": 3108,
+  "time_to_request_ms": 1388,
+  "time_to_request_phases_ms": {
+    "other": 123,
+    "system_prompt": 778,
+    "resume_other": 0,
+    "process_user_input": 103,
+    "input_attachments": 106,
+    "input_hooks": 58,
+    "tool_pool_refresh": 10,
+    "init_message": 29,
+    "engine_pickup": 17,
+    "message_prep": 25,
+    "model_config_wait": 13,
+    "autocompact": 10,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 10,
+    "message_normalization": 7,
+    "client_creation": 54,
+    "request_build": 42
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 481,
+  "time_to_request_cpu_ms": 399,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 215,
+  "process_anon_mib_turn_start": 98,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 972,
+  "process_wall_ms_turn": 13186,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 99,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3126,
+  "time_to_request_from_spawn_ms": 19698005,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999154766.5571,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
