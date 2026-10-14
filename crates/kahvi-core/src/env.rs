@@ -33,7 +33,7 @@ pub struct Bindings {
 const INDEX_FROM: usize = 16;
 
 impl Bindings {
-    fn position(&self, name: &JsString) -> Option<usize> {
+    pub(crate) fn position(&self, name: &JsString) -> Option<usize> {
         match &self.index {
             Some(ix) => ix.get(name).copied(),
             None => self.list.iter().position(|(n, _)| n == name),
@@ -114,6 +114,9 @@ pub enum Environment {
         /// Module environments resolve imports through other modules' environments.
         imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
         is_module: bool,
+        /// The environment of a Catch clause's parameter (Annex B.3.4 lets a
+        /// direct eval's `var` redeclare its names).
+        is_catch: bool,
         /// [[DisposableResourceStack]]: the resources of its `using` declarations.
         disposable_resource_stack: Vec<DisposableResource>,
     },
@@ -154,6 +157,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         }
     }
@@ -165,8 +169,26 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
+    }
+
+    /// A new declarative environment for a Catch clause's parameter.
+    pub fn new_catch(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
+        let env = Environment::new_declarative(agent, outer);
+        if let Environment::Declarative { is_catch, .. } = agent.env_mut(env) {
+            *is_catch = true;
+        }
+        env
+    }
+
+    /// Whether `env` is the Environment Record for a Catch clause.
+    pub fn is_catch(agent: &Agent, env: EnvId) -> bool {
+        matches!(
+            agent.env(env),
+            Environment::Declarative { is_catch: true, .. }
+        )
     }
 
     /// NewFunctionEnvironment(F, newTarget)
@@ -192,6 +214,7 @@ impl Environment {
             })),
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
     }
@@ -203,6 +226,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: true,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
     }
@@ -675,6 +699,44 @@ impl EnvId {
         agent.env(self).outer()
     }
 
+    /// The slot of `name` among a declarative record's own bindings (an
+    /// import binding has none), for the interpreter's binding caches.
+    pub(crate) fn binding_slot(self, agent: &Agent, name: JsString) -> Option<usize> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.position(&name),
+            _ => None,
+        }
+    }
+
+    /// GetBindingValue of the binding in `slot` of a declarative record (one
+    /// `binding_slot` returned): its value, or the error for its temporal
+    /// dead zone.
+    pub(crate) fn binding_value_at(self, agent: &mut Agent, slot: usize) -> JsResult<Value> {
+        let Environment::Declarative { bindings, .. } = agent.env(self) else {
+            unreachable!("a binding slot of a declarative record")
+        };
+        let (name, binding) = &bindings.list[slot];
+        match binding.value {
+            Some(v) => Ok(v),
+            None => {
+                let name = *name;
+                let msg = format!(
+                    "cannot access '{}' before initialization",
+                    agent.str_lossy(name)
+                );
+                Err(agent.throw_reference_error(&msg))
+            }
+        }
+    }
+
+    /// The name of the binding in `slot` of a declarative record.
+    pub(crate) fn binding_name_at(self, agent: &Agent, slot: usize) -> Option<JsString> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.list.get(slot).map(|(n, _)| *n),
+            _ => None,
+        }
+    }
+
     /// The record's [[DisposableResourceStack]] (declarative records only).
     pub fn disposable_resource_stack_mut(self, agent: &mut Agent) -> &mut Vec<DisposableResource> {
         match agent.env_mut(self) {
@@ -741,6 +803,7 @@ impl Trace for Environment {
                 function,
                 imports,
                 is_module: _,
+                is_catch: _,
                 disposable_resource_stack,
             } => {
                 bindings.trace(t);

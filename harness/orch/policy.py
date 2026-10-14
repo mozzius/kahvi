@@ -29,10 +29,11 @@ PROTECTED = [
     "t262",
     "spec",
     "orch",
+    "e2e",
 ]
 
 # Crates allowed to talk to the outside world and to know about test262.
-HOST_CRATES = ["crates/kahvi-cli/**", "crates/kahvi-host/**"]
+HOST_CRATES = ["crates/kahvi-cli/**", "crates/kahvi-host/**", "crates/kahvi-runtime/**"]
 
 # Added lines matching these reject the attempt outright, except in the
 # exempted paths: (pattern, reason[, exempt globs]).

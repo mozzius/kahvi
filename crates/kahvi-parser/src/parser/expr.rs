@@ -211,7 +211,11 @@ impl Parser<'_> {
         {
             let op_pos = self.tok.start;
             self.next()?;
-            let target = if op == AssignOp::Assign {
+            let target = if !matches!(op, AssignOp::Logical(_)) && self.is_web_compat_call(&left) {
+                // A call assigned to throws a ReferenceError when evaluated.
+                cover.merge(inner);
+                Pattern::Expr(Box::new(left))
+            } else if op == AssignOp::Assign {
                 // Object/array literals become destructuring patterns; their
                 // cover-only constructs are fine there.
                 self.expr_to_assignment_target(left, true)?
@@ -415,7 +419,9 @@ impl Parser<'_> {
             };
             self.next()?;
             let target = self.parse_unary(&mut Cover::default())?;
-            self.check_simple_target(&target)?;
+            if !self.is_web_compat_call(&target) {
+                self.check_simple_target(&target)?;
+            }
             return Ok(Expr::Update {
                 op,
                 prefix: true,
@@ -430,7 +436,9 @@ impl Parser<'_> {
             } else {
                 UpdateOp::Decrement
             };
-            self.check_simple_target(&expr)?;
+            if !self.is_web_compat_call(&expr) {
+                self.check_simple_target(&expr)?;
+            }
             self.next()?;
             return Ok(Expr::Update {
                 op,
@@ -446,6 +454,14 @@ impl Parser<'_> {
     /// where it is reserved but no expression is allowed).
     fn await_should_parse_expression(&self) -> bool {
         self.in_async() || self.fn_ctx().in_static_block
+    }
+
+    /// AssignmentTargetType of a CallExpression is web-compat in non-strict
+    /// code (Runtime Errors for Function Call Assignment Targets): `f() = 1`,
+    /// `f() += 1`, `f()++` and `for (f() in o)` throw a ReferenceError when
+    /// evaluated instead of being early errors.
+    pub fn is_web_compat_call(&self, e: &Expr) -> bool {
+        !self.strict && matches!(e.unparen(), Expr::Call { .. })
     }
 
     /// The target of `++`/`--` (and compound assignment) must be simple.

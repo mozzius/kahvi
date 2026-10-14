@@ -241,3 +241,135 @@ pub fn to_lowercase(c: u32) -> Option<&'static [u32]> {
 pub fn uppercase_mappings() -> impl Iterator<Item = (u32, &'static [u32])> {
     tables::TO_UPPERCASE.iter().map(|(c, m)| (*c, trim(m)))
 }
+
+// ---- normalization (UAX #15) -----------------------------------------------
+
+/// A Unicode normalization form.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NormalizationForm {
+    Nfc,
+    Nfd,
+    Nfkc,
+    Nfkd,
+}
+
+/// The Canonical_Combining_Class property.
+pub fn canonical_combining_class(c: u32) -> u8 {
+    find_range(tables::CANONICAL_COMBINING_CLASS, c)
+        .copied()
+        .unwrap_or(0)
+}
+
+// Hangul syllables (UAX #15 and the Unicode Standard, 3.12): composed and
+// decomposed arithmetically.
+const S_BASE: u32 = 0xAC00;
+const L_BASE: u32 = 0x1100;
+const V_BASE: u32 = 0x1161;
+const T_BASE: u32 = 0x11A7;
+const L_COUNT: u32 = 19;
+const V_COUNT: u32 = 21;
+const T_COUNT: u32 = 28;
+const N_COUNT: u32 = V_COUNT * T_COUNT;
+const S_COUNT: u32 = L_COUNT * N_COUNT;
+
+/// Appends the full (canonical, or with `compat` also compatibility)
+/// decomposition of `c`.
+fn decompose_into(c: u32, compat: bool, out: &mut Vec<u32>) {
+    if (S_BASE..S_BASE + S_COUNT).contains(&c) {
+        let s = c - S_BASE;
+        out.push(L_BASE + s / N_COUNT);
+        out.push(V_BASE + (s % N_COUNT) / T_COUNT);
+        if !s.is_multiple_of(T_COUNT) {
+            out.push(T_BASE + s % T_COUNT);
+        }
+        return;
+    }
+    if let Ok(i) = tables::DECOMPOSITION.binary_search_by_key(&c, |e| e.0) {
+        let (_, is_compat, start, len) = tables::DECOMPOSITION[i];
+        if !is_compat || compat {
+            let start = start as usize;
+            for &d in &tables::DECOMPOSITION_DATA[start..start + len as usize] {
+                decompose_into(d, compat, out);
+            }
+            return;
+        }
+    }
+    out.push(c);
+}
+
+/// The Canonical Ordering Algorithm: each run of non-starters is sorted by
+/// combining class, keeping the order of equal classes.
+fn canonical_order(s: &mut [u32]) {
+    let mut i = 0;
+    while i < s.len() {
+        if canonical_combining_class(s[i]) == 0 {
+            i += 1;
+            continue;
+        }
+        let start = i;
+        while i < s.len() && canonical_combining_class(s[i]) != 0 {
+            i += 1;
+        }
+        s[start..i].sort_by_key(|&c| canonical_combining_class(c));
+    }
+}
+
+/// The primary composite of `a` followed by `b`, if there is one.
+fn compose_pair(a: u32, b: u32) -> Option<u32> {
+    if (L_BASE..L_BASE + L_COUNT).contains(&a) && (V_BASE..V_BASE + V_COUNT).contains(&b) {
+        return Some(S_BASE + ((a - L_BASE) * V_COUNT + (b - V_BASE)) * T_COUNT);
+    }
+    if (S_BASE..S_BASE + S_COUNT).contains(&a)
+        && (a - S_BASE).is_multiple_of(T_COUNT)
+        && (T_BASE + 1..T_BASE + T_COUNT).contains(&b)
+    {
+        return Some(a + (b - T_BASE));
+    }
+    tables::COMPOSITION
+        .binary_search_by(|e| (e.0, e.1).cmp(&(a, b)))
+        .ok()
+        .map(|i| tables::COMPOSITION[i].2)
+}
+
+/// The Canonical Composition Algorithm over a canonically ordered sequence.
+fn compose(s: &[u32]) -> Vec<u32> {
+    let mut out: Vec<u32> = Vec::with_capacity(s.len());
+    // The index in `out` of the last starter, while composing with it is possible.
+    let mut starter: Option<usize> = None;
+    for &c in s {
+        let cc = canonical_combining_class(c);
+        if let Some(si) = starter {
+            // c is blocked from the starter if a character between them is a
+            // starter or has a class at least c's (the ones between are
+            // ordered, so the last one decides).
+            let blocked = out.len() > si + 1 && {
+                let last = canonical_combining_class(out[out.len() - 1]);
+                last == 0 || last >= cc
+            };
+            if !blocked && let Some(composite) = compose_pair(out[si], c) {
+                out[si] = composite;
+                continue;
+            }
+        }
+        if cc == 0 {
+            starter = Some(out.len());
+        }
+        out.push(c);
+    }
+    out
+}
+
+/// Normalizes a sequence of code points (a lone surrogate is kept as it is:
+/// it has no decomposition and combining class 0).
+pub fn normalize_code_points(code_points: &[u32], form: NormalizationForm) -> Vec<u32> {
+    let compat = matches!(form, NormalizationForm::Nfkc | NormalizationForm::Nfkd);
+    let mut d = Vec::with_capacity(code_points.len());
+    for &c in code_points {
+        decompose_into(c, compat, &mut d);
+    }
+    canonical_order(&mut d);
+    match form {
+        NormalizationForm::Nfd | NormalizationForm::Nfkd => d,
+        NormalizationForm::Nfc | NormalizationForm::Nfkc => compose(&d),
+    }
+}

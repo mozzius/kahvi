@@ -35,7 +35,10 @@ impl Compiler<'_> {
                 if mode == Mode::Init {
                     self.emit(Op::InitName(name));
                 } else {
-                    self.emit(Op::ResolveName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::ResolveName(name, ic));
+                    }
                     self.emit(Op::PutRef);
                     self.emit(Op::Pop);
                 }
@@ -101,9 +104,12 @@ impl Compiler<'_> {
                 self.emit(Op::Pop);
                 self.emit(Op::Pop);
             }
-            _ => {
+            other => {
+                // `for (f() in o)` in sloppy code: the call happens, then a ReferenceError.
+                self.compile_expr(other);
                 self.emit(Op::Pop);
-                self.throw_error(ErrorType::Reference, "invalid destructuring target");
+                self.emit(Op::Pop);
+                self.throw_error(ErrorType::Reference, "invalid assignment target");
             }
         }
     }
@@ -172,7 +178,10 @@ impl Compiler<'_> {
         {
             // ResolveBinding happens before the value is fetched.
             let name = self.string(&id.name);
-            self.emit(Op::ResolveName(name));
+            {
+                let ic = self.name_cache();
+                self.emit(Op::ResolveName(name, ic));
+            }
             fetch(self, 0);
             self.apply_default(elem);
             self.emit(Op::PutRef);

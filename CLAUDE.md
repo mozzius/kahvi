@@ -5,6 +5,8 @@ harness. Plan: docs/PLAN.md. Operating the harness: docs/HARNESS.md.
 
 - **test262 is the only measure of correctness.** `./t262 <path prefix>` runs
   tests under `vendor/test262/test/`, e.g. `./t262 built-ins/Array/prototype/at/`.
+- **The runtime** (`kahvi-run`, docs/RUNTIME.md) has end-to-end tests:
+  `./e2e` runs `harness/e2e/tests/` (architect-owned).
 - **The spec is the design.** `./spec <clause-id>` prints an algorithm with
   the published step numbers; `./spec --find <text>` searches titles.
 - **Engine code mirrors the spec.** Abstract operations keep their spec names

@@ -45,7 +45,15 @@ impl Compiler<'_> {
         match s {
             Stmt::Var(decl) => self.compile_var_decl(decl),
             // Hoisted by declaration instantiation.
-            Stmt::Function(_) => {}
+            Stmt::Function(f) => {
+                // Annex B.3.2: the declaration's evaluation copies the block's
+                // binding to the var binding, if instantiation created one.
+                if self.annex_b.contains(&std::rc::Rc::as_ptr(f)) {
+                    let name = f.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
+                    let name = self.string(name);
+                    self.emit(Op::AnnexBFunction(name));
+                }
+            }
             Stmt::Class(c) => {
                 self.compile_class(c, FnName::Own);
                 let name = c.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
@@ -147,7 +155,7 @@ impl Compiler<'_> {
                 self.compile_expr(object);
                 self.emit(Op::PushWith);
                 self.scopes.push(JumpScope::With);
-                self.compile_stmt(body);
+                self.dynamic_scope(|c| c.compile_stmt(body));
                 self.scopes.pop();
                 self.emit(Op::PopScope);
             }
@@ -285,7 +293,10 @@ impl Compiler<'_> {
                     let Some(init) = &d.init else { continue };
                     if let Pattern::Ident(id) = &d.target {
                         let name = self.string(&id.name);
-                        self.emit(Op::ResolveName(name));
+                        {
+                            let ic = self.name_cache();
+                            self.emit(Op::ResolveName(name, ic));
+                        }
                         self.compile_named_expr(init, &d.target);
                         self.emit(Op::PutRef);
                         self.emit(Op::Pop);
@@ -352,6 +363,7 @@ impl Compiler<'_> {
                 self.code.scopes.push(ScopeInfo {
                     lexical,
                     functions: Vec::new(),
+                    is_catch: false,
                 });
                 let scope = (self.code.scopes.len() - 1) as u32;
                 self.emit(Op::PushScope(scope));
@@ -447,6 +459,7 @@ impl Compiler<'_> {
             self.code.scopes.push(ScopeInfo {
                 lexical: names,
                 functions: Vec::new(),
+                is_catch: false,
             });
             (self.code.scopes.len() - 1) as u32
         });
@@ -458,7 +471,10 @@ impl Compiler<'_> {
         } = left
         {
             let name = self.string(&id.name);
-            self.emit(Op::ResolveName(name));
+            {
+                let ic = self.name_cache();
+                self.emit(Op::ResolveName(name, ic));
+            }
             self.compile_named_expr(init, &Pattern::Ident(id.clone()));
             self.emit(Op::PutRef);
             self.emit(Op::Pop);
@@ -475,6 +491,7 @@ impl Compiler<'_> {
             self.code.scopes.push(ScopeInfo {
                 lexical: lexical_names.clone(),
                 functions: Vec::new(),
+                is_catch: false,
             });
             (self.code.scopes.len() - 1) as u32
         });
@@ -550,7 +567,10 @@ impl Compiler<'_> {
             ForHead::Assign(target) => match target {
                 Pattern::Ident(id) => {
                     let name = self.string(&id.name);
-                    self.emit(Op::ResolveName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::ResolveName(name, ic));
+                    }
                     self.emit(Op::PutRef);
                     self.emit(Op::Pop);
                 }
@@ -706,6 +726,7 @@ impl Compiler<'_> {
                     self.code.scopes.push(ScopeInfo {
                         lexical,
                         functions: Vec::new(),
+                        is_catch: true,
                     });
                     let scope = (self.code.scopes.len() - 1) as u32;
                     self.emit(Op::PushScope(scope));

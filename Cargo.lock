@@ -3,11 +3,20 @@
 version = 4
 
 [[package]]
+name = "kahvi"
+version = "0.0.0"
+dependencies = [
+ "kahvi-builtins",
+ "kahvi-core",
+]
+
+[[package]]
 name = "kahvi-builtins"
 version = "0.0.0"
 dependencies = [
  "kahvi-core",
  "kahvi-regexp",
+ "kahvi-unicode",
 ]
 
 [[package]]
@@ -39,6 +48,15 @@ name = "kahvi-regexp"
 version = "0.0.0"
 dependencies = [
  "kahvi-unicode",
+]
+
+[[package]]
+name = "kahvi-runtime"
+version = "0.0.0"
+dependencies = [
+ "kahvi",
+ "kahvi-builtins",
+ "kahvi-core",
 ]
 
 [[package]]

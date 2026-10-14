@@ -301,79 +301,18 @@ pub fn check_catch(param: &Pattern, body: &[Stmt]) -> R {
             return Err(dup_error(l.name, l.span));
         }
     }
-    // Annex B.3.4: `var` may redeclare a simple catch parameter, except in for-of.
-    let simple = matches!(param, Pattern::Ident(_));
-    let vars = if simple {
-        for_of_var_names(body)
-    } else {
-        var_declared_names(body)
-    };
-    for v in &vars {
+    // It is a Syntax Error if any element of the BoundNames of CatchParameter also occurs in
+    // the VarDeclaredNames of Block, unless CatchParameter is CatchParameter : BindingIdentifier
+    // (Annex B.3.4, VariableStatements in Catch Blocks).
+    if matches!(param, Pattern::Ident(_)) {
+        return Ok(());
+    }
+    for v in &var_declared_names(body) {
         if names.contains(&v.name) {
             return Err(dup_error(v.name, v.span));
         }
     }
     Ok(())
-}
-
-fn for_of_var_names(stmts: &[Stmt]) -> Vec<Decl<'_>> {
-    let mut out = Vec::new();
-    fn walk<'a>(s: &'a Stmt, out: &mut Vec<Decl<'a>>) {
-        match s {
-            Stmt::ForOf {
-                left:
-                    ForHead::Var {
-                        kind: VarKind::Var,
-                        target,
-                        ..
-                    },
-                body,
-                ..
-            } => {
-                push_pattern(target, out);
-                walk(body, out);
-            }
-            Stmt::Block(b) => b.body.iter().for_each(|s| walk(s, out)),
-            Stmt::If {
-                consequent,
-                alternate,
-                ..
-            } => {
-                walk(consequent, out);
-                if let Some(a) = alternate {
-                    walk(a, out);
-                }
-            }
-            Stmt::For { body, .. }
-            | Stmt::ForIn { body, .. }
-            | Stmt::ForOf { body, .. }
-            | Stmt::While { body, .. }
-            | Stmt::DoWhile { body, .. }
-            | Stmt::With { body, .. }
-            | Stmt::Labeled { body, .. } => walk(body, out),
-            Stmt::Try {
-                block,
-                handler,
-                finalizer,
-                ..
-            } => {
-                block.body.iter().for_each(|s| walk(s, out));
-                if let Some(h) = handler {
-                    h.body.body.iter().for_each(|s| walk(s, out));
-                }
-                if let Some(f) = finalizer {
-                    f.body.iter().for_each(|s| walk(s, out));
-                }
-            }
-            Stmt::Switch { cases, .. } => cases
-                .iter()
-                .flat_map(|c| &c.body)
-                .for_each(|s| walk(s, out)),
-            _ => {}
-        }
-    }
-    stmts.iter().for_each(|s| walk(s, &mut out));
-    out
 }
 
 /// `for (let x; ;) { var x }` and duplicates in the head.
@@ -736,4 +675,157 @@ pub fn visit_stmt_exprs(s: &Stmt, v: &mut dyn FnMut(&Expr)) {
         }
         _ => {}
     }
+}
+
+/// Annex B.3.2 (Block-Level Function Declarations Web Legacy Compatibility
+/// Semantics): the FunctionDeclarations directly contained in the
+/// StatementList of a Block, CaseClause or DefaultClause of a non-strict
+/// function, script or eval body, such that "replacing the FunctionDeclaration
+/// with a VariableStatement that has its name as a BindingIdentifier would not
+/// produce any Early Errors", and whose name is not one of `params` (for
+/// function code: "paramNames does not contain funcName").
+pub fn annex_b_function_candidates<'a>(
+    body: &'a [Stmt],
+    params: &[&str],
+) -> Vec<&'a std::rc::Rc<Function>> {
+    // The lexically declared names of each enclosing scope, innermost last;
+    // the body's own top-level lexical declarations first.
+    let mut scopes: Vec<Vec<&'a str>> = vec![
+        lexically_declared_names(body, true)
+            .iter()
+            .map(|d| d.name)
+            .collect(),
+    ];
+    let mut out = Vec::new();
+    for s in body {
+        annex_b_stmt(s, params, &mut scopes, &mut out);
+    }
+    out
+}
+
+fn annex_b_stmt<'a>(
+    s: &'a Stmt,
+    params: &[&str],
+    scopes: &mut Vec<Vec<&'a str>>,
+    out: &mut Vec<&'a std::rc::Rc<Function>>,
+) {
+    match s {
+        Stmt::Block(b) => annex_b_list(&b.body, params, scopes, out),
+        Stmt::Switch { cases, .. } => {
+            let all: Vec<&'a Stmt> = cases.iter().flat_map(|c| &c.body).collect();
+            annex_b_list_refs(&all, params, scopes, out);
+        }
+        Stmt::If {
+            consequent,
+            alternate,
+            ..
+        } => {
+            annex_b_stmt(consequent, params, scopes, out);
+            if let Some(a) = alternate {
+                annex_b_stmt(a, params, scopes, out);
+            }
+        }
+        Stmt::For { init, body, .. } => {
+            let mut names = Vec::new();
+            if let Some(ForInit::Var(d)) = init
+                && d.kind.is_lexical()
+            {
+                for decl in &d.declarations {
+                    names.extend(bound_names(&decl.target));
+                }
+            }
+            scopes.push(names);
+            annex_b_stmt(body, params, scopes, out);
+            scopes.pop();
+        }
+        Stmt::ForIn { left, body, .. } | Stmt::ForOf { left, body, .. } => {
+            let mut names = Vec::new();
+            if let ForHead::Var { kind, target, .. } = left
+                && kind.is_lexical()
+            {
+                names.extend(bound_names(target));
+            }
+            scopes.push(names);
+            annex_b_stmt(body, params, scopes, out);
+            scopes.pop();
+        }
+        Stmt::While { body, .. }
+        | Stmt::DoWhile { body, .. }
+        | Stmt::With { body, .. }
+        | Stmt::Labeled { body, .. } => annex_b_stmt(body, params, scopes, out),
+        Stmt::Try {
+            block,
+            handler,
+            finalizer,
+            ..
+        } => {
+            annex_b_list(&block.body, params, scopes, out);
+            if let Some(h) = handler {
+                // Annex B.3.4: a `var` may redeclare a simple catch parameter,
+                // so only a destructured parameter's names conflict.
+                let names = match &h.param {
+                    Some(p @ (Pattern::Object { .. } | Pattern::Array { .. })) => bound_names(p),
+                    _ => Vec::new(),
+                };
+                scopes.push(names);
+                annex_b_list(&h.body.body, params, scopes, out);
+                scopes.pop();
+            }
+            if let Some(f) = finalizer {
+                annex_b_list(&f.body, params, scopes, out);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn annex_b_list<'a>(
+    body: &'a [Stmt],
+    params: &[&str],
+    scopes: &mut Vec<Vec<&'a str>>,
+    out: &mut Vec<&'a std::rc::Rc<Function>>,
+) {
+    let refs: Vec<&'a Stmt> = body.iter().collect();
+    annex_b_list_refs(&refs, params, scopes, out);
+}
+
+/// A Block's or case block's StatementList.
+fn annex_b_list_refs<'a>(
+    body: &[&'a Stmt],
+    params: &[&str],
+    scopes: &mut Vec<Vec<&'a str>>,
+    out: &mut Vec<&'a std::rc::Rc<Function>>,
+) {
+    // The declarations of this StatementList, function declarations
+    // included, by declaring statement.
+    let lexical: Vec<(usize, &'a str)> = body
+        .iter()
+        .enumerate()
+        .flat_map(|(i, s)| {
+            lexically_declared_names(std::slice::from_ref(*s), false)
+                .into_iter()
+                .map(move |d| (i, d.name))
+        })
+        .collect();
+    for (i, s) in body.iter().enumerate() {
+        let Stmt::Function(f) = s else { continue };
+        if f.is_async || f.is_generator {
+            continue;
+        }
+        let Some(id) = &f.id else { continue };
+        let name = id.name.as_str();
+        // A `var` of this name would collide with another lexical declaration
+        // of this StatementList or of an enclosing scope (early errors of
+        // Block, CaseBlock, for statements, catch clauses and the body).
+        let conflict = lexical.iter().any(|&(j, n)| j != i && n == name)
+            || scopes.iter().any(|names| names.contains(&name));
+        if !conflict && !params.contains(&name) {
+            out.push(f);
+        }
+    }
+    scopes.push(lexical.iter().map(|&(_, n)| n).collect());
+    for s in body {
+        annex_b_stmt(s, params, scopes, out);
+    }
+    scopes.pop();
 }
