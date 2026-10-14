@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9241,
+  "stop_reason": "tool_use",
+  "session_id": "b98721af-3317-460c-a27b-e573038615b4",
+  "total_cost_usd": 0.0242799,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3997,
+    "cache_read_input_tokens": 10980,
+    "output_tokens": 688,
+    "output_tokens_details": {
+      "thinking_tokens": 133
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3997,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 528,
+        "cache_read_input_tokens": 7352,
+        "cache_creation_input_tokens": 273,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 273
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 3,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements getUTCSeconds as the spec describes. It gets the time value with `this_time_value(agent, this)?`, which should cover RequireInternalSlot and read [[DateValue]], so a TypeError propagates. It returns NaN when tv is NaN, and otherwise returns `sec_from_time(tv)`. Every spec step has a comment above its code. Nothing is hardcoded or special-cased, and no errors are swallowed. The test262 target went from 8 to 16 passing, with no regressions. I could not open the helper source because the shell was disabled in this session. I judged the helpers `this_time_value` and `sec_from_time` only from the diff and the passing gate report.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements getUTCSeconds as the spec describes. It gets the time value with `this_time_value(agent, this)?`, which should cover RequireInternalSlot and read [[DateValue]], so a TypeError propagates. It returns NaN when tv is NaN, and otherwise returns `sec_from_time(tv)`. Every spec step has a comment above its code. Nothing is hardcoded or special-cased, and no errors are swallowed. The test262 target went from 8 to 16 passing, with no regressions. I could not open the helper source because the shell was disabled in this session. I judged the helpers `this_time_value` and `sec_from_time` only from the diff and the passing gate report.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 2814,
+  "type": "result",
+  "duration_ms": 7737,
+  "uuid": "0bec81b0-a91d-42be-9ffd-366a2548fb6e",
+  "ttft_stream_ms": 1816,
+  "time_to_request_ms": 525,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 407,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 24,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 10,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 1,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 75,
+  "time_to_request_cpu_ms": 390,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 245,
+  "process_cpu_ms_turn": 961,
+  "process_wall_ms_turn": 7737,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1818,
+  "time_to_request_from_spawn_ms": 25669989,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005129933.5244,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.38,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

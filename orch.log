@@ -2909,3 +2909,8 @@ test262 at last merge: 74823/81183 runs passing
 [19:11:23] B-date-prototype-get-utc-month: verifier: accept The diff implements Date.prototype.getUTCMonth in its own file, and I found no defects. Step 1 and 2 (RequireInternalSlot) are delegated to date::this
 [19:11:25] B-date-prototype-get-utc-seconds: attempt on slot 0 with haiku
 [19:11:28] B-json-raw-json: attempt on slot 3 with haiku
+[19:11:38] B-math-abs: attempt on slot 2 with haiku
+[19:11:46] B-date-prototype-get-utc-seconds: attempt 410 finished ($0.005, 7 turns)
+[19:12:04] B-math-abs: attempt 412 finished ($0.005, 9 turns)
+[19:12:16] B-string-prototype-locale-compare: attempt 408 finished ($0.022, 20 turns)
+[19:12:19] B-date-prototype-get-utc-seconds: verifier: accept The change implements Date.prototype.getUTCSeconds in its own file. It gets the time value through the shared date helper `date::this_time_value(agent

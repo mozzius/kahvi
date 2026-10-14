@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-abs",
+  "base": "91410085f1a61e4e7d04facbbcbe96060879b2d8",
+  "head": "8f4ca51b08b11c913f78f5273724864e21ef81a8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/abs.rs",
+      "added": 22,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
