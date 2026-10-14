@@ -178,3 +178,8 @@
 [17:22:16] B-iterator-prototype-reduce: verifier: accept The diff implements Iterator.prototype.reduce in its own file only, following the spec steps in order with each step kept as a comment. Checked agains
 [17:22:20] B-date-utc: attempt on slot 1 with haiku
 [17:22:22] B-string-prototype-char-at: verifier: accept The change implements String.prototype.charAt in its file, following the spec steps in order. RequireObjectCoercible runs before ToString, and ToStrin
+[17:22:26] B-iterator-from: attempt on slot 3 with haiku
+[17:22:33] B-array-prototype-shift: attempt 157 finished ($0.011, 16 turns)
+[17:22:57] B-date-utc: attempt 159 finished ($0.008, 11 turns)
+[17:23:13] B-iterator-from: attempt 160 finished ($0.011, 11 turns)
+[17:23:17] B-array-prototype-shift: verifier: accept The diff implements Array.prototype.shift in order against the spec: ToObject, LengthOfArrayLike, the length-0 branch (Set length +0, return undefined

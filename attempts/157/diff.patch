@@ -1,0 +1,102 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_shift.rs b/crates/kahvi-builtins/src/array/prototype_shift.rs
+index 7c7aef1..e20a348 100644
+--- a/crates/kahvi-builtins/src/array/prototype_shift.rs
++++ b/crates/kahvi-builtins/src/array/prototype_shift.rs
+@@ -8,36 +8,70 @@ use kahvi_core::prelude::*;
+ pub(crate) fn prototype_shift(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method removes the first element of the array and returns it.
+     // It performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
+-    // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
+-    // 3. If _length_ = 0, then
+-    //    a. Perform ? Set(_obj_, *"length"*, *+0*_𝔽, *true*).
+-    //    b. Return *undefined*.
+-    // 4. Let _first_ be ? Get(_obj_, *"0"*).
+-    // 5. Let _k_ be 1.
+-    // 6. Repeat, while _k_ < _length_,
+-    //    a. Let _from_ be ! ToString(𝔽(_k_)).
+-    //    b. Let _to_ be ! ToString(𝔽(_k_ - 1)).
+-    //    c. Let _fromPresent_ be ? HasProperty(_obj_, _from_).
+-    //    d. If _fromPresent_ is *true*, then
+-    //       i. Let _fromValue_ be ? Get(_obj_, _from_).
+-    //       ii. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
+-    //    e. Else,
+-    //       i. Assert: _fromPresent_ is *false*.
+-    //       ii. Perform ? DeletePropertyOrThrow(_obj_, _to_).
+-    //    f. Set _k_ to _k_ + 1.
+-    // 7. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_length_ - 1))).
+-    // 8. Perform ? Set(_obj_, *"length"*, 𝔽(_length_ - 1), *true*).
+-    // 9. Return _first_.
+-    //
+-    // NOTE:
+-    // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.shift"))
++    let obj = ops::to_object(agent, this)?;
++    // The steps below may call user code (getters, setters, proxy traps): obj stays rooted.
++    agent.with_roots(&[Value::Object(obj)], |agent| {
++        // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
++        let length = ops::length_of_array_like(agent, obj)?;
++        // 3. If _length_ = 0, then
++        if length == 0.0 {
++            // a. Perform ? Set(_obj_, *"length"*, *+0*_𝔽, *true*).
++            let length_key = PropertyKey::String(agent.names.length);
++            ops::set(agent, obj, length_key, Value::Number(0.0), true)?;
++            // b. Return *undefined*.
++            return Ok(Value::Undefined);
++        }
++        // 4. Let _first_ be ? Get(_obj_, *"0"*).
++        let first_key = agent.key_from_index(0.0);
++        let first = ops::get(agent, obj, first_key)?;
++        // `first` is returned at the end, so it stays rooted across the loop.
++        let mark = agent.push_root(first);
++        // 5. Let _k_ be 1.
++        let mut k = 1.0;
++        // 6. Repeat, while _k_ < _length_,
++        while k < length {
++            // Keys pushed below are dropped at the end of each iteration.
++            let iteration_mark = agent.gc_roots_len();
++            // a. Let _from_ be ! ToString(𝔽(_k_)).
++            let from = agent.key_from_index(k);
++            agent.push_root_key(from);
++            // b. Let _to_ be ! ToString(𝔽(_k_ - 1)).
++            let to = agent.key_from_index(k - 1.0);
++            agent.push_root_key(to);
++            // c. Let _fromPresent_ be ? HasProperty(_obj_, _from_).
++            let from_present = ops::has_property(agent, obj, from)?;
++            // d. If _fromPresent_ is *true*, then
++            if from_present {
++                // i. Let _fromValue_ be ? Get(_obj_, _from_).
++                let from_value = ops::get(agent, obj, from)?;
++                agent.push_root(from_value);
++                // ii. Perform ? Set(_obj_, _to_, _fromValue_, *true*).
++                ops::set(agent, obj, to, from_value, true)?;
++            } else {
++                // e. Else,
++                // i. Assert: _fromPresent_ is *false*.
++                // ii. Perform ? DeletePropertyOrThrow(_obj_, _to_).
++                ops::delete_property_or_throw(agent, obj, to)?;
++            }
++            agent.pop_roots(iteration_mark);
++            // f. Set _k_ to _k_ + 1.
++            k += 1.0;
++        }
++        // 7. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_length_ - 1))).
++        let last = agent.key_from_index(length - 1.0);
++        ops::delete_property_or_throw(agent, obj, last)?;
++        // 8. Perform ? Set(_obj_, *"length"*, 𝔽(_length_ - 1), *true*).
++        let length_key = PropertyKey::String(agent.names.length);
++        ops::set(agent, obj, length_key, Value::Number(length - 1.0), true)?;
++        agent.pop_roots(mark);
++        // 9. Return _first_.
++        Ok(first)
++    })
+ }

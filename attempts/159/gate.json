@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-utc",
+  "base": "d1d2f6abb4a7ff3011438533285f56d7d7b9c4d7",
+  "head": "94547014b2377a61f502af8a75e58c124cb7b635",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/utc.rs",
+      "added": 31,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

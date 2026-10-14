@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 26040,
+  "stop_reason": "end_turn",
+  "session_id": "26bf9827-f58b-4e1c-857a-232903e4f83e",
+  "total_cost_usd": 0.010776260000000001,
+  "usage": {
+    "input_tokens": 17,
+    "cache_creation_input_tokens": 27552,
+    "cache_read_input_tokens": 231876,
+    "output_tokens": 5224,
+    "output_tokens_details": {
+      "thinking_tokens": 1328
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27552,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 249,
+        "cache_read_input_tokens": 34767,
+        "cache_creation_input_tokens": 428,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 428
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Iterator.from` in `crates/kahvi-builtins/src/iterator/from.rs`, following the spec steps with each step as a comment. It builds and clippy is clean. 32 of 38 runs under `built-ins/Iterator/from/` pass; the other 6 fail because two unrelated built-ins are still stubs, so the \"all pass\" condition is not met.\n\nThe 6 failures are `Symbol.keyFor` (4 runs) and `Iterator.prototype.toArray` (2 runs), both throwing not-implemented in other files.\n\nBLOCKED: `Symbol.keyFor` and `Iterator.prototype.toArray` are not implemented (needed by 6 runs under built-ins/Iterator/from/).",
+  "ttft_ms": 2014,
+  "type": "result",
+  "duration_ms": 44452,
+  "uuid": "375e4046-eaeb-415a-a0da-4a144e869af3",
+  "ttft_stream_ms": 1488,
+  "time_to_request_ms": 588,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 462,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 13,
+    "model_config_wait": 38,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 72,
+  "time_to_request_cpu_ms": 385,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 4245,
+  "process_wall_ms_turn": 44451,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1489,
+  "time_to_request_from_spawn_ms": 19086261,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998546361.9548,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-array-prototype-shift",
+  "base": "e3f7ccf7c1eeccfd614f0df741f2a9c6784fa1a0",
+  "head": "0fec3ce6063b4538009ec261fd67b679a06ea34b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_shift.rs",
+      "added": 61,
+      "removed": 27
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 40,
+    "new_passes": 32,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
