@@ -528,6 +528,9 @@ class Stacker:
             return False  # merged with a merge commit, or already replayed
         log(f"stack: {below['branch']} was squashed into {trunk}; replaying {len(live)} live layer(s) onto it")
         upstream = below["head"]
+        # From here on the merged layer's head is where it landed on the trunk,
+        # so a later move of the trunk is not mistaken for another squash.
+        self.db.q("UPDATE layers SET head = ? WHERE id = ?", onto, below["id"])
         for layer in live:
             self._prepare(layer["head"])
             r = run(["git", "-c", "user.name=kahvi-stacker", "-c", "user.email=stacker@kahvi.invalid",
