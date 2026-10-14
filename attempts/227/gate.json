@@ -1,0 +1,37 @@
+{
+  "ticket": "B-date-prototype-set-full-year",
+  "base": "c5c0597cab7a6817fff1fa34a61fc36dace1ee07",
+  "head": "20f1c46eabe907988e2115faf4650b215de2b59a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_full_year.rs",
+      "added": 29,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 36,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Date/prototype/setFullYear/date-value-read-before-tonumber-when-date-is-invalid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setFullYear/date-value-read-before-tonumber-when-date-is-invalid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setFullYear/date-value-read-before-tonumber-when-date-is-valid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setFullYear/date-value-read-before-tonumber-when-date-is-valid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime"
+    ]
+  },
+  "decision": "pass"
+}

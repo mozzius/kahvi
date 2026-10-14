@@ -806,3 +806,10 @@ test262 at last merge: 72953/81183 runs passing
 [17:53:45] B-date-prototype-set-full-year: attempt 227 finished ($0.008, 8 turns)
 [17:53:46] B-array-prototype-reverse: attempt 226 finished ($0.010, 12 turns)
 [17:54:11] B-map-prototype-get-or-insert-computed: verifier: accept The diff implements Map.prototype.getOrInsertComputed in its own file, following the spec steps in order. RequireInternalSlot (via this_map) runs firs
+[17:54:14] B-reg-exp-prototype-get-ignore-case: attempt 228 finished ($0.007, 10 turns)
+[17:54:17] B-set-iterator-prototype-next: attempt on slot 1 with haiku
+[17:54:26] stack: stack/0007 (#20) green: 72953/81183 passing, +0
+[17:54:34] stack: pushed stack/0008 as #21 with B-iterator-prototype-filter, B-typed-array-prototype-find-last, B-typed-array-prototype-find-last-index, B-typed-array-prototype-find-index, B-typed-array-of, B-string-iterator-prototype-next, B-iterator-prototype-drop, B-typed-array-prototype-sort, B-iterator-prototype-every, B-array-prototype-includes, B-iterator-prototype-some, B-iterator-prototype-take, B-array-prototype-pop, B-iterator-prototype-find, B-typed-array-prototype-to-locale-string, B-weak-set-prototype-add
+[17:54:43] B-array-prototype-reverse: verifier: accept The diff implements Array.prototype.reverse in its single in-scope file, following the spec steps. ToObject and LengthOfArrayLike run first, with `?` 
+[17:54:50] B-date-prototype-set-full-year: verifier: accept The diff implements Date.prototype.setFullYear in its own file, following the spec steps 1-11 in order. The TypeError for a non-object or non-Date `th
+[17:54:51] B-reg-exp-prototype-get-ignore-case: verifier: accept The diff implements `get RegExp.prototype.ignoreCase` as specified. The getter passes the this value and code unit 0x0069 to a file-local `regexp_has_

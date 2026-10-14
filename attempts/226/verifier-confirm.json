@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8118,
+  "stop_reason": "tool_use",
+  "session_id": "2ca4d12e-e94c-4053-928b-00fbfb362be7",
+  "total_cost_usd": 0.0407938,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8065,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 743,
+    "output_tokens_details": {
+      "thinking_tokens": 334
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8065,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 743,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8065,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8065
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u20136 in order. Every abrupt completion is propagated with `?`. HasProperty, Get, Set and DeletePropertyOrThrow run in the spec's order and the spec's number of times. The `Value::Undefined` placeholders in the not-exists branches are never read, because every use is guarded by the matching exists flag. Length is handled as f64, so lengths up to 2^53-1 work. The 4 remaining failures come from other built-ins that throw not-implemented (Reflect.get, BigInt), not from this file. Only the one file in scope changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u20136 in order. Every abrupt completion is propagated with `?`. HasProperty, Get, Set and DeletePropertyOrThrow run in the spec's order and the spec's number of times. The `Value::Undefined` placeholders in the not-exists branches are never read, because every use is guarded by the matching exists flag. Length is handled as f64, so lengths up to 2^53-1 work. The 4 remaining failures come from other built-ins that throw not-implemented (Reflect.get, BigInt), not from this file. Only the one file in scope changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4848,
+  "type": "result",
+  "duration_ms": 7099,
+  "uuid": "65d03d58-7db4-40f2-a999-97bf631dd6b3",
+  "ttft_stream_ms": 1797,
+  "time_to_request_ms": 631,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 471,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 39,
+    "input_hooks": 10,
+    "tool_pool_refresh": 4,
+    "init_message": 13,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 14,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 8,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 98,
+  "time_to_request_cpu_ms": 473,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 876,
+  "process_wall_ms_turn": 7099,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1798,
+  "time_to_request_from_spawn_ms": 21014129,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000473073.8943,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

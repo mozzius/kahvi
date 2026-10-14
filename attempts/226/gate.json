@@ -1,0 +1,37 @@
+{
+  "ticket": "B-array-prototype-reverse",
+  "base": "7a8a064b1118647afe1dc9b9cad3484943e35573",
+  "head": "3297a98f0b345d313eccd9a8671b632793b9a332",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_reverse.rs",
+      "added": 75,
+      "removed": 34
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 8,
+    "after": 32,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Array/prototype/reverse/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/reverse/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
