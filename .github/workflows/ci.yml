@@ -65,7 +65,8 @@ jobs:
             target/release/kahvi
             target/release/t262
           retention-days: 3
-      # GC stress on main, manual runs, and PRs labelled gc-stress. The label
+      # GC stress on manual runs and PRs labelled gc-stress, not on pushes to
+      # main (it costs about as much again as the normal suite). The label
       # is read now rather than from the event: the stacker adds it just
       # after opening the PR, and the build gives it time to land.
       - id: gc_stress
@@ -73,8 +74,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
         run: |
-          if [ -z "$PR" ]; then
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
             echo "value=true" >> "$GITHUB_OUTPUT"
+          elif [ -z "$PR" ]; then
+            echo "value=false" >> "$GITHUB_OUTPUT"
           else
             labels=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json labels --jq '.labels[].name')
             echo "labels: $labels"
