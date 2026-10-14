@@ -549,8 +549,8 @@ impl Agent {
             if t.strings.get(i) || self.gc.pinned_strings.get(i) {
                 live_count += 1;
             } else if !self.gc.is_free_string.get(i) {
-                let units = std::mem::take(&mut self.strings[i as usize]);
-                self.string_index.remove(&units[..]);
+                self.string_index.remove(&self.strings, i);
+                self.strings[i as usize] = Box::default();
                 self.gc.is_free_string.insert(i);
                 self.gc.free_strings.push(i);
             }

@@ -88,3 +88,133 @@ impl std::hash::BuildHasher for SeededFxBuilder {
 }
 
 pub type ContentHashMap<K, V> = HashMap<K, V, SeededFxBuilder>;
+
+/// The string intern table: a set of string handles hashed by the contents
+/// they name in the agent's string arena. It stores only the `u32` handles,
+/// so every interned string's code units are kept once (in the arena), and
+/// lookups probe with the caller's slice without allocating.
+///
+/// Open addressing with linear probing over a power-of-two table. Removed
+/// entries leave a tombstone; the table is rebuilt when live entries plus
+/// tombstones pass three quarters of its capacity.
+pub struct StringTable {
+    slots: Vec<u32>,
+    live: usize,
+    tombstones: usize,
+    seed: u64,
+}
+
+const EMPTY: u32 = u32::MAX;
+const TOMBSTONE: u32 = u32::MAX - 1;
+
+impl Default for StringTable {
+    fn default() -> Self {
+        use std::hash::BuildHasher;
+        let seed = SeededFxBuilder::default().build_hasher().hash;
+        StringTable { slots: Vec::new(), live: 0, tombstones: 0, seed }
+    }
+}
+
+impl StringTable {
+    fn hash(&self, units: &[u16]) -> u64 {
+        let mut h = FxHasher { hash: self.seed };
+        let mut chunks = units.chunks_exact(4);
+        for c in &mut chunks {
+            h.add(c[0] as u64 | (c[1] as u64) << 16 | (c[2] as u64) << 32 | (c[3] as u64) << 48);
+        }
+        let mut last = 0u64;
+        for (i, &u) in chunks.remainder().iter().enumerate() {
+            last |= (u as u64) << (16 * i);
+        }
+        h.add(last);
+        h.add(units.len() as u64);
+        // Fx leaves the low bits weak; the probe index takes the high bits.
+        h.hash
+    }
+
+    fn start(&self, hash: u64) -> usize {
+        let bits = self.slots.len().trailing_zeros();
+        (hash >> (64 - bits)) as usize
+    }
+
+    /// The handle whose contents equal `units`, if one is interned.
+    pub fn find(&self, strings: &[Box<[u16]>], units: &[u16]) -> Option<u32> {
+        if self.slots.is_empty() {
+            return None;
+        }
+        let mask = self.slots.len() - 1;
+        let mut i = self.start(self.hash(units));
+        loop {
+            match self.slots[i] {
+                EMPTY => return None,
+                TOMBSTONE => {}
+                id => {
+                    if &*strings[id as usize] == units {
+                        return Some(id);
+                    }
+                }
+            }
+            i = (i + 1) & mask;
+        }
+    }
+
+    /// Adds handle `id`, whose contents are `strings[id]` and not yet in
+    /// the table.
+    pub fn insert(&mut self, strings: &[Box<[u16]>], id: u32) {
+        if (self.live + self.tombstones + 1) * 4 > self.slots.len() * 3 {
+            self.rebuild(strings);
+        }
+        let mask = self.slots.len() - 1;
+        let mut i = self.start(self.hash(&strings[id as usize]));
+        loop {
+            match self.slots[i] {
+                EMPTY => break,
+                TOMBSTONE => {
+                    self.tombstones -= 1;
+                    break;
+                }
+                _ => i = (i + 1) & mask,
+            }
+        }
+        self.slots[i] = id;
+        self.live += 1;
+    }
+
+    /// Removes handle `id`; `strings[id]` must still hold its contents.
+    pub fn remove(&mut self, strings: &[Box<[u16]>], id: u32) {
+        if self.slots.is_empty() {
+            return;
+        }
+        let mask = self.slots.len() - 1;
+        let mut i = self.start(self.hash(&strings[id as usize]));
+        loop {
+            match self.slots[i] {
+                EMPTY => return,
+                s if s == id => {
+                    self.slots[i] = TOMBSTONE;
+                    self.live -= 1;
+                    self.tombstones += 1;
+                    return;
+                }
+                _ => i = (i + 1) & mask,
+            }
+        }
+    }
+
+    /// Re-inserts the live handles into a table sized for twice as many.
+    fn rebuild(&mut self, strings: &[Box<[u16]>]) {
+        let capacity = ((self.live + 1) * 2).next_power_of_two().max(64);
+        let old = std::mem::replace(&mut self.slots, vec![EMPTY; capacity]);
+        self.live = 0;
+        self.tombstones = 0;
+        let mask = capacity - 1;
+        for id in old.into_iter().filter(|&s| s != EMPTY && s != TOMBSTONE) {
+            let mut i = self.start(self.hash(&strings[id as usize]));
+            while self.slots[i] != EMPTY {
+                i = (i + 1) & mask;
+            }
+            self.slots[i] = id;
+            self.live += 1;
+        }
+    }
+}
