@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 19444,
+  "stop_reason": "end_turn",
+  "session_id": "b97753da-f6ba-48fd-b649-4a7b96798531",
+  "total_cost_usd": 0.007806510000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 19361,
+    "cache_read_input_tokens": 165031,
+    "output_tokens": 3810,
+    "output_tokens_details": {
+      "thinking_tokens": 304
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19361,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 212,
+        "cache_read_input_tokens": 26768,
+        "cache_creation_input_tokens": 236,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 236
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01NkJvEzEgxcHm4vBoFP9hku",
+      "tool_input": {
+        "command": "rustfmt --edition 2021 crates/kahvi-builtins/src/string/prototype_includes.rs",
+        "description": "Format the edited file with rustfmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 19,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `String.prototype.includes` in `crates/kahvi-builtins/src/string/prototype_includes.rs`, following the spec steps as comments. All 54 `built-ins/String/prototype/includes/` runs pass, and clippy and the formatting check are clean.\n\nThe `StringIndexOf` helper is a private copy in that same file, matching the copies in the sibling string built-ins. It is not shared, so other built-ins that need it would still duplicate it.\n\nThe `rustfmt` call was denied, so I applied its one-line formatting change by hand; `cargo fmt --check` on the file now passes.\n\nBLOCKED: none",
+  "ttft_ms": 1730,
+  "type": "result",
+  "duration_ms": 45086,
+  "uuid": "def99383-8acc-4207-9f5f-07ff34ac6dab",
+  "ttft_stream_ms": 1512,
+  "time_to_request_ms": 593,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 385,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 116,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 71,
+  "time_to_request_cpu_ms": 408,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3859,
+  "process_wall_ms_turn": 45085,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1513,
+  "time_to_request_from_spawn_ms": 19437711,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998898005.872,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

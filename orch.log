@@ -217,3 +217,18 @@
 [17:28:13] B-reg-exp-prototype-get-multiline: attempt on slot 2 with haiku
 [17:28:17] B-string-prototype-includes: attempt on slot 0 with haiku
 [17:28:32] B-array-prototype-fill: verifier: accept The diff implements Array.prototype.fill following the spec steps in order: ToObject, LengthOfArrayLike, ToClampedIndex(start), ToClampedIndex(end) on
+[17:28:35] C-proxy-get-prototype-of: attempt on slot 1 with haiku
+[17:28:37] B-typed-array-prototype-with: verifier: accept The diff implements %TypedArray%.prototype.with in its own file, following the spec steps 1-11 in order. ValidateTypedArray, TypedArrayLength, ToAbsol
+[17:28:40] stack: stack/0004 (#17) green: 72174/81183 passing, +795
+[17:28:40] B-reflect-define-property: merged (+16, 72174 total)
+[17:28:40] B-data-view-prototype-set-uint8: merged (+36, 72174 total)
+[17:28:40] B-typed-array-prototype-subarray: merged (+112, 72174 total)
+[17:28:41] B-typed-array-prototype-map: merged (+150, 72174 total)
+[17:28:41] B-typed-array-prototype-values: merged (+28, 72174 total)
+[17:28:41] B-reg-exp-prototype-symbol-search: merged (+38, 72174 total)
+[17:28:41] B-typed-array-prototype-fill: merged (+90, 72174 total)
+[17:28:41] B-typed-array-prototype-copy-within: merged (+108, 72174 total)
+[17:28:42] stack: partial tickets after stack/0004: {'done': 2}
+[17:28:49] stack: pushed stack/0005 as #18 with B-typed-array-prototype-join, B-typed-array-prototype-includes, B-typed-array-prototype-some, B-typed-array-prototype-every, B-iterator-prototype-flat-map, B-reflect-own-keys, B-typed-array-prototype-index-of, B-typed-array-prototype-last-index-of
+[17:28:55] B-reg-exp-prototype-get-multiline: attempt 170 finished ($0.008, 12 turns)
+[17:29:06] B-string-prototype-includes: attempt 171 finished ($0.008, 19 turns)

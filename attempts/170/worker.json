@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17072,
+  "stop_reason": "end_turn",
+  "session_id": "611675bb-3f5e-439b-ab33-3e85373b852e",
+  "total_cost_usd": 0.007622420000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 20109,
+    "cache_read_input_tokens": 170112,
+    "output_tokens": 3111,
+    "output_tokens_details": {
+      "thinking_tokens": 318
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20109,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 244,
+        "cache_read_input_tokens": 27566,
+        "cache_creation_input_tokens": 186,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 186
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`get RegExp.prototype.multiline` is implemented in `crates/kahvi-builtins/src/reg_exp/prototype_get_multiline.rs`. All 20 runs under `built-ins/RegExp/prototype/multiline/` pass (the ticket said 10 pass on main; this run covers 10 files, 20 runs). `cargo build`, `cargo clippy` and `cargo fmt --check` are clean.\n\nI wrote `RegExpHasFlag` as a file-local helper, following `prototype_get_has_indices.rs`, because `support/regexp.rs` has no shared version. The other flag getters would need the same helper, so it may be worth moving into `support/regexp.rs` later. No other files were changed.",
+  "ttft_ms": 1608,
+  "type": "result",
+  "duration_ms": 39111,
+  "uuid": "56f8f73b-7c77-4ffd-a11a-d3c0c1594c81",
+  "ttft_stream_ms": 1357,
+  "time_to_request_ms": 603,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 456,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 30,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 19,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 14,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 80,
+  "time_to_request_cpu_ms": 372,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 254,
+  "process_cpu_ms_turn": 3067,
+  "process_wall_ms_turn": 39110,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1358,
+  "time_to_request_from_spawn_ms": 19434051,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998894054.692,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
