@@ -2914,3 +2914,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:12:04] B-math-abs: attempt 412 finished ($0.005, 9 turns)
 [19:12:16] B-string-prototype-locale-compare: attempt 408 finished ($0.022, 20 turns)
 [19:12:19] B-date-prototype-get-utc-seconds: verifier: accept The change implements Date.prototype.getUTCSeconds in its own file. It gets the time value through the shared date helper `date::this_time_value(agent
+[19:12:23] B-math-acos: attempt on slot 0 with haiku
+[19:12:29] B-math-abs: verifier: accept The change implements Math.abs following the spec steps in order. Step 1 calls ops::to_number(agent, x)? so ToNumber's observable behaviour and abrupt
