@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 20765,
+  "stop_reason": "tool_use",
+  "session_id": "6d5b584c-1eee-4a68-b49f-c7ee9e27e43d",
+  "total_cost_usd": 0.003979380000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6553,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4092,
+    "output_tokens_details": {
+      "thinking_tokens": 3560
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6553,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4092,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6553,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6553
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.toLocaleString steps 1-7 in order, with each spec step as a comment above its code. ToObject, LengthOfArrayLike, Get, Invoke and ToString are each called with `?`, so abrupt completions propagate. The separator is \\\",\\\" because the spec leaves it implementation-defined, so that is not a made-up value. The only other change is renaming the now-unused `args` and `new_target` parameters with underscores, which is a lint fix tied to this change. The 6 newly passing tests come from the generic algorithm, with no input-specific branches. Non-blocking observations, not counted as defects: (1) the `invoked` object returned by toLocaleString is not rooted while ToString may call user code (ToPrimitive), which could matter under KAHVI_GC_STRESS; (2) if `?` fires between push_root and pop_roots, the root is only released if with_roots restores its mark on error, which I could not verify from the diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.toLocaleString steps 1-7 in order, with each spec step as a comment above its code. ToObject, LengthOfArrayLike, Get, Invoke and ToString are each called with `?`, so abrupt completions propagate. The separator is \",\" because the spec leaves it implementation-defined, so that is not a made-up value. The only other change is renaming the now-unused `args` and `new_target` parameters with underscores, which is a lint fix tied to this change. The 6 newly passing tests come from the generic algorithm, with no input-specific branches. Non-blocking observations, not counted as defects: (1) the `invoked` object returned by toLocaleString is not rooted while ToString may call user code (ToPrimitive), which could matter under KAHVI_GC_STRESS; (2) if `?` fires between push_root and pop_roots, the root is only released if with_roots restores its mark on error, which I could not verify from the diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 18539,
+  "type": "result",
+  "duration_ms": 20760,
+  "uuid": "34104b85-73aa-444a-add5-34dda858ee27",
+  "ttft_stream_ms": 1762,
+  "time_to_request_ms": 570,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 406,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 19,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 59,
+    "autocompact": 14,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 6,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 374,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 1164,
+  "process_wall_ms_turn": 20759,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1763,
+  "time_to_request_from_spawn_ms": 21223070,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000683025.1704,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

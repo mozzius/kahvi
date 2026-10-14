@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7975,
+  "stop_reason": "tool_use",
+  "session_id": "2c72ea31-8856-4da3-ae41-a359611c6ed5",
+  "total_cost_usd": 0.0315487,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5749,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 768,
+    "output_tokens_details": {
+      "thinking_tokens": 322
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5749,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 768,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5749,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5749
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for unescape step by step, with each spec step as a comment above its code. ToString is called first with `?`, so abrupt completions propagate. The conditions `k+5 < length` and `k+3 <= length` match the spec literally, including the case where `%u` is too short and falls into the two-digit branch. `parse_hex_digits` requires at least one digit, accepts only ASCII hex, and cannot overflow a u16 with 4 digits. A surrogate unit makes `char::from_u32` return None, which correctly counts as a parse failure. Nothing is hardcoded or swallowed, and the only changes are in the ticket's file. The gate shows 30 new passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for unescape step by step, with each spec step as a comment above its code. ToString is called first with `?`, so abrupt completions propagate. The conditions `k+5 < length` and `k+3 <= length` match the spec literally, including the case where `%u` is too short and falls into the two-digit branch. `parse_hex_digits` requires at least one digit, accepts only ASCII hex, and cannot overflow a u16 with 4 digits. A surrogate unit makes `char::from_u32` return None, which correctly counts as a parse failure. Nothing is hardcoded or swallowed, and the only changes are in the ticket's file. The gate shows 30 new passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5251,
+  "type": "result",
+  "duration_ms": 7627,
+  "uuid": "8ffeac27-eb8a-40ff-b7e7-6e09b190a8c8",
+  "ttft_stream_ms": 2220,
+  "time_to_request_ms": 636,
+  "time_to_request_phases_ms": {
+    "other": 69,
+    "system_prompt": 409,
+    "resume_other": 3,
+    "process_user_input": 8,
+    "input_attachments": 26,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 32,
+    "autocompact": 9,
+    "query_setup": 1,
+    "model_gates": 5,
+    "tool_schema_build": 10,
+    "message_normalization": 4,
+    "client_creation": 16,
+    "request_build": 17
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 174,
+  "time_to_request_cpu_ms": 350,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 796,
+  "process_wall_ms_turn": 7627,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2222,
+  "time_to_request_from_spawn_ms": 21237672,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000696983.0085,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

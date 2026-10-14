@@ -833,3 +833,5 @@ test262 at last merge: 72953/81183 runs passing
 [17:57:34] B-global-unescape: attempt 235 finished ($0.007, 11 turns)
 [17:57:35] B-array-prototype-to-locale-string: attempt 234 finished ($0.009, 14 turns)
 [17:58:09] B-array-prototype-flat: verifier: accept The change implements Array.prototype.flat and a local flatten_into_array helper in prototype_flat.rs, following the spec steps in order. ToObject, Le
+[17:58:15] B-object-prototype-lookup-setter: attempt on slot 1 with haiku
+[17:58:27] B-global-unescape: verifier: accept The change implements unescape in its file and follows the spec steps in order. ToString is called first, which is the only observable operation. The 
