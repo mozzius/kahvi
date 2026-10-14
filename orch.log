@@ -205,3 +205,5 @@
 [17:26:37] B-set-prototype-intersection: verifier: accept The diff implements Set.prototype.intersection in its own file, with each spec step kept as a comment above its code. I walked the spec steps in order
 [17:26:40] B-typed-array-prototype-with: attempt on slot 3 with haiku
 [17:26:50] B-set-prototype-symmetric-difference: verifier: accept The diff implements Set.prototype.symmetricDifference in its own file, following the spec steps. I checked it against the spec and found no defects. G
+[17:26:53] B-object-get-own-property-symbols: attempt on slot 0 with haiku
+[17:27:08] B-set-prototype-difference: verifier: accept Set.prototype.difference is implemented in full (steps 1-9, both branches of step 5 and the step 6 keys-iterator path), with GetSetRecord written as a
