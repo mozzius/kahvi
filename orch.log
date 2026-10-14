@@ -4069,3 +4069,6 @@ test262 at last merge: 76432/81183 runs passing
 [19:38:18] B-string-prototype-italics: attempt 445 finished ($0.005, 11 turns)
 [19:38:21] B-string-prototype-small: attempt 444 finished ($0.005, 11 turns)
 [19:38:49] B-string-prototype-fixed: verifier: accept The diff implements String.prototype.fixed as spec steps 1-2: it binds `this` to `string` (step 1) and returns `create_html(agent, string, "tt", "", V
+[19:38:51] B-string-prototype-strike: verifier: accept The diff replaces the not-implemented stub for String.prototype.strike. It keeps the step comments, stores `this` as the string, and delegates to `sup
+[19:38:52] B-string-prototype-sub: attempt on slot 1 with haiku
+[19:38:52] B-string-prototype-italics: verifier: accept The diff implements String.prototype.italics by passing `this` through as step 1 and calling `create_html(agent, string, "i", "", empty)` for step 2, 
