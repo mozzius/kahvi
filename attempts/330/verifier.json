@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7975,
+  "stop_reason": "tool_use",
+  "session_id": "5db8b4fa-4eaf-466e-bb69-8d9c451afeac",
+  "total_cost_usd": 0.0016883800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3461,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1370,
+    "output_tokens_details": {
+      "thinking_tokens": 763
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3461,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1370,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3461,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3461
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Math.sin in crates/kahvi-builtins/src/math/sin.rs and matches the spec. Step 1 calls ops::to_number(agent, x) with `?`, so ToNumber's abrupt completions propagate. Step 2 returns n for NaN and for \u00b10; `n == 0.0` is true for both zeros in IEEE comparison. Step 3 returns NaN for \u00b1\u221e. Step 4 returns n.sin(). There are no input-specific branches, no swallowed errors, no made-up values, and no unrelated file changes. The gate reports build, clippy, and 8 new passing test262 tests with 0 regressions, which fits a change this size. The only issue is cosmetic: the step 1 comment sits above `let _ = (this, new_target);` rather than directly above the ToNumber code, which the ticket asks for.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes required. Optional style nit: in sin.rs, move the `let _ = (this, new_target);` line above the step 1 comment so that \\\"// 1. Let _n_ be ? ToNumber(_x_).\\\" sits directly above `let x = ...; let n = ops::to_number(agent, x)?;`, as the ticket asks.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Math.sin in crates/kahvi-builtins/src/math/sin.rs and matches the spec. Step 1 calls ops::to_number(agent, x) with `?`, so ToNumber's abrupt completions propagate. Step 2 returns n for NaN and for \u00b10; `n == 0.0` is true for both zeros in IEEE comparison. Step 3 returns NaN for \u00b1\u221e. Step 4 returns n.sin(). There are no input-specific branches, no swallowed errors, no made-up values, and no unrelated file changes. The gate reports build, clippy, and 8 new passing test262 tests with 0 regressions, which fits a change this size. The only issue is cosmetic: the step 1 comment sits above `let _ = (this, new_target);` rather than directly above the ToNumber code, which the ticket asks for.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes required. Optional style nit: in sin.rs, move the `let _ = (this, new_target);` line above the step 1 comment so that \"// 1. Let _n_ be ? ToNumber(_x_).\" sits directly above `let x = ...; let n = ops::to_number(agent, x)?;`, as the ticket asks."
+  },
+  "ttft_ms": 5655,
+  "type": "result",
+  "duration_ms": 7871,
+  "uuid": "a31af49e-fd77-43c2-a6df-bb19abe55d81",
+  "ttft_stream_ms": 1873,
+  "time_to_request_ms": 944,
+  "time_to_request_phases_ms": {
+    "other": 111,
+    "system_prompt": 548,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 35,
+    "input_hooks": 6,
+    "tool_pool_refresh": 12,
+    "init_message": 24,
+    "engine_pickup": 2,
+    "message_prep": 13,
+    "model_config_wait": 87,
+    "autocompact": 3,
+    "query_setup": 3,
+    "model_gates": 1,
+    "tool_schema_build": 21,
+    "message_normalization": 15,
+    "client_creation": 36,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 307,
+  "time_to_request_cpu_ms": 319,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 799,
+  "process_wall_ms_turn": 7871,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1880,
+  "time_to_request_from_spawn_ms": 23992749,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003450066.5378,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.21,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
