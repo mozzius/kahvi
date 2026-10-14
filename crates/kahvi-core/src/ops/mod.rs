@@ -2,6 +2,7 @@
 
 pub mod bigint;
 pub mod conversion;
+pub mod dispose;
 pub mod iteration;
 pub mod object;
 pub mod promise;

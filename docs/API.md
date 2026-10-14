@@ -124,6 +124,10 @@ slots and buffer operations (GetValueFromBuffer, IsValidIntegerIndex,
 TypedArrayLength, DetachArrayBuffer, ...) are in
 `kahvi_core::object::typed_array`. `iterator_helper.rs` is CreateIteratorFromClosure for the
 Iterator helpers: implement `HelperClosure` (see Iterator.prototype.map).
+`disposable_stack.rs` has the DisposableStack and AsyncDisposableStack slots
+(`require_disposable_stack`, `add_disposable_resource`, ...; see
+DisposableStack.prototype.use); AddDisposableResource, DisposeResources and
+the DisposableResource Record are in `kahvi_core::ops::dispose`.
 
 ## Checking your work
 

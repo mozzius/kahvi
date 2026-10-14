@@ -226,6 +226,16 @@ const ALIASES: &[(&str, Key, &str)] = &[
         Key::Str("toGMTString"),
         "%Date.prototype.toUTCString%",
     ),
+    (
+        "%DisposableStack.prototype%",
+        Key::Symbol("dispose"),
+        "%DisposableStack.prototype.dispose%",
+    ),
+    (
+        "%AsyncDisposableStack.prototype%",
+        Key::Symbol("asyncDispose"),
+        "%AsyncDisposableStack.prototype.disposeAsync%",
+    ),
     ("%Number%", Key::Str("parseFloat"), "%parseFloat%"),
     ("%Number%", Key::Str("parseInt"), "%parseInt%"),
 ];

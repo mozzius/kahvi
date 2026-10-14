@@ -4,6 +4,7 @@
 pub(crate) mod array_iterator;
 pub(crate) mod collections;
 pub(crate) mod date;
+pub(crate) mod disposable_stack;
 pub(crate) mod error;
 pub(crate) mod iterator_helper;
 pub(crate) mod regexp;

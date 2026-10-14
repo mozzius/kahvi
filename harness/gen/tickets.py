@@ -41,6 +41,7 @@ WORKER_GROUPS = {
     "string_iterator_prototype", "date", "reg_exp", "reg_exp_string_iterator_prototype",
     "array_buffer", "typed_array", "data_view",
     "iterator", "iterator_helper_prototype", "wrap_for_valid_iterator_prototype",
+    "disposable_stack", "async_disposable_stack",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
@@ -94,6 +95,12 @@ for _g in ("array_buffer", "typed_array", "data_view"):
         "crates/kahvi-builtins/src/support/typed_array.rs",
         "crates/kahvi-core/src/object/typed_array.rs",
         "crates/kahvi-builtins/src/typed_array/prototype_get_length.rs",
+    ]
+for _g in ("disposable_stack", "async_disposable_stack"):
+    EXTRA_READ[_g] = [
+        "crates/kahvi-builtins/src/support/disposable_stack.rs",
+        "crates/kahvi-core/src/ops/dispose.rs",
+        "crates/kahvi-builtins/src/disposable_stack/prototype_use.rs",
     ]
 for _g in ("reg_exp", "reg_exp_string_iterator_prototype"):
     EXTRA_READ[_g] = [

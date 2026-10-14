@@ -398,6 +398,13 @@ impl Parser<'_> {
                 }
                 body.push(self.parse_statement_list_item()?);
             }
+            // CaseClause / DefaultClause: It is a Syntax Error if ContainsUsing of StatementList is true.
+            if let Some(at) = contains_using(&body) {
+                return self.err(
+                    "'using' declarations are not allowed directly in a case clause",
+                    at,
+                );
+            }
             cases.push(SwitchCase {
                 test,
                 body,
@@ -663,10 +670,18 @@ impl Parser<'_> {
 
     fn using_in_for_head(&self) -> PResult<bool> {
         let next = self.peek()?;
-        Ok(next.kind == Tok::Ident
-            && !next.nl_before
-            && could_bind(&next.ident)
-            && !(next.ident == "of" && !next.escaped))
+        if next.kind != Tok::Ident || next.nl_before || !could_bind(&next.ident) {
+            return Ok(false);
+        }
+        // `for ( [lookahead ≠ using of] ForDeclaration of ...)`: `using of` starts a
+        // declaration only as a ForStatement's LexicalDeclaration (`for (using of = x;;)`).
+        if next.ident == "of" && !next.escaped {
+            let mut lx = self.lx.clone();
+            lx.next_token()?; // of
+            let after = lx.next_token()?;
+            return Ok(after.is(P::Eq) || after.is(P::Comma) || after.is(P::Semi));
+        }
+        Ok(true)
     }
 
     fn finish_for(&mut self, start: usize, init: Option<ForInit>) -> PResult<Stmt> {
@@ -747,4 +762,15 @@ impl Parser<'_> {
 /// words a declaration would then reject with a better error).
 fn could_bind(word: &str) -> bool {
     !crate::RESERVED_WORDS.contains(&word) || matches!(word, "yield" | "await" | "let")
+}
+
+/// ContainsUsing of a StatementList: the start of its first `using` or
+/// `await using` declaration.
+pub(crate) fn contains_using(stmts: &[Stmt]) -> Option<usize> {
+    stmts.iter().find_map(|s| match s {
+        Stmt::Var(d) if matches!(d.kind, VarKind::Using | VarKind::AwaitUsing) => {
+            Some(d.span.start as usize)
+        }
+        _ => None,
+    })
 }

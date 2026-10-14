@@ -91,7 +91,12 @@ pub(super) fn compile_function(
 
     match &f.body {
         FunctionBody::Block(stmts) => {
-            c.compile_statements(stmts);
+            // EvaluateBody: Let result be Completion(Evaluation of FunctionStatementList);
+            // the body's `using` declarations are disposed of before it returns.
+            match super::stmt::using_declarations(stmts) {
+                Some(is_await) => c.compile_disposing(is_await, |c| c.compile_statements(stmts)),
+                None => c.compile_statements(stmts),
+            }
             c.emit(Op::Undefined);
             c.emit(Op::Return);
         }
@@ -173,6 +178,24 @@ impl Compiler<'_> {
                 _ => {}
             }
         }
+        // ExecuteModule: Let result be Completion(Evaluation of module.[[ECMAScriptCode]]);
+        // Set result to Completion(DisposeResources(moduleEnv.[[DisposableResourceStack]], result)).
+        let top_level = items.iter().filter_map(|item| match item {
+            ModuleItem::Stmt(s) => Some(s),
+            _ => None,
+        });
+        match super::stmt::using_declarations(top_level) {
+            Some(is_await) => self.compile_disposing(is_await, |c| c.compile_module_items(items)),
+            None => self.compile_module_items(items),
+        }
+        self.emit(Op::Undefined);
+        self.emit(Op::Return);
+    }
+
+    /// The ModuleItems of a module body, in order.
+    fn compile_module_items(&mut self, items: &[ast::ModuleItem]) {
+        use ast::{ExportDecl, ModuleItem};
+        let default_name = self.string("*default*");
         for item in items {
             match item {
                 ModuleItem::Stmt(s) | ModuleItem::Export(ExportDecl::Decl(s)) => {
@@ -199,8 +222,6 @@ impl Compiler<'_> {
                 ModuleItem::Import(_) | ModuleItem::Export(_) => {}
             }
         }
-        self.emit(Op::Undefined);
-        self.emit(Op::Return);
     }
 
     /// Fills `code.decls` from a function/script body's top-level statements.

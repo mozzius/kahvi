@@ -47,6 +47,7 @@ use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
 use crate::object::{ObjectKind, PropertyKey};
+use crate::ops::dispose::{DisposeKind, DisposeResources, DisposeStep};
 use crate::ops::{self, IteratorRecord};
 use crate::realm::RealmId;
 use crate::value::{JsString, Object, Value};
@@ -104,6 +105,37 @@ struct Handler {
     iters_len: usize,
     env: EnvId,
     private_env: Option<Arc<PrivateEnv>>,
+}
+
+/// A DisposeResources in progress at the end of a `using` scope, kept on the
+/// operand stack (it survives the Awaits of `await using`).
+#[derive(Debug)]
+struct DisposeState {
+    /// `None` only while a dispose op is running it.
+    dispose: Option<DisposeResources>,
+    /// The finally completion kind it was started with (see `Op::EndFinally`).
+    kind: f64,
+}
+
+fn dispose_state(v: Value) -> Object {
+    match v {
+        Value::Object(o) => o,
+        _ => unreachable!("a DisposeResources state on the stack"),
+    }
+}
+
+fn take_dispose(agent: &mut Agent, state: Object) -> DisposeResources {
+    agent
+        .native_mut::<DisposeState>(state)
+        .and_then(|s| s.dispose.take())
+        .expect("a DisposeResources state")
+}
+
+fn put_dispose(agent: &mut Agent, state: Object, dispose: DisposeResources) {
+    agent
+        .native_mut::<DisposeState>(state)
+        .expect("a DisposeResources state")
+        .dispose = Some(dispose);
 }
 
 /// State of a for-in enumeration (EnumerateObjectProperties, §14.7.5.9).
@@ -970,6 +1002,78 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                     frame.push(value);
                     let target = frame.code.finally_targets[index as usize][k - 2];
                     return Ok(Flow::Jump(target as usize));
+                }
+            }
+        }
+
+        // ---- explicit resource management
+        Op::AddDisposable(is_async) => {
+            let v = frame.pop();
+            let kind = if is_async {
+                DisposeKind::Async
+            } else {
+                DisposeKind::Sync
+            };
+            // ? AddDisposableResource(envRec.[[DisposableResourceStack]], V, hint)
+            let mut capability = std::mem::take(frame.env.disposable_resource_stack_mut(agent));
+            let result =
+                ops::dispose::add_disposable_resource(agent, &mut capability, v, kind, None);
+            *frame.env.disposable_resource_stack_mut(agent) = capability;
+            result?;
+        }
+        Op::DisposeStart => {
+            let kind = frame.pop();
+            let value = frame.pop();
+            let kind = kind.as_number().unwrap_or(0.0);
+            let stack = std::mem::take(frame.env.disposable_resource_stack_mut(agent));
+            let completion = if kind == 1.0 { Err(value) } else { Ok(value) };
+            let state = agent.object_with_kind(
+                None,
+                ObjectKind::Native(Box::new(DisposeState {
+                    dispose: Some(DisposeResources::new(stack, completion)),
+                    kind,
+                })),
+            );
+            frame.push(Value::Object(state));
+        }
+        Op::DisposeStep(done) => {
+            let state = dispose_state(frame.peek());
+            let mut dispose = take_dispose(agent, state);
+            let step = dispose.step(agent);
+            put_dispose(agent, state, dispose);
+            match step? {
+                DisposeStep::Done => return Ok(Flow::Jump(done as usize)),
+                DisposeStep::Await(v) => frame.push(v),
+            }
+        }
+        Op::DisposeAwaitThrew => {
+            let e = frame.pop();
+            let state = dispose_state(frame.peek());
+            let mut dispose = take_dispose(agent, state);
+            let result = dispose.await_threw(agent, e);
+            put_dispose(agent, state, dispose);
+            result?;
+        }
+        Op::DisposeEnd => {
+            let state = dispose_state(frame.pop());
+            let s = agent
+                .native::<DisposeState>(state)
+                .expect("a DisposeResources state");
+            let kind = s.kind;
+            match s
+                .dispose
+                .as_ref()
+                .expect("a DisposeResources state")
+                .output()
+            {
+                // A normal (or break/continue/return) completion goes on as it was.
+                Ok(v) => {
+                    frame.push(v);
+                    frame.push(Value::Number(kind));
+                }
+                Err(e) => {
+                    frame.push(e);
+                    frame.push(Value::Number(1.0));
                 }
             }
         }

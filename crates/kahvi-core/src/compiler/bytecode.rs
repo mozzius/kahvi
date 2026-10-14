@@ -178,6 +178,22 @@ pub enum Op {
     /// n >= 2 jump to `FunctionCode::finally_targets[i][n - 2]` with value pushed.
     EndFinally(u32),
 
+    // ---- explicit resource management ------------------------------------------
+    /// [v] -> []: AddDisposableResource(env.[[DisposableResourceStack]], v, kind)
+    /// on the running LexicalEnvironment; `true` is ~async-dispose~.
+    AddDisposable(bool),
+    /// [value kind] -> [state]: starts DisposeResources(env.[[DisposableResourceStack]],
+    /// completion) for the running LexicalEnvironment, where [value kind] is a
+    /// finally block's completion.
+    DisposeStart,
+    /// [state] -> [state] (jumps when done) | [state v]: runs DisposeResources
+    /// to its next Await, pushing the value to await.
+    DisposeStep(Label),
+    /// [state e] -> [state]: the awaited value of an async dispose method threw e.
+    DisposeAwaitThrew,
+    /// [state] -> [value kind]: DisposeResources' result as a finally completion.
+    DisposeEnd,
+
     // ---- functions and calls -------------------------------------------------
     /// [] -> [closure of functions[i]] (InstantiateOrdinaryFunctionExpression etc.),
     /// named after its own BindingIdentifier or "".

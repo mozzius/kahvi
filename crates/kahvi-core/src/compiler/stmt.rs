@@ -8,6 +8,22 @@ use kahvi_parser::early;
 use super::expr::FnName;
 use super::{BinOp, Compiler, JumpScope, Op, ScopeInfo};
 
+/// Whether a StatementList declares `using` at its top level: `None` if not,
+/// `Some(true)` if any of them is `await using`.
+pub(super) fn using_declarations<'s>(stmts: impl IntoIterator<Item = &'s Stmt>) -> Option<bool> {
+    let mut found = None;
+    for s in stmts {
+        if let Stmt::Var(d) = s {
+            match d.kind {
+                VarKind::Using => found = Some(found.unwrap_or(false)),
+                VarKind::AwaitUsing => found = Some(true),
+                _ => {}
+            }
+        }
+    }
+    found
+}
+
 impl Compiler<'_> {
     pub(super) fn compile_statements(&mut self, stmts: &[Stmt]) {
         for s in stmts {
@@ -175,11 +191,90 @@ impl Compiler<'_> {
             Some(scope) => {
                 self.emit(Op::PushScope(scope));
                 self.scopes.push(JumpScope::Env);
-                self.compile_statements(&b.body);
+                // Block : { StatementList }
+                //   Let blockValue be Completion(Evaluation of StatementList).
+                //   Set blockValue to Completion(DisposeResources(blockEnv.[[DisposableResourceStack]], blockValue)).
+                match using_declarations(&b.body) {
+                    Some(is_await) => {
+                        self.compile_disposing(is_await, |c| c.compile_statements(&b.body))
+                    }
+                    None => self.compile_statements(&b.body),
+                }
                 self.scopes.pop();
                 self.emit(Op::PopScope);
             }
             None => self.compile_statements(&b.body),
+        }
+    }
+
+    /// Compiles `body` inside the running LexicalEnvironment (already
+    /// pushed), followed on every way out of it — normal, throw, break,
+    /// continue, return — by DisposeResources(env.[[DisposableResourceStack]],
+    /// completion), whose result replaces the completion. This is a finally
+    /// block whose code is DisposeResources. `has_await_using` says the scope
+    /// declares `await using`, so DisposeResources may Await.
+    pub(super) fn compile_disposing(
+        &mut self,
+        has_await_using: bool,
+        body: impl FnOnce(&mut Self),
+    ) {
+        self.code.finally_targets.push(Vec::new());
+        let index = (self.code.finally_targets.len() - 1) as u32;
+        self.scopes.push(JumpScope::Finally {
+            entry_jumps: Vec::new(),
+            continuations: Vec::new(),
+        });
+        let handler = self.emit(Op::PushHandler(0));
+        self.scopes.push(JumpScope::Handler);
+        body(self);
+        self.scopes.pop();
+        self.emit(Op::PopHandler);
+        let Some(JumpScope::Finally {
+            entry_jumps,
+            continuations,
+        }) = self.scopes.pop()
+        else {
+            unreachable!("finally scope expected")
+        };
+        // Normal completion: [undefined 0].
+        self.emit(Op::Undefined);
+        self.emit(Op::Number(0.0));
+        let to_dispose = self.emit(Op::Jump(0));
+        // Throw completion: [exception 1].
+        self.patch(handler);
+        self.emit(Op::Number(1.0));
+        self.patch(to_dispose);
+        for j in entry_jumps {
+            self.patch(j);
+        }
+        // [value kind] -> DisposeResources -> [value' kind'].
+        self.emit(Op::DisposeStart);
+        if has_await_using {
+            // Each Await DisposeResources performs; a rejection of an async
+            // dispose method's result is handed back to it.
+            let top = self.here();
+            let threw = self.emit(Op::PushHandler(0));
+            let done = self.emit(Op::DisposeStep(0));
+            self.emit(Op::Await);
+            self.emit(Op::PopHandler);
+            self.emit(Op::Pop);
+            self.emit(Op::Jump(top));
+            self.patch(threw);
+            self.emit(Op::DisposeAwaitThrew);
+            self.emit(Op::Jump(top));
+            self.patch(done);
+            self.emit(Op::PopHandler);
+        } else {
+            // Without `await using` every resource is ~sync-dispose~: no Await.
+            let done = self.emit(Op::DisposeStep(0));
+            self.patch(done);
+        }
+        self.emit(Op::DisposeEnd);
+        self.emit(Op::EndFinally(index));
+        if !continuations.is_empty() {
+            let skip = self.emit(Op::Jump(0));
+            self.emit_finally_continuations(index, continuations);
+            self.patch(skip);
         }
     }
 
@@ -211,7 +306,24 @@ impl Compiler<'_> {
                     self.compile_binding(&d.target, true);
                 }
             }
-            VarKind::Using | VarKind::AwaitUsing => self.not_implemented("using declarations"),
+            VarKind::Using | VarKind::AwaitUsing => {
+                let is_await = decl.kind == VarKind::AwaitUsing;
+                for d in &decl.declarations {
+                    // LexicalBinding : BindingIdentifier Initializer
+                    // 1-3. Let value be the value of Initializer (NamedEvaluation for an anonymous function).
+                    match &d.init {
+                        Some(init) => self.compile_named_expr(init, &d.target),
+                        None => {
+                            self.emit(Op::Undefined);
+                        }
+                    }
+                    // 4-5. Return ? InitializeReferencedBinding(lhs, value, sync-dispose / async-dispose):
+                    //      InitializeBinding first performs ? AddDisposableResource(envRec.[[DisposableResourceStack]], V, hint).
+                    self.emit(Op::Dup);
+                    self.emit(Op::AddDisposable(is_await));
+                    self.compile_binding(&d.target, true);
+                }
+            }
         }
     }
 
@@ -245,6 +357,19 @@ impl Compiler<'_> {
                 self.emit(Op::PushScope(scope));
                 self.scopes.push(JumpScope::Env);
                 pushed_env = true;
+                if matches!(d.kind, VarKind::Using | VarKind::AwaitUsing) {
+                    // Let forDcl be Completion(Evaluation of LexicalDeclaration); if it is
+                    // abrupt, return ? DisposeResources(loopEnv.[[DisposableResourceStack]], forDcl).
+                    // Let bodyResult be Completion(ForBodyEvaluation(...)).
+                    // Return ? DisposeResources(loopEnv.[[DisposableResourceStack]], bodyResult).
+                    self.compile_disposing(d.kind == VarKind::AwaitUsing, |c| {
+                        c.compile_var_decl(d);
+                        c.compile_for_body(false, test, update, body);
+                    });
+                    self.scopes.pop();
+                    self.emit(Op::PopScope);
+                    return;
+                }
                 self.compile_var_decl(d);
             }
             Some(ForInit::Var(d)) => self.compile_var_decl(d),
@@ -254,6 +379,21 @@ impl Compiler<'_> {
             }
             None => {}
         }
+        self.compile_for_body(per_iteration, test, update, body);
+        if pushed_env {
+            self.scopes.pop();
+            self.emit(Op::PopScope);
+        }
+    }
+
+    /// ForBodyEvaluation(test, increment, stmt, perIterationBindings, labelSet)
+    fn compile_for_body(
+        &mut self,
+        per_iteration: bool,
+        test: Option<&Expr>,
+        update: Option<&Expr>,
+        body: &Stmt,
+    ) {
         if per_iteration {
             self.emit(Op::CopyScope);
         }
@@ -277,10 +417,6 @@ impl Compiler<'_> {
             self.patch(exit);
         }
         self.pop_breakable(None);
-        if pushed_env {
-            self.scopes.pop();
-            self.emit(Op::PopScope);
-        }
     }
 
     fn compile_for_in_of(
@@ -394,8 +530,23 @@ impl Compiler<'_> {
             self.emit(Op::PushScope(scope));
             self.scopes.push(JumpScope::Env);
         }
+        let using = match left {
+            ForHead::Var {
+                kind: kind @ (VarKind::Using | VarKind::AwaitUsing),
+                ..
+            } => Some(*kind == VarKind::AwaitUsing),
+            _ => None,
+        };
         match left {
-            ForHead::Var { kind, target, .. } => self.compile_binding(target, kind.is_lexical()),
+            ForHead::Var { kind, target, .. } => {
+                if let Some(is_await) = using {
+                    // InitializeReferencedBinding(lhsRef, nextValue, hint): ? AddDisposableResource
+                    // on iterationEnv.[[DisposableResourceStack]] (if it throws, the iterator is closed).
+                    self.emit(Op::Dup);
+                    self.emit(Op::AddDisposable(is_await));
+                }
+                self.compile_binding(target, kind.is_lexical())
+            }
             ForHead::Assign(target) => match target {
                 Pattern::Ident(id) => {
                     let name = self.string(&id.name);
@@ -406,7 +557,12 @@ impl Compiler<'_> {
                 _ => self.compile_assignment_pattern(target),
             },
         }
-        self.compile_stmt(body);
+        match using {
+            // Let result be Completion(Evaluation of stmt); if lhsKind is lexicalBinding,
+            // set result to Completion(DisposeResources(iterationEnv.[[DisposableResourceStack]], result)).
+            Some(is_await) => self.compile_disposing(is_await, |c| c.compile_stmt(body)),
+            None => self.compile_stmt(body),
+        }
         if iteration_scope.is_some() {
             self.scopes.pop();
             self.emit(Op::PopScope);
@@ -466,6 +622,19 @@ impl Compiler<'_> {
             self.emit(Op::PushScope(scope));
             self.scopes.push(JumpScope::Env);
         }
+        // 7. Let blockResult be Completion(CaseBlockEvaluation of CaseBlock with argument switchValue).
+        // 8. Assert: blockEnv.[[DisposableResourceStack]] is an empty List (case clauses cannot declare `using`).
+        self.compile_case_block(cases);
+        if scope.is_some() {
+            self.scopes.pop();
+            self.emit(Op::PopScope);
+        }
+        self.scopes.pop();
+        self.emit(Op::Pop);
+    }
+
+    /// CaseBlockEvaluation, with the switch value on the stack.
+    fn compile_case_block(&mut self, cases: &[SwitchCase]) {
         self.push_breakable(false, true);
         let mut case_jumps = Vec::new();
         for c in cases {
@@ -492,12 +661,6 @@ impl Compiler<'_> {
             None => self.patch(no_match),
         }
         self.pop_breakable(None);
-        if scope.is_some() {
-            self.scopes.pop();
-            self.emit(Op::PopScope);
-        }
-        self.scopes.pop();
-        self.emit(Op::Pop);
     }
 
     fn compile_try(
