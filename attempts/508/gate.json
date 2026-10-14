@@ -1,0 +1,75 @@
+{
+  "ticket": "B-uint8-array-from-base64",
+  "base": "2985a456f5d0ddce1552cb0f90531fab179ce480",
+  "head": "44e36bccf9970c39d3cda26d1a4b22b53a479a47",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_base64.rs:27: #[allow(dead_code)] // `read` is for Uint8Array.prototype.setFromBase64"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "added": 363,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 27,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // `read` is for Uint8Array.prototype.setFromBase64"
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 155,
+      "rule": "skipping something: check what and why",
+      "text": "/// SkipAsciiWhitespace ( _string_, _index_ ) (sec-skipasciiwhitespace)"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 156,
+      "rule": "skipping something: check what and why",
+      "text": "fn skip_ascii_whitespace(string: &[u16], mut index: usize) -> usize {"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 253,
+      "rule": "skipping something: check what and why",
+      "text": "// b. Set _index_ to SkipAsciiWhitespace(_string_, _index_)."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 254,
+      "rule": "skipping something: check what and why",
+      "text": "index = skip_ascii_whitespace(string, index);"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 296,
+      "rule": "skipping something: check what and why",
+      "text": "// ii. Set _index_ to SkipAsciiWhitespace(_string_, _index_)."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 297,
+      "rule": "skipping something: check what and why",
+      "text": "index = skip_ascii_whitespace(string, index);"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 314,
+      "rule": "skipping something: check what and why",
+      "text": "// a. Set _index_ to SkipAsciiWhitespace(_string_, _index_ + 1)."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_base64.rs",
+      "line": 315,
+      "rule": "skipping something: check what and why",
+      "text": "index = skip_ascii_whitespace(string, index + 1);"
+    }
+  ],
+  "decision": "reject"
+}

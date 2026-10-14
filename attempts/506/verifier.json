@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16246,
+  "stop_reason": "tool_use",
+  "session_id": "556e0fd0-50ec-42c1-8b6d-5753d6674c38",
+  "total_cost_usd": 0.004154199999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9597,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 3400,
+    "output_tokens_details": {
+      "thinking_tokens": 2728
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9597,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3400,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 9597,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9597
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements AsyncIteratorPrototype[Symbol.asyncDispose] in the scoped file, following steps 1-7 in order. Each spec step is a comment above its code. GetMethod, the undefined check, Call, the IfAbruptRejectPromise handling, PromiseResolve, CreateBuiltinFunction with name \\\"\\\", PerformPromiseThen with the capability, and the final return of the promise all match the spec. Only throw completions are routed to the reject function, and not-implemented or other engine errors propagate. There are no test-specific branches, no hardcoded results, and no swallowed errors. Two minor deviations are not observable: step 2 and the reject call use `?` where the spec uses `!`, which only matters if those calls could throw, and the spec's cannot-throw assumption makes that unreachable in practice. The build and clippy are clean, and I did not verify the signatures of the ops helpers I cannot see.\",\"problems\":[],\"notes_for_next_attempt\":\"Nits only, not blocking: step 2 (NewPromiseCapability) and the reject call inside reject_if_abrupt use `?` where the spec uses `!`. Behaviour is the same in practice because those calls cannot throw. Also confirm that ops::get_method performs GetV then the IsCallable TypeError check, and that create_builtin_function's trailing None/false arguments mean default prototype and non-constructor, since neither is visible in this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements AsyncIteratorPrototype[Symbol.asyncDispose] in the scoped file, following steps 1-7 in order. Each spec step is a comment above its code. GetMethod, the undefined check, Call, the IfAbruptRejectPromise handling, PromiseResolve, CreateBuiltinFunction with name \"\", PerformPromiseThen with the capability, and the final return of the promise all match the spec. Only throw completions are routed to the reject function, and not-implemented or other engine errors propagate. There are no test-specific branches, no hardcoded results, and no swallowed errors. Two minor deviations are not observable: step 2 and the reject call use `?` where the spec uses `!`, which only matters if those calls could throw, and the spec's cannot-throw assumption makes that unreachable in practice. The build and clippy are clean, and I did not verify the signatures of the ops helpers I cannot see.",
+    "problems": [],
+    "notes_for_next_attempt": "Nits only, not blocking: step 2 (NewPromiseCapability) and the reject call inside reject_if_abrupt use `?` where the spec uses `!`. Behaviour is the same in practice because those calls cannot throw. Also confirm that ops::get_method performs GetV then the IsCallable TypeError check, and that create_builtin_function's trailing None/false arguments mean default prototype and non-constructor, since neither is visible in this diff."
+  },
+  "ttft_ms": 13111,
+  "type": "result",
+  "duration_ms": 15825,
+  "uuid": "23feed29-e4f0-42df-a1a1-c6b73d044dc1",
+  "ttft_stream_ms": 1796,
+  "time_to_request_ms": 592,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 354,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 30,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 40,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 103,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 89,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 119,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1129,
+  "process_wall_ms_turn": 15825,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 54,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1797,
+  "time_to_request_from_spawn_ms": 31623203,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792011083294.2322,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792020000,
+    "rateLimitType": "five_hour",
+    "utilization": 0.92,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.9,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.92,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.9,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

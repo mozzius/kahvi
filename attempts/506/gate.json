@@ -1,0 +1,32 @@
+{
+  "ticket": "B-async-iterator-prototype-symbol-async-dispose",
+  "base": "2985a456f5d0ddce1552cb0f90531fab179ce480",
+  "head": "6ff2166544581fc523c6f9ab6ab6f26c4d8524ac",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/async_iterator_prototype/symbol_async_dispose.rs",
+      "added": 85,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -4926,3 +4926,6 @@ test262 at last merge: 80909/81183 runs passing
 [20:50:54] B-uint8-array-prototype-to-base64: attempt 507 finished ($0.200, 13 turns)
 [20:51:01] B-uint8-array-from-hex: attempt 505 finished ($0.208, 16 turns)
 [20:51:02] B-uint8-array-from-hex: gate rejected attempt 505: lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_hex.rs:11: #[allow(dead_code)] // read by Uint8Array.prototype.setFromHex
+[20:51:06] B-uint8-array-from-hex: attempt on slot 0 with sonnet
+[20:51:43] B-uint8-array-from-base64: attempt 508 finished ($0.401, 18 turns)
+[20:51:43] B-uint8-array-from-base64: gate rejected attempt 508: lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_base64.rs:27: #[allow(dead_code)] // `read` is for Uint8Array.prototype.setFromBase64
