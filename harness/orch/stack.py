@@ -342,6 +342,13 @@ class Stacker:
             # The newest run of each check (re-runs add new ones).
             if c["name"] not in runs or c["id"] > runs[c["name"]]["id"]:
                 runs[c["name"]] = c
+        # A failed side check (fmt, clippy, unit tests) decides at once; no
+        # need to wait for the full suite.
+        early = [n for n in self.required if n != self.check and n in runs and runs[n]["status"] == "completed"
+                 and runs[n]["conclusion"] not in ("success", "skipped", "neutral")]
+        if early and not (layer["rerun_of"] and runs[self.check]["id"] == layer["rerun_of"]):
+            self._red(layer, f"CI failed: {', '.join(early)}", [])
+            return True
         if any(name not in runs or runs[name]["status"] != "completed" for name in self.required):
             return False
         if layer["rerun_of"] and runs[self.check]["id"] == layer["rerun_of"]:
@@ -468,8 +475,10 @@ class Stacker:
                 changed = True
             elif pr["state"] == "closed":
                 self.db.q("UPDATE layers SET status = 'closed', updated = ? WHERE id = ?", time.time(), layer["id"])
-                log(f"stack: {layer['branch']} (#{layer['pr']}) was closed on GitHub; its work stays below newer layers")
+                log(f"stack: {layer['branch']} (#{layer['pr']}) was closed on GitHub; dropped from the stack")
                 changed = True
+        if changed:
+            self.compose()
         # The lowest open layer targets whatever its merged layers merged into.
         lowest = self.db.one(f"SELECT * FROM layers WHERE status IN {LIVE} AND pr IS NOT NULL ORDER BY id LIMIT 1")
         if lowest:
