@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 10566,
+  "stop_reason": "end_turn",
+  "session_id": "823a1d87-d6a2-4dba-8065-e0ae5a570ea1",
+  "total_cost_usd": 0.00484368,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 14533,
+    "cache_read_input_tokens": 82718,
+    "output_tokens": 1775,
+    "output_tokens_details": {
+      "thinking_tokens": 108
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14533,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 195,
+        "cache_read_input_tokens": 21793,
+        "cache_creation_input_tokens": 383,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 383
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Map.prototype.clear` is implemented in `crates/kahvi-builtins/src/map/prototype_clear.rs`. It brand-checks `this` with the existing `this_map` helper, then calls `OrderedTable::clear` and returns `undefined`. `OrderedTable::clear` already empties entries in place, so existing iterators keep their positions as the spec note requires.\n\n`./t262 built-ins/Map/prototype/clear/` passes 22 of 22 (up from 8 on main), and `cargo clippy` is clean. No other files were touched and no helper was missing.",
+  "ttft_ms": 1840,
+  "type": "result",
+  "duration_ms": 31085,
+  "uuid": "1378de5f-6e89-4ccd-a4a2-7ee7ef35cdac",
+  "ttft_stream_ms": 1606,
+  "time_to_request_ms": 658,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 443,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 26,
+    "input_hooks": 16,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 31,
+    "autocompact": 7,
+    "query_setup": 5,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 3,
+    "client_creation": 8,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 178,
+  "time_to_request_cpu_ms": 363,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2590,
+  "process_wall_ms_turn": 31078,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1607,
+  "time_to_request_from_spawn_ms": 23500246,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002958750.629,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.17,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
