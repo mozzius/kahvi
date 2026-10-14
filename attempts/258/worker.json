@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11666,
+  "stop_reason": "end_turn",
+  "session_id": "c31ea318-ccba-4dc6-a3b4-6679274cb3b8",
+  "total_cost_usd": 0.00505516,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 15062,
+    "cache_read_input_tokens": 83586,
+    "output_tokens": 1973,
+    "output_tokens_details": {
+      "thinking_tokens": 197
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15062,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 167,
+        "cache_read_input_tokens": 22100,
+        "cache_creation_input_tokens": 605,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 605
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Set.prototype.clear` in `crates/kahvi-builtins/src/set/prototype_clear.rs`. It uses the existing `this_set` (RequireInternalSlot) and `set_table(...).clear()` helpers, which empty the entries but keep the list so live Set iterators still work. `./t262 built-ins/Set/prototype/clear/` passes 38/38, `cargo clippy` is clean, and the file is rustfmt-clean.\n\nBLOCKED: none",
+  "ttft_ms": 1977,
+  "type": "result",
+  "duration_ms": 34368,
+  "uuid": "b1d38179-3be7-4d4f-ad7a-b1a9ac5a4767",
+  "ttft_stream_ms": 1736,
+  "time_to_request_ms": 930,
+  "time_to_request_phases_ms": {
+    "other": 65,
+    "system_prompt": 466,
+    "resume_other": 4,
+    "process_user_input": 20,
+    "input_attachments": 48,
+    "input_hooks": 28,
+    "tool_pool_refresh": 14,
+    "init_message": 23,
+    "engine_pickup": 116,
+    "message_prep": 3,
+    "model_config_wait": 115,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 329,
+  "time_to_request_cpu_ms": 323,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 2606,
+  "process_wall_ms_turn": 34367,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 31,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1739,
+  "time_to_request_from_spawn_ms": 21736703,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001194935.317,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

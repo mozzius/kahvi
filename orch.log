@@ -897,3 +897,29 @@ test262 at last merge: 72953/81183 runs passing
 [18:06:26] B-map-prototype-for-each: verifier: accept The diff implements Map.prototype.forEach in its single file, following the spec steps. RequireInternalSlot is done through this_map, and IsCallable i
 [18:06:34] B-set-prototype-clear: attempt on slot 1 with haiku
 [18:07:01] B-object-get-own-property-descriptors: verifier: accept The diff implements Object.getOwnPropertyDescriptors in its own file, with each spec step as a comment directly above its code. Order matches the spec
+[18:07:01] B-reflect-prevent-extensions: attempt 257 finished ($0.005, 12 turns)
+[18:07:05] B-weak-map-prototype-get-or-insert: attempt on slot 2 with haiku
+[18:07:13] B-set-prototype-clear: attempt 258 finished ($0.005, 10 turns)
+[18:07:15] stack: stack/0008 (#21) green: 73796/81183 passing, +843
+[18:07:15] B-iterator-prototype-filter: merged (+62, 73796 total)
+[18:07:15] B-typed-array-prototype-find-last: merged (+56, 73796 total)
+[18:07:15] B-typed-array-prototype-find-last-index: merged (+58, 73796 total)
+[18:07:15] B-typed-array-prototype-find-index: merged (+58, 73796 total)
+[18:07:15] B-typed-array-of: merged (+8, 73796 total)
+[18:07:15] B-string-iterator-prototype-next: merged (+6, 73796 total)
+[18:07:15] B-iterator-prototype-drop: merged (+56, 73796 total)
+[18:07:15] B-typed-array-prototype-sort: merged (+52, 73796 total)
+[18:07:16] B-iterator-prototype-every: merged (+54, 73796 total)
+[18:07:16] B-array-prototype-includes: merged (+48, 73796 total)
+[18:07:16] B-iterator-prototype-some: merged (+54, 73796 total)
+[18:07:16] B-iterator-prototype-take: merged (+54, 73796 total)
+[18:07:16] B-array-prototype-pop: merged (+38, 73796 total)
+[18:07:16] B-iterator-prototype-find: merged (+52, 73796 total)
+[18:07:16] B-typed-array-prototype-to-locale-string: merged (+40, 73796 total)
+[18:07:16] B-weak-set-prototype-add: merged (+30, 73796 total)
+[18:07:19] stack: partial tickets after stack/0008: {'done': 6}
+[18:07:28] B-number-prototype-to-precision: verifier: accept The diff implements Number.prototype.toPrecision step by step, in spec order, with each step's text as a comment above its code. ThisNumberValue, the 
+[18:07:30] stack: pushed stack/0009 as #22 with B-promise-prototype-finally, B-iterator-prototype-reduce, B-string-prototype-char-at, B-array-prototype-shift, B-date-utc, B-iterator-from, B-set-prototype-union, B-object-from-entries, B-string-prototype-ends-with, B-set-prototype-intersection, B-set-prototype-symmetric-difference, B-set-prototype-difference, B-string-prototype-to-lower-case, B-object-get-own-property-symbols, B-array-prototype-fill, B-typed-array-prototype-with
+[18:07:46] B-weak-map-prototype-get-or-insert: attempt 259 finished ($0.006, 10 turns)
+[18:07:48] B-reflect-prevent-extensions: verifier: accept The diff implements Reflect.preventExtensions as the two spec steps. Step 1 is a let-else that throws a TypeError when args[0] is not a Value::Object.
+[18:08:04] B-set-prototype-clear: verifier: accept The change implements Set.prototype.clear by calling this_set(agent, this)? (step 1 and 2, RequireInternalSlot with ? propagation) and then set_table(

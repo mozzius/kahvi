@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reflect-prevent-extensions",
+  "base": "e1e9c192686ff682c0a99fe9efe93becf42bde6d",
+  "head": "14b5c45917973f37339c4c5f3333626a7deb7306",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/prevent_extensions.rs",
+      "added": 6,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Reflect/preventExtensions/target-is-symbol-throws.js:sloppy  Uncaught InternalError: not implemented: Reflect.isExtensible",
+      "built-ins/Reflect/preventExtensions/target-is-symbol-throws.js:strict  Uncaught InternalError: not implemented: Reflect.isExtensible"
+    ]
+  },
+  "decision": "pass"
+}

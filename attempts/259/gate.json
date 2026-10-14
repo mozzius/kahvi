@@ -1,0 +1,37 @@
+{
+  "ticket": "B-weak-map-prototype-get-or-insert",
+  "base": "7c764331656d1501b8eff575ec4f0fa8a502d461",
+  "head": "a7548314ac9b09458d2b6a325a2437a3ba2c32d0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_map/prototype_get_or_insert.rs",
+      "added": 20,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 30,
+    "new_passes": 22,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakMap/prototype/getOrInsert/adds-object-element.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsert/adds-object-element.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsert/adds-symbol-element.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsert/adds-symbol-element.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.get"
+    ]
+  },
+  "decision": "pass"
+}
