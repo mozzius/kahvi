@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 48899,
+  "stop_reason": "end_turn",
+  "session_id": "60b4bd5d-aefa-4223-bdd8-74a8e150dbc9",
+  "total_cost_usd": 0.014728680000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 35235,
+    "cache_read_input_tokens": 195348,
+    "output_tokens": 10379,
+    "output_tokens_details": {
+      "thinking_tokens": 5843
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 35235,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 873,
+        "cache_read_input_tokens": 42378,
+        "cache_creation_input_tokens": 500,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 500
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `next` algorithm is implemented in `next.rs` and builds, but none of the 30 target tests can pass yet. Every test reaches an iterator through `RegExp.prototype[Symbol.matchAll]`, which still throws not-implemented in `prototype_symbol_match_all.rs`. That file is outside this ticket's scope.\n\nWhat I changed, all in `crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs`:\n- **Slot type:** I defined `RegExpStringIterator` there with `iterating_regexp`, `iterated_string`, `global`, `unicode` and `done`, plus its `Trace` impl. No such type existed, and the matchAll ticket will need it. Moving it into `support/regexp.rs` is the follow-up.\n- **`next`:** It follows spec steps 1\u201314 as comments above the code. It uses `regexp_exec`, `advance_string_index`, `ops::to_length`, `ops::set` and `ops::create_iter_result_object`.\n- **Checks:** `cargo build -p kahvi-cli`, `cargo fmt` and `cargo clippy -p kahvi-builtins` are clean for this file.\n- **test262:** `./t262 built-ins/RegExpStringIteratorPrototype/next/` gives 0 of 30 passing, all failing with \"not implemented: CreateRegExpStringIterator\". Canaries pass.\n\nBLOCKED: CreateRegExpStringIterator (RegExp String Iterator slots) \u2014 `RegExp.prototype[Symbol.matchAll]` in `reg_exp/prototype_symbol_match_all.rs` must construct the iterator object with `ObjectKind::Native(RegExpStringIterator)` and `%RegExpStringIteratorPrototype%`; that file is outside this ticket's scope.",
+  "ttft_ms": 1595,
+  "type": "result",
+  "duration_ms": 76223,
+  "uuid": "35a95785-a780-4b64-b016-50f2adb63f3b",
+  "ttft_stream_ms": 1492,
+  "time_to_request_ms": 561,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 323,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 1,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 137,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 99,
+  "time_to_request_cpu_ms": 291,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 253,
+  "process_anon_mib_result": 135,
+  "process_peak_rss_mib": 274,
+  "process_cpu_ms_turn": 4362,
+  "process_wall_ms_turn": 76222,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1493,
+  "time_to_request_from_spawn_ms": 28020408,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007480484.7236,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.68,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

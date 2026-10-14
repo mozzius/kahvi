@@ -1,0 +1,33 @@
+{
+  "ticket": "B-reg-exp-string-iterator-prototype-next",
+  "base": "8978cb7c8bb28f1a1616737bdc27634ff7d07d11",
+  "head": "df8920c0d6c6c4b836f8fa5e69a2cf40c28217c2",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs:13: #[allow(dead_code)] // constructed by CreateRegExpStringIterator (RegExp.prototype[@@matchAll])"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs",
+      "added": 127,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs",
+      "line": 13,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // constructed by CreateRegExpStringIterator (RegExp.prototype[@@matchAll])"
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs",
+      "line": 143,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"RegExpStringIterator slots on a receiver checked by next\")"
+    }
+  ],
+  "decision": "reject"
+}
