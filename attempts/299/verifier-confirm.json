@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7081,
+  "stop_reason": "tool_use",
+  "session_id": "11a323ec-81df-48c9-b4cc-ca59cd2a1ac9",
+  "total_cost_usd": 0.028983199999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5343,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 678,
+    "output_tokens_details": {
+      "thinking_tokens": 337
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5343,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 678,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5343,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5343
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1-8 in order. Errors propagate with `?`. The closure calls onDispose with undefined as this and value as the only argument. The test262 target went from 8 to 24 passing with no regressions, which fits the change. The one lint flag, `expect` on `active_function()` inside the built-in closure, is acceptable: a built-in being called always has an active function.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1-8 in order. Errors propagate with `?`. The closure calls onDispose with undefined as this and value as the only argument. The test262 target went from 8 to 24 passing with no regressions, which fits the change. The one lint flag, `expect` on `active_function()` inside the built-in closure, is acceptable: a built-in being called always has an active function.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5127,
+  "type": "result",
+  "duration_ms": 6893,
+  "uuid": "104c1cf9-690c-4303-89ff-374a1dbc3359",
+  "ttft_stream_ms": 1978,
+  "time_to_request_ms": 758,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 376,
+    "resume_other": 0,
+    "process_user_input": 9,
+    "input_attachments": 49,
+    "input_hooks": 8,
+    "tool_pool_refresh": 6,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 230,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 86,
+  "time_to_request_cpu_ms": 443,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 706,
+  "process_wall_ms_turn": 6892,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 32,
+    "cpu_ms": 42,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1979,
+  "time_to_request_from_spawn_ms": 23046470,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002505751.2522,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.12,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

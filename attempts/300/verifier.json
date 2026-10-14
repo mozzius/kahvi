@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9887,
+  "stop_reason": "tool_use",
+  "session_id": "218e0bdd-3d6a-41e5-8a82-06fcd24fa1df",
+  "total_cost_usd": 0.0022154800000000006,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4355,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1881,
+    "output_tokens_details": {
+      "thinking_tokens": 1246
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4355,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1881,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4355,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4355
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Map.prototype.getOrInsert in the stub file, with each spec step kept as a comment above its code. Steps 1-2 use this_map (RequireInternalSlot), with ? propagation. Step 3 canonicalizes the key via collection_key. Step 4 returns an existing entry's value via map_table(..).get. Steps 5-6 append the new entry via set, and step 7 returns value. No test-keyed branches, no swallowed errors, no fabricated return values, and no changes outside the ticket's file. The only edit beyond the steps is renaming the unused new_target parameter to _new_target, which is harmless. The helpers (collection_key, map_table, this_map) are not in the diff, so I could not verify that collection_key maps -0 to +0 or that the table's get/set use the right equality and append order. The gate report (build and clippy ok, 20 new passing test262 runs, no regressions) is consistent with a correct implementation.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. Nothing to fix. The helper semantics (collection_key canonicalizing -0 to +0, map_table get/set using SameValueZero-style equality, and set appending new entries at the end in insertion order) are outside the diff and were not checked here. A reviewer with access to support::collections should confirm them.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Map.prototype.getOrInsert in the stub file, with each spec step kept as a comment above its code. Steps 1-2 use this_map (RequireInternalSlot), with ? propagation. Step 3 canonicalizes the key via collection_key. Step 4 returns an existing entry's value via map_table(..).get. Steps 5-6 append the new entry via set, and step 7 returns value. No test-keyed branches, no swallowed errors, no fabricated return values, and no changes outside the ticket's file. The only edit beyond the steps is renaming the unused new_target parameter to _new_target, which is harmless. The helpers (collection_key, map_table, this_map) are not in the diff, so I could not verify that collection_key maps -0 to +0 or that the table's get/set use the right equality and append order. The gate report (build and clippy ok, 20 new passing test262 runs, no regressions) is consistent with a correct implementation.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. Nothing to fix. The helper semantics (collection_key canonicalizing -0 to +0, map_table get/set using SameValueZero-style equality, and set appending new entries at the end in insertion order) are outside the diff and were not checked here. A reviewer with access to support::collections should confirm them."
+  },
+  "ttft_ms": 7056,
+  "type": "result",
+  "duration_ms": 9543,
+  "uuid": "39946603-69b7-42a6-9312-1b48a04da376",
+  "ttft_stream_ms": 1263,
+  "time_to_request_ms": 544,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 343,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 27,
+    "input_hooks": 5,
+    "tool_pool_refresh": 4,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 89,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 67,
+  "time_to_request_cpu_ms": 373,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 832,
+  "process_wall_ms_turn": 9543,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1264,
+  "time_to_request_from_spawn_ms": 23046824,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002506611.0325,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.12,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

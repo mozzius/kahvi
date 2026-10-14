@@ -1,0 +1,32 @@
+{
+  "ticket": "B-map-prototype-get-or-insert",
+  "base": "4c2a390feb7ccb0e0248ea3f5091cd814344b27b",
+  "head": "7a5813603bd376c8181e4fb7f8139ba6f65ebc66",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_get_or_insert.rs",
+      "added": 18,
+      "removed": 13
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 8,
+    "after": 28,
+    "new_passes": 20,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
