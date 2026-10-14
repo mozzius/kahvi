@@ -1,0 +1,23 @@
+{
+  "merged": true,
+  "commit": "3822bbae10d3d410330a912eb89cfbde05b02de4",
+  "batch": [
+    "B-date-prototype-set-minutes",
+    "B-set-prototype-delete",
+    "B-set-prototype-entries",
+    "C-proxy-is-extensible",
+    "B-array-prototype-to-reversed",
+    "B-reg-exp-escape",
+    "B-date-prototype-set-seconds",
+    "B-number-prototype-to-fixed"
+  ],
+  "new_passes": 22,
+  "total_pass": 76889,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-invalid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+    "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-invalid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+    "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-valid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+    "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-valid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime"
+  ]
+}
