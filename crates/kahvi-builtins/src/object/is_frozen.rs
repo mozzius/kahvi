@@ -7,14 +7,15 @@ use kahvi_core::prelude::*;
 /// Object.isFrozen
 pub(crate) fn is_frozen(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function performs the following steps when called:
-    //
     // 1. If _obj_ is not an Object, return *true*.
+    let Value::Object(o) = args.get_or_undefined(0) else {
+        return Ok(Value::Boolean(true));
+    };
     // 2. Return ? TestIntegrityLevel(_obj_, ~frozen~).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.isFrozen"))
+    let result = ops::test_integrity_level(agent, o, ops::IntegrityLevel::Frozen)?;
+    Ok(Value::Boolean(result))
 }
