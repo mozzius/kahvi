@@ -6,3 +6,4 @@
 [14:45:31] C-proxy-set: attempt 98 finished ($0.012, 17 turns)
 [14:46:00] B-string-raw: attempt 96 finished ($0.012, 17 turns)
 [14:46:24] B-string-prototype-char-code-at: verifier: accept The diff implements String.prototype.charCodeAt steps 1-7 in order inside prototype_char_code_at.rs. Each step is kept as a comment above its code. Re
+[14:46:48] C-proxy-set: verifier: accept The diff implements Proxy [[Set]] in set.rs and follows the spec steps in order. Step 1 uses validate_non_revoked with ?. Step 5 calls GetMethod(handl

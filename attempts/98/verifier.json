@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16542,
+  "stop_reason": "tool_use",
+  "session_id": "01e09a1c-c9f9-42fc-a258-8e8a6bb0aa4e",
+  "total_cost_usd": 0.00375574,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7013,
+    "cache_read_input_tokens": 3504,
+    "output_tokens": 3361,
+    "output_tokens_details": {
+      "thinking_tokens": 2808
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7013,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3361,
+        "cache_read_input_tokens": 3504,
+        "cache_creation_input_tokens": 7013,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7013
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Proxy [[Set]] in set.rs and follows the spec steps in order. Step 1 uses validate_non_revoked with ?. Step 5 calls GetMethod(handler, \\\"set\\\") with ?. Step 6 returns target.[[Set]] when the trap is undefined. Step 7 calls the trap with ? and applies ToBoolean. Step 8 returns false. Step 9 calls target.[[GetOwnProperty]] with ?. Step 10 checks non-configurable targets, with 10a (non-writable data, SameValue check, TypeError) and 10b (accessor with undefined setter, TypeError) both nested as in the spec. Step 11 returns true. Error paths use throw_type_error with ?. The only other changes are the parameter rename to _o, which is unused, and removal of the NOTE comment. No test-shaped branches exist. The 4 remaining failures are honest not-implemented errors from Reflect.getOwnPropertyDescriptor, which is outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Proxy [[Set]] in set.rs and follows the spec steps in order. Step 1 uses validate_non_revoked with ?. Step 5 calls GetMethod(handler, \"set\") with ?. Step 6 returns target.[[Set]] when the trap is undefined. Step 7 calls the trap with ? and applies ToBoolean. Step 8 returns false. Step 9 calls target.[[GetOwnProperty]] with ?. Step 10 checks non-configurable targets, with 10a (non-writable data, SameValue check, TypeError) and 10b (accessor with undefined setter, TypeError) both nested as in the spec. Step 11 returns true. Error paths use throw_type_error with ?. The only other changes are the parameter rename to _o, which is unused, and removal of the NOTE comment. No test-shaped branches exist. The 4 remaining failures are honest not-implemented errors from Reflect.getOwnPropertyDescriptor, which is outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 14766,
+  "type": "result",
+  "duration_ms": 16789,
+  "uuid": "ad57f71e-0d78-4158-85ee-7883c3767236",
+  "ttft_stream_ms": 2332,
+  "time_to_request_ms": 836,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 498,
+    "resume_other": 0,
+    "process_user_input": 16,
+    "input_attachments": 41,
+    "input_hooks": 12,
+    "tool_pool_refresh": 7,
+    "init_message": 23,
+    "engine_pickup": 7,
+    "message_prep": 10,
+    "model_config_wait": 152,
+    "autocompact": 8,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 135,
+  "time_to_request_cpu_ms": 470,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 1071,
+  "process_wall_ms_turn": 16788,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 39,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2334,
+  "time_to_request_from_spawn_ms": 9719205,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791989178662.467,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
