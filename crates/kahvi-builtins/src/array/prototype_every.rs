@@ -45,33 +45,38 @@ pub(crate) fn prototype_every(
         return Err(agent.throw_type_error("Array.prototype.every callback is not a function"));
     }
     let this_arg = args.get_or_undefined(1);
-    // 4. Let k be 0.
-    let mut k = 0.0;
-    // 5. Repeat, while k < len,
-    while k < len {
-        // a. Let Pk be ! ToString(𝔽(k)).
-        let pk = agent.key_from_index(k);
-        // b. Let kPresent be ? HasProperty(O, Pk).
-        // c. If kPresent is true, then
-        if ops::has_property(agent, o, pk)? {
-            // i. Let kValue be ? Get(O, Pk).
-            let k_value = ops::get(agent, o, pk)?;
-            // ii. Let testResult be ToBoolean(? Call(callback, thisArg, « kValue, 𝔽(k), O »)).
-            let test_result = ops::call(
-                agent,
-                callback,
-                this_arg,
-                &[k_value, Value::Number(k), Value::Object(o)],
-            )?;
-            let test_result = ops::to_boolean(agent, test_result);
-            // iii. If testResult is false, return false.
-            if !test_result {
-                return Ok(Value::Boolean(false));
+    // The callback may collect garbage: what is used after it stays rooted.
+    agent.with_roots(&[Value::Object(o), callback, this_arg], |agent| {
+        // 4. Let k be 0.
+        let mut k = 0.0;
+        // 5. Repeat, while k < len,
+        while k < len {
+            // a. Let Pk be ! ToString(𝔽(k)).
+            let pk = agent.key_from_index(k);
+            // b. Let kPresent be ? HasProperty(O, Pk).
+            // c. If kPresent is true, then
+            if ops::has_property(agent, o, pk)? {
+                // i. Let kValue be ? Get(O, Pk).
+                let k_value = ops::get(agent, o, pk)?;
+                // ii. Let testResult be ToBoolean(? Call(callback, thisArg, « kValue, 𝔽(k), O »)).
+                let mark = agent.push_root(k_value);
+                let test_result = ops::call_rooted(
+                    agent,
+                    callback,
+                    this_arg,
+                    &[k_value, Value::Number(k), Value::Object(o)],
+                )?;
+                let test_result = ops::to_boolean(agent, test_result);
+                // iii. If testResult is false, return false.
+                if !test_result {
+                    return Ok(Value::Boolean(false));
+                }
+                agent.pop_roots(mark);
             }
+            // d. Set k to k + 1.
+            k += 1.0;
         }
-        // d. Set k to k + 1.
-        k += 1.0;
-    }
-    // 6. Return true.
-    Ok(Value::Boolean(true))
+        // 6. Return true.
+        Ok(Value::Boolean(true))
+    })
 }

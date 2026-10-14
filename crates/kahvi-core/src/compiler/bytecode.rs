@@ -520,6 +520,27 @@ pub struct ClassStatic {
     pub span: (u32, u32),
 }
 
+/// The strings and BigInts that the code of one compilation unit (a script,
+/// module, eval or dynamic function, with every function nested in it)
+/// refers to. Each `FunctionCode` of the unit shares one; the collector
+/// traces it from whatever holds the code (docs/GC.md).
+#[derive(Debug, Default)]
+pub struct CodeConstants {
+    values: std::sync::OnceLock<Box<[crate::value::Value]>>,
+}
+
+impl CodeConstants {
+    pub(crate) fn set(&self, values: Box<[crate::value::Value]>) {
+        self.values
+            .set(values)
+            .expect("a compilation unit's constants are set once");
+    }
+
+    pub fn values(&self) -> &[crate::value::Value] {
+        self.values.get().map_or(&[], |v| v)
+    }
+}
+
 /// Compiled code for a script, module, eval or function body.
 #[derive(Debug)]
 pub struct FunctionCode {
@@ -555,6 +576,8 @@ pub struct FunctionCode {
     pub span: (u32, u32),
     /// Index of the script/module this code belongs to.
     pub script: u32,
+    /// The handles the compilation unit's code refers to.
+    pub constants: Arc<CodeConstants>,
 }
 
 impl FunctionCode {

@@ -828,8 +828,8 @@ impl Trace for ClassPending {
 
 impl Trace for EcmaFunction {
     fn trace(&self, t: &mut Tracer) {
-        // [[ECMAScriptCode]]'s constants are pinned when compiled; realms and
-        // scripts are not collected.
+        // Realms and scripts are not collected.
+        t.code(&self.code);
         t.env(self.environment);
         self.private_environment.trace(t);
         self.home_object.trace(t);

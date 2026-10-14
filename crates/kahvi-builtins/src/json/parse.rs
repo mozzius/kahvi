@@ -38,8 +38,14 @@ pub(crate) fn parse(
     // 8. Let _snapshot_ be CreateJSONParseRecord(_parseResult_.[[ParseNode]], _rootName_, _unfiltered_).
     // The JSON Parse Record of every value is built while parsing, so the record for the
     // root of the parse result is the snapshot.
-    // 9. Return ? InternalizeJSONProperty(_root_, _rootName_, _reviver_, _snapshot_).
-    internalize_json_property(agent, root, root_name, reviver, Some(&parse_result))
+    // The reviver may collect garbage. The parse record's values are compared
+    // with SameValue after it runs, so they stay rooted with root and reviver.
+    let mut roots = vec![Value::Object(root), Value::String(root_name), reviver];
+    parse_result.values(&mut roots);
+    agent.with_roots(&roots, |agent| {
+        // 9. Return ? InternalizeJSONProperty(_root_, _rootName_, _reviver_, _snapshot_).
+        internalize_json_property(agent, root, root_name, reviver, Some(&parse_result))
+    })
     // The *"length"* property of this function is *2*_𝔽.
     // [subclause sec-ParseJSON: ParseJSON (
     // _text_: a String,
@@ -71,6 +77,19 @@ struct JsonParseRecord {
     value: Value,
     elements: Vec<JsonParseRecord>,
     entries: Vec<(Vec<u16>, JsonParseRecord)>,
+}
+
+impl JsonParseRecord {
+    /// Appends every value in this record and its children to `out`.
+    fn values(&self, out: &mut Vec<Value>) {
+        out.push(self.value);
+        for e in &self.elements {
+            e.values(out);
+        }
+        for (_, e) in &self.entries {
+            e.values(out);
+        }
+    }
 }
 
 /// ParseJSON ( _text_ )
@@ -359,83 +378,95 @@ fn internalize_json_property(
     // 1. Let val be ? Get(holder, name).
     let name_key = ops::to_property_key(agent, Value::String(name))?;
     let val = ops::get(agent, holder, name_key)?;
-    // 2. If val is an Object, then
-    if let Value::Object(val_obj) = val {
-        // a. Let isArray be ? IsArray(val).
-        // b. If isArray is true, then
-        if ops::is_array(agent, val)? {
-            // i. Let len be ? LengthOfArrayLike(val).
-            let len = ops::length_of_array_like(agent, val_obj)?;
-            // ii. Let I be 0.
-            let mut i = 0.0;
-            // iii. Repeat, while I < len,
-            while i < len {
-                // 1. Let prop be ! ToString(𝔽(I)).
-                let prop = ops::to_string(agent, Value::Number(i))?;
-                // 2. Let elementRecord be empty, or the element record of parseRecord
-                //    when parseRecord.[[Value]] is SameValue to val.
-                let element_record = match parse_record {
-                    Some(record) if ops::same_value(agent, record.value, val) => {
-                        record.elements.get(i as usize)
-                    }
-                    _ => None,
-                };
-                // 3. Let newElement be ? InternalizeJSONProperty(val, prop, reviver, elementRecord).
-                // 4. If newElement is undefined, perform ? val.[[Delete]](prop).
-                // 5. Else, perform ? CreateDataProperty(val, prop, newElement).
-                internalize_child(agent, val_obj, prop, reviver, element_record)?;
-                // 6. Set I to I + 1.
-                i += 1.0;
-            }
-        } else {
-            // c. Else,
-            // i. Let keys be ? EnumerableOwnProperties(val, key).
-            let keys = ops::enumerable_own_properties(agent, val_obj, EnumerableKind::Key)?;
-            // ii. For each String P of keys, do
-            for key in keys {
-                let prop = ops::to_string(agent, key)?;
-                // 1. Let entryRecord be empty, or the entry record of parseRecord whose key is P
-                //    when parseRecord.[[Value]] is SameValue to val.
-                let entry_record = match parse_record {
-                    Some(record) if ops::same_value(agent, record.value, val) => record
-                        .entries
-                        .iter()
-                        .find(|entry| entry.0.as_slice() == agent.str(prop))
-                        .map(|entry| &entry.1),
-                    _ => None,
-                };
-                // 2. Let newElement be ? InternalizeJSONProperty(val, P, reviver, entryRecord).
-                // 3. If newElement is undefined, perform ? val.[[Delete]](P).
-                // 4. Else, perform ? CreateDataProperty(val, P, newElement).
-                internalize_child(agent, val_obj, prop, reviver, entry_record)?;
+    // The reviver calls below may collect garbage: val stays rooted (holder,
+    // name and reviver are rooted by the caller).
+    agent.with_roots(&[val], |agent| {
+        // 2. If val is an Object, then
+        if let Value::Object(val_obj) = val {
+            // a. Let isArray be ? IsArray(val).
+            // b. If isArray is true, then
+            if ops::is_array(agent, val)? {
+                // i. Let len be ? LengthOfArrayLike(val).
+                let len = ops::length_of_array_like(agent, val_obj)?;
+                // ii. Let I be 0.
+                let mut i = 0.0;
+                // iii. Repeat, while I < len,
+                while i < len {
+                    // 1. Let prop be ! ToString(𝔽(I)).
+                    let prop = ops::to_string(agent, Value::Number(i))?;
+                    // 2. Let elementRecord be empty, or the element record of parseRecord
+                    //    when parseRecord.[[Value]] is SameValue to val.
+                    let element_record = match parse_record {
+                        Some(record) if ops::same_value(agent, record.value, val) => {
+                            record.elements.get(i as usize)
+                        }
+                        _ => None,
+                    };
+                    // 3. Let newElement be ? InternalizeJSONProperty(val, prop, reviver, elementRecord).
+                    // 4. If newElement is undefined, perform ? val.[[Delete]](prop).
+                    // 5. Else, perform ? CreateDataProperty(val, prop, newElement).
+                    let mark = agent.push_root(Value::String(prop));
+                    internalize_child(agent, val_obj, prop, reviver, element_record)?;
+                    agent.pop_roots(mark);
+                    // 6. Set I to I + 1.
+                    i += 1.0;
+                }
+            } else {
+                // c. Else,
+                // i. Let keys be ? EnumerableOwnProperties(val, key).
+                let keys = ops::enumerable_own_properties(agent, val_obj, EnumerableKind::Key)?;
+                // ii. For each String P of keys, do
+                let mark = agent.gc_roots_len();
+                for &key in &keys {
+                    agent.push_root(key);
+                }
+                for key in keys {
+                    let prop = ops::to_string(agent, key)?;
+                    // 1. Let entryRecord be empty, or the entry record of parseRecord whose key is P
+                    //    when parseRecord.[[Value]] is SameValue to val.
+                    let entry_record = match parse_record {
+                        Some(record) if ops::same_value(agent, record.value, val) => record
+                            .entries
+                            .iter()
+                            .find(|entry| entry.0.as_slice() == agent.str(prop))
+                            .map(|entry| &entry.1),
+                        _ => None,
+                    };
+                    // 2. Let newElement be ? InternalizeJSONProperty(val, P, reviver, entryRecord).
+                    // 3. If newElement is undefined, perform ? val.[[Delete]](P).
+                    // 4. Else, perform ? CreateDataProperty(val, P, newElement).
+                    internalize_child(agent, val_obj, prop, reviver, entry_record)?;
+                }
+                agent.pop_roots(mark);
             }
         }
-    }
-    // 3. Let context be OrdinaryObjectCreate(%Object.prototype%).
-    let object_proto = agent.intrinsic("%Object.prototype%");
-    let context = agent.ordinary_object_create(Some(object_proto));
-    // 4. If parseRecord is not empty and val is not an Object and SameValue(parseRecord.[[Value]], val) is true, then
-    if let Some(record) = parse_record {
-        if !matches!(val, Value::Object(_)) && ops::same_value(agent, record.value, val) {
-            // a. Let sourceText be the source text matched by the JSONText production that produced val.
-            let source_text = agent.intern(&record.source);
-            // b. Perform ! CreateDataPropertyOrThrow(context, "source", sourceText).
-            let source_key = agent.key("source");
-            ops::create_data_property_or_throw(
-                agent,
-                context,
-                source_key,
-                Value::String(source_text),
-            )?;
+        // 3. Let context be OrdinaryObjectCreate(%Object.prototype%).
+        let object_proto = agent.intrinsic("%Object.prototype%");
+        let context = agent.ordinary_object_create(Some(object_proto));
+        // 4. If parseRecord is not empty and val is not an Object and SameValue(parseRecord.[[Value]], val) is true, then
+        if let Some(record) = parse_record {
+            if !matches!(val, Value::Object(_)) && ops::same_value(agent, record.value, val) {
+                // a. Let sourceText be the source text matched by the JSONText production that produced val.
+                let source_text = agent.intern(&record.source);
+                // b. Perform ! CreateDataPropertyOrThrow(context, "source", sourceText).
+                let source_key = agent.key("source");
+                ops::create_data_property_or_throw(
+                    agent,
+                    context,
+                    source_key,
+                    Value::String(source_text),
+                )?;
+            }
         }
-    }
-    // 5. Return ? Call(_reviver_, _holder_, « _name_, _val_, _context_ »).
-    ops::call(
-        agent,
-        reviver,
-        Value::Object(holder),
-        &[Value::String(name), val, Value::Object(context)],
-    )
+        // 5. Return ? Call(_reviver_, _holder_, « _name_, _val_, _context_ »).
+        agent.push_root(Value::Object(context));
+        ops::call_rooted(
+            agent,
+            reviver,
+            Value::Object(holder),
+            &[Value::String(name), val, Value::Object(context)],
+        )
+    })
 }
 
 /// Steps 2 to 5 of InternalizeJSONProperty for one child property `prop` of `val`.

@@ -3,7 +3,7 @@
 use crate::agent::Agent;
 use crate::error::{JsError, JsResult};
 use crate::object::PropertyKey;
-use crate::ops::{call, create_data_property_or_throw, get, get_method, to_boolean};
+use crate::ops::{call, call_rooted, create_data_property_or_throw, get, get_method, to_boolean};
 use crate::value::{Object, Value};
 
 /// An Iterator Record (§7.4.1).
@@ -86,8 +86,20 @@ pub fn iterator_next(
     record: &mut IteratorRecord,
     value: Option<Value>,
 ) -> JsResult<Object> {
+    iterator_next_impl(agent, record, value, false)
+}
+
+/// `rooted`: the caller keeps the record (and `value`) rooted, so `next()`
+/// runs with `call_rooted` and may collect garbage (docs/GC.md).
+fn iterator_next_impl(
+    agent: &mut Agent,
+    record: &mut IteratorRecord,
+    value: Option<Value>,
+    rooted: bool,
+) -> JsResult<Object> {
     // 1-2. Let result be Completion(Call(nextMethod, iterator [, « value »])).
     let args: Vec<Value> = value.into_iter().collect();
+    let call = if rooted { call_rooted } else { call };
     let result = match call(
         agent,
         record.next_method,
@@ -126,8 +138,16 @@ pub fn iterator_value(agent: &mut Agent, result: Object) -> JsResult<Value> {
 
 /// IteratorStep(iteratorRecord) (§7.4.10): the result object, or None when done.
 pub fn iterator_step(agent: &mut Agent, record: &mut IteratorRecord) -> JsResult<Option<Object>> {
+    iterator_step_impl(agent, record, false)
+}
+
+fn iterator_step_impl(
+    agent: &mut Agent,
+    record: &mut IteratorRecord,
+    rooted: bool,
+) -> JsResult<Option<Object>> {
     // 1. Let result be ? IteratorNext(iteratorRecord).
-    let result = iterator_next(agent, record, None)?;
+    let result = iterator_next_impl(agent, record, None, rooted)?;
     // 2. Let done be Completion(IteratorComplete(result)).
     let done = match iterator_complete(agent, result) {
         Ok(d) => d,
@@ -151,8 +171,26 @@ pub fn iterator_step_value(
     agent: &mut Agent,
     record: &mut IteratorRecord,
 ) -> JsResult<Option<Value>> {
+    iterator_step_value_impl(agent, record, false)
+}
+
+/// IteratorStepValue for a caller that keeps the iterator record rooted (the
+/// interpreter's iterator stack, a built-in's explicit roots): `next()` may
+/// collect garbage, so a generator driven by `for-of` collects as it runs.
+pub fn iterator_step_value_rooted(
+    agent: &mut Agent,
+    record: &mut IteratorRecord,
+) -> JsResult<Option<Value>> {
+    iterator_step_value_impl(agent, record, true)
+}
+
+fn iterator_step_value_impl(
+    agent: &mut Agent,
+    record: &mut IteratorRecord,
+    rooted: bool,
+) -> JsResult<Option<Value>> {
     // 1. Let result be ? IteratorStep(iteratorRecord).
-    let Some(result) = iterator_step(agent, record)? else {
+    let Some(result) = iterator_step_impl(agent, record, rooted)? else {
         return Ok(None);
     };
     // 3. Let value be Completion(IteratorValue(result)).

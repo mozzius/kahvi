@@ -128,7 +128,8 @@ pub type IntrinsicsInstaller = fn(&mut Agent, RealmId) -> JsResult<()>;
 pub struct Agent {
     pub(crate) objects: Vec<ObjectData>,
     pub(crate) strings: Vec<Box<[u16]>>,
-    pub(crate) string_index: crate::hash::ContentHashMap<Box<[u16]>, u32>,
+    /// The intern table: handles hashed by the contents they name (stored once, in `strings`).
+    pub(crate) string_index: crate::hash::StringTable,
     pub(crate) symbols: Vec<SymbolData>,
     /// The garbage collector's state (docs/GC.md).
     pub(crate) gc: crate::gc::GcState,
@@ -380,9 +381,11 @@ impl Agent {
 
     /// Interns UTF-16 code units.
     pub fn intern(&mut self, units: &[u16]) -> JsString {
-        if let Some(&id) = self.string_index.get(units) {
+        if let Some(id) = self.string_index.find(&self.strings, units) {
             if self.gc.pinning {
                 self.gc.pinned_strings.insert(id);
+            } else if let Some(unit) = &mut self.gc.compiling {
+                unit.strings.push(id);
             }
             return JsString(id);
         }
@@ -398,9 +401,11 @@ impl Agent {
                 (self.strings.len() - 1) as u32
             }
         };
-        self.string_index.insert(units.into(), id);
+        self.string_index.insert(&self.strings, id);
         if self.gc.pinning {
             self.gc.pinned_strings.insert(id);
+        } else if let Some(unit) = &mut self.gc.compiling {
+            unit.strings.push(id);
         }
         JsString(id)
     }

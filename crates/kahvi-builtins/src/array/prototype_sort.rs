@@ -28,31 +28,35 @@ pub(crate) fn prototype_sort(
     //    a. Return ? CompareArrayElements(_x_, _y_, _comparator_).
     let mut sort_compare =
         |agent: &mut Agent, x: Value, y: Value| compare_array_elements(agent, x, y, comparator);
-    // 5. Let _sortedList_ be ? SortIndexedProperties(_obj_, _length_, _sortCompare_, ~skip-holes~).
-    let sorted_list = sort_indexed_properties(agent, obj, length, &mut sort_compare, true)?;
-    // 6. Let _itemCount_ be the number of elements in _sortedList_.
-    // 7. Let _j_ be 0.
-    let mut j = 0.0;
-    // 8. Repeat, while _j_ < _itemCount_,
-    //    (the loop runs once per element of _sortedList_, so _j_ < _itemCount_ holds throughout)
-    for item in sorted_list {
-        // a. Perform ? Set(_obj_, ! ToString(𝔽(_j_)), _sortedList_[_j_], *true*).
-        let pj = agent.key_from_index(j);
-        ops::set(agent, obj, pj, item, true)?;
-        // b. Set _j_ to _j_ + 1.
-        j += 1.0;
-    }
-    // 9. NOTE: The call to SortIndexedProperties in step [step-array-sortindexedproperties] uses ~skip-holes~. The remaining indices are deleted to preserve the number of holes that were detected and excluded from the sort.
-    // 10. Repeat, while _j_ < _length_,
-    while j < length {
-        // a. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_j_))).
-        let pj = agent.key_from_index(j);
-        ops::delete_property_or_throw(agent, obj, pj)?;
-        // b. Set _j_ to _j_ + 1.
-        j += 1.0;
-    }
-    // 11. Return _obj_.
-    Ok(Value::Object(obj))
+    // The comparator may collect garbage: obj and the comparator stay rooted
+    // (SortIndexedProperties roots the items).
+    agent.with_roots(&[Value::Object(obj), comparator], |agent| {
+        // 5. Let _sortedList_ be ? SortIndexedProperties(_obj_, _length_, _sortCompare_, ~skip-holes~).
+        let sorted_list = sort_indexed_properties(agent, obj, length, &mut sort_compare, true)?;
+        // 6. Let _itemCount_ be the number of elements in _sortedList_.
+        // 7. Let _j_ be 0.
+        let mut j = 0.0;
+        // 8. Repeat, while _j_ < _itemCount_,
+        //    (the loop runs once per element of _sortedList_, so _j_ < _itemCount_ holds throughout)
+        for item in sorted_list {
+            // a. Perform ? Set(_obj_, ! ToString(𝔽(_j_)), _sortedList_[_j_], *true*).
+            let pj = agent.key_from_index(j);
+            ops::set(agent, obj, pj, item, true)?;
+            // b. Set _j_ to _j_ + 1.
+            j += 1.0;
+        }
+        // 9. NOTE: The call to SortIndexedProperties in step [step-array-sortindexedproperties] uses ~skip-holes~. The remaining indices are deleted to preserve the number of holes that were detected and excluded from the sort.
+        // 10. Repeat, while _j_ < _length_,
+        while j < length {
+            // a. Perform ? DeletePropertyOrThrow(_obj_, ! ToString(𝔽(_j_))).
+            let pj = agent.key_from_index(j);
+            ops::delete_property_or_throw(agent, obj, pj)?;
+            // b. Set _j_ to _j_ + 1.
+            j += 1.0;
+        }
+        // 11. Return _obj_.
+        Ok(Value::Object(obj))
+    })
 }
 
 /// SortIndexedProperties ( _obj_, _length_, _sortCompare_, _holes_ )
@@ -96,7 +100,9 @@ pub(crate) fn sort_indexed_properties(
         k += 1.0;
     }
     // 4. Sort _items_ using an implementation-defined sequence of calls to _SortCompare_. If any such call returns an abrupt completion, stop before performing any further calls to _SortCompare_ and return that Completion Record.
-    let sorted = merge_sort(agent, items, sort_compare)?;
+    // The comparator may collect garbage: the items stay rooted while sorting.
+    let roots = items.clone();
+    let sorted = agent.with_roots(&roots, |agent| merge_sort(agent, items, sort_compare))?;
     // 5. Return _items_.
     Ok(sorted)
 }
@@ -125,7 +131,8 @@ fn compare_array_elements(
     // 4. If _comparator_ is not *undefined*, then
     if !matches!(comparator, Value::Undefined) {
         // a. Let _v_ be ? ToNumber(? Call(_comparator_, *undefined*, « _x_, _y_ »)).
-        let v = ops::call(agent, comparator, Value::Undefined, &[x, y])?;
+        // x and y are among the items SortIndexedProperties keeps rooted.
+        let v = ops::call_rooted(agent, comparator, Value::Undefined, &[x, y])?;
         let result = ops::to_number(agent, v)?;
         // b. If _v_ is *NaN*, return *+0*𝔽.
         if result.is_nan() {

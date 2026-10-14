@@ -22,6 +22,8 @@ from common import ROOT, WORK, log, read_json, run, write_json
 
 MERGE_LOCK = threading.Lock()
 MAX_ERRORS = 3
+# The merge queue `orch run` starts; None means merge inline (one at a time).
+MERGES = None
 
 
 def next_tier(cfg, tier):
@@ -140,32 +142,12 @@ def judge(cfg, db, ticket, att, rep):
         return
     if decision == "accept":
         db.set_ticket(ticket.id, status="merging")
+        if MERGES is not None:
+            MERGES.put(ticket, att, decision)
+            return
         with MERGE_LOCK:
             m = merge.merge(cfg, ticket, att.id, att.head, decision, att.dir)
-        write_json(Path(att.dir) / "merge.json", m)
-        if not m["merged"]:
-            log(f"{ticket.id}: merge refused: {m['reason'][:200]}")
-            db.note(ticket.id, att.id, f"accepted by the verifier but not merged: {m['reason'][:600]}")
-            db.set_ticket(ticket.id, status="open", salvage_attempt=att.id)
-        else:
-            db.set_attempt(att.id, merged=1, new_passes=m["new_passes"])
-            log(f"{ticket.id}: merged (+{m['new_passes']}, {m['total_pass']} total)")
-            if m["target_complete"]:
-                db.set_ticket(ticket.id, status="done", strikes=0, salvage_attempt=None, reason="")
-            else:
-                left = "\n".join(m["remaining"][:10])
-                db.note(ticket.id, att.id, f"merged partial progress. Still failing:\n{left}")
-                # Reopen only if the ticket's own function still reports not
-                # implemented. Other leftovers are usually blocked on other
-                # tickets or engine work: retrying would only escalate and burn
-                # budget, so they wait for triage (`orch reset` reopens).
-                # The exact name: "Set" must not match "Set.prototype.add".
-                own = re.compile(rf"not implemented: {re.escape(ticket.title)}(?![\w.\[])")
-                if any(own.search(r) for r in m["remaining"]):
-                    db.set_ticket(ticket.id, status="open", strikes=0, salvage_attempt=None)
-                else:
-                    db.set_ticket(ticket.id, status="partial", strikes=0, salvage_attempt=None,
-                                  reason=f"{len(m['remaining'])} target runs still failing, none in its own code path")
+        after_merge(cfg, db, ticket, att, m)
     elif decision == "revise":
         db.note(ticket.id, att.id, f"not merged ({', '.join(v['defects'])}); continue from this diff. {notes}")
         row = db.ticket(ticket.id)
@@ -180,6 +162,127 @@ def judge(cfg, db, ticket, att, rep):
         strike(cfg, db, ticket, att.id,
                f"rejected ({', '.join(v['defects'])}): {v.get('summary', '')[:300]} {notes}", weight=weight)
     db.set_attempt(att.id, finished=time.time())
+
+
+def after_merge(cfg, db, ticket, att, m):
+    """Bookkeeping once the merge bot has tried an accepted attempt."""
+    write_json(Path(att.dir) / "merge.json", m)
+    if not m["merged"]:
+        log(f"{ticket.id}: merge refused: {m['reason'][:200]}")
+        db.note(ticket.id, att.id, f"accepted by the verifier but not merged: {m['reason'][:600]}")
+        db.set_ticket(ticket.id, status="open", salvage_attempt=att.id)
+        return
+    db.set_attempt(att.id, merged=1, new_passes=m["new_passes"])
+    log(f"{ticket.id}: merged (+{m['new_passes']}, {m['total_pass']} total)")
+    if m["target_complete"]:
+        db.set_ticket(ticket.id, status="done", strikes=0, salvage_attempt=None, reason="")
+        return
+    left = "\n".join(m["remaining"][:10])
+    db.note(ticket.id, att.id, f"merged partial progress. Still failing:\n{left}")
+    # Reopen only if the ticket's own function still reports not
+    # implemented. Other leftovers are usually blocked on other
+    # tickets or engine work: retrying would only escalate and burn
+    # budget, so they wait for triage (`orch reset` reopens).
+    # The exact name: "Set" must not match "Set.prototype.add".
+    own = re.compile(rf"not implemented: {re.escape(ticket.title)}(?![\w.\[])")
+    if any(own.search(r) for r in m["remaining"]):
+        db.set_ticket(ticket.id, status="open", strikes=0, salvage_attempt=None)
+    else:
+        db.set_ticket(ticket.id, status="partial", strikes=0, salvage_attempt=None,
+                      reason=f"{len(m['remaining'])} target runs still failing, none in its own code path")
+
+
+def refresh_partials(db, pool, results):
+    """Re-judges every `partial` ticket against a full run's results: done
+    when its whole target passes now, back in the pool when its own function
+    reports not implemented again, otherwise still partial with a fresh
+    reason naming what blocks it. Returns {status: count} for what changed."""
+    from collections import Counter
+    by_id = {}
+    for r in results:
+        by_id[r["id"]] = r
+    changed = Counter()
+    for row in db.q("SELECT id FROM tickets WHERE status = 'partial'"):
+        t = pool.get(row["id"])
+        if t is None or not t.target:
+            continue
+        failing = [r for rid, r in by_id.items() if r["status"] != "pass" and any(rid.startswith(p) for p in t.target)]
+        if not failing:
+            db.set_ticket(t.id, status="done", reason="")
+            db.note(t.id, None, "every target run passes after later merges")
+            changed["done"] += 1
+            continue
+        own = re.compile(rf"not implemented: {re.escape(t.title)}(?![\w.\[])")
+        if any(own.search(r.get("reason", "")) for r in failing):
+            db.set_ticket(t.id, status="open", strikes=0, salvage_attempt=None, reason="")
+            db.note(t.id, None, "its own function reports not implemented again")
+            changed["open"] += 1
+            continue
+        blockers = Counter(r["not_implemented"] for r in failing if r.get("not_implemented"))
+        other = sum(1 for r in failing if not r.get("not_implemented"))
+        parts = [f"{name} ({n})" for name, n in blockers.most_common(4)]
+        if other:
+            parts.append(f"{other} other failures")
+        reason = f"{len(failing)} target runs still failing: " + ", ".join(parts)
+        if reason != db.ticket(t.id)["reason"]:
+            db.set_ticket(t.id, reason=reason)
+    return changed
+
+
+class MergeQueue:
+    """Accepted attempts wait here for the merge bot, so slots go back to work
+    at once. One thread merges whatever has queued up as one batch (one full
+    test262 run per batch instead of one per attempt)."""
+
+    def __init__(self, cfg, db):
+        self.cfg, self.db = cfg, db
+        self.max_batch = int(cfg.t262.get("max_merge_batch", 8))
+        self.items = []
+        self.busy = False
+        self.cv = threading.Condition()
+        threading.Thread(target=self._loop, daemon=True, name="merge-bot").start()
+
+    def put(self, ticket, att, decision):
+        with self.cv:
+            self.items.append((ticket, att, decision))
+            self.cv.notify()
+
+    def pending(self):
+        with self.cv:
+            return len(self.items) + (1 if self.busy else 0)
+
+    def _loop(self):
+        while True:
+            with self.cv:
+                while not self.items:
+                    self.cv.wait()
+                batch, self.items = self.items[:self.max_batch], self.items[self.max_batch:]
+                self.busy = True
+            try:
+                items = [{"ticket": t, "attempt_id": a.id, "head": a.head, "verdict": d, "adir": a.dir}
+                         for t, a, d in batch]
+                with MERGE_LOCK:
+                    results = merge.merge_batch(self.cfg, items)
+                for t, a, _ in batch:
+                    after_merge(self.cfg, self.db, t, a, results.get(a.id) or
+                                {"merged": False, "reason": "the merge bot returned no result"})
+                if any(r.get("merged") for r in results.values()):
+                    import tickets as ticket_files
+                    from gates import read_results
+                    changed = refresh_partials(self.db, ticket_files.load_all(ticket_files.TICKETS),
+                                               read_results(WORK / "last-full.jsonl"))
+                    if changed:
+                        log(f"partial tickets after the merge: {dict(changed)}")
+            except Exception as e:  # keep the merge bot alive; the attempts stay salvageable
+                log(f"merge bot error: {e!r}")
+                for t, a, _ in batch:
+                    self.db.note(t.id, a.id, f"merge bot error: {e!r}"[:500])
+                    self.db.set_ticket(t.id, status="open", salvage_attempt=a.id)
+            finally:
+                for _, a, _ in batch:
+                    self.db.set_attempt(a.id, finished=time.time())
+                with self.cv:
+                    self.busy = False
 
 
 def build_tools(cfg):

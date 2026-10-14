@@ -27,7 +27,7 @@ pub(crate) fn prototype_replace(
         // b. If _replacer_ is not *undefined*, then
         if !matches!(replacer, Value::Undefined) {
             // i. Return ? Call(_replacer_, _searchValue_, « _thisValue_, _replaceValue_ »).
-            return ops::call(agent, replacer, search_value, &[this_value, replace_value]);
+            return ops::call_rooted(agent, replacer, search_value, &[this_value, replace_value]);
         }
     }
     // 4. Let _string_ be ? ToString(_thisValue_).
@@ -57,38 +57,46 @@ pub(crate) fn prototype_replace(
     let preceding = &string_units[..position];
     // 12. Let _following_ be the substring of _string_ from _position_ + _searchLength_.
     let following = &string_units[position + search_length..];
-    // 13. If _functionalReplace_ is *true*, then
-    let replacement: Vec<u16> = match replace_template {
-        None => {
-            // a. Let _replacement_ be ? ToString(? Call(_replaceValue_, *undefined*, « _searchString_, 𝔽(_position_), _string_ »)).
-            let replaced = ops::call(
-                agent,
-                replace_value,
-                Value::Undefined,
-                &[
-                    Value::String(search_string),
-                    Value::Number(position as f64),
-                    Value::String(string),
-                ],
-            )?;
-            let replaced = ops::to_string(agent, replaced)?;
-            agent.str(replaced).to_vec()
-        }
-        // 14. Else,
-        Some(template) => {
-            // a. Assert: _replaceValue_ is a String.
-            // b. Let _captures_ be a new empty List.
-            // c. Let _replacement_ be ! GetSubstitution(_searchString_, _string_, _position_, _captures_, *undefined*, _replaceValue_).
-            get_substitution(&search_units, &string_units, position, agent.str(template))
-        }
-    };
-    // 15. Return the string-concatenation of _preceding_, _replacement_, and _following_.
-    let mut result: Vec<u16> =
-        Vec::with_capacity(preceding.len() + replacement.len() + following.len());
-    result.extend_from_slice(preceding);
-    result.extend_from_slice(&replacement);
-    result.extend_from_slice(following);
-    Ok(Value::String(agent.intern(&result)))
+    // The replacer may collect garbage: what is used after it stays rooted.
+    let roots = [
+        replace_value,
+        Value::String(search_string),
+        Value::String(string),
+    ];
+    agent.with_roots(&roots, |agent| {
+        // 13. If _functionalReplace_ is *true*, then
+        let replacement: Vec<u16> = match replace_template {
+            None => {
+                // a. Let _replacement_ be ? ToString(? Call(_replaceValue_, *undefined*, « _searchString_, 𝔽(_position_), _string_ »)).
+                let replaced = ops::call_rooted(
+                    agent,
+                    replace_value,
+                    Value::Undefined,
+                    &[
+                        Value::String(search_string),
+                        Value::Number(position as f64),
+                        Value::String(string),
+                    ],
+                )?;
+                let replaced = ops::to_string(agent, replaced)?;
+                agent.str(replaced).to_vec()
+            }
+            // 14. Else,
+            Some(template) => {
+                // a. Assert: _replaceValue_ is a String.
+                // b. Let _captures_ be a new empty List.
+                // c. Let _replacement_ be ! GetSubstitution(_searchString_, _string_, _position_, _captures_, *undefined*, _replaceValue_).
+                get_substitution(&search_units, &string_units, position, agent.str(template))
+            }
+        };
+        // 15. Return the string-concatenation of _preceding_, _replacement_, and _following_.
+        let mut result: Vec<u16> =
+            Vec::with_capacity(preceding.len() + replacement.len() + following.len());
+        result.extend_from_slice(preceding);
+        result.extend_from_slice(&replacement);
+        result.extend_from_slice(following);
+        Ok(Value::String(agent.intern(&result)))
+    })
 }
 
 /// StringIndexOf(_string_, _searchValue_, _fromIndex_)

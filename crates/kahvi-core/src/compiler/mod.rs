@@ -93,6 +93,13 @@ impl<'a> Compiler<'a> {
         script: u32,
         span: Span,
     ) -> Compiler<'a> {
+        let constants = agent
+            .gc
+            .compiling
+            .as_ref()
+            .expect("code is compiled inside pinned()")
+            .constants
+            .clone();
         Compiler {
             agent,
             code: FunctionCode {
@@ -120,6 +127,7 @@ impl<'a> Compiler<'a> {
                 source,
                 span: (span.start, span.end),
                 script,
+                constants,
             },
             scopes: Vec::new(),
             pending_labels: Vec::new(),
@@ -506,12 +514,28 @@ pub fn compile_dynamic_function(
     })
 }
 
-/// Runs `f` with the strings and BigInts it creates or looks up pinned:
-/// compiled code refers to them and is not collected (docs/GC.md).
+/// Compiles one unit: the strings and BigInts `f` creates or looks up become
+/// the unit's constants, shared by every `FunctionCode` it produces and
+/// traced from whatever holds that code (docs/GC.md).
 fn pinned<T>(agent: &mut Agent, f: impl FnOnce(&mut Agent) -> T) -> T {
-    let was = agent.gc.pinning;
-    agent.gc.pinning = true;
+    let outer = agent
+        .gc
+        .compiling
+        .replace(crate::gc::CompileUnit::default());
     let r = f(agent);
-    agent.gc.pinning = was;
+    let unit = std::mem::replace(&mut agent.gc.compiling, outer).expect("the unit compiled above");
+    use crate::value::{BigInt, Value};
+    let mut strings = unit.strings;
+    strings.sort_unstable();
+    strings.dedup();
+    let mut bigints = unit.bigints;
+    bigints.sort_unstable();
+    bigints.dedup();
+    let values: Vec<Value> = strings
+        .into_iter()
+        .map(|s| Value::String(JsString(s)))
+        .chain(bigints.into_iter().map(|b| Value::BigInt(BigInt(b))))
+        .collect();
+    unit.constants.set(values.into_boxed_slice());
     r
 }

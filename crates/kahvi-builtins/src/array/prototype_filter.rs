@@ -52,38 +52,46 @@ pub(crate) fn prototype_filter(
     let this_arg = args.get_or_undefined(1);
     // 4. Let A be ? ArraySpeciesCreate(O, 0).
     let a = ops::array_species_create(agent, o, 0.0)?;
-    // 5. Let k be 0.
-    let mut k = 0.0;
-    // 6. Let to be 0.
-    let mut to = 0.0;
-    // 7. Repeat, while k < len,
-    while k < len {
-        // a. Let Pk be ! ToString(𝔽(k)).
-        let pk = agent.key_from_index(k);
-        // b. Let kPresent be ? HasProperty(O, Pk).
-        // c. If kPresent is true, then
-        if ops::has_property(agent, o, pk)? {
-            // i. Let kValue be ? Get(O, Pk).
-            let k_value = ops::get(agent, o, pk)?;
-            // ii. Let selected be ToBoolean(? Call(callback, thisArg, « kValue, 𝔽(k), O »)).
-            let selected = ops::call(
-                agent,
-                callback,
-                this_arg,
-                &[k_value, Value::Number(k), Value::Object(o)],
-            )?;
-            // iii. If selected is true, then
-            if ops::to_boolean(agent, selected) {
-                // 1. Perform ? CreateDataPropertyOrThrow(A, ! ToString(𝔽(to)), kValue).
-                let to_key = agent.key_from_index(to);
-                ops::create_data_property_or_throw(agent, a, to_key, k_value)?;
-                // 2. Set to to to + 1.
-                to += 1.0;
+    // The callback may collect garbage: what is used after it stays rooted.
+    agent.with_roots(
+        &[Value::Object(o), callback, this_arg, Value::Object(a)],
+        |agent| {
+            // 5. Let k be 0.
+            let mut k = 0.0;
+            // 6. Let to be 0.
+            let mut to = 0.0;
+            // 7. Repeat, while k < len,
+            while k < len {
+                // a. Let Pk be ! ToString(𝔽(k)).
+                let pk = agent.key_from_index(k);
+                // b. Let kPresent be ? HasProperty(O, Pk).
+                // c. If kPresent is true, then
+                if ops::has_property(agent, o, pk)? {
+                    // i. Let kValue be ? Get(O, Pk).
+                    let k_value = ops::get(agent, o, pk)?;
+                    // ii. Let selected be ToBoolean(? Call(callback, thisArg, « kValue, 𝔽(k), O »)).
+                    let mark = agent.push_root(k_value);
+                    let selected = ops::call_rooted(
+                        agent,
+                        callback,
+                        this_arg,
+                        &[k_value, Value::Number(k), Value::Object(o)],
+                    )?;
+                    // iii. If selected is true, then
+                    if ops::to_boolean(agent, selected) {
+                        // 1. Perform ? CreateDataPropertyOrThrow(A, ! ToString(𝔽(to)), kValue).
+                        let to_key = agent.key_from_index(to);
+                        ops::create_data_property_or_throw(agent, a, to_key, k_value)?;
+                        // 2. Set to to to + 1.
+                        to += 1.0;
+                    }
+                    agent.pop_roots(mark);
+                }
+                // d. Set k to k + 1.
+                k += 1.0;
             }
-        }
-        // d. Set k to k + 1.
-        k += 1.0;
-    }
-    // 8. Return A.
-    Ok(Value::Object(a))
+            // 8. Return A.
+            Ok(Value::Object(a))
+        },
+    )
 }

@@ -379,7 +379,7 @@ pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) 
         }
     }
     let source: Arc<str> = Arc::from(source);
-    let script = register_script(agent, realm, source.clone(), key);
+    let script = register_script(agent, realm, source.clone(), key, false);
     agent.scripts[script as usize].module = Some(id);
     let code = compiler::compile_module(agent, &body, source, script);
     // 11. Let async be body Contains await.
@@ -1691,6 +1691,7 @@ impl Trace for ExportEntry {
 
 impl Trace for ModuleRecord {
     fn trace(&self, t: &mut Tracer) {
+        t.code(&self.code);
         self.environment.trace(t);
         self.namespace.trace(t);
         self.evaluation_error.trace(t);

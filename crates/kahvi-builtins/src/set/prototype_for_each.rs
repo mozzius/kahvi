@@ -23,28 +23,33 @@ pub(crate) fn prototype_for_each(
     let this_arg = args.get_or_undefined(1);
     // 4. Let _entries_ be _set_.[[SetData]].
     // 5. Let _entriesCount_ be the number of elements in _entries_.
-    // 6. Let _index_ be 0.
-    let mut index = 0;
-    // 7. Repeat, while _index_ < _entriesCount_,
-    //    (_entriesCount_ is re-read from the table on each pass: callbacks may add entries.)
-    while index < set_table(agent, set).slots() {
-        // a. Let _entry_ be _entries_[_index_].
-        let entry = set_table(agent, set).entry(index);
-        // b. Set _index_ to _index_ + 1.
-        index += 1;
-        // c. If _entry_ is not ~empty~, then
-        if let Some((value, _)) = entry {
-            // i. Perform ? Call(_callback_, _thisArg_, « _entry_, _entry_, _set_ »).
-            // ii. NOTE: The number of elements in _entries_ may have increased during execution of _callback_.
-            // iii. Set _entriesCount_ to the number of elements in _entries_.
-            ops::call(
-                agent,
-                callback,
-                this_arg,
-                &[value, value, Value::Object(set)],
-            )?;
+    // The callback may collect garbage: what is used after it stays rooted.
+    agent.with_roots(&[Value::Object(set), callback, this_arg], |agent| {
+        // 6. Let _index_ be 0.
+        let mut index = 0;
+        // 7. Repeat, while _index_ < _entriesCount_,
+        //    (_entriesCount_ is re-read from the table on each pass: callbacks may add entries.)
+        while index < set_table(agent, set).slots() {
+            // a. Let _entry_ be _entries_[_index_].
+            let entry = set_table(agent, set).entry(index);
+            // b. Set _index_ to _index_ + 1.
+            index += 1;
+            // c. If _entry_ is not ~empty~, then
+            if let Some((value, _)) = entry {
+                // i. Perform ? Call(_callback_, _thisArg_, « _entry_, _entry_, _set_ »).
+                // ii. NOTE: The number of elements in _entries_ may have increased during execution of _callback_.
+                // iii. Set _entriesCount_ to the number of elements in _entries_.
+                let mark = agent.push_root(value);
+                ops::call_rooted(
+                    agent,
+                    callback,
+                    this_arg,
+                    &[value, value, Value::Object(set)],
+                )?;
+                agent.pop_roots(mark);
+            }
         }
-    }
-    // 8. Return *undefined*.
-    Ok(Value::Undefined)
+        // 8. Return *undefined*.
+        Ok(Value::Undefined)
+    })
 }

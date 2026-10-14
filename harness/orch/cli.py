@@ -5,6 +5,7 @@
   ./orch usage                                                    the plan's usage windows right now
   ./orch show ATTEMPT                                             one attempt's artifacts
   ./orch reset TICKET [--tier haiku]                              put a ticket back in the pool
+  ./orch partials [--results F]                                   re-judge partial tickets
   ./orch triage [--fresh] [--top N]                               cluster test262 failures
   ./orch calibrate [--model M] [--only CASE]                      run the verifier red-team set
 """
@@ -38,6 +39,11 @@ def cmd_run(args):
     log(f"building trusted runner; integration branch {cfg.branch}, {cfg.slots} slots")
     pipeline.build_tools(cfg)
     db = DB()
+    # Accepted attempts that were waiting for the merge bot when the last run
+    # stopped go back in the merge queue instead of starting over.
+    unmerged = db.q(
+        "SELECT t.id AS ticket, MAX(a.id) AS aid FROM tickets t JOIN attempts a ON a.ticket = t.id "
+        "WHERE t.status = 'merging' AND a.outcome = 'accept' AND a.merged = 0 GROUP BY t.id")
     db.release_stale_claims()
     limits = Limits(cfg, db)
     llm.LIMITS = limits
@@ -45,6 +51,16 @@ def cmd_run(args):
     tickets_dir = Path(args.tickets) if args.tickets else ticket_files.TICKETS
     pool = ticket_files.load_all(tickets_dir)
     db.sync_tickets(pool)
+    merges = pipeline.MergeQueue(cfg, db)
+    pipeline.MERGES = merges
+    for row in unmerged:
+        a = db.one("SELECT * FROM attempts WHERE id = ?", row["aid"])
+        if row["ticket"] in pool and a["head"]:
+            log(f"{row['ticket']}: back in the merge queue (attempt {a['id']})")
+            db.set_ticket(row["ticket"], status="merging")
+            merges.put(pool[row["ticket"]], pipeline.worker.Attempt(
+                a["id"], "", a["base"], a["head"], 0.0, 0, None, None, str(pipeline.worker.ATTEMPTS / str(a["id"]))),
+                "accept")
     started = 0
     STOP_FILE.unlink(missing_ok=True)
     with cf.ThreadPoolExecutor(cfg.slots) as ex:
@@ -68,6 +84,11 @@ def cmd_run(args):
                 slot = free.pop()
                 running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
                 started += 1
+            if not running and merges.pending():
+                # Only the merge bot is busy: wait for it (it may free tickets
+                # that unblock others).
+                time.sleep(10)
+                continue
             if not running:
                 if limits.fatal or stopping:
                     break
@@ -184,6 +205,18 @@ def cmd_reset(args):
     print(f"{args.ticket} reopened")
 
 
+def cmd_partials(args):
+    """Re-judges the partial tickets against a full run (default: the merge
+    bot's last one)."""
+    from gates import read_results
+    results = read_results(Path(args.results) if args.results else WORK / "last-full.jsonl")
+    if not results:
+        sys.exit("no results to judge against")
+    db = DB()
+    changed = pipeline.refresh_partials(db, ticket_files.load_all(ticket_files.TICKETS), results)
+    print(f"partial tickets: {dict(changed) or 'no status changes'}")
+
+
 def cmd_triage(args):
     import triage
     triage.main(args)
@@ -215,6 +248,9 @@ def main():
     rs.add_argument("ticket")
     rs.add_argument("--tier")
     rs.set_defaults(fn=cmd_reset)
+    pt = sub.add_parser("partials", help="re-judge partial tickets against a full run")
+    pt.add_argument("--results", help="a full run's --json output (default: work/last-full.jsonl)")
+    pt.set_defaults(fn=cmd_partials)
     t = sub.add_parser("triage")
     t.add_argument("--fresh", action="store_true", help="run the full suite on the branch first")
     t.add_argument("--top", type=int, default=25)

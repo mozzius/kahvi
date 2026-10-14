@@ -44,7 +44,7 @@ pub(crate) fn prototype_replace_all(
         // d. If _replacer_ is not *undefined*, then
         if !matches!(replacer, Value::Undefined) {
             // i. Return ? Call(_replacer_, _searchValue_, « _thisValue_, _replaceValue_ »).
-            return ops::call(agent, replacer, search_value, &[this_value, replace_value]);
+            return ops::call_rooted(agent, replacer, search_value, &[this_value, replace_value]);
         }
     }
     // 4. Let _string_ be ? ToString(_thisValue_).
@@ -81,53 +81,61 @@ pub(crate) fn prototype_replace_all(
     let mut end_of_last_match = 0;
     // 14. Let _result_ be the empty String.
     let mut result: Vec<u16> = Vec::new();
-    // 15. For each element _matchPosition_ of _matchPositions_, do
-    for match_position in match_positions {
-        // a. Let _preserved_ be the substring of _string_ from _endOfLastMatch_ to _matchPosition_.
-        let preserved = &string_units[end_of_last_match..match_position];
-        // b. If _functionalReplace_ is *true*, then
-        let replacement: Vec<u16> = match replace_template {
-            None => {
-                // i. Let _replacement_ be ? ToString(? Call(_replaceValue_, *undefined*, « _searchString_, 𝔽(_matchPosition_), _string_ »)).
-                let replaced = ops::call(
-                    agent,
-                    replace_value,
-                    Value::Undefined,
-                    &[
-                        Value::String(search_string),
-                        Value::Number(match_position as f64),
-                        Value::String(string),
-                    ],
-                )?;
-                let replaced = ops::to_string(agent, replaced)?;
-                agent.str(replaced).to_vec()
-            }
-            // c. Else,
-            Some(template) => {
-                // i. Assert: _replaceValue_ is a String.
-                // ii. Let _captures_ be a new empty List.
-                // iii. Let _replacement_ be ! GetSubstitution(_searchString_, _string_, _matchPosition_, _captures_, *undefined*, _replaceValue_).
-                get_substitution(
-                    &search_units,
-                    &string_units,
-                    match_position,
-                    agent.str(template),
-                )
-            }
-        };
-        // d. Set _result_ to the string-concatenation of _result_, _preserved_, and _replacement_.
-        result.extend_from_slice(preserved);
-        result.extend_from_slice(&replacement);
-        // e. Set _endOfLastMatch_ to _matchPosition_ + _searchLength_.
-        end_of_last_match = match_position + search_length;
-    }
-    // 16. If _endOfLastMatch_ < the length of _string_, then
-    if end_of_last_match < string_units.len() {
-        // a. Set _result_ to the string-concatenation of _result_ and the substring of _string_ from _endOfLastMatch_.
-        result.extend_from_slice(&string_units[end_of_last_match..]);
-    }
-    // 17. Return _result_.
-    Ok(Value::String(agent.intern(&result)))
+    // The replacer may collect garbage: what is used after it stays rooted.
+    let roots = [
+        replace_value,
+        Value::String(search_string),
+        Value::String(string),
+    ];
+    agent.with_roots(&roots, |agent| {
+        // 15. For each element _matchPosition_ of _matchPositions_, do
+        for match_position in match_positions {
+            // a. Let _preserved_ be the substring of _string_ from _endOfLastMatch_ to _matchPosition_.
+            let preserved = &string_units[end_of_last_match..match_position];
+            // b. If _functionalReplace_ is *true*, then
+            let replacement: Vec<u16> = match replace_template {
+                None => {
+                    // i. Let _replacement_ be ? ToString(? Call(_replaceValue_, *undefined*, « _searchString_, 𝔽(_matchPosition_), _string_ »)).
+                    let replaced = ops::call_rooted(
+                        agent,
+                        replace_value,
+                        Value::Undefined,
+                        &[
+                            Value::String(search_string),
+                            Value::Number(match_position as f64),
+                            Value::String(string),
+                        ],
+                    )?;
+                    let replaced = ops::to_string(agent, replaced)?;
+                    agent.str(replaced).to_vec()
+                }
+                // c. Else,
+                Some(template) => {
+                    // i. Assert: _replaceValue_ is a String.
+                    // ii. Let _captures_ be a new empty List.
+                    // iii. Let _replacement_ be ! GetSubstitution(_searchString_, _string_, _matchPosition_, _captures_, *undefined*, _replaceValue_).
+                    get_substitution(
+                        &search_units,
+                        &string_units,
+                        match_position,
+                        agent.str(template),
+                    )
+                }
+            };
+            // d. Set _result_ to the string-concatenation of _result_, _preserved_, and _replacement_.
+            result.extend_from_slice(preserved);
+            result.extend_from_slice(&replacement);
+            // e. Set _endOfLastMatch_ to _matchPosition_ + _searchLength_.
+            end_of_last_match = match_position + search_length;
+        }
+        // 16. If _endOfLastMatch_ < the length of _string_, then
+        if end_of_last_match < string_units.len() {
+            // a. Set _result_ to the string-concatenation of _result_ and the substring of _string_ from _endOfLastMatch_.
+            result.extend_from_slice(&string_units[end_of_last_match..]);
+        }
+        // 17. Return _result_.
+        Ok(Value::String(agent.intern(&result)))
+    })
 }
 
 /// StringIndexOf(_string_, _searchValue_, _fromIndex_)

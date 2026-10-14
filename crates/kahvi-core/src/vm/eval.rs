@@ -42,12 +42,27 @@ pub(super) fn register_script(
     realm: RealmId,
     source: Arc<str>,
     name: &str,
+    collectable: bool,
 ) -> u32 {
+    if collectable {
+        // A freed record of the same realm and name: whatever might still
+        // name the old one (a dynamic import's referrer) sees no difference.
+        if let Some(id) = agent
+            .gc
+            .free_scripts
+            .get_mut(&(realm.0, name.to_string()))
+            .and_then(|v| v.pop())
+        {
+            agent.scripts[id as usize].source = source;
+            return id;
+        }
+    }
     agent.scripts.push(ScriptRecord {
         realm,
         source,
         name: name.to_string(),
         module: None,
+        collectable,
     });
     (agent.scripts.len() - 1) as u32
 }
@@ -74,7 +89,7 @@ pub fn parse_script(
         }
     };
     let source: Arc<str> = Arc::from(source);
-    let id = register_script(agent, realm, source.clone(), name);
+    let id = register_script(agent, realm, source.clone(), name, false);
     let code = compiler::compile_script(agent, &ast, source, id);
     Ok(ParsedScript { id, code })
 }
@@ -164,7 +179,7 @@ pub fn perform_eval(
     // 13. strictEval.
     let strict_eval = ast.strict;
     let source: Arc<str> = Arc::from(source.as_str());
-    let id = register_script(agent, realm, source.clone(), "eval");
+    let id = register_script(agent, realm, source.clone(), "eval", true);
     let code = compiler::compile_eval(agent, &ast, source, id);
     // 16-17. The environments.
     let (lex_env, mut var_env, private_env, script) = match caller_state {

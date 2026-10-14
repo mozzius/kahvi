@@ -61,6 +61,9 @@ pub struct ScriptRecord {
     pub name: String,
     /// The module this is the source of, for module code.
     pub module: Option<u32>,
+    /// An eval or dynamic function's record: freed (and its index reused by
+    /// a record with the same realm and name) once no code refers to it.
+    pub collectable: bool,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.
@@ -1579,7 +1582,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 unreachable!("iterator expected")
             };
             let mut record = *record;
-            let r = ops::iterator_step_value(agent, &mut record);
+            // The record is rooted by the frame's iterator stack.
+            let r = ops::iterator_step_value_rooted(agent, &mut record);
             if let FrameIter::Iter(top) = frame.top_iter() {
                 *top = record;
             }
@@ -1596,7 +1600,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let r = if record.done {
                 Ok(None)
             } else {
-                ops::iterator_step_value(agent, &mut record)
+                // The record is rooted by the frame's iterator stack.
+                ops::iterator_step_value_rooted(agent, &mut record)
             };
             if let FrameIter::Iter(top) = frame.top_iter() {
                 *top = record;
@@ -1957,7 +1962,7 @@ impl Trace for PendingBody {
 
 impl Trace for Frame {
     fn trace(&self, t: &mut Tracer) {
-        // The code's constants are pinned when compiled.
+        t.code(&self.code);
         self.stack.trace(t);
         self.refs.trace(t);
         self.iters.trace(t);
