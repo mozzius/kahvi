@@ -286,3 +286,5 @@
 [17:36:37] B-string-prototype-last-index-of: verifier: accept The diff implements String.prototype.lastIndexOf in its own file, following spec steps 1-14 in order. Each step is commented, and every abstract opera
 [17:36:41] B-array-prototype-flat-map: attempt on slot 0 with haiku
 [17:37:05] B-string-prototype-to-locale-lower-case: verifier: accept The diff makes String.prototype.toLocaleLowerCase delegate to the existing prototype_to_lower_case with the same this, args and new_target. The pinned
+[17:37:08] B-weak-map-prototype-get-or-insert-computed: attempt on slot 3 with haiku
+[17:37:09] B-set-prototype-is-disjoint-from: verifier: accept The diff implements Set.prototype.isDisjointFrom in its own file, with a local GetSetRecord helper. I walked the spec steps: RequireInternalSlot via t

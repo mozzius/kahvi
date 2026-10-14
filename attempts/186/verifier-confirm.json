@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13163,
+  "stop_reason": "tool_use",
+  "session_id": "322edbde-b8af-4a63-8264-28771ec7126c",
+  "total_cost_usd": 0.049184700000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9816,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 864,
+    "output_tokens_details": {
+      "thinking_tokens": 491
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9816,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 864,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 9816,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9816
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Set.prototype.isDisjointFrom step by step. It also adds a local GetSetRecord helper, which the ticket allows. Observable operations (Get size, ToNumber, Get has, Get keys, Call, iterator step and close) happen in spec order, and errors propagate with `?`. The 14 remaining test262 failures come from other built-ins that aren't implemented yet (Set size getter, Set.prototype.delete, Map size getter), not from this file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Set.prototype.isDisjointFrom step by step. It also adds a local GetSetRecord helper, which the ticket allows. Observable operations (Get size, ToNumber, Get has, Get keys, Call, iterator step and close) happen in spec order, and errors propagate with `?`. The 14 remaining test262 failures come from other built-ins that aren't implemented yet (Set size getter, Set.prototype.delete, Map size getter), not from this file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11713,
+  "type": "result",
+  "duration_ms": 13415,
+  "uuid": "685e99a7-0a64-443c-b41c-5a96ee576ea4",
+  "ttft_stream_ms": 7956,
+  "time_to_request_ms": 799,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 344,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 18,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 364,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 40,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 827,
+  "process_wall_ms_turn": 13414,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 7957,
+  "time_to_request_from_spawn_ms": 19954367,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999414207.2334,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
