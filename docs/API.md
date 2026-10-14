@@ -61,6 +61,9 @@ pub(crate) fn prototype_map(agent: &mut Agent, this: Value, args: &[Value], new_
 - Anything not implemented: `return Err(agent.not_implemented("what is missing"));`.
   JavaScript cannot catch it, and the runner counts it. Never return a
   made-up value instead.
+- Something only an engine bug could cause (your own internal record is
+  missing, a closure has no slots): `unreachable!("what broke")` or
+  `.expect("what broke")`. That is not "not implemented".
 
 ## Objects
 

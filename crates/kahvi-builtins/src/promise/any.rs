@@ -159,7 +159,7 @@ fn perform_promise_any(
             // b. If next is done, then
             None => {
                 let Some(state_record) = agent.native_mut::<PromiseAnyState>(state) else {
-                    return Err(agent.not_implemented("Promise.any state record"));
+                    unreachable!("Promise.any state record")
                 };
                 // i. Set remainingElementsCount.[[Value]] to remainingElementsCount.[[Value]] - 1.
                 state_record.remaining_elements_count =
@@ -179,7 +179,7 @@ fn perform_promise_any(
             Some(next) => {
                 // c. Append undefined to errors.
                 let Some(state_record) = agent.native_mut::<PromiseAnyState>(state) else {
-                    return Err(agent.not_implemented("Promise.any state record"));
+                    unreachable!("Promise.any state record")
                 };
                 state_record.errors.push(Value::Undefined);
                 // d. Let nextPromise be ? Call(promiseResolve, ctor, « next »).
@@ -210,7 +210,7 @@ fn perform_promise_any(
                 index += 1;
                 // j. Set remainingElementsCount.[[Value]] to remainingElementsCount.[[Value]] + 1.
                 let Some(state_record) = agent.native_mut::<PromiseAnyState>(state) else {
-                    return Err(agent.not_implemented("Promise.any state record"));
+                    unreachable!("Promise.any state record")
                 };
                 state_record.remaining_elements_count += 1;
                 // k. Perform ? Invoke(nextPromise, "then", « resultCapability.[[Resolve]], onRejected »).
@@ -235,18 +235,18 @@ fn promise_any_reject_element(
 ) -> JsResult<Value> {
     // i. Let activeFunc be the active function object.
     let Some(active) = agent.active_function() else {
-        return Err(agent.not_implemented("Promise.any reject element: no active function"));
+        unreachable!("Promise.any reject element: no active function")
     };
     let slots = builtin_slots(agent, active).to_vec();
     let (Some(&Value::Object(state)), Some(&Value::Object(element))) =
         (slots.first(), slots.get(1))
     else {
-        return Err(agent.not_implemented("Promise.any reject element: missing slots"));
+        unreachable!("Promise.any reject element: missing slots")
     };
     // ii. If activeFunc.[[AlreadyCalled]] is true, return undefined.
     // iii. Set activeFunc.[[AlreadyCalled]] to true.
     let Some(element_record) = agent.native_mut::<ElementRecord>(element) else {
-        return Err(agent.not_implemented("Promise.any reject element: missing record"));
+        unreachable!("Promise.any reject element: missing record")
     };
     if element_record.already_called {
         return Ok(Value::Undefined);
@@ -257,10 +257,10 @@ fn promise_any_reject_element(
     // v. Set errors[thisIndex] to error.
     let error = args.get_or_undefined(0);
     let Some(state_record) = agent.native_mut::<PromiseAnyState>(state) else {
-        return Err(agent.not_implemented("Promise.any reject element: missing state"));
+        unreachable!("Promise.any reject element: missing state")
     };
     let Some(slot) = state_record.errors.get_mut(this_index) else {
-        return Err(agent.not_implemented("Promise.any reject element: index outside errors list"));
+        unreachable!("Promise.any reject element: index outside errors list")
     };
     *slot = error;
     // vi. Set remainingElementsCount.[[Value]] to remainingElementsCount.[[Value]] - 1.
