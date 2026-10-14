@@ -37,6 +37,17 @@ max_seven_day = 0.8
 max_default = 0.9         # any other window the plan reports
 backoff_minutes = 5       # wait when a limit is hit without a reset time (doubles, up to 2h)
 
+[stack]
+# Land through stacked PRs whose CI runs the full suite (docs/STACKS.md).
+# Unset repo = the local merge bot. Set per machine in work/orch.local.toml.
+# repo = "mozzius/kahvi"
+trunk = "main"
+check = "test262"
+required_checks = ["test262"]
+artifact = "t262-results"
+max_layer = 8
+poll_seconds = 60
+
 [t262]
 timeout = 10              # seconds per test
 jobs = 0                  # 0 = one per CPU

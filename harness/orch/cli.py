@@ -2,6 +2,8 @@
 
   ./orch run [--slots N] [--only T-0001,...] [--max-attempts N]   grind the ticket pool
   ./orch status                                                   tickets, costs, outcomes
+  ./orch stack [retry]                                            the stack of PRs; retry stuck layers
+  ./orch land BRANCH                                              stack an architect branch
   ./orch usage                                                    the plan's usage windows right now
   ./orch show ATTEMPT                                             one attempt's artifacts
   ./orch reset TICKET [--tier haiku]                              put a ticket back in the pool
@@ -51,8 +53,24 @@ def cmd_run(args):
     tickets_dir = Path(args.tickets) if args.tickets else ticket_files.TICKETS
     pool = ticket_files.load_all(tickets_dir)
     db.sync_tickets(pool)
-    merges = pipeline.MergeQueue(cfg, db)
-    pipeline.MERGES = merges
+    if cfg.stack.get("repo"):
+        import stack
+        stacker = stack.Stacker(cfg, db, lambda: ticket_files.load_all(tickets_dir))
+        pipeline.STACKER = stacker
+        stacker.start()
+        merges = stacker
+        # Accepted attempts the merge bot never got to go on the stack.
+        for row in unmerged:
+            a = db.one("SELECT * FROM attempts WHERE id = ?", row["aid"])
+            if row["ticket"] in pool and a["head"]:
+                log(f"{row['ticket']}: onto the stack (attempt {a['id']}, accepted before the switch)")
+                stacker.accept(pool[row["ticket"]], pipeline.worker.Attempt(
+                    a["id"], "", a["base"], a["head"], 0.0, 0, None, None,
+                    str(pipeline.worker.ATTEMPTS / str(a["id"]))), "accept")
+        unmerged = []
+    else:
+        merges = pipeline.MergeQueue(cfg, db)
+        pipeline.MERGES = merges
     for row in unmerged:
         a = db.one("SELECT * FROM attempts WHERE id = ?", row["aid"])
         if row["ticket"] in pool and a["head"]:
@@ -84,9 +102,9 @@ def cmd_run(args):
                 slot = free.pop()
                 running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
                 started += 1
-            if not running and merges.pending():
-                # Only the merge bot is busy: wait for it (it may free tickets
-                # that unblock others).
+            if not running and merges.pending() and not stopping:
+                # Only the merge bot (or the stack's CI) is busy: wait for it
+                # (it may free tickets that unblock others).
                 time.sleep(10)
                 continue
             if not running:
@@ -117,6 +135,30 @@ def cmd_run(args):
     else:
         log(f"stopped: {limits.fatal}" if limits.fatal else "nothing left to do")
     cmd_status(args)
+
+
+def _stacker(args):
+    import stack
+    cfg = load_config()
+    if not cfg.stack.get("repo"):
+        sys.exit("no [stack] repo configured (docs/STACKS.md)")
+    return stack.Stacker(cfg, DB(), lambda: ticket_files.load_all(ticket_files.TICKETS))
+
+
+def cmd_stack(args):
+    """The stack of PRs: layers, CI state and what is queued."""
+    s = _stacker(args)
+    if args.action == "retry":
+        s.retry()
+        print("stuck layers closed; their work is queued again")
+    else:
+        print(s.status())
+
+
+def cmd_land(args):
+    """Queues an architect branch as its own layer on top of the stack."""
+    sha = _stacker(args).land(args.branch)
+    print(f"{args.branch} ({sha[:10]}) queued; the running orchestrator stacks it as its own layer")
 
 
 def cmd_snapshot(args):
@@ -240,6 +282,12 @@ def main():
     sub.add_parser("stop", help="finish in-flight attempts, then exit").set_defaults(fn=cmd_stop)
     sub.add_parser("snapshot", help="commit the run state to the orch-runs branch").set_defaults(fn=cmd_snapshot)
     sub.add_parser("status").set_defaults(fn=cmd_status)
+    st = sub.add_parser("stack", help="the stack of PRs (docs/STACKS.md)")
+    st.add_argument("action", nargs="?", choices=["status", "retry"], default="status")
+    st.set_defaults(fn=cmd_stack)
+    ld = sub.add_parser("land", help="put an architect branch on the stack as its own layer")
+    ld.add_argument("branch")
+    ld.set_defaults(fn=cmd_land)
     sub.add_parser("usage", help="probe the plan's usage windows").set_defaults(fn=cmd_usage)
     s = sub.add_parser("show")
     s.add_argument("attempt", type=int)
