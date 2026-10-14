@@ -236,3 +236,69 @@ pub fn from_literal(agent: &mut Agent, digits: &str) -> BigInt {
 pub fn unsupported<T>(agent: &mut Agent, op: &str) -> JsResult<T> {
     Err(agent.not_implemented(&format!("BigInt::{op}")))
 }
+
+impl BigIntValue {
+    /// The value modulo 2^64, as the two's-complement bit pattern.
+    pub fn low_u64(&self) -> u64 {
+        let lo = self.magnitude.first().copied().unwrap_or(0) as u64;
+        let hi = self.magnitude.get(1).copied().unwrap_or(0) as u64;
+        let m = lo | (hi << 32);
+        if self.negative { m.wrapping_neg() } else { m }
+    }
+
+    pub fn from_i128(v: i128) -> Self {
+        let negative = v < 0;
+        let mut m = v.unsigned_abs();
+        let mut magnitude = Vec::new();
+        while m > 0 {
+            magnitude.push(m as u32);
+            m >>= 32;
+        }
+        BigIntValue {
+            negative,
+            magnitude,
+        }
+        .normalize()
+    }
+}
+
+/// ToBigInt(argument) (§7.1.13)
+pub fn to_bigint(agent: &mut Agent, argument: crate::value::Value) -> JsResult<BigInt> {
+    use crate::value::Value;
+    // 1. Let prim be ? ToPrimitive(argument, number).
+    let prim = super::to_primitive(agent, argument, super::PreferredType::Number)?;
+    // 2. Return the value that prim corresponds to in Table 12.
+    match prim {
+        Value::Undefined | Value::Null => Err(agent.throw_type_error("cannot convert to a BigInt")),
+        Value::Boolean(b) => Ok(agent.new_bigint(BigIntValue::from_i128(b as i128))),
+        Value::BigInt(b) => Ok(b),
+        Value::Number(_) => Err(agent.throw_type_error("cannot convert a Number to a BigInt")),
+        Value::String(s) => match string_to_bigint(agent, s) {
+            Some(b) => Ok(b),
+            None => Err(agent.throw_syntax_error("cannot convert string to a BigInt")),
+        },
+        Value::Symbol(_) => Err(agent.throw_type_error("cannot convert a Symbol to a BigInt")),
+        Value::Object(_) => unreachable!("ToPrimitive returns a primitive"),
+    }
+}
+
+/// ToBigInt64(argument) (§7.1.15)
+pub fn to_big_int64(agent: &mut Agent, argument: crate::value::Value) -> JsResult<i64> {
+    // 1. Let n be ? ToBigInt(argument).
+    let n = to_bigint(agent, argument)?;
+    // 2-3. Let int64bit be ℝ(n) modulo 2^64; as a signed value.
+    Ok(agent.bigint(n).low_u64() as i64)
+}
+
+/// ToBigUint64(argument) (§7.1.16)
+pub fn to_big_uint64(agent: &mut Agent, argument: crate::value::Value) -> JsResult<u64> {
+    // 1. Let n be ? ToBigInt(argument).
+    let n = to_bigint(agent, argument)?;
+    // 2. Let int64bit be ℝ(n) modulo 2^64.
+    Ok(agent.bigint(n).low_u64())
+}
+
+/// ℤ(v): a BigInt for an integer.
+pub fn from_i128(agent: &mut Agent, v: i128) -> BigInt {
+    agent.new_bigint(BigIntValue::from_i128(v))
+}

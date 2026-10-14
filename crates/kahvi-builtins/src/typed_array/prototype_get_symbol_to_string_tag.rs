@@ -4,24 +4,25 @@
 
 use kahvi_core::prelude::*;
 
+use kahvi_core::object::typed_array::typed_array_data;
+
 /// get TypedArray.prototype[Symbol.toStringTag]
 pub(crate) fn prototype_get_symbol_to_string_tag(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // %TypedArray%`.prototype[%Symbol.toStringTag%]` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
-    //
-    // 1. Let _obj_ be the *this* value.
-    // 2. If _obj_ is not an Object, return *undefined*.
-    // 3. If _obj_ does not have a [[TypedArrayName]] internal slot, return *undefined*.
-    // 4. Let _name_ be _obj_.[[TypedArrayName]].
-    // 5. Assert: _name_ is a String.
-    // 6. Return _name_.
-    //
-    // This property has the attributes { [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-    // The initial value of the *"name"* property of this function is *"get [Symbol.toStringTag]"*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get TypedArray.prototype[Symbol.toStringTag]"))
+    // 1. Let O be the this value.
+    // 2. If O is not an Object, return undefined.
+    let Value::Object(o) = this else {
+        return Ok(Value::Undefined);
+    };
+    // 3. If O does not have a [[TypedArrayName]] internal slot, return undefined.
+    let Some(d) = typed_array_data(agent, o) else {
+        return Ok(Value::Undefined);
+    };
+    // 4-6. Return O.[[TypedArrayName]].
+    let name = agent.string(d.kind.name());
+    Ok(Value::String(name))
 }

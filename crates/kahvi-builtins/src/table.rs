@@ -192,6 +192,11 @@ const ALIASES: &[(&str, Key, &str)] = &[
         "%TypedArray.prototype.values%",
     ),
     (
+        "%TypedArray.prototype%",
+        Key::Str("toString"),
+        "%Array.prototype.toString%",
+    ),
+    (
         "%Map.prototype%",
         Key::Symbol("iterator"),
         "%Map.prototype.entries%",
@@ -890,6 +895,19 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         };
         let key = key_of(agent, key);
         define(agent, o, key, value, w, e, c);
+    }
+    // BYTES_PER_ELEMENT of each TypedArray constructor and prototype (§23.2.6.1, §23.2.7.1).
+    for kind in kahvi_core::object::typed_array::ALL_ELEMENT_TYPES {
+        let size = Value::Number(kind.size() as f64);
+        for name in [
+            format!("%{}%", kind.name()),
+            format!("%{}.prototype%", kind.name()),
+        ] {
+            if let Some(&o) = agent.realm(realm).intrinsics.get(name.as_str()) {
+                let key = agent.key("BYTES_PER_ELEMENT");
+                define(agent, o, key, size, false, false, false);
+            }
+        }
     }
     for &(owner, tag) in TO_STRING_TAGS {
         let Some(&o) = agent.realm(realm).intrinsics.get(owner) else {
