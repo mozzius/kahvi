@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16348,
+  "stop_reason": "tool_use",
+  "session_id": "7c581e2f-01b6-4a24-b509-b9ed370b59a6",
+  "total_cost_usd": 0.0581971,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10124,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1639,
+    "output_tokens_details": {
+      "thinking_tokens": 1176
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10124,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1639,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 10124,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10124
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for Iterator.prototype.flatMap. Steps 1-9 are implemented in order, each with its spec comment. The closure resumes the inner iterator across yields, bumps the counter only after the inner iterator finishes, and caps it at 2^53. IfAbruptCloseIterator is applied after the mapper call, GetIteratorFlattenable, and inner IteratorStepValue. The return path closes the inner iterator, then the outer one, in the spec's order. GetIteratorFlattenable is written locally, which the ticket allows. Passing tests went from 12 to 86 of 88, with no regressions. The two failures throw a not-implemented error from StringIteratorPrototype.next, which is a separate missing built-in.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for Iterator.prototype.flatMap. Steps 1-9 are implemented in order, each with its spec comment. The closure resumes the inner iterator across yields, bumps the counter only after the inner iterator finishes, and caps it at 2^53. IfAbruptCloseIterator is applied after the mapper call, GetIteratorFlattenable, and inner IteratorStepValue. The return path closes the inner iterator, then the outer one, in the spec's order. GetIteratorFlattenable is written locally, which the ticket allows. Passing tests went from 12 to 86 of 88, with no regressions. The two failures throw a not-implemented error from StringIteratorPrototype.next, which is a separate missing built-in.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 13406,
+  "type": "result",
+  "duration_ms": 15682,
+  "uuid": "d9713ba8-9f0c-42de-b2dc-8426a52eb871",
+  "ttft_stream_ms": 4405,
+  "time_to_request_ms": 534,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 324,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 20,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 14,
+    "engine_pickup": 4,
+    "message_prep": 3,
+    "model_config_wait": 91,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 86,
+  "time_to_request_cpu_ms": 406,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 227,
+  "process_anon_mib_turn_start": 110,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 982,
+  "process_wall_ms_turn": 15682,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4406,
+  "time_to_request_from_spawn_ms": 18215443,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997675077.3596,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
