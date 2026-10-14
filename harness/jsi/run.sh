@@ -18,5 +18,5 @@ out="$WORK/jsi-test"
 ${CXX:-g++} -std=c++17 -O1 -g -Wall -Wextra -Werror -Wno-unused-parameter \
   -I"$JSI" -Icrates/kahvi-ffi/include -Ireact-native/cpp \
   "$JSI/jsi/jsi.cpp" react-native/cpp/KahviJSI.cpp harness/jsi/test.cpp \
-  target/release/libkahvi.a -lpthread -ldl -lm -o "$out"
+  target/release/libkahvi_ffi.a -lpthread -ldl -lm -o "$out"
 "$out"
