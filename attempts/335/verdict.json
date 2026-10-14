@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements get AsyncDisposableStack.prototype.disposed in the single in-scope file. Steps 1 to 4 each keep their spec comment directly above the code. Step 2 uses the `?` on the brand check helper, which is expected to perform RequireInternalSlot (TypeError on non-object or missing slot). Step 3 returns true when the stack's disposed state is set, and step 4 returns false otherwise. No special-casing, no swallowed errors, no fabricated values. The only deviation is that the intro sentence and the blank `//` line of the original header comment were dropped, which is cosmetic. I could not inspect the support helpers (`require_async_disposable_stack`, `async_disposable_stack`) because they are outside the diff. The build passes, so they exist and the `.disposed` field is a bool. Test262 shows 8 new passes and 0 regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

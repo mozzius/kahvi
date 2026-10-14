@@ -1,0 +1,35 @@
+{
+  "ticket": "B-typed-array-prototype-to-sorted",
+  "base": "6e2e00b7c1d36620a3eb4cd201232c0c62b27d91",
+  "head": "c597fff49e274e8d4475134a9bdbf5cca2402c35",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_to_sorted.rs",
+      "added": 118,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/toSorted/comparefn-not-a-function.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "built-ins/TypedArray/prototype/toSorted/comparefn-not-a-function.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8198,
+  "stop_reason": "tool_use",
+  "session_id": "28030f40-bb96-4a17-a15e-2f468562ec18",
+  "total_cost_usd": 0.00180298,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3592,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1510,
+    "output_tokens_details": {
+      "thinking_tokens": 1005
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3592,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1510,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3592,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3592
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements get AsyncDisposableStack.prototype.disposed in the single in-scope file. Steps 1 to 4 each keep their spec comment directly above the code. Step 2 uses the `?` on the brand check helper, which is expected to perform RequireInternalSlot (TypeError on non-object or missing slot). Step 3 returns true when the stack's disposed state is set, and step 4 returns false otherwise. No special-casing, no swallowed errors, no fabricated values. The only deviation is that the intro sentence and the blank `//` line of the original header comment were dropped, which is cosmetic. I could not inspect the support helpers (`require_async_disposable_stack`, `async_disposable_stack`) because they are outside the diff. The build passes, so they exist and the `.disposed` field is a bool. Test262 shows 8 new passes and 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements get AsyncDisposableStack.prototype.disposed in the single in-scope file. Steps 1 to 4 each keep their spec comment directly above the code. Step 2 uses the `?` on the brand check helper, which is expected to perform RequireInternalSlot (TypeError on non-object or missing slot). Step 3 returns true when the stack's disposed state is set, and step 4 returns false otherwise. No special-casing, no swallowed errors, no fabricated values. The only deviation is that the intro sentence and the blank `//` line of the original header comment were dropped, which is cosmetic. I could not inspect the support helpers (`require_async_disposable_stack`, `async_disposable_stack`) because they are outside the diff. The build passes, so they exist and the `.disposed` field is a bool. Test262 shows 8 new passes and 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6316,
+  "type": "result",
+  "duration_ms": 8207,
+  "uuid": "c0ce43ad-79b5-4201-a78c-5527cdddc8b7",
+  "ttft_stream_ms": 1547,
+  "time_to_request_ms": 623,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 384,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 154,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 68,
+  "time_to_request_cpu_ms": 310,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 238,
+  "process_cpu_ms_turn": 810,
+  "process_wall_ms_turn": 8207,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1548,
+  "time_to_request_from_spawn_ms": 24116970,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003575863.377,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.22,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

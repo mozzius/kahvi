@@ -1,0 +1,32 @@
+{
+  "ticket": "B-async-disposable-stack-prototype-get-disposed",
+  "base": "641486ef8c1b260be06c80b18ce1542859e5ea08",
+  "head": "05c732bcb327a5d807d8ba17a9104d0e94f2f434",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/async_disposable_stack/prototype_get_disposed.rs",
+      "added": 8,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 6,
+    "after": 14,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
