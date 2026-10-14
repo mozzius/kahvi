@@ -290,3 +290,6 @@
 [17:37:09] B-set-prototype-is-disjoint-from: verifier: accept The diff implements Set.prototype.isDisjointFrom in its own file, with a local GetSetRecord helper. I walked the spec steps: RequireInternalSlot via t
 [17:37:14] B-array-prototype-find: attempt on slot 2 with haiku
 [17:37:18] B-set-prototype-is-superset-of: verifier: accept The diff implements Set.prototype.isSupersetOf and its GetSetRecord helper in order and matches the spec. Steps 1-2 use this_set, then GetSetRecord ru
+[17:37:21] B-array-prototype-find-last: attempt on slot 1 with haiku
+[17:37:53] B-array-prototype-flat-map: attempt 190 finished ($0.014, 18 turns)
+[17:37:53] B-array-prototype-flat-map: gate rejected attempt 190: lint: lint suppression is architect-only at crates/kahvi-builtins/src/array/prototype_flat_map.rs:58: #[allow(clippy::too_many_arguments)]

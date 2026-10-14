@@ -1,0 +1,33 @@
+{
+  "ticket": "B-array-prototype-flat-map",
+  "base": "2e27a7c8680abbf5ad37a657edc3fd9af389e24b",
+  "head": "66b5af20043d7a4197e7ec52450dd8fa622b410a",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/array/prototype_flat_map.rs:58: #[allow(clippy::too_many_arguments)]"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_flat_map.rs",
+      "added": 140,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_flat_map.rs",
+      "line": 58,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(clippy::too_many_arguments)]"
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_flat_map.rs",
+      "line": 123,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"IsArray(element) was true for a non-object\")"
+    }
+  ],
+  "decision": "reject"
+}
