@@ -1,0 +1,35 @@
+{
+  "ticket": "B-data-view-prototype-get-byte-length",
+  "base": "5531d80fcf81a25f2b1e5c9eef3c35e6c63de9ee",
+  "head": "7660dc8052edd52114d657123babf92b56c05642",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_byte_length.rs",
+      "added": 16,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 6,
+    "after": 22,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DataView/prototype/byteLength/instance-has-detached-buffer.js:sloppy  Uncaught InternalError: not implemented: get DataView.prototype.buffer",
+      "built-ins/DataView/prototype/byteLength/instance-has-detached-buffer.js:strict  Uncaught InternalError: not implemented: get DataView.prototype.buffer"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 20568,
+  "stop_reason": "end_turn",
+  "session_id": "63a31311-592c-4717-904d-d07fab13d878",
+  "total_cost_usd": 0.00998293,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 30008,
+    "cache_read_input_tokens": 193013,
+    "output_tokens": 3424,
+    "output_tokens_details": {
+      "thinking_tokens": 736
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 30008,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 266,
+        "cache_read_input_tokens": 37155,
+        "cache_creation_input_tokens": 496,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 496
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `get DataView.prototype.byteLength` in its file, using the existing `require_data_view`, `is_view_out_of_bounds` and `get_view_byte_length` helpers. `cargo clippy` is clean, and `./t262 built-ins/DataView/prototype/byteLength/` passes 22 of 24 runs. The 2 failures are in `instance-has-detached-buffer.js`, which calls the `DataView.prototype.buffer` getter. That getter is still a stub in `prototype_get_buffer.rs`, which is outside my scope.\n\nBLOCKED: `get DataView.prototype.buffer` (crates/kahvi-builtins/src/data_view/prototype_get_buffer.rs) must be implemented before instance-has-detached-buffer.js can pass",
+  "ttft_ms": 2114,
+  "type": "result",
+  "duration_ms": 39945,
+  "uuid": "a9395701-a66c-4f16-aec4-4cf1809d8bf4",
+  "ttft_stream_ms": 1761,
+  "time_to_request_ms": 877,
+  "time_to_request_phases_ms": {
+    "other": 52,
+    "system_prompt": 472,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 42,
+    "input_hooks": 7,
+    "tool_pool_refresh": 21,
+    "init_message": 19,
+    "engine_pickup": 12,
+    "message_prep": 32,
+    "model_config_wait": 168,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 20,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 231,
+  "time_to_request_cpu_ms": 384,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3550,
+  "process_wall_ms_turn": 39944,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1762,
+  "time_to_request_from_spawn_ms": 21365834,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000824230.6682,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
