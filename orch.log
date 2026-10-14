@@ -940,3 +940,7 @@ test262 at last merge: 72953/81183 runs passing
 [18:10:12] B-async-disposable-stack-prototype-defer: verifier: accept The change implements AsyncDisposableStack.prototype.defer in the specified order: RequireInternalSlot via require_async_disposable_stack (step 2, pro
 [18:10:22] B-iterator-prototype-to-array: attempt on slot 3 with haiku
 [18:10:25] B-data-view-prototype-get-uint8: verifier: accept The change implements DataView.prototype.getUint8 as a thin wrapper. It keeps the spec step comments, passes this as view, passes args[0] as the byte 
+[18:10:32] B-map-group-by: attempt on slot 2 with haiku
+[18:10:50] B-global-escape: attempt 265 finished ($0.008, 13 turns)
+[18:10:50] B-iterator-prototype-to-array: attempt 266 finished ($0.008, 8 turns)
+[18:10:51] B-date-prototype-set-month: verifier: accept The diff implements Date.prototype.setMonth in the same order as the spec. this_time_value performs the RequireInternalSlot check and reads [[DateValu
