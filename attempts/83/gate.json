@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reflect-set",
+  "base": "db921355b42dda4a6b69fcc7c3a48b00b5d230b5",
+  "head": "7cd32c26a320e40d07a48ade7e7f4b73d0381fff",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/set.rs",
+      "added": 12,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 8,
+    "after": 36,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
