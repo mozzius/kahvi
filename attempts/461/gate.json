@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-log1p",
+  "base": "9d4a8312b3545b862f3148b67c810fbf93891076",
+  "head": "635a4680bcfe8fae2b46dce0b90124894c9b982e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/log1p.rs",
+      "added": 18,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

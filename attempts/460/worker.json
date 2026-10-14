@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11890,
+  "stop_reason": "end_turn",
+  "session_id": "c356f89e-3310-4ce4-a248-789a584594bd",
+  "total_cost_usd": 0.005101240000000001,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 14221,
+    "cache_read_input_tokens": 99004,
+    "output_tokens": 2073,
+    "output_tokens_details": {
+      "thinking_tokens": 173
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14221,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 109,
+        "cache_read_input_tokens": 21544,
+        "cache_creation_input_tokens": 320,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 320
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.log10` in `crates/kahvi-builtins/src/math/log10.rs`, following the spec steps with each step's text as a comment above its code. All 10 test262 runs under `built-ins/Math/log10/` pass (up from 8), and clippy and rustfmt are clean. No other files were changed.",
+  "ttft_ms": 1478,
+  "type": "result",
+  "duration_ms": 26735,
+  "uuid": "9f94292c-950b-4766-a234-1cf7ada1ee73",
+  "ttft_stream_ms": 1259,
+  "time_to_request_ms": 532,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 352,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 12,
+    "input_hooks": 6,
+    "tool_pool_refresh": 4,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 81,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 415,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2614,
+  "process_wall_ms_turn": 26734,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1260,
+  "time_to_request_from_spawn_ms": 27468399,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006928736.855,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.58,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -4115,3 +4115,11 @@ test262 at last merge: 76432/81183 runs passing
 [19:42:21] B-json-is-raw-json: attempt 458 finished ($0.078, 13 turns)
 [19:42:31] B-math-imul: attempt 459 finished ($0.004, 11 turns)
 [19:42:36] B-json-is-raw-json: gate rejected attempt 458: no new test262 passes in target
+[19:42:37] B-math-log10: attempt 460 finished ($0.005, 10 turns)
+[19:42:39] B-math-log1p: attempt on slot 1 with haiku
+[19:42:40] B-math-f16round: verifier: accept Math.f16round is implemented in crates/kahvi-builtins/src/math/f16round.rs only. Steps 1-3 follow the spec: ToNumber via ops::to_number with `?`, NaN 
+[19:43:02] B-math-imul: verifier: accept Math.imul now converts x then y with ops::to_uint32 (steps 1-2, errors propagated with ?), multiplies as u32 with wrapping_mul (step 3, equivalent to 
+[19:43:04] B-math-log10: verifier: accept The diff implements Math.log10 in crates/kahvi-builtins/src/math/log10.rs and nothing else. Steps 1 to 6 follow the spec in order. ToNumber is called 
+[19:43:08] B-math-log1p: attempt 461 finished ($0.005, 9 turns)
+[19:43:12] stack: pushed stack/0019 as #35 with B-array-prototype-to-locale-string, B-object-prototype-lookup-setter, B-symbol-for, B-typed-array-prototype-entries
+[19:43:35] B-math-log1p: verifier: accept The change implements Math.log1p in its own file and follows the spec steps in order. Step 1 calls ops::to_number with `?`, so abrupt completions prop

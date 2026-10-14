@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10113,
+  "stop_reason": "tool_use",
+  "session_id": "d16a633d-0939-45e2-82e2-980f6fa0b37d",
+  "total_cost_usd": 0.0020407800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3694,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1935,
+    "output_tokens_details": {
+      "thinking_tokens": 1396
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3694,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1935,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3694,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3694
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Math.log1p in its own file and follows the spec steps in order. Step 1 calls ops::to_number with `?`, so abrupt completions propagate. Step 2 returns NaN, +0, -0 and +Infinity unchanged (`n == 0.0` covers both zeros). Step 3 returns -Infinity for -1. Step 4 returns NaN for values below -1, which includes -Infinity. Step 5 uses f64::ln_1p. No test-shaped branches, no swallowed errors, no made-up values, and no edits outside the file. The only blemish is cosmetic: the step 1 and step 2 comments are repeated inside the body, presumably on top of comments already in the stub.\",\"problems\":[],\"notes_for_next_attempt\":\"The implementation is spec-correct as written. Optional cleanup: the diff adds \\\"// 1.\\\" and \\\"// 2.\\\" comments inside the body, but the stub seems to already carry those step comments above the code. Keep one copy of each step comment directly above its code. Nothing else needs changing.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Math.log1p in its own file and follows the spec steps in order. Step 1 calls ops::to_number with `?`, so abrupt completions propagate. Step 2 returns NaN, +0, -0 and +Infinity unchanged (`n == 0.0` covers both zeros). Step 3 returns -Infinity for -1. Step 4 returns NaN for values below -1, which includes -Infinity. Step 5 uses f64::ln_1p. No test-shaped branches, no swallowed errors, no made-up values, and no edits outside the file. The only blemish is cosmetic: the step 1 and step 2 comments are repeated inside the body, presumably on top of comments already in the stub.",
+    "problems": [],
+    "notes_for_next_attempt": "The implementation is spec-correct as written. Optional cleanup: the diff adds \"// 1.\" and \"// 2.\" comments inside the body, but the stub seems to already carry those step comments above the code. Keep one copy of each step comment directly above its code. Nothing else needs changing."
+  },
+  "ttft_ms": 7636,
+  "type": "result",
+  "duration_ms": 9606,
+  "uuid": "62e2ab67-dd38-4264-945b-c9789c730ccc",
+  "ttft_stream_ms": 1219,
+  "time_to_request_ms": 542,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 371,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 97,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 25,
+  "time_to_request_cpu_ms": 254,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 802,
+  "process_wall_ms_turn": 9606,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1219,
+  "time_to_request_from_spawn_ms": 27537552,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006997962.6138,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.59,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

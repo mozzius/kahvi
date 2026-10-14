@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 4838,
+  "stop_reason": "tool_use",
+  "session_id": "2a456b8c-a9f8-4659-87fb-e14916149f4b",
+  "total_cost_usd": 0.0190938,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3344,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 509,
+    "output_tokens_details": {
+      "thinking_tokens": 143
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3344,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 509,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3344,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3344
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.imul is implemented per spec. Both arguments go through ops::to_uint32 with `?`, in order x then y. wrapping_mul on u32 equals (a\u00d7b) mod 2^32. Casting to i32 gives product \u2212 2^32 when product \u2265 2^31, and product otherwise. The result is returned as a Number. The gate shows 0 regressions, +2 passing, and a clean build and clippy. The change touches only the in-scope file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.imul is implemented per spec. Both arguments go through ops::to_uint32 with `?`, in order x then y. wrapping_mul on u32 equals (a\u00d7b) mod 2^32. Casting to i32 gives product \u2212 2^32 when product \u2265 2^31, and product otherwise. The result is returned as a Number. The gate shows 0 regressions, +2 passing, and a clean build and clippy. The change touches only the in-scope file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3174,
+  "type": "result",
+  "duration_ms": 4913,
+  "uuid": "5b17e5cf-39a2-478b-b012-05f2d56ccc35",
+  "ttft_stream_ms": 1722,
+  "time_to_request_ms": 605,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 336,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 42,
+    "input_hooks": 24,
+    "tool_pool_refresh": 10,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 138,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 2,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 39,
+  "time_to_request_cpu_ms": 415,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 648,
+  "process_wall_ms_turn": 4913,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1723,
+  "time_to_request_from_spawn_ms": 27515832,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006975630.9177,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.58,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-imul",
+  "base": "5d0e8d7144836ef5b3114038344d95566e81d053",
+  "head": "b7c24c748b93f00896c222a7ffa6253af29689eb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/imul.rs",
+      "added": 13,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
