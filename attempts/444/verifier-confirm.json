@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6405,
+  "stop_reason": "tool_use",
+  "session_id": "b5a2599a-8235-461e-a232-7dae752788bb",
+  "total_cost_usd": 0.0202954,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3493,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 568,
+    "output_tokens_details": {
+      "thinking_tokens": 191
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3493,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 568,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3493,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3493
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.small as a thin wrapper. It takes this and calls the shared create_html helper from prototype_anchor with tag \\\"small\\\" and an empty attr. The error from create_html is propagated with the equivalent of `?`. The attrValue is passed as Undefined, but the spec never reads it when attr is empty, so nothing observable changes. The diff touches only the one in-scope file. Build and clippy pass, the target went from 8 to 12 passing, and there were no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.small as a thin wrapper. It takes this and calls the shared create_html helper from prototype_anchor with tag \"small\" and an empty attr. The error from create_html is propagated with the equivalent of `?`. The attrValue is passed as Undefined, but the spec never reads it when attr is empty, so nothing observable changes. The diff touches only the one in-scope file. Build and clippy pass, the target went from 8 to 12 passing, and there were no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4258,
+  "type": "result",
+  "duration_ms": 6104,
+  "uuid": "dad2ac00-936b-4609-9f25-9c2b29f66917",
+  "ttft_stream_ms": 2407,
+  "time_to_request_ms": 485,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 321,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 62,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 5,
+    "client_creation": 3,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 77,
+  "time_to_request_cpu_ms": 287,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 679,
+  "process_wall_ms_turn": 6104,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2408,
+  "time_to_request_from_spawn_ms": 27268812,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006729208.744,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
