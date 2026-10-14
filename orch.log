@@ -249,3 +249,5 @@
 [17:31:33] B-object-is: verifier: accept Object.is is implemented as a single call to ops::same_value(agent, args[0], args[1]) wrapped in Value::Boolean, which matches step 1 of the spec (Ret
 [17:31:36] C-proxy-prevent-extensions: attempt on slot 1 with haiku
 [17:31:43] B-global-encode-uri-component: verifier: accept The diff implements encodeURIComponent per the pinned spec: ToString on the argument, empty extraUnescaped, then Encode. Encode and CodePointAt are wr
+[17:31:45] B-iterator-prototype-for-each: verifier: accept The change implements Iterator.prototype.forEach following the spec steps in order: the TypeError for a non-object this, the IsCallable check with Ite
+[17:31:47] B-data-view-prototype-set-float16: attempt on slot 2 with haiku
