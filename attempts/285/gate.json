@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-get-uint32",
+  "base": "b695a1ae7c07865e579f2eba26c9049da3210116",
+  "head": "a6c2a4f9b2a4e6dc9be1fefc02e9d47c698b39b4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_uint32.rs",
+      "added": 13,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 6,
+    "after": 36,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

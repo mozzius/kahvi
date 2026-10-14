@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12571,
+  "stop_reason": "tool_use",
+  "session_id": "e24257db-cb12-46c8-a32e-01a7ff70f60b",
+  "total_cost_usd": 0.00225608,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3941,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2210,
+    "output_tokens_details": {
+      "thinking_tokens": 1540
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3941,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2210,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3941,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3941
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements DataView.prototype.getUint16 in its single in-scope file. Step 1 binds `this` to view. Step 2 maps an absent or undefined littleEndian to false. Step 3 delegates to the shared `get_view_value` helper with ElementType::Uint16, and the `?` propagation is carried through by returning the helper's JsResult directly. The steps that GetViewValue owns (RequireInternalSlot, ToIndex, ToBoolean on littleEndian, IsViewOutOfBounds, the RangeError check, GetValueFromBuffer) live in the helper, which is not in this diff, so it already existed in the support module. The explicit-undefined match is spec-equivalent because ToBoolean(undefined) is false and the conversion is unobservable; it is redundant but harmless. The `_new_target` rename and removal of the placeholder `let _ =` are needed to avoid unused-variable warnings. The gate reports build and clippy ok, no regressions, and +30 passing tests, which fits a one-line delegation to an existing helper.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes needed. The change is a thin delegation to the existing get_view_value helper, and the spec steps for GetViewValue are covered there (not in this diff). The explicit-undefined match for littleEndian is redundant with the helper's ToBoolean but spec-equivalent, so it can stay or be dropped.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements DataView.prototype.getUint16 in its single in-scope file. Step 1 binds `this` to view. Step 2 maps an absent or undefined littleEndian to false. Step 3 delegates to the shared `get_view_value` helper with ElementType::Uint16, and the `?` propagation is carried through by returning the helper's JsResult directly. The steps that GetViewValue owns (RequireInternalSlot, ToIndex, ToBoolean on littleEndian, IsViewOutOfBounds, the RangeError check, GetValueFromBuffer) live in the helper, which is not in this diff, so it already existed in the support module. The explicit-undefined match is spec-equivalent because ToBoolean(undefined) is false and the conversion is unobservable; it is redundant but harmless. The `_new_target` rename and removal of the placeholder `let _ =` are needed to avoid unused-variable warnings. The gate reports build and clippy ok, no regressions, and +30 passing tests, which fits a one-line delegation to an existing helper.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes needed. The change is a thin delegation to the existing get_view_value helper, and the spec steps for GetViewValue are covered there (not in this diff). The explicit-undefined match for littleEndian is redundant with the helper's ToBoolean but spec-equivalent, so it can stay or be dropped."
+  },
+  "ttft_ms": 8763,
+  "type": "result",
+  "duration_ms": 11439,
+  "uuid": "3b153b57-140e-45c8-bf7f-9b6d91f1186f",
+  "ttft_stream_ms": 1910,
+  "time_to_request_ms": 925,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 538,
+    "resume_other": 1,
+    "process_user_input": 14,
+    "input_attachments": 33,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 232,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 7,
+    "client_creation": 22,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 104,
+  "time_to_request_cpu_ms": 362,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 979,
+  "process_wall_ms_turn": 11438,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1911,
+  "time_to_request_from_spawn_ms": 22560258,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002019347.9583,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
