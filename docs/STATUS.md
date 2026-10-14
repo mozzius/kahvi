@@ -29,8 +29,21 @@ git worktree add work/runs-repo orch-runs
 cp work/runs-repo/state.db work/state.db
 # The architect worktree:
 git fetch origin arch:arch && git worktree add ../kahvi-arch arch
+# Per-machine orchestrator settings (work/ is not committed):
+cat > work/orch.local.toml <<'TOML'
+branch = "m1-spine"   # the integration branch (main gets it by PR)
+push = true           # containers are ephemeral: keep every merge on origin
+# slots = 4           # more concurrent workers on a bigger box
+
+[escalation]
+tiers = ["haiku", "sonnet"]   # Opus-tier work comes to the architect instead
+max_attempts = 4
+TOML
 nohup ./orch run > work/orch.log 2>&1 & echo $! > work/orch.pid
 ```
+
+At handoff one ticket (`B-array-prototype-to-spliced`) was killed mid-merge;
+`orch run` reopens it on start.
 
 ## Landing architect work
 
