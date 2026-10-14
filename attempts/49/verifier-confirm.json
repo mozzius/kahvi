@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 8525,
+  "stop_reason": "tool_use",
+  "session_id": "9bce6fe0-c2d0-42e1-9c08-cd67cc9bf685",
+  "total_cost_usd": 0.0466767,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8906,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1000,
+    "output_tokens_details": {
+      "thinking_tokens": 546
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8906,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1000,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8906,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8906
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements RegExp.prototype[Symbol.match] step by step in spec order. Every abrupt completion is propagated with `?`. The observable operations happen in the right order: ToString(string), then Get \\\"flags\\\" and ToString of it, then Set lastIndex, then the RegExpExec loop. The empty-match path does Get lastIndex, ToLength, AdvanceStringIndex and Set in order. It uses existing support helpers and ops, and touches only the in-scope file. The 86 remaining failures are not-implemented errors from the `RegExp.prototype.flags` getter, which is outside this ticket. I could not see the helper bodies, so I did not check whether `advance_string_index` handles surrogate pairs.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements RegExp.prototype[Symbol.match] step by step in spec order. Every abrupt completion is propagated with `?`. The observable operations happen in the right order: ToString(string), then Get \"flags\" and ToString of it, then Set lastIndex, then the RegExpExec loop. The empty-match path does Get lastIndex, ToLength, AdvanceStringIndex and Set in order. It uses existing support helpers and ops, and touches only the in-scope file. The 86 remaining failures are not-implemented errors from the `RegExp.prototype.flags` getter, which is outside this ticket. I could not see the helper bodies, so I did not check whether `advance_string_index` handles surrogate pairs.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5935,
+  "type": "result",
+  "duration_ms": 8210,
+  "uuid": "62ce0ee0-eff5-4b51-949d-cf2ddf801454",
+  "ttft_stream_ms": 1378,
+  "time_to_request_ms": 107,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 45,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 57,
+  "time_to_request_cpu_ms": 113,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1378,
+  "time_to_request_from_spawn_ms": 27988230,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791946963138.5847,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.75,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
