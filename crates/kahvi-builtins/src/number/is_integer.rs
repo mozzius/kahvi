@@ -11,10 +11,14 @@ pub(crate) fn is_integer(
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let _ = (agent, this, new_target);
     // This function performs the following steps when called:
     //
     // 1. If _number_ is an integral Number, return *true*.
+    let number = args.get_or_undefined(0);
+    if ops::is_integral_number(number) {
+        return Ok(Value::Boolean(true));
+    }
     // 2. Return *false*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.isInteger"))
+    Ok(Value::Boolean(false))
 }
