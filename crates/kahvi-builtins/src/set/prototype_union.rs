@@ -2,32 +2,116 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-set.prototype.union
 
+use crate::support::collections::{SetData, collection_key, set_table, this_set};
+use kahvi_core::object::ObjectKind;
 use kahvi_core::prelude::*;
+
+/// GetSetRecord(obj) (§24.2.1.2). Returns the fields of a Set Record
+/// (§24.2.1.1) as ([[SetObject]], [[Size]], [[Has]], [[Keys]]). Local to this
+/// file until other Set methods need it too.
+fn get_set_record(agent: &mut Agent, obj: Value) -> JsResult<(Object, f64, Value, Value)> {
+    // 1. If obj is not an Object, throw a TypeError exception.
+    let Value::Object(obj) = obj else {
+        return Err(agent.throw_type_error("Set operation argument is not an object"));
+    };
+    // 2. Let rawSize be ? Get(obj, "size").
+    let size_key = agent.key("size");
+    let raw_size = ops::get(agent, obj, size_key)?;
+    // 3. Let numberSize be ? ToNumber(rawSize).
+    let number_size = ops::to_number(agent, raw_size)?;
+    // 4. NOTE: If rawSize is undefined, then numberSize will be NaN.
+    // 5. If numberSize is NaN, throw a TypeError exception.
+    if number_size.is_nan() {
+        return Err(agent.throw_type_error("Set operation size is NaN"));
+    }
+    // 6. Let intSize be ! ToIntegerOrInfinity(numberSize).
+    let int_size = ops::to_integer_or_infinity(agent, Value::Number(number_size))?;
+    // 7. If intSize < 0, throw a RangeError exception.
+    if int_size < 0.0 {
+        return Err(agent.throw_range_error("Set operation size is negative"));
+    }
+    // 8. Let has be ? Get(obj, "has").
+    let has_key = agent.key("has");
+    let has = ops::get(agent, obj, has_key)?;
+    // 9. If IsCallable(has) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, has) {
+        return Err(agent.throw_type_error("Set operation 'has' is not callable"));
+    }
+    // 10. Let keys be ? Get(obj, "keys").
+    let keys_key = agent.key("keys");
+    let keys = ops::get(agent, obj, keys_key)?;
+    // 11. If IsCallable(keys) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, keys) {
+        return Err(agent.throw_type_error("Set operation 'keys' is not callable"));
+    }
+    // 12. Return a new Set Record { [[SetObject]]: obj, [[Size]]: intSize, [[Has]]: has, [[Keys]]: keys }.
+    Ok((obj, int_size, has, keys))
+}
 
 /// Set.prototype.union
 pub(crate) fn prototype_union(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _set_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_set_, [[SetData]]).
-    // 3. Let _otherRecord_ be ? GetSetRecord(_other_).
-    // 4. Let _keysIterator_ be ? GetIteratorFromMethod(_otherRecord_.[[SetObject]], _otherRecord_.[[Keys]]).
-    // 5. Let _resultSetData_ be a copy of _set_.[[SetData]].
-    // 6. Let _next_ be ~not-started~.
-    // 7. Repeat, while _next_ is not ~done~,
-    //    a. Set _next_ to ? IteratorStepValue(_keysIterator_).
-    //    b. If _next_ is not ~done~, then
-    //       i. Set _next_ to CanonicalizeKeyedCollectionKey(_next_).
-    //       ii. If SetDataHas(_resultSetData_, _next_) is *false*, then
-    //          1. Append _next_ to _resultSetData_.
-    // 8. Let _result_ be OrdinaryObjectCreate(%Set.prototype%, « [[SetData]] »).
-    // 9. Set _result_.[[SetData]] to _resultSetData_.
-    // 10. Return _result_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Set.prototype.union"))
+    // 1. Let set be the this value.
+    // 2. Perform ? RequireInternalSlot(set, [[SetData]]).
+    let set = this_set(agent, this)?;
+    // 3. Let otherRecord be ? GetSetRecord(other).
+    let (set_object, _size, _has, keys) = get_set_record(agent, args.get_or_undefined(0))?;
+    // 4. Let keysIterator be ? GetIteratorFromMethod(otherRecord.[[SetObject]], otherRecord.[[Keys]]).
+    let mut keys_iterator = ops::get_iterator_from_method(agent, Value::Object(set_object), keys)?;
+    // The result object is created before the copy below (step 8 comes later
+    // in the spec, but nothing observable happens in between), so that it can
+    // be rooted while the keys iterator runs and may collect garbage.
+    // 8. Let result be OrdinaryObjectCreate(%Set.prototype%, « [[SetData]] »).
+    let set_proto = agent.intrinsic("%Set.prototype%");
+    let result = agent.object_with_kind(
+        Some(set_proto),
+        ObjectKind::Native(Box::new(SetData::default())),
+    );
+    // 5. Let resultSetData be a copy of set.[[SetData]].
+    let existing: Vec<Value> = {
+        let table = set_table(agent, set);
+        (0..table.slots())
+            .filter_map(|i| table.entry(i))
+            .map(|(k, _)| k)
+            .collect()
+    };
+    for k in existing {
+        // The keys of [[SetData]] are already canonical, so they are copied as they are.
+        let key = collection_key(agent, k);
+        set_table(agent, result).set(key, Value::Undefined);
+    }
+    // The iterator (and its next method) and the result stay rooted while
+    // IteratorStepValue calls next(), which may collect garbage.
+    let roots = [
+        Value::Object(result),
+        Value::Object(keys_iterator.iterator),
+        keys_iterator.next_method,
+    ];
+    agent.with_roots(&roots, |agent| -> JsResult<Value> {
+        // 6. Let next be not-started.
+        // 7. Repeat, while next is not done,
+        loop {
+            // a. Set next to ? IteratorStepValue(keysIterator).
+            let Some(next) = ops::iterator_step_value_rooted(agent, &mut keys_iterator)? else {
+                // b. (next is done) the loop ends.
+                break;
+            };
+            // b. If next is not done, then
+            //    i. Set next to CanonicalizeKeyedCollectionKey(next).
+            let key = collection_key(agent, next);
+            let table = set_table(agent, result);
+            //    ii. If SetDataHas(resultSetData, next) is false, then
+            if !table.has(&key) {
+                //    1. Append next to resultSetData.
+                table.set(key, Value::Undefined);
+            }
+        }
+        // 9. Set result.[[SetData]] to resultSetData.
+        // 10. Return result.
+        Ok(Value::Object(result))
+    })
 }
