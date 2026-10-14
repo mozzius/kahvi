@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9117,
+  "stop_reason": "tool_use",
+  "session_id": "e404e895-1f98-4524-a04a-2f24b1fe1ffd",
+  "total_cost_usd": 0.0419234,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7632,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1033,
+    "output_tokens_details": {
+      "thinking_tokens": 606
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7632,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1033,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7632,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7632
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1\u201313 in order. ToNumber/ToBigInt run once, before the start and end conversions. Bounds are re-validated after coercion, and endIndex is clamped to the new length. ToClampedIndex and ToAbsoluteIndex are inlined correctly and noted as missing from ops. The `unreachable!` and `.expect` are guarded by the earlier ValidateTypedArray call, so they cannot be reached. The 4 remaining failures come from BigInt not being implemented elsewhere, and they surface as not-implemented errors. The test results (+90, 0 regressions) fit the size of the change.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1\u201313 in order. ToNumber/ToBigInt run once, before the start and end conversions. Bounds are re-validated after coercion, and endIndex is clamped to the new length. ToClampedIndex and ToAbsoluteIndex are inlined correctly and noted as missing from ops. The `unreachable!` and `.expect` are guarded by the earlier ValidateTypedArray call, so they cannot be reached. The 4 remaining failures come from BigInt not being implemented elsewhere, and they surface as not-implemented errors. The test results (+90, 0 regressions) fit the size of the change.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7286,
+  "type": "result",
+  "duration_ms": 9571,
+  "uuid": "af8c2121-c662-4f7e-a93d-413875ced9e0",
+  "ttft_stream_ms": 2578,
+  "time_to_request_ms": 1229,
+  "time_to_request_phases_ms": {
+    "other": 99,
+    "system_prompt": 644,
+    "resume_other": 1,
+    "process_user_input": 38,
+    "input_attachments": 127,
+    "input_hooks": 5,
+    "tool_pool_refresh": 5,
+    "init_message": 33,
+    "engine_pickup": 4,
+    "message_prep": 3,
+    "model_config_wait": 191,
+    "autocompact": 10,
+    "query_setup": 1,
+    "model_gates": 7,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 11,
+    "request_build": 36
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 237,
+  "time_to_request_cpu_ms": 330,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 737,
+  "process_wall_ms_turn": 9570,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 104,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2580,
+  "time_to_request_from_spawn_ms": 17928533,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997385605.5286,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
