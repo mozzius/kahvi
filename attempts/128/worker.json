@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 20411,
+  "stop_reason": "end_turn",
+  "session_id": "0a01c629-273f-49fd-8222-3a7d8c23e15e",
+  "total_cost_usd": 0.012680819999999999,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 40074,
+    "cache_read_input_tokens": 224092,
+    "output_tokens": 4025,
+    "output_tokens_details": {
+      "thinking_tokens": 771
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 40074,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 292,
+        "cache_read_input_tokens": 47254,
+        "cache_creation_input_tokens": 463,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 463
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.indexOf` in `crates/kahvi-builtins/src/typed_array/prototype_index_of.rs`, following the spec steps with each one commented above its code. The build and clippy are clean. `./t262 built-ins/TypedArray/prototype/indexOf/` gives 80 of 86 runs passing; the 6 failures are all `not implemented: BigInt` in tests that use BigInt values.\n\nThe helper `to_clamped_index` is written locally in the file, as the sibling `prototype_includes.rs` does, because `ops` does not have it yet. Other built-ins would need it too, so it is worth moving into `ops` later.\n\nBLOCKED: BigInt support in the engine (the 6 failing `coerced-searchelement-*` and `resizable-buffer` runs need it; the fix is outside this ticket's file).",
+  "ttft_ms": 1623,
+  "type": "result",
+  "duration_ms": 56741,
+  "uuid": "fdfb0543-cdfb-4a70-88a8-80c1b0ede2e6",
+  "ttft_stream_ms": 1326,
+  "time_to_request_ms": 583,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 373,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 5,
+    "message_prep": 9,
+    "model_config_wait": 49,
+    "autocompact": 10,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 22,
+    "message_normalization": 8,
+    "client_creation": 16,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 151,
+  "time_to_request_cpu_ms": 479,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 4067,
+  "process_wall_ms_turn": 56740,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1346,
+  "time_to_request_from_spawn_ms": 18208951,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997668525.3672,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

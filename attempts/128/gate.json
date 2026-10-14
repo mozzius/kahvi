@@ -1,0 +1,46 @@
+{
+  "ticket": "B-typed-array-prototype-index-of",
+  "base": "1c86ddabf3561ce4fa01276c84552e94187475ad",
+  "head": "86a235f3b5c43d21556612ac4ce2d2412d21d821",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_index_of.rs",
+      "added": 54,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_index_of.rs",
+      "line": 47,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 86,
+    "before": 8,
+    "after": 80,
+    "new_passes": 72,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/indexOf/coerced-searchelement-fromindex-grow.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/indexOf/coerced-searchelement-fromindex-grow.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/indexOf/coerced-searchelement-fromindex-shrink.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/indexOf/coerced-searchelement-fromindex-shrink.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/indexOf/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/indexOf/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

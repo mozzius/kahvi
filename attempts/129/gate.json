@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reflect-own-keys",
+  "base": "78f5c17cefba379ea6497c9aa0621e6f8ac107d8",
+  "head": "0bb45c6fe3fc4c6cf27a6c5fcc100a8c52e1fe99",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/own_keys.rs",
+      "added": 11,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 26,
+    "before": 8,
+    "after": 24,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Reflect/ownKeys/return-on-corresponding-order-large-index.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/Reflect/ownKeys/return-on-corresponding-order-large-index.js:strict  Uncaught InternalError: not implemented: Symbol.for"
+    ]
+  },
+  "decision": "pass"
+}

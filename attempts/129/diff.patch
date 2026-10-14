@@ -1,0 +1,31 @@
+diff --git a/crates/kahvi-builtins/src/reflect/own_keys.rs b/crates/kahvi-builtins/src/reflect/own_keys.rs
+index 54016c1..07b9637 100644
+--- a/crates/kahvi-builtins/src/reflect/own_keys.rs
++++ b/crates/kahvi-builtins/src/reflect/own_keys.rs
+@@ -7,15 +7,20 @@ use kahvi_core::prelude::*;
+ /// Reflect.ownKeys
+ pub(crate) fn own_keys(
+     agent: &mut Agent,
+-    this: Value,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
+     // 1. If _target_ is not an Object, throw a *TypeError* exception.
++    let target = match args.get_or_undefined(0) {
++        Value::Object(o) => o,
++        _ => {
++            return Err(agent.throw_type_error("Reflect.ownKeys target is not an object"));
++        }
++    };
+     // 2. Let _keys_ be ? _target_.[[OwnPropertyKeys]]().
++    let keys = target.internal_own_property_keys(agent)?;
+     // 3. Return CreateArrayFromList(_keys_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Reflect.ownKeys"))
++    let values: Vec<Value> = keys.into_iter().map(|k| agent.key_to_value(k)).collect();
++    Ok(Value::Object(ops::create_array_from_list(agent, &values)))
+ }
