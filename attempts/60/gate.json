@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-symbol-iterator",
+  "base": "99cf5767a52b7a1e63305dfc14b6c89bade1843e",
+  "head": "d67eaf47d41a7ac9182fc2b7994a956b2ef19f65",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_symbol_iterator.rs",
+      "added": 11,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 8,
+    "after": 12,
+    "new_passes": 4,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
