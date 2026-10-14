@@ -20725,6 +20725,10 @@ built-ins/String/prototype/Symbol.iterator/not-a-constructor.js:sloppy
 built-ins/String/prototype/Symbol.iterator/not-a-constructor.js:strict
 built-ins/String/prototype/Symbol.iterator/prop-desc.js:sloppy
 built-ins/String/prototype/Symbol.iterator/prop-desc.js:strict
+built-ins/String/prototype/Symbol.iterator/this-val-non-obj-coercible.js:sloppy
+built-ins/String/prototype/Symbol.iterator/this-val-non-obj-coercible.js:strict
+built-ins/String/prototype/Symbol.iterator/this-val-to-str-err.js:sloppy
+built-ins/String/prototype/Symbol.iterator/this-val-to-str-err.js:strict
 built-ins/String/prototype/at/length.js:sloppy
 built-ins/String/prototype/at/length.js:strict
 built-ins/String/prototype/at/name.js:sloppy
@@ -21755,6 +21759,14 @@ built-ins/String/symbol-string-coercion.js:sloppy
 built-ins/String/symbol-string-coercion.js:strict
 built-ins/String/symbol-wrapping.js:sloppy
 built-ins/String/symbol-wrapping.js:strict
+built-ins/StringIteratorPrototype/Symbol.toStringTag.js:sloppy
+built-ins/StringIteratorPrototype/Symbol.toStringTag.js:strict
+built-ins/StringIteratorPrototype/ancestry.js:sloppy
+built-ins/StringIteratorPrototype/ancestry.js:strict
+built-ins/StringIteratorPrototype/next/length.js:sloppy
+built-ins/StringIteratorPrototype/next/length.js:strict
+built-ins/StringIteratorPrototype/next/name.js:sloppy
+built-ins/StringIteratorPrototype/next/name.js:strict
 built-ins/SuppressedError/length.js:sloppy
 built-ins/SuppressedError/length.js:strict
 built-ins/SuppressedError/name.js:sloppy
@@ -26284,6 +26296,8 @@ language/expressions/assignment/dstr/array-empty-val-null.js:sloppy
 language/expressions/assignment/dstr/array-empty-val-null.js:strict
 language/expressions/assignment/dstr/array-empty-val-num.js:sloppy
 language/expressions/assignment/dstr/array-empty-val-num.js:strict
+language/expressions/assignment/dstr/array-empty-val-string.js:sloppy
+language/expressions/assignment/dstr/array-empty-val-string.js:strict
 language/expressions/assignment/dstr/array-empty-val-symbol.js:sloppy
 language/expressions/assignment/dstr/array-empty-val-symbol.js:strict
 language/expressions/assignment/dstr/array-empty-val-undef.js:sloppy
@@ -58228,6 +58242,8 @@ language/statements/for-await-of/async-func-decl-dstr-array-elision-val-array.js
 language/statements/for-await-of/async-func-decl-dstr-array-elision-val-array.js:strict
 language/statements/for-await-of/async-func-decl-dstr-array-empty-val-array.js:sloppy
 language/statements/for-await-of/async-func-decl-dstr-array-empty-val-array.js:strict
+language/statements/for-await-of/async-func-decl-dstr-array-empty-val-string.js:sloppy
+language/statements/for-await-of/async-func-decl-dstr-array-empty-val-string.js:strict
 language/statements/for-await-of/async-func-decl-dstr-array-rest-after-element.js:sloppy
 language/statements/for-await-of/async-func-decl-dstr-array-rest-after-element.js:strict
 language/statements/for-await-of/async-func-decl-dstr-array-rest-after-elision.js:sloppy
@@ -59423,6 +59439,8 @@ language/statements/for-await-of/async-gen-decl-dstr-array-empty-iter-close.js:s
 language/statements/for-await-of/async-gen-decl-dstr-array-empty-iter-close.js:strict
 language/statements/for-await-of/async-gen-decl-dstr-array-empty-val-array.js:sloppy
 language/statements/for-await-of/async-gen-decl-dstr-array-empty-val-array.js:strict
+language/statements/for-await-of/async-gen-decl-dstr-array-empty-val-string.js:sloppy
+language/statements/for-await-of/async-gen-decl-dstr-array-empty-val-string.js:strict
 language/statements/for-await-of/async-gen-decl-dstr-array-rest-after-element.js:sloppy
 language/statements/for-await-of/async-gen-decl-dstr-array-rest-after-element.js:strict
 language/statements/for-await-of/async-gen-decl-dstr-array-rest-after-elision.js:sloppy
@@ -61038,6 +61056,8 @@ language/statements/for-of/dstr/array-empty-val-null.js:sloppy
 language/statements/for-of/dstr/array-empty-val-null.js:strict
 language/statements/for-of/dstr/array-empty-val-num.js:sloppy
 language/statements/for-of/dstr/array-empty-val-num.js:strict
+language/statements/for-of/dstr/array-empty-val-string.js:sloppy
+language/statements/for-of/dstr/array-empty-val-string.js:strict
 language/statements/for-of/dstr/array-empty-val-symbol.js:sloppy
 language/statements/for-of/dstr/array-empty-val-symbol.js:strict
 language/statements/for-of/dstr/array-empty-val-undef.js:sloppy
