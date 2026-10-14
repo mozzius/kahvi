@@ -13,7 +13,7 @@ pub(crate) fn prototype_get_constructor(
 ) -> JsResult<Value> {
     // The value of the [[Getter]] attribute is a built-in function that requires no arguments. It performs the following steps when called:
     //
-    // 1. Return %Iterator%.
     let _ = (this, args, new_target);
-    Err(agent.not_implemented("get Iterator.prototype.constructor"))
+    // 1. Return %Iterator%.
+    Ok(Value::Object(agent.intrinsic("%Iterator%")))
 }
