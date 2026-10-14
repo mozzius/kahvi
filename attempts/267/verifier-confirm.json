@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13050,
+  "stop_reason": "tool_use",
+  "session_id": "f34d7c2c-fd5b-4283-8d5a-99c2e167f250",
+  "total_cost_usd": 0.0434345,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7014,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1438,
+    "output_tokens_details": {
+      "thinking_tokens": 951
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7014,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1438,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7014,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7014
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Map.groupBy follows the spec's GroupBy steps in order. It does RequireObjectCoercible, then the IsCallable check, then GetIterator. The loop covers the 2^53-1 guard with IteratorClose, IteratorStepValue with `?` propagation, the callback call, IfAbruptCloseIterator, key canonicalization for collections, and AddValueToKeyedGroup. The one structural change is that the result Map is created first and groups are appended to it as the loop runs. This is not observable: the Map is not exposed to user code until the end, `%Map%`'s prototype is non-configurable, and the arrays are engine-created. The code comments say so. The 8 remaining test262 failures come from the unimplemented `Map.prototype.keys`, not from this change. The diff is confined to the one file in scope.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Map.groupBy follows the spec's GroupBy steps in order. It does RequireObjectCoercible, then the IsCallable check, then GetIterator. The loop covers the 2^53-1 guard with IteratorClose, IteratorStepValue with `?` propagation, the callback call, IfAbruptCloseIterator, key canonicalization for collections, and AddValueToKeyedGroup. The one structural change is that the result Map is created first and groups are appended to it as the loop runs. This is not observable: the Map is not exposed to user code until the end, `%Map%`'s prototype is non-configurable, and the arrays are engine-created. The code comments say so. The 8 remaining test262 failures come from the unimplemented `Map.prototype.keys`, not from this change. The diff is confined to the one file in scope.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10011,
+  "type": "result",
+  "duration_ms": 12774,
+  "uuid": "da86eeac-d0a7-4305-8fc0-0a8adc763bf1",
+  "ttft_stream_ms": 1903,
+  "time_to_request_ms": 621,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 375,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 26,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 25,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 108,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 17,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 96,
+  "time_to_request_cpu_ms": 312,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 690,
+  "process_wall_ms_turn": 12765,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1905,
+  "time_to_request_from_spawn_ms": 22117562,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001577430.7368,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 23141,
+  "stop_reason": "end_turn",
+  "session_id": "39ee5025-a0e8-423d-9d41-531bb931078d",
+  "total_cost_usd": 0.00780416,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 19370,
+    "cache_read_input_tokens": 136626,
+    "output_tokens": 4321,
+    "output_tokens_details": {
+      "thinking_tokens": 895
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19370,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 208,
+        "cache_read_input_tokens": 26593,
+        "cache_creation_input_tokens": 420,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 420
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.codePointAt` is implemented in `crates/kahvi-builtins/src/string/prototype_code_point_at.rs`, and all 32 test262 runs under `built-ins/String/prototype/codePointAt/` pass (up from 8). Clippy is clean and the file is rustfmt-clean.\n\nI added a local `code_point_at` helper for CodePointAt, since no shared one exists. `encode_uri.rs`, `string_iterator_prototype/next.rs` and others also have their own copies, so a shared helper would be a reasonable follow-up. No files outside the ticket's scope were touched.",
+  "ttft_ms": 2086,
+  "type": "result",
+  "duration_ms": 41502,
+  "uuid": "e2be4456-00dc-46c1-8504-5ff25e022d4f",
+  "ttft_stream_ms": 1933,
+  "time_to_request_ms": 787,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 511,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 51,
+    "input_hooks": 4,
+    "tool_pool_refresh": 6,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 83,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 5,
+    "tool_schema_build": 28,
+    "message_normalization": 2,
+    "client_creation": 20,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 180,
+  "time_to_request_cpu_ms": 446,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 133,
+  "process_peak_rss_mib": 263,
+  "process_cpu_ms_turn": 3380,
+  "process_wall_ms_turn": 41501,
+  "input_attachments_detail": {
+    "slowest_producer": "peer_mentions",
+    "slowest_producer_ms": 26,
+    "cpu_ms": 36,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1944,
+  "time_to_request_from_spawn_ms": 22083839,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001543637.0083,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
