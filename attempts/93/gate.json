@@ -1,0 +1,45 @@
+{
+  "ticket": "B-array-prototype-to-spliced",
+  "base": "b6172e7cea2ee6e4240dd24ec852cf5b456de9ae",
+  "head": "3a435413d91c19f125738df9edd77141b3cc5e18",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_to_spliced.rs",
+      "added": 85,
+      "removed": 24
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_to_spliced.rs",
+      "line": 36,
+      "rule": "skipping something: check what and why",
+      "text": "let skip_count = ops::to_integer_or_infinity(agent, args.get_or_undefined(1))?;"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_to_spliced.rs",
+      "line": 37,
+      "rule": "skipping something: check what and why",
+      "text": "skip_count.max(0.0).min(max_skip_count)"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 60,
+    "before": 8,
+    "after": 60,
+    "new_passes": 52,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

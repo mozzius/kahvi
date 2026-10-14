@@ -1,0 +1,35 @@
+{
+  "ticket": "B-set-prototype-has",
+  "base": "b6172e7cea2ee6e4240dd24ec852cf5b456de9ae",
+  "head": "2900930aa3055efb63a8c88a3afd3747f733733a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_has.rs",
+      "added": 7,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 60,
+    "before": 8,
+    "after": 58,
+    "new_passes": 50,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/has/returns-false-when-undefined-added-deleted-not-present-undefined.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/has/returns-false-when-undefined-added-deleted-not-present-undefined.js:strict  Uncaught InternalError: not implemented: Set.prototype.delete"
+    ]
+  },
+  "decision": "pass"
+}

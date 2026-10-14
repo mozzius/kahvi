@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 12377,
+  "stop_reason": "end_turn",
+  "session_id": "9310991a-e8a0-42e7-a1d1-b7bbc8312cd1",
+  "total_cost_usd": 0.00598617,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 18342,
+    "cache_read_input_tokens": 93937,
+    "output_tokens": 2252,
+    "output_tokens_details": {
+      "thinking_tokens": 299
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18342,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 278,
+        "cache_read_input_tokens": 25584,
+        "cache_creation_input_tokens": 401,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 401
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Set.prototype.has` is implemented in `crates/kahvi-builtins/src/set/prototype_has.rs`, and 58 of 60 runs under `built-ins/Set/prototype/has/` pass. The two failures are the `returns-false-when-undefined-added-deleted-not-present-undefined` test in sloppy and strict mode, which calls `Set.prototype.delete`; that is still a not-implemented stub, so it's outside this ticket. Clippy and fmt are clean.\n\nThe implementation follows the spec steps: `this_set` for the slot check, `collection_key` for canonicalization, and `set_table(...).has` for the lookup. No helpers were added and no other files were changed.\n\nBLOCKED: Set.prototype.delete (needed by the one remaining failing `has` test; not in this ticket's file scope)",
+  "ttft_ms": 1774,
+  "type": "result",
+  "duration_ms": 26840,
+  "uuid": "0df8bc79-093a-419c-9189-1c7d1fa2ebad",
+  "ttft_stream_ms": 1511,
+  "time_to_request_ms": 754,
+  "time_to_request_phases_ms": {
+    "other": 50,
+    "system_prompt": 469,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 40,
+    "input_hooks": 10,
+    "tool_pool_refresh": 2,
+    "init_message": 25,
+    "engine_pickup": 1,
+    "message_prep": 14,
+    "model_config_wait": 54,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 30,
+    "message_normalization": 3,
+    "client_creation": 25,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 212,
+  "time_to_request_cpu_ms": 442,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2795,
+  "process_wall_ms_turn": 26839,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 36,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1513,
+  "time_to_request_from_spawn_ms": 4127532,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791983586436.8276,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

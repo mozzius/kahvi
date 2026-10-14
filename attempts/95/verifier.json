@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10535,
+  "stop_reason": "tool_use",
+  "session_id": "da4a6f02-3f2d-494c-b2f7-ec9e01881497",
+  "total_cost_usd": 0.0021103400000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3937,
+    "cache_read_input_tokens": 3504,
+    "output_tokens": 1917,
+    "output_tokens_details": {
+      "thinking_tokens": 1417
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3937,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1917,
+        "cache_read_input_tokens": 3504,
+        "cache_creation_input_tokens": 3937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Set.prototype.has in its own file. It calls this_set (RequireInternalSlot with a TypeError on failure) before collection_key (CanonicalizeKeyedCollectionKey), so the step order matches the spec. It then answers with a lookup in the set's table, which is keyed by SameValueZero. After canonicalization that matches SameValue (-0 is already mapped to +0, and all NaNs are one key). The table lookup replaces the spec's iteration over [[SetData]]; no user-observable steps are involved, so this is equivalent. The only unimplemented path, delete, surfaces as the honest not-implemented error from another built-in. The removed header comment line is cosmetic and inside the ticket's scope. I could not read the support::collections helpers, so I am relying on the build, clippy and the 50 new passing tests for their behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Set.prototype.has in its own file. It calls this_set (RequireInternalSlot with a TypeError on failure) before collection_key (CanonicalizeKeyedCollectionKey), so the step order matches the spec. It then answers with a lookup in the set's table, which is keyed by SameValueZero. After canonicalization that matches SameValue (-0 is already mapped to +0, and all NaNs are one key). The table lookup replaces the spec's iteration over [[SetData]]; no user-observable steps are involved, so this is equivalent. The only unimplemented path, delete, surfaces as the honest not-implemented error from another built-in. The removed header comment line is cosmetic and inside the ticket's scope. I could not read the support::collections helpers, so I am relying on the build, clippy and the 50 new passing tests for their behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8498,
+  "type": "result",
+  "duration_ms": 10511,
+  "uuid": "f86a38e5-d233-4d8b-83c3-05b0faf041c5",
+  "ttft_stream_ms": 1657,
+  "time_to_request_ms": 988,
+  "time_to_request_phases_ms": {
+    "other": 101,
+    "system_prompt": 479,
+    "resume_other": 1,
+    "process_user_input": 13,
+    "input_attachments": 59,
+    "input_hooks": 10,
+    "tool_pool_refresh": 6,
+    "init_message": 12,
+    "engine_pickup": 8,
+    "message_prep": 3,
+    "model_config_wait": 259,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 10,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 170,
+  "time_to_request_cpu_ms": 351,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 864,
+  "process_wall_ms_turn": 10510,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1658,
+  "time_to_request_from_spawn_ms": 4175270,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791983632808.4102,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

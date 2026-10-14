@@ -423,3 +423,8 @@ test262 at last merge: 69351/79928 runs passing
 [13:12:56] B-array-prototype-to-spliced: attempt 93 finished ($0.006, 6 turns)
 [13:13:02] B-set-constructor: attempt 92 finished ($0.008, 16 turns)
 [13:13:02] B-set-constructor: blocked: `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries, union and the rest), which the Set constructor tests that check `size` depend on
+[13:13:06] B-set-prototype-has: attempt on slot 2 with haiku
+[13:13:36] B-set-prototype-has: attempt 95 finished ($0.006, 10 turns)
+[13:13:41] B-array-prototype-to-spliced: verifier: accept The diff implements Array.prototype.toSpliced step by step, with each spec step kept as a comment above its code. Observable operations run in spec or
+[13:14:17] B-set-prototype-has: verifier: accept The diff implements Set.prototype.has in its own file. It calls this_set (RequireInternalSlot with a TypeError on failure) before collection_key (Cano
+[13:43:59] B-iterator-concat: merged (+50, 69402 total)
