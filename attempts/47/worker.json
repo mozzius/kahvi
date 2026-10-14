@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 109126,
+  "stop_reason": "end_turn",
+  "session_id": "cad95ce3-ac1e-4abf-be54-2819b7934fc7",
+  "total_cost_usd": 0.030063109999999997,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 56362,
+    "cache_read_input_tokens": 409181,
+    "output_tokens": 28130,
+    "output_tokens_details": {
+      "thinking_tokens": 18481
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 56362,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 270,
+        "cache_read_input_tokens": 63294,
+        "cache_creation_input_tokens": 548,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 548
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `RegExp.prototype[Symbol.replace]` in its file, following the spec steps with each one as a comment. `./t262 built-ins/RegExp/prototype/Symbol.replace/` now gives 20 passing runs, up from 8, and clippy is clean. The other 118 runs fail with \"not implemented: get RegExp.prototype.flags\", which is a stub in another file, so the ticket's \"every test passes\" condition is not met.\n\nI wrote `GetSubstitution` as a private helper in the same file, since no shared one existed and `String.prototype.replace` and `replaceAll` will need it too.\n\nBLOCKED: `RegExp.prototype.flags` getter (step 7 calls `Get(regexp, \"flags\")`), currently a not-implemented stub outside this ticket's scope.",
+  "ttft_ms": 1174,
+  "type": "result",
+  "duration_ms": 120965,
+  "uuid": "0bcf9a26-0ecd-4953-aab0-a55ec79386d7",
+  "ttft_stream_ms": 925,
+  "time_to_request_ms": 149,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 33,
+    "resume_other": 0,
+    "process_user_input": 2,
+    "input_attachments": 11,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 44,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 29,
+  "time_to_request_cpu_ms": 173,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 926,
+  "time_to_request_from_spawn_ms": 26550360,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791945525273.6926,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.74,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

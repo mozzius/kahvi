@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 15812,
+  "stop_reason": "tool_use",
+  "session_id": "1d613055-c9a2-4002-878f-10ac70ab0313",
+  "total_cost_usd": 0.0905156,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 17449,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1881,
+    "output_tokens_details": {
+      "thinking_tokens": 1326
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17449,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1881,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 17449,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 17449
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec step by step. The observable operations happen in the spec's order: ToString(string), then ToString(replaceValue), then Get flags, the lastIndex Set, RegExpExec, Get \\\"0\\\", and the lastIndex advance. In the replacement loop the order is LengthOfArrayLike, \\\"0\\\", \\\"index\\\", captures, \\\"groups\\\", then Call or GetSubstitution. All `?` errors are propagated with no fallbacks. The local GetSubstitution matches the spec, including the two-digit `$nn` fallback to one digit, `$<` without named captures, `$'` with min clamping, and `$0`/out-of-range left literal. Slice bounds cannot panic: position is clamped to the string length, and a next_source_position past the end is handled by step 16. The `unreachable!` is truly unreachable, because replace_value is always a String when not functional. The 118 remaining failures are all \\\"not implemented: get RegExp.prototype.flags\\\", which belongs to a different ticket. The 12 new passes are plausible for this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec step by step. The observable operations happen in the spec's order: ToString(string), then ToString(replaceValue), then Get flags, the lastIndex Set, RegExpExec, Get \"0\", and the lastIndex advance. In the replacement loop the order is LengthOfArrayLike, \"0\", \"index\", captures, \"groups\", then Call or GetSubstitution. All `?` errors are propagated with no fallbacks. The local GetSubstitution matches the spec, including the two-digit `$nn` fallback to one digit, `$<` without named captures, `$'` with min clamping, and `$0`/out-of-range left literal. Slice bounds cannot panic: position is clamped to the string length, and a next_source_position past the end is handled by step 16. The `unreachable!` is truly unreachable, because replace_value is always a String when not functional. The 118 remaining failures are all \"not implemented: get RegExp.prototype.flags\", which belongs to a different ticket. The 12 new passes are plausible for this diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 12126,
+  "type": "result",
+  "duration_ms": 15509,
+  "uuid": "91fcf6fe-00c9-40ae-8a3f-85e4305a4afd",
+  "ttft_stream_ms": 1728,
+  "time_to_request_ms": 213,
+  "time_to_request_phases_ms": {
+    "other": 44,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 41,
+    "input_hooks": 8,
+    "tool_pool_refresh": 6,
+    "init_message": 9,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 43,
+    "autocompact": 6,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 24,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 167,
+  "time_to_request_cpu_ms": 144,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1729,
+  "time_to_request_from_spawn_ms": 26743890,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791945718347.7888,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.74,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

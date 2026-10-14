@@ -1,0 +1,55 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-replace",
+  "base": "a3cb650d3f4f9ef3d36b82d486de42031456845a",
+  "head": "c3ae0a14fa67f4e690e8e9f57292e947206c8e70",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_replace.rs",
+      "added": 324,
+      "removed": 53
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_replace.rs",
+      "line": 169,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"replaceValue is converted to a String when not functional\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 138,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 118,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/prototype/Symbol.replace/arg-1-coerce.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/arg-1-coerce.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/arg-2-coerce.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/arg-2-coerce.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-global.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-global.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-lastindex-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-lastindex-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-lastindex.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-lastindex.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-unicode.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/coerce-unicode.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/exec-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/exec-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.replace/exec-invocation.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags"
+    ]
+  },
+  "decision": "pass"
+}
