@@ -19,6 +19,22 @@ pub(crate) fn atan(
     // 3. If _n_ is *+∞*_𝔽, return an implementation-approximated Number value representing π / 2.
     // 4. If _n_ is *-∞*_𝔽, return an implementation-approximated Number value representing -π / 2.
     // 5. Return an implementation-approximated Number value representing the inverse tangent of ℝ(_n_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.atan"))
+    let _ = (this, new_target);
+    let x = args.get_or_undefined(0);
+    // 1. Let _n_ be ? ToNumber(_x_).
+    let n = ops::to_number(agent, x)?;
+    // 2. If _n_ is one of *NaN*, *+0*_𝔽, or *-0*_𝔽, return _n_.
+    if n.is_nan() || n == 0.0 {
+        return Ok(Value::Number(n));
+    }
+    // 3. If _n_ is *+∞*_𝔽, return an implementation-approximated Number value representing π / 2.
+    if n == f64::INFINITY {
+        return Ok(Value::Number(std::f64::consts::FRAC_PI_2));
+    }
+    // 4. If _n_ is *-∞*_𝔽, return an implementation-approximated Number value representing -π / 2.
+    if n == f64::NEG_INFINITY {
+        return Ok(Value::Number(-std::f64::consts::FRAC_PI_2));
+    }
+    // 5. Return an implementation-approximated Number value representing the inverse tangent of ℝ(_n_).
+    Ok(Value::Number(n.atan()))
 }
