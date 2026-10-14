@@ -1,0 +1,37 @@
+{
+  "ticket": "B-date-prototype-set-month",
+  "base": "14d4ff760364825523ffab6937028d2420b391a0",
+  "head": "6bd146ea38de6fdd3cf48f56a201b516bb4c9e68",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_month.rs",
+      "added": 24,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 30,
+    "new_passes": 22,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Date/prototype/setMonth/date-value-read-before-tonumber-when-date-is-invalid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setMonth/date-value-read-before-tonumber-when-date-is-invalid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setMonth/date-value-read-before-tonumber-when-date-is-valid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setDate",
+      "built-ins/Date/prototype/setMonth/date-value-read-before-tonumber-when-date-is-valid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setDate"
+    ]
+  },
+  "decision": "pass"
+}
