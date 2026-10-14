@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 10071,
+  "stop_reason": "tool_use",
+  "session_id": "271ecb75-457d-4726-8263-9c20a3bd7a49",
+  "total_cost_usd": 0.00231326,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4436,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2049,
+    "output_tokens_details": {
+      "thinking_tokens": 1415
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4436,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2049,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 4436,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4436
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Object.freeze in freeze.rs by following the spec steps in order. Step 1 returns non-Object arguments unchanged. Step 2 calls ops::set_integrity_level(agent, o, Frozen) with `?` propagation. Step 3 throws a TypeError when the status is false. Step 4 returns the object. There are no test-specific branches, no hardcoded results and no swallowed errors. The only other change is renaming the unused `this` and `new_target` parameters to `_this` and `_new_target`, which is cosmetic and local. I could not open the repository to confirm that ops::set_integrity_level exists and implements the frozen branch of SetIntegrityLevel. The gate reports the build as ok and 62 new test262 passes with no regressions, which is consistent with the helper existing.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in freeze.rs. Before merging, confirm that kahvi_core::ops::set_integrity_level implements SetIntegrityLevel with the frozen branch (GetOwnProperty per key, accessor vs data descriptor handling, and DefinePropertyOrThrow). That helper lives outside this diff and was not reviewed here. The remaining failing tests come from missing Object.isFrozen and RegExp used by the harness, not from this change.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Object.freeze in freeze.rs by following the spec steps in order. Step 1 returns non-Object arguments unchanged. Step 2 calls ops::set_integrity_level(agent, o, Frozen) with `?` propagation. Step 3 throws a TypeError when the status is false. Step 4 returns the object. There are no test-specific branches, no hardcoded results and no swallowed errors. The only other change is renaming the unused `this` and `new_target` parameters to `_this` and `_new_target`, which is cosmetic and local. I could not open the repository to confirm that ops::set_integrity_level exists and implements the frozen branch of SetIntegrityLevel. The gate reports the build as ok and 62 new test262 passes with no regressions, which is consistent with the helper existing.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in freeze.rs. Before merging, confirm that kahvi_core::ops::set_integrity_level implements SetIntegrityLevel with the frozen branch (GetOwnProperty per key, accessor vs data descriptor handling, and DefinePropertyOrThrow). That helper lives outside this diff and was not reviewed here. The remaining failing tests come from missing Object.isFrozen and RegExp used by the harness, not from this change."
+  },
+  "ttft_ms": 7184,
+  "type": "result",
+  "duration_ms": 9529,
+  "uuid": "4629d660-cfe6-407b-8225-9ad86b32c709",
+  "ttft_stream_ms": 638,
+  "time_to_request_ms": 164,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 2,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 25,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 67,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 176,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 639,
+  "time_to_request_from_spawn_ms": 18303905,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791937278662.2048,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.07,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.48,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 48810,
+  "stop_reason": "end_turn",
+  "session_id": "9b4d9534-1635-4c17-a65a-c1f2938bae4e",
+  "total_cost_usd": 0.0056907400000000006,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 12831,
+    "cache_read_input_tokens": 142754,
+    "output_tokens": 2918,
+    "output_tokens_details": {
+      "thinking_tokens": 647
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12831,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 310,
+        "cache_read_input_tokens": 19639,
+        "cache_creation_input_tokens": 672,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 672
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Object.freeze` in `crates/kahvi-builtins/src/object/freeze.rs` by calling the existing `ops::set_integrity_level` with `Frozen`, and it builds and passes clippy. `./t262 built-ins/Object/freeze/` runs 104 cases: 70 pass and 34 fail, all with \"not implemented\" errors from other built-ins. The failures are `Object.isFrozen` (20), Proxy `[[PreventExtensions]]` (8), `Object.seal` (2), Function (2) and RegExp (2), so the ticket's \"every test passes\" condition is not met. Nothing outside `freeze.rs` changed.\n\nBLOCKED: `Object.isFrozen`, Proxy `[[PreventExtensions]]`, and `Object.seal` are not implemented in the engine, and the freeze tests that depend on them (and the Function and RegExp cases) still fail.",
+  "ttft_ms": 1793,
+  "type": "result",
+  "duration_ms": 55830,
+  "uuid": "19ff2335-6900-4900-9c5a-36bce1251c07",
+  "ttft_stream_ms": 1229,
+  "time_to_request_ms": 128,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 11,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 44,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 77,
+  "time_to_request_cpu_ms": 155,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1229,
+  "time_to_request_from_spawn_ms": 18240337,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791937215209.2102,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.07,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.48,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -72,3 +72,8 @@
 [00:16:55] B-array-prototype-slice: attempt 31 finished ($0.011, 14 turns)
 [00:17:28] B-array-prototype-slice: verifier: accept The diff implements Array.prototype.slice steps 1–10 in order, with `?` on every abrupt completion. Start is converted before end, and end is skipped 
 [00:20:13] B-object-prevent-extensions: merged (+128, 58633 total)
+[00:20:15] B-object-freeze: attempt on slot 1 with haiku
+[00:20:15] B-array-prototype-slice: full test262 run for merge
+[00:21:12] B-object-freeze: attempt 32 finished ($0.006, 12 turns)
+[00:21:36] B-object-freeze: verifier: accept The diff implements Object.freeze in freeze.rs by following the spec steps in order. Step 1 returns non-Object arguments unchanged. Step 2 calls ops::
+[00:25:21] B-array-prototype-slice: merged (+124, 58757 total)

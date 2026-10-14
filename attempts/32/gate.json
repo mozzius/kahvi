@@ -1,0 +1,48 @@
+{
+  "ticket": "B-object-freeze",
+  "base": "8714c883cc3d92f92cb5fd1c5a9ce6e878a2640d",
+  "head": "079aa80c146eebbb6bfaa8ab2d552fbe51295dd0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/freeze.rs",
+      "added": 11,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 104,
+    "before": 8,
+    "after": 70,
+    "new_passes": 62,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 34,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/freeze/15.2.3.9-2-d-1.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-1.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-2.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-2.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-3.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-3.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-4.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-4.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-5.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-5.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-6.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-6.js:strict  Uncaught InternalError: not implemented: Object.isFrozen",
+      "built-ins/Object/freeze/15.2.3.9-2-d-7.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/freeze/15.2.3.9-2-d-7.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Object/freeze/15.2.3.9-2-d-8.js:sloppy  Uncaught InternalError: not implemented: Object.isFrozen"
+    ]
+  },
+  "decision": "pass"
+}
