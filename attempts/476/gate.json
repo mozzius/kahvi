@@ -1,0 +1,34 @@
+{
+  "ticket": "B-date-prototype-to-locale-time-string",
+  "base": "07401ebacfe662ebda1489bff9e94e068a6bc77d",
+  "head": "78f977fb4875d6dde0331c21f331b01166f59ad6",
+  "reject": [
+    "no new test262 passes in target"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_locale_time_string.rs",
+      "added": 21,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 8,
+    "before": 8,
+    "after": 8,
+    "new_passes": 0,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "reject"
+}
