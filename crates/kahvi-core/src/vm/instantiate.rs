@@ -27,13 +27,12 @@ pub(super) fn function_declaration_instantiation(
     let strict = code.strict;
     let params = &code.params;
     let arguments = agent.names.arguments;
-    // 12-14. funcNames: the var-scoped function declarations.
-    let func_names: Vec<JsString> = code.decls.functions.iter().map(|(n, _)| *n).collect();
+    // 12-14. funcNames: the var-scoped function declarations (code.decls.functions).
     // 15-18. argumentsObjectNeeded.
     let this_mode = super::this_mode_of(agent, func).unwrap_or(ThisMode::Strict);
     // (An arguments object nothing can observe is skipped.)
     let shadowed = !params.has_expressions
-        && (func_names.contains(&arguments)
+        && (code.decls.functions.iter().any(|(n, _)| *n == arguments)
             || code.decls.lexical.iter().any(|(n, _)| *n == arguments));
     let arguments_needed = (code.uses_arguments || code.has_direct_eval)
         && this_mode != ThisMode::Lexical
@@ -60,7 +59,6 @@ pub(super) fn function_declaration_instantiation(
             }
         }
     }
-    let mut param_bindings = params.names.clone();
     // 22. If argumentsObjectNeeded is true, then
     if arguments_needed {
         // a-b. Mapped arguments only for sloppy functions with simple parameter lists.
@@ -78,10 +76,9 @@ pub(super) fn function_declaration_instantiation(
         // e. Perform ! env.InitializeBinding("arguments", ao).
         env_record.initialize_binding(agent, arguments, Value::Object(ao))?;
         // f. Let parameterBindings be the list-concatenation of parameterNames and « "arguments" ».
-        param_bindings.push(arguments);
     }
     frame.pending.env_record = Some(env_record);
-    frame.pending.param_bindings = param_bindings;
+    frame.pending.arguments_bound = arguments_needed;
     Ok(())
 }
 
@@ -93,39 +90,42 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         // Not function code (a default constructor run directly): nothing to do.
         return Ok(());
     };
-    let param_bindings = std::mem::take(&mut frame.pending.param_bindings);
+    let arguments = agent.names.arguments;
+    let arguments_bound = std::mem::take(&mut frame.pending.arguments_bound);
+    let is_param_binding =
+        |n: JsString| code.params.names.contains(&n) || (arguments_bound && n == arguments);
     let decls = &code.decls;
-    let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
+    let is_func_name = |n: JsString| decls.functions.iter().any(|&(f, _)| f == n);
     // VarDeclaredNames includes the function declarations' names.
-    let mut var_names: Vec<JsString> = decls.var_names.clone();
-    for n in &func_names {
-        if !var_names.contains(n) {
-            var_names.push(*n);
-        }
-    }
-    let (var_env, mut instantiated) = if !code.params.has_expressions {
+    let var_names = decls.var_names.iter().copied().chain(
+        decls
+            .functions
+            .iter()
+            .map(|&(n, _)| n)
+            .filter(|n| !decls.var_names.contains(n)),
+    );
+    // instantiatedVarNames: the names varEnv has bindings for. With one
+    // environment for parameters and vars, that starts as parameterBindings.
+    let var_env = if !code.params.has_expressions {
         // 27. NOTE: Only a single Environment Record is needed for the parameters and top-level vars.
         // b. Let instantiatedVarNames be a copy of the List parameterBindings.
-        let mut instantiated = param_bindings.clone();
         // c. For each element n of varNames, do
-        for &n in &var_names {
-            if !instantiated.contains(&n) {
-                instantiated.push(n);
+        for n in var_names {
+            // i. If instantiatedVarNames does not contain n, then
+            if !env_record.has_binding(agent, n)? {
                 env_record.create_mutable_binding(agent, n, false)?;
                 env_record.initialize_binding(agent, n, Value::Undefined)?;
             }
         }
-        (env_record, instantiated)
+        env_record
     } else {
         // 28. A separate Environment Record for the body's var declarations.
         let var_env = Environment::new_declarative(agent, Some(env_record));
-        let mut instantiated: Vec<JsString> = Vec::new();
-        for &n in &var_names {
-            if !instantiated.contains(&n) {
-                instantiated.push(n);
+        for n in var_names {
+            if !var_env.has_binding(agent, n)? {
                 var_env.create_mutable_binding(agent, n, false)?;
                 // A var with the same name as a parameter starts with the parameter's value.
-                let initial = if !param_bindings.contains(&n) || func_names.contains(&n) {
+                let initial = if !is_param_binding(n) || is_func_name(n) {
                     Value::Undefined
                 } else {
                     env_record.get_binding_value(agent, n, false)?
@@ -133,7 +133,7 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
                 var_env.initialize_binding(agent, n, initial)?;
             }
         }
-        (var_env, instantiated)
+        var_env
     };
     frame.var_env = var_env;
     // 30.a If the host supports Block-Level Function Declarations Web Legacy
@@ -141,21 +141,19 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
     //   i. For each FunctionDeclaration f directly contained in the StatementList of a Block,
     //      CaseClause, or DefaultClause, such that replacing it with a `var F` would not produce
     //      any Early Errors (the compiler's static check), do
-    let arguments = agent.names.arguments;
     for &name in &decls.annex_b_functions {
         // 2. ... and F is not an element of parameterNames (the formals, and "arguments"
         //    when there is an arguments object), then
-        if param_bindings.contains(&name) {
+        if is_param_binding(name) {
             continue;
         }
         // b. If instantiatedVarNames does not contain F and F is not "arguments", then
-        if !instantiated.contains(&name) && name != arguments {
+        if !var_env.has_binding(agent, name)? && name != arguments {
             // i. Perform ! varEnv.CreateMutableBinding(F, false).
             var_env.create_mutable_binding(agent, name, false)?;
             // ii. Perform ! varEnv.InitializeBinding(F, undefined).
             var_env.initialize_binding(agent, name, Value::Undefined)?;
-            // iii. Append F to instantiatedVarNames.
-            instantiated.push(name);
+            // iii. Append F to instantiatedVarNames (varEnv now has its binding).
         }
         // c. When the FunctionDeclaration f is evaluated, set varEnv's F (Op::AnnexBFunction).
         frame.annex_b.push(name);
