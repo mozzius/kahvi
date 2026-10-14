@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 4058,
+  "stop_reason": "tool_use",
+  "session_id": "f539d529-110e-4378-8608-e17b97511767",
+  "total_cost_usd": 0.017369799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3038,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 462,
+    "output_tokens_details": {
+      "thinking_tokens": 102
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3038,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 462,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3038,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3038
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Object.is is implemented as a single call to ops::same_value on the first two arguments, with missing arguments treated as undefined. This matches the one-step spec algorithm. The gate report shows the build and clippy clean, and all 42 test262 runs passing with 0 regressions. The diff has no special cases, no swallowed errors, and no unrelated changes. The only blemish is a duplicated boilerplate comment line, which is cosmetic.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Object.is is implemented as a single call to ops::same_value on the first two arguments, with missing arguments treated as undefined. This matches the one-step spec algorithm. The gate report shows the build and clippy clean, and all 42 test262 runs passing with 0 regressions. The diff has no special cases, no swallowed errors, and no unrelated changes. The only blemish is a duplicated boilerplate comment line, which is cosmetic.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 2129,
+  "type": "result",
+  "duration_ms": 4022,
+  "uuid": "4d655206-d884-48d4-a016-dde0ec1d353b",
+  "ttft_stream_ms": 1265,
+  "time_to_request_ms": 467,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 343,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 63,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 3
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 9,
+  "time_to_request_cpu_ms": 244,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 242,
+  "process_cpu_ms_turn": 550,
+  "process_wall_ms_turn": 4021,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1265,
+  "time_to_request_from_spawn_ms": 19626936,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999087190.9429,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
