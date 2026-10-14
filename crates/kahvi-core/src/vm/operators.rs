@@ -103,8 +103,25 @@ fn apply_string_or_numeric(
     let rnum = ops::to_numeric(agent, rval)?;
     match (lnum, rnum) {
         (Numeric::Number(l), Numeric::Number(r)) => Ok(Value::Number(number_op(op, l, r))),
-        (Numeric::BigInt(_), Numeric::BigInt(_)) => {
-            ops::bigint::unsupported(agent, &format!("{op:?}"))
+        // 6. If lnum is a BigInt, then ... Let operation be the abstract
+        //    operation for opText and Type(lnum) from Table 39.
+        (Numeric::BigInt(l), Numeric::BigInt(r)) => {
+            let name = match op {
+                BinOp::Add => "add",
+                BinOp::Sub => "subtract",
+                BinOp::Mul => "multiply",
+                BinOp::Div => "divide",
+                BinOp::Mod => "remainder",
+                BinOp::Exp => "exponentiate",
+                BinOp::Shl => "leftShift",
+                BinOp::Shr => "signedRightShift",
+                BinOp::UShr => "unsignedRightShift",
+                BinOp::BitAnd => "bitwiseAND",
+                BinOp::BitOr => "bitwiseOR",
+                BinOp::BitXor => "bitwiseXOR",
+                _ => unreachable!("not a numeric operator"),
+            };
+            Ok(Value::BigInt(ops::bigint::binary(agent, name, l, r)?))
         }
         // 5. If Type(lnum) is not Type(rnum), throw a TypeError exception.
         _ => {
@@ -182,6 +199,10 @@ pub fn unary_minus(agent: &mut Agent, v: Value) -> JsResult<Value> {
 pub fn bitwise_not(agent: &mut Agent, v: Value) -> JsResult<Value> {
     match ops::to_numeric(agent, v)? {
         Numeric::Number(n) => Ok(Value::Number(!ops::f64_to_int32(n) as f64)),
-        Numeric::BigInt(_) => ops::bigint::unsupported(agent, "bitwiseNOT"),
+        Numeric::BigInt(b) => {
+            // BigInt::bitwiseNOT(x): -x - 1.
+            let value = agent.bigint(b).not();
+            Ok(Value::BigInt(agent.new_bigint(value)))
+        }
     }
 }

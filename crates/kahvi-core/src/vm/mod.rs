@@ -874,12 +874,18 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let v = frame.pop();
             let r = match v {
                 Value::Number(n) => Value::Number(if op == Op::Inc { n + 1.0 } else { n - 1.0 }),
-                _ => {
-                    return ops::bigint::unsupported(
-                        agent,
-                        if op == Op::Inc { "add" } else { "subtract" },
-                    );
+                // BigInt::add(oldValue, 1ℤ) / BigInt::subtract(oldValue, 1ℤ)
+                Value::BigInt(b) => {
+                    let one = ops::bigint::BigIntValue::from_i128(1);
+                    let old = agent.bigint(b);
+                    let value = if op == Op::Inc {
+                        old.add(&one)
+                    } else {
+                        old.sub(&one)
+                    };
+                    Value::BigInt(agent.new_bigint(value))
                 }
+                _ => unreachable!("Inc/Dec follow ToNumeric"),
             };
             frame.push(r);
         }
