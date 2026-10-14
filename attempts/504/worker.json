@@ -1,0 +1,130 @@
+{
+  "duration_api_ms": 25246,
+  "stop_reason": "end_turn",
+  "session_id": "55818b1e-2b42-46c4-8e5a-8b557bfbe4d4",
+  "total_cost_usd": 0.08714060000000001,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 12332,
+    "cache_read_input_tokens": 165536,
+    "output_tokens": 2101,
+    "output_tokens_details": {
+      "thinking_tokens": 38
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12332,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 308,
+        "cache_read_input_tokens": 18378,
+        "cache_creation_input_tokens": 817,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 817
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01AP3wog3z9D9VCiJrnApdTK",
+      "tool_input": {
+        "command": "sed -i 's/Value::Bool(/Value::Boolean(/' crates/kahvi-builtins/src/json/is_raw_json.rs"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `JSON.isRawJSON` in `is_raw_json.rs`. It returns true when the argument is an object carrying the `RawJsonData` slot from `raw_json.rs`, and false otherwise. The build and clippy are clean, but `./t262 built-ins/JSON/isRawJSON/` still shows 10 passing and 2 failing, so the target isn't met.\n\nThe two failures are both `basic.js` (sloppy and strict). They fail inside `JSON.rawJSON`, which throws not-implemented because `parse_json` in `json/parse.rs` isn't `pub(crate)`. That file and `raw_json.rs` are outside this ticket's scope.\n\nBLOCKED: `parse_json` in `crates/kahvi-builtins/src/json/parse.rs` must be made `pub(crate)`, and `raw_json.rs` updated to call it; both files are outside this ticket's scope.",
+  "ttft_ms": 2867,
+  "type": "result",
+  "duration_ms": 35547,
+  "uuid": "2938b463-4d56-4484-8ec1-a46dcb9d4941",
+  "ttft_stream_ms": 1963,
+  "time_to_request_ms": 615,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 353,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 15,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 129,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 17,
+    "message_normalization": 3,
+    "client_creation": 18,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 117,
+  "time_to_request_cpu_ms": 499,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3392,
+  "process_wall_ms_turn": 35546,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1964,
+  "time_to_request_from_spawn_ms": 30136961,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792009597195.4487,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.88,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.81,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.88,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
