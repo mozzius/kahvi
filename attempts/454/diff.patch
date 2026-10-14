@@ -1,0 +1,18 @@
+diff --git a/crates/kahvi-builtins/src/json/is_raw_json.rs b/crates/kahvi-builtins/src/json/is_raw_json.rs
+index 9ab3286..753e439 100644
+--- a/crates/kahvi-builtins/src/json/is_raw_json.rs
++++ b/crates/kahvi-builtins/src/json/is_raw_json.rs
+@@ -15,6 +15,11 @@ pub(crate) fn is_raw_json(
+     //
+     // 1. If _obj_ is an Object and _obj_ has an [[IsRawJSON]] internal slot, return *true*.
+     // 2. Return *false*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("JSON.isRawJSON"))
++    let _ = (this, new_target);
++    if let Value::Object(obj) = args.get_or_undefined(0) {
++        if agent.native::<super::raw_json::RawJsonData>(obj).is_some() {
++            return Ok(Value::Boolean(true));
++        }
++    }
++    Ok(Value::Boolean(false))
+ }

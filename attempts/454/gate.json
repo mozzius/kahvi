@@ -1,0 +1,37 @@
+{
+  "ticket": "B-json-is-raw-json",
+  "base": "af164c890551e6034f2612a919f758aca3ecd387",
+  "head": "6769823b108cd1463df02a92e65388e0147c85b6",
+  "reject": [
+    "no new test262 passes in target"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/json/is_raw_json.rs",
+      "added": 7,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 10,
+    "after": 10,
+    "new_passes": 0,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/JSON/isRawJSON/basic.js:sloppy  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/isRawJSON/basic.js:strict  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))"
+    ]
+  },
+  "decision": "reject"
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17208,
+  "stop_reason": "end_turn",
+  "session_id": "77bcfd1b-84ea-48a0-a697-8ba4781723e7",
+  "total_cost_usd": 0.0646401,
+  "usage": {
+    "input_tokens": 13,
+    "cache_creation_input_tokens": 10666,
+    "cache_read_input_tokens": 94863,
+    "output_tokens": 1218,
+    "output_tokens_details": {
+      "thinking_tokens": 29
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10666,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 257,
+        "cache_read_input_tokens": 17098,
+        "cache_creation_input_tokens": 431,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 431
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `JSON.isRawJSON` in `is_raw_json.rs`. It returns true when the argument is an object carrying the `RawJsonData` slot and false otherwise. The build passes, but `./t262 built-ins/JSON/isRawJSON/` is still at 10 of 12 runs, the same as before, and I did not run `cargo clippy`. The two failing runs (`basic.js`, sloppy and strict) call `JSON.rawJSON`, which still throws not-implemented at its `ParseJSON` step.\n\nBLOCKED: `parse_json` in `crates/kahvi-builtins/src/json/parse.rs` must be made `pub(crate)` and `raw_json.rs` updated to call it; both files are outside this ticket's scope.",
+  "ttft_ms": 3423,
+  "type": "result",
+  "duration_ms": 29057,
+  "uuid": "766ce7da-55f2-4a06-bb1e-4526c702b061",
+  "ttft_stream_ms": 2523,
+  "time_to_request_ms": 503,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 336,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 14,
+    "input_hooks": 6,
+    "tool_pool_refresh": 4,
+    "init_message": 9,
+    "engine_pickup": 3,
+    "message_prep": 5,
+    "model_config_wait": 47,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 105,
+  "time_to_request_cpu_ms": 469,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 254,
+  "process_cpu_ms_turn": 2543,
+  "process_wall_ms_turn": 29056,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2524,
+  "time_to_request_from_spawn_ms": 27394648,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006854970.6199,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.57,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

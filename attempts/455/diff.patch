@@ -1,0 +1,29 @@
+diff --git a/crates/kahvi-builtins/src/math/cosh.rs b/crates/kahvi-builtins/src/math/cosh.rs
+index a59904a..b88a6e7 100644
+--- a/crates/kahvi-builtins/src/math/cosh.rs
++++ b/crates/kahvi-builtins/src/math/cosh.rs
+@@ -22,6 +22,22 @@ pub(crate) fn cosh(
+     //
+     // NOTE:
+     // The value of `Math.cosh(x)` is the same as the value of `(Math.exp(x) + Math.exp(-x)) / 2`.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Math.cosh"))
++    let _ = (this, new_target);
++    // 1. Let _n_ be ? ToNumber(_x_).
++    let x = args.get_or_undefined(0);
++    let n = ops::to_number(agent, x)?;
++    // 2. If _n_ is *NaN*, return *NaN*.
++    if n.is_nan() {
++        return Ok(Value::Number(f64::NAN));
++    }
++    // 3. If _n_ is either *+∞*_𝔽 or *-∞*_𝔽, return *+∞*_𝔽.
++    if n.is_infinite() {
++        return Ok(Value::Number(f64::INFINITY));
++    }
++    // 4. If _n_ is either *+0*_𝔽 or *-0*_𝔽, return *1*_𝔽.
++    if n == 0.0 {
++        return Ok(Value::Number(1.0));
++    }
++    // 5. Return an implementation-approximated Number value representing the hyperbolic cosine of ℝ(_n_).
++    Ok(Value::Number(n.cosh()))
+ }
