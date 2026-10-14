@@ -541,3 +541,39 @@ pub fn to_index(agent: &mut Agent, v: Value) -> JsResult<f64> {
     // 3. Return integer.
     Ok(integer)
 }
+
+/// SnapToInteger(arg, nonIntHandling, minimum, maximum) (sec-snaptointeger)
+pub fn snap_to_integer(
+    agent: &mut Agent,
+    arg: Value,
+    truncate: bool,
+    minimum: Option<f64>,
+    maximum: Option<f64>,
+) -> JsResult<f64> {
+    // 1. Let number be ? ToNumber(arg).
+    let number = to_number(agent, arg)?;
+    // 2. If number is one of NaN, +∞𝔽, or -∞𝔽, throw a RangeError exception.
+    if !number.is_finite() {
+        return Err(agent.throw_range_error("expected a finite number"));
+    }
+    // 3. Let mv be ℝ(number).
+    let mut mv = number;
+    // 4. If nonIntHandling is truncate, set mv to truncate(mv).
+    if truncate {
+        mv = mv.trunc();
+    }
+    // 5. If mv is not an integer, throw a RangeError exception.
+    if mv.trunc() != mv {
+        return Err(agent.throw_range_error("expected an integer"));
+    }
+    // 6. If minimum is present and mv < minimum, throw a RangeError exception.
+    if minimum.is_some_and(|min| mv < min) {
+        return Err(agent.throw_range_error("number is below the allowed range"));
+    }
+    // 7. If maximum is present and mv > maximum, throw a RangeError exception.
+    if maximum.is_some_and(|max| mv > max) {
+        return Err(agent.throw_range_error("number is above the allowed range"));
+    }
+    // 8. Return mv.
+    Ok(mv + 0.0)
+}
