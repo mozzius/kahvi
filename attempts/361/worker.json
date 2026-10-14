@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 20320,
+  "stop_reason": "end_turn",
+  "session_id": "9fd3bd6f-2c1e-4fdd-afaa-46679c257d2b",
+  "total_cost_usd": 0.058193400000000006,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 8286,
+    "cache_read_input_tokens": 99346,
+    "output_tokens": 1476,
+    "output_tokens_details": {
+      "thinking_tokens": 23
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8286,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 314,
+        "cache_read_input_tokens": 14733,
+        "cache_creation_input_tokens": 416,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 416
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The getter now returns \"Iterator\". The two remaining failures need the setter, which lives in a file outside my scope.\n\nI changed `crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs` so `Iterator.prototype[Symbol.toStringTag]` returns the string \"Iterator\". The build passes. `./t262 built-ins/Iterator/prototype/Symbol.toStringTag/` still shows 2 of 4 runs passing, because `weird-setter.js` (sloppy and strict) now fails with `not implemented: set Iterator.prototype[Symbol.toStringTag]`. I didn't run clippy.\n\nBLOCKED: `iterator/prototype_set_symbol_to_string_tag.rs` (including SetterThatIgnoresPrototypeProperties) is unimplemented, and `weird-setter.js` needs it. It is outside this ticket's file scope.",
+  "ttft_ms": 2845,
+  "type": "result",
+  "duration_ms": 49470,
+  "uuid": "8c55742b-1da7-4e02-9849-6df2a1f15a14",
+  "ttft_stream_ms": 2012,
+  "time_to_request_ms": 681,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 408,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 28,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 135,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 6,
+    "tool_schema_build": 13,
+    "message_normalization": 8,
+    "client_creation": 5,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 94,
+  "time_to_request_cpu_ms": 350,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 2684,
+  "process_wall_ms_turn": 49469,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2013,
+  "time_to_request_from_spawn_ms": 24830749,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004289149.808,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.28,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

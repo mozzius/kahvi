@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11735,
+  "stop_reason": "end_turn",
+  "session_id": "c35dcf27-fd8f-49ea-a334-d983c4ed2949",
+  "total_cost_usd": 0.003982680000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 11329,
+    "cache_read_input_tokens": 74258,
+    "output_tokens": 1486,
+    "output_tokens_details": {
+      "thinking_tokens": 157
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11329,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 130,
+        "cache_read_input_tokens": 18797,
+        "cache_creation_input_tokens": 175,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 175
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.log` in `crates/kahvi-builtins/src/math/log.rs`, following the spec steps with each one as a comment above its code. All 18 test262 runs under `built-ins/Math/log/` pass (the ticket said 8 on main, so the count differs), and clippy and fmt are clean. No helper was missing, so no other files changed.\n\nBLOCKED: none",
+  "ttft_ms": 2650,
+  "type": "result",
+  "duration_ms": 38085,
+  "uuid": "d54c0caf-071c-4aa2-aef3-43aba9ef6c8b",
+  "ttft_stream_ms": 2157,
+  "time_to_request_ms": 1054,
+  "time_to_request_phases_ms": {
+    "other": 102,
+    "system_prompt": 797,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 64,
+    "input_hooks": 17,
+    "tool_pool_refresh": 2,
+    "init_message": 21,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 2,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 221,
+  "time_to_request_cpu_ms": 361,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 233,
+  "process_anon_mib_turn_start": 116,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 264,
+  "process_cpu_ms_turn": 2349,
+  "process_wall_ms_turn": 38085,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 32,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2160,
+  "time_to_request_from_spawn_ms": 24830082,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004288798.9727,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.28,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

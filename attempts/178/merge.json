@@ -1,0 +1,26 @@
+{
+  "merged": true,
+  "commit": "904fd00516fef80e555e2852e13e35b2eb052b3a",
+  "batch": [
+    "B-data-view-prototype-set-float16",
+    "C-proxy-prevent-extensions",
+    "B-data-view-prototype-set-float32",
+    "B-data-view-prototype-set-float64",
+    "B-data-view-prototype-set-int16",
+    "B-data-view-prototype-set-int32",
+    "B-data-view-prototype-set-uint16",
+    "B-data-view-prototype-set-uint32"
+  ],
+  "new_passes": 16,
+  "total_pass": 74823,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Proxy/preventExtensions/return-false.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/return-false.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/return-true-target-is-not-extensible.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/return-true-target-is-not-extensible.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/trap-is-undefined-target-is-proxy.js:module  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/trap-is-undefined.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+    "built-ins/Proxy/preventExtensions/trap-is-undefined.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions"
+  ]
+}
