@@ -37,8 +37,10 @@ pub(crate) fn prototype_reduce(
     }
     // 5. Set iterated to ? GetIteratorDirect(obj).
     let mut iterated = ops::get_iterator_direct(agent, obj)?;
-    // The reducer may collect garbage: obj and reducer stay rooted.
-    agent.with_roots(&[Value::Object(obj), reducer], |agent| {
+    // The reducer may collect garbage: obj, reducer and the next method stay
+    // rooted (the next method may be reachable from nothing else).
+    let roots = [Value::Object(obj), reducer, iterated.next_method];
+    agent.with_roots(&roots, |agent| {
         // 6. If initialValue is not present, then
         let (mut accumulator, mut counter) = if args.len() < 2 {
             // a. Let accumulator be ? IteratorStepValue(iterated).
