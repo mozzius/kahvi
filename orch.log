@@ -17,3 +17,7 @@
 [07:59:18] B-object-is-sealed: attempt 72 finished ($0.005, 15 turns)
 [07:59:36] B-object-is-sealed: verifier: accept The diff implements Object.isSealed as the spec describes. Step 1 returns true when the argument is not an Object. Step 2 propagates the result of Tes
 [08:12:09] B-typed-array-from: merged (+126, 68439 total)
+[08:12:11] B-object-is-sealed: full test262 run for merge
+[08:12:11] B-reg-exp-prototype-symbol-match-all: attempt on slot 0 with haiku
+[08:12:45] B-reg-exp-prototype-symbol-match-all: attempt 73 finished ($0.010, 9 turns)
+[08:12:45] B-reg-exp-prototype-symbol-match-all: gate rejected attempt 73: lint: lint suppression is architect-only at crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs:11: #[allow(dead_code)] // read by %RegExpStringIteratorPrototype%.next, a separate ticket

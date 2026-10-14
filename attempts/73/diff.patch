@@ -1,0 +1,117 @@
+diff --git a/crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs b/crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs
+index 15b9ccc..fc2d661 100644
+--- a/crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs
++++ b/crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs
+@@ -2,32 +2,105 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-regexp-prototype-%symbol.matchall%
+ 
++use kahvi_core::object::ObjectKind;
+ use kahvi_core::prelude::*;
+ 
++/// The state of a RegExp String Iterator: [[IteratingRegExp]], [[IteratedString]],
++/// [[Global]], [[Unicode]] and [[Done]].
++#[derive(Debug)]
++#[allow(dead_code)] // read by %RegExpStringIteratorPrototype%.next, a separate ticket
++pub(crate) struct RegExpStringIterator {
++    pub(crate) iterating_regexp: Object,
++    pub(crate) iterated_string: JsString,
++    pub(crate) global: bool,
++    pub(crate) unicode: bool,
++    pub(crate) done: bool,
++}
++
++/// CreateRegExpStringIterator(regexp, string, global, fullUnicode) (§22.2.9.1)
++fn create_reg_exp_string_iterator(
++    agent: &mut Agent,
++    regexp: Object,
++    string: JsString,
++    global: bool,
++    full_unicode: bool,
++) -> Object {
++    // 1. Let iterator be OrdinaryObjectCreate(%RegExpStringIteratorPrototype%, « [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]], [[Done]] »).
++    // 2. Set iterator.[[IteratingRegExp]] to regexp.
++    // 3. Set iterator.[[IteratedString]] to string.
++    // 4. Set iterator.[[Global]] to global.
++    // 5. Set iterator.[[Unicode]] to fullUnicode.
++    // 6. Set iterator.[[Done]] to false.
++    let proto = agent.intrinsic("%RegExpStringIteratorPrototype%");
++    let state = RegExpStringIterator {
++        iterating_regexp: regexp,
++        iterated_string: string,
++        global,
++        unicode: full_unicode,
++        done: false,
++    };
++    // 7. Return iterator.
++    agent.object_with_kind(Some(proto), ObjectKind::Native(Box::new(state)))
++}
++
+ /// RegExp.prototype[Symbol.matchAll]
+ pub(crate) fn prototype_symbol_match_all(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+     // 1. Let _regexp_ be the *this* value.
++    let regexp = this;
+     // 2. If _regexp_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(regexp) = regexp else {
++        return Err(
++            agent.throw_type_error("RegExp.prototype[Symbol.matchAll] called on a non-object")
++        );
++    };
+     // 3. Set _string_ to ? ToString(_string_).
++    let string = ops::to_string(agent, args.get_or_undefined(0))?;
+     // 4. Let _speciesCtor_ be ? SpeciesConstructor(_regexp_, %RegExp%).
++    let default_ctor = agent.intrinsic("%RegExp%");
++    let species_ctor = ops::species_constructor(agent, regexp, default_ctor)?;
+     // 5. Let _flags_ be ? ToString(? Get(_regexp_, *"flags"*)).
++    let flags_key = agent.key("flags");
++    let flags_value = ops::get(agent, regexp, flags_key)?;
++    let flags = ops::to_string(agent, flags_value)?;
+     // 6. Let _matcher_ be ? Construct(_speciesCtor_, « _regexp_, _flags_ »).
++    let matcher = ops::construct(
++        agent,
++        species_ctor,
++        &[Value::Object(regexp), Value::String(flags)],
++        None,
++    )?;
+     // 7. Let _lastIndex_ be ? ToLength(? Get(_regexp_, *"lastIndex"*)).
++    let last_index_key = agent.key("lastIndex");
++    let last_index_value = ops::get(agent, regexp, last_index_key)?;
++    let last_index = ops::to_length(agent, last_index_value)?;
+     // 8. Perform ? Set(_matcher_, *"lastIndex"*, _lastIndex_, *true*).
++    let matcher_last_index_key = agent.key("lastIndex");
++    ops::set(
++        agent,
++        matcher,
++        matcher_last_index_key,
++        Value::Number(last_index),
++        true,
++    )?;
+     // 9. If _flags_ contains *"g"*, let _global_ be *true*.
+     // 10. Else, let _global_ be *false*.
++    let flag_units = agent.str(flags);
++    let contains = |c: char| flag_units.iter().any(|&u| u == c as u16);
++    let global = contains('g');
+     // 11. If _flags_ contains *"u"* or _flags_ contains *"v"*, let _fullUnicode_ be *true*.
+     // 12. Else, let _fullUnicode_ be *false*.
++    let full_unicode = contains('u') || contains('v');
+     // 13. Return CreateRegExpStringIterator(_matcher_, _string_, _global_, _fullUnicode_).
+-    //
+-    // The value of the *"name"* property of this method is *"[Symbol.matchAll]"*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("RegExp.prototype[Symbol.matchAll]"))
++    Ok(Value::Object(create_reg_exp_string_iterator(
++        agent,
++        matcher,
++        string,
++        global,
++        full_unicode,
++    )))
+ }

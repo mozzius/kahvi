@@ -1,0 +1,26 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-match-all",
+  "base": "4367c0289c7725b3dc0aff9811236f17114bad80",
+  "head": "1ae049e7f3baa8f738854a25e2aa0759c1793bdc",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs:11: #[allow(dead_code)] // read by %RegExpStringIteratorPrototype%.next, a separate ticket"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs",
+      "added": 80,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs",
+      "line": 11,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // read by %RegExpStringIteratorPrototype%.next, a separate ticket"
+    }
+  ],
+  "lint_flag": [],
+  "decision": "reject"
+}
