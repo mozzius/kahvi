@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7860,
+  "stop_reason": "tool_use",
+  "session_id": "a3d56f3b-c44e-4dce-b54c-64e93c93e8ad",
+  "total_cost_usd": 0.0322282,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5627,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 886,
+    "output_tokens_details": {
+      "thinking_tokens": 509
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 886,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5627,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5627
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec. It validates the typed array, takes its length, then runs the descending FindViaPredicate loop with `Get`, `Call` and `ToBoolean` in the right order, and returns -1 if nothing matches. Every `?` is propagated, and roots are popped before the call result is unwrapped. The 6 remaining failures throw the engine's not-implemented error for BigInt, which comes from other parts of the engine. Nothing is special-cased or unrelated to the ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec. It validates the typed array, takes its length, then runs the descending FindViaPredicate loop with `Get`, `Call` and `ToBoolean` in the right order, and returns -1 if nothing matches. Every `?` is propagated, and roots are popped before the call result is unwrapped. The 6 remaining failures throw the engine's not-implemented error for BigInt, which comes from other parts of the engine. Nothing is special-cased or unrelated to the ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6049,
+  "type": "result",
+  "duration_ms": 7956,
+  "uuid": "9c5c6d9d-15ed-4a5d-bc74-5aab58a3f079",
+  "ttft_stream_ms": 1942,
+  "time_to_request_ms": 777,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 386,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 282,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 72,
+  "time_to_request_cpu_ms": 398,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 714,
+  "process_wall_ms_turn": 7955,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1944,
+  "time_to_request_from_spawn_ms": 18646551,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998106434.2302,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

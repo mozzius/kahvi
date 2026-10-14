@@ -126,3 +126,5 @@
 [17:14:36] B-iterator-prototype-filter: verifier: accept The diff implements Iterator.prototype.filter in its own file and follows the spec steps in order. Step 2 throws a TypeError for a non-object this. St
 [17:14:42] B-typed-array-prototype-sort: attempt on slot 2 with haiku
 [17:15:15] B-typed-array-prototype-find-last: verifier: accept The change implements %TypedArray%.prototype.findLast per spec: ValidateTypedArray (?) first, then TypedArrayLength, then a local FindViaPredicate in 
+[17:15:16] B-typed-array-prototype-find-last-index: verifier: accept The change implements %TypedArray%.prototype.findLastIndex per the spec steps. ValidateTypedArray (with ?) runs first, then TypedArrayLength, then Fin
+[17:15:18] B-iterator-prototype-drop: attempt on slot 1 with haiku
