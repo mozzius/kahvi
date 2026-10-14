@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 24308,
+  "stop_reason": "tool_use",
+  "session_id": "a2e3930d-54b4-4daf-af85-743f521820cc",
+  "total_cost_usd": 0.00502378,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8019,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 5295,
+    "output_tokens_details": {
+      "thinking_tokens": 4570
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8019,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5295,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8019,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8019
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.with in its own file, following the spec steps 1-11 in order. ValidateTypedArray, TypedArrayLength, ToAbsoluteIndex (written locally and flagged as not yet in ops), ToBigInt/ToNumber by content type, IsValidIntegerIndex with RangeError, TypedArrayCreateSameType, and the get/set loop all match the spec order and abrupt-completion handling. Each step is kept as a comment above its code. There are no test-shaped branches, hardcoded values, or made-up returns. The gate shows 46 new passes, 0 regressions, and lint is clean. The diff is plausible for the size of the test directory. Minor nits only: an Option from element_type is mapped with is_some_and (unreachable None after validation), and step 10c uses `?` where the spec uses `!` (the helper cannot fail there). Neither changes observable behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"No blocking issues. Optional follow-ups: (1) to_absolute_index is a local helper in prototype_with.rs; since at/slice/copyWithin and others need it, consider moving it to kahvi_core::ops in a separate architect-owned change. (2) Step 10c uses `?` on typed_array_set_element where the spec says `Perform !`; this is harmless because the value is already converted, but it could be written to match the spec. (3) The element_type(...).is_some_and(|k| k.is_bigint()) check could use an explicit expect or match, so an unexpected None does not silently select the Number path.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.with in its own file, following the spec steps 1-11 in order. ValidateTypedArray, TypedArrayLength, ToAbsoluteIndex (written locally and flagged as not yet in ops), ToBigInt/ToNumber by content type, IsValidIntegerIndex with RangeError, TypedArrayCreateSameType, and the get/set loop all match the spec order and abrupt-completion handling. Each step is kept as a comment above its code. There are no test-shaped branches, hardcoded values, or made-up returns. The gate shows 46 new passes, 0 regressions, and lint is clean. The diff is plausible for the size of the test directory. Minor nits only: an Option from element_type is mapped with is_some_and (unreachable None after validation), and step 10c uses `?` where the spec uses `!` (the helper cannot fail there). Neither changes observable behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": "No blocking issues. Optional follow-ups: (1) to_absolute_index is a local helper in prototype_with.rs; since at/slice/copyWithin and others need it, consider moving it to kahvi_core::ops in a separate architect-owned change. (2) Step 10c uses `?` on typed_array_set_element where the spec says `Perform !`; this is harmless because the value is already converted, but it could be written to match the spec. (3) The element_type(...).is_some_and(|k| k.is_bigint()) check could use an explicit expect or match, so an unexpected None does not silently select the Number path."
+  },
+  "ttft_ms": 21001,
+  "type": "result",
+  "duration_ms": 24081,
+  "uuid": "93914480-3103-4eb0-ad24-3c1e3c823c03",
+  "ttft_stream_ms": 1286,
+  "time_to_request_ms": 551,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 416,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 40,
+    "input_hooks": 12,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 9,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 36,
+  "time_to_request_cpu_ms": 257,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 1312,
+  "process_wall_ms_turn": 24079,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1287,
+  "time_to_request_from_spawn_ms": 19421952,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998881290.205,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

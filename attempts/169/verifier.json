@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 18640,
+  "stop_reason": "tool_use",
+  "session_id": "a8342699-ba45-4219-b226-71fe6969f0d5",
+  "total_cost_usd": 0.0038770800000000006,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6307,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4038,
+    "output_tokens_details": {
+      "thinking_tokens": 3328
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4038,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6307,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6307
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.fill following the spec steps in order: ToObject, LengthOfArrayLike, ToClampedIndex(start), ToClampedIndex(end) only when end is not undefined, then the Set loop with ToString(k) via key_from_index and Set(..., true) propagated with `?`, returning obj. The local to_clamped_index helper matches ToAbsoluteIndex plus the final clamp, and the ToIntegerOrInfinity call order is correct. No special-casing, swallowed errors, or made-up values. The BigInt failures in the gate report come from the test files themselves, not this code. The only open concern is GC rooting, which is a note rather than a spec defect.\",\"problems\":[],\"notes_for_next_attempt\":\"Optional hardening, not a blocker: obj (from ToObject on a primitive `this`, which creates a fresh wrapper) is not rooted during the ops::length_of_array_like call, which runs before agent.with_roots. Getters on the prototype chain could allocate and trigger GC there. Consider rooting obj from step 1 onward, or confirm that the GC cannot collect it at that point. Please also check the change under KAHVI_GC_STRESS=1. The to_clamped_index helper is a local copy because ops lacks ToClampedIndex/ToAbsoluteIndex. Other built-ins (copyWithin, slice, splice, at-like) would need it too, so the helper belongs in ops eventually. The doc comment saying \\\"only this built-in needs it so far\\\" is inaccurate.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.fill following the spec steps in order: ToObject, LengthOfArrayLike, ToClampedIndex(start), ToClampedIndex(end) only when end is not undefined, then the Set loop with ToString(k) via key_from_index and Set(..., true) propagated with `?`, returning obj. The local to_clamped_index helper matches ToAbsoluteIndex plus the final clamp, and the ToIntegerOrInfinity call order is correct. No special-casing, swallowed errors, or made-up values. The BigInt failures in the gate report come from the test files themselves, not this code. The only open concern is GC rooting, which is a note rather than a spec defect.",
+    "problems": [],
+    "notes_for_next_attempt": "Optional hardening, not a blocker: obj (from ToObject on a primitive `this`, which creates a fresh wrapper) is not rooted during the ops::length_of_array_like call, which runs before agent.with_roots. Getters on the prototype chain could allocate and trigger GC there. Consider rooting obj from step 1 onward, or confirm that the GC cannot collect it at that point. Please also check the change under KAHVI_GC_STRESS=1. The to_clamped_index helper is a local copy because ops lacks ToClampedIndex/ToAbsoluteIndex. Other built-ins (copyWithin, slice, splice, at-like) would need it too, so the helper belongs in ops eventually. The doc comment saying \"only this built-in needs it so far\" is inaccurate."
+  },
+  "ttft_ms": 15837,
+  "type": "result",
+  "duration_ms": 18706,
+  "uuid": "045fae72-bf20-414e-a3c0-09d018a2699f",
+  "ttft_stream_ms": 1459,
+  "time_to_request_ms": 606,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 362,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 18,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 130,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 3,
+    "tool_schema_build": 7,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 117,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1155,
+  "process_wall_ms_turn": 18703,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1460,
+  "time_to_request_from_spawn_ms": 19421850,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998881486.341,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

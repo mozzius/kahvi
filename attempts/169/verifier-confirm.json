@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8956,
+  "stop_reason": "tool_use",
+  "session_id": "ffbec43d-c791-462d-8586-3fb96956f6b6",
+  "total_cost_usd": 0.035601,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6301,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 947,
+    "output_tokens_details": {
+      "thinking_tokens": 594
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6301,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 947,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6301,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6301
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps for Array.prototype.fill in order. Every fallible call uses `?`. The `to_clamped_index` helper, written in the same file as the ticket allows, matches ToAbsoluteIndex and ToClampedIndex. The gate shows +32 passes and 0 regressions. The 4 remaining failures come from the engine's BigInt not-implemented error, which is outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps for Array.prototype.fill in order. Every fallible call uses `?`. The `to_clamped_index` helper, written in the same file as the ticket allows, matches ToAbsoluteIndex and ToClampedIndex. The gate shows +32 passes and 0 regressions. The 4 remaining failures come from the engine's BigInt not-implemented error, which is outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6928,
+  "type": "result",
+  "duration_ms": 8586,
+  "uuid": "7a6faa52-3680-47d9-b714-e35134980e38",
+  "ttft_stream_ms": 1623,
+  "time_to_request_ms": 524,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 367,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 46,
+    "autocompact": 2,
+    "query_setup": 3,
+    "model_gates": 0,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 114,
+  "time_to_request_cpu_ms": 204,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 591,
+  "process_wall_ms_turn": 8585,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1624,
+  "time_to_request_from_spawn_ms": 19442125,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998902200.806,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
