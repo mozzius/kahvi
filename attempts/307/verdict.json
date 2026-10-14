@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change replaces the not-implemented stub for Map.prototype.keys with a call to this_map(agent, this)? followed by create_collection_iterator(agent, map, CollectionIterKind::Key, false), wrapped in Ok(Value::Object(...)). This matches spec steps 1-2: this is taken as map, then CreateMapIterator(map, key) runs, with RequireInternalSlot([[MapData]]) happening first via ?. No test-specific branches, no swallowed errors, no fabricated values. The parameter renames to _args and _new_target are needed to avoid unused warnings, and the change is confined to the in-scope file. The helper implementations in support::collections (this_map, create_collection_iterator) are outside the diff, so I could not check their internals (closure iteration over the live entries list, the empty-key skip, and GeneratorYield behaviour). That is a limit of this review, not a defect found in the diff. The gate reports 12 new passing test262 tests and no regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

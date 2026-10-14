@@ -1,0 +1,35 @@
+{
+  "ticket": "B-error-is-error",
+  "base": "f11c17e82c2a5f17f81d1b2a5299c0ca99a4f11c",
+  "head": "d82dd2d0ab4c8752f60a88533cff3f37a8ec423b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/error/is_error.rs",
+      "added": 12,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 6,
+    "after": 22,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Error/isError/bigints.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Error/isError/bigints.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

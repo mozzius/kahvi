@@ -1,0 +1,32 @@
+{
+  "ticket": "B-map-prototype-keys",
+  "base": "c52943b9fa3dba5df87d006c0b347d0c6150725c",
+  "head": "642304090b4f577ea77b4927bf773e002e80a5b3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_keys.rs",
+      "added": 13,
+      "removed": 8
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

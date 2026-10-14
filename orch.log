@@ -1464,3 +1464,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:31:31] B-error-is-error: attempt 306 finished ($0.006, 16 turns)
 [18:31:33] B-map-prototype-keys: attempt 307 finished ($0.006, 8 turns)
 [18:31:47] B-date-prototype-to-json: verifier: accept The diff implements Date.prototype.toJSON in the stub's file, following the four spec steps in order. Step 1 calls ops::to_object(agent, this)?. Step 
+[18:32:11] B-map-prototype-keys: verifier: accept The change replaces the not-implemented stub for Map.prototype.keys with a call to this_map(agent, this)? followed by create_collection_iterator(agent
+[18:32:11] B-error-is-error: verifier: accept Error.isError implementation matches the three spec steps. Non-objects return false via a `Value::Object` let-else, objects are checked for the error 
