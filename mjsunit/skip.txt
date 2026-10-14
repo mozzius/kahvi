@@ -1,2 +1,4 @@
 # Tests skipped by hand, one per line: <path under test/mjsunit> <reason>.
 # Only for tests that cannot mean anything for a JS engine, or hang the run.
+turbolev/regress-351576252.js  `arg %OptimizeOsr()` is the modulo operator there, which the native rewrite cannot tell apart from a call
+console.js  tests d8's own console object (console.time, console.count, ...), not JavaScript

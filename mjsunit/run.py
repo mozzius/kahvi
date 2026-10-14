@@ -60,7 +60,7 @@ EXPECTED = HERE / "expected-pass.txt"
 SKIP_FILE = HERE / "skip.txt"
 SHIM = HERE / "shim.js"
 # Bump when rewrite_natives or rewrite_specifiers changes, to re-prepare the copy.
-PREPARE_VERSION = 2
+PREPARE_VERSION = 3
 
 # Directories that test V8 itself rather than JavaScript.
 SKIP_DIRS = {
@@ -118,7 +118,7 @@ FLAGS_LINE = re.compile(r"^//\s*Flags:(.*)$", re.M)
 FILES_LINE = re.compile(r"//\s+Files:(.*)")
 ENV_LINE = re.compile(r"//\s+Environment Variables:(.*)")
 NO_HARNESS = re.compile(r"^// NO HARNESS$", re.M)
-NATIVE_CALL = re.compile(r"%([A-Z][A-Za-z0-9_]*)\s*\(")
+NATIVE_CALL = re.compile(r"%_?([A-Z][A-Za-z0-9_]*)\s*\(")  # %Name( and the %_Name( intrinsic form
 
 
 def lock():
@@ -260,14 +260,20 @@ def classify(name, path, original, status, manual):
         flag = f.split("=", 1)[0]
         if any(rx.fullmatch(flag) for rx in SEMANTIC_FLAGS):
             return {"skip": f"flag {flag}"}
-    natives = set(NATIVE_CALL.findall(source)) - HINT_NATIVES - SPEC_NATIVES
+    # The `// Files:` helpers run with the test, so they count as its code.
+    code = source
+    for f in (f for line in FILES_LINE.findall(source) for f in line.split()):
+        helper = original.parents[len(Path(name).parts) - 1].parent.parent / f
+        if helper.is_file():
+            code += "\n" + helper.read_text(errors="surrogateescape")
+    natives = set(NATIVE_CALL.findall(code)) - HINT_NATIVES - SPEC_NATIVES
     if natives:
         return {"skip": f"V8 internal %{sorted(natives)[0]}"}
-    if TIERING_HELPERS.search(source):
+    if TIERING_HELPERS.search(code):
         return {"skip": "asserts V8 tiering state"}
-    if re.search(r"\bWebAssembly\b|wasm-module-builder", source):
+    if re.search(r"\bWebAssembly\b|wasm-module-builder", code):
         return {"skip": "uses WebAssembly"}
-    m = D8_API.search(re.sub(r"//.*", "", source))
+    m = D8_API.search(re.sub(r"//.*", "", code))
     if m:
         return {"skip": f"d8 host API: {m.group(0).strip()}"}
     files = [f for line in FILES_LINE.findall(source) for f in line.split()]
