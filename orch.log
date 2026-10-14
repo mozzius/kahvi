@@ -239,3 +239,9 @@
 [17:29:50] B-string-prototype-includes: verifier: accept The diff implements String.prototype.includes steps 1-12 in order. RequireObjectCoercible, ToString(this), IsRegExp(searchString), the TypeError on a 
 [17:29:53] B-iterator-prototype-for-each: attempt on slot 0 with haiku
 [17:30:05] C-proxy-get-prototype-of: verifier: accept The diff implements Proxy [[GetPrototypeOf]] (spec steps 1-13) in get_prototype_of.rs, in order, with each step's spec text kept as a comment above it
+[17:30:08] B-object-is: attempt on slot 1 with haiku
+[17:30:27] B-global-encode-uri: attempt 173 finished ($0.013, 15 turns)
+[17:30:45] B-object-is: attempt 176 finished ($0.004, 8 turns)
+[17:30:45] B-iterator-prototype-for-each: attempt 175 finished ($0.010, 13 turns)
+[17:30:46] B-global-encode-uri-component: attempt 174 finished ($0.011, 17 turns)
+[17:31:21] B-global-encode-uri: verifier: accept The change implements encodeURI and a file-local Encode, following the spec steps. encodeURI does ToString(uri) then Encode with ";/?:@&=+$,#". Encode

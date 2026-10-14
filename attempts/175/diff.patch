@@ -1,0 +1,88 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_for_each.rs b/crates/kahvi-builtins/src/iterator/prototype_for_each.rs
+index cc5d3c8..f9fe0ea 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_for_each.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_for_each.rs
+@@ -2,32 +2,68 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-iterator.prototype.foreach
+ 
++use kahvi_core::ops::IteratorRecord;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::iterator_helper::if_abrupt_close_iterator;
++
+ /// Iterator.prototype.forEach
+ pub(crate) fn prototype_for_each(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
++    let procedure = args.get_or_undefined(0);
+     // 1. Let _obj_ be the *this* value.
+     // 2. If _obj_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(obj) = this else {
++        return Err(agent.throw_type_error("Iterator.prototype.forEach called on a non-object"));
++    };
+     // 3. Let _iterated_ be the Iterator Record { [[Iterator]]: _obj_, [[NextMethod]]: *undefined*, [[Done]]: *false* }.
++    let iterated = IteratorRecord {
++        iterator: obj,
++        next_method: Value::Undefined,
++        done: false,
++    };
+     // 4. If IsCallable(_procedure_) is *false*, then
+-    //    a. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
+-    //    b. Return ? IteratorClose(_iterated_, _error_).
++    if !ops::is_callable(agent, procedure) {
++        // a. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
++        let error = agent.throw_type_error("Iterator.prototype.forEach: procedure is not callable");
++        // b. Return ? IteratorClose(_iterated_, _error_).
++        return ops::iterator_close(agent, &iterated, Err(error));
++    }
+     // 5. Set _iterated_ to ? GetIteratorDirect(_obj_).
+-    // 6. Let _counter_ be *+0*_𝔽.
+-    // 7. Repeat,
+-    //    a. Let _value_ be ? IteratorStepValue(_iterated_).
+-    //    b. If _value_ is ~done~, return *undefined*.
+-    //    c. Let _result_ be Completion(Call(_procedure_, *undefined*, « _value_, _counter_ »)).
+-    //    d. IfAbruptCloseIterator(_result_, _iterated_).
+-    //    e. NOTE: The following step will not change _counter_ once it reaches *2^53*_𝔽.
+-    //    f. Set _counter_ to _counter_ + *1*_𝔽.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Iterator.prototype.forEach"))
++    let mut iterated = ops::get_iterator_direct(agent, obj)?;
++    // The loop calls user code, which may collect garbage: the procedure and
++    // the iterator stay rooted.
++    let roots = [Value::Object(obj), procedure, iterated.next_method];
++    agent.with_roots(&roots, |agent| {
++        // 6. Let _counter_ be *+0*_𝔽.
++        let mut counter = 0.0;
++        // 7. Repeat,
++        loop {
++            // a. Let _value_ be ? IteratorStepValue(_iterated_).
++            let Some(value) = ops::iterator_step_value_rooted(agent, &mut iterated)? else {
++                // b. If _value_ is ~done~, return *undefined*.
++                return Ok(Value::Undefined);
++            };
++            // c. Let _result_ be Completion(Call(_procedure_, *undefined*, « _value_, _counter_ »)).
++            let mark = agent.push_root(value);
++            let result = ops::call_rooted(
++                agent,
++                procedure,
++                Value::Undefined,
++                &[value, Value::Number(counter)],
++            );
++            // d. IfAbruptCloseIterator(_result_, _iterated_).
++            if_abrupt_close_iterator(agent, result, &iterated)?;
++            agent.pop_roots(mark);
++            // e. NOTE: The following step will not change _counter_ once it reaches *2^53*_𝔽.
++            // f. Set _counter_ to _counter_ + *1*_𝔽.
++            if counter < 9007199254740992.0 {
++                counter += 1.0;
++            }
++        }
++    })
+ }

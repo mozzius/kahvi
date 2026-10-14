@@ -1,0 +1,145 @@
+diff --git a/crates/kahvi-builtins/src/global/encode_uri.rs b/crates/kahvi-builtins/src/global/encode_uri.rs
+index 8b1c1ca..142bc03 100644
+--- a/crates/kahvi-builtins/src/global/encode_uri.rs
++++ b/crates/kahvi-builtins/src/global/encode_uri.rs
+@@ -16,8 +16,138 @@ pub(crate) fn encode_uri(
+     // It performs the following steps when called:
+     //
+     // 1. Let _uriString_ be ? ToString(_uri_).
++    let uri_string = ops::to_string(agent, args.get_or_undefined(0))?;
+     // 2. Let _extraUnescaped_ be *";/?:@&=+$,#"*.
++    let extra_unescaped = agent.string(";/?:@&=+$,#");
+     // 3. Return ? Encode(_uriString_, _extraUnescaped_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("encodeURI"))
++    let _ = (this, new_target);
++    let encoded = encode(agent, uri_string, extra_unescaped)?;
++    Ok(Value::String(encoded))
++}
++
++/// Encode ( _string_: a String, _extraUnescaped_: a String, ): either a normal completion containing a String or a throw completion
++///
++/// It performs URI encoding and escaping, interpreting _string_ as a sequence of UTF-16 encoded code points. If a character is identified as unreserved in RFC 2396 or appears in _extraUnescaped_, it is not escaped.
++pub(crate) fn encode(
++    agent: &mut Agent,
++    string: JsString,
++    extra_unescaped: JsString,
++) -> JsResult<JsString> {
++    let units = agent.str(string).to_vec();
++    let extra = agent.str(extra_unescaped).to_vec();
++    // 1. Let _length_ be the length of _string_.
++    let length = units.len();
++    // 2. Let _result_ be the empty String.
++    let mut result: Vec<u16> = Vec::new();
++    // 3. Let _alwaysUnescaped_ be the string-concatenation of the ASCII word characters and *"-.!~\*'()"*.
++    let always_unescaped: Vec<u16> = (b'a'..=b'z')
++        .chain(b'A'..=b'Z')
++        .chain(b'0'..=b'9')
++        .chain(b"_-.!~*'()".iter().copied())
++        .map(u16::from)
++        .collect();
++    // 4. Let _unescapedSet_ be the string-concatenation of _alwaysUnescaped_ and _extraUnescaped_.
++    let mut unescaped_set = always_unescaped;
++    unescaped_set.extend_from_slice(&extra);
++    // 5. Let _k_ be 0.
++    let mut k = 0;
++    // 6. Repeat, while _k_ < _length_,
++    while k < length {
++        // a. Let _codeUnit_ be the code unit at index _k_ within _string_.
++        let code_unit = units[k];
++        // b. If _unescapedSet_ contains _codeUnit_, then
++        if unescaped_set.contains(&code_unit) {
++            // i. Set _k_ to _k_ + 1.
++            k += 1;
++            // ii. Set _result_ to the string-concatenation of _result_ and _codeUnit_.
++            result.push(code_unit);
++        } else {
++            // c. Else,
++            // i. Let _codePoint_ be CodePointAt(_string_, _k_).
++            let code_point = code_point_at(&units, k);
++            // ii. If _codePoint_.[[IsUnpairedSurrogate]] is *true*, throw a *URIError* exception.
++            if code_point.is_unpaired_surrogate {
++                return Err(agent.throw_error(ErrorKind::Uri, "URI malformed"));
++            }
++            // iii. Set _k_ to _k_ + _codePoint_.[[CodeUnitCount]].
++            k += code_point.code_unit_count;
++            // iv. Let _octets_ be the List of octets resulting by applying the UTF-8 transformation to _codePoint_.[[CodePoint]].
++            let octets = utf8_octets(code_point.code_point);
++            // v. For each element _octet_ of _octets_, do
++            for octet in octets {
++                // 1. Let _hex_ be the String representation of _octet_, formatted as an uppercase hexadecimal number.
++                // 2. Set _result_ to the string-concatenation of _result_, *"%"*, and StringPad(_hex_, 2, *"0"*, ~start~).
++                let escape = format!("%{octet:02X}");
++                result.extend(escape.encode_utf16());
++            }
++        }
++    }
++    // 7. Return _result_.
++    Ok(agent.intern(&result))
++}
++
++/// The Record returned by CodePointAt ( _string_, _position_ ).
++struct CodePointAt {
++    /// [[CodePoint]]
++    code_point: u32,
++    /// [[CodeUnitCount]]
++    code_unit_count: usize,
++    /// [[IsUnpairedSurrogate]]
++    is_unpaired_surrogate: bool,
++}
++
++/// CodePointAt ( _string_, _position_ )
++///
++/// Local to this file: no shared CodePointAt helper exists yet.
++/// It reads the code point starting at _position_, which must be below the length of _string_.
++fn code_point_at(units: &[u16], position: usize) -> CodePointAt {
++    let first = units[position];
++    // A code unit that is not a surrogate is its own code point.
++    if !(0xD800..=0xDFFF).contains(&first) {
++        return CodePointAt {
++            code_point: u32::from(first),
++            code_unit_count: 1,
++            is_unpaired_surrogate: false,
++        };
++    }
++    // A leading surrogate followed by a trailing surrogate forms a surrogate pair.
++    // Anything else (a lone trailing surrogate, or a leading surrogate with no trailing one after it) is unpaired.
++    let is_leading = first < 0xDC00;
++    match units.get(position + 1).copied() {
++        Some(second) if is_leading && (0xDC00..=0xDFFF).contains(&second) => {
++            let cp = 0x10000 + ((u32::from(first) - 0xD800) << 10) + (u32::from(second) - 0xDC00);
++            CodePointAt {
++                code_point: cp,
++                code_unit_count: 2,
++                is_unpaired_surrogate: false,
++            }
++        }
++        _ => CodePointAt {
++            code_point: u32::from(first),
++            code_unit_count: 1,
++            is_unpaired_surrogate: true,
++        },
++    }
++}
++
++/// The UTF-8 transformation: returns the octets of the UTF-8 encoding of the code point _cp_.
++fn utf8_octets(cp: u32) -> Vec<u8> {
++    if cp < 0x80 {
++        vec![cp as u8]
++    } else if cp < 0x800 {
++        vec![0xC0 | (cp >> 6) as u8, 0x80 | (cp & 0x3F) as u8]
++    } else if cp < 0x10000 {
++        vec![
++            0xE0 | (cp >> 12) as u8,
++            0x80 | ((cp >> 6) & 0x3F) as u8,
++            0x80 | (cp & 0x3F) as u8,
++        ]
++    } else {
++        vec![
++            0xF0 | (cp >> 18) as u8,
++            0x80 | ((cp >> 12) & 0x3F) as u8,
++            0x80 | ((cp >> 6) & 0x3F) as u8,
++            0x80 | (cp & 0x3F) as u8,
++        ]
++    }
+ }

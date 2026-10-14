@@ -1,0 +1,22 @@
+diff --git a/crates/kahvi-builtins/src/object/is.rs b/crates/kahvi-builtins/src/object/is.rs
+index aa3a4fd..d1b6f33 100644
+--- a/crates/kahvi-builtins/src/object/is.rs
++++ b/crates/kahvi-builtins/src/object/is.rs
+@@ -11,9 +11,15 @@ pub(crate) fn is(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    // This function performs the following steps when called:
++    //
++    let _ = (this, new_target);
+     // This function performs the following steps when called:
+     //
+     // 1. Return SameValue(_value1_, _value2_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.is"))
++    Ok(Value::Boolean(ops::same_value(
++        agent,
++        args.get_or_undefined(0),
++        args.get_or_undefined(1),
++    )))
+ }

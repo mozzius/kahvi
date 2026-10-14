@@ -257,3 +257,6 @@
 {"ticket": "C-proxy-define-own-property", "attempt": null, "ts": 1791998922.369592, "text": "every target run passes after later merges"}
 {"ticket": "B-typed-array-from", "attempt": null, "ts": 1791998922.6821096, "text": "every target run passes after later merges"}
 {"ticket": "B-string-prototype-includes", "attempt": 171, "ts": 1791998946.066983, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-global-encode-uri", "attempt": 173, "ts": 1791999027.261918, "text": "worker reported BLOCKED but changed files: String.prototype.toUpperCase (used by the encodeURI test harness; needed for the remaining 12 runs)"}
+{"ticket": "B-iterator-prototype-for-each", "attempt": 175, "ts": 1791999045.2182379, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-global-encode-uri-component", "attempt": 174, "ts": 1791999046.4739394, "text": "worker reported BLOCKED but changed files: String.prototype.toUpperCase is not implemented (needed by the 12 remaining encodeURIComponent tests)"}

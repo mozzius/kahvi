@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-is",
+  "base": "81b0f4a7d80590fbb239ca52d42455cab0ea0582",
+  "head": "9e10ecae34717f9689ce1ecb1eb99a30dbc344cf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/is.rs",
+      "added": 8,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 8,
+    "after": 42,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

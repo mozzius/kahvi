@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-for-each",
+  "base": "6cc4793b6066bd00b553d325b663b24f6b6430da",
+  "head": "51872e4416e5db6358362587727b407319f3074e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_for_each.rs",
+      "added": 51,
+      "removed": 15
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 54,
+    "before": 12,
+    "after": 54,
+    "new_passes": 42,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

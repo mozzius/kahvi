@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8078,
+  "stop_reason": "tool_use",
+  "session_id": "0eeb2af1-c0c8-4f5e-bd00-5c6f48d106df",
+  "total_cost_usd": 0.0371073,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6564,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 990,
+    "output_tokens_details": {
+      "thinking_tokens": 511
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6564,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 990,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6564,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6564
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements encodeURI and the Encode abstract operation step by step as the spec describes. ToString is called first and its error propagates with `?`. The unescaped set is built as the spec says (word characters, \\\"-.!~*'()\\\", plus extraUnescaped). An unpaired surrogate throws a URIError. The UTF-8 octets are correct for 1 to 4 bytes, and each is written as \\\"%\\\" plus two-digit uppercase hex. The local CodePointAt helper correctly treats a lone trailing surrogate, or a leading surrogate with no trailing one after it, as unpaired. The 12 remaining test failures come from `String.prototype.toUpperCase`, which is not implemented and is outside this ticket. I found no special-casing, swallowed errors, made-up values or unrelated edits.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements encodeURI and the Encode abstract operation step by step as the spec describes. ToString is called first and its error propagates with `?`. The unescaped set is built as the spec says (word characters, \"-.!~*'()\", plus extraUnescaped). An unpaired surrogate throws a URIError. The UTF-8 octets are correct for 1 to 4 bytes, and each is written as \"%\" plus two-digit uppercase hex. The local CodePointAt helper correctly treats a lone trailing surrogate, or a leading surrogate with no trailing one after it, as unpaired. The 12 remaining test failures come from `String.prototype.toUpperCase`, which is not implemented and is outside this ticket. I found no special-casing, swallowed errors, made-up values or unrelated edits.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5481,
+  "type": "result",
+  "duration_ms": 8374,
+  "uuid": "67da7c52-7abe-4ead-aaf0-52fbd43bcdd3",
+  "ttft_stream_ms": 1537,
+  "time_to_request_ms": 939,
+  "time_to_request_phases_ms": {
+    "other": 111,
+    "system_prompt": 399,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 37,
+    "input_hooks": 7,
+    "tool_pool_refresh": 2,
+    "init_message": 31,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 85,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 202,
+    "message_normalization": 12,
+    "client_creation": 14,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 439,
+  "time_to_request_cpu_ms": 285,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 801,
+  "process_wall_ms_turn": 8374,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1538,
+  "time_to_request_from_spawn_ms": 19611378,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999069147.0293,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
