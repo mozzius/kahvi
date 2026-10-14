@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reg-exp-prototype-get-sticky",
+  "base": "1053a61570c99c8b0f500be4bada876cb24ab8e5",
+  "head": "50ceb358041a1605142ff4643a955bca41761ff1",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_get_sticky.rs",
+      "added": 30,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 6,
+    "after": 16,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

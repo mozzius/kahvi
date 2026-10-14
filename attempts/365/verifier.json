@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11747,
+  "stop_reason": "tool_use",
+  "session_id": "b2c55324-95a4-42e4-b6cd-3faabc62170c",
+  "total_cost_usd": 0.00225178,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3995,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2173,
+    "output_tokens_details": {
+      "thinking_tokens": 1624
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3995,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2173,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3995,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3995
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements get RegExp.prototype.sticky as the spec describes. The getter sets regexp to this, sets codeUnit to 0x0079, and returns RegExpHasFlag(regexp, codeUnit) with ?. The helper follows RegExpHasFlag steps 1\u20135 in order: a non-object throws a TypeError; a missing [[OriginalFlags]] (RegExpData native) returns undefined when the value is %RegExp.prototype% and otherwise throws a TypeError; otherwise it returns whether the flags string contains the code unit. Step comments are kept, there are no test-specific branches, no swallowed errors, and no unrelated edits. The 10 new passing test262 runs are plausible for this small change.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The RegExpHasFlag helper lives in prototype_get_sticky.rs. Other flag getters (global, ignoreCase, multiline, etc.) need the same helper, so it may be moved to a shared location by the architect. Nothing else needs changing.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements get RegExp.prototype.sticky as the spec describes. The getter sets regexp to this, sets codeUnit to 0x0079, and returns RegExpHasFlag(regexp, codeUnit) with ?. The helper follows RegExpHasFlag steps 1\u20135 in order: a non-object throws a TypeError; a missing [[OriginalFlags]] (RegExpData native) returns undefined when the value is %RegExp.prototype% and otherwise throws a TypeError; otherwise it returns whether the flags string contains the code unit. Step comments are kept, there are no test-specific branches, no swallowed errors, and no unrelated edits. The 10 new passing test262 runs are plausible for this small change.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The RegExpHasFlag helper lives in prototype_get_sticky.rs. Other flag getters (global, ignoreCase, multiline, etc.) need the same helper, so it may be moved to a shared location by the architect. Nothing else needs changing."
+  },
+  "ttft_ms": 9620,
+  "type": "result",
+  "duration_ms": 11624,
+  "uuid": "3ef4470d-32e6-4d21-b34b-ad86980e3612",
+  "ttft_stream_ms": 2042,
+  "time_to_request_ms": 702,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 348,
+    "resume_other": 0,
+    "process_user_input": 14,
+    "input_attachments": 19,
+    "input_hooks": 3,
+    "tool_pool_refresh": 6,
+    "init_message": 18,
+    "engine_pickup": 3,
+    "message_prep": 11,
+    "model_config_wait": 225,
+    "autocompact": 4,
+    "query_setup": 4,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 56,
+  "time_to_request_cpu_ms": 418,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 897,
+  "process_wall_ms_turn": 11624,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2043,
+  "time_to_request_from_spawn_ms": 25079008,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004538272.6953,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

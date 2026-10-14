@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reflect-is-extensible",
+  "base": "1053a61570c99c8b0f500be4bada876cb24ab8e5",
+  "head": "783e493cc7e2151d9133ae1db17e2233ef298733",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/is_extensible.rs",
+      "added": 6,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
