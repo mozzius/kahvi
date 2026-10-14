@@ -813,3 +813,4 @@ test262 at last merge: 72953/81183 runs passing
 [17:54:43] B-array-prototype-reverse: verifier: accept The diff implements Array.prototype.reverse in its single in-scope file, following the spec steps. ToObject and LengthOfArrayLike run first, with `?` 
 [17:54:50] B-date-prototype-set-full-year: verifier: accept The diff implements Date.prototype.setFullYear in its own file, following the spec steps 1-11 in order. The TypeError for a non-object or non-Date `th
 [17:54:51] B-reg-exp-prototype-get-ignore-case: verifier: accept The diff implements `get RegExp.prototype.ignoreCase` as specified. The getter passes the this value and code unit 0x0069 to a file-local `regexp_has_
+[17:55:02] B-set-prototype-get-size: attempt on slot 2 with haiku
