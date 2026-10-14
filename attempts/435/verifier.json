@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16742,
+  "stop_reason": "tool_use",
+  "session_id": "1c3c16f8-b84c-43d8-86db-a72f8e750dd9",
+  "total_cost_usd": 0.00377688,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7093,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 3360,
+    "output_tokens_details": {
+      "thinking_tokens": 2849
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7093,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3360,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 7093,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7093
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.setUTCFullYear steps 1\u201311 in spec order. It checks the this value and reads the [[DateValue]] slot through the date helpers. It maps NaN to +0 (step 4). It runs ToNumber on year, month and day in order with `?` propagation (steps 5\u20137). Presence of month and day is detected with args.len() >= 2 and >= 3, so explicitly passed undefined still counts as present. It defaults month and day from MonthFromTime and DateFromTime of tv. It then applies MakeDate, MakeDay, TimeWithinDay, TimeClip, sets the slot and returns the value. There are no test-shaped branches, no swallowed errors and no made-up values. The helpers in crate::support::date are not part of this diff, so their internal correctness is inferred from the gate's +4 passing / 0 regressions result rather than verified here.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.setUTCFullYear steps 1\u201311 in spec order. It checks the this value and reads the [[DateValue]] slot through the date helpers. It maps NaN to +0 (step 4). It runs ToNumber on year, month and day in order with `?` propagation (steps 5\u20137). Presence of month and day is detected with args.len() >= 2 and >= 3, so explicitly passed undefined still counts as present. It defaults month and day from MonthFromTime and DateFromTime of tv. It then applies MakeDate, MakeDay, TimeWithinDay, TimeClip, sets the slot and returns the value. There are no test-shaped branches, no swallowed errors and no made-up values. The helpers in crate::support::date are not part of this diff, so their internal correctness is inferred from the gate's +4 passing / 0 regressions result rather than verified here.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 14716,
+  "type": "result",
+  "duration_ms": 16597,
+  "uuid": "20bc35c2-0969-4dae-810a-3743f1aad64f",
+  "ttft_stream_ms": 1888,
+  "time_to_request_ms": 561,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 443,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 20,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 30,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 51,
+  "time_to_request_cpu_ms": 401,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 1123,
+  "process_wall_ms_turn": 16596,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1892,
+  "time_to_request_from_spawn_ms": 26932495,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006392176.8474,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.53,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

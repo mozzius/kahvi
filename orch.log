@@ -3702,3 +3702,5 @@ test262 at last merge: 76432/81183 runs passing
 [19:32:48] B-date-prototype-set-utc-full-year: attempt 435 finished ($0.010, 13 turns)
 [19:32:55] B-string-prototype-fontsize: attempt 434 finished ($0.007, 20 turns)
 [19:33:21] B-string-prototype-link: verifier: accept The diff replaces the not-implemented stub in prototype_link.rs with a direct call to `create_html(agent, this, "a", "href", url)` imported from `supe
+[19:33:23] B-date-parse: attempt 436 finished ($0.012, 16 turns)
+[19:33:33] B-string-prototype-fontsize: verifier: accept The diff implements String.prototype.fontsize by reading the size argument with get_or_undefined(0), keeping the spec step comments, setting string to
