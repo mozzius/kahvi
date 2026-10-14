@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5355,
+  "stop_reason": "tool_use",
+  "session_id": "5798b36c-63a1-4c23-8c75-cfd738ce713b",
+  "total_cost_usd": 0.00154228,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3804,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 872,
+    "output_tokens_details": {
+      "thinking_tokens": 423
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3804,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 872,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3804,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3804
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.atanh is implemented in its own file, one spec step per comment. Step 1 uses ops::to_number with `?`. Step 2 returns NaN, +0 and -0 unchanged; `n == 0.0` also matches -0.0, so the sign is kept. Step 3 uses plain comparisons, which are false for NaN, and returns NaN. Steps 4 and 5 return \u00b1Infinity. Step 6 calls f64::atanh. No special-casing, no swallowed errors, no edits outside the in-scope file. The gate reports +2 test262 passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The diff can be merged as is. If the ticket needs more coverage, the remaining work is outside this file.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.atanh is implemented in its own file, one spec step per comment. Step 1 uses ops::to_number with `?`. Step 2 returns NaN, +0 and -0 unchanged; `n == 0.0` also matches -0.0, so the sign is kept. Step 3 uses plain comparisons, which are false for NaN, and returns NaN. Steps 4 and 5 return \u00b1Infinity. Step 6 calls f64::atanh. No special-casing, no swallowed errors, no edits outside the in-scope file. The gate reports +2 test262 passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The diff can be merged as is. If the ticket needs more coverage, the remaining work is outside this file."
+  },
+  "ttft_ms": 3415,
+  "type": "result",
+  "duration_ms": 5214,
+  "uuid": "15e8f6d1-8760-4b46-a9d2-32ae72e56337",
+  "ttft_stream_ms": 1283,
+  "time_to_request_ms": 482,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 314,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 20,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 55,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 20,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 94,
+  "time_to_request_cpu_ms": 323,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 815,
+  "process_wall_ms_turn": 5214,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1284,
+  "time_to_request_from_spawn_ms": 27394486,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006854847.4246,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
