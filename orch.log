@@ -308,3 +308,5 @@
 [17:39:26] B-data-view-prototype-set-big-int64: attempt 196 finished ($0.007, 13 turns)
 [17:39:54] B-date-prototype-set-hours: attempt 197 finished ($0.012, 12 turns)
 [17:40:00] B-array-prototype-flat-map: verifier: accept The diff implements Array.prototype.flatMap and its FlattenIntoArray helper in the scoped file. I walked the spec steps for flatMap (ToObject, LengthO
+[17:40:04] B-object-entries: attempt on slot 0 with haiku
+[17:40:11] B-data-view-prototype-set-big-int64: verifier: accept The change replaces the not-implemented stub for DataView.prototype.setBigInt64 with a direct delegation to the shared set_view_value helper, using El

@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change replaces the not-implemented stub for DataView.prototype.setBigInt64 with a direct delegation to the shared set_view_value helper, using ElementType::BigInt64. Spec steps 1-3 are kept as comments above their code. Argument mapping is correct: byteOffset is args[0] (requestIndex), value is args[1], littleEndian is args[2], and the call is propagated with `?`. The method returns Ok(Value::Undefined) after the call. No test-specific branches, hardcoded results or swallowed errors appear in the diff. The 12 remaining failures are not-implemented errors from getBigInt64 and Number.isInteger in other built-ins, not defects here. The ToIndex/ToBigInt/bounds ordering (SetViewValue steps 3-15) lives in the helper, which is outside this diff and was not visible to me, so it was not reviewed. Its existence is implied by the successful build.",
+  "problems": [],
+  "notes_for_next_attempt": "No changes needed for this ticket. The SetViewValue steps (ToIndex, ToBigInt, detached/out-of-bounds check, range check, SetValueInBuffer) are implemented in crate::support::typed_array::set_view_value, which was not part of this diff; it is shared with other DataView setters and should be checked there if it has not been. The remaining failing test262 cases depend on DataView.prototype.getBigInt64 and Number.isInteger, which are other tickets. The `let _ = new_target;` line is a harmless no-op, not a defect.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
