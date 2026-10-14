@@ -56,6 +56,17 @@ impl Object {
         if let Some(r) = super::namespace::prevent_extensions(agent, self) {
             return r;
         }
+        // TypedArray [[PreventExtensions]] (§10.4.5.1)
+        if super::typed_array::typed_array_data(agent, self).is_some() {
+            // 1. NOTE: The extensibility-related invariants do not allow this method to return
+            //    true when O can gain (or lose and then regain) properties, which might occur for
+            //    properties with integer index names when its underlying buffer is resized.
+            // 2. If IsTypedArrayFixedLength(O) is false, return false.
+            if !super::typed_array::is_typed_array_fixed_length(agent, self) {
+                return Ok(false);
+            }
+            // 3. Return OrdinaryPreventExtensions(O).
+        }
         agent.obj_mut(self).extensible = false;
         Ok(true)
     }
