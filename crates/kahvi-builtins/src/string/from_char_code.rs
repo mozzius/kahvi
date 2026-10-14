@@ -21,6 +21,16 @@ pub(crate) fn from_char_code(
     // 3. Return _result_.
     //
     // The *"length"* property of this function is *1*_𝔽.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.fromCharCode"))
+    let _ = (this, new_target);
+    // 1. Let _result_ be the empty String.
+    let mut result: Vec<u16> = Vec::with_capacity(args.len());
+    // 2. For each element _next_ of _codeUnits_, do
+    for next in args {
+        // a. Let _nextCU_ be the code unit whose numeric value is ℝ(? ToUint16(_next_)).
+        let next_cu = ops::to_uint16(agent, *next)?;
+        // b. Set _result_ to the string-concatenation of _result_ and _nextCU_.
+        result.push(next_cu);
+    }
+    // 3. Return _result_.
+    Ok(Value::String(agent.intern(&result)))
 }

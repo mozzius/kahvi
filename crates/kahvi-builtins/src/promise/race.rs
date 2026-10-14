@@ -2,6 +2,8 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-promise.race
 
+use kahvi_core::ops::promise::{self, PromiseCapability};
+use kahvi_core::ops::{IteratorKind, IteratorRecord};
 use kahvi_core::prelude::*;
 
 /// Promise.race
@@ -9,32 +11,118 @@ pub(crate) fn race(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function returns a new promise which is settled in the same way as the first passed promise to settle. It resolves all elements of the passed _iterable_ to promises as it runs this algorithm.
-    //
-    // 1. Let _ctor_ be the *this* value.
-    // 2. Let _promiseCapability_ be ? NewPromiseCapability(_ctor_).
-    // 3. Let _promiseResolve_ be Completion(GetPromiseResolve(_ctor_)).
-    // 4. IfAbruptRejectPromise(_promiseResolve_, _promiseCapability_).
-    // 5. Let _iteratorRecord_ be Completion(GetIterator(_iterable_, ~sync~)).
-    // 6. IfAbruptRejectPromise(_iteratorRecord_, _promiseCapability_).
-    // 7. Let _result_ be Completion(PerformPromiseRace(_iteratorRecord_, _ctor_, _promiseCapability_, _promiseResolve_)).
-    // 8. If _result_ is an abrupt completion, then
-    //    a. If _iteratorRecord_.[[Done]] is *false*, set _result_ to Completion(IteratorClose(_iteratorRecord_, _result_)).
-    //    b. IfAbruptRejectPromise(_result_, _promiseCapability_).
-    // 9. Return ! _result_.
-    //
-    // NOTE:
-    // If the _iterable_ argument yields no values or if none of the promises yielded by _iterable_ ever settle, then the pending promise returned by this method will never be settled.
-    // NOTE:
-    // This function expects its *this* value to be a constructor function that supports the parameter conventions of the Promise constructor. It also expects that its *this* value provides a `resolve` method.
-    // [subclause sec-performpromiserace: PerformPromiseRace (
-    // _iteratorRecord_: an Iterator Record,
-    // _ctor_: a constructor,
-    // _resultCapability_: a PromiseCapability Record,
-    // _promiseResolve_: a function object,
-    // ): either a normal completion containing an Object or a throw completion]
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Promise.race"))
+    // 1. Let C be the this value.
+    let c = this;
+    // 2. Let promiseCapability be ? NewPromiseCapability(C).
+    let promise_capability = promise::new_promise_capability(agent, c)?;
+    let Value::Object(ctor) = c else {
+        return Err(agent.throw_type_error("Promise.race called on a non-object"));
+    };
+    // 3. Let promiseResolve be Completion(GetPromiseResolve(C)).
+    let promise_resolve = get_promise_resolve(agent, ctor);
+    // 4. IfAbruptRejectPromise(promiseResolve, promiseCapability).
+    let promise_resolve = match promise_resolve {
+        Ok(f) => f,
+        Err(e) => return reject_abrupt(agent, &promise_capability, e),
+    };
+    // 5. Let iteratorRecord be Completion(GetIterator(iterable, sync)).
+    let iterable = args.get_or_undefined(0);
+    let iterator_record = ops::get_iterator(agent, iterable, IteratorKind::Sync);
+    // 6. IfAbruptRejectPromise(iteratorRecord, promiseCapability).
+    let mut iterator_record = match iterator_record {
+        Ok(r) => r,
+        Err(e) => return reject_abrupt(agent, &promise_capability, e),
+    };
+    // 7. Let result be Completion(PerformPromiseRace(iteratorRecord, C, promiseCapability, promiseResolve)).
+    let result = perform_promise_race(
+        agent,
+        &mut iterator_record,
+        ctor,
+        &promise_capability,
+        promise_resolve,
+    );
+    let result = match result {
+        Ok(v) => Ok(v),
+        Err(e) => {
+            // 8. If result is an abrupt completion, then
+            // a. If iteratorRecord.[[Done]] is false, set result to Completion(IteratorClose(iteratorRecord, result)).
+            if iterator_record.done {
+                Err(e)
+            } else {
+                ops::iterator_close(agent, &iterator_record, Err::<Value, _>(e))
+            }
+        }
+    };
+    // b. IfAbruptRejectPromise(result, promiseCapability).
+    match result {
+        Ok(v) => Ok(v),
+        Err(e) => reject_abrupt(agent, &promise_capability, e),
+    }
+}
+
+/// IfAbruptRejectPromise for a throw completion: reject the capability with
+/// the thrown value and return its promise. Other abrupt completions propagate.
+fn reject_abrupt(
+    agent: &mut Agent,
+    capability: &PromiseCapability,
+    error: JsError,
+) -> JsResult<Value> {
+    match error {
+        // 1. Perform ? Call(capability.[[Reject]], undefined, « error.[[Value]] »).
+        JsError::Throw(e) => {
+            ops::call(agent, capability.reject, Value::Undefined, &[e])?;
+            // 2. Return capability.[[Promise]].
+            Ok(capability.promise)
+        }
+        other => Err(other),
+    }
+}
+
+/// GetPromiseResolve ( _promiseCtor_ ) (§27.2.4.7.2)
+fn get_promise_resolve(agent: &mut Agent, promise_ctor: Object) -> JsResult<Value> {
+    // 1. Let promiseResolve be ? Get(promiseCtor, "resolve").
+    let key = agent.key("resolve");
+    let promise_resolve = ops::get(agent, promise_ctor, key)?;
+    // 2. If IsCallable(promiseResolve) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, promise_resolve) {
+        return Err(agent.throw_type_error("Promise.resolve is not a function"));
+    }
+    // 3. Return promiseResolve.
+    Ok(promise_resolve)
+}
+
+/// PerformPromiseRace ( _iteratorRecord_, _ctor_, _resultCapability_, _promiseResolve_ ) (§27.2.4.5.1)
+fn perform_promise_race(
+    agent: &mut Agent,
+    iterator_record: &mut IteratorRecord,
+    ctor: Object,
+    result_capability: &PromiseCapability,
+    promise_resolve: Value,
+) -> JsResult<Value> {
+    // 1. Repeat,
+    loop {
+        // a. Let next be ? IteratorStepValue(iteratorRecord).
+        let next = ops::iterator_step_value(agent, iterator_record)?;
+        match next {
+            // b. If next is done, then
+            None => {
+                // i. Return resultCapability.[[Promise]].
+                return Ok(result_capability.promise);
+            }
+            Some(next) => {
+                // c. Let nextPromise be ? Call(promiseResolve, ctor, « next »).
+                let next_promise = ops::call(agent, promise_resolve, Value::Object(ctor), &[next])?;
+                // d. Perform ? Invoke(nextPromise, "then", « resultCapability.[[Resolve]], resultCapability.[[Reject]] »).
+                let then_key = agent.key("then");
+                ops::invoke(
+                    agent,
+                    next_promise,
+                    then_key,
+                    &[result_capability.resolve, result_capability.reject],
+                )?;
+            }
+        }
+    }
 }
