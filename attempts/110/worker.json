@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 43513,
+  "stop_reason": "end_turn",
+  "session_id": "4c589489-6813-41c2-ab83-f2f1d9959cd5",
+  "total_cost_usd": 0.017848509999999998,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 44386,
+    "cache_read_input_tokens": 380581,
+    "output_tokens": 9108,
+    "output_tokens_details": {
+      "thinking_tokens": 2052
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 44386,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 401,
+        "cache_read_input_tokens": 50689,
+        "cache_creation_input_tokens": 1340,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1340
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`TypedArray.prototype.copyWithin` is implemented in its file, following the spec steps. The build and clippy are clean, and `./t262 built-ins/TypedArray/prototype/copyWithin/` gives 116 of 128 runs passing, up from 8 files' worth on main. The 12 remaining failures are not in the implementation. They throw \"not implemented\" because the tests call BigInt and `Array.prototype.fill`, which the engine lacks.\n\nI wrote a private `to_clamped_index` in the file, the same as the other TypedArray built-ins, since it isn't in `ops`. No other files changed.\n\nBLOCKED: BigInt support and `Array.prototype.fill` are not implemented, which the remaining 12 copyWithin test262 runs need.",
+  "ttft_ms": 2053,
+  "type": "result",
+  "duration_ms": 63737,
+  "uuid": "03fada8b-58e5-4432-8330-aa3c46eb688b",
+  "ttft_stream_ms": 1834,
+  "time_to_request_ms": 588,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 414,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 9,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 41,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 27,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 88,
+  "time_to_request_cpu_ms": 446,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 263,
+  "process_anon_mib_result": 144,
+  "process_peak_rss_mib": 263,
+  "process_cpu_ms_turn": 4943,
+  "process_wall_ms_turn": 63737,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1835,
+  "time_to_request_from_spawn_ms": 17790758,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997250797.789,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
