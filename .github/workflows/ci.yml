@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: fmt, clippy, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      # Same flags as the orchestrator's clippy gate (harness/orch/gates.py).
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+
+  test262:
+    name: test262 vs baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      # vendor/ecma262 is only needed by ./spec, so skip it.
+      - run: git submodule update --init --depth 1 vendor/test262
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Full suite against the ratchet: exit 1 on any regression, 3 if the
+      # canaries say the run is invalid.
+      - run: ./t262 --quiet --show 20 --baseline conformance/expected-pass.txt --summary-json t262-summary.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: t262-summary
+          path: t262-summary.json
+          if-no-files-found: ignore
