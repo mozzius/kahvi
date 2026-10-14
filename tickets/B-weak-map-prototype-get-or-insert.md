@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/weak_map/prototype_get_or_insert.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/collections.rs", "crates/kahvi-builtins/src/map/prototype_set.rs", "crates/kahvi-builtins/src/map_iterator_prototype/next.rs"]
 spec = ["sec-weakmap.prototype.getorinsert"]
 target = ["built-ins/WeakMap/prototype/getOrInsert/"]
-priority = 22
+priority = 26
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

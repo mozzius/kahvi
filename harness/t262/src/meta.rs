@@ -57,7 +57,9 @@ pub fn parse(src: &[u8]) -> Result<Meta, String> {
             .ok_or("unterminated frontmatter")?;
     let mut meta = Meta::default();
     let mut current = String::new();
-    for line in text[start..end].lines() {
+    // Some tests use CR or CRLF line terminators (YAML line breaks).
+    let frontmatter = text[start..end].replace("\r\n", "\n").replace('\r', "\n");
+    for line in frontmatter.lines() {
         if line.trim().is_empty() {
             continue;
         }

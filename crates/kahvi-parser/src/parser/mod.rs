@@ -51,6 +51,13 @@ pub fn parse_script(src: &str, opts: &ParseOptions) -> PResult<Script> {
     p.strict = opts.strict;
     let body = p.parse_directives_and_statements(true, |p| p.tok.kind == Tok::Eof)?;
     let strict = p.strict;
+    // ScriptBody : StatementList — It is a Syntax Error if ContainsUsing of StatementList is true.
+    if let Some(at) = stmt::contains_using(&body) {
+        return p.err(
+            "'using' declarations are not allowed at the top level of a script",
+            at,
+        );
+    }
     crate::early::check_script_declarations(&body, p.fn_ctx().is_eval_like)?;
     p.finish_private_names()?;
     Ok(Script {

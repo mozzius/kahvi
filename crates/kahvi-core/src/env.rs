@@ -5,6 +5,7 @@ use crate::agent::Agent;
 use crate::error::JsResult;
 use crate::object::PropertyKey;
 use crate::ops;
+use crate::ops::dispose::DisposableResource;
 use crate::value::{JsString, Object, Value};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -113,6 +114,8 @@ pub enum Environment {
         /// Module environments resolve imports through other modules' environments.
         imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
         is_module: bool,
+        /// [[DisposableResourceStack]]: the resources of its `using` declarations.
+        disposable_resource_stack: Vec<DisposableResource>,
     },
     /// Object environment records (`with` and the global object part).
     Object {
@@ -125,7 +128,6 @@ pub enum Environment {
         object_record: EnvId,
         global_this: Object,
         declarative_record: EnvId,
-        var_names: crate::hash::FxHashSet<JsString>,
     },
 }
 
@@ -151,6 +153,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: false,
+            disposable_resource_stack: Vec::new(),
         })
     }
 
@@ -177,6 +180,7 @@ impl Environment {
             })),
             imports: Default::default(),
             is_module: false,
+            disposable_resource_stack: Vec::new(),
         })
     }
 
@@ -187,6 +191,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: true,
+            disposable_resource_stack: Vec::new(),
         })
     }
 
@@ -207,7 +212,6 @@ impl Environment {
             object_record,
             global_this: this_value,
             declarative_record,
-            var_names: Default::default(),
         })
     }
 
@@ -657,6 +661,17 @@ impl EnvId {
 
     pub fn outer(self, agent: &Agent) -> Option<EnvId> {
         agent.env(self).outer()
+    }
+
+    /// The record's [[DisposableResourceStack]] (declarative records only).
+    pub fn disposable_resource_stack_mut(self, agent: &mut Agent) -> &mut Vec<DisposableResource> {
+        match agent.env_mut(self) {
+            Environment::Declarative {
+                disposable_resource_stack,
+                ..
+            } => disposable_resource_stack,
+            _ => unreachable!("[[DisposableResourceStack]] of a non-declarative environment"),
+        }
     }
 }
 

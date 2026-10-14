@@ -47,6 +47,7 @@ use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
 use crate::object::{ObjectKind, PropertyKey};
+use crate::ops::dispose::{DisposeKind, DisposeResources, DisposeStep};
 use crate::ops::{self, IteratorRecord};
 use crate::realm::RealmId;
 use crate::value::{JsString, Object, Value};
@@ -104,6 +105,37 @@ struct Handler {
     iters_len: usize,
     env: EnvId,
     private_env: Option<Arc<PrivateEnv>>,
+}
+
+/// A DisposeResources in progress at the end of a `using` scope, kept on the
+/// operand stack (it survives the Awaits of `await using`).
+#[derive(Debug)]
+struct DisposeState {
+    /// `None` only while a dispose op is running it.
+    dispose: Option<DisposeResources>,
+    /// The finally completion kind it was started with (see `Op::EndFinally`).
+    kind: f64,
+}
+
+fn dispose_state(v: Value) -> Object {
+    match v {
+        Value::Object(o) => o,
+        _ => unreachable!("a DisposeResources state on the stack"),
+    }
+}
+
+fn take_dispose(agent: &mut Agent, state: Object) -> DisposeResources {
+    agent
+        .native_mut::<DisposeState>(state)
+        .and_then(|s| s.dispose.take())
+        .expect("a DisposeResources state")
+}
+
+fn put_dispose(agent: &mut Agent, state: Object, dispose: DisposeResources) {
+    agent
+        .native_mut::<DisposeState>(state)
+        .expect("a DisposeResources state")
+        .dispose = Some(dispose);
 }
 
 /// State of a for-in enumeration (EnumerateObjectProperties, §14.7.5.9).
@@ -467,6 +499,14 @@ fn super_base(agent: &mut Agent, env: EnvId) -> JsResult<(Value, Value)> {
     let this_env = agent.get_this_environment(env);
     // MakeSuperPropertyReference: actualThis = ? env.GetThisBinding().
     let this = this_env.get_this_binding(agent)?;
+    let base = get_super_base(agent, env)?;
+    Ok((base, this))
+}
+
+/// GetSuperBase(env) for the function environment of `env`'s this binding.
+fn get_super_base(agent: &mut Agent, env: EnvId) -> JsResult<Value> {
+    let this_env = agent.get_this_environment(env);
+    // 1. Let home be env.[[FunctionObject]].[[HomeObject]].
     let home = this_env
         .function_data(agent)
         .map(|f| f.function_object)
@@ -474,14 +514,28 @@ fn super_base(agent: &mut Agent, env: EnvId) -> JsResult<(Value, Value)> {
             ObjectKind::Function(e) => e.home_object,
             _ => None,
         });
-    let base = match home {
+    Ok(match home {
+        // 2. If home is undefined, return undefined.
+        None => Value::Undefined,
+        // 3-4. Return ? home.[[GetPrototypeOf]]().
         Some(h) => h
             .internal_get_prototype_of(agent)?
             .map(Value::Object)
             .unwrap_or(Value::Null),
-        None => Value::Undefined,
-    };
-    Ok((base, this))
+    })
+}
+
+/// The first steps of GetValue / PutValue on a Super Reference
+/// { [[Base]]: base, [[ReferencedName]]: key }: ? ToObject(base), then
+/// ? ToPropertyKey(key).
+fn super_reference(agent: &mut Agent, base: Value, key: Value) -> JsResult<(Object, PropertyKey)> {
+    if base.is_nullish() {
+        let what = if base.is_null() { "null" } else { "undefined" };
+        return Err(agent.throw_type_error(&format!("Cannot use 'super' properties of {what}")));
+    }
+    let obj = ops::to_object(agent, base)?;
+    let key = ops::to_property_key(agent, key)?;
+    Ok((obj, key))
 }
 
 fn super_get(agent: &mut Agent, env: EnvId, key: PropertyKey) -> JsResult<Value> {
@@ -491,29 +545,6 @@ fn super_get(agent: &mut Agent, env: EnvId, key: PropertyKey) -> JsResult<Value>
     }
     let obj = ops::to_object(agent, base)?;
     obj.internal_get(agent, key, this)
-}
-
-fn super_set(
-    agent: &mut Agent,
-    env: EnvId,
-    key: PropertyKey,
-    value: Value,
-    strict: bool,
-) -> JsResult<()> {
-    let (base, this) = super_base(agent, env)?;
-    if base.is_nullish() {
-        return Err(base_error(agent, base, key, "set"));
-    }
-    let obj = ops::to_object(agent, base)?;
-    let ok = obj.internal_set(agent, key, value, this)?;
-    if !ok && strict {
-        let msg = format!(
-            "Cannot assign to read only property '{}'",
-            agent.key_display(key)
-        );
-        return Err(agent.throw_type_error(&msg));
-    }
-    Ok(())
 }
 
 fn resolve_private(
@@ -600,11 +631,17 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let n = frame.stack.len();
             frame.stack.insert(n - 3, d);
         }
+        Op::RotRight5 => {
+            let e = frame.pop();
+            let n = frame.stack.len();
+            frame.stack.insert(n - 4, e);
+        }
         Op::Pick(n) => {
             let v = frame.stack[frame.stack.len() - 1 - n as usize];
             frame.push(v);
         }
         Op::SetCompletion => frame.completion = frame.pop(),
+        Op::GetCompletion => frame.push(frame.completion),
 
         // ---- identifiers
         Op::GetName(name) => {
@@ -766,36 +803,63 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let v = super_get(agent, frame.env, key)?;
             frame.push(v);
         }
-        Op::GetSuperElem => {
-            let key = frame.pop();
-            let k = ops::to_property_key(agent, key)?;
-            let v = super_get(agent, frame.env, k)?;
-            frame.push(v);
-        }
-        Op::SetSuperProp(key) => {
-            let v = frame.peek();
-            super_set(agent, frame.env, key, v, frame.strict())?;
-        }
-        Op::SetSuperElem => {
-            let v = frame.pop();
-            let key = frame.pop();
-            let k = ops::to_property_key(agent, key)?;
-            super_set(agent, frame.env, k, v, frame.strict())?;
-            frame.push(v);
-        }
         Op::GetSuperPropForCall(key) => {
             let f = super_get(agent, frame.env, key)?;
             let this = resolve_this_binding(agent, frame.env)?;
             frame.push(f);
             frame.push(this);
         }
-        Op::GetSuperElemForCall => {
+        Op::SuperBase => {
+            // MakeSuperPropertyReference: Let baseValue be GetSuperBase(env).
+            let base = get_super_base(agent, frame.env)?;
+            frame.push(base);
+        }
+        Op::GetSuperElem => {
+            let base = frame.pop();
             let key = frame.pop();
-            let k = ops::to_property_key(agent, key)?;
-            let f = super_get(agent, frame.env, k)?;
-            let this = resolve_this_binding(agent, frame.env)?;
+            let this = frame.pop();
+            let (obj, key) = super_reference(agent, base, key)?;
+            // Return ? baseObj.[[Get]](V.[[ReferencedName]], GetThisValue(V)).
+            let v = obj.internal_get(agent, key, this)?;
+            frame.push(v);
+        }
+        Op::GetSuperElemForCall => {
+            let base = frame.pop();
+            let key = frame.pop();
+            let this = frame.pop();
+            let (obj, key) = super_reference(agent, base, key)?;
+            let f = obj.internal_get(agent, key, this)?;
             frame.push(f);
             frame.push(this);
+        }
+        Op::GetSuperElemForUpdate => {
+            let base = frame.pop();
+            let key = frame.pop();
+            let this = frame.pop();
+            let (obj, key) = super_reference(agent, base, key)?;
+            let v = obj.internal_get(agent, key, this)?;
+            frame.push(this);
+            frame.push(agent.key_to_value(key));
+            frame.push(Value::Object(obj));
+            frame.push(v);
+        }
+        Op::SetSuperElem => {
+            let v = frame.pop();
+            let base = frame.pop();
+            let key = frame.pop();
+            let this = frame.pop();
+            let (obj, key) = super_reference(agent, base, key)?;
+            // PutValue: Let succeeded be ? baseObj.[[Set]](V.[[ReferencedName]], W, GetThisValue(V)).
+            let ok = obj.internal_set(agent, key, v, this)?;
+            // If succeeded is false and V.[[Strict]] is true, throw a TypeError exception.
+            if !ok && frame.strict() {
+                let msg = format!(
+                    "Cannot assign to read only property '{}'",
+                    agent.key_display(key)
+                );
+                return Err(agent.throw_type_error(&msg));
+            }
+            frame.push(v);
         }
         Op::GetPrivate(name) => {
             let base = frame.pop();
@@ -970,6 +1034,78 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                     frame.push(value);
                     let target = frame.code.finally_targets[index as usize][k - 2];
                     return Ok(Flow::Jump(target as usize));
+                }
+            }
+        }
+
+        // ---- explicit resource management
+        Op::AddDisposable(is_async) => {
+            let v = frame.pop();
+            let kind = if is_async {
+                DisposeKind::Async
+            } else {
+                DisposeKind::Sync
+            };
+            // ? AddDisposableResource(envRec.[[DisposableResourceStack]], V, hint)
+            let mut capability = std::mem::take(frame.env.disposable_resource_stack_mut(agent));
+            let result =
+                ops::dispose::add_disposable_resource(agent, &mut capability, v, kind, None);
+            *frame.env.disposable_resource_stack_mut(agent) = capability;
+            result?;
+        }
+        Op::DisposeStart => {
+            let kind = frame.pop();
+            let value = frame.pop();
+            let kind = kind.as_number().unwrap_or(0.0);
+            let stack = std::mem::take(frame.env.disposable_resource_stack_mut(agent));
+            let completion = if kind == 1.0 { Err(value) } else { Ok(value) };
+            let state = agent.object_with_kind(
+                None,
+                ObjectKind::Native(Box::new(DisposeState {
+                    dispose: Some(DisposeResources::new(stack, completion)),
+                    kind,
+                })),
+            );
+            frame.push(Value::Object(state));
+        }
+        Op::DisposeStep(done) => {
+            let state = dispose_state(frame.peek());
+            let mut dispose = take_dispose(agent, state);
+            let step = dispose.step(agent);
+            put_dispose(agent, state, dispose);
+            match step? {
+                DisposeStep::Done => return Ok(Flow::Jump(done as usize)),
+                DisposeStep::Await(v) => frame.push(v),
+            }
+        }
+        Op::DisposeAwaitThrew => {
+            let e = frame.pop();
+            let state = dispose_state(frame.peek());
+            let mut dispose = take_dispose(agent, state);
+            let result = dispose.await_threw(agent, e);
+            put_dispose(agent, state, dispose);
+            result?;
+        }
+        Op::DisposeEnd => {
+            let state = dispose_state(frame.pop());
+            let s = agent
+                .native::<DisposeState>(state)
+                .expect("a DisposeResources state");
+            let kind = s.kind;
+            match s
+                .dispose
+                .as_ref()
+                .expect("a DisposeResources state")
+                .output()
+            {
+                // A normal (or break/continue/return) completion goes on as it was.
+                Ok(v) => {
+                    frame.push(v);
+                    frame.push(Value::Number(kind));
+                }
+                Err(e) => {
+                    frame.push(e);
+                    frame.push(Value::Number(1.0));
                 }
             }
         }

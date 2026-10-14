@@ -178,6 +178,7 @@ impl<'a> Compiler<'a> {
             | Op::AsyncIteratorClose(l)
             | Op::AsyncIteratorCloseForThrow(l)
             | Op::ForInNext(l)
+            | Op::DisposeStep(l)
             | Op::Yield(l)
             | Op::YieldDelegate(l) => *l = target,
             op => unreachable!("patching a non-jump {op:?}"),
