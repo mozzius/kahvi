@@ -1759,7 +1759,7 @@
   "strikes": 0,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792007544.155051,
+  "updated": 1792007608.6123564,
   "errors": 0,
   "resume_attempt": null
  },
@@ -1771,7 +1771,7 @@
   "strikes": 1,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792007564.7826304,
+  "updated": 1792007610.9157739,
   "errors": 0,
   "resume_attempt": null
  },
@@ -4561,13 +4561,13 @@
  },
  {
   "id": "B-typed-array-prototype-to-string",
-  "status": "open",
+  "status": "blocked",
   "tier": "haiku",
-  "attempts": 0,
+  "attempts": 1,
   "strikes": 0,
-  "reason": "",
+  "reason": "none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever owns `typed_array/mod.rs`, but that is cleanup, not a missing feature.",
   "salvage_attempt": null,
-  "updated": 1791957457.6162016,
+  "updated": 1792007613.805012,
   "errors": 0,
   "resume_attempt": null
  },
