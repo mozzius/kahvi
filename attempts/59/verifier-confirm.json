@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 5456,
+  "stop_reason": "tool_use",
+  "session_id": "5d8728b3-14a2-4754-ac3e-33034985d15a",
+  "total_cost_usd": 0.023234800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4362,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 519,
+    "output_tokens_details": {
+      "thinking_tokens": 132
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4362,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 519,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 4362,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4362
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the four spec steps in order. It calls to_object with `?`, then get of \\\"join\\\" with `?`, then is_callable. If that is false, it substitutes the %Object.prototype.toString% intrinsic. Last, it returns the result of call with an empty argument list, with errors propagated. Nothing is special-cased or swallowed. The `_args` and `_new_target` renames only silence unused-variable warnings. The two remaining failures come from `Reflect.get` being unimplemented, which is outside this ticket's file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the four spec steps in order. It calls to_object with `?`, then get of \"join\" with `?`, then is_callable. If that is false, it substitutes the %Object.prototype.toString% intrinsic. Last, it returns the result of call with an empty argument list, with errors propagated. Nothing is special-cased or swallowed. The `_args` and `_new_target` renames only silence unused-variable warnings. The two remaining failures come from `Reflect.get` being unimplemented, which is outside this ticket's file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3032,
+  "type": "result",
+  "duration_ms": 4858,
+  "uuid": "2ae5c7e8-66c5-4f20-856f-c413bf6989fd",
+  "ttft_stream_ms": 1585,
+  "time_to_request_ms": 95,
+  "time_to_request_phases_ms": {
+    "other": 17,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 40,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 44,
+  "time_to_request_cpu_ms": 105,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 384,
+  "process_wall_ms_turn": 4858,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1585,
+  "time_to_request_from_spawn_ms": 4427946,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791952305226.732,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.81,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

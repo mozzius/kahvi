@@ -1,0 +1,35 @@
+{
+  "ticket": "B-array-prototype-to-string",
+  "base": "c30285ec1dad46f5997e59e02a73b7d6f2f59ee7",
+  "head": "d0428508d9f2b3c8a18261dd1767d269d4b839ba",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_to_string.rs",
+      "added": 13,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/toString/non-callable-join-string-tag.js:sloppy  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Array/prototype/toString/non-callable-join-string-tag.js:strict  Uncaught InternalError: not implemented: Reflect.get"
+    ]
+  },
+  "decision": "pass"
+}
