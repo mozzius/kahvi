@@ -1974,3 +1974,10 @@ test262 at last merge: 74349/81183 runs passing
 [18:55:29] B-math-cos: attempt on slot 3 with haiku
 [18:55:33] B-math-exp: attempt on slot 1 with haiku
 [18:55:34] B-reflect-get-prototype-of: verifier: accept Implements Reflect.getPrototypeOf per spec. Step 1 checks that args[0] is an Object and throws a TypeError otherwise, with no observable side effects 
+[18:55:38] B-math-fround: attempt on slot 0 with haiku
+[18:56:09] B-iterator-prototype-get-symbol-to-string-tag: attempt 354 finished ($0.005, 13 turns)
+[18:56:09] B-math-exp: attempt 356 finished ($0.005, 11 turns)
+[18:56:11] B-math-fround: attempt 357 finished ($0.004, 9 turns)
+[18:56:12] B-math-cos: attempt 355 finished ($0.005, 9 turns)
+[18:56:43] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 354: no new test262 passes in target
+[18:56:43] B-iterator-prototype-get-symbol-to-string-tag: escalating haiku -> sonnet

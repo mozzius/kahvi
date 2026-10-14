@@ -1,0 +1,13 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs b/crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs
+index 4c64021..04a3571 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs
+@@ -15,5 +15,7 @@ pub(crate) fn prototype_get_symbol_to_string_tag(
+     //
+     // 1. Return *"Iterator"*.
+     let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Iterator.prototype[Symbol.toStringTag]"))
++    // 1. Return *"Iterator"*.
++    let units: Vec<u16> = "Iterator".encode_utf16().collect();
++    Ok(Value::String(agent.intern(&units)))
+ }

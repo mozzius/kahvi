@@ -441,3 +441,7 @@
 {"ticket": "B-math-asin", "attempt": 352, "ts": 1792004068.3304315, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-iterator-prototype-get-symbol-to-string-tag", "attempt": 353, "ts": 1792004087.8492231, "text": "worker reported BLOCKED but changed files: the setter for `Iterator.prototype[Symbol.toStringTag]` (`set Iterator.prototype[Symbol.toStringTag]`, needed by `weird-setter.js`) is not implemented"}
 {"ticket": "B-iterator-prototype-get-symbol-to-string-tag", "attempt": 353, "ts": 1792004123.6220696, "text": "rejected by gates: no new test262 passes in target"}
+{"ticket": "B-iterator-prototype-get-symbol-to-string-tag", "attempt": 354, "ts": 1792004169.303812, "text": "worker reported BLOCKED but changed files: set Iterator.prototype[Symbol.toStringTag] (the setter in iterator/prototype_set_symbol_to_string_tag.rs, incl. SetterThatIgnoresPrototypeProperties), needed by weird-setter.js"}
+{"ticket": "B-math-fround", "attempt": 357, "ts": 1792004171.6708164, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-iterator-prototype-get-symbol-to-string-tag", "attempt": 354, "ts": 1792004203.6580775, "text": "rejected by gates: no new test262 passes in target"}
+{"ticket": "B-iterator-prototype-get-symbol-to-string-tag", "attempt": 354, "ts": 1792004203.6738942, "text": "escalated from haiku to sonnet"}

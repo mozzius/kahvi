@@ -1,0 +1,25 @@
+diff --git a/crates/kahvi-builtins/src/math/cos.rs b/crates/kahvi-builtins/src/math/cos.rs
+index 870c6cd..1cecd34 100644
+--- a/crates/kahvi-builtins/src/math/cos.rs
++++ b/crates/kahvi-builtins/src/math/cos.rs
+@@ -14,10 +14,18 @@ pub(crate) fn cos(
+     // This function returns the cosine of _x_. The argument is expressed in radians.
+     // It performs the following steps when called:
+     //
++    let _ = (this, new_target);
+     // 1. Let _n_ be ? ToNumber(_x_).
++    let x = args.get_or_undefined(0);
++    let n = ops::to_number(agent, x)?;
+     // 2. If _n_ is not a finite Number, return *NaN*.
++    if !n.is_finite() {
++        return Ok(Value::Number(f64::NAN));
++    }
+     // 3. If _n_ is either *+0*_𝔽 or *-0*_𝔽, return *1*_𝔽.
++    if n == 0.0 {
++        return Ok(Value::Number(1.0));
++    }
+     // 4. Return an implementation-approximated Number value representing the cosine of ℝ(_n_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Math.cos"))
++    Ok(Value::Number(n.cos()))
+ }
