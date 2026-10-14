@@ -3331,3 +3331,6 @@ test262 at last merge: 76432/81183 runs passing
 [19:17:46] B-date-prototype-set-utc-minutes: verifier: accept The diff implements Date.prototype.setUTCMinutes in its own file, following the 13 spec steps in order. Observable steps run in spec order: this check
 [19:17:47] B-date-prototype-set-utc-milliseconds: verifier: accept The change implements Date.prototype.setUTCMilliseconds in its own file and follows the spec steps in order. Step 1 is a manual Object check that thro
 [19:17:49] B-date-prototype-set-utc-seconds: attempt on slot 1 with haiku
+[19:17:52] B-date-prototype-set-utc-hours: verifier: accept The diff implements Date.prototype.setUTCHours following the spec's 15 steps in order. Steps 2-7 check the this-value and run ToNumber on hour, minute
+[19:17:52] B-date-prototype-to-date-string: attempt on slot 2 with haiku
+[19:17:54] B-date-prototype-set-utc-month: verifier: accept The diff implements Date.prototype.setUTCMonth in its own file, following the spec steps in order. RequireInternalSlot is done via date::this_time_val

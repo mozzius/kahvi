@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Date.prototype.setUTCHours following the spec's 15 steps in order. Steps 2-7 check the this-value and run ToNumber on hour, minute, second and millisecond in order, using args.get(i) for presence, before the NaN check in step 8. Steps 9-11 default missing fields from tv, step 12 composes MakeDate/MakeTime from the shared support::date helpers, step 13 applies TimeClip, step 14 stores the value, and step 15 returns it. Errors propagate with `?` and no default values are returned. No input-specific branches. The gate reports 14 new passing test262 runs with no regressions. The only cosmetic deviation is that the stub's trailing \"length\"/NOTE comment was dropped; the `new_target` rename to `_new_target` is needed because the parameter is now unused.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
