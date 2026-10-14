@@ -2862,3 +2862,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:08:40] B-date-prototype-get-month: verifier: accept The change implements Date.prototype.getMonth in its own file. Steps 1-2 and 3 go through `date::this_time_value(agent, this)?`, which should perform 
 [19:08:42] B-date-prototype-get-minutes: verifier: accept The diff implements Date.prototype.getMinutes in its own file, following the spec steps. Step 1-3 go through date::this_time_value(agent, this)? (the 
 [19:08:44] B-date-prototype-get-utc-date: attempt on slot 2 with haiku
+[19:08:47] B-date-prototype-get-seconds: verifier: accept The diff implements Date.prototype.getSeconds in its own file. Steps 1-3 go through date::this_time_value(agent, this)?, which should cover RequireInt
+[19:08:48] B-date-prototype-get-utc-day: attempt on slot 0 with haiku
