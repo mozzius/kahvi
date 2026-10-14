@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-prototype-to-locale-string",
+  "base": "5c4269a9bb03cc7081ba7919dd8bb268a445c044",
+  "head": "be879f840d7a1686cb867bbfdc02d99284b8592d",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_to_locale_string.rs",
+      "added": 6,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 14,
+    "after": 22,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

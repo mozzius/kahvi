@@ -1,0 +1,17 @@
+diff --git a/crates/kahvi-builtins/src/object/prototype_to_locale_string.rs b/crates/kahvi-builtins/src/object/prototype_to_locale_string.rs
+index af065e9..c45c517 100644
+--- a/crates/kahvi-builtins/src/object/prototype_to_locale_string.rs
++++ b/crates/kahvi-builtins/src/object/prototype_to_locale_string.rs
+@@ -21,6 +21,10 @@ pub(crate) fn prototype_to_locale_string(
+     // This method provides a generic `toLocaleString` implementation for objects that have no locale-sensitive `toString` behaviour. `Array`, `Number`, `Date`, and %TypedArray% provide their own locale-sensitive `toLocaleString` methods.
+     // NOTE:
+     // ECMA-402 intentionally does not provide an alternative to this default implementation.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.prototype.toLocaleString"))
++    let _ = (args, new_target);
++    // 1. Let _thisValue_ be the *this* value.
++    let this_value = this;
++    // 2. Return ? Invoke(_thisValue_, *"toString"*).
++    let key = agent.key("toString");
++    ops::invoke(agent, this_value, key, &[])
+ }

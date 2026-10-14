@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 9946,
+  "stop_reason": "end_turn",
+  "session_id": "e171660b-5f0b-404e-bccd-3e8b23dd6bb2",
+  "total_cost_usd": 0.00422578,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 12613,
+    "cache_read_input_tokens": 77028,
+    "output_tokens": 1402,
+    "output_tokens_details": {
+      "thinking_tokens": 143
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12613,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 178,
+        "cache_read_input_tokens": 19803,
+        "cache_creation_input_tokens": 453,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 453
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Object.prototype.toLocaleString` in `crates/kahvi-builtins/src/object/prototype_to_locale_string.rs`. It calls `ops::invoke(agent, this, \"toString\", &[])`, with the spec steps kept as comments above the code. All 22 test262 runs under `built-ins/Object/prototype/toLocaleString/` pass (up from 14), and `cargo clippy -p kahvi-builtins` is clean.\n\nNo helper was missing and no files outside the ticket's scope changed.",
+  "ttft_ms": 1812,
+  "type": "result",
+  "duration_ms": 26395,
+  "uuid": "1fd33141-e4e9-4a54-8722-061ad86e421b",
+  "ttft_stream_ms": 1562,
+  "time_to_request_ms": 690,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 495,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 54,
+    "input_hooks": 16,
+    "tool_pool_refresh": 5,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 2,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 21,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 147,
+  "time_to_request_cpu_ms": 385,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2404,
+  "process_wall_ms_turn": 26394,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 37,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1564,
+  "time_to_request_from_spawn_ms": 23323873,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002782315.395,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.15,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,112 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_pad_end.rs b/crates/kahvi-builtins/src/string/prototype_pad_end.rs
+index 2d640cc..f845be8 100644
+--- a/crates/kahvi-builtins/src/string/prototype_pad_end.rs
++++ b/crates/kahvi-builtins/src/string/prototype_pad_end.rs
+@@ -16,6 +16,105 @@ pub(crate) fn prototype_pad_end(
+     // 1. Let _thisValue_ be the *this* value.
+     // 2. Perform ? RequireObjectCoercible(_thisValue_).
+     // 3. Return ? StringPaddingBuiltinsImpl(_thisValue_, _maxLength_, _fillString_, ~end~).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.padEnd"))
++    let _ = new_target;
++    // 1. Let _thisValue_ be the *this* value.
++    let this_value = this;
++    // 2. Perform ? RequireObjectCoercible(_thisValue_).
++    ops::require_object_coercible(agent, this_value)?;
++    // 3. Return ? StringPaddingBuiltinsImpl(_thisValue_, _maxLength_, _fillString_, ~end~).
++    let max_length = args.get_or_undefined(0);
++    let fill_string = args.get_or_undefined(1);
++    let padded =
++        string_padding_builtins_impl(agent, this_value, max_length, fill_string, Placement::End)?;
++    Ok(Value::String(padded))
++}
++
++/// The _placement_ parameter of StringPaddingBuiltinsImpl and StringPad.
++#[derive(Clone, Copy, PartialEq, Eq)]
++pub(crate) enum Placement {
++    // Only padEnd is implemented in this file; padStart uses ~start~.
++    #[allow(dead_code)]
++    Start,
++    End,
++}
++
++/// The largest String length the engine will allocate. Matches the limit
++/// used by String.prototype.repeat.
++const MAX_STRING_LENGTH: f64 = ((1u64 << 29) - 24) as f64;
++
++/// StringPaddingBuiltinsImpl ( _thisValue_, _maxLength_, _fillString_, _placement_ ) (§22.1.3.17.1)
++pub(crate) fn string_padding_builtins_impl(
++    agent: &mut Agent,
++    this_value: Value,
++    max_length: Value,
++    fill_string: Value,
++    placement: Placement,
++) -> JsResult<JsString> {
++    // 1. Let _string_ be ? ToString(_thisValue_).
++    let string = ops::to_string(agent, this_value)?;
++    // 2. Let _intMaxLength_ be ℝ(? ToLength(_maxLength_)).
++    let int_max_length = ops::to_length(agent, max_length)?;
++    // 3. Let _stringLength_ be the length of _string_.
++    let string_length = agent.str_len(string) as f64;
++    // 4. If _intMaxLength_ ≤ _stringLength_, return _string_.
++    if int_max_length <= string_length {
++        return Ok(string);
++    }
++    // 5. If _fillString_ is *undefined*, set _fillString_ to the String value consisting solely of the code unit 0x0020 (SPACE).
++    let fill = if matches!(fill_string, Value::Undefined) {
++        agent.string(" ")
++    } else {
++        // 6. Else, set _fillString_ to ? ToString(_fillString_).
++        ops::to_string(agent, fill_string)?
++    };
++    // 7. Return StringPad(_string_, _intMaxLength_, _fillString_, _placement_).
++    string_pad(agent, string, int_max_length, fill, placement)
++}
++
++/// StringPad ( _string_, _maxLength_, _fillString_, _placement_ ) (§22.1.3.17.2)
++pub(crate) fn string_pad(
++    agent: &mut Agent,
++    string: JsString,
++    max_length: f64,
++    fill_string: JsString,
++    placement: Placement,
++) -> JsResult<JsString> {
++    // 1. Let _stringLength_ be the length of _string_.
++    let string_length = agent.str_len(string) as f64;
++    // 2. If _maxLength_ ≤ _stringLength_, return _string_.
++    if max_length <= string_length {
++        return Ok(string);
++    }
++    // 3. If _fillString_ is the empty String, return _string_.
++    if agent.str_len(fill_string) == 0 {
++        return Ok(string);
++    }
++    // 4. Let _fillLen_ be _maxLength_ - _stringLength_.
++    // The result is allocated below, so refuse lengths the engine cannot hold.
++    if max_length > MAX_STRING_LENGTH {
++        return Err(agent.throw_range_error("Invalid string length"));
++    }
++    let fill_len = (max_length - string_length) as usize;
++    // 5. Let _truncatedStringFiller_ be a String value produced by truncating _filler_ to length _fillLen_.
++    //    _filler_ is _fillString_ repeated until it has at least _fillLen_ code units.
++    let fill_units = agent.str(fill_string);
++    let mut filler: Vec<u16> = Vec::with_capacity(fill_len);
++    while filler.len() < fill_len {
++        let take = (fill_len - filler.len()).min(fill_units.len());
++        filler.extend_from_slice(&fill_units[..take]);
++    }
++    // 6. If _placement_ is ~start~, return the string-concatenation of _truncatedStringFiller_ and _string_.
++    // 7. Return the string-concatenation of _string_ and _truncatedStringFiller_.
++    let mut result: Vec<u16> = Vec::with_capacity(agent.str_len(string) + filler.len());
++    match placement {
++        Placement::Start => {
++            result.extend_from_slice(&filler);
++            result.extend_from_slice(agent.str(string));
++        }
++        Placement::End => {
++            result.extend_from_slice(agent.str(string));
++            result.extend_from_slice(&filler);
++        }
++    }
++    Ok(agent.intern(&result))
+ }

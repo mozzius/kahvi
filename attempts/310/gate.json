@@ -1,0 +1,26 @@
+{
+  "ticket": "B-string-prototype-pad-end",
+  "base": "5c4269a9bb03cc7081ba7919dd8bb268a445c044",
+  "head": "9a00d4049fa229156ae7942b7e475b4d764ddc24",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/string/prototype_pad_end.rs:36: #[allow(dead_code)]"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_pad_end.rs",
+      "added": 101,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/string/prototype_pad_end.rs",
+      "line": 36,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)]"
+    }
+  ],
+  "lint_flag": [],
+  "decision": "reject"
+}

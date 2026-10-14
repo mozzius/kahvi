@@ -401,3 +401,6 @@
 {"ticket": "B-object-prototype-set-proto", "attempt": 301, "ts": 1792002541.975603, "text": "worker reported BLOCKED but changed files: the getter `get Object.prototype.__proto__` is not implemented; the 6 failing `get-*` tests under built-ins/Object/prototype/__proto__/ need it."}
 {"ticket": "B-reflect-get-own-property-descriptor", "attempt": 302, "ts": 1792002595.9930127, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-error-is-error", "attempt": 306, "ts": 1792002691.290886, "text": "worker reported BLOCKED but changed files: BigInt literals and the `BigInt()` global are not implemented in the engine, which `built-ins/Error/isError/bigints.js` requires."}
+{"ticket": "B-map-prototype-values", "attempt": 308, "ts": 1792002812.4987187, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-string-prototype-pad-end", "attempt": 310, "ts": 1792002853.6752758, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-string-prototype-pad-end", "attempt": 310, "ts": 1792002854.3191633, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/string/prototype_pad_end.rs:36: #[allow(dead_code)]"}
