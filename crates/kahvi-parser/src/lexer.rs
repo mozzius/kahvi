@@ -158,6 +158,10 @@ pub fn is_identifier_part(c: char) -> bool {
 pub struct Lexer<'a> {
     src: &'a str,
     pub pos: usize,
+    /// Byte offsets of the U+FFFD characters in `src` that stand for lone
+    /// surrogates in the original UTF-16 source, with those code units.
+    /// Sorted by offset.
+    pub lone_surrogates: Vec<(usize, u16)>,
     /// Module goal: no HTML-like comments.
     pub module: bool,
 }
@@ -169,12 +173,44 @@ impl<'a> Lexer<'a> {
         Lexer {
             src,
             pos: 0,
+            lone_surrogates: Vec::new(),
             module,
         }
     }
 
     pub fn source(&self) -> &'a str {
         self.src
+    }
+
+    /// Appends the source character `c` that was just consumed: a lone
+    /// surrogate keeps its own code unit.
+    fn push_source_char(&self, buf: &mut Utf16, c: char) {
+        self.push_source_char_at(buf, c, self.pos - c.len_utf8());
+    }
+
+    fn push_source_char_at(&self, buf: &mut Utf16, c: char, at: usize) {
+        if c == '\u{FFFD}'
+            && let Ok(i) = self.lone_surrogates.binary_search_by_key(&at, |&(p, _)| p)
+        {
+            buf.push(self.lone_surrogates[i].1);
+        } else {
+            push_char(buf, c);
+        }
+    }
+
+    /// TRV of the template text `src[start..end]`: CR and CRLF become LF.
+    fn push_raw(&self, raw: &mut Utf16, start: usize, end: usize) {
+        let mut chars = self.src[start..end].char_indices().peekable();
+        while let Some((i, c)) = chars.next() {
+            if c == '\r' {
+                if chars.peek().map(|&(_, n)| n) == Some('\n') {
+                    chars.next();
+                }
+                raw.push(0x0A);
+            } else {
+                self.push_source_char_at(raw, c, start + i);
+            }
+        }
     }
 
     fn peek_char(&self) -> Option<char> {
@@ -632,7 +668,7 @@ impl<'a> Lexer<'a> {
                     }
                 }
                 '\n' | '\r' => return self.err_at("unterminated string literal", start),
-                c => push_char(&mut buf, c),
+                c => self.push_source_char(&mut buf, c),
             }
         }
         tok.str_val = buf;
@@ -742,7 +778,7 @@ impl<'a> Lexer<'a> {
             }
             c => {
                 let mut v = Vec::new();
-                push_char(&mut v, c);
+                self.push_source_char(&mut v, c);
                 Escape {
                     value: Some(v),
                     legacy_octal: false,
@@ -775,8 +811,7 @@ impl<'a> Lexer<'a> {
                     }
                     raw.push('\\' as u16);
                     // Raw text of the escape, with line terminators normalised.
-                    let text = &self.src[esc_start..self.pos];
-                    push_raw(&mut raw, text);
+                    self.push_raw(&mut raw, esc_start, self.pos);
                 }
                 '\r' => {
                     self.eat('\n');
@@ -784,8 +819,8 @@ impl<'a> Lexer<'a> {
                     raw.push(0x0A);
                 }
                 c => {
-                    push_char(&mut cooked, c);
-                    push_char(&mut raw, c);
+                    self.push_source_char(&mut cooked, c);
+                    self.push_source_char(&mut raw, c);
                 }
             }
         }
@@ -807,7 +842,7 @@ impl<'a> Lexer<'a> {
     pub fn rescan_regexp(&mut self, start: usize, nl_before: bool) -> LexResult<Token> {
         self.pos = start + 1;
         let mut in_class = false;
-        let mut body = String::new();
+        let mut body: Utf16 = Vec::new();
         loop {
             let Some(c) = self.bump() else {
                 return self.err_at("unterminated regular expression", start);
@@ -817,9 +852,9 @@ impl<'a> Lexer<'a> {
             }
             match c {
                 '\\' => {
-                    body.push(c);
+                    body.push(c as u16);
                     match self.bump() {
-                        Some(n) if !is_line_terminator(n) => body.push(n),
+                        Some(n) if !is_line_terminator(n) => self.push_source_char(&mut body, n),
                         _ => return self.err_at("unterminated regular expression", start),
                     }
                     continue;
@@ -829,7 +864,7 @@ impl<'a> Lexer<'a> {
                 '/' if !in_class => break,
                 _ => {}
             }
-            body.push(c);
+            self.push_source_char(&mut body, c);
         }
         if body.is_empty() {
             return self.err_at("empty regular expression", start);
@@ -846,7 +881,7 @@ impl<'a> Lexer<'a> {
             self.bump();
         }
         let mut tok = Token::new(Tok::RegExp, start);
-        tok.str_val = body.encode_utf16().collect();
+        tok.str_val = body;
         tok.regex_flags = flags;
         tok.end = self.pos;
         tok.nl_before = nl_before;
@@ -869,21 +904,6 @@ fn push_code_point(buf: &mut Utf16, cp: u32) {
         Some(c) => push_char(buf, c),
         // A lone surrogate written as \uD800.
         None => buf.push(cp as u16),
-    }
-}
-
-/// TRV of template text: CR and CRLF become LF.
-fn push_raw(raw: &mut Utf16, text: &str) {
-    let mut chars = text.chars().peekable();
-    while let Some(c) = chars.next() {
-        if c == '\r' {
-            if chars.peek() == Some(&'\n') {
-                chars.next();
-            }
-            raw.push(0x0A);
-        } else {
-            push_char(raw, c);
-        }
     }
 }
 

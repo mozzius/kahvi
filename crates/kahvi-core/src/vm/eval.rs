@@ -131,11 +131,12 @@ pub fn perform_eval(
 ) -> JsResult<Value> {
     // 2. If x is not a String, return x.
     let Value::String(s) = x else { return Ok(x) };
-    let source = agent.str_lossy(s);
+    let (source, lone_surrogates) = source_text(agent.str(s));
     let direct = caller.is_some();
     // 6-7. What the eval code may contain depends on the enclosing function.
     let mut opts = ParseOptions {
         strict: direct && strict_caller,
+        lone_surrogates,
         ..ParseOptions::default()
     };
     let mut caller_state = None;
@@ -232,4 +233,22 @@ pub fn perform_eval(
     })();
     agent.contexts.pop();
     result
+}
+
+/// Source text for the parser, which reads UTF-8: each lone surrogate
+/// becomes U+FFFD, recorded with its byte offset and code unit so literals
+/// keep the code unit itself.
+fn source_text(units: &[u16]) -> (String, Vec<(usize, u16)>) {
+    let mut text = String::with_capacity(units.len());
+    let mut lone = Vec::new();
+    for r in char::decode_utf16(units.iter().copied()) {
+        match r {
+            Ok(c) => text.push(c),
+            Err(e) => {
+                lone.push((text.len(), e.unpaired_surrogate()));
+                text.push(char::REPLACEMENT_CHARACTER);
+            }
+        }
+    }
+    (text, lone)
 }
