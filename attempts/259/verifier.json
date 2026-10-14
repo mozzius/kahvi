@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11417,
+  "stop_reason": "tool_use",
+  "session_id": "d46364f4-1f8d-48ac-979b-7571688ee072",
+  "total_cost_usd": 0.00263958,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4927,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2147,
+    "output_tokens_details": {
+      "thinking_tokens": 1552
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4927,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2147,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4927,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4927
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements WeakMap.prototype.getOrInsert in its own file and follows the spec steps in order. Step 2 uses this_weak_map, which performs RequireInternalSlot. Step 3 checks can_be_held_weakly and throws a TypeError. Step 4 returns the existing value on a key match. Steps 5 and 6 append the new entry. Step 7 returns value. Each step keeps its spec comment directly above the code. The only observable operations are the slot check, the key check and the table operations, and none of them are reordered. There are no test-shaped branches, no swallowed errors and no made-up values. The renamed `_new_target` parameter is a required consequence of no longer using the parameter. The helpers it imports come from support::collections and are not edited here. The remaining gate failures come from WeakMap.prototype.get being unimplemented, which the ticket allows. I could not inspect the helper internals (collection_key, OrderedTable::get/set) from the diff, so I assumed they implement SameValue semantics for the key lookup. Because objects and non-registered symbols are the only keys that reach that lookup, -0 normalisation does not matter.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements WeakMap.prototype.getOrInsert in its own file and follows the spec steps in order. Step 2 uses this_weak_map, which performs RequireInternalSlot. Step 3 checks can_be_held_weakly and throws a TypeError. Step 4 returns the existing value on a key match. Steps 5 and 6 append the new entry. Step 7 returns value. Each step keeps its spec comment directly above the code. The only observable operations are the slot check, the key check and the table operations, and none of them are reordered. There are no test-shaped branches, no swallowed errors and no made-up values. The renamed `_new_target` parameter is a required consequence of no longer using the parameter. The helpers it imports come from support::collections and are not edited here. The remaining gate failures come from WeakMap.prototype.get being unimplemented, which the ticket allows. I could not inspect the helper internals (collection_key, OrderedTable::get/set) from the diff, so I assumed they implement SameValue semantics for the key lookup. Because objects and non-registered symbols are the only keys that reach that lookup, -0 normalisation does not matter.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8268,
+  "type": "result",
+  "duration_ms": 10512,
+  "uuid": "e29d1e43-f402-4a99-8eb8-9450a1eb562d",
+  "ttft_stream_ms": 1647,
+  "time_to_request_ms": 574,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 315,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 5,
+    "model_config_wait": 168,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 3,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 85,
+  "time_to_request_cpu_ms": 313,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 782,
+  "process_wall_ms_turn": 10512,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1648,
+  "time_to_request_from_spawn_ms": 21824920,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001284383.2314,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

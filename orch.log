@@ -923,3 +923,4 @@ test262 at last merge: 72953/81183 runs passing
 [18:07:46] B-weak-map-prototype-get-or-insert: attempt 259 finished ($0.006, 10 turns)
 [18:07:48] B-reflect-prevent-extensions: verifier: accept The diff implements Reflect.preventExtensions as the two spec steps. Step 1 is a let-else that throws a TypeError when args[0] is not a Value::Object.
 [18:08:04] B-set-prototype-clear: verifier: accept The change implements Set.prototype.clear by calling this_set(agent, this)? (step 1 and 2, RequireInternalSlot with ? propagation) and then set_table(
+[18:08:11] B-weak-set-prototype-delete: attempt on slot 0 with haiku
