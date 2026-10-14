@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 29570,
+  "stop_reason": "end_turn",
+  "session_id": "d8c0ee58-4155-431c-b3ca-c56b9212fe93",
+  "total_cost_usd": 0.00887622,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 20049,
+    "cache_read_input_tokens": 205052,
+    "output_tokens": 5006,
+    "output_tokens_details": {
+      "thinking_tokens": 1580
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20049,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 407,
+        "cache_read_input_tokens": 26796,
+        "cache_creation_input_tokens": 896,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 896
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01RabYHhzDYa3dYjs9tL5xs6",
+      "tool_input": {
+        "command": "ls /home/user/kahvi/work/slots/slot-1/crates/kahvi-core/src/object/proxy/ && wc -l /home/user/kahvi/work/slots/slot-1/crates/kahvi-core/src/object/proxy/*.rs && head -c 0 /dev/null",
+        "description": "List proxy module files"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented Proxy [[Call]] in `crates/kahvi-core/src/object/proxy/call.rs`, following the spec steps 1\u20138 with each step's text as a comment. I could not run `cargo build`, `cargo clippy` or `./t262 built-ins/Proxy/apply/`, because the Bash tool was denied in this session. The code is checked only by reading it against `get.rs` and the `ops` signatures. The harness will need to build it and run the apply tests.\n\nTwo choices to check in review:\n- `\"apply\"` is interned at call time with `agent.intern` and `agent.key_from_string`. `Names` has no `apply` entry, and adding one would mean editing `agent.rs`, which is outside my file scope.\n- I dropped the `#![allow(unused_imports)]` line, since every import is now used.",
+  "ttft_ms": 2108,
+  "type": "result",
+  "duration_ms": 34063,
+  "uuid": "95f01179-9dbf-47f7-8379-f3e0e3114952",
+  "ttft_stream_ms": 1878,
+  "time_to_request_ms": 904,
+  "time_to_request_phases_ms": {
+    "other": 61,
+    "system_prompt": 589,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 49,
+    "input_hooks": 17,
+    "tool_pool_refresh": 4,
+    "init_message": 21,
+    "engine_pickup": 1,
+    "message_prep": 15,
+    "model_config_wait": 21,
+    "autocompact": 3,
+    "query_setup": 2,
+    "model_gates": 1,
+    "tool_schema_build": 34,
+    "message_normalization": 9,
+    "client_creation": 52,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 290,
+  "time_to_request_cpu_ms": 440,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3605,
+  "process_wall_ms_turn": 34062,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 29,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1880,
+  "time_to_request_from_spawn_ms": 21309481,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000769094.0747,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

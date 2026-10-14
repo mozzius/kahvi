@@ -1,0 +1,39 @@
+{
+  "ticket": "B-typed-array-prototype-entries",
+  "base": "4bfba54eb6d3f6c1d29123e57e7a778736294e6a",
+  "head": "366c4b0caffff0e4c132c6728fa98455623163f5",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_entries.rs",
+      "added": 11,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 38,
+    "before": 8,
+    "after": 32,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/entries/resizable-buffer-grow-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/entries/resizable-buffer-grow-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/entries/resizable-buffer-shrink-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/entries/resizable-buffer-shrink-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/entries/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/entries/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

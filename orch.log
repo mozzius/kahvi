@@ -847,3 +847,7 @@ test262 at last merge: 72953/81183 runs passing
 [17:59:28] C-proxy-call: attempt on slot 1 with haiku
 [17:59:34] B-typed-array-prototype-entries: attempt 239 finished ($0.008, 14 turns)
 [17:59:52] B-symbol-for: verifier: accept Symbol.for is implemented in crates/kahvi-builtins/src/symbol/for.rs and follows the spec steps in order. Step 1 calls ops::to_string(agent, key)? and
+[17:59:56] B-reflect-get: attempt on slot 3 with haiku
+[18:00:05] C-proxy-call: attempt 241 finished ($0.009, 14 turns)
+[18:00:18] B-typed-array-prototype-entries: verifier: accept The change implements %TypedArray%.prototype.entries in its one in-scope file, following the three spec steps with the step comments kept in place. St
+[18:00:19] B-weak-set-prototype-has: verifier: accept The change implements WeakSet.prototype.has in the order the spec gives. this_weak_set performs RequireInternalSlot (step 2) and propagates its TypeEr
