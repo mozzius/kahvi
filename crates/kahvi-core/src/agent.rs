@@ -137,6 +137,9 @@ pub struct Agent {
     pub(crate) symbols: Vec<SymbolData>,
     /// The garbage collector's state (docs/GC.md).
     pub(crate) gc: crate::gc::GcState,
+    /// Empty vectors kept from finished frames (operand stacks, argument
+    /// lists) so a call does not allocate new ones. They hold no values.
+    pub(crate) spare_vecs: Vec<Vec<Value>>,
     /// Collect at every safe point (finds rooting bugs; set by the host).
     pub gc_stress: bool,
     /// [[KeptAlive]]: WeakRef targets kept until the end of the current job.
@@ -199,6 +202,19 @@ impl std::fmt::Debug for Agent {
 }
 
 impl Agent {
+    /// An empty vector, reusing one a finished frame gave back.
+    pub(crate) fn spare_vec(&mut self) -> Vec<Value> {
+        self.spare_vecs.pop().unwrap_or_default()
+    }
+
+    /// Keeps `v`'s allocation for `spare_vec` (a bounded number of them).
+    pub(crate) fn give_back_vec(&mut self, mut v: Vec<Value>) {
+        if self.spare_vecs.len() < 64 && v.capacity() <= 1024 {
+            v.clear();
+            self.spare_vecs.push(v);
+        }
+    }
+
     pub fn new() -> Agent {
         let placeholder = JsString(0);
         let mut agent = Agent {
@@ -207,6 +223,7 @@ impl Agent {
             string_index: Default::default(),
             symbols: Vec::new(),
             gc: Default::default(),
+            spare_vecs: Vec::new(),
             gc_stress: false,
             kept_objects: Vec::new(),
             kept_symbols: Vec::new(),
