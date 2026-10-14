@@ -1887,3 +1887,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:42:04] B-math-atan2: attempt 326 finished ($0.008, 13 turns)
 [18:42:12] B-math-max: attempt 327 finished ($0.005, 13 turns)
 [18:42:20] B-array-buffer-prototype-get-max-byte-length: verifier: revise The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireIntern
+[18:42:27] B-array-buffer-prototype-get-max-byte-length: attempt on slot 2 with haiku
+[18:42:46] B-date-prototype-set-time: verifier: accept The diff implements Date.prototype.setTime in the spec's step order: the this-value slot check (via date::this_time_value, propagated with ?), then op

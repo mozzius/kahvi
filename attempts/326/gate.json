@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-atan2",
+  "base": "bf565e158f9ea46d881bcbbaeee1d2d064942823",
+  "head": "6de1d074e17cae166e7a3edd7cddc8395a59fa3d",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/atan2.rs",
+      "added": 108,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10804,
+  "stop_reason": "tool_use",
+  "session_id": "5df0192f-a709-4352-ae37-51742076695a",
+  "total_cost_usd": 0.00224118,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3981,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1981,
+    "output_tokens_details": {
+      "thinking_tokens": 1350
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3981,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1981,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3981,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3981
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setTime in the spec's step order: the this-value slot check (via date::this_time_value, propagated with ?), then ops::to_number on the argument with ?, then date::time_clip, then date::set_time_value, then returning the clipped number. Each step keeps its spec comment above the code. No test-shaped branches, no hardcoded values, no swallowed errors. The only changes beyond the body are the import and renaming new_target to _new_target, which the removed stub use requires. Two points I could not verify from the diff alone: the helpers in crate::support::date (this_time_value, time_clip, set_time_value) are pre-existing and not shown, so I am assuming time_clip performs ToIntegerOrInfinity with -0 mapped to +0. The 14 new passing tests and zero regressions are consistent with that. The else branch after this_time_value is unreachable if the helper checks the slot, but it returns a TypeError rather than a made-up value, so it is not a defect.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes required. If the next attempt touches this file, confirm that support::date::time_clip performs ToIntegerOrInfinity (truncation, with -0 turned into +0) after the finiteness and 8.64e15 range checks, since that helper is not visible in this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setTime in the spec's step order: the this-value slot check (via date::this_time_value, propagated with ?), then ops::to_number on the argument with ?, then date::time_clip, then date::set_time_value, then returning the clipped number. Each step keeps its spec comment above the code. No test-shaped branches, no hardcoded values, no swallowed errors. The only changes beyond the body are the import and renaming new_target to _new_target, which the removed stub use requires. Two points I could not verify from the diff alone: the helpers in crate::support::date (this_time_value, time_clip, set_time_value) are pre-existing and not shown, so I am assuming time_clip performs ToIntegerOrInfinity with -0 mapped to +0. The 14 new passing tests and zero regressions are consistent with that. The else branch after this_time_value is unreachable if the helper checks the slot, but it returns a TypeError rather than a made-up value, so it is not a defect.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes required. If the next attempt touches this file, confirm that support::date::time_clip performs ToIntegerOrInfinity (truncation, with -0 turned into +0) after the finiteness and 8.64e15 range checks, since that helper is not visible in this diff."
+  },
+  "ttft_ms": 8224,
+  "type": "result",
+  "duration_ms": 10720,
+  "uuid": "b9466015-33d9-4ab9-bb64-e12e352574e2",
+  "ttft_stream_ms": 2272,
+  "time_to_request_ms": 1381,
+  "time_to_request_phases_ms": {
+    "other": 158,
+    "system_prompt": 657,
+    "resume_other": 0,
+    "process_user_input": 21,
+    "input_attachments": 103,
+    "input_hooks": 23,
+    "tool_pool_refresh": 19,
+    "init_message": 38,
+    "engine_pickup": 3,
+    "message_prep": 15,
+    "model_config_wait": 242,
+    "autocompact": 22,
+    "query_setup": 13,
+    "model_gates": 9,
+    "tool_schema_build": 13,
+    "message_normalization": 11,
+    "client_creation": 8,
+    "request_build": 26
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 353,
+  "time_to_request_cpu_ms": 343,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 849,
+  "process_wall_ms_turn": 10715,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 60,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2273,
+  "time_to_request_from_spawn_ms": 23885222,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003342420.2517,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

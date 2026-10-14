@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-max",
+  "base": "16c028cdc55db565a6f907615faade9cef0f616a",
+  "head": "319e8a0f4fdae9eaf56ced6b2a8d022a9bc6ceda",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/max.rs",
+      "added": 33,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 10,
+    "after": 20,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
