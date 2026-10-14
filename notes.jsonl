@@ -679,3 +679,5 @@
 {"ticket": "B-typed-array-prototype-to-string", "attempt": 499, "ts": 1792007613.8032763, "text": "BLOCKED: none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever owns `typed_array/mod.rs`, but that is cleanup, not a missing feature."}
 {"ticket": "B-iterator-prototype-set-constructor", "attempt": 495, "ts": 1792007620.0779912, "text": "rejected by gates: no new test262 passes in target"}
 {"ticket": "B-iterator-prototype-set-symbol-to-string-tag", "attempt": 497, "ts": 1792007622.6639862, "text": "rejected by gates: no new test262 passes in target"}
+{"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 498, "ts": 1792007635.3833039, "text": "worker reported BLOCKED but changed files: `generated.rs` registers `%TypedArray.prototype%[@@iterator]` as its own function entry, so it is not the same function object as `%TypedArray.prototype%.values`; it needs that entry to point at the `values` function object."}
+{"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 498, "ts": 1792007643.7498636, "text": "rejected by gates: no new test262 passes in target"}

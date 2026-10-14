@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 22119,
+  "stop_reason": "end_turn",
+  "session_id": "5f9861f7-8b44-406f-ba3c-a292b3942332",
+  "total_cost_usd": 0.006827120000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 16507,
+    "cache_read_input_tokens": 143782,
+    "output_tokens": 3774,
+    "output_tokens_details": {
+      "thinking_tokens": 1039
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16507,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 211,
+        "cache_read_input_tokens": 23538,
+        "cache_creation_input_tokens": 612,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 612
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`TypedArray.prototype[Symbol.iterator]` now delegates to `TypedArray.prototype.values` instead of throwing not-implemented. The target directory still passes 2/2, and clippy and fmt are clean.\n\nThe function is not yet the same object as `values`, as the spec requires. That identity comes from the registration in `generated.rs`, which is outside my file scope.\n\nBLOCKED: `generated.rs` registers `%TypedArray.prototype%[@@iterator]` as its own function entry, so it is not the same function object as `%TypedArray.prototype%.values`; it needs that entry to point at the `values` function object.",
+  "ttft_ms": 1893,
+  "type": "result",
+  "duration_ms": 51165,
+  "uuid": "6369bdeb-c270-4649-901c-151c75192f70",
+  "ttft_stream_ms": 1649,
+  "time_to_request_ms": 505,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 329,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 69,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 7,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 89,
+  "time_to_request_cpu_ms": 418,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 270,
+  "process_anon_mib_result": 152,
+  "process_peak_rss_mib": 271,
+  "process_cpu_ms_turn": 3545,
+  "process_wall_ms_turn": 51164,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1650,
+  "time_to_request_from_spawn_ms": 28122045,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007582355.2896,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.87,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.69,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.87,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
