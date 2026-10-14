@@ -1,0 +1,143 @@
+{
+  "duration_api_ms": 29374,
+  "stop_reason": "tool_use",
+  "session_id": "0bec1d9f-d1a4-4cf1-aaa5-d968d29bd74a",
+  "total_cost_usd": 0.00462998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4626,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 6544,
+    "output_tokens_details": {
+      "thinking_tokens": 5553
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4626,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6544,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4626,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4626
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":true,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireInternalSlot and the right helpers for IsDetachedBuffer and IsFixedLengthArrayBuffer. Step 3 (IsSharedArrayBuffer -> TypeError) is only a comment with an assumption that the engine has no shared buffers. Nothing is executed for it, and the ticket asks that unfinished steps return not_implemented instead. The step-6 None branch throws an invented TypeError for an internal invariant violation, which is unreachable in normal use and not a major concern.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/array_buffer/prototype_get_max_byte_length.rs\",\"question\":\"skips_observable_steps\",\"issue\":\"Step 3 (If IsSharedArrayBuffer(obj) is true, throw a TypeError) is not implemented. It is only a comment with the claim that no object with [[ArrayBufferData]] is ever shared. If SharedArrayBuffer objects share the ArrayBufferData slot in this engine, this path returns a number where the spec throws. The step should either be implemented via the real shared-buffer check or return agent.not_implemented(...) naming the missing shared-data-block support. Verify the claim against the engine's SharedArrayBuffer representation and the this-is-sharedarraybuffer test in the target directory.\",\"line\":24}],\"notes_for_next_attempt\":\"Step 3 needs real handling. Check how SharedArrayBuffer is represented in kahvi-core. If shared buffers carry [[ArrayBufferData]], implement IsSharedArrayBuffer and throw a TypeError when it is true, as a comment-plus-code pair in spec order between step 2 and step 4. If the engine has no shared buffers at all, the current comment is only valid because of that fact. Say so in the code by pointing to the representation, or return agent.not_implemented naming the missing shared data block check. Do not rely on an unverified assumption. Separately, the step-6 None branch invents a TypeError message for an internal invariant. Consider a clearer internal-error path. The rest of the diff (steps 1, 2, 4, 5, 6, 7, the helper calls and the comment layout) matches the spec and can be kept.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": true,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireInternalSlot and the right helpers for IsDetachedBuffer and IsFixedLengthArrayBuffer. Step 3 (IsSharedArrayBuffer -> TypeError) is only a comment with an assumption that the engine has no shared buffers. Nothing is executed for it, and the ticket asks that unfinished steps return not_implemented instead. The step-6 None branch throws an invented TypeError for an internal invariant violation, which is unreachable in normal use and not a major concern.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/array_buffer/prototype_get_max_byte_length.rs",
+        "question": "skips_observable_steps",
+        "issue": "Step 3 (If IsSharedArrayBuffer(obj) is true, throw a TypeError) is not implemented. It is only a comment with the claim that no object with [[ArrayBufferData]] is ever shared. If SharedArrayBuffer objects share the ArrayBufferData slot in this engine, this path returns a number where the spec throws. The step should either be implemented via the real shared-buffer check or return agent.not_implemented(...) naming the missing shared-data-block support. Verify the claim against the engine's SharedArrayBuffer representation and the this-is-sharedarraybuffer test in the target directory.",
+        "line": 24
+      }
+    ],
+    "notes_for_next_attempt": "Step 3 needs real handling. Check how SharedArrayBuffer is represented in kahvi-core. If shared buffers carry [[ArrayBufferData]], implement IsSharedArrayBuffer and throw a TypeError when it is true, as a comment-plus-code pair in spec order between step 2 and step 4. If the engine has no shared buffers at all, the current comment is only valid because of that fact. Say so in the code by pointing to the representation, or return agent.not_implemented naming the missing shared data block check. Do not rely on an unverified assumption. Separately, the step-6 None branch invents a TypeError message for an internal invariant. Consider a clearer internal-error path. The rest of the diff (steps 1, 2, 4, 5, 6, 7, the helper calls and the comment layout) matches the spec and can be kept."
+  },
+  "ttft_ms": 25148,
+  "type": "result",
+  "duration_ms": 29584,
+  "uuid": "d642c604-8e56-4bfb-92e8-4c23b2d710cc",
+  "ttft_stream_ms": 1536,
+  "time_to_request_ms": 778,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 592,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 24,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 7,
+    "model_config_wait": 52,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 197,
+  "time_to_request_cpu_ms": 514,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 245,
+  "process_cpu_ms_turn": 1624,
+  "process_wall_ms_turn": 29583,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1537,
+  "time_to_request_from_spawn_ms": 23849603,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003309149.501,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

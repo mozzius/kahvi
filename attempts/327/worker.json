@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19347,
+  "stop_reason": "end_turn",
+  "session_id": "09881adf-e218-42ce-af2c-1d35ad464f8a",
+  "total_cost_usd": 0.00546445,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 13554,
+    "cache_read_input_tokens": 95155,
+    "output_tokens": 3116,
+    "output_tokens_details": {
+      "thinking_tokens": 841
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13554,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 215,
+        "cache_read_input_tokens": 20444,
+        "cache_creation_input_tokens": 753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.max` in `crates/kahvi-builtins/src/math/max.rs`, following the spec steps with each step's text above its code. `./t262 built-ins/Math/max/` now passes 20 of 20 runs (10 files), up from 10 on main, and `cargo clippy -p kahvi-builtins` is clean. I didn't run `cargo fmt`; I wrapped one long condition by hand to fit the width.\n\nNo helpers were missing, so nothing was written outside the file. The first version failed `zeros.js` because the step 4b check didn't test that `number` was `+0`; that is fixed.\n\nBLOCKED: none",
+  "ttft_ms": 1935,
+  "type": "result",
+  "duration_ms": 55201,
+  "uuid": "53a8a191-1462-4de8-9a1d-d398d7718a68",
+  "ttft_stream_ms": 1707,
+  "time_to_request_ms": 526,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 406,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 8,
+    "input_hooks": 4,
+    "tool_pool_refresh": 1,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 25,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 18,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 264,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 3315,
+  "process_wall_ms_turn": 55200,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 8,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1708,
+  "time_to_request_from_spawn_ms": 23814709,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003274483.1262,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

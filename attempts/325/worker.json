@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 15255,
+  "stop_reason": "end_turn",
+  "session_id": "612b0fa5-d39c-4f73-ae0f-e2fc60810c99",
+  "total_cost_usd": 0.0075067400000000005,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 22014,
+    "cache_read_input_tokens": 155794,
+    "output_tokens": 2561,
+    "output_tokens_details": {
+      "thinking_tokens": 421
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22014,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 161,
+        "cache_read_input_tokens": 29222,
+        "cache_creation_input_tokens": 435,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 435
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Date.prototype.setTime` is implemented in `crates/kahvi-builtins/src/date/prototype_set_time.rs`, following the spec steps with each one as a comment. All 22 runs under `built-ins/Date/prototype/setTime/` pass, `cargo build` and `cargo clippy -p kahvi-builtins` are clean, and `cargo fmt --check` passes on the file. No helpers were missing, so I changed no other files.\n\nBLOCKED: none",
+  "ttft_ms": 2027,
+  "type": "result",
+  "duration_ms": 44137,
+  "uuid": "4b88699b-3d7a-4ce5-8e66-f41b48090554",
+  "ttft_stream_ms": 1798,
+  "time_to_request_ms": 540,
+  "time_to_request_phases_ms": {
+    "other": 48,
+    "system_prompt": 349,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 15,
+    "tool_pool_refresh": 10,
+    "init_message": 26,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 41,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 135,
+  "time_to_request_cpu_ms": 336,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 254,
+  "process_cpu_ms_turn": 3194,
+  "process_wall_ms_turn": 44136,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1805,
+  "time_to_request_from_spawn_ms": 23808023,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003267738.8467,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

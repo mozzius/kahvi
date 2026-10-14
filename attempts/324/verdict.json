@@ -1,0 +1,27 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": true,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireInternalSlot and the right helpers for IsDetachedBuffer and IsFixedLengthArrayBuffer. Step 3 (IsSharedArrayBuffer -> TypeError) is only a comment with an assumption that the engine has no shared buffers. Nothing is executed for it, and the ticket asks that unfinished steps return not_implemented instead. The step-6 None branch throws an invented TypeError for an internal invariant violation, which is unreachable in normal use and not a major concern.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_get_max_byte_length.rs",
+      "question": "skips_observable_steps",
+      "issue": "Step 3 (If IsSharedArrayBuffer(obj) is true, throw a TypeError) is not implemented. It is only a comment with the claim that no object with [[ArrayBufferData]] is ever shared. If SharedArrayBuffer objects share the ArrayBufferData slot in this engine, this path returns a number where the spec throws. The step should either be implemented via the real shared-buffer check or return agent.not_implemented(...) naming the missing shared-data-block support. Verify the claim against the engine's SharedArrayBuffer representation and the this-is-sharedarraybuffer test in the target directory.",
+      "line": 24
+    }
+  ],
+  "notes_for_next_attempt": "Step 3 needs real handling. Check how SharedArrayBuffer is represented in kahvi-core. If shared buffers carry [[ArrayBufferData]], implement IsSharedArrayBuffer and throw a TypeError when it is true, as a comment-plus-code pair in spec order between step 2 and step 4. If the engine has no shared buffers at all, the current comment is only valid because of that fact. Say so in the code by pointing to the representation, or return agent.not_implemented naming the missing shared data block check. Do not rely on an unverified assumption. Separately, the step-6 None branch invents a TypeError message for an internal invariant. Consider a clearer internal-error path. The rest of the diff (steps 1, 2, 4, 5, 6, 7, the helper calls and the comment layout) matches the spec and can be kept.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "skips_observable_steps"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

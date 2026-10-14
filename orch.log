@@ -1881,3 +1881,9 @@ test262 at last merge: 74349/81183 runs passing
 [18:41:07] B-date-prototype-set-time: attempt on slot 3 with haiku
 [18:41:07] B-object-prototype-define-getter: verifier: accept The change implements Object.prototype.__defineGetter__ in the order the spec gives: ToObject(this) with ?, then IsCallable(getter) throwing a TypeErr
 [18:41:10] B-math-atan2: attempt on slot 1 with haiku
+[18:41:14] B-math-max: attempt on slot 0 with haiku
+[18:41:24] B-array-buffer-prototype-get-max-byte-length: attempt 324 finished ($0.008, 8 turns)
+[18:41:54] B-date-prototype-set-time: attempt 325 finished ($0.008, 12 turns)
+[18:42:04] B-math-atan2: attempt 326 finished ($0.008, 13 turns)
+[18:42:12] B-math-max: attempt 327 finished ($0.005, 13 turns)
+[18:42:20] B-array-buffer-prototype-get-max-byte-length: verifier: revise The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireIntern

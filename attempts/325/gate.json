@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-set-time",
+  "base": "5d993fb025a3237e4d779d0a4af82c2aa1dce421",
+  "head": "7ff33bb6181698806de46b0921a79b3deb26b4a3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_time.rs",
+      "added": 10,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
