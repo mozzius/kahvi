@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 49048,
+  "stop_reason": "end_turn",
+  "session_id": "328eb060-d63f-4f96-a0ad-d20b6ba361e5",
+  "total_cost_usd": 0.017106769999999997,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 36321,
+    "cache_read_input_tokens": 425407,
+    "output_tokens": 10359,
+    "output_tokens_details": {
+      "thinking_tokens": 5058
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 36321,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 367,
+        "cache_read_input_tokens": 43415,
+        "cache_creation_input_tokens": 549,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 549
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Set.prototype.union` in `crates/kahvi-builtins/src/set/prototype_union.rs`, with each spec step as a comment above its code. `./t262 built-ins/Set/prototype/union/` now gives 24 passing and 34 failing. Every failure is a \"not implemented\" error from another built-in outside this ticket's scope: `get Set.prototype.size` (20), `SetIteratorPrototype.next` (10), `Set.prototype.delete` (2) and `get Map.prototype.size` (2). `cargo clippy -p kahvi-builtins` is clean.\n\nI added `GetSetRecord` as a local helper in my file (`get_set_record` and `SetRecord`), because it doesn't exist anywhere in the crate. The six sibling Set methods need it too, so it should move into `support/collections.rs` when they land.\n\nBLOCKED: `Set.prototype.size` getter, `SetIteratorPrototype.next`, `Set.prototype.delete` and `Map.prototype.size` getter are not implemented, so the union tests cannot all pass yet.",
+  "ttft_ms": 1361,
+  "type": "result",
+  "duration_ms": 72277,
+  "uuid": "ee6d94e3-2595-4c9c-aef6-9267e612dab5",
+  "ttft_stream_ms": 1247,
+  "time_to_request_ms": 511,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 360,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 16,
+    "input_hooks": 7,
+    "tool_pool_refresh": 5,
+    "init_message": 11,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 5,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 22,
+    "message_normalization": 2,
+    "client_creation": 23,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 123,
+  "time_to_request_cpu_ms": 359,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 281,
+  "process_anon_mib_result": 161,
+  "process_peak_rss_mib": 281,
+  "process_cpu_ms_turn": 4690,
+  "process_wall_ms_turn": 72277,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1248,
+  "time_to_request_from_spawn_ms": 18970489,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998430539.067,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

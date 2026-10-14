@@ -170,3 +170,6 @@
 [17:21:14] B-weak-set-prototype-add: verifier: accept The diff implements WeakSet.prototype.add in its own file, in spec order: RequireInternalSlot via this_weak_set (?), the CanBeHeldWeakly TypeError, a 
 [17:21:17] B-string-prototype-char-at: attempt on slot 3 with haiku
 [17:21:34] B-promise-prototype-finally: verifier: accept The diff implements Promise.prototype.finally in its file only, following the spec steps 1-7 and the thenFinally/catchFinally/valueThunk/thrower closu
+[17:21:37] B-array-prototype-shift: attempt on slot 2 with haiku
+[17:21:44] B-set-prototype-union: attempt 155 finished ($0.017, 20 turns)
+[17:21:45] B-set-prototype-union: gate rejected attempt 155: lint: lint suppression is architect-only at crates/kahvi-builtins/src/set/prototype_union.rs:12: #[allow(dead_code)]

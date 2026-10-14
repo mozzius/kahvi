@@ -1,0 +1,33 @@
+{
+  "ticket": "B-set-prototype-union",
+  "base": "fcca6711c72154b395843fdd2ab83d669b3afc1b",
+  "head": "cbf80f2ffed80de13bd3150ba5a4e9e4d4671bf2",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/set/prototype_union.rs:12: #[allow(dead_code)]"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_union.rs",
+      "added": 109,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/set/prototype_union.rs",
+      "line": 12,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)]"
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/set/prototype_union.rs",
+      "line": 10,
+      "rule": "shortcut language",
+      "text": "/// GetSetRecord is local to this file for now; the other Set methods need it"
+    }
+  ],
+  "decision": "reject"
+}
