@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 16202,
+  "stop_reason": "end_turn",
+  "session_id": "e86872cd-dc57-43ed-8225-04378ca115b2",
+  "total_cost_usd": 0.00847811,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 25227,
+    "cache_read_input_tokens": 115201,
+    "output_tokens": 3539,
+    "output_tokens_details": {
+      "thinking_tokens": 1433
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25227,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 194,
+        "cache_read_input_tokens": 32439,
+        "cache_creation_input_tokens": 431,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 431
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.setFullYear` in its file, following the spec steps. Clippy is clean, and 36 of 40 runs under `built-ins/Date/prototype/setFullYear/` pass. The remaining 4 fail because the test calls `Date.prototype.setTime`, which is still a not-implemented stub in another file I'm not allowed to edit.\n\nBLOCKED: Date.prototype.setTime (used by built-ins/Date/prototype/setFullYear/date-value-read-before-tonumber-when-date-is-{valid,invalid}.js)",
+  "ttft_ms": 1993,
+  "type": "result",
+  "duration_ms": 40160,
+  "uuid": "3010c4ae-333f-49ba-9574-332c8712a937",
+  "ttft_stream_ms": 1438,
+  "time_to_request_ms": 779,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 497,
+    "resume_other": 1,
+    "process_user_input": 12,
+    "input_attachments": 11,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 172,
+    "autocompact": 2,
+    "query_setup": 2,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 128,
+  "time_to_request_cpu_ms": 480,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 3305,
+  "process_wall_ms_turn": 40159,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1438,
+  "time_to_request_from_spawn_ms": 20923665,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000383548.879,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

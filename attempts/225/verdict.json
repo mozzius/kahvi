@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Map.prototype.getOrInsertComputed in its own file, following the spec steps in order. RequireInternalSlot (via this_map) runs first, then the IsCallable check throws a TypeError. Key canonicalization maps -0 to +0 for numbers only, which matches CanonicalizeKeyedCollectionKey. The first lookup returns the existing value when present. The callback is called via ops::call_rooted with ? propagation, inside with_roots so map, callback and key stay rooted. After the callback, the table is updated with set(), which matches step 8 (update if present, otherwise append) and returns the value. No branches key on test-specific inputs, no errors are swallowed, no placeholder values are returned, and the only file touched is the one in scope. The rename of new_target to _new_target is a trivial, in-scope change. I did not verify that the helpers (collection_key, map_table, this_map, ops::call_rooted) exist beyond the gate's build passing. The two remaining test262 failures come from the unimplemented Map.prototype.size getter, which throws the not-implemented error, so they are honest.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found. The implementation is spec-faithful. The remaining test262 failures (append-new-values) depend on the Map.prototype.size getter, which is a separate ticket. Once size lands, rerun the getOrInsertComputed target to confirm those pass.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

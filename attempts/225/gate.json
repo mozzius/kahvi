@@ -1,0 +1,35 @@
+{
+  "ticket": "B-map-prototype-get-or-insert-computed",
+  "base": "58f25c14996831635d51ff91b50e3883be697be7",
+  "head": "052c1a7cc2edf7dd00edd037175dcbbc9b8d94e8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_get_or_insert_computed.rs",
+      "added": 44,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 37,
+    "before": 4,
+    "after": 35,
+    "new_passes": 31,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Map/prototype/getOrInsertComputed/append-new-values.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Map/prototype/getOrInsertComputed/append-new-values.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}

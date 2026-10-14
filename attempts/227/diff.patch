@@ -1,0 +1,66 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_set_full_year.rs b/crates/kahvi-builtins/src/date/prototype_set_full_year.rs
+index 6535067..82bf37f 100644
+--- a/crates/kahvi-builtins/src/date/prototype_set_full_year.rs
++++ b/crates/kahvi-builtins/src/date/prototype_set_full_year.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.setfullyear
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.setFullYear
+@@ -9,25 +10,46 @@ pub(crate) fn prototype_set_full_year(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _dateObj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_dateObj_, [[DateValue]]).
++    let Value::Object(date_obj) = this else {
++        return Err(agent.throw_type_error("this is not a Date object"));
++    };
+     // 3. Let _tv_ be _dateObj_.[[DateValue]].
++    let tv = date::this_time_value(agent, this)?;
+     // 4. Let _yearNumber_ be ? ToNumber(_year_).
++    let year_number = ops::to_number(agent, args.get_or_undefined(0))?;
+     // 5. If _tv_ is *NaN*, set _tv_ to *+0*_𝔽; else set _tv_ to LocalTime(_tv_).
++    let tv = if tv.is_nan() {
++        0.0
++    } else {
++        date::local_time(agent, tv)
++    };
+     // 6. If _month_ is present, let _monthNumber_ be ? ToNumber(_month_); else let _monthNumber_ be 𝔽(MonthFromTime(_tv_)).
++    let month_number = if args.len() > 1 {
++        ops::to_number(agent, args.get_or_undefined(1))?
++    } else {
++        date::month_from_time(tv)
++    };
+     // 7. If _day_ is present, let _dayNumber_ be ? ToNumber(_day_); else let _dayNumber_ be 𝔽(DateFromTime(_tv_)).
++    let day_number = if args.len() > 2 {
++        ops::to_number(agent, args.get_or_undefined(2))?
++    } else {
++        date::date_from_time(tv)
++    };
+     // 8. Let _newDate_ be MakeDate(MakeDay(_yearNumber_, _monthNumber_, _dayNumber_), 𝔽(TimeWithinDay(_tv_))).
++    let new_date = date::make_date(
++        date::make_day(year_number, month_number, day_number),
++        date::time_within_day(tv),
++    );
+     // 9. Let _u_ be TimeClip(UTC(_newDate_)).
++    let u = date::time_clip(date::utc(agent, new_date));
+     // 10. Set _dateObj_.[[DateValue]] to _u_.
++    date::set_time_value(agent, date_obj, u);
+     // 11. Return _u_.
+-    //
+-    // The *"length"* property of this method is *3*_𝔽.
+-    // NOTE:
+-    // If _month_ is not present, this method behaves as if _month_ was present with the value `getMonth()`. If _day_ is not present, it behaves as if _day_ was present with the value `getDate()`.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.setFullYear"))
++    Ok(Value::Number(u))
+ }
