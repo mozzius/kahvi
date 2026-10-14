@@ -5,6 +5,8 @@
 use kahvi_core::object::ObjectKind;
 use kahvi_core::prelude::*;
 
+use crate::support::date::DateValue;
+
 /// Object.prototype.toString
 pub(crate) fn prototype_to_string(
     agent: &mut Agent,
@@ -33,6 +35,7 @@ pub(crate) fn prototype_to_string(
             ObjectKind::StringObject(_) => "String",
             _ if o.is_callable(agent) => "Function",
             _ if ops::has_regexp_matcher(agent, o) => "RegExp",
+            _ if agent.native::<DateValue>(o).is_some() => "Date",
             _ => {
                 if builtin_tag.is_empty() {
                     "Object"

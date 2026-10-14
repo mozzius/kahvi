@@ -15,6 +15,13 @@ pub(crate) fn is_raw_json(
     //
     // 1. If _obj_ is an Object and _obj_ has an [[IsRawJSON]] internal slot, return *true*.
     // 2. Return *false*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("JSON.isRawJSON"))
+    let _ = (this, new_target);
+    // 1. If _obj_ is an Object and _obj_ has an [[IsRawJSON]] internal slot, return *true*.
+    if let Value::Object(obj) = args.get_or_undefined(0) {
+        if agent.native::<super::raw_json::RawJsonData>(obj).is_some() {
+            return Ok(Value::Boolean(true));
+        }
+    }
+    // 2. Return *false*.
+    Ok(Value::Boolean(false))
 }
