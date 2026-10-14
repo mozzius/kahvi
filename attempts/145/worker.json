@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 27869,
+  "stop_reason": "end_turn",
+  "session_id": "9d07650d-d6a3-493c-b063-11e49dcfb5a1",
+  "total_cost_usd": 0.00795789,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 19456,
+    "cache_read_input_tokens": 186669,
+    "output_tokens": 3604,
+    "output_tokens_details": {
+      "thinking_tokens": 559
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19456,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 311,
+        "cache_read_input_tokens": 26667,
+        "cache_creation_input_tokens": 432,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 432
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Array.prototype.includes` in `crates/kahvi-builtins/src/array/prototype_includes.rs`, following the spec steps with each step as a comment. `./t262 built-ins/Array/prototype/includes/` now gives 56 of 60 runs passing, up from 8 files before. Clippy and fmt are clean.\n\nI added a private `to_clamped_index` helper in the same file, because `kahvi_core::ops` has none. Several sibling built-ins already carry their own copy, so it should move to `ops` eventually; I did not touch those files.\n\nThe 4 remaining failures (`coerced-searchelement-fromindex-resize.js` and `resizable-buffer.js`, sloppy and strict) throw `not implemented: BigInt`. They depend on BigInt support, which the engine does not have yet.\n\nBLOCKED: BigInt support in the engine (needed by the two resizable-buffer includes tests)",
+  "ttft_ms": 1920,
+  "type": "result",
+  "duration_ms": 39426,
+  "uuid": "1561ebb6-fa7e-4173-aa2e-f81c483690ed",
+  "ttft_stream_ms": 1686,
+  "time_to_request_ms": 580,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 333,
+    "resume_other": 1,
+    "process_user_input": 13,
+    "input_attachments": 16,
+    "input_hooks": 16,
+    "tool_pool_refresh": 7,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 121,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 101,
+  "time_to_request_cpu_ms": 423,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 119,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3411,
+  "process_wall_ms_turn": 39426,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1687,
+  "time_to_request_from_spawn_ms": 18756605,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998216645.138,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

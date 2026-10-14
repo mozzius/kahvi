@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13607,
+  "stop_reason": "tool_use",
+  "session_id": "ef3656da-1b17-4b4c-a709-3b2b9a7f2023",
+  "total_cost_usd": 0.0511257,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8546,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1579,
+    "output_tokens_details": {
+      "thinking_tokens": 1140
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8546,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1579,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8546,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8546
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows the spec steps in order. It checks the comparator first, then runs ValidateTypedArray, then TypedArrayLength. It sorts through the shared SortIndexedProperties, and CompareTypedArrayElements covers the NaN, -0/+0 and BigInt cases. Comparator and ToNumber errors propagate with `?`. The 10 remaining failures come from BigInt and Array.prototype.reverse not being implemented elsewhere, so they are honest not-implemented errors in other files. The `unreachable!` is safe, because ValidateTypedArray's RequireInternalSlot already rejects non-objects. Only the one in-scope file changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows the spec steps in order. It checks the comparator first, then runs ValidateTypedArray, then TypedArrayLength. It sorts through the shared SortIndexedProperties, and CompareTypedArrayElements covers the NaN, -0/+0 and BigInt cases. Comparator and ToNumber errors propagate with `?`. The 10 remaining failures come from BigInt and Array.prototype.reverse not being implemented elsewhere, so they are honest not-implemented errors in other files. The `unreachable!` is safe, because ValidateTypedArray's RequireInternalSlot already rejects non-objects. Only the one in-scope file changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11707,
+  "type": "result",
+  "duration_ms": 14202,
+  "uuid": "76aedd56-5a48-43b9-ad1e-d20ff60c397b",
+  "ttft_stream_ms": 3085,
+  "time_to_request_ms": 1425,
+  "time_to_request_phases_ms": {
+    "other": 244,
+    "system_prompt": 566,
+    "resume_other": 0,
+    "process_user_input": 43,
+    "input_attachments": 121,
+    "input_hooks": 55,
+    "tool_pool_refresh": 55,
+    "init_message": 96,
+    "engine_pickup": 2,
+    "message_prep": 24,
+    "model_config_wait": 27,
+    "autocompact": 42,
+    "query_setup": 21,
+    "model_gates": 0,
+    "tool_schema_build": 25,
+    "message_normalization": 27,
+    "client_creation": 43,
+    "request_build": 34
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 758,
+  "time_to_request_cpu_ms": 351,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 919,
+  "process_wall_ms_turn": 14201,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 74,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3206,
+  "time_to_request_from_spawn_ms": 18800854,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998258874.463,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

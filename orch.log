@@ -140,3 +140,7 @@
 [17:17:05] B-string-iterator-prototype-next: verifier: accept The diff implements %StringIteratorPrototype%.next in the one in-scope file. The receiver is brand-checked first and throws a TypeError otherwise. A c
 [17:17:09] B-iterator-prototype-every: attempt on slot 0 with haiku
 [17:17:15] B-iterator-prototype-drop: verifier: accept The change implements Iterator.prototype.drop steps 1-14 in prototype_drop.rs in spec order. Argument validation (TypeError on non-object, ToNumber wi
+[17:17:18] B-iterator-prototype-some: attempt on slot 1 with haiku
+[17:17:37] B-iterator-prototype-every: attempt 146 finished ($0.008, 8 turns)
+[17:17:38] B-array-prototype-includes: attempt 145 finished ($0.008, 14 turns)
+[17:17:56] B-typed-array-prototype-sort: verifier: accept The diff implements %TypedArray%.prototype.sort in its stub file, and I found no spec defects. Steps 1 through 10 are present in order, with `?` propa
