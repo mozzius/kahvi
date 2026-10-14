@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-values",
+  "base": "bd8729400e1b22b2170c8a9d3fb31d8a7a44c470",
+  "head": "1a4cba50c6c3df04c89adfcbc63b3cbdea74df73",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/values.rs",
+      "added": 8,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 40,
+    "new_passes": 32,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -354,3 +354,8 @@
 [17:44:26] B-set-prototype-is-subset-of: attempt on slot 1 with haiku
 [17:44:29] B-string-prototype-concat: attempt on slot 0 with haiku
 [17:44:46] B-date-prototype-get-timezone-offset: verifier: accept The diff implements Date.prototype.getTimezoneOffset in its single file. It gets the time value via `date::this_time_value(agent, this)?`, which shoul
+[17:44:49] B-string-prototype-starts-with: attempt on slot 2 with haiku
+[17:44:53] B-object-values: attempt 208 finished ($0.006, 16 turns)
+[17:45:12] B-string-prototype-concat: attempt 210 finished ($0.006, 12 turns)
+[17:45:25] B-string-prototype-starts-with: attempt 211 finished ($0.009, 10 turns)
+[17:45:26] B-object-values: verifier: accept The diff implements Object.values as the spec describes. It calls ops::to_object on args[0] with `?`, then ops::enumerable_own_properties with the Val

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 21153,
+  "stop_reason": "end_turn",
+  "session_id": "006d6bc8-9de8-4090-8b5c-e7f24ae4f3ed",
+  "total_cost_usd": 0.0063988100000000004,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 14912,
+    "cache_read_input_tokens": 144321,
+    "output_tokens": 3420,
+    "output_tokens_details": {
+      "thinking_tokens": 1523
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14912,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 132,
+        "cache_read_input_tokens": 22381,
+        "cache_creation_input_tokens": 174,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 174
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.concat` is implemented in `crates/kahvi-builtins/src/string/prototype_concat.rs`, with each spec step kept as a comment above its code. All 44 test262 runs under `built-ins/String/prototype/concat/` pass (up from 16 on main), and clippy and rustfmt are clean. I changed no other files and added no tests.\n\nBLOCKED: none",
+  "ttft_ms": 1651,
+  "type": "result",
+  "duration_ms": 40437,
+  "uuid": "e5be30b0-4903-4541-98e4-8a64294b420c",
+  "ttft_stream_ms": 1429,
+  "time_to_request_ms": 608,
+  "time_to_request_phases_ms": {
+    "other": 50,
+    "system_prompt": 382,
+    "resume_other": 1,
+    "process_user_input": 14,
+    "input_attachments": 29,
+    "input_hooks": 10,
+    "tool_pool_refresh": 2,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 32,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 25,
+    "message_normalization": 6,
+    "client_creation": 18,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 164,
+  "time_to_request_cpu_ms": 286,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 259,
+  "process_anon_mib_result": 139,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2517,
+  "process_wall_ms_turn": 40436,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1430,
+  "time_to_request_from_spawn_ms": 20409745,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999869687.2869,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
