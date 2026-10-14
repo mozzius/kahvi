@@ -271,3 +271,6 @@
 [17:34:26] B-data-view-prototype-set-uint16: attempt 184 finished ($0.006, 13 turns)
 [17:34:30] B-data-view-prototype-set-uint32: attempt on slot 3 with haiku
 [17:35:03] B-data-view-prototype-set-int16: verifier: accept The diff implements DataView.prototype.setInt16 as a thin wrapper, which matches the spec. It binds `this` as the view, defaults littleEndian to false
+[17:35:07] B-set-prototype-is-disjoint-from: attempt on slot 2 with haiku
+[17:35:11] B-data-view-prototype-set-int32: verifier: accept The diff implements DataView.prototype.setInt32 as a thin wrapper over the shared `set_view_value` helper in crate::support::typed_array (not part of 
+[17:35:12] B-data-view-prototype-set-uint16: verifier: accept The diff implements DataView.prototype.setUint16 as a thin wrapper. It keeps all four spec step comments, uses the default-false rule for an absent li
