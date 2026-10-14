@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 73774,
+  "stop_reason": "end_turn",
+  "session_id": "48a26202-1428-4bd3-a301-46c011d546e1",
+  "total_cost_usd": 0.019534999999999997,
+  "usage": {
+    "input_tokens": 21,
+    "cache_creation_input_tokens": 37114,
+    "cache_read_input_tokens": 344950,
+    "output_tokens": 16479,
+    "output_tokens_details": {
+      "thinking_tokens": 10120
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 37114,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 366,
+        "cache_read_input_tokens": 43699,
+        "cache_creation_input_tokens": 1058,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1058
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01UJ2DNravPywGnSLRfg8WuW",
+      "tool_input": {
+        "command": "printf 'var r=[Math.sumPrecise([1e20,0.1,-1e20]), Math.sumPrecise([1e308,1e308,-1e308]), Math.sumPrecise([5e-324,5e-324]), Math.sumPrecise([0.1,0.2]), Math.sumPrecise([-0]), Math.sumPrecise([]), Math.sumPrecise([Infinity,-Infinity]), 1/Math.sumPrecise([-0,-0])]; print(r.join(\" \"));\\n' > \"$SCRATCHPAD/check.js\" 2>/dev/null || printf 'var r=[Math.sumPrecise([1e20,0.1,-1e20]), Math.sumPrecise([1e308,1e308,-1e308]), Math.sumPrecise([5e-324,5e-324]), Math.sumPrecise([0.1,0.2]), Math.sumPrecise([-0]), Math.sumPrecise([]), Math.sumPrecise([Infinity,-Infinity]), 1/Math.sumPrecise([-0,-0])]; print(r.join(\" \"));\\n' > /home/user/kahvi/work/slots/slot-1/scratch-check.js; target/debug/kahvi /home/user/kahvi/work/slots/slot-1/scratch-check.js; rm -f /home/user/kahvi/work/slots/slot-1/scratch-check.js",
+        "description": "Spot-check sumPrecise numeric results with the engine"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Math.sumPrecise` in `crates/kahvi-builtins/src/math/sum_precise.rs`. `./t262 built-ins/Math/sumPrecise/` now passes 20/20 (up from 8), `cargo build -p kahvi-cli` and `cargo clippy -p kahvi-builtins` are clean, and `cargo fmt --check` on the file reported nothing.\n\nThe sum is exact: an in-file 2240-bit two's-complement accumulator in units of 2^-1074, rounded once to the nearest double with ties-to-even at the end. I did not add shared helpers, so nothing outside the ticket's file changed. My attempt to spot-check a few edge values with a scratch script was denied, so those results are unverified beyond test262.\n\nBLOCKED: none",
+  "ttft_ms": 1756,
+  "type": "result",
+  "duration_ms": 103877,
+  "uuid": "970657e8-67b9-489c-a1e1-f26509c2131a",
+  "ttft_stream_ms": 1615,
+  "time_to_request_ms": 751,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 413,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 25,
+    "input_hooks": 10,
+    "tool_pool_refresh": 5,
+    "init_message": 14,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 159,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 27,
+    "message_normalization": 4,
+    "client_creation": 26,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 140,
+  "time_to_request_cpu_ms": 501,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 270,
+  "process_anon_mib_result": 151,
+  "process_peak_rss_mib": 281,
+  "process_cpu_ms_turn": 5090,
+  "process_wall_ms_turn": 103872,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1618,
+  "time_to_request_from_spawn_ms": 24361157,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003820826.1868,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

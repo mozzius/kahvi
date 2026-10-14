@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 27037,
+  "stop_reason": "end_turn",
+  "session_id": "26a7de60-5e36-4a80-9f4a-5a9b6e3beefb",
+  "total_cost_usd": 0.007476049999999999,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 16899,
+    "cache_read_input_tokens": 101915,
+    "output_tokens": 5456,
+    "output_tokens_details": {
+      "thinking_tokens": 2342
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16899,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 433,
+        "cache_read_input_tokens": 24007,
+        "cache_creation_input_tokens": 535,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 535
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "All 16 runs under `built-ins/Date/prototype/toString/` pass, including `negative-year.js` in sloppy and strict, and clippy is clean for this file. The fix is confined to `crates/kahvi-builtins/src/date/prototype_to_string.rs`: it now has a local DateString that formats negative years as `-` plus at least four digits (year -1 gives `-0001`). That duplicates some of the support helper, which I did only because the helper is out of scope.\n\nThe underlying bug remains in `support::date::year_string`, which pads negative years to six digits. `date::to_date_string` (used by the `Date()` constructor in `constructor.rs`) still produces `-000001` for year -1; that needs an architect fix to `support/date.rs`.",
+  "ttft_ms": 3267,
+  "type": "result",
+  "duration_ms": 66023,
+  "uuid": "c1a3df4d-cdd9-4e4e-be9c-d830d64fe0f9",
+  "ttft_stream_ms": 2839,
+  "time_to_request_ms": 1915,
+  "time_to_request_phases_ms": {
+    "other": 46,
+    "system_prompt": 649,
+    "resume_other": 2,
+    "process_user_input": 56,
+    "input_attachments": 52,
+    "input_hooks": 10,
+    "tool_pool_refresh": 5,
+    "init_message": 21,
+    "engine_pickup": 1,
+    "message_prep": 10,
+    "model_config_wait": 1021,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 15,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 937,
+  "time_to_request_cpu_ms": 473,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 214,
+  "process_anon_mib_turn_start": 97,
+  "process_rss_mib_result": 254,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 262,
+  "process_cpu_ms_turn": 3319,
+  "process_wall_ms_turn": 66023,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 40,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2840,
+  "time_to_request_from_spawn_ms": 24440039,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003895724.5706,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

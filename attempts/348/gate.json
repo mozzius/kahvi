@@ -1,0 +1,32 @@
+{
+  "ticket": "B-number-is-safe-integer",
+  "base": "2c4e3a17ad0d1582360527560eced8bcdd2ecc78",
+  "head": "78dcacc3911a68945d7b1890b67b4a0e5ae8305c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/number/is_safe_integer.rs",
+      "added": 13,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

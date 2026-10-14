@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-sum-precise",
+  "base": "457dc8b16e1a70c9168e60d4b3a9948ce6518d42",
+  "head": "38b075d194ae02897b2847964e309ca71195dc24",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/sum_precise.rs",
+      "added": 213,
+      "removed": 40
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

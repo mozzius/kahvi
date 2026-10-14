@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6622,
+  "stop_reason": "tool_use",
+  "session_id": "09edd93d-2eb1-4cb5-a76a-dcacbf6b5a35",
+  "total_cost_usd": 0.00139208,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2854,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1143,
+    "output_tokens_details": {
+      "thinking_tokens": 598
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2854,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1143,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 2854,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2854
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Number.isInteger in its own file, as the spec requires. Step 1 calls ops::is_integral_number on args[0] and returns true when it holds. Step 2 returns false otherwise. Each step's comment sits directly above its code. The old not_implemented return is gone, which is correct now that the function is complete. No branching on specific inputs, no swallowed errors, no extra observable operations (the spec performs none, and the diff performs none). The gate reports build and clippy ok, with 10 new test262 passes and no regressions, which fits a 18-test directory. I could not inspect ops::is_integral_number itself, since it is outside the diff, so its correctness is assumed from the build passing and the test results.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing to fix in this file. The `let _ = (agent, this, new_target);` line is harmless but unnecessary. Reviewers may want to confirm that ops::is_integral_number returns false for NaN, +/-Infinity and non-Number values, but that lives outside this ticket's scope.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Number.isInteger in its own file, as the spec requires. Step 1 calls ops::is_integral_number on args[0] and returns true when it holds. Step 2 returns false otherwise. Each step's comment sits directly above its code. The old not_implemented return is gone, which is correct now that the function is complete. No branching on specific inputs, no swallowed errors, no extra observable operations (the spec performs none, and the diff performs none). The gate reports build and clippy ok, with 10 new test262 passes and no regressions, which fits a 18-test directory. I could not inspect ops::is_integral_number itself, since it is outside the diff, so its correctness is assumed from the build passing and the test results.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing to fix in this file. The `let _ = (agent, this, new_target);` line is harmless but unnecessary. Reviewers may want to confirm that ops::is_integral_number returns false for NaN, +/-Infinity and non-Number values, but that lives outside this ticket's scope."
+  },
+  "ttft_ms": 4205,
+  "type": "result",
+  "duration_ms": 6582,
+  "uuid": "2329735c-3922-4478-acc2-5248e6a05bef",
+  "ttft_stream_ms": 1407,
+  "time_to_request_ms": 540,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 448,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 20,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 1,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 2,
+    "message_normalization": 2,
+    "client_creation": 12,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 37,
+  "time_to_request_cpu_ms": 333,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 711,
+  "process_wall_ms_turn": 6582,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1409,
+  "time_to_request_from_spawn_ms": 24443833,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003902903.3564,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

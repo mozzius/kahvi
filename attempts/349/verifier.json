@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12813,
+  "stop_reason": "tool_use",
+  "session_id": "a35b61cd-4d71-406c-89b7-b777d7eeac1b",
+  "total_cost_usd": 0.00270158,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4860,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2555,
+    "output_tokens_details": {
+      "thinking_tokens": 1964
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4860,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2555,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4860,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4860
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.toString in its own file, with the spec steps kept as comments. It adds local helpers date_string (DateString) and to_date_string (ToDateString), which follow the spec. Checked against the spec: NaN returns \\\"Invalid Date\\\"; LocalTime is applied before DateString and TimeString; TimeZoneString uses the unmodified tv; the year sign uses yv < 0 (equivalent to the spec's \\\"+0 or > 0\\\" test for finite values); the day is zero-padded to 2 and the absolute year to 4. Errors propagate with `?` from the this-value check. There are no special-cased inputs, no fake values, and no lint flags. Renaming the unused args/new_target parameters to underscore names is required by the change, not unrelated. Nothing in the diff contradicts the spec. I could not see the support::date helpers, so I am assuming this_time_value performs RequireInternalSlot and throws TypeError for non-Date receivers, and that the local date_string does not duplicate an existing helper in kahvi_core::ops. Both are worth a quick check, but neither is a defect in the diff as shown.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.toString in its own file, with the spec steps kept as comments. It adds local helpers date_string (DateString) and to_date_string (ToDateString), which follow the spec. Checked against the spec: NaN returns \"Invalid Date\"; LocalTime is applied before DateString and TimeString; TimeZoneString uses the unmodified tv; the year sign uses yv < 0 (equivalent to the spec's \"+0 or > 0\" test for finite values); the day is zero-padded to 2 and the absolute year to 4. Errors propagate with `?` from the this-value check. There are no special-cased inputs, no fake values, and no lint flags. Renaming the unused args/new_target parameters to underscore names is required by the change, not unrelated. Nothing in the diff contradicts the spec. I could not see the support::date helpers, so I am assuming this_time_value performs RequireInternalSlot and throws TypeError for non-Date receivers, and that the local date_string does not duplicate an existing helper in kahvi_core::ops. Both are worth a quick check, but neither is a defect in the diff as shown.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10505,
+  "type": "result",
+  "duration_ms": 12730,
+  "uuid": "9e66e0a6-3825-4fad-baab-6d91e4a4959f",
+  "ttft_stream_ms": 1729,
+  "time_to_request_ms": 563,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 364,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 10,
+    "engine_pickup": 5,
+    "message_prep": 3,
+    "model_config_wait": 88,
+    "autocompact": 8,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 40,
+  "time_to_request_cpu_ms": 422,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 988,
+  "process_wall_ms_turn": 12729,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1731,
+  "time_to_request_from_spawn_ms": 24522883,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003982470.759,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

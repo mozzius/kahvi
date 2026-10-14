@@ -1950,3 +1950,12 @@ test262 at last merge: 74349/81183 runs passing
 [18:51:15] B-number-is-integer: attempt 347 finished ($0.004, 11 turns)
 [18:51:15] B-number-is-safe-integer: attempt 348 finished ($0.004, 9 turns)
 [18:51:30] B-date-prototype-to-string: verifier: revise The diff is a thin wrapper. It keeps the spec step comments, calls date::this_time_value (step 2 RequireInternalSlot and step 3) and date::to_date_str
+[18:51:34] B-date-prototype-to-string: attempt on slot 3 with haiku
+[18:51:39] stack: stack/0011 (#25) merged into main
+[18:51:59] B-number-is-integer: verifier: accept The change implements Number.isInteger in its own file, as the spec requires. Step 1 calls ops::is_integral_number on args[0] and returns true when it
+[18:52:03] B-number-is-safe-integer: verifier: accept Implements Number.isSafeInteger in its own file. It checks ops::is_integral_number on the argument, then tests abs(n) <= 9_007_199_254_740_991.0 (2^53
+[18:52:07] B-math-sum-precise: attempt 346 finished ($0.020, 16 turns)
+[18:52:46] B-date-prototype-to-string: attempt 349 finished ($0.007, 6 turns)
+[18:52:55] stack: pushed stack/0012 as #26 with B-data-view-prototype-set-float16, C-proxy-prevent-extensions, B-data-view-prototype-set-float32, B-data-view-prototype-set-float64, B-data-view-prototype-set-int16, B-data-view-prototype-set-int32, B-data-view-prototype-set-uint16, B-data-view-prototype-set-uint32
+[18:53:27] B-math-sum-precise: verifier: accept The diff implements Math.sumPrecise in its own file, keeping the spec steps as comments above the matching code. I walked each step and found no defec
+[18:53:27] B-date-prototype-to-string: verifier: accept The diff implements Date.prototype.toString in its own file, with the spec steps kept as comments. It adds local helpers date_string (DateString) and 
