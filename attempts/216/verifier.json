@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11190,
+  "stop_reason": "tool_use",
+  "session_id": "051bf798-e9fc-4faa-a825-1fada9cd9b57",
+  "total_cost_usd": 0.0025083799999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4774,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2217,
+    "output_tokens_details": {
+      "thinking_tokens": 1527
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4774,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2217,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4774,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4774
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements WeakMap.prototype.delete in the single in-scope file. Steps 1-5 are each kept as comments and mapped to code in spec order: this_weak_map (RequireInternalSlot, step 2) runs before can_be_held_weakly (step 3), which returns false early, and the table delete (steps 4-5) returns a boolean. No test-keyed branches, no swallowed errors, no made-up values, and no unrelated edits. The helpers (this_weak_map, can_be_held_weakly, collection_key, weak_map_table) live in crate::support::collections, which is outside the diff. I could not read them, so their behaviour is unverified. The gate's two remaining failures come from Symbol.for not being implemented, which the test hits before reaching delete, and that path is honest.\",\"problems\":[],\"notes_for_next_attempt\":\"The helpers were not visible to me, so verify them before merging if you can. (1) can_be_held_weakly must return false for registered symbols (KeyForSymbol not undefined, i.e. Symbol.for keys). It returns a plain bool, so check that it actually consults the symbol registry and is not just returning true for all symbols. Re-run returns-false-if-key-cannot-be-held-weakly once Symbol.for lands. (2) this_weak_map must throw a TypeError for non-objects and for objects without [[WeakMapData]]. (3) The table delete must compare keys with SameValue semantics. Nothing in this diff shows a defect.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements WeakMap.prototype.delete in the single in-scope file. Steps 1-5 are each kept as comments and mapped to code in spec order: this_weak_map (RequireInternalSlot, step 2) runs before can_be_held_weakly (step 3), which returns false early, and the table delete (steps 4-5) returns a boolean. No test-keyed branches, no swallowed errors, no made-up values, and no unrelated edits. The helpers (this_weak_map, can_be_held_weakly, collection_key, weak_map_table) live in crate::support::collections, which is outside the diff. I could not read them, so their behaviour is unverified. The gate's two remaining failures come from Symbol.for not being implemented, which the test hits before reaching delete, and that path is honest.",
+    "problems": [],
+    "notes_for_next_attempt": "The helpers were not visible to me, so verify them before merging if you can. (1) can_be_held_weakly must return false for registered symbols (KeyForSymbol not undefined, i.e. Symbol.for keys). It returns a plain bool, so check that it actually consults the symbol registry and is not just returning true for all symbols. Re-run returns-false-if-key-cannot-be-held-weakly once Symbol.for lands. (2) this_weak_map must throw a TypeError for non-objects and for objects without [[WeakMapData]]. (3) The table delete must compare keys with SameValue semantics. Nothing in this diff shows a defect."
+  },
+  "ttft_ms": 8400,
+  "type": "result",
+  "duration_ms": 11124,
+  "uuid": "ae6ebd03-0596-444e-834e-fd49ab452c8a",
+  "ttft_stream_ms": 1080,
+  "time_to_request_ms": 473,
+  "time_to_request_phases_ms": {
+    "other": 40,
+    "system_prompt": 341,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 7,
+    "tool_pool_refresh": 2,
+    "init_message": 18,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 9,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 267,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 225,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 250,
+  "process_cpu_ms_turn": 994,
+  "process_wall_ms_turn": 11123,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1085,
+  "time_to_request_from_spawn_ms": 20619172,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000079270.803,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
