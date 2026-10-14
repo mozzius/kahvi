@@ -2864,3 +2864,6 @@ test262 at last merge: 74823/81183 runs passing
 [19:08:44] B-date-prototype-get-utc-date: attempt on slot 2 with haiku
 [19:08:47] B-date-prototype-get-seconds: verifier: accept The diff implements Date.prototype.getSeconds in its own file. Steps 1-3 go through date::this_time_value(agent, this)?, which should cover RequireInt
 [19:08:48] B-date-prototype-get-utc-day: attempt on slot 0 with haiku
+[19:08:53] B-date-prototype-get-utc-full-year: attempt on slot 3 with haiku
+[19:09:06] B-date-prototype-get-utc-date: attempt 401 finished ($0.005, 7 turns)
+[19:09:11] B-string-prototype-locale-compare: verifier: revise The localeCompare implementation follows spec steps 1-4 in order, with correct abrupt-completion handling. It returns -1/0/1 from a real comparison of
