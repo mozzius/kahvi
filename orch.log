@@ -826,3 +826,4 @@ test262 at last merge: 72953/81183 runs passing
 [17:56:39] B-map-prototype-get-size: verifier: accept The diff implements get Map.prototype.size. Step 1 binds this, step 2 calls this_map (the RequireInternalSlot equivalent) with ?, and step 5 returns O
 [17:56:39] B-typed-array-prototype-keys: verifier: accept The diff replaces the not-implemented stub in prototype_keys.rs with the spec's two steps: ValidateTypedArray(obj, seq-cst) via validate_typed_array w
 [17:56:41] B-array-prototype-to-locale-string: attempt on slot 2 with haiku
+[17:56:51] B-global-unescape: attempt on slot 3 with haiku
