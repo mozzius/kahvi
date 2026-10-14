@@ -9,8 +9,8 @@ conformance suite.
 
 | test262 | |
 |---|--:|
-| **Pass rate** | **99.99%** |
-| Passing runs | 81,171 / 81,183 |
+| **Pass rate** | **100.00%** |
+| Passing runs | 81,183 / 81,183 |
 | Not implemented | 0 |
 | Test files | 48,751 |
 
