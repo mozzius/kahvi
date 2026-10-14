@@ -2369,3 +2369,4 @@ test262 at last merge: 74349/81183 runs passing
 [18:59:31] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 361: no new test262 passes in target
 [18:59:39] B-math-tan: verifier: accept The diff implements Math.tan in its stub, following the four spec steps. Step 1 calls ops::to_number once with ? propagation. Step 2 returns n unchang
 [18:59:45] B-math-log: verifier: accept Math.log implementation matches the six spec steps. ToNumber is called once via ops::to_number with `?`. NaN and +∞ return n. 1 returns +0. ±0 returns
+[18:59:50] B-math-min: verifier: accept Math.min implementation in crates/kahvi-builtins/src/math/min.rs follows the spec. Step 1-2 coerce every argument with ops::to_number and propagate er
