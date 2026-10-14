@@ -2881,3 +2881,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:10:16] B-date-prototype-get-utc-milliseconds: attempt 406 finished ($0.005, 8 turns)
 [19:10:28] B-date-prototype-get-utc-minutes: attempt 407 finished ($0.006, 11 turns)
 [19:10:29] B-string-prototype-locale-compare: verifier: revise The change implements String.prototype.localeCompare steps 1-4 in order (RequireObjectCoercible, ToString(this), ToString(that), with `?` propagation)
+[19:10:31] B-string-prototype-locale-compare: attempt on slot 1 with haiku
+[19:10:32] B-date-prototype-get-utc-hours: verifier: accept The diff implements Date.prototype.getUTCHours in its file. It calls a shared helper `date::this_time_value(agent, this)?`, which I take to be the Req
