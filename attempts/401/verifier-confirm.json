@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5883,
+  "stop_reason": "tool_use",
+  "session_id": "948979a7-70ea-4a7d-bc41-d307634c14b8",
+  "total_cost_usd": 0.022254899999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4160,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 490,
+    "output_tokens_details": {
+      "thinking_tokens": 99
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4160,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 490,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4160,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4160
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the five spec steps in order. It calls the shared `date::this_time_value` with `?`, which should cover RequireInternalSlot and the [[DateValue]] read. It returns NaN for a NaN time value and otherwise returns \ud835\udd3d(DateFromTime(tv)) through the shared helper. It touches only the ticket's file, adds no special cases, and swallows no errors. The gate shows 8 new passes and 0 regressions. I did not open the `support::date` helpers, so I'm assuming they match the spec.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the five spec steps in order. It calls the shared `date::this_time_value` with `?`, which should cover RequireInternalSlot and the [[DateValue]] read. It returns NaN for a NaN time value and otherwise returns \ud835\udd3d(DateFromTime(tv)) through the shared helper. It touches only the ticket's file, adds no special cases, and swallows no errors. The gate shows 8 new passes and 0 regressions. I did not open the `support::date` helpers, so I'm assuming they match the spec.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3842,
+  "type": "result",
+  "duration_ms": 5670,
+  "uuid": "99d11b32-26a8-4f85-807f-2550d83be7c4",
+  "ttft_stream_ms": 2585,
+  "time_to_request_ms": 667,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 431,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 120,
+    "input_hooks": 8,
+    "tool_pool_refresh": 6,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 27,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 163,
+  "time_to_request_cpu_ms": 372,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 669,
+  "process_wall_ms_turn": 5669,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 105,
+    "cpu_ms": 98,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2589,
+  "time_to_request_from_spawn_ms": 25508585,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004968242.9998,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.36,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

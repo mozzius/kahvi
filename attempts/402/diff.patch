@@ -1,0 +1,27 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_get_utc_day.rs b/crates/kahvi-builtins/src/date/prototype_get_utc_day.rs
+index 746423c..857c673 100644
+--- a/crates/kahvi-builtins/src/date/prototype_get_utc_day.rs
++++ b/crates/kahvi-builtins/src/date/prototype_get_utc_day.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.getutcday
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.getUTCDay
+@@ -16,8 +17,12 @@ pub(crate) fn prototype_get_utc_day(
+     // 1. Let _dateObj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_dateObj_, [[DateValue]]).
+     // 3. Let _tv_ be _dateObj_.[[DateValue]].
++    let _ = (args, new_target);
++    let tv = date::this_time_value(agent, this)?;
+     // 4. If _tv_ is *NaN*, return *NaN*.
++    if tv.is_nan() {
++        return Ok(Value::Number(f64::NAN));
++    }
+     // 5. Return 𝔽(WeekDay(_tv_)).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.getUTCDay"))
++    Ok(Value::Number(date::week_day(tv)))
+ }

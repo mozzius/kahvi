@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-utc-date",
+  "base": "599beb2cf3bc060f8bede4086387ceb85313b193",
+  "head": "9d1fc05c092a22c96726aa0306fee0d1ec442287",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_utc_date.rs",
+      "added": 13,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

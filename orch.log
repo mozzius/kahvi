@@ -2867,3 +2867,7 @@ test262 at last merge: 74823/81183 runs passing
 [19:08:53] B-date-prototype-get-utc-full-year: attempt on slot 3 with haiku
 [19:09:06] B-date-prototype-get-utc-date: attempt 401 finished ($0.005, 7 turns)
 [19:09:11] B-string-prototype-locale-compare: verifier: revise The localeCompare implementation follows spec steps 1-4 in order, with correct abrupt-completion handling. It returns -1/0/1 from a real comparison of
+[19:09:14] B-string-prototype-locale-compare: attempt on slot 1 with haiku
+[19:09:20] B-date-prototype-get-utc-day: attempt 402 finished ($0.007, 12 turns)
+[19:09:22] B-date-prototype-get-utc-full-year: attempt 403 finished ($0.006, 11 turns)
+[19:09:36] B-date-prototype-get-utc-date: verifier: accept The diff implements Date.prototype.getUTCDate in its own file, following the five spec steps. It gets the this value's time value through date::this_t
