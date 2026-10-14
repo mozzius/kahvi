@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16219,
+  "stop_reason": "tool_use",
+  "session_id": "f2205e63-5031-49ea-8274-07ca1b272d92",
+  "total_cost_usd": 0.0035652799999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6290,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 3418,
+    "output_tokens_details": {
+      "thinking_tokens": 2757
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6290,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3418,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 6290,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6290
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setUTCMonth in its own file, following the spec steps in order. RequireInternalSlot is done via date::this_time_value with `?`. The tv read happens before the ToNumber calls, and month and day are converted with `?` in the spec's order. \\\"Day present\\\" is tested with args.len() > 1, so an explicit undefined counts as present. The NaN check comes after the conversions, as step 6 requires. The default day is DateFromTime(tv), and the result goes through MakeDay, MakeDate, TimeClip and the [[DateValue]] set. The only `unwrap_or_else` is the spec's step-7 default. There are no test-keyed branches and no swallowed errors. Two minor points: the stub's `length` and NOTE comments were dropped (they are not steps), and the unused parameter was renamed to `_new_target`. Neither is a defect. The helpers in crate::support::date are not in the diff, so their correctness is unverified here; the gate's 10 new passes and 0 regressions are consistent with them being correct.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. If the next attempt starts from scratch, keep the same structure. Optionally restore the stub's `length` property and NOTE comments above the function body for documentation fidelity. The unreachable `else` TypeError after this_time_value could be dropped, since this_time_value already guarantees an object.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setUTCMonth in its own file, following the spec steps in order. RequireInternalSlot is done via date::this_time_value with `?`. The tv read happens before the ToNumber calls, and month and day are converted with `?` in the spec's order. \"Day present\" is tested with args.len() > 1, so an explicit undefined counts as present. The NaN check comes after the conversions, as step 6 requires. The default day is DateFromTime(tv), and the result goes through MakeDay, MakeDate, TimeClip and the [[DateValue]] set. The only `unwrap_or_else` is the spec's step-7 default. There are no test-keyed branches and no swallowed errors. Two minor points: the stub's `length` and NOTE comments were dropped (they are not steps), and the unused parameter was renamed to `_new_target`. Neither is a defect. The helpers in crate::support::date are not in the diff, so their correctness is unverified here; the gate's 10 new passes and 0 regressions are consistent with them being correct.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. If the next attempt starts from scratch, keep the same structure. Optionally restore the stub's `length` property and NOTE comments above the function body for documentation fidelity. The unreachable `else` TypeError after this_time_value could be dropped, since this_time_value already guarantees an object."
+  },
+  "ttft_ms": 13298,
+  "type": "result",
+  "duration_ms": 16061,
+  "uuid": "68cde38f-7d14-4a41-b107-1b93f13f9f3d",
+  "ttft_stream_ms": 1340,
+  "time_to_request_ms": 599,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 325,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 20,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 162,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 18,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 95,
+  "time_to_request_cpu_ms": 327,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 110,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 1315,
+  "process_wall_ms_turn": 16061,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1341,
+  "time_to_request_from_spawn_ms": 25987561,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005447818.7915,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.46,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12598,
+  "stop_reason": "tool_use",
+  "session_id": "a0e8b653-a41d-46ac-b1f6-6e837d6af30d",
+  "total_cost_usd": 0.0035883800000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8659,
+    "cache_read_input_tokens": 1288,
+    "output_tokens": 2553,
+    "output_tokens_details": {
+      "thinking_tokens": 1934
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8659,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2553,
+        "cache_read_input_tokens": 1288,
+        "cache_creation_input_tokens": 8659,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8659
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setUTCMinutes in its own file, following the 13 spec steps in order. Observable steps run in spec order: this check and slot check, then ToNumber(minute), ToNumber(second) and ToNumber(millisecond) only when those arguments are present (by argument count, not by undefined value). The NaN early return at step 7 happens after the conversions. Steps 8 and 9 default the second and millisecond from tv. Steps 10 to 13 are MakeDate, TimeClip, set [[DateValue]], and return. Errors propagate with `?`. There are no special-cased inputs, no fallback values, and no swallowed errors. The only other changes are renaming the unused new_target parameter and dropping the trailing NOTE/length comment block from the stub. Neither affects behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. Optional cleanups: the early let-else TypeError at step 1 duplicates the check inside date::this_time_value (same error type, so harmless but redundant). The stub's trailing NOTE and length comment block was removed; restoring it would keep the file closer to the stub. The date helpers in support::date are not in the diff, so their correctness rests on the existing code and the passing test262 runs.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setUTCMinutes in its own file, following the 13 spec steps in order. Observable steps run in spec order: this check and slot check, then ToNumber(minute), ToNumber(second) and ToNumber(millisecond) only when those arguments are present (by argument count, not by undefined value). The NaN early return at step 7 happens after the conversions. Steps 8 and 9 default the second and millisecond from tv. Steps 10 to 13 are MakeDate, TimeClip, set [[DateValue]], and return. Errors propagate with `?`. There are no special-cased inputs, no fallback values, and no swallowed errors. The only other changes are renaming the unused new_target parameter and dropping the trailing NOTE/length comment block from the stub. Neither affects behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. Optional cleanups: the early let-else TypeError at step 1 duplicates the check inside date::this_time_value (same error type, so harmless but redundant). The stub's trailing NOTE and length comment block was removed; restoring it would keep the file closer to the stub. The date helpers in support::date are not in the diff, so their correctness rests on the existing code and the passing test262 runs."
+  },
+  "ttft_ms": 9743,
+  "type": "result",
+  "duration_ms": 12189,
+  "uuid": "b47eeecd-a5f8-456c-96af-c46842dbabd3",
+  "ttft_stream_ms": 1306,
+  "time_to_request_ms": 523,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 365,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 19,
+    "input_hooks": 11,
+    "tool_pool_refresh": 8,
+    "init_message": 8,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 39,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 8,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 90,
+  "time_to_request_cpu_ms": 289,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 1149,
+  "process_wall_ms_turn": 12189,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1314,
+  "time_to_request_from_spawn_ms": 25983341,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005441971.7693,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.45,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

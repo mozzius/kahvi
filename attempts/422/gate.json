@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-set-utc-milliseconds",
+  "base": "d6198a0465f8c9d564598e4da15884f25a7a29ef",
+  "head": "9fffe6af185296c6f7b566efe758851326c0a6f5",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_utc_milliseconds.rs",
+      "added": 20,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

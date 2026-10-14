@@ -1,0 +1,60 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_set_utc_month.rs b/crates/kahvi-builtins/src/date/prototype_set_utc_month.rs
+index 59db219..235d5b3 100644
+--- a/crates/kahvi-builtins/src/date/prototype_set_utc_month.rs
++++ b/crates/kahvi-builtins/src/date/prototype_set_utc_month.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.setutcmonth
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.setUTCMonth
+@@ -9,25 +10,40 @@ pub(crate) fn prototype_set_utc_month(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _dateObj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_dateObj_, [[DateValue]]).
+     // 3. Let _tv_ be _dateObj_.[[DateValue]].
++    let t = date::this_time_value(agent, this)?;
++    let Value::Object(date_obj) = this else {
++        return Err(agent.throw_type_error("this is not a Date object"));
++    };
+     // 4. Let _monthNumber_ be ? ToNumber(_month_).
++    let month_number = ops::to_number(agent, args.get_or_undefined(0))?;
+     // 5. If _day_ is present, let _dayNumber_ be ? ToNumber(_day_).
++    let day_number = if args.len() > 1 {
++        Some(ops::to_number(agent, args.get_or_undefined(1))?)
++    } else {
++        None
++    };
+     // 6. If _tv_ is *NaN*, return *NaN*.
++    if t.is_nan() {
++        return Ok(Value::Number(f64::NAN));
++    }
+     // 7. If _day_ is not present, let _dayNumber_ be 𝔽(DateFromTime(_tv_)).
++    let day_number = day_number.unwrap_or_else(|| date::date_from_time(t));
+     // 8. Let _newDate_ be MakeDate(MakeDay(𝔽(YearFromTime(_tv_)), _monthNumber_, _dayNumber_), 𝔽(TimeWithinDay(_tv_))).
++    let new_date = date::make_date(
++        date::make_day(date::year_from_time(t), month_number, day_number),
++        date::time_within_day(t),
++    );
+     // 9. Let _v_ be TimeClip(_newDate_).
++    let v = date::time_clip(new_date);
+     // 10. Set _dateObj_.[[DateValue]] to _v_.
++    date::set_time_value(agent, date_obj, v);
+     // 11. Return _v_.
+-    //
+-    // The *"length"* property of this method is *2*_𝔽.
+-    // NOTE:
+-    // If _day_ is not present, this method behaves as if _day_ was present with the value `getUTCDate()`.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.setUTCMonth"))
++    Ok(Value::Number(v))
+ }

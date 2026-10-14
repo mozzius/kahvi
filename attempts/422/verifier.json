@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12207,
+  "stop_reason": "tool_use",
+  "session_id": "43a48cd7-9410-4ffa-b239-a0fc0e07d55f",
+  "total_cost_usd": 0.0029552800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5668,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 2569,
+    "output_tokens_details": {
+      "thinking_tokens": 1902
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5668,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2569,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 5668,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5668
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.setUTCMilliseconds in its own file and follows the spec steps in order. Step 1 is a manual Object check that throws a TypeError. Step 3 reads the time value via date::this_time_value(agent, this)?, which should perform RequireInternalSlot. Step 4 is ToNumber with ?. Step 5 returns NaN when tv is NaN. Step 6 calls date::make_time with the hour, minute, second and millisecond. Step 7 is time_clip(make_date(day(tv), time)). Step 8 stores the value with date::set_time_value. Step 9 returns the value. Each step has its spec comment directly above its code. No other files are touched. The only redundancy is the explicit Object check before this_time_value, which throws the same TypeError type and has no observable effect. The support::date helpers are not in the diff, so I could not verify that this_time_value does the slot check or that make_time applies ToIntegerOrInfinity to its arguments. The gate's 8 new passing test262 runs are consistent with them being correct.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The support::date helpers (this_time_value, make_time, set_time_value) are outside the diff, so their correctness was not checked here. The explicit Object check before this_time_value duplicates the RequireInternalSlot Object check and could be dropped if this_time_value already covers it, but this is optional.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.setUTCMilliseconds in its own file and follows the spec steps in order. Step 1 is a manual Object check that throws a TypeError. Step 3 reads the time value via date::this_time_value(agent, this)?, which should perform RequireInternalSlot. Step 4 is ToNumber with ?. Step 5 returns NaN when tv is NaN. Step 6 calls date::make_time with the hour, minute, second and millisecond. Step 7 is time_clip(make_date(day(tv), time)). Step 8 stores the value with date::set_time_value. Step 9 returns the value. Each step has its spec comment directly above its code. No other files are touched. The only redundancy is the explicit Object check before this_time_value, which throws the same TypeError type and has no observable effect. The support::date helpers are not in the diff, so I could not verify that this_time_value does the slot check or that make_time applies ToIntegerOrInfinity to its arguments. The gate's 8 new passing test262 runs are consistent with them being correct.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The support::date helpers (this_time_value, make_time, set_time_value) are outside the diff, so their correctness was not checked here. The explicit Object check before this_time_value duplicates the RequireInternalSlot Object check and could be dropped if this_time_value already covers it, but this is optional."
+  },
+  "ttft_ms": 9563,
+  "type": "result",
+  "duration_ms": 11943,
+  "uuid": "ba573654-205f-49a2-aaf9-479bc14ffb8b",
+  "ttft_stream_ms": 1342,
+  "time_to_request_ms": 621,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 397,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 17,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 5,
+    "model_config_wait": 109,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 4,
+    "client_creation": 17,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 115,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 933,
+  "process_wall_ms_turn": 11943,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1343,
+  "time_to_request_from_spawn_ms": 25985355,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005445318.374,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.46,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

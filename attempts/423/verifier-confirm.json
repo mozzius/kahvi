@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7792,
+  "stop_reason": "tool_use",
+  "session_id": "98e57336-3e09-4ad8-b2f5-0c684832e518",
+  "total_cost_usd": 0.0437758,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8659,
+    "cache_read_input_tokens": 1288,
+    "output_tokens": 844,
+    "output_tokens_details": {
+      "thinking_tokens": 453
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8659,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 844,
+        "cache_read_input_tokens": 1288,
+        "cache_creation_input_tokens": 8659,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8659
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1\u201313 in order. tv is read before the ToNumber calls, and the optional arguments are ToNumber'd in order with `?`. The NaN check comes after the conversions. Missing second/millisecond fall back to values from tv. It uses the existing date helpers (MakeDate, MakeTime, TimeClip) and writes the result back to the Date. The gate report shows 16/16 target tests passing, no regressions and no lint flags. I found no special-casing, swallowed errors or unrelated changes.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1\u201313 in order. tv is read before the ToNumber calls, and the optional arguments are ToNumber'd in order with `?`. The NaN check comes after the conversions. Missing second/millisecond fall back to values from tv. It uses the existing date helpers (MakeDate, MakeTime, TimeClip) and writes the result back to the Date. The gate report shows 16/16 target tests passing, no regressions and no lint flags. I found no special-casing, swallowed errors or unrelated changes.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5445,
+  "type": "result",
+  "duration_ms": 7465,
+  "uuid": "5c6cbb3f-464c-4fd8-823a-4ce4137a25c6",
+  "ttft_stream_ms": 1788,
+  "time_to_request_ms": 481,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 292,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 26,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 100,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 15,
+  "time_to_request_cpu_ms": 285,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 780,
+  "process_wall_ms_turn": 7465,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1790,
+  "time_to_request_from_spawn_ms": 25997022,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005457467.1775,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.46,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
