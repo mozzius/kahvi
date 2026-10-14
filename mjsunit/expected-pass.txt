@@ -158,6 +158,7 @@ compiler/compare.js
 compiler/complex-for-in.js
 compiler/consecutive-addition.js
 compiler/constant-fold-tostring.js
+compiler/constructor-inlining.js
 compiler/context-sensitivity.js
 compiler/control-flow-0.js
 compiler/control-flow-1.js
@@ -199,6 +200,7 @@ compiler/deopt-array-prototype-slice.js
 compiler/deopt-array-prototype-some.js
 compiler/deopt-bool.js
 compiler/deopt-bool2.js
+compiler/deopt-closure.js
 compiler/deopt-during-eval-lookup.js
 compiler/deopt-eager-and-lazy.js
 compiler/deopt-eager-var-mutation-ite.js
@@ -226,6 +228,7 @@ compiler/deoptimize-lazy-weak.js
 compiler/division-by-constant.js
 compiler/dont-constant-fold-deopting-checks.js
 compiler/double-array-to-global.js
+compiler/eager-deopt-simple.js
 compiler/escape-analysis-1.js
 compiler/escape-analysis-10.js
 compiler/escape-analysis-11.js
@@ -250,7 +253,9 @@ compiler/escape-analysis-deopt-2.js
 compiler/escape-analysis-deopt-3.js
 compiler/escape-analysis-deopt-4.js
 compiler/escape-analysis-deopt-5.js
+compiler/escape-analysis-deopt-6.js
 compiler/escape-analysis-framestate-use-at-branchpoint.js
+compiler/escape-analysis-materialize.js
 compiler/escape-analysis-phi-type-2.js
 compiler/escape-analysis-phi-type.js
 compiler/escape-analysis-replacement.js
@@ -629,6 +634,7 @@ compiler/regress-693425.js
 compiler/regress-694088.js
 compiler/regress-7.js
 compiler/regress-700883.js
+compiler/regress-713367.js
 compiler/regress-714483.js
 compiler/regress-715204.js
 compiler/regress-715651.js
@@ -3473,12 +3479,14 @@ regress/regress-679727.js
 regress/regress-681.js
 regress/regress-681171-2.js
 regress/regress-681171-3.js
+regress/regress-681383.js
 regress/regress-682649.js
 regress/regress-683617.js
 regress/regress-685086.js
 regress/regress-687.js
 regress/regress-688690.js
 regress/regress-69.js
+regress/regress-6907.js
 regress/regress-693500.js
 regress/regress-696.js
 regress/regress-696251.js
@@ -3549,6 +3557,7 @@ regress/regress-7740.js
 regress/regress-774475.js
 regress/regress-774824.js
 regress/regress-775888.js
+regress/regress-776309.js
 regress/regress-776338.js
 regress/regress-7773.js
 regress/regress-778574.js
@@ -4278,6 +4287,7 @@ regress/regress-crbug-640369.js
 regress/regress-crbug-640497.js
 regress/regress-crbug-642056.js
 regress/regress-crbug-643073.js
+regress/regress-crbug-644245.js
 regress/regress-crbug-644689-1.js
 regress/regress-crbug-644689-2.js
 regress/regress-crbug-645103.js
@@ -4310,6 +4320,7 @@ regress/regress-crbug-660379.js
 regress/regress-crbug-661949.js
 regress/regress-crbug-662367.js
 regress/regress-crbug-662410.js
+regress/regress-crbug-662830.js
 regress/regress-crbug-662854.js
 regress/regress-crbug-662907.js
 regress/regress-crbug-663340.js
@@ -4339,8 +4350,10 @@ regress/regress-crbug-673008.js
 regress/regress-crbug-677757.js
 regress/regress-crbug-679202.js
 regress/regress-crbug-679841.js
+regress/regress-crbug-681983.js
 regress/regress-crbug-682194.js
 regress/regress-crbug-683581.js
+regress/regress-crbug-684208.js
 regress/regress-crbug-685050.js
 regress/regress-crbug-685504.js
 regress/regress-crbug-685506.js
@@ -4401,6 +4414,7 @@ regress/regress-crbug-729573-1.js
 regress/regress-crbug-729573-2.js
 regress/regress-crbug-729597.js
 regress/regress-crbug-731193.js
+regress/regress-crbug-732169.js
 regress/regress-crbug-734051.js
 regress/regress-crbug-734162.js
 regress/regress-crbug-736575.js
@@ -4429,6 +4443,7 @@ regress/regress-crbug-768080.js
 regress/regress-crbug-768367.js
 regress/regress-crbug-769852.js
 regress/regress-crbug-771971.js
+regress/regress-crbug-772610.js
 regress/regress-crbug-772672.js
 regress/regress-crbug-772689.js
 regress/regress-crbug-772720.js
@@ -4814,7 +4829,6 @@ string-constructor-inlining-lazy-deopt.js
 string-equal.js
 string-flatten.js
 string-fromcharcode.js
-string-index.js
 string-indexof-1.js
 string-indexof-2.js
 string-lastindexof.js
