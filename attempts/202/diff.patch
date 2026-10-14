@@ -1,0 +1,26 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_trim_start.rs b/crates/kahvi-builtins/src/string/prototype_trim_start.rs
+index c136b84..f8c6270 100644
+--- a/crates/kahvi-builtins/src/string/prototype_trim_start.rs
++++ b/crates/kahvi-builtins/src/string/prototype_trim_start.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use super::prototype_trim::{TrimWhere, trim_string};
++
+ /// String.prototype.trimStart
+ pub(crate) fn prototype_trim_start(
+     agent: &mut Agent,
+@@ -19,6 +21,10 @@ pub(crate) fn prototype_trim_start(
+     //
+     // NOTE:
+     // This method is intentionally generic; it does not require that its *this* value be a String object. Therefore, it can be transferred to other kinds of objects for use as a method.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.trimStart"))
++    let _ = (args, new_target);
++    // 1. Let _string_ be the *this* value.
++    let string = this;
++    // 2. Return ? TrimString(_string_, ~start~).
++    let trimmed = trim_string(agent, string, TrimWhere::Start)?;
++    Ok(Value::String(trimmed))
+ }

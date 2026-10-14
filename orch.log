@@ -335,3 +335,8 @@
 [17:41:56] B-reg-exp-prototype-compile: verifier: accept The diff implements RegExp.prototype.compile in the assigned file, following the four spec steps. Step 2 uses require_regexp (RequireInternalSlot) wit
 [17:42:00] B-string-prototype-trim-end: verifier: accept The diff wires String.prototype.trimEnd to the shared TrimString helper with TrimWhere::End. Step 1 (this value) and step 2 (return ? TrimString(strin
 [17:42:17] B-weak-map-prototype-has: attempt on slot 2 with haiku
+[17:42:20] B-aggregate-error-constructor: attempt on slot 1 with haiku
+[17:42:20] B-array-prototype-unshift: attempt on slot 3 with haiku
+[17:42:25] B-string-prototype-trim-start: attempt 202 finished ($0.008, 16 turns)
+[17:42:52] B-weak-map-prototype-has: attempt 203 finished ($0.006, 9 turns)
+[17:42:59] B-string-prototype-trim-start: verifier: accept The diff is a small, spec-faithful implementation of String.prototype.trimStart. It keeps the spec steps as comments, takes `this` as the string, and 
