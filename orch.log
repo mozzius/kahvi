@@ -1413,3 +1413,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:24:02] B-typed-array-prototype-at: verifier: accept The diff implements %TypedArray%.prototype.at step by step, with the spec step comments kept above the code. Order matches the spec: ValidateTypedArra
 [18:24:07] B-typed-array-prototype-reduce: attempt on slot 0 with sonnet
 [18:24:09] B-string-prototype-substr: verifier: accept The change implements String.prototype.substr in the single in-scope file, following the spec steps 1-8 in order. RequireObjectCoercible runs before T
+[18:24:13] B-promise-try: verifier: accept The diff implements Promise.try in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object `this`. Step 3 calls th
+[18:24:13] B-typed-array-prototype-reduce-right: attempt on slot 1 with sonnet
