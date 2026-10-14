@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8212,
+  "stop_reason": "tool_use",
+  "session_id": "0c62c4d5-6af7-4a97-b599-45aa0a6ddad8",
+  "total_cost_usd": 0.0017974800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3562,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1525,
+    "output_tokens_details": {
+      "thinking_tokens": 873
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3562,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1525,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3562,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3562
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Diff implements Date.prototype.getHours in its own file, following the spec steps. Step 1-3 are delegated to `date::this_time_value(agent, this)?`, which propagates the abrupt completion. Step 4 returns NaN when tv is NaN. Step 5 returns Value::Number(hour_from_time(local_time(agent, tv))). No test-specific branches, no swallowed errors, no made-up values. The gate reports 8 new passing test262 runs with 0 regressions. Only one file changed. The removed header comment and the underscore-renamed unused parameters are cosmetic. I could not see the helper module, so whether `this_time_value` performs RequireInternalSlot (TypeError for non-Date objects) is inferred, not verified from this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. Before merging, confirm in crates/kahvi-builtins/src/support/date (not shown in this diff) that `this_time_value` throws a TypeError when `this` is not an object or lacks [[DateValue]] (spec RequireInternalSlot, steps 1-2), and that `local_time` and `hour_from_time` match the spec's LocalTime and HourFromTime. Cosmetic: the \\\"This method performs the following steps when called:\\\" header comment was dropped; the stub convention keeps it, so restoring it would match the other files.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Diff implements Date.prototype.getHours in its own file, following the spec steps. Step 1-3 are delegated to `date::this_time_value(agent, this)?`, which propagates the abrupt completion. Step 4 returns NaN when tv is NaN. Step 5 returns Value::Number(hour_from_time(local_time(agent, tv))). No test-specific branches, no swallowed errors, no made-up values. The gate reports 8 new passing test262 runs with 0 regressions. Only one file changed. The removed header comment and the underscore-renamed unused parameters are cosmetic. I could not see the helper module, so whether `this_time_value` performs RequireInternalSlot (TypeError for non-Date objects) is inferred, not verified from this diff.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. Before merging, confirm in crates/kahvi-builtins/src/support/date (not shown in this diff) that `this_time_value` throws a TypeError when `this` is not an object or lacks [[DateValue]] (spec RequireInternalSlot, steps 1-2), and that `local_time` and `hour_from_time` match the spec's LocalTime and HourFromTime. Cosmetic: the \"This method performs the following steps when called:\" header comment was dropped; the stub convention keeps it, so restoring it would match the other files."
+  },
+  "ttft_ms": 5693,
+  "type": "result",
+  "duration_ms": 8205,
+  "uuid": "fe0ba8be-19a9-4137-9ed6-4a58baa8e376",
+  "ttft_stream_ms": 1533,
+  "time_to_request_ms": 601,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 298,
+    "resume_other": 0,
+    "process_user_input": 43,
+    "input_attachments": 57,
+    "input_hooks": 10,
+    "tool_pool_refresh": 4,
+    "init_message": 17,
+    "engine_pickup": 8,
+    "message_prep": 3,
+    "model_config_wait": 107,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 101,
+  "time_to_request_cpu_ms": 418,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 238,
+  "process_cpu_ms_turn": 855,
+  "process_wall_ms_turn": 8205,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 42,
+    "cpu_ms": 87,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1534,
+  "time_to_request_from_spawn_ms": 25384231,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004844261.4512,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.35,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

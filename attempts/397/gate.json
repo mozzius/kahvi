@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-milliseconds",
+  "base": "98a1284926c82c04c8a5a5b09cbfc0d3e4375e32",
+  "head": "19446fedf8222566e690fab1449b09647e1cfd8b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_milliseconds.rs",
+      "added": 15,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

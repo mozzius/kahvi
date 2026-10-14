@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-day",
+  "base": "7f1c0ff0c5e90858140a55c03d9b8dfc75437f60",
+  "head": "ddc4f057e849b2a3f38156d6ec276f0c02372745",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_day.rs",
+      "added": 7,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

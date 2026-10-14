@@ -2842,3 +2842,11 @@ test262 at last merge: 74823/81183 runs passing
 [19:06:48] B-string-prototype-locale-compare: attempt on slot 1 with haiku
 [19:06:48] B-reflect-set-prototype-of: merged (+18, 75323 total)
 [19:06:48] B-reg-exp-prototype-compile: merged (+20, 75323 total)
+[19:06:48] B-string-prototype-trim-end: merged (+38, 75323 total)
+[19:06:48] B-string-prototype-trim-start: merged (+38, 75323 total)
+[19:06:52] B-date-prototype-get-milliseconds: attempt on slot 3 with haiku
+[19:06:52] B-date-prototype-get-day: attempt 394 finished ($0.006, 10 turns)
+[19:07:01] stack: pushed stack/0015 as #30 with B-weak-map-prototype-has, B-array-prototype-unshift, B-aggregate-error-constructor, B-data-view-prototype-set-int8, B-date-prototype-get-timezone-offset, B-object-values, B-string-prototype-concat, B-set-prototype-is-subset-of, B-string-prototype-to-locale-upper-case, B-string-prototype-to-upper-case, B-symbol-prototype-symbol-to-primitive, B-string-prototype-starts-with, B-weak-map-prototype-delete, B-array-prototype-find-index, B-array-prototype-to-sorted, B-array-buffer-prototype-transfer-to-fixed-length
+[19:07:11] B-date-prototype-get-hours: attempt 395 finished ($0.007, 11 turns)
+[19:07:23] B-date-prototype-get-milliseconds: attempt 397 finished ($0.007, 11 turns)
+[19:07:26] B-date-prototype-get-day: verifier: accept The diff implements Date.prototype.getDay in its own file. It calls date::this_time_value(agent, this)? for steps 1-3, which covers RequireInternalSlo

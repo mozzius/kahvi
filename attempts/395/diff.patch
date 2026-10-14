@@ -1,0 +1,37 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_get_hours.rs b/crates/kahvi-builtins/src/date/prototype_get_hours.rs
+index 8591916..2a3599e 100644
+--- a/crates/kahvi-builtins/src/date/prototype_get_hours.rs
++++ b/crates/kahvi-builtins/src/date/prototype_get_hours.rs
+@@ -2,22 +2,26 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.gethours
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.getHours
+ pub(crate) fn prototype_get_hours(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+     // 1. Let _dateObj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_dateObj_, [[DateValue]]).
+     // 3. Let _tv_ be _dateObj_.[[DateValue]].
++    let tv = date::this_time_value(agent, this)?;
+     // 4. If _tv_ is *NaN*, return *NaN*.
++    if tv.is_nan() {
++        return Ok(Value::Number(f64::NAN));
++    }
+     // 5. Return 𝔽(HourFromTime(LocalTime(_tv_))).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.getHours"))
++    Ok(Value::Number(date::hour_from_time(date::local_time(
++        agent, tv,
++    ))))
+ }
