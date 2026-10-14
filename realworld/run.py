@@ -9,7 +9,9 @@ other environment beyond PATH.
 
 expected-pass.txt is the ratchet: a case listed there that fails is a
 regression, and the run exits 1. Other failures are reported, grouped by the
-first line of stderr, but do not fail the run.
+first line of stderr, but do not fail the run. Under --gc-stress a timeout is
+reported but is not a regression: collecting at every safe point makes the
+long cases many times slower.
 
   ./rw [NAME...]                  run cases (all by default)
   ./rw --engine PATH              use this kahvi-run (default: release build)
@@ -145,7 +147,8 @@ def main():
         print("\nfailures by cause:")
         for reason, names in sorted(groups.items(), key=lambda kv: (-len(kv[1]), kv[0])):
             print(f"  {len(names):3}  {reason}  [{', '.join(names)}]")
-    regressions = sorted(r["name"] for r in failed if r["name"] in expected)
+    regressions = sorted(r["name"] for r in failed if r["name"] in expected
+                         and not (args.gc_stress and r["status"] is None))
     new_passes = sorted(set(passed) - expected)
     print(f"\n{len(passed)}/{len(results)} passed")
     if new_passes:
