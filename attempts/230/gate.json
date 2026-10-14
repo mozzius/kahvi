@@ -1,0 +1,35 @@
+{
+  "ticket": "B-set-prototype-get-size",
+  "base": "c27d93bfddbf6ef420772ddfd00a533d1e4dbf7d",
+  "head": "feea3e6022047f63addc62e9c86fe8c8ffb8df4a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_get_size.rs",
+      "added": 5,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 6,
+    "after": 10,
+    "new_passes": 4,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/size/returns-count-of-present-values-before-after-add-delete.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/size/returns-count-of-present-values-before-after-add-delete.js:strict  Uncaught InternalError: not implemented: Set.prototype.delete"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8202,
+  "stop_reason": "tool_use",
+  "session_id": "4d95ae05-e4b3-4b88-bc0e-94a6e2463fc5",
+  "total_cost_usd": 0.00182788,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3810,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1441,
+    "output_tokens_details": {
+      "thinking_tokens": 809
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3810,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1441,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3810,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3810
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements get Map.prototype.size. Step 1 binds this, step 2 calls this_map (the RequireInternalSlot equivalent) with ?, and step 5 returns Ok(Value::Number(count as f64)). Step 3/4 is replaced by map_table(agent, m).len() with a comment saying OrderedTable tracks its non-empty entry count. The spec's counting loop has no observable operations, so this shortcut is acceptable as long as len() excludes tombstoned (empty-key) entries. I could not see the support::collections helpers, so that is unverified. Renaming args/new_target to _args/_new_target is needed because they are now unused, not an unrelated change. No special-casing, no made-up values, no swallowed errors.\",\"problems\":[],\"notes_for_next_attempt\":\"Not a defect as far as the diff shows, but the reviewer could not see crates/kahvi-builtins/src/support/collections.rs. Confirm that OrderedTable::len() (the helper behind map_table(...).len()) returns only live entries and excludes deleted (empty-key) slots. If it returns the raw slot count including tombstones, this change is wrong after any delete. The test262 size tests that exercise delete are currently blocked on Map.prototype.delete being not-implemented, so they would not catch this yet.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements get Map.prototype.size. Step 1 binds this, step 2 calls this_map (the RequireInternalSlot equivalent) with ?, and step 5 returns Ok(Value::Number(count as f64)). Step 3/4 is replaced by map_table(agent, m).len() with a comment saying OrderedTable tracks its non-empty entry count. The spec's counting loop has no observable operations, so this shortcut is acceptable as long as len() excludes tombstoned (empty-key) entries. I could not see the support::collections helpers, so that is unverified. Renaming args/new_target to _args/_new_target is needed because they are now unused, not an unrelated change. No special-casing, no made-up values, no swallowed errors.",
+    "problems": [],
+    "notes_for_next_attempt": "Not a defect as far as the diff shows, but the reviewer could not see crates/kahvi-builtins/src/support/collections.rs. Confirm that OrderedTable::len() (the helper behind map_table(...).len()) returns only live entries and excludes deleted (empty-key) slots. If it returns the raw slot count including tombstones, this change is wrong after any delete. The test262 size tests that exercise delete are currently blocked on Map.prototype.delete being not-implemented, so they would not catch this yet."
+  },
+  "ttft_ms": 5704,
+  "type": "result",
+  "duration_ms": 8294,
+  "uuid": "f21ab8df-fa1d-49c8-a063-5c4cbf90608e",
+  "ttft_stream_ms": 1584,
+  "time_to_request_ms": 655,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 445,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 22,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 19,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 77,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 92,
+  "time_to_request_cpu_ms": 451,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 240,
+  "process_cpu_ms_turn": 925,
+  "process_wall_ms_turn": 8294,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1585,
+  "time_to_request_from_spawn_ms": 21121466,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000581137.3767,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

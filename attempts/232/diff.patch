@@ -1,0 +1,36 @@
+diff --git a/crates/kahvi-builtins/src/map/prototype_get_size.rs b/crates/kahvi-builtins/src/map/prototype_get_size.rs
+index b8ddfa6..8832b78 100644
+--- a/crates/kahvi-builtins/src/map/prototype_get_size.rs
++++ b/crates/kahvi-builtins/src/map/prototype_get_size.rs
+@@ -2,23 +2,27 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-get-map.prototype.size
+ 
++use crate::support::collections::{map_table, this_map};
+ use kahvi_core::prelude::*;
+ 
+ /// get Map.prototype.size
+ pub(crate) fn prototype_get_size(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // `Map.prototype.size` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
+     //
+     // 1. Let _map_ be the *this* value.
++    let map = this;
+     // 2. Perform ? RequireInternalSlot(_map_, [[MapData]]).
++    let m = this_map(agent, map)?;
+     // 3. Let _count_ be 0.
+     // 4. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
+     //    a. If _entry_.[[Key]] is not ~empty~, set _count_ to _count_ + 1.
++    // (OrderedTable keeps a count of its non-empty entries, which is the same value.)
++    let count = map_table(agent, m).len();
+     // 5. Return 𝔽(_count_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Map.prototype.size"))
++    Ok(Value::Number(count as f64))
+ }

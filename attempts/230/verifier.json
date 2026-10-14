@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8644,
+  "stop_reason": "tool_use",
+  "session_id": "51e305a2-f225-4dfa-8a3e-631704028bc2",
+  "total_cost_usd": 0.0017542800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3523,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1463,
+    "output_tokens_details": {
+      "thinking_tokens": 950
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3523,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1463,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3523,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3523
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements get Set.prototype.size in the spec's four steps, in order. Step 1 takes the this value. Step 2 calls this_set(agent, this)? for RequireInternalSlot, with the ? propagated. Step 3 computes the size from set_table(agent, set).len(). Step 4 returns Value::Number(size as f64), which is \ud835\udd3d(size). The step comments sit directly above their code. There are no test-shaped branches, no swallowed errors, no placeholder values and no edits outside the ticket file. The remaining failing test is blocked on Set.prototype.delete, which is the honest not-implemented path.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Not verified from the diff alone: that set_table(...).len() counts only live (non-empty) entries and not deleted-entry tombstones, as SetDataSize requires. The four new passing tests suggest it does, and the file should be checked if the collections table representation changes.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements get Set.prototype.size in the spec's four steps, in order. Step 1 takes the this value. Step 2 calls this_set(agent, this)? for RequireInternalSlot, with the ? propagated. Step 3 computes the size from set_table(agent, set).len(). Step 4 returns Value::Number(size as f64), which is \ud835\udd3d(size). The step comments sit directly above their code. There are no test-shaped branches, no swallowed errors, no placeholder values and no edits outside the ticket file. The remaining failing test is blocked on Set.prototype.delete, which is the honest not-implemented path.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Not verified from the diff alone: that set_table(...).len() counts only live (non-empty) entries and not deleted-entry tombstones, as SetDataSize requires. The four new passing tests suggest it does, and the file should be checked if the collections table representation changes."
+  },
+  "ttft_ms": 6189,
+  "type": "result",
+  "duration_ms": 8245,
+  "uuid": "dae565f9-0da5-439e-b5e4-5588fedf6120",
+  "ttft_stream_ms": 1564,
+  "time_to_request_ms": 688,
+  "time_to_request_phases_ms": {
+    "other": 50,
+    "system_prompt": 323,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 42,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 15,
+    "engine_pickup": 3,
+    "message_prep": 13,
+    "model_config_wait": 172,
+    "autocompact": 8,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 32,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 105,
+  "time_to_request_cpu_ms": 382,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 829,
+  "process_wall_ms_turn": 8244,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 34,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1565,
+  "time_to_request_from_spawn_ms": 21120045,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000579388.9658,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

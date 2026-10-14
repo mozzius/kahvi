@@ -1,0 +1,37 @@
+{
+  "ticket": "B-map-prototype-get-size",
+  "base": "c27d93bfddbf6ef420772ddfd00a533d1e4dbf7d",
+  "head": "ec6b947fe78883c69e65132fb23659031c1fead0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_get_size.rs",
+      "added": 8,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 6,
+    "after": 18,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-clear.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.clear",
+      "built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-clear.js:strict  Uncaught InternalError: not implemented: Map.prototype.clear",
+      "built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-delete.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-delete.js:strict  Uncaught InternalError: not implemented: Map.prototype.delete"
+    ]
+  },
+  "decision": "pass"
+}
