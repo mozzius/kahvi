@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 9820,
+  "stop_reason": "end_turn",
+  "session_id": "f9f897ca-cf1a-4d7a-b19d-ac73e8199a66",
+  "total_cost_usd": 0.00501852,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 15378,
+    "cache_read_input_tokens": 86352,
+    "output_tokens": 1596,
+    "output_tokens_details": {
+      "thinking_tokens": 69
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15378,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 156,
+        "cache_read_input_tokens": 22508,
+        "cache_creation_input_tokens": 513,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 513
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Date.prototype.getMonth` is implemented in `crates/kahvi-builtins/src/date/prototype_get_month.rs`, following the spec steps as comments and reusing the existing `date` helpers, with no new helpers needed. All 16 runs across the 8 getMonth test files pass, `cargo fmt` and `cargo clippy -p kahvi-builtins` are clean, and nothing outside the ticket's file changed.\n\nBLOCKED: none",
+  "ttft_ms": 1820,
+  "type": "result",
+  "duration_ms": 20565,
+  "uuid": "c2d071b1-ac12-49da-96b9-885139848442",
+  "ttft_stream_ms": 1229,
+  "time_to_request_ms": 458,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 289,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 9,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 83,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 47,
+  "time_to_request_cpu_ms": 372,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 2269,
+  "process_wall_ms_turn": 20564,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1230,
+  "time_to_request_from_spawn_ms": 25407895,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004868110.9504,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.35,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

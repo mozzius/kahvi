@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-seconds",
+  "base": "1ac4c9bb3f4d7ff9a8b5de4a0452cf87eba6c4f9",
+  "head": "f6095c85aa56437714d410a292c0f18462e77a61",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_seconds.rs",
+      "added": 10,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

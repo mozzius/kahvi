@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-minutes",
+  "base": "747f12c61ed5e6ee61bf3fea55950d15a5da8e63",
+  "head": "be9533a1d9cf820559c1e4df667e4068497d6c3e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_minutes.rs",
+      "added": 9,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
