@@ -79,6 +79,9 @@ impl Object {
         agent: &mut Agent,
         key: PropertyKey,
     ) -> JsResult<Option<PropertyDescriptor>> {
+        if has_ordinary_get(&agent.obj(self).kind) {
+            return Ok(ordinary_get_own_property(agent, self, key));
+        }
         if let Some(r) = crate::object::proxy::get_own_property(agent, self, key) {
             return r;
         }
@@ -178,6 +181,28 @@ impl Object {
         key: PropertyKey,
         receiver: Value,
     ) -> JsResult<Value> {
+        // OrdinaryGet without building descriptors, up the prototype chain
+        // for as long as the objects on it have the ordinary [[Get]].
+        let mut o = self;
+        while has_ordinary_get(&agent.obj(o).kind) {
+            let obj = agent.obj(o);
+            match obj.properties.get(&key) {
+                Some(Property::Data { value, .. }) => return Ok(*value),
+                Some(&Property::Accessor { get, .. }) => {
+                    return match get {
+                        Value::Object(_) => ops::call(agent, get, receiver, &[]),
+                        _ => Ok(Value::Undefined),
+                    };
+                }
+                None => match obj.prototype {
+                    Some(parent) => o = parent,
+                    None => return Ok(Value::Undefined),
+                },
+            }
+        }
+        if o != self {
+            return o.internal_get(agent, key, receiver);
+        }
         if let Some(r) = crate::object::proxy::get(agent, self, key, receiver) {
             return r;
         }
@@ -206,6 +231,25 @@ impl Object {
         value: Value,
         receiver: Value,
     ) -> JsResult<bool> {
+        // OrdinarySet's commonest case: the receiver's own writable data
+        // property (OrdinarySetWithOwnDescriptor steps 2.c-2.d: its
+        // [[DefineOwnProperty]] with only [[Value]] replaces the value). An
+        // array's "length" goes through ArraySetLength instead.
+        if matches!(receiver, Value::Object(r) if r == self)
+            && has_ordinary_get(&agent.obj(self).kind)
+        {
+            let is_array = matches!(agent.obj(self).kind, ObjectKind::Array);
+            if !(is_array && key == PropertyKey::String(agent.names.length))
+                && let Some(Property::Data {
+                    value: slot,
+                    writable: true,
+                    ..
+                }) = agent.obj_mut(self).properties.get_mut(&key)
+            {
+                *slot = value;
+                return Ok(true);
+            }
+        }
         if let Some(r) = crate::object::proxy::set(agent, self, key, value, receiver) {
             return r;
         }
@@ -672,4 +716,28 @@ pub fn ordinary_delete(agent: &mut Agent, o: Object, key: PropertyKey) -> JsResu
     }
     // 4. Return false.
     Ok(false)
+}
+
+/// Whether objects of this kind have the ordinary [[GetPrototypeOf]],
+/// [[GetOwnProperty]], [[Get]] and [[Set]] (proxies and host objects are
+/// `Native`; namespaces, typed arrays, String objects and mapped arguments
+/// objects are exotic).
+fn has_ordinary_get(kind: &ObjectKind) -> bool {
+    matches!(
+        kind,
+        ObjectKind::Ordinary
+            | ObjectKind::Array
+            | ObjectKind::Function(_)
+            | ObjectKind::Builtin(_)
+            | ObjectKind::BoundFunction(_)
+            | ObjectKind::Arguments(None)
+            | ObjectKind::ArrayBuffer(_)
+            | ObjectKind::DataView(_)
+            | ObjectKind::Error
+            | ObjectKind::BooleanObject(_)
+            | ObjectKind::NumberObject(_)
+            | ObjectKind::SymbolObject(_)
+            | ObjectKind::BigIntObject(_)
+            | ObjectKind::ImmutablePrototype
+    )
 }
