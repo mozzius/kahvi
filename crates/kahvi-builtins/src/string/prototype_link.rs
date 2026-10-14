@@ -4,17 +4,20 @@
 
 use kahvi_core::prelude::*;
 
+use super::prototype_anchor::create_html;
+
 /// String.prototype.link
 pub(crate) fn prototype_link(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let url = args.get_or_undefined(0);
     // This method performs the following steps when called:
     //
     // 1. Let _string_ be the *this* value.
+    let string = this;
     // 2. Return ? CreateHTML(_string_, *"a"*, *"href"*, _url_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.link"))
+    create_html(agent, string, "a", "href", url)
 }
