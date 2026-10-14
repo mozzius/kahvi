@@ -1,0 +1,80 @@
+name: Bench
+
+# Kahvi against other engines (bench/run.py). Nightly on main and on demand;
+# a run on main adds its results to the bench-results branch, whose README.md
+# is the dashboard (bench/publish.py). PRs labelled `bench` run it too and get
+# the table in their job summary, without publishing.
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "Include the large Octane workloads"
+        type: boolean
+        default: false
+  pull_request:
+    types: [labeled, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  bench:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'bench')
+    name: benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo build --release -p kahvi-cli -p kahvi-runtime
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: bench
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: realworld
+      # Other engines. A failed install skips that engine rather than the run.
+      - name: install QuickJS and Hermes
+        continue-on-error: true
+        run: npx -y jsvu@3.0.6 --os=linux64 --engines=quickjs,hermes
+      - name: install Boa
+        continue-on-error: true
+        run: cargo install boa_cli --locked --root "$HOME/.boa" && echo "$HOME/.boa/bin" >> "$GITHUB_PATH"
+      - name: run
+        run: |
+          echo "$HOME/.jsvu/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.jsvu/bin:$HOME/.boa/bin:$PATH"
+          bench/run.py --list --kahvi-dir target/release
+          bench/run.py --kahvi-dir target/release --runs 3 ${{ inputs.all && '--all' || '' }} \
+            --json bench.json --markdown bench.md
+          cat bench.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bench-results
+          path: bench.json
+      - name: publish to bench-results
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch origin bench-results; then
+            git worktree add results-branch origin/bench-results
+            git -C results-branch checkout -B bench-results
+          else
+            git worktree add --detach results-branch
+            git -C results-branch checkout --orphan bench-results
+            git -C results-branch rm -rfq .
+          fi
+          bench/publish.py bench.json results-branch --sha "$GITHUB_SHA"
+          git -C results-branch add -A
+          git -C results-branch commit -qm "bench: results for ${GITHUB_SHA::10}"
+          git -C results-branch push origin bench-results
