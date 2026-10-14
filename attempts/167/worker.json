@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 33949,
+  "stop_reason": "end_turn",
+  "session_id": "977de07a-f6aa-4780-8485-5d4c1084a264",
+  "total_cost_usd": 0.013902590000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 36967,
+    "cache_read_input_tokens": 214729,
+    "output_tokens": 7654,
+    "output_tokens_details": {
+      "thinking_tokens": 3921
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 36967,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 268,
+        "cache_read_input_tokens": 43966,
+        "cache_creation_input_tokens": 644,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 644
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`TypedArray.prototype.with` is implemented in `crates/kahvi-builtins/src/typed_array/prototype_with.rs`, following the spec steps with each step as a comment above its code. `./t262 built-ins/TypedArray/prototype/with/` passes 54 of 54 runs, up from 8 on main. The build, `cargo fmt --check` and `cargo clippy -p kahvi-builtins` are all clean.\n\nI added `ToAbsoluteIndex` as a local helper in that file, because it isn't in `ops` yet and the sibling `lastIndexOf` file keeps its own copy too. Nothing outside the ticket's file was changed. No Rust tests were added.\n\nBLOCKED: none",
+  "ttft_ms": 1694,
+  "type": "result",
+  "duration_ms": 53998,
+  "uuid": "75f0e28c-3c33-42e0-bbd5-4635cef59fef",
+  "ttft_stream_ms": 1443,
+  "time_to_request_ms": 582,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 342,
+    "resume_other": 1,
+    "process_user_input": 12,
+    "input_attachments": 18,
+    "input_hooks": 10,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 107,
+    "autocompact": 8,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 6,
+    "client_creation": 3,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 124,
+  "time_to_request_cpu_ms": 319,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 4103,
+  "process_wall_ms_turn": 53997,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1444,
+  "time_to_request_from_spawn_ms": 19340768,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998800497.8308,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

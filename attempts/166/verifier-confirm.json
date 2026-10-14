@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8639,
+  "stop_reason": "tool_use",
+  "session_id": "9291e214-d278-4f74-97d6-0809500b75a2",
+  "total_cost_usd": 0.0344782,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5966,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 972,
+    "output_tokens_details": {
+      "thinking_tokens": 525
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5966,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 972,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5966,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5966
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order. RequireObjectCoercible and ToString both propagate errors with `?`. Full lowercase mappings come from kahvi_unicode. Final_Sigma is implemented per the Unicode condition: a cased letter before, skipping case-ignorables, and no cased letter after, skipping case-ignorables. Lone surrogates map to themselves. If the Cased or Case_Ignorable tables are missing, it throws not_implemented rather than guessing. The `.skip(i + 1)` lint flag is just the lookahead after the sigma. The one remaining test failure comes from RegExp.prototype.toString being unimplemented, which is unrelated to this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order. RequireObjectCoercible and ToString both propagate errors with `?`. Full lowercase mappings come from kahvi_unicode. Final_Sigma is implemented per the Unicode condition: a cased letter before, skipping case-ignorables, and no cased letter after, skipping case-ignorables. Lone surrogates map to themselves. If the Cased or Case_Ignorable tables are missing, it throws not_implemented rather than guessing. The `.skip(i + 1)` lint flag is just the lookahead after the sigma. The one remaining test failure comes from RegExp.prototype.toString being unimplemented, which is unrelated to this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6391,
+  "type": "result",
+  "duration_ms": 8456,
+  "uuid": "e2f9e6c0-4421-4720-8235-70a4e158e1bf",
+  "ttft_stream_ms": 2039,
+  "time_to_request_ms": 742,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 430,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 33,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 17,
+    "engine_pickup": 6,
+    "message_prep": 7,
+    "model_config_wait": 166,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 3,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 57,
+  "time_to_request_cpu_ms": 321,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 713,
+  "process_wall_ms_turn": 8456,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2039,
+  "time_to_request_from_spawn_ms": 19419329,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998877578.5398,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

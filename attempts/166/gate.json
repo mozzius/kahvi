@@ -1,0 +1,42 @@
+{
+  "ticket": "B-string-prototype-to-lower-case",
+  "base": "2880bea3b2da2beb482a2657fe8a4890b9f8dd2e",
+  "head": "ad81eae9d4663469cf5a0397b84a92443e812134",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_to_lower_case.rs",
+      "added": 86,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/string/prototype_to_lower_case.rs",
+      "line": 84,
+      "rule": "skipping something: check what and why",
+      "text": ".skip(i + 1)"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 60,
+    "before": 16,
+    "after": 58,
+    "new_passes": 42,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/toLowerCase/S15.5.4.16_A1_T14.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "built-ins/String/prototype/toLowerCase/S15.5.4.16_A1_T14.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

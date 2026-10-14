@@ -1,0 +1,102 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_with.rs b/crates/kahvi-builtins/src/typed_array/prototype_with.rs
+index 462ab67..3db3b11 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_with.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_with.rs
+@@ -2,32 +2,85 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.with
+ 
++use kahvi_core::object::typed_array::typed_array_length;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{
++    element_type, is_valid_integer_index, typed_array_create_same_type, typed_array_get_element,
++    typed_array_set_element, validate_typed_array,
++};
++
++/// ToAbsoluteIndex(_value_, _length_), which is not yet in `ops`.
++///
++/// Spec: https://tc39.es/ecma262/#sec-toabsoluteindex
++fn to_absolute_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _int_ be ? ToIntegerOrInfinity(_value_).
++    let mut int = ops::to_integer_or_infinity(agent, value)?;
++    // 2. If _int_ is finite and _int_ < 0, set _int_ to _length_ + _int_.
++    if int.is_finite() && int < 0.0 {
++        int += length;
++    }
++    // 3. Return _int_.
++    Ok(int)
++}
++
+ /// TypedArray.prototype.with
+ pub(crate) fn prototype_with(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
++    let index = args.get_or_undefined(0);
++    let value = args.get_or_undefined(1);
+     // 1. Let _obj_ be the *this* value.
++    let obj = this;
+     // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, obj)?;
++    let obj = ta_record.object;
+     // 3. Let _length_ be TypedArrayLength(_taRecord_).
++    let length = typed_array_length(agent, ta_record) as f64;
+     // 4. Let _actualIndex_ be ? ToAbsoluteIndex(_index_, _length_).
++    let actual_index = to_absolute_index(agent, index, length)?;
+     // 5. If _obj_.[[ContentType]] is ~bigint~, let _numericValue_ be ? ToBigInt(_value_).
+     // 6. Else, let _numericValue_ be ? ToNumber(_value_).
++    let numeric_value = if element_type(agent, Value::Object(obj)).is_some_and(|k| k.is_bigint()) {
++        Value::BigInt(ops::bigint::to_bigint(agent, value)?)
++    } else {
++        Value::Number(ops::to_number(agent, value)?)
++    };
+     // 7. If IsValidIntegerIndex(_obj_, 𝔽(_actualIndex_)) is *false*, throw a *RangeError* exception.
++    if !is_valid_integer_index(agent, obj, actual_index) {
++        return Err(agent.throw_range_error("TypedArray.prototype.with index is out of range"));
++    }
+     // 8. Let _resultArray_ be ? TypedArrayCreateSameType(_obj_, _length_).
+-    // 9. Let _k_ be 0.
+-    // 10. Repeat, while _k_ < _length_,
+-    //    a. If _k_ = _actualIndex_, let _fromValue_ be _numericValue_.
+-    //    b. Else, let _fromValue_ be TypedArrayGetElement(_obj_, 𝔽(_k_)).
+-    //    c. Perform ! TypedArraySetElement(_resultArray_, 𝔽(_k_), _fromValue_).
+-    //    d. Set _k_ to _k_ + 1.
+-    // 11. Return _resultArray_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.with"))
++    let result_array = typed_array_create_same_type(agent, obj, length)?;
++    // The loop may collect garbage: obj, resultArray and numericValue stay rooted.
++    agent.with_roots(
++        &[
++            Value::Object(obj),
++            Value::Object(result_array),
++            numeric_value,
++        ],
++        |agent| {
++            // 9. Let _k_ be 0.
++            let mut k = 0.0;
++            // 10. Repeat, while _k_ < _length_,
++            while k < length {
++                // a. If _k_ = _actualIndex_, let _fromValue_ be _numericValue_.
++                // b. Else, let _fromValue_ be TypedArrayGetElement(_obj_, 𝔽(_k_)).
++                let from_value = if k == actual_index {
++                    numeric_value
++                } else {
++                    typed_array_get_element(agent, obj, k)
++                };
++                // c. Perform ! TypedArraySetElement(_resultArray_, 𝔽(_k_), _fromValue_).
++                typed_array_set_element(agent, result_array, k, from_value)?;
++                // d. Set _k_ to _k_ + 1.
++                k += 1.0;
++            }
++            // 11. Return _resultArray_.
++            Ok(Value::Object(result_array))
++        },
++    )
+ }

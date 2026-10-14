@@ -1,0 +1,32 @@
+{
+  "ticket": "B-typed-array-prototype-with",
+  "base": "c4b7cc056abb09f6e4b1a3bb7dff81af8acc8801",
+  "head": "c59d0ce88d9e86a2024b5707716e6b80e204db41",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_with.rs",
+      "added": 65,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 54,
+    "before": 8,
+    "after": 54,
+    "new_passes": 46,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

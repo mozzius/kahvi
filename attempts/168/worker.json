@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 16022,
+  "stop_reason": "end_turn",
+  "session_id": "104121ac-45d1-4d27-9489-d8b6545c59ce",
+  "total_cost_usd": 0.006445049999999999,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 17171,
+    "cache_read_input_tokens": 151005,
+    "output_tokens": 2517,
+    "output_tokens_details": {
+      "thinking_tokens": 203
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17171,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 246,
+        "cache_read_input_tokens": 24589,
+        "cache_creation_input_tokens": 225,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 225
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Object.getOwnPropertySymbols` in `crates/kahvi-builtins/src/object/get_own_property_symbols.rs`, the only file changed. All 24 runs under `built-ins/Object/getOwnPropertySymbols/` pass, up from 6 on main. Clippy is clean, `cargo fmt --check` passes on the file, and the build succeeds.\n\nThe implementation calls `ToObject`, then `[[OwnPropertyKeys]]`, keeps the symbol keys, and returns them via `create_array_from_list`. It follows the sibling `get_own_property_names.rs`, which I read but did not edit. No helpers were missing, so nothing was added outside this file.\n\nBLOCKED: none",
+  "ttft_ms": 1959,
+  "type": "result",
+  "duration_ms": 30609,
+  "uuid": "a965d1b4-9c39-45ae-9f7a-666d2bab3a0e",
+  "ttft_stream_ms": 1728,
+  "time_to_request_ms": 827,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 424,
+    "resume_other": 1,
+    "process_user_input": 14,
+    "input_attachments": 26,
+    "input_hooks": 9,
+    "tool_pool_refresh": 4,
+    "init_message": 20,
+    "engine_pickup": 3,
+    "message_prep": 5,
+    "model_config_wait": 251,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 136,
+  "time_to_request_cpu_ms": 487,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3091,
+  "process_wall_ms_turn": 30607,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1729,
+  "time_to_request_from_spawn_ms": 19355023,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998814161.3218,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

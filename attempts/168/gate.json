@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-get-own-property-symbols",
+  "base": "e5496dfb1ff3698ba61b2de3bfaea387520a6786",
+  "head": "de51eef6b20c5681756f9a09e08de69167d9591b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/get_own_property_symbols.rs",
+      "added": 19,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 6,
+    "after": 24,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
