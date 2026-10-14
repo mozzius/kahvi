@@ -160,11 +160,21 @@ impl Parser<'_> {
     /// FormalParameters including the parentheses.
     fn parse_formal_parameters(&mut self) -> PResult<(Vec<Param>, Option<Pattern>)> {
         self.expect(P::LParen)?;
+        let list = self.parse_formal_parameter_list(|p| p.is(P::RParen))?;
+        self.expect(P::RParen)?;
+        Ok(list)
+    }
+
+    /// FormalParameters without the parentheses, stopping where `end` holds.
+    pub(super) fn parse_formal_parameter_list(
+        &mut self,
+        end: impl Fn(&Self) -> bool,
+    ) -> PResult<(Vec<Param>, Option<Pattern>)> {
         self.fn_ctx_mut().in_params = true;
         let mut params = Vec::new();
         let mut rest = None;
         let r = self.with_in(true, |p| {
-            while !p.is(P::RParen) {
+            while !end(p) {
                 if p.eat(P::Ellipsis)? {
                     rest = Some(p.parse_binding_target()?);
                     if p.is(P::Eq) {
@@ -177,16 +187,55 @@ impl Parser<'_> {
                     target: elem.target,
                     default: elem.default,
                 });
-                if !p.is(P::RParen) {
+                if !end(p) {
                     p.expect(P::Comma)?;
                 }
             }
-            p.expect(P::RParen)?;
             Ok(())
         });
         self.fn_ctx_mut().in_params = false;
         r?;
         Ok((params, rest))
+    }
+
+    /// The parse steps of CreateDynamicFunction (§20.2.1.1.1, steps 17-24).
+    pub(super) fn parse_dynamic_function_parts(
+        params: &str,
+        body: &str,
+        source: &str,
+        is_async: bool,
+        is_generator: bool,
+    ) -> PResult<Function> {
+        let opts = super::ParseOptions::default();
+        // 17-18. Let params be ParseText(paramString, paramGrammar); a List of errors is a SyntaxError.
+        let mut p = Parser::new(params, false, &opts)?;
+        let ctx = p.child_ctx(is_async, is_generator);
+        p.push_fn(ctx);
+        p.parse_formal_parameter_list(|p| p.tok.kind == Tok::Eof)?;
+        if p.tok.kind != Tok::Eof {
+            return p.unexpected();
+        }
+        p.pop_fn();
+        p.finish_private_names()?;
+        // 19-20. Let body be ParseText(bodyParseString, bodyGrammar); a List of errors is a SyntaxError.
+        let mut p = Parser::new(body, false, &opts)?;
+        let ctx = p.child_ctx(is_async, is_generator);
+        p.push_fn(ctx);
+        let statements = p.parse_directives_and_statements(true, |p| p.tok.kind == Tok::Eof)?;
+        p.pop_fn();
+        early::check_function_body(&[], &statements)?;
+        p.finish_private_names()?;
+        // 23-24. Let expr be ParseText(sourceText, exprGrammar); a List of errors is a SyntaxError.
+        let mut p = Parser::new(source, false, &opts)?;
+        if is_async {
+            p.expect_word("async")?;
+        }
+        let f = p.parse_function(0, is_async, false, true)?;
+        if p.tok.kind != Tok::Eof || f.is_generator != is_generator {
+            return p.unexpected();
+        }
+        p.finish_private_names()?;
+        Ok(f)
     }
 
     /// The rest of an arrow function after its parameters were recovered from

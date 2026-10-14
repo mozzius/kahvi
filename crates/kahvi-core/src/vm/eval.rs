@@ -37,7 +37,12 @@ pub fn line_col(source: &str, pos: usize) -> (usize, usize) {
     (line, col)
 }
 
-fn register_script(agent: &mut Agent, realm: RealmId, source: Arc<str>, name: &str) -> u32 {
+pub(super) fn register_script(
+    agent: &mut Agent,
+    realm: RealmId,
+    source: Arc<str>,
+    name: &str,
+) -> u32 {
     agent.scripts.push(ScriptRecord {
         realm,
         source,

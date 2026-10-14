@@ -144,7 +144,7 @@ fn perform_promise_all(
             // b. If next is done, then
             None => {
                 let Some(state_record) = agent.native_mut::<PromiseAllState>(state) else {
-                    return Err(agent.not_implemented("Promise.all state record"));
+                    unreachable!("Promise.all state record")
                 };
                 // i. Set remainingElementsCount.[[Value]] to remainingElementsCount.[[Value]] - 1.
                 state_record.remaining_elements_count =
@@ -169,7 +169,7 @@ fn perform_promise_all(
             Some(next) => {
                 // c. Append undefined to values.
                 let Some(state_record) = agent.native_mut::<PromiseAllState>(state) else {
-                    return Err(agent.not_implemented("Promise.all state record"));
+                    unreachable!("Promise.all state record")
                 };
                 state_record.values.push(Value::Undefined);
                 // d. Let nextPromise be ? Call(promiseResolve, ctor, « next »).
@@ -201,7 +201,7 @@ fn perform_promise_all(
                 index += 1;
                 // j. Set remainingElementsCount.[[Value]] to remainingElementsCount.[[Value]] + 1.
                 let Some(state_record) = agent.native_mut::<PromiseAllState>(state) else {
-                    return Err(agent.not_implemented("Promise.all state record"));
+                    unreachable!("Promise.all state record")
                 };
                 state_record.remaining_elements_count += 1;
                 // k. Perform ? Invoke(nextPromise, "then", « onFulfilled, resultCapability.[[Reject]] »).
@@ -226,19 +226,19 @@ fn promise_all_resolve_element(
 ) -> JsResult<Value> {
     // a. Let F be the active function object.
     let Some(active) = agent.active_function() else {
-        return Err(agent.not_implemented("Promise.all resolve element: no active function"));
+        unreachable!("Promise.all resolve element: no active function")
     };
     let slots = builtin_slots(agent, active).to_vec();
     let (Some(&Value::Object(state)), Some(&Value::Object(element))) =
         (slots.first(), slots.get(1))
     else {
-        return Err(agent.not_implemented("Promise.all resolve element: missing slots"));
+        unreachable!("Promise.all resolve element: missing slots")
     };
     // b. Let alreadyCalled be F.[[AlreadyCalled]].
     // c. If alreadyCalled.[[Value]] is true, return undefined.
     // d. Set alreadyCalled.[[Value]] to true.
     let Some(element_record) = agent.native_mut::<ElementRecord>(element) else {
-        return Err(agent.not_implemented("Promise.all resolve element: missing record"));
+        unreachable!("Promise.all resolve element: missing record")
     };
     if element_record.already_called {
         return Ok(Value::Undefined);
@@ -251,7 +251,7 @@ fn promise_all_resolve_element(
     // h. Set values[index] to x.
     let value = args.get_or_undefined(0);
     let Some(state_record) = agent.native_mut::<PromiseAllState>(state) else {
-        return Err(agent.not_implemented("Promise.all resolve element: missing state"));
+        unreachable!("Promise.all resolve element: missing state")
     };
     if let Some(slot) = state_record.values.get_mut(index) {
         *slot = value;

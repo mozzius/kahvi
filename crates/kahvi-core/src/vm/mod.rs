@@ -9,6 +9,7 @@ mod async_from_sync;
 mod async_function;
 mod async_generator;
 mod call;
+mod dynamic_function;
 mod eval;
 mod generator;
 mod instantiate;
@@ -28,6 +29,7 @@ pub use call::{
     call_ecma_function, construct_ecma_function, create_closure, define_field,
     initialize_instance_elements, private_get, private_set,
 };
+pub use dynamic_function::{DynamicFunctionKind, create_dynamic_function};
 pub use eval::{ParsedScript, evaluate_script, line_col, parse_script, perform_eval};
 pub use generator::{GeneratorData, GeneratorState, generator_resume, generator_resume_abrupt};
 pub use operators::{apply_binary_operator, number_exponentiate, type_of};

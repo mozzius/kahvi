@@ -73,6 +73,11 @@ Cheap to honour now, expensive to retrofit:
 - **The host owns the outside world.** Job queue draining, promise rejection
   tracking, module loading, clocks and I/O are host hooks. The engine crates
   never touch files, env or processes (the lint already enforces this).
+- **ESM only.** Modules are ECMAScript modules: no CommonJS anywhere (no
+  `require`, `module`, `exports`, `.cjs`, no CJS interop in the loader). The
+  runtime's entry file is a module. Scripts stay, because the spec and
+  test262 need them; Metro bundles are scripts with their own registry, so
+  React Native does not need CJS either.
 - **Host objects.** Exotic-object dispatch lets the host implement
   [[Get]]/[[Set]]/[[OwnPropertyKeys]] (JSI `HostObject`). ArrayBuffers can
   wrap host-owned memory.
@@ -164,7 +169,7 @@ Deterministic gates run first; an LLM looks only at what survives.
   features; triage keeps the pool full.
 - **M3 Hard tail** (Sonnet/Opus) — generators/async, Proxy/Reflect, RegExp
   engine, modules, Date, number→string, Annex B, GC.
-- **M4 Runtime** — event loop, console, timers, module loading, own e2e suite.
+- **M4 Runtime** — event loop, console, timers, ESM loading, own e2e suite.
 - **M5 (stretch) React Native via JSI** — RN talks to its engine through JSI,
   a C++ `jsi::Runtime` interface; Hermes is just the default implementation
   (react-native-v8 proves others work). So "Hermes compat" means: a C ABI
