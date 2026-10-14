@@ -1,0 +1,37 @@
+{
+  "ticket": "B-global-parse-int",
+  "base": "bfa65a73277f6733b1530ea51e0791915790e435",
+  "head": "dde892d1124da38a4aaaa16f5b69f39da253cd34",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/global/parse_int.rs",
+      "added": 129,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 110,
+    "before": 8,
+    "after": 106,
+    "new_passes": 98,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/parseInt/S15.1.2.2_A7.2_T1.js:sloppy  Uncaught InternalError: not implemented: Math.max",
+      "built-ins/parseInt/S15.1.2.2_A7.2_T1.js:strict  Uncaught InternalError: not implemented: Math.max",
+      "built-ins/parseInt/S15.1.2.2_A7.3_T1.js:sloppy  Uncaught InternalError: not implemented: Math.max",
+      "built-ins/parseInt/S15.1.2.2_A7.3_T1.js:strict  Uncaught InternalError: not implemented: Math.max"
+    ]
+  },
+  "decision": "pass"
+}

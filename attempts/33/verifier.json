@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 29744,
+  "stop_reason": "tool_use",
+  "session_id": "555178f0-c631-4c26-9727-82675530d233",
+  "total_cost_usd": 0.00586636,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8773,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 6551,
+    "output_tokens_details": {
+      "thinking_tokens": 5881
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8773,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6551,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8773,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8773
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements parseInt steps 1\u201316 in order. ToString and ToInt32 are called first, with the spec's abrupt-completion handling via `?`. The radix range check, TrimString(start) with the correct WhiteSpace and LineTerminator set (including Zs), the sign handling, the 0x/0X prefix rule for radix 0 or 16, the radix-10 default, the digit scan, the empty-string NaN, and the -0 rule are all present. No test-shaped branches, hardcoded results, or swallowed errors. Radix 10 uses a correctly rounded f64 parse. Power-of-two radixes use exact bit accumulation with round-half-even. Other radixes use a floating fold, which step 14 explicitly permits as an implementation-approximated integer. Indexing is guarded, so no reachable panics were found.\",\"problems\":[],\"notes_for_next_attempt\":\"Minor, non-blocking: the diff removed the spec NOTE block (\\\"This function may interpret only a leading portion...\\\") from the stub's comments and dropped the phrase \\\"according to the specified _radix_\\\" from the top description comment. Restore both verbatim so the comments match the spec text. For radixes other than 2, 4, 8, 10, 16 and 32, the f64 fold is spec-permitted approximation; if a test262 case later fails on a large exact value, consider an exact big-integer conversion. Otherwise the implementation is ready to merge.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements parseInt steps 1\u201316 in order. ToString and ToInt32 are called first, with the spec's abrupt-completion handling via `?`. The radix range check, TrimString(start) with the correct WhiteSpace and LineTerminator set (including Zs), the sign handling, the 0x/0X prefix rule for radix 0 or 16, the radix-10 default, the digit scan, the empty-string NaN, and the -0 rule are all present. No test-shaped branches, hardcoded results, or swallowed errors. Radix 10 uses a correctly rounded f64 parse. Power-of-two radixes use exact bit accumulation with round-half-even. Other radixes use a floating fold, which step 14 explicitly permits as an implementation-approximated integer. Indexing is guarded, so no reachable panics were found.",
+    "problems": [],
+    "notes_for_next_attempt": "Minor, non-blocking: the diff removed the spec NOTE block (\"This function may interpret only a leading portion...\") from the stub's comments and dropped the phrase \"according to the specified _radix_\" from the top description comment. Restore both verbatim so the comments match the spec text. For radixes other than 2, 4, 8, 10, 16 and 32, the f64 fold is spec-permitted approximation; if a test262 case later fails on a large exact value, consider an exact big-integer conversion. Otherwise the implementation is ready to merge."
+  },
+  "ttft_ms": 26660,
+  "type": "result",
+  "duration_ms": 29336,
+  "uuid": "6319e7b5-609d-4ab1-b894-4779526918e6",
+  "ttft_stream_ms": 1151,
+  "time_to_request_ms": 125,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 56,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 24,
+  "time_to_request_cpu_ms": 155,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1151,
+  "time_to_request_from_spawn_ms": 18628425,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791937603166.6572,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.1,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.49,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -77,3 +77,8 @@
 [00:21:12] B-object-freeze: attempt 32 finished ($0.006, 12 turns)
 [00:21:36] B-object-freeze: verifier: accept The diff implements Object.freeze in freeze.rs by following the spec steps in order. Step 1 returns non-Object arguments unchanged. Step 2 calls ops::
 [00:25:21] B-array-prototype-slice: merged (+124, 58757 total)
+[00:25:23] B-global-parse-int: attempt on slot 0 with haiku
+[00:25:23] B-object-freeze: full test262 run for merge
+[00:26:33] B-global-parse-int: attempt 33 finished ($0.017, 17 turns)
+[00:27:27] B-global-parse-int: verifier: accept The diff implements parseInt steps 1–16 in order. ToString and ToInt32 are called first, with the spec's abrupt-completion handling via `?`. The radix
+[00:29:16] B-object-freeze: merged (+79, 58836 total)
