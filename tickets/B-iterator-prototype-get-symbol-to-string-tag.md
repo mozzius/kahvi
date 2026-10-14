@@ -8,6 +8,7 @@ read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi
 spec = ["sec-get-iterator.prototype-%symbol.tostringtag%"]
 target = ["built-ins/Iterator/prototype/Symbol.toStringTag/"]
 priority = 10
+needs = ["B-iterator-prototype-set-symbol-to-string-tag"]
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.
