@@ -24,8 +24,9 @@ if ! git diff --quiet "$before" "$BRANCH" -- vendor; then
 fi
 git show HEAD:conformance/expected-pass.txt > "$WORK/land-baseline.txt"
 git merge --no-edit -q "$BRANCH"
-cargo build -q -p kahvi-cli
-if ! ./t262 built-ins/ language/ annexB/ intl402/ staging/ harness/ --show 20 \
+# The release build: the full suite on a debug build takes too long.
+cargo build --release -q -p kahvi-cli
+if ! ./t262 built-ins/ language/ annexB/ intl402/ staging/ harness/ --show 20 --engine target/release/kahvi \
      --baseline "$WORK/land-baseline.txt" --write-baseline conformance/expected-pass.txt > "$WORK/land.log" 2>&1; then
   grep -E "pass |regress" "$WORK/land.log" || true
   echo "land: regressions; undoing the merge" >&2
