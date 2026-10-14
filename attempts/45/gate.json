@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-from-async",
+  "base": "102ff2b3b91a5ac900ba56e48b0e01978f016eb3",
+  "head": "7c1e59f2245c26f1f8c4e6ebc8f2b23c209454bf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/from_async.rs",
+      "added": 573,
+      "removed": 64
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 186,
+    "before": 10,
+    "after": 159,
+    "new_passes": 149,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 27,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/fromAsync/asyncitems-array-remove.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/fromAsync/asyncitems-array-remove.js:strict  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/fromAsync/asyncitems-arraybuffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/fromAsync/asyncitems-arraybuffer.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/fromAsync/asyncitems-arraylike-promise.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-arraylike-promise.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-exists.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-exists.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-null.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-null.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-sync.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-asynciterator-sync.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-iterator-exists.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-iterator-exists.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Array/fromAsync/asyncitems-iterator-null.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor"
+    ]
+  },
+  "decision": "pass"
+}

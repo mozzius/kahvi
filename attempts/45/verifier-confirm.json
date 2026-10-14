@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 22077,
+  "stop_reason": "tool_use",
+  "session_id": "f9b99bae-089f-4b35-a054-7131a6c218c9",
+  "total_cost_usd": 0.1074531,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 19530,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2722,
+    "output_tokens_details": {
+      "thinking_tokens": 2215
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19530,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2722,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 19530,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 19530
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.fromAsync as a native state machine with one Await per promise reaction. It follows the spec steps in order and keeps them as comments. The iterator path and the array-like path both follow the spec. The error handling matches the spec: abrupt completions before an Await or inside a reaction reject the promise. IfAbruptCloseAsyncIterator and AsyncIteratorClose behave as written, and the original throw completion wins. The only discarded errors are the GetMethod(\\\"return\\\") failure, the return() call failure and the Await failure inside AsyncIteratorClose, where the spec itself discards them. There are no input-specific branches and no made-up values. All 27 remaining failures are not-implemented errors from other built-ins (Symbol.keyFor, ArrayBuffer, Array.prototype.pop), and there are no regressions. The change is confined to the one file the ticket allows.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.fromAsync as a native state machine with one Await per promise reaction. It follows the spec steps in order and keeps them as comments. The iterator path and the array-like path both follow the spec. The error handling matches the spec: abrupt completions before an Await or inside a reaction reject the promise. IfAbruptCloseAsyncIterator and AsyncIteratorClose behave as written, and the original throw completion wins. The only discarded errors are the GetMethod(\"return\") failure, the return() call failure and the Await failure inside AsyncIteratorClose, where the spec itself discards them. There are no input-specific branches and no made-up values. All 27 remaining failures are not-implemented errors from other built-ins (Symbol.keyFor, ArrayBuffer, Array.prototype.pop), and there are no regressions. The change is confined to the one file the ticket allows.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 18407,
+  "type": "result",
+  "duration_ms": 21447,
+  "uuid": "ffa8f31f-657f-4e69-b985-2c72356f0325",
+  "ttft_stream_ms": 1405,
+  "time_to_request_ms": 218,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 24,
+    "input_hooks": 8,
+    "tool_pool_refresh": 6,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 71,
+    "autocompact": 6,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 14,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 118,
+  "time_to_request_cpu_ms": 139,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1409,
+  "time_to_request_from_spawn_ms": 25474572,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791944448567.393,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.72,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

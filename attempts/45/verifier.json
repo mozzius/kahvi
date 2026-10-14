@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 96353,
+  "stop_reason": "tool_use",
+  "session_id": "3bd89c92-103e-45a8-ab95-07fa69706283",
+  "total_cost_usd": 0.01693286,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 19526,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 22232,
+    "output_tokens_details": {
+      "thinking_tokens": 21427
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19526,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 22232,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 19526,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 19526
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Reviewed the Array.fromAsync implementation in from_async.rs against the pinned spec steps 1-9 and the AsyncIteratorClose, Await, and IsConstructor/GetMethod helpers. The state-machine design (native state object, promise reactions resuming `step`) follows the spec order: GetMethod for asyncIterator then iterator, CreateAsyncFromSyncIterator, IsConstructor-gated Construct/ArrayCreate, the 2^53-1 guard with AsyncIteratorClose, Await placement for nextResult, mapped values and array-like values, IfAbruptCloseAsyncIterator on mapper, Await and define failures, and the final Set length. The AsyncIteratorClose throw-completion handling correctly discards return() errors and rejects with the original error. No test-specific branches, no hardcoded results, no unrelated file changes. Error paths propagate with `?` as the spec does; the only \\\"catch\\\" sites (GetMethod/Call/Await failures inside AsyncIteratorClose) are the spec's own discard rule for throw completions. Internal \\\"missing state\\\" and \\\"resumed while not awaiting\\\" TypeErrors are unreachable invariant checks, not spec-visible defaults. Remaining test failures are not-implemented throws from other built-ins (Array.prototype.pop, ArrayBuffer, Symbol.keyFor), which is allowed.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in this diff. Remaining gaps are only in the test262 failures caused by other built-ins (Array.prototype.pop, ArrayBuffer, Symbol.keyFor). Style nit only: a few spec step comments (e.g. \\\"c. Let k be 0\\\" and \\\"d. Repeat\\\") sit above a call rather than the code they describe; this is not a spec issue.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Reviewed the Array.fromAsync implementation in from_async.rs against the pinned spec steps 1-9 and the AsyncIteratorClose, Await, and IsConstructor/GetMethod helpers. The state-machine design (native state object, promise reactions resuming `step`) follows the spec order: GetMethod for asyncIterator then iterator, CreateAsyncFromSyncIterator, IsConstructor-gated Construct/ArrayCreate, the 2^53-1 guard with AsyncIteratorClose, Await placement for nextResult, mapped values and array-like values, IfAbruptCloseAsyncIterator on mapper, Await and define failures, and the final Set length. The AsyncIteratorClose throw-completion handling correctly discards return() errors and rejects with the original error. No test-specific branches, no hardcoded results, no unrelated file changes. Error paths propagate with `?` as the spec does; the only \"catch\" sites (GetMethod/Call/Await failures inside AsyncIteratorClose) are the spec's own discard rule for throw completions. Internal \"missing state\" and \"resumed while not awaiting\" TypeErrors are unreachable invariant checks, not spec-visible defaults. Remaining test failures are not-implemented throws from other built-ins (Array.prototype.pop, ArrayBuffer, Symbol.keyFor), which is allowed.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in this diff. Remaining gaps are only in the test262 failures caused by other built-ins (Array.prototype.pop, ArrayBuffer, Symbol.keyFor). Style nit only: a few spec step comments (e.g. \"c. Let k be 0\" and \"d. Repeat\") sit above a call rather than the code they describe; this is not a spec issue."
+  },
+  "ttft_ms": 92219,
+  "type": "result",
+  "duration_ms": 95536,
+  "uuid": "a3c7c015-e3f5-4bb2-85f9-47974fcc5e92",
+  "ttft_stream_ms": 1430,
+  "time_to_request_ms": 275,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 36,
+    "input_hooks": 8,
+    "tool_pool_refresh": 5,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 122,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 5,
+    "tool_schema_build": 9,
+    "message_normalization": 1,
+    "client_creation": 7,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 78,
+  "time_to_request_cpu_ms": 190,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1431,
+  "time_to_request_from_spawn_ms": 25376821,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791944351467.9353,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.72,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
