@@ -1,0 +1,39 @@
+{
+  "ticket": "B-iterator-prototype-get-constructor",
+  "base": "07401ebacfe662ebda1489bff9e94e068a6bc77d",
+  "head": "56f7ce867078346854ba2da63e2ab69901dc3e4b",
+  "reject": [
+    "no new test262 passes in target"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs",
+      "added": 2,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 4,
+    "before": 0,
+    "after": 0,
+    "new_passes": 0,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/prototype/constructor/prop-desc.js:sloppy  Uncaught Test262Error: Expected SameValue(\u00ab\"undefined\"\u00bb, \u00ab\"function\"\u00bb) to be true",
+      "built-ins/Iterator/prototype/constructor/prop-desc.js:strict  Uncaught Test262Error: Expected SameValue(\u00ab\"undefined\"\u00bb, \u00ab\"function\"\u00bb) to be true",
+      "built-ins/Iterator/prototype/constructor/weird-setter.js:sloppy  Uncaught TypeError: Cannot read properties of undefined (reading 'call')",
+      "built-ins/Iterator/prototype/constructor/weird-setter.js:strict  Uncaught TypeError: Cannot read properties of undefined (reading 'call')"
+    ]
+  },
+  "decision": "reject"
+}
