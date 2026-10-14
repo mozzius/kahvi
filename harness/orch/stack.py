@@ -477,6 +477,15 @@ class Stacker:
                 self.db.q("UPDATE layers SET status = 'closed', updated = ? WHERE id = ?", time.time(), layer["id"])
                 log(f"stack: {layer['branch']} (#{layer['pr']}) was closed on GitHub; dropped from the stack")
                 changed = True
+            elif pr["head"]["sha"] != layer["head"]:
+                # Rebased on GitHub (a stack merge updates the PRs above, as
+                # does "Update branch"): the stack continues from that head.
+                run(["git", "fetch", "-q", self.cfg.remote, layer["branch"]], check=False)
+                self.db.q("UPDATE layers SET head = ?, status = 'pending', reruns = 0, updated = ? WHERE id = ?",
+                          pr["head"]["sha"], time.time(), layer["id"])
+                log(f"stack: {layer['branch']} (#{layer['pr']}) was rebased on GitHub to {pr['head']['sha'][:10]}; "
+                    "restacking on it")
+                changed = True
         if self._restack():
             changed = True
         if changed:
