@@ -85,7 +85,11 @@ pub(crate) fn define_own_property(
     })
 }
 
-pub(crate) fn has_property(agent: &mut Agent, o: Object, key: PropertyKey) -> Option<JsResult<bool>> {
+pub(crate) fn has_property(
+    agent: &mut Agent,
+    o: Object,
+    key: PropertyKey,
+) -> Option<JsResult<bool>> {
     let host = host_of(agent, o)?;
     Some((|| {
         if host.property_names(agent, o)?.contains(&key) {
@@ -103,7 +107,12 @@ pub(crate) fn get(agent: &mut Agent, o: Object, key: PropertyKey) -> Option<JsRe
     Some(host.get(agent, o, key))
 }
 
-pub(crate) fn set(agent: &mut Agent, o: Object, key: PropertyKey, value: Value) -> Option<JsResult<bool>> {
+pub(crate) fn set(
+    agent: &mut Agent,
+    o: Object,
+    key: PropertyKey,
+    value: Value,
+) -> Option<JsResult<bool>> {
     let host = host_of(agent, o)?;
     Some(host.set(agent, o, key, value).map(|_| true))
 }
@@ -113,7 +122,10 @@ pub(crate) fn delete(agent: &Agent, o: Object) -> Option<JsResult<bool>> {
     Some(Ok(true))
 }
 
-pub(crate) fn own_property_keys(agent: &mut Agent, o: Object) -> Option<JsResult<Vec<PropertyKey>>> {
+pub(crate) fn own_property_keys(
+    agent: &mut Agent,
+    o: Object,
+) -> Option<JsResult<Vec<PropertyKey>>> {
     let host = host_of(agent, o)?;
     Some(host.property_names(agent, o))
 }

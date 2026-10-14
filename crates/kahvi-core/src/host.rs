@@ -123,9 +123,15 @@ impl Agent {
         let Value::Object(f) = v else { return None };
         match &self.obj(f).kind {
             crate::object::ObjectKind::Builtin(b)
-                if std::ptr::fn_addr_eq(b.behaviour, call_host_function as crate::function::NativeFn) =>
+                if std::ptr::fn_addr_eq(
+                    b.behaviour,
+                    call_host_function as crate::function::NativeFn,
+                ) =>
             {
-                b.slots.first().and_then(|v| v.as_number()).map(|n| n as usize)
+                b.slots
+                    .first()
+                    .and_then(|v| v.as_number())
+                    .map(|n| n as usize)
             }
             _ => None,
         }
