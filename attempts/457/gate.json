@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-f16round",
+  "base": "d3979f4e622d332f462696fb503cbe3fd2b68b49",
+  "head": "6f85b29dc91044f6b38c6890555617b766adef5c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/f16round.rs",
+      "added": 55,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

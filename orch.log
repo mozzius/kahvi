@@ -4110,3 +4110,8 @@ test262 at last merge: 76432/81183 runs passing
 [19:42:01] B-math-cosh: verifier: accept The diff implements Math.cosh in cosh.rs step by step. Step 1 calls ops::to_number(agent, x) with `?`, so abrupt completions propagate. Step 2 returns
 [19:42:03] B-math-expm1: verifier: accept The diff implements Math.expm1 in crates/kahvi-builtins/src/math/expm1.rs and follows the spec steps in order. Step 1 uses ops::to_number with `?`. St
 [19:42:04] B-math-imul: attempt on slot 2 with haiku
+[19:42:08] stack: stack/0018 (#33) red: 4 regressions in the full suite
+[19:42:08] B-math-log10: attempt on slot 3 with haiku
+[19:42:21] B-json-is-raw-json: attempt 458 finished ($0.078, 13 turns)
+[19:42:31] B-math-imul: attempt 459 finished ($0.004, 11 turns)
+[19:42:36] B-json-is-raw-json: gate rejected attempt 458: no new test262 passes in target

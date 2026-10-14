@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 12148,
+  "stop_reason": "end_turn",
+  "session_id": "3b604bf0-c158-4227-9f4a-5680faa56add",
+  "total_cost_usd": 0.00390673,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 9665,
+    "cache_read_input_tokens": 81163,
+    "output_tokens": 1917,
+    "output_tokens_details": {
+      "thinking_tokens": 346
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9665,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 208,
+        "cache_read_input_tokens": 16611,
+        "cache_creation_input_tokens": 697,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 697
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Math.imul` in `crates/kahvi-builtins/src/math/imul.rs`, following the spec steps with comments. `./t262 built-ins/Math/imul/` passes 10 of 10 runs, and `cargo clippy -p kahvi-builtins` is clean. I did not edit any other file, and no helpers were needed beyond `ops::to_uint32`.\n\nBLOCKED: none",
+  "ttft_ms": 1620,
+  "type": "result",
+  "duration_ms": 24974,
+  "uuid": "0ee2f9b2-b2d5-4e31-a06e-c4233d8e9bce",
+  "ttft_stream_ms": 1393,
+  "time_to_request_ms": 606,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 397,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 11,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 109,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 82,
+  "time_to_request_cpu_ms": 402,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2578,
+  "process_wall_ms_turn": 24974,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1394,
+  "time_to_request_from_spawn_ms": 27464946,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006925108.7478,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.58,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
