@@ -1,0 +1,31 @@
+diff --git a/crates/kahvi-builtins/src/json/raw_json.rs b/crates/kahvi-builtins/src/json/raw_json.rs
+index bcf11a1..7f442b1 100644
+--- a/crates/kahvi-builtins/src/json/raw_json.rs
++++ b/crates/kahvi-builtins/src/json/raw_json.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-json.rawjson
+ 
++use super::parse;
+ use kahvi_core::prelude::*;
+ 
+ /// The [[IsRawJSON]] internal slot. The object carries no other state.
+@@ -38,12 +39,13 @@ pub(crate) fn raw_json(
+         return Err(agent.throw_syntax_error("JSON.rawJSON: invalid last character"));
+     }
+     // 5. Let _parseResult_ be ? ParseJSON(_jsonString_).
+-    // ParseJSON is `parse_json` in json/parse.rs, which is private to that module, so it
+-    // cannot be called from here yet. Until it is exposed as pub(crate), this step throws.
+-    let _parse_result: () = Err(agent.not_implemented(
+-        "ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+-    ))?;
++    // `parse_json` in json/parse.rs is private to that module. The public JSON.parse entry
++    // (`parse`) runs ParseJSON on its string argument and, with no reviver, returns
++    // _parseResult_.[[Value]] unchanged, so its result is used here and the SyntaxError
++    // for malformed text propagates.
++    let _parse_result = parse::parse(agent, Value::Undefined, &[Value::String(json_string)], None)?;
+     // 6. Assert: _parseResult_.[[Value]] is either a String, a Number, a Boolean, or *null*.
++    //    (The first and last code unit checks above restrict the text to such a primitive.)
+     // 7. Let _internalSlotsList_ be « [[IsRawJSON]] ».
+     // 8. Let _obj_ be OrdinaryObjectCreate(*null*, _internalSlotsList_).
+     let obj = agent.object_with_kind(None, ObjectKind::Native(Box::new(RawJsonData)));

@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 34933,
+  "stop_reason": "end_turn",
+  "session_id": "b4d81daf-3c3d-45d8-b10b-0069cc54cb78",
+  "total_cost_usd": 0.01086984,
+  "usage": {
+    "input_tokens": 23,
+    "cache_creation_input_tokens": 24624,
+    "cache_read_input_tokens": 263584,
+    "output_tokens": 5514,
+    "output_tokens_details": {
+      "thinking_tokens": 2364
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24624,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 479,
+        "cache_read_input_tokens": 28682,
+        "cache_creation_input_tokens": 944,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 944
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`JSON.rawJSON` now runs ParseJSON and creates the frozen `rawJSON` object. `./t262 built-ins/JSON/rawJSON/` gives 16 passing and 4 failing (up from 12 passing on main), and clippy is clean.\n\nStep 5 calls the `pub(crate)` `parse` (JSON.parse) entry in `json/parse.rs` rather than the private `parse_json`, since it returns the unfiltered value when there is no reviver. The `parse_json` visibility change would have needed an edit outside my scope. The `BigInt` not-implemented error from the attempt-411 run is gone, and the remaining 4 failures are all `JSON.stringify` not serialising `[[IsRawJSON]]` objects.\n\nBLOCKED: JSON.stringify must check [[IsRawJSON]] and emit the `rawJSON` text (SerializeJSONProperty step 4.a) in json/stringify.rs, which is outside this ticket's file scope; this is what the remaining basic.js and bigint-raw-json-can-be-stringified.js failures need.",
+  "ttft_ms": 1975,
+  "type": "result",
+  "duration_ms": 192346,
+  "uuid": "bcc15db5-cbe1-4bb4-a2de-5cfd47f81b62",
+  "ttft_stream_ms": 1724,
+  "time_to_request_ms": 629,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 421,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 132,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 61,
+  "time_to_request_cpu_ms": 387,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 233,
+  "process_anon_mib_turn_start": 118,
+  "process_rss_mib_result": 263,
+  "process_anon_mib_result": 144,
+  "process_peak_rss_mib": 265,
+  "process_cpu_ms_turn": 5161,
+  "process_wall_ms_turn": 192345,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1725,
+  "time_to_request_from_spawn_ms": 291353,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792013145826.8345,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792030800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.04,
+        "resetsAt": 1792030800
+      },
+      "seven_day": {
+        "utilization": 0.01,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

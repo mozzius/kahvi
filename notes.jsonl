@@ -854,3 +854,4 @@
 {"ticket": "B-reg-exp-prototype-symbol-match-all", "attempt": null, "ts": 1792011178.8825467, "text": "every target run passes after later merges"}
 {"ticket": "B-iterator-zip-keyed", "attempt": null, "ts": 1792011178.8992765, "text": "every target run passes after later merges"}
 {"ticket": "B-iterator-zip", "attempt": null, "ts": 1792011178.9148064, "text": "every target run passes after later merges"}
+{"ticket": "B-json-raw-json", "attempt": 514, "ts": 1792013343.0122595, "text": "worker reported BLOCKED but changed files: JSON.stringify must check [[IsRawJSON]] and emit the `rawJSON` text (SerializeJSONProperty step 4.a) in json/stringify.rs, which is outside this ticket's file scope; this is what the remaining basic.js and bigint-raw-json-can-be-stringified.js failures need."}

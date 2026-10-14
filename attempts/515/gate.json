@@ -1,0 +1,32 @@
+{
+  "ticket": "B-uint8-array-prototype-set-from-base64",
+  "base": "b180e4075d9d59f7f652a23eb4f0a0be52a873f1",
+  "head": "1b4a2b4f4fface0c0ea90efc9240b7d09bc2fb6f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/uint8_array/prototype_set_from_base64.rs",
+      "added": 68,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
