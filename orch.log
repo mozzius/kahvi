@@ -1877,3 +1877,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:40:56] B-object-prototype-define-setter: verifier: accept The diff implements all six steps of Object.prototype.__defineSetter__ in order: ToObject(this) with `?`, IsCallable check throwing TypeError, Propert
 [18:41:01] B-array-buffer-prototype-get-max-byte-length: attempt on slot 2 with haiku
 [18:41:03] B-string-prototype-at: verifier: accept The diff implements String.prototype.at faithfully. Steps 1-7 appear in order with the spec text as comments: RequireObjectCoercible runs before ToStr
+[18:41:05] B-promise-with-resolvers: verifier: accept The diff implements Promise.withResolvers in its own file, following the spec steps in order. Step 1 binds `this` to ctor. Step 2 calls NewPromiseCapa
+[18:41:07] B-date-prototype-set-time: attempt on slot 3 with haiku

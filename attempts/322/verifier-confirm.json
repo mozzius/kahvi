@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6826,
+  "stop_reason": "tool_use",
+  "session_id": "ea5b2717-1f46-4470-8200-8f2fbaf1b9da",
+  "total_cost_usd": 0.0238318,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4516,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 502,
+    "output_tokens_details": {
+      "thinking_tokens": 119
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4516,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 502,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4516,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4516
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Promise.withResolvers step by step as the spec says. It calls new_promise_capability with `this` and creates the object with %Object.prototype%. It defines promise, resolve and reject in order, then returns the object. Only the one in-scope file changed. Steps 4-6 use `?` where the spec has `!`. On a fresh ordinary object this cannot fail, so it makes no observable difference. The gate shows 12 of 12 target tests passing, with no regressions and no not-implemented hits.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Promise.withResolvers step by step as the spec says. It calls new_promise_capability with `this` and creates the object with %Object.prototype%. It defines promise, resolve and reject in order, then returns the object. Only the one in-scope file changed. Steps 4-6 use `?` where the spec has `!`. On a fresh ordinary object this cannot fail, so it makes no observable difference. The gate shows 12 of 12 target tests passing, with no regressions and no not-implemented hits.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4839,
+  "type": "result",
+  "duration_ms": 6793,
+  "uuid": "1c05541f-4d5a-405d-b39a-9a7ba573272c",
+  "ttft_stream_ms": 3480,
+  "time_to_request_ms": 594,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 379,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 49,
+    "input_hooks": 16,
+    "tool_pool_refresh": 6,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 79,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 64,
+  "time_to_request_cpu_ms": 434,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 751,
+  "process_wall_ms_turn": 6793,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3481,
+  "time_to_request_from_spawn_ms": 23796694,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003255875.9097,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.19,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
