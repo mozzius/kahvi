@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10678,
+  "stop_reason": "tool_use",
+  "session_id": "be352e5b-ee7f-412b-bcbf-b8d5fed1e484",
+  "total_cost_usd": 0.0030475800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7072,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1917,
+    "output_tokens_details": {
+      "thinking_tokens": 1373
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7072,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1917,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7072,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7072
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.toUTCString by calling existing helpers in crate::support::date (this_time_value, week_day, month_from_time, date_from_time, year_from_time, time_string). The control flow matches the spec: RequireInternalSlot via this_time_value with `?`, the NaN check returns \\\"Invalid Date\\\", and weekday/month come from fixed name tables indexed by WeekDay and MonthFromTime. Day and year are zero-padded to 2 and 4 digits, the year sign is \\\"-\\\" when YearFromTime is negative, and the final format string has the same piece order as step 11. There are no test-shaped branches, no swallowed errors, and no made-up values. The only deviation is cosmetic: steps 1-3 share one comment and the verbatim spec step text was replaced by paraphrase, which the ticket's comment rule arguably asks for. I could not inspect the support::date helpers, so I am assuming they exist and behave per spec, as the passing build and gate report suggest.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.toUTCString by calling existing helpers in crate::support::date (this_time_value, week_day, month_from_time, date_from_time, year_from_time, time_string). The control flow matches the spec: RequireInternalSlot via this_time_value with `?`, the NaN check returns \"Invalid Date\", and weekday/month come from fixed name tables indexed by WeekDay and MonthFromTime. Day and year are zero-padded to 2 and 4 digits, the year sign is \"-\" when YearFromTime is negative, and the final format string has the same piece order as step 11. There are no test-shaped branches, no swallowed errors, and no made-up values. The only deviation is cosmetic: steps 1-3 share one comment and the verbatim spec step text was replaced by paraphrase, which the ticket's comment rule arguably asks for. I could not inspect the support::date helpers, so I am assuming they exist and behave per spec, as the passing build and gate report suggest.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9858,
+  "type": "result",
+  "duration_ms": 12182,
+  "uuid": "592f4117-0d02-4d49-b1ef-cb7074b34a16",
+  "ttft_stream_ms": 3371,
+  "time_to_request_ms": 2442,
+  "time_to_request_phases_ms": {
+    "other": 119,
+    "system_prompt": 1382,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 388,
+    "input_hooks": 165,
+    "tool_pool_refresh": 22,
+    "init_message": 48,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 161,
+    "autocompact": 30,
+    "query_setup": 1,
+    "model_gates": 11,
+    "tool_schema_build": 29,
+    "message_normalization": 23,
+    "client_creation": 20,
+    "request_build": 30
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 870,
+  "time_to_request_cpu_ms": 445,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 917,
+  "process_wall_ms_turn": 12181,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 326,
+    "cpu_ms": 58,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3378,
+  "time_to_request_from_spawn_ms": 24645803,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004100423.728,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

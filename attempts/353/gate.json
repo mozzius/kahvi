@@ -1,0 +1,37 @@
+{
+  "ticket": "B-iterator-prototype-get-symbol-to-string-tag",
+  "base": "c5e432f5048420150462674a00a446463f90718c",
+  "head": "cfca1c6032a0dec6433aeca57fe45e5cb41ccb38",
+  "reject": [
+    "no new test262 passes in target"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_get_symbol_to_string_tag.rs",
+      "added": 2,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 4,
+    "before": 2,
+    "after": 2,
+    "new_passes": 0,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/prototype/Symbol.toStringTag/weird-setter.js:sloppy  Uncaught InternalError: not implemented: set Iterator.prototype[Symbol.toStringTag]",
+      "built-ins/Iterator/prototype/Symbol.toStringTag/weird-setter.js:strict  Uncaught InternalError: not implemented: set Iterator.prototype[Symbol.toStringTag]"
+    ]
+  },
+  "decision": "reject"
+}

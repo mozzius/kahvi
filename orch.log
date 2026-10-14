@@ -1960,3 +1960,11 @@ test262 at last merge: 74349/81183 runs passing
 [18:53:27] B-math-sum-precise: verifier: accept The diff implements Math.sumPrecise in its own file, keeping the spec steps as comments above the matching code. I walked each step and found no defec
 [18:53:27] B-date-prototype-to-string: verifier: accept The diff implements Date.prototype.toString in its own file, with the spec steps kept as comments. It adds local helpers date_string (DateString) and 
 [18:53:45] B-reflect-get-prototype-of: attempt on slot 0 with haiku
+[18:53:48] B-date-prototype-to-utc-string: attempt on slot 3 with haiku
+[18:53:48] B-math-asin: attempt on slot 1 with haiku
+[18:53:48] B-iterator-prototype-get-symbol-to-string-tag: attempt on slot 2 with haiku
+[18:54:12] B-date-prototype-to-utc-string: attempt 351 finished ($0.007, 8 turns)
+[18:54:24] B-reflect-get-prototype-of: attempt 350 finished ($0.004, 11 turns)
+[18:54:28] B-math-asin: attempt 352 finished ($0.005, 9 turns)
+[18:54:47] B-iterator-prototype-get-symbol-to-string-tag: attempt 353 finished ($0.005, 14 turns)
+[18:55:23] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 353: no new test262 passes in target

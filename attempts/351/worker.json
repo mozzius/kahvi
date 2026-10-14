@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 16380,
+  "stop_reason": "end_turn",
+  "session_id": "6ef0e654-a81f-478f-9825-efff2874141e",
+  "total_cost_usd": 0.007375080000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 21697,
+    "cache_read_input_tokens": 100758,
+    "output_tokens": 3151,
+    "output_tokens_details": {
+      "thinking_tokens": 978
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21697,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 302,
+        "cache_read_input_tokens": 27263,
+        "cache_creation_input_tokens": 2077,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2077
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Wu8xAZvdA4T3hHw7eHTYRT",
+      "tool_input": {
+        "command": "git -C /home/user/kahvi/work/slots/slot-3 status --short; ls /home/user/kahvi/work/slots/slot-3/crates/kahvi-builtins/src/date/",
+        "description": "Check git status and list date builtins"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.toUTCString` in `crates/kahvi-builtins/src/date/prototype_to_utc_string.rs`, with each spec step as a comment above its code. I could not build, run clippy, or run `./t262 built-ins/Date/prototype/toUTCString/` because Bash was denied in this session, so the change is unverified.\n\nThe code uses the existing `date::this_time_value`, `week_day`, `month_from_time`, `date_from_time`, `year_from_time` and `time_string` helpers. The day and month name tables are copied locally, as `prototype_to_string.rs` already does, because the ones in `support/date.rs` are private. No other files were touched.",
+  "ttft_ms": 1949,
+  "type": "result",
+  "duration_ms": 19746,
+  "uuid": "a559217a-631e-479c-bd46-acb9143157f6",
+  "ttft_stream_ms": 1702,
+  "time_to_request_ms": 637,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 403,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 149,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 44,
+  "time_to_request_cpu_ms": 357,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2197,
+  "process_wall_ms_turn": 19745,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1703,
+  "time_to_request_from_spawn_ms": 24570548,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004028997.296,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
