@@ -128,6 +128,10 @@ pub(crate) struct FnCtx {
     /// Position of the first yield/await expression seen while parsing
     /// arrow parameters (they are not allowed there).
     pub yield_or_await_pos: Option<usize>,
+    /// Position of the first `await` used as an identifier in this function's
+    /// own code (not nested function bodies): an async arrow head parsed as a
+    /// call cover must not contain one.
+    pub await_ident_pos: std::cell::Cell<Option<usize>>,
 }
 
 impl FnCtx {
@@ -151,6 +155,7 @@ impl FnCtx {
             uses_this: false,
             has_direct_eval: false,
             yield_or_await_pos: None,
+            await_ident_pos: Default::default(),
         }
     }
 }
@@ -367,6 +372,10 @@ impl<'a> Parser<'a> {
         if name == "await" && (self.await_reserved() || self.fn_ctx().in_params && self.in_async())
         {
             return self.err("'await' is not a valid identifier here", pos);
+        }
+        if name == "await" {
+            let seen = &self.fn_ctx().await_ident_pos;
+            seen.set(seen.get().or(Some(pos)));
         }
         if name != "yield" && name != "await" && crate::RESERVED_WORDS.contains(&name) {
             return self.err(format!("unexpected reserved word '{name}'"), pos);
