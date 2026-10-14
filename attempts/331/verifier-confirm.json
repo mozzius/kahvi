@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6485,
+  "stop_reason": "tool_use",
+  "session_id": "931c6698-f5f9-4bed-9d0e-0c98a4157119",
+  "total_cost_usd": 0.0234048,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4014,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 665,
+    "output_tokens_details": {
+      "thinking_tokens": 251
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4014,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 665,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4014,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4014
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for the dotAll getter and for RegExpHasFlag. It checks that the value is an Object, then checks for the [[OriginalFlags]] slot via RegExpData. If the slot is missing it returns undefined for %RegExp.prototype% and throws a TypeError otherwise. Otherwise it checks whether the flags contain 's' (0x73). Each step has a spec comment above its code. The edit stays in the one in-scope file, and the gate report shows 10 new passes with no regressions. I found nothing special-cased, no swallowed errors, and no skipped observable steps.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for the dotAll getter and for RegExpHasFlag. It checks that the value is an Object, then checks for the [[OriginalFlags]] slot via RegExpData. If the slot is missing it returns undefined for %RegExp.prototype% and throws a TypeError otherwise. Otherwise it checks whether the flags contain 's' (0x73). Each step has a spec comment above its code. The edit stays in the one in-scope file, and the gate report shows 10 new passes with no regressions. I found nothing special-cased, no swallowed errors, and no skipped observable steps.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4096,
+  "type": "result",
+  "duration_ms": 6310,
+  "uuid": "725e5ccc-72ac-477a-b219-c0eb64b8aee2",
+  "ttft_stream_ms": 1741,
+  "time_to_request_ms": 567,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 438,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 21,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 36,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 164,
+  "time_to_request_cpu_ms": 353,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 612,
+  "process_wall_ms_turn": 6310,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 36,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1742,
+  "time_to_request_from_spawn_ms": 24024553,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003484279.1885,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.21,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

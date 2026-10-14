@@ -1,0 +1,88 @@
+# Ticket B-array-buffer-prototype-get-max-byte-length: get ArrayBuffer.prototype.maxByteLength
+
+Implement this built-in in its file, following the spec steps already in
+the stub: keep each step as a comment directly above the code for it.
+
+- Abstract operations are in `kahvi_core::ops` (see docs/API.md); use them
+  rather than re-implementing. If a helper you need is missing and other
+  built-ins would need it too, write it in your file and say so in your
+  final report; do not edit other files.
+- Anything you cannot finish must still return
+  `Err(agent.not_implemented("..."))` naming what is missing. Never return
+  a made-up value.
+- No new Rust tests: the test262 target is the measure.
+
+## Files you may change
+
+- `crates/kahvi-builtins/src/array_buffer/prototype_get_max_byte_length.rs`
+
+## Read first
+
+- `docs/API.md`
+- `crates/kahvi-builtins/src/support/mod.rs`
+- `crates/kahvi-builtins/src/array/prototype_map.rs`
+- `crates/kahvi-builtins/src/object/define_property.rs`
+- `crates/kahvi-builtins/src/support/typed_array.rs`
+- `crates/kahvi-core/src/object/typed_array.rs`
+- `crates/kahvi-builtins/src/typed_array/prototype_get_length.rs`
+
+## Spec
+
+get ArrayBuffer.prototype.maxByteLength
+  id: sec-get-arraybuffer.prototype.maxbytelength   type: built-in function
+
+`ArrayBuffer.prototype.maxByteLength` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
+
+1. Let _obj_ be the *this* value.
+2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferData]]).
+3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
+4. If IsDetachedBuffer(_obj_) is *true*, return *+0*_𝔽.
+5. If IsFixedLengthArrayBuffer(_obj_) is *true*, then
+   a. Let _length_ be _obj_.[[ArrayBufferByteLength]].
+6. Else,
+   a. Let _length_ be _obj_.[[ArrayBufferMaxByteLength]].
+7. Return 𝔽(_length_).
+
+--- referenced: RequireInternalSlot ( _obj_: an ECMAScript language value, _internalSlot_: an internal slot name, ): either a normal completion containing ~unused~ or a throw completion
+  id: sec-requireinternalslot
+
+description: It throws an exception unless _obj_ is an Object and has the given internal slot.
+
+1. If _obj_ is not an Object, throw a *TypeError* exception.
+2. If _obj_ does not have an _internalSlot_ internal slot, throw a *TypeError* exception.
+3. Return ~unused~.
+
+--- referenced: IsSharedArrayBuffer ( _obj_: an ArrayBuffer or a SharedArrayBuffer, ): a Boolean
+  id: sec-issharedarraybuffer
+
+description: It tests whether an object is a SharedArrayBuffer.
+
+1. If _obj_.[[ArrayBufferData]] is a Shared Data Block, return *true*.
+2. Return *false*.
+
+--- referenced: IsDetachedBuffer ( _arrayBuffer_: an ArrayBuffer or a SharedArrayBuffer, ): a Boolean
+  id: sec-isdetachedbuffer
+
+1. If _arrayBuffer_.[[ArrayBufferData]] is *null*, return *true*.
+2. Return *false*.
+
+--- referenced: IsFixedLengthArrayBuffer ( _arrayBuffer_: an ArrayBuffer or a SharedArrayBuffer, ): a Boolean
+  id: sec-isfixedlengtharraybuffer
+
+1. If _arrayBuffer_ has an [[ArrayBufferMaxByteLength]] internal slot, return *false*.
+2. Return *true*.
+
+
+## Done when
+
+- Every test262 run under built-ins/ArrayBuffer/prototype/maxByteLength/ passes (check with `./t262 built-ins/ArrayBuffer/prototype/maxByteLength/`). 6 pass on the main branch right now.
+
+## Previous attempts
+
+Your worktree already contains a previous attempt's changes (not merged). Start from them and fix what the reviewer pointed out.
+
+- attempt 324: worker reported BLOCKED but changed files: Bash permission was denied, so I could not build or run the target test262 tests.
+- attempt 324: not merged (skips_observable_steps); continue from this diff. Step 3 needs real handling. Check how SharedArrayBuffer is represented in kahvi-core. If shared buffers carry [[ArrayBufferData]], implement IsSharedArrayBuffer and throw a TypeError when it is true, as a comment-plus-code pair in spec order between step 2 and step 4. If the engine has no shared buffers at all, the current comment is only valid because of that fact. Say so in the code by pointing to the representation, or return agent.not_implemented naming the missing shared data block check. Do not rely on an unverified assumption. Separately, the step-6 None branch invents a TypeError message for an internal invariant. Consider a clearer internal-error path. The rest of the diff (steps 1, 2, 4, 5, 6, 7, the helper calls and the comment layout) matches the spec and can be kept.
+- attempt 328: worker reported BLOCKED but changed files: none
+- attempt 328: not merged (skips_observable_steps); continue from this diff. Add the missing step 3 in order, between RequireInternalSlot and the detached check. Keep the spec step text as a comment directly above the code. If the engine has an IsSharedArrayBuffer-style helper, call it and throw a TypeError when it is true. If no such helper exists, do not assume false: return Err(agent.not_implemented(...)) for shared-buffer inputs, or add the check in this file. The rest of the diff (steps 1, 2, 4, 5/6, 7) matches the spec and can be kept. The `_ => array_buffer_byte_length` fallback in the length match is acceptable because step 2 has already established that the slot exists. The helpers come from kahvi_core::object::typed_array rather than kahvi_core::ops, which the ticket suggested; that is acceptable if no ops equivalent exists, but confirm it.
+
