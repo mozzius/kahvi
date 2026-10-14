@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements %SetIteratorPrototype%.next in its own file. It validates the receiver (an object with a CollectionIterator whose is_set is true, otherwise a TypeError), which is the GeneratorValidate brand check. It then steps the collection iterator and returns { value: undefined, done: true } once exhausted, which is GeneratorResume step 2. Otherwise it maps the kind to key, value, or [key, key] and wraps the result in an iterator result object with done=false. No test-specific branches, no swallowed errors, no non-spec defaults on reachable paths, and no unrelated files changed. The 10 new passing tests are plausible for this change. The 6 remaining failures are honest failures from Set.prototype.entries being unimplemented, not from this diff.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

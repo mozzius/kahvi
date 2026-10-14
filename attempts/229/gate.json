@@ -1,0 +1,39 @@
+{
+  "ticket": "B-set-iterator-prototype-next",
+  "base": "a52d9afdcacd80ef2665ed55485a8b897c9323f0",
+  "head": "751359feed9d0912a15ecbd773b7a575e0256cb4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set_iterator_prototype/next.rs",
+      "added": 43,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 4,
+    "after": 14,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots-set.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.entries",
+      "built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots-set.js:strict  Uncaught InternalError: not implemented: Set.prototype.entries",
+      "built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.entries",
+      "built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots.js:strict  Uncaught InternalError: not implemented: Set.prototype.entries",
+      "built-ins/SetIteratorPrototype/next/this-not-object-throw-entries.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.entries",
+      "built-ins/SetIteratorPrototype/next/this-not-object-throw-entries.js:strict  Uncaught InternalError: not implemented: Set.prototype.entries"
+    ]
+  },
+  "decision": "pass"
+}

@@ -814,3 +814,8 @@ test262 at last merge: 72953/81183 runs passing
 [17:54:50] B-date-prototype-set-full-year: verifier: accept The diff implements Date.prototype.setFullYear in its own file, following the spec steps 1-11 in order. The TypeError for a non-object or non-Date `th
 [17:54:51] B-reg-exp-prototype-get-ignore-case: verifier: accept The diff implements `get RegExp.prototype.ignoreCase` as specified. The getter passes the this value and code unit 0x0069 to a file-local `regexp_has_
 [17:55:02] B-set-prototype-get-size: attempt on slot 2 with haiku
+[17:55:02] B-set-iterator-prototype-next: attempt 229 finished ($0.008, 15 turns)
+[17:55:05] B-typed-array-prototype-keys: attempt on slot 0 with haiku
+[17:55:05] B-map-prototype-get-size: attempt on slot 3 with haiku
+[17:55:46] B-set-prototype-get-size: attempt 230 finished ($0.006, 9 turns)
+[17:55:47] B-set-iterator-prototype-next: verifier: accept The change implements %SetIteratorPrototype%.next in its own file. It validates the receiver (an object with a CollectionIterator whose is_set is true
