@@ -1,0 +1,157 @@
+diff --git a/crates/kahvi-builtins/src/reg_exp/escape.rs b/crates/kahvi-builtins/src/reg_exp/escape.rs
+index e7400da..aa67577 100644
+--- a/crates/kahvi-builtins/src/reg_exp/escape.rs
++++ b/crates/kahvi-builtins/src/reg_exp/escape.rs
+@@ -15,24 +15,139 @@ pub(crate) fn escape(
+     // It performs the following steps when called:
+     //
+     // 1. If _string_ is not a String, throw a *TypeError* exception.
++    let string = match args.get_or_undefined(0) {
++        Value::String(s) => *s,
++        _ => return Err(agent.throw_type_error("RegExp.escape called on a non-string")),
++    };
+     // 2. Let _escaped_ be the empty String.
++    let mut escaped: Vec<u16> = Vec::new();
+     // 3. Let _codePointList_ be StringToCodePoints(_string_).
++    let code_point_list = string_to_code_points(agent.str(string));
+     // 4. For each code point _codePoint_ of _codePointList_, do
+-    //    a. If _escaped_ is the empty String and _codePoint_ is matched by either |DecimalDigit| or |AsciiLetter|, then
+-    //       i. NOTE: Escaping a leading digit ensures that output corresponds with pattern text which may be used after a `\0` character escape or a |DecimalEscape| such as `\1` and still match _string_ rather than be interpreted as an extension of the preceding escape sequence. Escaping a leading ASCII letter does the same for the context after `\c`.
+-    //       ii. Let _numericValue_ be the numeric value of _codePoint_.
+-    //       iii. Let _hex_ be Number::toString(𝔽(_numericValue_), 16).
+-    //       iv. Assert: The length of _hex_ is 2.
+-    //       v. Set _escaped_ to the string-concatenation of the code unit 0x005C (REVERSE SOLIDUS), *"x"*, and _hex_.
+-    //    b. Else,
+-    //       i. Set _escaped_ to the string-concatenation of _escaped_ and EncodeForRegExpEscape(_codePoint_).
++    for code_point in code_point_list {
++        // a. If _escaped_ is the empty String and _codePoint_ is matched by either |DecimalDigit| or |AsciiLetter|, then
++        if escaped.is_empty() && is_decimal_digit_or_ascii_letter(code_point) {
++            // i. NOTE: Escaping a leading digit ensures that output corresponds with pattern text which may be used after a `\0` character escape or a |DecimalEscape| such as `\1` and still match _string_ rather than be interpreted as an extension of the preceding escape sequence. Escaping a leading ASCII letter does the same for the context after `\c`.
++            // ii. Let _numericValue_ be the numeric value of _codePoint_.
++            // iii. Let _hex_ be Number::toString(𝔽(_numericValue_), 16).
++            let hex = format!("{code_point:02x}");
++            // iv. Assert: The length of _hex_ is 2.
++            debug_assert_eq!(hex.len(), 2);
++            // v. Set _escaped_ to the string-concatenation of the code unit 0x005C (REVERSE SOLIDUS), *"x"*, and _hex_.
++            push_ascii(&format!("\\x{hex}"), &mut escaped);
++        } else {
++            // b. Else,
++            //    i. Set _escaped_ to the string-concatenation of _escaped_ and EncodeForRegExpEscape(_codePoint_).
++            encode_for_regexp_escape(code_point, &mut escaped);
++        }
++    }
+     // 5. Return _escaped_.
+     //
+     // NOTE:
+     // Despite having similar names, EscapeRegExpPattern and `RegExp.escape` do not perform similar actions. The former escapes a pattern for representation as a string, while this function escapes a string for representation inside a pattern.
+-    // [subclause sec-encodeforregexpescape: EncodeForRegExpEscape (
+-    // _codePoint_: a code point,
+-    // ): a String]
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("RegExp.escape"))
++    let _ = (this, new_target);
++    Ok(Value::String(agent.intern(&escaped)))
++}
++
++/// Whether a code point is matched by |DecimalDigit| or |AsciiLetter|.
++fn is_decimal_digit_or_ascii_letter(code_point: u32) -> bool {
++    char::from_u32(code_point).is_some_and(|c| c.is_ascii_digit() || c.is_ascii_alphabetic())
++}
++
++/// EncodeForRegExpEscape ( _codePoint_ ): a String representing a |Pattern|
++/// for matching _codePoint_, appended to `out`.
++fn encode_for_regexp_escape(code_point: u32, out: &mut Vec<u16>) {
++    // 1. If _codePoint_ is matched by |SyntaxCharacter| or _codePoint_ is U+002F (SOLIDUS), then
++    //    a. Return the string-concatenation of 0x005C (REVERSE SOLIDUS) and UTF16EncodeCodePoint(_codePoint_).
++    if is_syntax_character(code_point) || code_point == 0x002F {
++        out.push(0x005C);
++        push_code_point(code_point, out);
++        return;
++    }
++    // 2. If _codePoint_ is a code point listed in the “Code Point” column of [table-controlescape-code-point-values], then
++    //    a. Return the string-concatenation of 0x005C (REVERSE SOLIDUS) and the string in the “ControlEscape” column of the row whose “Code Point” column contains _codePoint_.
++    let control_escape = match code_point {
++        0x0009 => Some("\\t"),
++        0x000A => Some("\\n"),
++        0x000B => Some("\\v"),
++        0x000C => Some("\\f"),
++        0x000D => Some("\\r"),
++        _ => None,
++    };
++    if let Some(escape) = control_escape {
++        push_ascii(escape, out);
++        return;
++    }
++    // 3. Let _otherPunctuators_ be the string-concatenation of *",-=<>#&!%:;@~'`"* and the code unit 0x0022 (QUOTATION MARK).
++    const OTHER_PUNCTUATORS: &str = ",-=<>#&!%:;@~'`\"";
++    // 4. Let _toEscape_ be StringToCodePoints(_otherPunctuators_).
++    let to_escape = string_to_code_points(&OTHER_PUNCTUATORS.encode_utf16().collect::<Vec<u16>>());
++    // 5. If _toEscape_ contains _codePoint_, _codePoint_ is matched by either |WhiteSpace| or |LineTerminator|, or _codePoint_ has the same numeric value as a leading surrogate or trailing surrogate, then
++    if to_escape.contains(&code_point)
++        || is_white_space_or_line_terminator(code_point)
++        || (0xD800..=0xDFFF).contains(&code_point)
++    {
++        // a. Let _codePointNumber_ be the numeric value of _codePoint_.
++        // b. If _codePointNumber_ ≤ 0xFF, then
++        if code_point <= 0xFF {
++            // i. Let _hex_ be Number::toString(𝔽(_codePointNumber_), 16).
++            // ii. Return the string-concatenation of the code unit 0x005C (REVERSE SOLIDUS), *"x"*, and StringPad(_hex_, 2, *"0"*, ~start~).
++            push_ascii(&format!("\\x{code_point:02x}"), out);
++            return;
++        }
++        // c. Let _escaped_ be the empty String.
++        // d. Let _codeUnits_ be UTF16EncodeCodePoint(_codePoint_).
++        // e. For each code unit _codeUnit_ of _codeUnits_, do
++        //    i. Set _escaped_ to the string-concatenation of _escaped_ and UnicodeEscape(_codeUnit_).
++        // f. Return _escaped_.
++        // Every code point reaching this point above U+00FF is in the BMP, so it is one code unit.
++        push_ascii(&format!("\\u{code_point:04x}"), out);
++        return;
++    }
++    // 6. Return UTF16EncodeCodePoint(_codePoint_).
++    push_code_point(code_point, out);
++}
++
++/// Whether a code point is matched by |SyntaxCharacter|.
++fn is_syntax_character(code_point: u32) -> bool {
++    matches!(
++        char::from_u32(code_point),
++        Some('^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|')
++    )
++}
++
++/// Whether a code point is matched by |WhiteSpace| or |LineTerminator|.
++fn is_white_space_or_line_terminator(code_point: u32) -> bool {
++    matches!(
++        code_point,
++        0x0009 | 0x000A | 0x000B | 0x000C | 0x000D | 0x0020 | 0x00A0 | 0x1680 | 0x2000
++            ..=0x200A | 0x2028 | 0x2029 | 0x202F | 0x205F | 0x3000 | 0xFEFF
++    )
++}
++
++/// StringToCodePoints ( _string_ ): a lone surrogate stands for itself.
++fn string_to_code_points(units: &[u16]) -> Vec<u32> {
++    char::decode_utf16(units.iter().copied())
++        .map(|r| match r {
++            Ok(c) => c as u32,
++            Err(e) => u32::from(e.unpaired_surrogate()),
++        })
++        .collect()
++}
++
++/// UTF16EncodeCodePoint ( _cp_ ): appends the code units of a code point to `out`.
++fn push_code_point(code_point: u32, out: &mut Vec<u16>) {
++    match char::from_u32(code_point) {
++        Some(c) => {
++            let mut buf = [0u16; 2];
++            out.extend_from_slice(c.encode_utf16(&mut buf));
++        }
++        // A lone surrogate.
++        None => out.push(code_point as u16),
++    }
++}
++
++/// Appends an ASCII string to `out` as code units.
++fn push_ascii(s: &str, out: &mut Vec<u16>) {
++    out.extend(s.encode_utf16());
+ }
