@@ -1,0 +1,29 @@
+{
+  "merged": true,
+  "commit": "8da92d0a33e488df0bf93dc76d7daf531da595bf",
+  "batch": [
+    "B-weak-map-prototype-has",
+    "B-array-prototype-unshift",
+    "B-aggregate-error-constructor",
+    "B-data-view-prototype-set-int8",
+    "B-date-prototype-get-timezone-offset",
+    "B-object-values",
+    "B-string-prototype-concat",
+    "B-set-prototype-is-subset-of",
+    "B-string-prototype-to-locale-upper-case",
+    "B-string-prototype-to-upper-case",
+    "B-symbol-prototype-symbol-to-primitive",
+    "B-string-prototype-starts-with",
+    "B-weak-map-prototype-delete",
+    "B-array-prototype-find-index",
+    "B-array-prototype-to-sorted",
+    "B-array-buffer-prototype-transfer-to-fixed-length"
+  ],
+  "new_passes": 34,
+  "total_pass": 75861,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/String/prototype/toUpperCase/S15.5.4.18_A1_T14.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+    "built-ins/String/prototype/toUpperCase/S15.5.4.18_A1_T14.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+  ]
+}
