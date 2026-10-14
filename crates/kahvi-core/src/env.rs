@@ -20,6 +20,73 @@ pub struct Binding {
     pub deletable: bool,
 }
 
+/// A declarative record's bindings: a short list searched linearly (most
+/// scopes have a handful of names), with a hash index once it grows.
+#[derive(Debug, Clone, Default)]
+pub struct Bindings {
+    list: Vec<(JsString, Binding)>,
+    index: Option<crate::hash::FxHashMap<JsString, usize>>,
+}
+
+/// The size at which a scope's bindings get a hash index.
+const INDEX_FROM: usize = 16;
+
+impl Bindings {
+    fn position(&self, name: &JsString) -> Option<usize> {
+        match &self.index {
+            Some(ix) => ix.get(name).copied(),
+            None => self.list.iter().position(|(n, _)| n == name),
+        }
+    }
+
+    pub fn get(&self, name: &JsString) -> Option<&Binding> {
+        self.position(name).map(|i| &self.list[i].1)
+    }
+
+    pub fn get_mut(&mut self, name: &JsString) -> Option<&mut Binding> {
+        self.position(name).map(|i| &mut self.list[i].1)
+    }
+
+    pub fn contains_key(&self, name: &JsString) -> bool {
+        self.position(name).is_some()
+    }
+
+    /// Adds or replaces a binding.
+    pub fn insert(&mut self, name: JsString, binding: Binding) -> Option<Binding> {
+        if let Some(i) = self.position(&name) {
+            return Some(std::mem::replace(&mut self.list[i].1, binding));
+        }
+        self.list.push((name, binding));
+        if let Some(ix) = &mut self.index {
+            ix.insert(name, self.list.len() - 1);
+        } else if self.list.len() >= INDEX_FROM {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+        None
+    }
+
+    pub fn remove(&mut self, name: &JsString) -> Option<Binding> {
+        let i = self.position(name)?;
+        let (_, b) = self.list.remove(i);
+        if self.index.is_some() {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+        Some(b)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ThisBindingStatus {
     Lexical,
@@ -40,7 +107,7 @@ pub struct FunctionEnvData {
 pub enum Environment {
     /// Declarative (and function, and module) environment records.
     Declarative {
-        bindings: crate::hash::FxHashMap<JsString, Binding>,
+        bindings: Bindings,
         outer: Option<EnvId>,
         function: Option<Box<FunctionEnvData>>,
         /// Module environments resolve imports through other modules' environments.
@@ -238,7 +305,7 @@ impl EnvId {
         }
     }
 
-    fn decl_bindings(self, agent: &mut Agent) -> &mut crate::hash::FxHashMap<JsString, Binding> {
+    fn decl_bindings(self, agent: &mut Agent) -> &mut Bindings {
         match agent.env_mut(self) {
             Environment::Declarative { bindings, .. } => bindings,
             _ => unreachable!("declarative environment expected"),

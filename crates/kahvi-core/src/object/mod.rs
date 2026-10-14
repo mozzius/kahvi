@@ -151,42 +151,122 @@ impl PropertyDescriptor {
 }
 
 /// Own properties in creation order, with O(1) lookup.
+///
+/// Array-index keys `0..elements.len()` live in a dense vector (holes are
+/// `None`); every other key, including larger indices, lives in the
+/// insertion-ordered map. The split is invisible to callers.
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
+    elements: Vec<Option<Property>>,
+    /// How many of `elements` are present.
+    element_count: usize,
     index: crate::hash::FxHashMap<PropertyKey, usize>,
     entries: Vec<Option<(PropertyKey, Property)>>,
     removed: usize,
+    /// How many index keys are in the map rather than in `elements`.
+    sparse_indices: usize,
 }
 
+/// How far past the end of the dense elements a new index may land and
+/// still extend them (filling the gap with holes).
+const DENSE_GAP: usize = 64;
+
 impl PropertyMap {
+    fn dense_slot(&self, key: &PropertyKey) -> Option<usize> {
+        match key {
+            PropertyKey::Index(i) if (*i as usize) < self.elements.len() => Some(*i as usize),
+            _ => None,
+        }
+    }
+
     pub fn get(&self, key: &PropertyKey) -> Option<&Property> {
+        if let Some(i) = self.dense_slot(key) {
+            return self.elements[i].as_ref();
+        }
         self.index
             .get(key)
             .and_then(|&i| self.entries[i].as_ref().map(|(_, p)| p))
     }
 
     pub fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
+        if let Some(i) = self.dense_slot(key) {
+            return self.elements[i].as_mut();
+        }
         let i = *self.index.get(key)?;
         self.entries[i].as_mut().map(|(_, p)| p)
     }
 
     pub fn contains(&self, key: &PropertyKey) -> bool {
+        if let Some(i) = self.dense_slot(key) {
+            return self.elements[i].is_some();
+        }
         self.index.contains_key(key)
     }
 
     /// Inserts or replaces, keeping the original position on replacement.
     pub fn insert(&mut self, key: PropertyKey, prop: Property) {
+        if let PropertyKey::Index(i) = key {
+            let i = i as usize;
+            if i < self.elements.len() {
+                if self.elements[i].is_none() {
+                    self.element_count += 1;
+                }
+                self.elements[i] = Some(prop);
+                return;
+            }
+            if i <= self.elements.len() + DENSE_GAP && !self.index.contains_key(&key) {
+                self.grow_elements(i + 1);
+                self.elements[i] = Some(prop);
+                self.element_count += 1;
+                return;
+            }
+        }
         match self.index.get(&key) {
             Some(&i) => self.entries[i] = Some((key, prop)),
             None => {
+                if key.as_index().is_some() {
+                    self.sparse_indices += 1;
+                }
                 self.index.insert(key, self.entries.len());
                 self.entries.push(Some((key, prop)));
             }
         }
     }
 
+    /// Extends the dense elements to `len`, moving any map entries for the
+    /// newly covered indices into them.
+    fn grow_elements(&mut self, len: usize) {
+        let old = self.elements.len();
+        self.elements.resize(len, None);
+        if self.sparse_indices > 0 {
+            for i in old..len {
+                if let Some(p) = self.remove_from_map(&PropertyKey::Index(i as u32)) {
+                    self.elements[i] = Some(p);
+                    self.element_count += 1;
+                }
+            }
+        }
+    }
+
     pub fn remove(&mut self, key: &PropertyKey) -> Option<Property> {
+        if let Some(i) = self.dense_slot(key) {
+            let old = self.elements[i].take();
+            if old.is_some() {
+                self.element_count -= 1;
+            }
+            while matches!(self.elements.last(), Some(None)) {
+                self.elements.pop();
+            }
+            return old;
+        }
+        self.remove_from_map(key)
+    }
+
+    fn remove_from_map(&mut self, key: &PropertyKey) -> Option<Property> {
         let i = self.index.remove(key)?;
+        if key.as_index().is_some() {
+            self.sparse_indices -= 1;
+        }
         let old = self.entries[i].take().map(|(_, p)| p);
         self.removed += 1;
         if self.removed > 16 && self.removed * 2 > self.entries.len() {
@@ -205,16 +285,24 @@ impl PropertyMap {
     }
 
     pub fn len(&self) -> usize {
-        self.index.len()
+        self.element_count + self.index.len()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.index.is_empty()
+        self.len() == 0
     }
 
     /// Keys in OrdinaryOwnPropertyKeys order: array indices ascending, then
     /// strings in creation order, then symbols in creation order.
     pub fn keys_in_spec_order(&self) -> Vec<PropertyKey> {
+        let mut keys: Vec<PropertyKey> = Vec::with_capacity(self.len());
+        keys.extend(
+            self.elements
+                .iter()
+                .enumerate()
+                .filter(|(_, p)| p.is_some())
+                .map(|(i, _)| PropertyKey::Index(i as u32)),
+        );
         let mut indices: Vec<u32> = Vec::new();
         let mut strings = Vec::new();
         let mut symbols = Vec::new();
@@ -226,12 +314,10 @@ impl PropertyMap {
             }
         }
         indices.sort_unstable();
-        indices
-            .into_iter()
-            .map(PropertyKey::Index)
-            .chain(strings)
-            .chain(symbols)
-            .collect()
+        keys.extend(indices.into_iter().map(PropertyKey::Index));
+        keys.extend(strings);
+        keys.extend(symbols);
+        keys
     }
 
     /// Array-index keys at or above `from`, descending (for ArraySetLength).
@@ -244,6 +330,13 @@ impl PropertyMap {
             .filter(|&i| i >= from)
             .collect();
         v.sort_unstable_by(|a, b| b.cmp(a));
+        let dense_from = (from as usize).min(self.elements.len());
+        v.extend(
+            (dense_from..self.elements.len())
+                .rev()
+                .filter(|&i| self.elements[i].is_some())
+                .map(|i| i as u32),
+        );
         v
     }
 }
