@@ -1,0 +1,41 @@
+{
+  "ticket": "C-proxy-get-own-property",
+  "base": "b7bfd0266c210f687ddeef8bbcead924a8df0401",
+  "head": "bd49991dbc520c2e541feabe099cf365d0915555",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/get_own_property.rs",
+      "added": 99,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 0,
+    "after": 34,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-missing-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-missing-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-null-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-null-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Set]]",
+      "built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined.js:strict  Uncaught InternalError: not implemented: Proxy [[Set]]"
+    ]
+  },
+  "decision": "pass"
+}
