@@ -1,0 +1,32 @@
+{
+  "ticket": "B-symbol-key-for",
+  "base": "eaf384f2b6bf198a41936c900561a78ed607042c",
+  "head": "83a598ee912af8ab3cf1fd44d86a89579493b00f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/symbol/key_for.rs",
+      "added": 24,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11406,
+  "stop_reason": "tool_use",
+  "session_id": "fde61370-f44b-4974-8f06-94fde3ba5c58",
+  "total_cost_usd": 0.0332403,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5040,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1228,
+    "output_tokens_details": {
+      "thinking_tokens": 867
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5040,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1228,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5040,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5040
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u20137 in order. It propagates every error with `?`, and the observable ToString and ToIntegerOrInfinity calls run in the right order. The only addition is an engine string-length cap that throws a RangeError (\\\"Invalid string length\\\"), as V8 does, so the engine doesn't abort on huge results. The gate shows 32 of 32 target tests passing with no regressions. The diff stays within the one in-scope file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u20137 in order. It propagates every error with `?`, and the observable ToString and ToIntegerOrInfinity calls run in the right order. The only addition is an engine string-length cap that throws a RangeError (\"Invalid string length\"), as V8 does, so the engine doesn't abort on huge results. The gate shows 32 of 32 target tests passing with no regressions. The diff stays within the one in-scope file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9163,
+  "type": "result",
+  "duration_ms": 11366,
+  "uuid": "33572471-9954-493a-8575-1a0923fe6221",
+  "ttft_stream_ms": 2023,
+  "time_to_request_ms": 1007,
+  "time_to_request_phases_ms": {
+    "other": 116,
+    "system_prompt": 425,
+    "resume_other": 1,
+    "process_user_input": 42,
+    "input_attachments": 76,
+    "input_hooks": 26,
+    "tool_pool_refresh": 10,
+    "init_message": 34,
+    "engine_pickup": 3,
+    "message_prep": 14,
+    "model_config_wait": 176,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 12,
+    "tool_schema_build": 15,
+    "message_normalization": 12,
+    "client_creation": 14,
+    "request_build": 29
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 293,
+  "time_to_request_cpu_ms": 400,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 892,
+  "process_wall_ms_turn": 11366,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 46,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2024,
+  "time_to_request_from_spawn_ms": 22237414,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001693239.439,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
