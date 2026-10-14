@@ -1,0 +1,27 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff is a faithful, step-by-step implementation of %TypedArray%.prototype.set, SetTypedArrayFromTypedArray and SetTypedArrayFromArrayLike. Step order, RangeError/TypeError choices, ToIntegerOrInfinity handling, the same-buffer clone, the same-type byte copy and the per-element TypedArraySetElement loop all match the spec text. No test-shaped special cases, no hardcoded values, and no swallowed abrupt completions. One real gap: SetTypedArrayFromTypedArray step 10 (sameSharedArrayBuffer: two SharedArrayBuffer objects sharing one data block are treated as aliasing) is omitted and not turned into a not-implemented throw. The four lint flags are .expect() calls on invariants (TypedArray kind and buffer present), not reachable from JS as far as I can tell, so I do not count them as defects.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "line": 114,
+      "question": "contradicts_spec",
+      "issue": "SetTypedArrayFromTypedArray step 10 (sameSharedArrayBuffer: IsSharedArrayBuffer(srcBuffer) and IsSharedArrayBuffer(targetBuffer) and the same [[ArrayBufferData]] block) is missing. The aliasing test is only `src_buffer == target_buffer` (object identity). If the engine can produce two SharedArrayBuffer objects over one data block, the copy runs without the CloneArrayBuffer step and does not behave as the spec requires. Either implement step 10 or throw agent.not_implemented for the shared-buffer case. Not observable from ordinary user code, so this is not a skipped observable step."
+    }
+  ],
+  "notes_for_next_attempt": "The diff is close to mergeable. Only change needed: add SetTypedArrayFromTypedArray step 10 (sameSharedArrayBuffer). Concretely, compute whether srcBuffer and targetBuffer are both shared and share a data block. Then fold that into the aliasing check in step 11 (`if SameValue(srcBuffer, targetBuffer) or sameSharedArrayBuffer`) so the source is cloned. If SharedArrayBuffer cannot be represented in this engine, return agent.not_implemented for that case instead of silently skipping it. Keep the step comments in place. The `.expect(...)` calls are on invariants and are acceptable as they stand. Do not change the copy-failure TypeError fallback unless it becomes reachable. Everything else (order of checks, RangeError on +\u221e offset, content-type TypeError, element loop via typed_array_set_element) matches the spec and should be kept.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

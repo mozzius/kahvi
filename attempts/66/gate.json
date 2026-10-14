@@ -1,0 +1,73 @@
+{
+  "ticket": "B-typed-array-prototype-set",
+  "base": "7f7edbaec8122490c411e9d5e2f7d9a16aa43148",
+  "head": "7892198461acabd0d330999fb540d70bb239a5b0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "added": 189,
+      "removed": 28
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "line": 57,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let target_data = typed_array_data(agent, target).expect(\"a TypedArray\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "line": 58,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let src_data = typed_array_data(agent, source).expect(\"a TypedArray\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "line": 60,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let target_buffer = target_data.buffer.expect(\"an initialized TypedArray\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+      "line": 70,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let src_buffer = src_data.buffer.expect(\"an initialized TypedArray\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 204,
+    "before": 8,
+    "after": 42,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 162,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-negative-integer-offset-throws.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-negative-integer-offset-throws.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-offset-tointeger.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-offset-tointeger.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-primitive-toobject.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-primitive-toobject.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-get-length.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-get-length.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-get-value.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-get-value.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-length-symbol.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-length-symbol.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-length.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-length.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/set/BigInt/array-arg-return-abrupt-from-src-tonumber-value-symbol.js:sloppy  Uncaught InternalError: not implemented: Math.floor"
+    ]
+  },
+  "decision": "pass"
+}

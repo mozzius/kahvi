@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 80100,
+  "stop_reason": "end_turn",
+  "session_id": "e2bb3c3a-35fd-44d2-809d-37067ec9e037",
+  "total_cost_usd": 0.026421040000000003,
+  "usage": {
+    "input_tokens": 28,
+    "cache_creation_input_tokens": 52781,
+    "cache_read_input_tokens": 599944,
+    "output_tokens": 19005,
+    "output_tokens_details": {
+      "thinking_tokens": 11632
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 52781,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 455,
+        "cache_read_input_tokens": 59825,
+        "cache_creation_input_tokens": 436,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 436
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.set` in `prototype_set.rs`, with the spec steps as comments. Its two abstract operations are private helpers in that file because nothing else uses them. The test262 run under `built-ins/TypedArray/prototype/set/` shows 42 of 204 runs passing. All 162 failures are \"not implemented\" errors from other built-ins (`Math.floor` 116, `TypedArray.prototype.join` 24, `ArrayBuffer.prototype.resize` 22), so the \"every test passes\" bar is not met.\n\nBLOCKED: `Math.floor`, `TypedArray.prototype.join` and `ArrayBuffer.prototype.resize` are still unimplemented, and the set tests fail on them.",
+  "ttft_ms": 1526,
+  "type": "result",
+  "duration_ms": 141427,
+  "uuid": "478137b9-c953-4060-8e0d-410893af54d7",
+  "ttft_stream_ms": 1275,
+  "time_to_request_ms": 119,
+  "time_to_request_phases_ms": {
+    "other": 15,
+    "system_prompt": 14,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 7,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 40,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 69,
+  "time_to_request_cpu_ms": 145,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 270,
+  "process_cpu_ms_turn": 4437,
+  "process_wall_ms_turn": 141427,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 4,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1276,
+  "time_to_request_from_spawn_ms": 11054770,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791958931817.9492,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.67,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
