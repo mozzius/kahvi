@@ -1,0 +1,39 @@
+{
+  "ticket": "B-aggregate-error-constructor",
+  "base": "73a809ddb402608d39e713fae6781e3f8fced874",
+  "head": "b78ff294ad1ecd91db32cee6155840833313ef11",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/aggregate_error/constructor.rs",
+      "added": 42,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/aggregate_error/constructor.rs",
+      "line": 24,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a built-in runs with an active function\"),"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 50,
+    "before": 20,
+    "after": 50,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

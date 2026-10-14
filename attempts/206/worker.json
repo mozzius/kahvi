@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 13457,
+  "stop_reason": "end_turn",
+  "session_id": "94b9112a-49ed-4199-8104-c37eb7360878",
+  "total_cost_usd": 0.00444822,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 11536,
+    "cache_read_input_tokens": 87102,
+    "output_tokens": 1999,
+    "output_tokens_details": {
+      "thinking_tokens": 300
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11536,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 622,
+        "cache_read_input_tokens": 17519,
+        "cache_creation_input_tokens": 1660,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1660
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.setInt8` in its file, but 10 of the setInt8 tests still fail. They call `DataView.prototype.getInt8` to read back the stored value, and that stub is still not implemented. It belongs to another ticket and is outside my file scope, so I left it alone.\n\nThe implementation follows the `setUint8` sibling: it calls `set_view_value` with `ElementType::Int8` and returns `undefined`. `cargo build` and `cargo clippy` are clean. `./t262 built-ins/DataView/prototype/setInt8/` gives 32 pass and 10 fail, all with \"not implemented: DataView.prototype.getInt8\". The ticket's \"done when\" condition is therefore not met yet.\n\nBLOCKED: DataView.prototype.getInt8 (crates/kahvi-builtins/src/data_view/prototype_get_int8.rs) is not implemented; the setInt8 tests call it to read back the written value.",
+  "ttft_ms": 2116,
+  "type": "result",
+  "duration_ms": 30290,
+  "uuid": "0f061fa1-802a-4778-8ac0-03d645c84791",
+  "ttft_stream_ms": 1900,
+  "time_to_request_ms": 863,
+  "time_to_request_phases_ms": {
+    "other": 83,
+    "system_prompt": 383,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 37,
+    "input_hooks": 14,
+    "tool_pool_refresh": 2,
+    "init_message": 77,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 138,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 42,
+    "message_normalization": 2,
+    "client_creation": 10,
+    "request_build": 61
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 351,
+  "time_to_request_cpu_ms": 396,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2595,
+  "process_wall_ms_turn": 30261,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1901,
+  "time_to_request_from_spawn_ms": 20326436,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999784659.6912,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

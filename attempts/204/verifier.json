@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 14105,
+  "stop_reason": "tool_use",
+  "session_id": "90f18cdc-7f0b-45ae-988d-c2c04cd562ff",
+  "total_cost_usd": 0.0034429800000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6753,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2905,
+    "output_tokens_details": {
+      "thinking_tokens": 2355
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2905,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all seven AggregateError steps in order, each with its spec comment above the code: NewTarget fallback, OrdinaryCreateFromConstructor with the [[ErrorData]] slot, the message ToString and non-enumerable define, InstallErrorCause, GetIterator plus IteratorToList, CreateArrayFromList, and the errors property define with writable, non-enumerable, configurable. Errors propagate with `?`, and nothing is special-cased or faked. The one gate lint is the `.expect(\\\"a built-in runs with an active function\\\")` on the NewTarget fallback. I judge it unreachable from JS, since a built-in always runs with an active function, so I am not counting it as a defect. Helper signatures in kahvi_core::ops and PropertyDescriptor::data argument order are not visible to me; I rely on the clean build and the 30 new passing test262 tests for those. Minor: step 6 uses `?` where the spec uses `!`, which is not observable for a fresh ordinary object.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all seven AggregateError steps in order, each with its spec comment above the code: NewTarget fallback, OrdinaryCreateFromConstructor with the [[ErrorData]] slot, the message ToString and non-enumerable define, InstallErrorCause, GetIterator plus IteratorToList, CreateArrayFromList, and the errors property define with writable, non-enumerable, configurable. Errors propagate with `?`, and nothing is special-cased or faked. The one gate lint is the `.expect(\"a built-in runs with an active function\")` on the NewTarget fallback. I judge it unreachable from JS, since a built-in always runs with an active function, so I am not counting it as a defect. Helper signatures in kahvi_core::ops and PropertyDescriptor::data argument order are not visible to me; I rely on the clean build and the 30 new passing test262 tests for those. Minor: step 6 uses `?` where the spec uses `!`, which is not observable for a fresh ordinary object.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11596,
+  "type": "result",
+  "duration_ms": 13740,
+  "uuid": "a9a83c6e-012d-4a44-b414-450dc82e0dec",
+  "ttft_stream_ms": 1635,
+  "time_to_request_ms": 578,
+  "time_to_request_phases_ms": {
+    "other": 50,
+    "system_prompt": 334,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 41,
+    "input_hooks": 3,
+    "tool_pool_refresh": 11,
+    "init_message": 17,
+    "engine_pickup": 3,
+    "message_prep": 6,
+    "model_config_wait": 26,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 47,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 136,
+  "time_to_request_cpu_ms": 346,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 947,
+  "process_wall_ms_turn": 13739,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1648,
+  "time_to_request_from_spawn_ms": 20372546,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999831925.5198,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

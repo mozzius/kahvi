@@ -1,0 +1,39 @@
+diff --git a/crates/kahvi-builtins/src/data_view/prototype_set_int8.rs b/crates/kahvi-builtins/src/data_view/prototype_set_int8.rs
+index 19f6459..46a07d8 100644
+--- a/crates/kahvi-builtins/src/data_view/prototype_set_int8.rs
++++ b/crates/kahvi-builtins/src/data_view/prototype_set_int8.rs
+@@ -2,8 +2,11 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-dataview.prototype.setint8
+ 
++use kahvi_core::object::typed_array::ElementType;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::set_view_value;
++
+ /// DataView.prototype.setInt8
+ pub(crate) fn prototype_set_int8(
+     agent: &mut Agent,
+@@ -11,11 +14,20 @@ pub(crate) fn prototype_set_int8(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = new_target;
+     // This method performs the following steps when called:
+     //
+     // 1. Let _view_ be the *this* value.
++    let view = this;
+     // 2. Perform ? SetViewValue(_view_, _byteOffset_, *true*, ~int8~, _value_).
++    set_view_value(
++        agent,
++        view,
++        args.get_or_undefined(0),
++        Value::Boolean(true),
++        ElementType::Int8,
++        args.get_or_undefined(1),
++    )?;
+     // 3. Return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("DataView.prototype.setInt8"))
++    Ok(Value::Undefined)
+ }

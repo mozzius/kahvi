@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11916,
+  "stop_reason": "end_turn",
+  "session_id": "0d6fd5da-8788-4ed3-a505-dbc3397fdc7d",
+  "total_cost_usd": 0.00649043,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 22302,
+    "cache_read_input_tokens": 77263,
+    "output_tokens": 2071,
+    "output_tokens_details": {
+      "thinking_tokens": 504
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22302,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 240,
+        "cache_read_input_tokens": 29489,
+        "cache_creation_input_tokens": 456,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 456
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.getTimezoneOffset` in `crates/kahvi-builtins/src/date/prototype_get_timezone_offset.rs`, following the spec steps, and all 16 test262 runs under `built-ins/Date/prototype/getTimezoneOffset/` pass. `cargo clippy -p kahvi-builtins` is clean.\n\nThe brand check uses the existing `date::this_time_value` helper, which throws a TypeError for non-Date receivers. The offset uses `date::local_time` and `date::MS_PER_MINUTE` from `support/date.rs`, so no new helpers were needed. The unused `args` and `new_target` parameters are renamed with a leading `_`.",
+  "ttft_ms": 2581,
+  "type": "result",
+  "duration_ms": 24842,
+  "uuid": "cc10a536-e7d9-4216-be2b-36723a908549",
+  "ttft_stream_ms": 2353,
+  "time_to_request_ms": 1369,
+  "time_to_request_phases_ms": {
+    "other": 114,
+    "system_prompt": 557,
+    "resume_other": 1,
+    "process_user_input": 19,
+    "input_attachments": 65,
+    "input_hooks": 17,
+    "tool_pool_refresh": 2,
+    "init_message": 34,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 429,
+    "autocompact": 20,
+    "query_setup": 0,
+    "model_gates": 2,
+    "tool_schema_build": 41,
+    "message_normalization": 27,
+    "client_creation": 22,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 353,
+  "time_to_request_cpu_ms": 392,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2234,
+  "process_wall_ms_turn": 24841,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 34,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2355,
+  "time_to_request_from_spawn_ms": 20364612,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999820321.715,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
