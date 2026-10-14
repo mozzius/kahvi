@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 34135,
+  "stop_reason": "end_turn",
+  "session_id": "0ae4ab84-6d76-4e09-985d-b37aa10622cb",
+  "total_cost_usd": 0.010420490000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 25115,
+    "cache_read_input_tokens": 186249,
+    "output_tokens": 6398,
+    "output_tokens_details": {
+      "thinking_tokens": 2549
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25115,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 379,
+        "cache_read_input_tokens": 32011,
+        "cache_creation_input_tokens": 747,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 747
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Map.prototype.getOrInsertComputed` is implemented in its file following the spec steps, with each step's text as a comment. The target run is 35 of 37 passing; `append-new-values.js` (sloppy and strict) fails only because the test reads `Map.prototype.size`, which is still a not-implemented stub. `cargo build` and `cargo clippy -p kahvi-builtins` are clean. No helpers were added outside my file, and no other files changed.\n\nBLOCKED: `Map.prototype.size` getter (get Map.prototype.size) is not implemented, needed by built-ins/Map/prototype/getOrInsertComputed/append-new-values.js",
+  "ttft_ms": 2831,
+  "type": "result",
+  "duration_ms": 56662,
+  "uuid": "f43cb027-1d25-404a-85e2-df0ed299c7bb",
+  "ttft_stream_ms": 2682,
+  "time_to_request_ms": 1199,
+  "time_to_request_phases_ms": {
+    "other": 125,
+    "system_prompt": 724,
+    "resume_other": 1,
+    "process_user_input": 24,
+    "input_attachments": 40,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 51,
+    "engine_pickup": 1,
+    "message_prep": 14,
+    "model_config_wait": 18,
+    "autocompact": 2,
+    "query_setup": 4,
+    "model_gates": 1,
+    "tool_schema_build": 94,
+    "message_normalization": 2,
+    "client_creation": 32,
+    "request_build": 55
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 452,
+  "time_to_request_cpu_ms": 330,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 261,
+  "process_anon_mib_result": 142,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 3539,
+  "process_wall_ms_turn": 56653,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 23,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2684,
+  "time_to_request_from_spawn_ms": 20871961,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000328323.143,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

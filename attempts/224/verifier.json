@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 19174,
+  "stop_reason": "tool_use",
+  "session_id": "472f494e-535d-4f34-9e29-e265d84dfa12",
+  "total_cost_usd": 0.00370978,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5836,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3982,
+    "output_tokens_details": {
+      "thinking_tokens": 3415
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5836,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3982,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5836,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5836
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.reverse in the ticket's file, following the spec steps in order. Step 2 uses validate_typed_array with `?`, step 3 computes length once, step 4 computes middle as floor(len/2), and the loop runs while lower != middle. Each iteration computes upper, gets both elements, and writes them back in the spec's order (lower first, then upper). The method returns obj at the end. The two get_element calls have no `?`, which is correct because TypedArrayGetElement has no abrupt completions and the diff's types only compile if it returns a plain Value. The set_element calls use `?` where the spec uses `!`; this only matters if the set can throw, and the values being written are already Number or BigInt, so the set cannot throw in practice. The not-implemented BigInt failures come from the shared helpers and are reported honestly, not hidden. No test-specific branches, no hardcoded values, and no unrelated edits. The removed prose note about genericity is not an algorithm step, and the param renames to underscore are needed because the params are now unused.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.reverse in the ticket's file, following the spec steps in order. Step 2 uses validate_typed_array with `?`, step 3 computes length once, step 4 computes middle as floor(len/2), and the loop runs while lower != middle. Each iteration computes upper, gets both elements, and writes them back in the spec's order (lower first, then upper). The method returns obj at the end. The two get_element calls have no `?`, which is correct because TypedArrayGetElement has no abrupt completions and the diff's types only compile if it returns a plain Value. The set_element calls use `?` where the spec uses `!`; this only matters if the set can throw, and the values being written are already Number or BigInt, so the set cannot throw in practice. The not-implemented BigInt failures come from the shared helpers and are reported honestly, not hidden. No test-specific branches, no hardcoded values, and no unrelated edits. The removed prose note about genericity is not an algorithm step, and the param renames to underscore are needed because the params are now unused.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 16751,
+  "type": "result",
+  "duration_ms": 19197,
+  "uuid": "034b0efa-2d1d-4da2-b83e-5386f6019243",
+  "ttft_stream_ms": 1391,
+  "time_to_request_ms": 484,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 324,
+    "resume_other": 3,
+    "process_user_input": 4,
+    "input_attachments": 18,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 86,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 2,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 65,
+  "time_to_request_cpu_ms": 291,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 241,
+  "process_cpu_ms_turn": 1096,
+  "process_wall_ms_turn": 19197,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1392,
+  "time_to_request_from_spawn_ms": 20915836,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000376187.016,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

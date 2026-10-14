@@ -1,0 +1,81 @@
+diff --git a/crates/kahvi-builtins/src/map/prototype_get_or_insert_computed.rs b/crates/kahvi-builtins/src/map/prototype_get_or_insert_computed.rs
+index 86ea9a0..d8b3d56 100644
+--- a/crates/kahvi-builtins/src/map/prototype_get_or_insert_computed.rs
++++ b/crates/kahvi-builtins/src/map/prototype_get_or_insert_computed.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-map.prototype.getorinsertcomputed
+ 
++use crate::support::collections::{collection_key, map_table, this_map};
+ use kahvi_core::prelude::*;
+ 
+ /// Map.prototype.getOrInsertComputed
+@@ -9,25 +10,48 @@ pub(crate) fn prototype_get_or_insert_computed(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+-    // 1. Let _map_ be the *this* value.
+-    // 2. Perform ? RequireInternalSlot(_map_, [[MapData]]).
+-    // 3. If IsCallable(_callback_) is *false*, throw a *TypeError* exception.
+-    // 4. Set _key_ to CanonicalizeKeyedCollectionKey(_key_).
+-    // 5. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
+-    //    a. If _entry_.[[Key]] is not ~empty~ and SameValue(_entry_.[[Key]], _key_) is *true*, return _entry_.[[Value]].
+-    // 6. Let _value_ be ? Call(_callback_, *undefined*, « _key_ »).
+-    // 7. NOTE: The Map may have been modified during execution of _callback_.
+-    // 8. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
+-    //    a. If _entry_.[[Key]] is not ~empty~ and SameValue(_entry_.[[Key]], _key_) is *true*, then
+-    //       i. Set _entry_.[[Value]] to _value_.
+-    //       ii. Return _value_.
+-    // 9. Let _entry_ be the Record { [[Key]]: _key_, [[Value]]: _value_ }.
+-    // 10. Append _entry_ to _map_.[[MapData]].
+-    // 11. Return _value_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Map.prototype.getOrInsertComputed"))
++    // 1. Let map be the this value.
++    // 2. Perform ? RequireInternalSlot(map, [[MapData]]).
++    let map = this_map(agent, this)?;
++    let key_arg = args.get_or_undefined(0);
++    let callback = args.get_or_undefined(1);
++    // 3. If IsCallable(callback) is false, throw a TypeError exception.
++    if !ops::is_callable(agent, callback) {
++        return Err(
++            agent.throw_type_error("Map.prototype.getOrInsertComputed callback is not a function")
++        );
++    }
++    // 4. Set key to CanonicalizeKeyedCollectionKey(key).
++    let key = match key_arg {
++        // CanonicalizeKeyedCollectionKey: -0 becomes +0.
++        Value::Number(n) => Value::Number(n + 0.0),
++        k => k,
++    };
++    // 5. For each Record entry of map.[[MapData]], do
++    //    a. If entry.[[Key]] is not ~empty~ and SameValue(entry.[[Key]], key) is true, return entry.[[Value]].
++    // (The table is hash-indexed on SameValueZero, which agrees with SameValue
++    // once -0 has been canonicalized and all NaNs are one key.)
++    let table_key = collection_key(agent, key);
++    if let Some(existing) = map_table(agent, map).get(&table_key) {
++        return Ok(existing);
++    }
++    // The callback may collect garbage: map, callback and key stay rooted.
++    agent.with_roots(&[Value::Object(map), callback, key], |agent| {
++        // 6. Let value be ? Call(callback, undefined, « key »).
++        let value = ops::call_rooted(agent, callback, Value::Undefined, &[key])?;
++        // 7. NOTE: The Map may have been modified during execution of callback.
++        // 8. For each Record entry of map.[[MapData]], do
++        //    a. If entry.[[Key]] is not ~empty~ and SameValue(entry.[[Key]], key) is true, then
++        //       i. Set entry.[[Value]] to value.
++        //       ii. Return value.
++        // 9. Let entry be the Record { [[Key]]: key, [[Value]]: value }.
++        // 10. Append entry to map.[[MapData]].
++        // (OrderedTable::set updates the existing entry or appends a new one.)
++        let table_key = collection_key(agent, key);
++        map_table(agent, map).set(table_key, value);
++        // 11. Return value.
++        Ok(value)
++    })
+ }

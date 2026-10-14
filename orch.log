@@ -799,3 +799,6 @@ test262 at last merge: 72953/81183 runs passing
 [17:52:43] B-reflect-delete-property: verifier: accept The change implements Reflect.deleteProperty in the spec's three steps, in order. Step 1 checks `Value::Object` and throws a TypeError before any conv
 [17:52:48] B-array-prototype-reverse: attempt on slot 2 with haiku
 [17:53:00] B-date-prototype-symbol-to-primitive: verifier: accept The change implements Date.prototype[Symbol.toPrimitive] in its single in-scope file and follows the spec. Step 2 throws a TypeError for a non-object 
+[17:53:03] B-date-prototype-set-full-year: attempt on slot 0 with haiku
+[17:53:09] B-map-prototype-get-or-insert-computed: attempt 225 finished ($0.010, 15 turns)
+[17:53:29] B-typed-array-prototype-reverse: verifier: accept The diff implements %TypedArray%.prototype.reverse in the ticket's file, following the spec steps in order. Step 2 uses validate_typed_array with `?`,
