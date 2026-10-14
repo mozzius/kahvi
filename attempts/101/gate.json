@@ -1,0 +1,55 @@
+{
+  "ticket": "B-typed-array-prototype-filter",
+  "base": "fd8d1fd56218bb67fdfbf426ce52c456b27a4404",
+  "head": "eb6cdb89a236d50a09c8924b1414f6dc7a522af2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_filter.rs",
+      "added": 51,
+      "removed": 13
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_filter.rs",
+      "line": 28,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 172,
+    "before": 8,
+    "after": 40,
+    "new_passes": 32,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 132,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-arguments-with-thisarg.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-arguments-with-thisarg.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-arguments-without-thisarg.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-arguments-without-thisarg.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-called-before-ctor.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-called-before-ctor.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-called-before-species.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-called-before-species.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-detachbuffer-kept-undefined.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-detachbuffer-kept-undefined.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-detachbuffer.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-detachbuffer.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-no-iteration-over-non-integer.js:sloppy  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-no-iteration-over-non-integer.js:strict  Uncaught InternalError: not implemented: Math.floor",
+      "built-ins/TypedArray/prototype/filter/BigInt/callbackfn-not-callable-throws.js:sloppy  Uncaught InternalError: not implemented: Math.floor"
+    ]
+  },
+  "decision": "pass"
+}

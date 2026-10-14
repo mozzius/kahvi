@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reg-exp-prototype-get-has-indices",
+  "base": "fd8d1fd56218bb67fdfbf426ce52c456b27a4404",
+  "head": "e07049165ca34ee5e1237878c2d4f5c786c6e4e8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_get_has_indices.rs",
+      "added": 30,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 6,
+    "after": 16,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

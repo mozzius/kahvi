@@ -1,0 +1,35 @@
+{
+  "ticket": "B-math-floor",
+  "base": "fd8d1fd56218bb67fdfbf426ce52c456b27a4404",
+  "head": "1e2ec798a37924e171d9462c37bafc1d0e2f9043",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/floor.rs",
+      "added": 13,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Math/floor/S15.8.2.9_A7.js:sloppy  Uncaught InternalError: not implemented: Math.ceil",
+      "built-ins/Math/floor/S15.8.2.9_A7.js:strict  Uncaught InternalError: not implemented: Math.ceil"
+    ]
+  },
+  "decision": "pass"
+}

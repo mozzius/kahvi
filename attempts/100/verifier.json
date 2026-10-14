@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9256,
+  "stop_reason": "tool_use",
+  "session_id": "29054ef4-1f6f-41f4-820f-9ef455457635",
+  "total_cost_usd": 0.00198698,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4012,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1630,
+    "output_tokens_details": {
+      "thinking_tokens": 986
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4012,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1630,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4012,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4012
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements get RegExp.prototype.hasIndices as the spec describes. The getter binds this to regexp, uses code unit 0x0064, and calls RegExpHasFlag. The helper follows all five RegExpHasFlag steps in order: the non-Object TypeError, the %RegExp.prototype% SameValue check returning undefined, the other TypeError for non-RegExp objects, and the contains check on [[OriginalFlags]] returning true or false. Each step has its spec comment directly above its code. Errors propagate and nothing is special-cased. The change touches only the in-scope file. The gate report shows the build and clippy passing, with 10 new test262 passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. RegExpHasFlag is a private helper inside prototype_get_has_indices.rs. The other RegExp flag getters (global, ignoreCase, multiline, dotAll, unicode, unicodeSets, sticky) will need the same algorithm. Per the ticket, move it to a shared location such as crates/kahvi-builtins/src/support/regexp.rs, and report that move when it happens. I could not check the existence or signatures of agent.native, agent.intrinsic, agent.str or support::regexp::RegExpData from the diff alone. The clean build suggests they exist.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements get RegExp.prototype.hasIndices as the spec describes. The getter binds this to regexp, uses code unit 0x0064, and calls RegExpHasFlag. The helper follows all five RegExpHasFlag steps in order: the non-Object TypeError, the %RegExp.prototype% SameValue check returning undefined, the other TypeError for non-RegExp objects, and the contains check on [[OriginalFlags]] returning true or false. Each step has its spec comment directly above its code. Errors propagate and nothing is special-cased. The change touches only the in-scope file. The gate report shows the build and clippy passing, with 10 new test262 passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. RegExpHasFlag is a private helper inside prototype_get_has_indices.rs. The other RegExp flag getters (global, ignoreCase, multiline, dotAll, unicode, unicodeSets, sticky) will need the same algorithm. Per the ticket, move it to a shared location such as crates/kahvi-builtins/src/support/regexp.rs, and report that move when it happens. I could not check the existence or signatures of agent.native, agent.intrinsic, agent.str or support::regexp::RegExpData from the diff alone. The clean build suggests they exist."
+  },
+  "ttft_ms": 6512,
+  "type": "result",
+  "duration_ms": 9351,
+  "uuid": "f4a24ceb-a436-437c-987e-b8f6abfe9273",
+  "ttft_stream_ms": 1799,
+  "time_to_request_ms": 595,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 413,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 44,
+    "input_hooks": 9,
+    "tool_pool_refresh": 6,
+    "init_message": 18,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 1,
+    "autocompact": 6,
+    "query_setup": 5,
+    "model_gates": 5,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 86,
+  "time_to_request_cpu_ms": 283,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 939,
+  "process_wall_ms_turn": 9345,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1800,
+  "time_to_request_from_spawn_ms": 14389821,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791993848844.0566,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792011600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

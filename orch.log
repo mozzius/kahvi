@@ -1,16 +1,8 @@
-[14:44:26] building trusted runner; integration branch m1-spine, 3 slots
-[14:44:26] B-string-prototype-char-code-at: attempt on slot 2 with haiku
-[14:44:26] B-string-raw: attempt on slot 1 with haiku
-[14:44:26] C-proxy-set: attempt on slot 0 with haiku
-[14:45:20] B-string-prototype-char-code-at: attempt 97 finished ($0.005, 10 turns)
-[14:45:31] C-proxy-set: attempt 98 finished ($0.012, 17 turns)
-[14:46:00] B-string-raw: attempt 96 finished ($0.012, 17 turns)
-[14:46:24] B-string-prototype-char-code-at: verifier: accept The diff implements String.prototype.charCodeAt steps 1-7 in order inside prototype_char_code_at.rs. Each step is kept as a comment above its code. Re
-[14:46:48] C-proxy-set: verifier: accept The diff implements Proxy [[Set]] in set.rs and follows the spec steps in order. Step 1 uses validate_non_revoked with ?. Step 5 calls GetMethod(handl
-[14:46:54] full test262 run for merge: B-string-prototype-char-code-at
-[14:47:10] B-string-raw: verifier: accept The diff implements String.raw in crates/kahvi-builtins/src/string/raw.rs and follows the spec steps 1–8 in order. Each step is kept as a comment abov
-[15:12:04] B-string-prototype-char-code-at: merged (+52, 69560 total)
-[15:12:05] partial tickets after the merge: {'done': 2}
-[15:12:13] full test262 run for merge: C-proxy-set, B-string-raw
-[15:37:31] C-proxy-set: merged (+50, 69685 total)
-[15:37:31] B-string-raw: merged (+52, 69685 total)
+[15:58:57] building trusted runner; integration branch m1-spine, 3 slots
+[15:58:57] B-reg-exp-prototype-get-has-indices: attempt on slot 2 with haiku
+[15:58:57] B-math-floor: attempt on slot 1 with haiku
+[15:58:57] B-typed-array-prototype-filter: attempt on slot 0 with haiku
+[16:01:00] B-math-floor: attempt 99 finished ($0.007, 14 turns)
+[16:01:00] B-reg-exp-prototype-get-has-indices: attempt 100 finished ($0.007, 10 turns)
+[16:01:36] B-typed-array-prototype-filter: attempt 101 finished ($0.014, 15 turns)
+[16:04:27] B-math-floor: verifier: accept Math.floor now follows all five spec steps in order. ToNumber is called with `?`. Non-finite values and ±0 are returned as-is, and the (0,1) range ret

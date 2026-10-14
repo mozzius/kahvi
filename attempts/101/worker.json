@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 44252,
+  "stop_reason": "end_turn",
+  "session_id": "cec7283d-0ef8-4838-a4e7-1604a915e634",
+  "total_cost_usd": 0.01398908,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 31456,
+    "cache_read_input_tokens": 336078,
+    "output_tokens": 7530,
+    "output_tokens_details": {
+      "thinking_tokens": 1988
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 31456,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 706,
+        "cache_read_input_tokens": 35581,
+        "cache_creation_input_tokens": 763,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 763
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01MSFNDiFC8ZhXT9oHp8Usmk",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/typed_array/prototype_filter.rs <<'EOF'\n//! %TypedArray%.prototype.filter ( _callback_ [ , _thisArg_ ] )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.filter\n\nuse kahvi_core::object::typed_array::typed_array_length;\nuse kahvi_core::prelude::*;\n\nuse crate::support::typed_array::{\n    typed_array_get_element, typed_array_set_element, typed_array_species_create,\n    validate_typed_array,\n};\n\n/// TypedArray.prototype.filter\npub(crate) fn prototype_filter(\n    agent: &mut Agent,\n    this: Value,\n    args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    // The interpretation and use of the arguments of this method are the same as for `Array.prototype.filter` as defined in [sec-array.prototype.filter].\n    // This method performs the following steps when called:\n    //\n    // 1. Let _obj_ be the *this* value.\n    let obj = this;\n    // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).\n    let ta_record = validate_typed_array(agent, obj)?;\n    let Value::Object(obj) = obj else {\n        unreachable!(\"ValidateTypedArray accepted a non-object\")\n    };\n    // 3. Let _length_ be TypedArrayLength(_taRecord_).\n    let length = typed_array_length(agent, ta_record);\n    // 4. If IsCallable(_callback_) is *false*, throw a *TypeError* exception.\n    let callback = args.get_or_undefined(0);\n    if !ops::is_callable(agent, callback) {\n        return Err(agent.throw_type_error(\"callback is not a function\"));\n    }\n    let this_arg = args.get_or_undefined(1);\n    // 5. Let _kept_ be a new empty List.\n    let mut kept: Vec<Value> = Vec::new();\n    // 6. Let _captured_ be 0.\n    let mut captured: usize = 0;\n    // 7. Let _k_ be 0.\n    let mut k: usize = 0;\n    // 8. Repeat, while _k_ < _length_,\n    while k < length {\n        // a. Let _kValue_ be TypedArrayGetElement(_obj_, \ud835\udd3d(_k_)).\n        let k_value = typed_array_get_element(agent, obj, k as f64);\n        // b. Let _selected_ be ToBoolean(? Call(_callback_, _thisArg_, \u00ab _kValue_, \ud835\udd3d(_k_), _obj_ \u00bb)).\n        let result = ops::call(\n            agent,\n            callback,\n            this_arg,\n            &[k_value, Value::Number(k as f64), obj.into()],\n        )?;\n        let selected = ops::to_boolean(agent, result);\n        // c. If _selected_ is *true*, then\n        if selected {\n            // i. Append _kValue_ to _kept_.\n            kept.push(k_value);\n            // ii. Set _captured_ to _captured_ + 1.\n            captured += 1;\n        }\n        // d. Set _k_ to _k_ + 1.\n        k += 1;\n    }\n    // 9. Let _result_ be ? TypedArraySpeciesCreate(_obj_, \u00ab \ud835\udd3d(_captured_) \u00bb).\n    let result = typed_array_species_create(agent, obj, &[Value::Number(captured as f64)])?;\n    // 10. Let _n_ be 0.\n    let mut n: usize = 0;\n    // 11. For each element _element_ of _kept_, do\n    for element in kept {\n        // a. Perform ! TypedArraySetElement(_result_, \ud835\udd3d(_n_), _element_).\n        typed_array_set_element(agent, result, n as f64, element)\n            .expect(\"TypedArraySetElement cannot fail for a valid kept element\");\n        // b. Set _n_ to _n_ + 1.\n        n += 1;\n    }\n    // 12. Return _result_.\n    Ok(Value::Object(result))\n}\nEOF\ncargo build 2>&1 | tail -40",
+        "description": "Write filter implementation and build"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.filter` in `crates/kahvi-builtins/src/typed_array/prototype_filter.rs` following the spec steps, with each step as a comment above its code. The build is clean and clippy reports nothing for the file. The target tests do not all pass: 40 of 172 runs pass, and the other 132 throw \"not implemented\" from the `Math.floor` stub (126 runs) and a BigInt stub (6 runs). Those stubs are outside this ticket's file scope, so the \"all pass\" condition is not met yet.\n\nBLOCKED: `Math.floor` (crates/kahvi-builtins/src/math/floor.rs is a not-implemented stub, and the test262 harness depends on it); also a BigInt stub, which makes the 6 BigInt-variant runs fail.",
+  "ttft_ms": 2450,
+  "type": "result",
+  "duration_ms": 153253,
+  "uuid": "e4479604-69ff-4c13-855a-5d1c1cc0c275",
+  "ttft_stream_ms": 1762,
+  "time_to_request_ms": 708,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 374,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 213,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 18,
+    "message_normalization": 7,
+    "client_creation": 9,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 120,
+  "time_to_request_cpu_ms": 372,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 257,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 273,
+  "process_cpu_ms_turn": 5723,
+  "process_wall_ms_turn": 153252,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1763,
+  "time_to_request_from_spawn_ms": 14079136,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791993538994.919,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792011600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
