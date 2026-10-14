@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-includes",
+  "base": "73274ad3fd4d24902652bea74275d01549aca646",
+  "head": "3fccd47356a165e6d57edd4bab8ef5674f85eb3a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_includes.rs",
+      "added": 46,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 54,
+    "before": 10,
+    "after": 54,
+    "new_passes": 44,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
