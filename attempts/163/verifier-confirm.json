@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11708,
+  "stop_reason": "tool_use",
+  "session_id": "4131015e-5cd9-4eef-9522-92c30d4bc45a",
+  "total_cost_usd": 0.058140899999999995,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10962,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1290,
+    "output_tokens_details": {
+      "thinking_tokens": 935
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10962,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1290,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 10962,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10962
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Set.prototype.intersection follows the spec step by step, including GetSetRecord with its observable Get order, both the size-based branches, and the duplicate checks. Every `?` step propagates its error. The remaining 32 test failures are all not-implemented errors from other built-ins (Set size getter, SetIteratorPrototype.next, Map size getter), not from this file. The gate shows +14 tests passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Set.prototype.intersection follows the spec step by step, including GetSetRecord with its observable Get order, both the size-based branches, and the duplicate checks. Every `?` step propagates its error. The remaining 32 test failures are all not-implemented errors from other built-ins (Set size getter, SetIteratorPrototype.next, Map size getter), not from this file. The gate shows +14 tests passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10029,
+  "type": "result",
+  "duration_ms": 11840,
+  "uuid": "8bdf131d-bc0d-427c-8ecc-d536c1c9afb5",
+  "ttft_stream_ms": 2628,
+  "time_to_request_ms": 597,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 390,
+    "resume_other": 0,
+    "process_user_input": 20,
+    "input_attachments": 60,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 41,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 59,
+  "time_to_request_cpu_ms": 458,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 237,
+  "process_cpu_ms_turn": 817,
+  "process_wall_ms_turn": 11840,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 40,
+    "cpu_ms": 65,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2630,
+  "time_to_request_from_spawn_ms": 19323509,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998783472.6062,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
