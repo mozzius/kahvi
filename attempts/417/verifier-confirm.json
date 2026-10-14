@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7097,
+  "stop_reason": "tool_use",
+  "session_id": "92250666-e8fd-4ccd-81b2-a12eb0db86c0",
+  "total_cost_usd": 0.0331133,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6311,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 694,
+    "output_tokens_details": {
+      "thinking_tokens": 287
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6311,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 694,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6311,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6311
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.toWellFormed step by step. It calls RequireObjectCoercible and then ToString in order, which are the only observable operations. It loops with a local CodePointAt and UTF16EncodeCodePoint that match the spec text. Unpaired surrogates become U+FFFD and pairs are kept. The gate shows 16 of 16 target tests passing, with no regressions. The only file touched is the one in scope. The `unwrap_or(0)` calls in `code_point_at` are on indices the spec asserts are in range, so they are not reachable error paths.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.toWellFormed step by step. It calls RequireObjectCoercible and then ToString in order, which are the only observable operations. It loops with a local CodePointAt and UTF16EncodeCodePoint that match the spec text. Unpaired surrogates become U+FFFD and pairs are kept. The gate shows 16 of 16 target tests passing, with no regressions. The only file touched is the one in scope. The `unwrap_or(0)` calls in `code_point_at` are on indices the spec asserts are in range, so they are not reachable error paths.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4355,
+  "type": "result",
+  "duration_ms": 6221,
+  "uuid": "b21689da-d4ba-4971-a6ab-9b0a1f2e2a2a",
+  "ttft_stream_ms": 1706,
+  "time_to_request_ms": 476,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 291,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 16,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 104,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 58,
+  "time_to_request_cpu_ms": 245,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 726,
+  "process_wall_ms_turn": 6220,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1707,
+  "time_to_request_from_spawn_ms": 25817771,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005278039.0608,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.42,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

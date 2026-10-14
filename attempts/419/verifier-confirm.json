@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6323,
+  "stop_reason": "tool_use",
+  "session_id": "ebd97d82-a81a-4519-8f5d-3d8e8a02abbb",
+  "total_cost_usd": 0.0218568,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3678,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 648,
+    "output_tokens_details": {
+      "thinking_tokens": 225
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3678,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 648,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3678,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3678
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.getYear as the spec describes. It gets the time value through the shared helper `date::this_time_value` with `?`, which should do RequireInternalSlot and read [[DateValue]]. It returns NaN for a NaN time value. Otherwise it returns `year_from_time(local_time(tv)) - 1900`. The spec step comments are kept above the code. The `?` is propagated, there are no special cases, and only the one in-scope file changed. The target went from 8 to 14 passing with no regressions. I did not open the `support::date` helpers, so I am assuming `this_time_value` does what its name says.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.getYear as the spec describes. It gets the time value through the shared helper `date::this_time_value` with `?`, which should do RequireInternalSlot and read [[DateValue]]. It returns NaN for a NaN time value. Otherwise it returns `year_from_time(local_time(tv)) - 1900`. The spec step comments are kept above the code. The `?` is propagated, there are no special cases, and only the one in-scope file changed. The target went from 8 to 14 passing with no regressions. I did not open the `support::date` helpers, so I am assuming `this_time_value` does what its name says.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3994,
+  "type": "result",
+  "duration_ms": 6115,
+  "uuid": "1df45845-7b4a-4b5a-98b7-2b953c27d8bb",
+  "ttft_stream_ms": 1636,
+  "time_to_request_ms": 432,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 295,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 18,
+    "input_hooks": 6,
+    "tool_pool_refresh": 4,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 31,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 16,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 76,
+  "time_to_request_cpu_ms": 288,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 240,
+  "process_cpu_ms_turn": 740,
+  "process_wall_ms_turn": 6115,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1637,
+  "time_to_request_from_spawn_ms": 25825002,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005284884.3193,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.42,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

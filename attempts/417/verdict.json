@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "Implements String.prototype.toWellFormed following the stub's spec steps in order: RequireObjectCoercible, ToString, length, the loop over CodePointAt, and UTF-16 re-encoding with U+FFFD for unpaired surrogates. The local CodePointAt record and the UTF16EncodeCodePoint helper match the spec algorithms, including the leading/trailing/end-of-string/non-trailing-second checks. There are no test-shaped branches, no swallowed abrupt completions, and no hardcoded results. The gate reports 8 new passing tests and no regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "Nothing blocking. Minor points for the architect: (1) code_point_at uses units.get(..).copied().unwrap_or(0) at the step-3 and step-7 reads. Both indices are guaranteed in range by the spec assert and by the step-6 check, so the default is unreachable, but a direct index or an assert would state the invariant more clearly. (2) The ticket asks for helpers to come from kahvi_core::ops when they exist. The worker's comments say no shared CodePointAt exists and the UTF-16 encoder is private to other built-ins. I did not verify that against ops, so confirm before merging that neither helper already exists there.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
