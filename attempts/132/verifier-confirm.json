@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11760,
+  "stop_reason": "tool_use",
+  "session_id": "d88c77be-3bec-404a-944f-980af5521417",
+  "total_cost_usd": 0.046885500000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8238,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1281,
+    "output_tokens_details": {
+      "thinking_tokens": 887
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8238,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1281,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8238,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8238
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u201323 in order, with `?` propagation on ToIntegerOrInfinity, SpeciesConstructor and Construct. The local ToClampedIndex and CopyDataBlockBytes helpers are correct. No special-casing or swallowed errors. The two `expect` calls guard invariants that hold at that point. Steps 14\u201322 run no user code, so `obj` stays attached and the byte ranges stay within bounds. Target went from 12 to 62 passing with no regressions, which fits a full implementation.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u201323 in order, with `?` propagation on ToIntegerOrInfinity, SpeciesConstructor and Construct. The local ToClampedIndex and CopyDataBlockBytes helpers are correct. No special-casing or swallowed errors. The two `expect` calls guard invariants that hold at that point. Steps 14\u201322 run no user code, so `obj` stays attached and the byte ranges stay within bounds. Target went from 12 to 62 passing with no regressions, which fits a full implementation.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9657,
+  "type": "result",
+  "duration_ms": 11836,
+  "uuid": "bf8cbd78-0ef3-450d-a157-cff1b69644b6",
+  "ttft_stream_ms": 2097,
+  "time_to_request_ms": 620,
+  "time_to_request_phases_ms": {
+    "other": 71,
+    "system_prompt": 404,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 21,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 16,
+    "engine_pickup": 1,
+    "message_prep": 7,
+    "model_config_wait": 64,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 43,
+  "time_to_request_cpu_ms": 411,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 734,
+  "process_wall_ms_turn": 11835,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2098,
+  "time_to_request_from_spawn_ms": 18447205,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997907198.2803,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 29810,
+  "stop_reason": "tool_use",
+  "session_id": "4a087c6d-0eba-4753-8c14-e83c3707b48e",
+  "total_cost_usd": 0.00566668,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8240,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 6451,
+    "output_tokens_details": {
+      "thinking_tokens": 5832
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8240,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6451,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8240,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8240
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements ArrayBuffer.prototype.slice steps 1-23 in order, with each spec step kept as a comment above its code. Observable operations match the spec: length is read before ToClampedIndex(start), the end argument is coerced only when not undefined, SpeciesConstructor and Construct are called once, and the post-side-effect detach check (step 17) is performed before the copy. ToClampedIndex inlines ToAbsoluteIndex and the clamp correctly. CopyDataBlockBytes indices stay in range given the step 17 and step 15 checks, and no user code runs between those checks and the copy. Errors propagate with `?`, and no value is made up or special-cased. The two lint flags are `expect` calls on the copy path. I checked and they are unreachable, because the detach checks guarantee the data is present, so I did not count them as a defect. Caveat, not a defect in the answers: steps 3 and 12 (IsSharedArrayBuffer) are omitted with a comment saying the engine has no Shared Data Blocks. That is correct only if no SharedArrayBuffer shares the [[ArrayBufferData]] slot. I could not verify this from the diff, so a reviewer should confirm it.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements ArrayBuffer.prototype.slice steps 1-23 in order, with each spec step kept as a comment above its code. Observable operations match the spec: length is read before ToClampedIndex(start), the end argument is coerced only when not undefined, SpeciesConstructor and Construct are called once, and the post-side-effect detach check (step 17) is performed before the copy. ToClampedIndex inlines ToAbsoluteIndex and the clamp correctly. CopyDataBlockBytes indices stay in range given the step 17 and step 15 checks, and no user code runs between those checks and the copy. Errors propagate with `?`, and no value is made up or special-cased. The two lint flags are `expect` calls on the copy path. I checked and they are unreachable, because the detach checks guarantee the data is present, so I did not count them as a defect. Caveat, not a defect in the answers: steps 3 and 12 (IsSharedArrayBuffer) are omitted with a comment saying the engine has no Shared Data Blocks. That is correct only if no SharedArrayBuffer shares the [[ArrayBufferData]] slot. I could not verify this from the diff, so a reviewer should confirm it.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 27376,
+  "type": "result",
+  "duration_ms": 29963,
+  "uuid": "f0134cf9-a1ff-44ee-bb97-295cdfde961b",
+  "ttft_stream_ms": 1430,
+  "time_to_request_ms": 684,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 414,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 53,
+    "input_hooks": 7,
+    "tool_pool_refresh": 4,
+    "init_message": 11,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 101,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 7,
+    "message_normalization": 4,
+    "client_creation": 12,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 66,
+  "time_to_request_cpu_ms": 530,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 240,
+  "process_anon_mib_result": 122,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 1473,
+  "process_wall_ms_turn": 29963,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 35,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1431,
+  "time_to_request_from_spawn_ms": 18415678,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997875514.8752,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
