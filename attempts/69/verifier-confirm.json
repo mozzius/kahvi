@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 10976,
+  "stop_reason": "tool_use",
+  "session_id": "fb352b79-5ff2-46a1-b7e3-80232c3d5c0f",
+  "total_cost_usd": 0.0531588,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9851,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1261,
+    "output_tokens_details": {
+      "thinking_tokens": 803
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9851,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1261,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 9851,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9851
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u201315 in order. The observable operations (RequireObjectCoercible, GetMethod with Symbol.replace, Call, ToString on this, search and replace values, IsCallable, and ToString of the callback result) are done with `?` and in the right order. The local StringIndexOf matches the spec. The local GetSubstitution handles `$$`, `` $` ``, `$&` and `$'`. With empty captures and undefined namedCaptures, `$n` and `$<` stay literal, which is what the spec gives. The 50 remaining failures are `RegExp.prototype.hasIndices` not-implemented errors in other files, not in this one. I found no special-casing, swallowed errors or unrelated edits.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u201315 in order. The observable operations (RequireObjectCoercible, GetMethod with Symbol.replace, Call, ToString on this, search and replace values, IsCallable, and ToString of the callback result) are done with `?` and in the right order. The local StringIndexOf matches the spec. The local GetSubstitution handles `$$`, `` $` ``, `$&` and `$'`. With empty captures and undefined namedCaptures, `$n` and `$<` stay literal, which is what the spec gives. The 50 remaining failures are `RegExp.prototype.hasIndices` not-implemented errors in other files, not in this one. I found no special-casing, swallowed errors or unrelated edits.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8159,
+  "type": "result",
+  "duration_ms": 10655,
+  "uuid": "e284c934-e039-4589-a2d3-8114ca92f886",
+  "ttft_stream_ms": 1155,
+  "time_to_request_ms": 152,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 86,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 54,
+  "time_to_request_cpu_ms": 115,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 223,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 526,
+  "process_wall_ms_turn": 10655,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1156,
+  "time_to_request_from_spawn_ms": 15304460,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791963181634.0586,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.68,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

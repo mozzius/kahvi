@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 24847,
+  "stop_reason": "end_turn",
+  "session_id": "8ef09cef-dbda-466c-aa21-901831997ec0",
+  "total_cost_usd": 0.009208540000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 21821,
+    "cache_read_input_tokens": 152484,
+    "output_tokens": 5800,
+    "output_tokens_details": {
+      "thinking_tokens": 969
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21821,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 416,
+        "cache_read_input_tokens": 28881,
+        "cache_creation_input_tokens": 420,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 420
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.replace` is implemented in `crates/kahvi-builtins/src/string/prototype_replace.rs`, following the spec steps with each step as a comment. The build and clippy are clean. The target tests are not all passing: 58 of 108 runs pass, and all 50 failures are not-implemented errors from the RegExp path (48 `RegExp.prototype.hasIndices`, 2 `RegExp.prototype.toString`), not from this file. The ticket's \"done when\" is therefore not met.\n\nI added private copies of `string_index_of` and `get_substitution` in my file, since the sibling `replaceAll` file's helpers are not shared and I can't edit other files. Those helpers should move into `kahvi_core::ops` or `support/` later.\n\nBLOCKED: RegExp.prototype.hasIndices getter (and RegExp.prototype.toString) must be implemented before built-ins/String/prototype/replace/ can fully pass",
+  "ttft_ms": 1174,
+  "type": "result",
+  "duration_ms": 53481,
+  "uuid": "35868139-c279-49fd-94b0-bad2c23f0308",
+  "ttft_stream_ms": 955,
+  "time_to_request_ms": 158,
+  "time_to_request_phases_ms": {
+    "other": 17,
+    "system_prompt": 16,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 79,
+    "autocompact": 1,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 57,
+  "time_to_request_cpu_ms": 144,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2432,
+  "process_wall_ms_turn": 53480,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 955,
+  "time_to_request_from_spawn_ms": 15198475,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791963075695.6804,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.68,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

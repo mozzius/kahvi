@@ -1,24 +1,9 @@
-[05:57:37] building trusted runner; integration branch m1-spine, 2 slots
-[05:57:37] B-reg-exp-prototype-get-flags: attempt on slot 1 with haiku
-[05:57:37] B-array-buffer-prototype-resize: attempt on slot 0 with haiku
-[05:58:00] B-reg-exp-prototype-get-flags: attempt 64 finished ($0.009, 8 turns)
-[05:58:31] B-array-buffer-prototype-resize: attempt 65 finished ($0.014, 12 turns)
-[05:58:38] B-reg-exp-prototype-get-flags: verifier: accept The change implements get RegExp.prototype.flags in its own file, following the spec steps. Step 2 throws a TypeError for non-object receivers. Steps 
-[05:59:06] B-reg-exp-prototype-get-flags: full test262 run for merge
-[05:59:55] B-array-buffer-prototype-resize: verifier: accept The diff implements ArrayBuffer.prototype.resize in order: RequireInternalSlot (TypeError for non-objects and non-resizable buffers), ToIndex, the det
-[06:22:09] B-reg-exp-prototype-get-flags: merged (+20, 67608 total)
-[06:22:11] B-typed-array-prototype-set: attempt on slot 1 with haiku
-[06:22:13] B-array-buffer-prototype-resize: full test262 run for merge
-[06:24:35] B-typed-array-prototype-set: attempt 66 finished ($0.026, 22 turns)
-[06:25:52] B-typed-array-prototype-set: verifier: revise The diff is a faithful, step-by-step implementation of %TypedArray%.prototype.set, SetTypedArrayFromTypedArray and SetTypedArrayFromArrayLike. Step or
-[06:25:56] B-typed-array-prototype-set: attempt on slot 1 with haiku
-[06:27:12] B-typed-array-prototype-set: attempt 67 finished ($0.012, 22 turns)
-[06:28:56] B-typed-array-prototype-set: verifier: accept I walked the diff against the pinned spec text for %TypedArray%.prototype.set, SetTypedArrayFromTypedArray and SetTypedArrayFromArrayLike. Steps are i
-[06:49:00] B-array-buffer-prototype-resize: merged (+76, 67676 total)
-[06:49:02] B-typed-array-prototype-slice: attempt on slot 0 with haiku
-[06:49:03] B-typed-array-prototype-set: full test262 run for merge
-[06:50:19] B-typed-array-prototype-slice: attempt 68 finished ($0.022, 24 turns)
-[06:51:20] B-typed-array-prototype-slice: verifier: accept The diff implements %TypedArray%.prototype.slice step by step, with each spec step kept as a comment above its code. I checked the steps in order: Val
-[07:07:20] B-typed-array-prototype-set: merged (+44, 67729 total)
-[07:07:22] B-typed-array-prototype-slice: full test262 run for merge
-[07:19:45] B-typed-array-prototype-slice: merged (+30, 67759 total)
+[07:31:13] building trusted runner; integration branch m1-spine, 2 slots
+[07:31:15] B-string-prototype-replace: attempt on slot 1 with haiku
+[07:31:15] B-string-prototype-match: attempt on slot 0 with haiku
+[07:31:40] B-string-prototype-match: attempt 70 finished ($0.009, 13 turns)
+[07:32:10] B-string-prototype-replace: attempt 69 finished ($0.009, 10 turns)
+[07:32:23] B-string-prototype-match: verifier: accept The change implements String.prototype.match in the order the spec gives. It runs RequireObjectCoercible on this, then, only when the argument is an O
+[07:32:39] B-string-prototype-match: full test262 run for merge
+[07:33:13] B-string-prototype-replace: verifier: accept I walked the spec steps 1–15 of String.prototype.replace against the diff, along with the helpers StringIndexOf and GetSubstitution. Every step is imp
+[07:45:22] B-string-prototype-match: merged (+10, 68255 total)

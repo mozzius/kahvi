@@ -1,0 +1,48 @@
+{
+  "ticket": "B-string-prototype-replace",
+  "base": "62d305620e680b6c9b14e0aa500f8e250eb9a079",
+  "head": "4a0415abed465dc49c1ef24f8dc03648fe9604a0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_replace.rs",
+      "added": 152,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 108,
+    "before": 10,
+    "after": 58,
+    "new_passes": 48,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 50,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/replace/15.5.4.11-1.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A12.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T14.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T14.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T17.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T17.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T8.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A1_T8.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T1.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T1.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T10.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T10.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T2.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T2.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/String/prototype/replace/S15.5.4.11_A2_T3.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices"
+    ]
+  },
+  "decision": "pass"
+}

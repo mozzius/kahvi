@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 11291,
+  "stop_reason": "tool_use",
+  "session_id": "88ad478e-bd47-4c4d-8689-8b5d276495a6",
+  "total_cost_usd": 0.00296356,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6234,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2270,
+    "output_tokens_details": {
+      "thinking_tokens": 1703
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6234,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2270,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6234,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6234
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.match in the order the spec gives. It runs RequireObjectCoercible on this, then, only when the argument is an Object, GetMethod for %Symbol.match% and a Call to the matcher if one exists. After that it runs ToString on this, RegExpCreate with undefined flags, and Invoke of %Symbol.match% with the string. Every abstract operation propagates errors with `?`. No test-specific branches, hardcoded values or swallowed errors appear in the diff. The remaining hasIndices failures come from RegExp.prototype[@@match] and its flags getter, not from this file. The one visible deviation is that the spec NOTE comment was dropped, which is cosmetic. The regexp_create helper is imported from a support module the diff does not touch, and the build passes, so it already exists.\",\"problems\":[],\"notes_for_next_attempt\":\"The implementation matches the spec steps. Optionally restore the spec NOTE comment about the method being intentionally generic. The remaining test262 failures depend on RegExp.prototype.hasIndices (and the flags getter) being implemented in another ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.match in the order the spec gives. It runs RequireObjectCoercible on this, then, only when the argument is an Object, GetMethod for %Symbol.match% and a Call to the matcher if one exists. After that it runs ToString on this, RegExpCreate with undefined flags, and Invoke of %Symbol.match% with the string. Every abstract operation propagates errors with `?`. No test-specific branches, hardcoded values or swallowed errors appear in the diff. The remaining hasIndices failures come from RegExp.prototype[@@match] and its flags getter, not from this file. The one visible deviation is that the spec NOTE comment was dropped, which is cosmetic. The regexp_create helper is imported from a support module the diff does not touch, and the build passes, so it already exists.",
+    "problems": [],
+    "notes_for_next_attempt": "The implementation matches the spec steps. Optionally restore the spec NOTE comment about the method being intentionally generic. The remaining test262 failures depend on RegExp.prototype.hasIndices (and the flags getter) being implemented in another ticket."
+  },
+  "ttft_ms": 8403,
+  "type": "result",
+  "duration_ms": 10702,
+  "uuid": "aa05b65c-9716-4df3-a849-92ee2b819832",
+  "ttft_stream_ms": 824,
+  "time_to_request_ms": 161,
+  "time_to_request_phases_ms": {
+    "other": 17,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 12,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 0,
+    "model_config_wait": 95,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 6,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 6,
+  "time_to_request_cpu_ms": 118,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 223,
+  "process_anon_mib_result": 105,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 605,
+  "process_wall_ms_turn": 10702,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 825,
+  "time_to_request_from_spawn_ms": 15247629,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791963124947.4336,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.68,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
