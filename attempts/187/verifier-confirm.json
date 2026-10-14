@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10198,
+  "stop_reason": "tool_use",
+  "session_id": "aceba364-937b-4e7a-ac49-a707f3437261",
+  "total_cost_usd": 0.0440749,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8133,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1043,
+    "output_tokens_details": {
+      "thinking_tokens": 696
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8133,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1043,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8133,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8133
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec step by step. GetSetRecord is a local helper, which the ticket allows. Step 4 reads the live Set size. Each loop iteration re-fetches the table, so mutation during iteration is handled. The IteratorClose result is propagated. The 14 remaining failures come from other tickets (the Set size getter, Set.prototype.delete, the Map size getter), not from this change.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec step by step. GetSetRecord is a local helper, which the ticket allows. Step 4 reads the live Set size. Each loop iteration re-fetches the table, so mutation during iteration is handled. The IteratorClose result is propagated. The 14 remaining failures come from other tickets (the Set size getter, Set.prototype.delete, the Map size getter), not from this change.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 8211,
+  "type": "result",
+  "duration_ms": 9789,
+  "uuid": "38abce75-cb76-44f3-949c-d62fe0f76ba5",
+  "ttft_stream_ms": 1904,
+  "time_to_request_ms": 550,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 317,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 12,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 73,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 68,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 146,
+  "time_to_request_cpu_ms": 359,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 732,
+  "process_wall_ms_turn": 9789,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1905,
+  "time_to_request_from_spawn_ms": 19966602,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999426723.388,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
