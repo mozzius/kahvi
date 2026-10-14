@@ -4989,3 +4989,10 @@ test262 at last merge: 80909/81183 runs passing
 [21:30:50] B-json-is-raw-json: attempt on slot 2 with sonnet
 [21:31:29] B-json-is-raw-json: attempt 516 finished ($0.067, 10 turns)
 [21:31:58] B-json-is-raw-json: verifier: accept The change implements JSON.isRawJSON per spec. Step 1 checks that the argument is an Object and that it has the [[IsRawJSON]] slot, via `agent.native:
+[21:34:07] stack: stack/0034 (#52) green: 81097/81183 passing, +98
+[21:34:07] B-uint8-array-prototype-set-from-base64: merged (+26, 81097 total)
+[21:34:15] stack: pushed stack/0035 as #53 with B-json-raw-json, B-json-is-raw-json
+[21:37:25] stack: stack/0035 (#53) green: 81103/81183 passing, +6
+[21:37:25] B-json-raw-json: merged (+4, 81103 total)
+[21:37:25] B-json-is-raw-json: merged (+2, 81103 total)
+[21:37:35] stack: pushed stack/0036 as #55 with arch-stragglers

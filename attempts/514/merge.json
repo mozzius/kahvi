@@ -1,0 +1,17 @@
+{
+  "merged": true,
+  "commit": "a42c9c8cc68e3fe47b2124298a6ccb8fe1bd0e3c",
+  "batch": [
+    "B-json-raw-json",
+    "B-json-is-raw-json"
+  ],
+  "new_passes": 4,
+  "total_pass": 81103,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/JSON/rawJSON/basic.js:sloppy  Uncaught Test262Error: Expected SameValue(\u00ab\"{\\\"rawJSON\\\":\\\"1\\\"}\"\u00bb, \u00ab\"1\"\u00bb) to be true",
+    "built-ins/JSON/rawJSON/basic.js:strict  Uncaught Test262Error: Expected SameValue(\u00ab\"{\\\"rawJSON\\\":\\\"1\\\"}\"\u00bb, \u00ab\"1\"\u00bb) to be true",
+    "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:sloppy  Uncaught Test262Error: Expected SameValue(\u00ab\"{\\\"tooBigForNumber\\\":{\\\"rawJSON\\\":\\\"9007199254740993\\\"}}\"\u00bb, \u00ab\"{\\\"tooBigForNumber\\\":9007199254740",
+    "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:strict  Uncaught Test262Error: Expected SameValue(\u00ab\"{\\\"tooBigForNumber\\\":{\\\"rawJSON\\\":\\\"9007199254740993\\\"}}\"\u00bb, \u00ab\"{\\\"tooBigForNumber\\\":9007199254740"
+  ]
+}
