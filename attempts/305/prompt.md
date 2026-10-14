@@ -1,0 +1,73 @@
+# Ticket B-date-prototype-to-json: Date.prototype.toJSON
+
+Implement this built-in in its file, following the spec steps already in
+the stub: keep each step as a comment directly above the code for it.
+
+- Abstract operations are in `kahvi_core::ops` (see docs/API.md); use them
+  rather than re-implementing. If a helper you need is missing and other
+  built-ins would need it too, write it in your file and say so in your
+  final report; do not edit other files.
+- Anything you cannot finish must still return
+  `Err(agent.not_implemented("..."))` naming what is missing. Never return
+  a made-up value.
+- No new Rust tests: the test262 target is the measure.
+
+## Files you may change
+
+- `crates/kahvi-builtins/src/date/prototype_to_json.rs`
+
+## Read first
+
+- `docs/API.md`
+- `crates/kahvi-builtins/src/support/mod.rs`
+- `crates/kahvi-builtins/src/array/prototype_map.rs`
+- `crates/kahvi-builtins/src/object/define_property.rs`
+- `crates/kahvi-builtins/src/support/date.rs`
+- `crates/kahvi-builtins/src/date/constructor.rs`
+
+## Spec
+
+Date.prototype.toJSON ( _key_ )
+  id: sec-date.prototype.tojson   type: built-in function
+
+This method provides a String representation of a Date for use by `JSON.stringify` ([sec-json.stringify]).
+It performs the following steps when called:
+
+1. Let _obj_ be ? ToObject(*this* value).
+2. Let _tv_ be ? ToPrimitive(_obj_, ~number~).
+3. If _tv_ is a Number and _tv_ is not a finite Number, return *null*.
+4. Return ? Invoke(_obj_, *"toISOString"*).
+
+NOTE:
+The argument is ignored.
+NOTE:
+This method is intentionally generic; it does not require that its *this* value be a Date. Therefore, it can be transferred to other kinds of objects for use as a method. However, it does require that any such object have a `toISOString` method.
+
+--- referenced: ToObject ( _arg_: an ECMAScript language value, ): either a normal completion containing an Object or a throw completion
+  id: sec-toobject
+
+description: It converts _arg_ to a value of type Object.
+
+1. If _arg_ is either *undefined* or *null*, throw a *TypeError* exception.
+2. If _arg_ is a Boolean, return a new Boolean object whose [[BooleanData]] internal slot is set to _arg_. See [sec-boolean-objects] for a description of Boolean objects.
+3. If _arg_ is a Number, return a new Number object whose [[NumberData]] internal slot is set to _arg_. See [sec-number-objects] for a description of Number objects.
+4. If _arg_ is a String, return a new String object whose [[StringData]] internal slot is set to _arg_. See [sec-string-objects] for a description of String objects.
+5. If _arg_ is a Symbol, return a new Symbol object whose [[SymbolData]] internal slot is set to _arg_. See [sec-symbol-objects] for a description of Symbol objects.
+6. If _arg_ is a BigInt, return a new BigInt object whose [[BigIntData]] internal slot is set to _arg_. See [sec-bigint-objects] for a description of BigInt objects.
+7. Assert: _arg_ is an Object.
+8. Return _arg_.
+
+--- referenced: Invoke ( _value_: an ECMAScript language value, _propertyKey_: a property key, optional _argList_: a List of ECMAScript language values, ): either a normal completion containing an ECMAScript language value or a throw completion
+  id: sec-invoke
+
+description: It is used to call a method property of an ECMAScript language value. _value_ serves as both the lookup point for the property and the *this* value of the call. _argList_ is the list of arguments values passed to the method. If _argList_ is not present, a new empty List is used as its value.
+
+1. If _argList_ is not present, set _argList_ to a new empty List.
+2. Let _func_ be ? GetV(_value_, _propertyKey_).
+3. Return ? Call(_func_, _value_, _argList_).
+
+
+## Done when
+
+- Every test262 run under built-ins/Date/prototype/toJSON/ passes (check with `./t262 built-ins/Date/prototype/toJSON/`). 8 pass on the main branch right now.
+

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-array-buffer-prototype-get-resizable",
+  "base": "41d8a8fe9d8cef1f02097b4c2f34f85d389f8fe5",
+  "head": "de1299c5259bd05184dfb008f7bbcd8930321970",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs",
+      "added": 14,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 6,
+    "after": 18,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

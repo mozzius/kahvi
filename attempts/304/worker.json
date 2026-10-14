@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 24645,
+  "stop_reason": "end_turn",
+  "session_id": "b6e5bf74-0d03-442d-a9f9-6305f31a1a40",
+  "total_cost_usd": 0.00849904,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 19875,
+    "cache_read_input_tokens": 236764,
+    "output_tokens": 3798,
+    "output_tokens_details": {
+      "thinking_tokens": 973
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19875,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 209,
+        "cache_read_input_tokens": 27282,
+        "cache_creation_input_tokens": 236,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 236
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `get ArrayBuffer.prototype.resizable` in `crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs`, with each spec step as a comment above its code. All 18 test262 runs under `built-ins/ArrayBuffer/prototype/resizable/` pass (up from 6 on main), and clippy and fmt are clean.\n\nStep 3 (the SharedArrayBuffer check) is a no-op here: `ArrayBufferData` has no shared-data-block representation, so the check is always false. The comment in the file says so. No helpers were added and no other files were touched.",
+  "ttft_ms": 2252,
+  "type": "result",
+  "duration_ms": 58531,
+  "uuid": "95e8c52c-b1fb-483f-975e-1821b23c033f",
+  "ttft_stream_ms": 1998,
+  "time_to_request_ms": 1002,
+  "time_to_request_phases_ms": {
+    "other": 98,
+    "system_prompt": 774,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 11,
+    "input_hooks": 23,
+    "tool_pool_refresh": 5,
+    "init_message": 42,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 2,
+    "autocompact": 2,
+    "query_setup": 2,
+    "model_gates": 0,
+    "tool_schema_build": 17,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 202,
+  "time_to_request_cpu_ms": 323,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 133,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3753,
+  "process_wall_ms_turn": 58507,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1999,
+  "time_to_request_from_spawn_ms": 23089264,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002546834.5771,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.13,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

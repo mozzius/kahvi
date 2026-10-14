@@ -1453,3 +1453,6 @@ test262 at last merge: 74349/81183 runs passing
 [18:29:45] B-object-prototype-set-proto: verifier: accept The diff implements all seven steps of the set Object.prototype.__proto__ setter in order. Step 2 calls ops::require_object_coercible with `?`. Step 3
 [18:29:47] B-data-view-prototype-get-byte-offset: attempt 303 finished ($0.006, 8 turns)
 [18:29:55] B-reflect-get-own-property-descriptor: attempt 302 finished ($0.006, 10 turns)
+[18:30:10] B-array-buffer-prototype-get-resizable: attempt 304 finished ($0.008, 17 turns)
+[18:30:13] B-date-prototype-to-json: attempt on slot 1 with haiku
+[18:30:42] B-data-view-prototype-get-byte-offset: verifier: accept The diff implements get DataView.prototype.byteOffset in order against the spec: RequireInternalSlot via require_data_view with `?` propagation (step 

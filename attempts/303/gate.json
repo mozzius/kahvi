@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-get-byte-offset",
+  "base": "41d8a8fe9d8cef1f02097b4c2f34f85d389f8fe5",
+  "head": "a7aa12b352c1d1750dfd7e8997b5e06380744fe7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_byte_offset.rs",
+      "added": 16,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 6,
+    "after": 22,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

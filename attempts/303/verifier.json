@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12425,
+  "stop_reason": "tool_use",
+  "session_id": "95313fad-75e9-4153-856a-b79abad72cd7",
+  "total_cost_usd": 0.00253118,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4522,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2414,
+    "output_tokens_details": {
+      "thinking_tokens": 1844
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4522,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2414,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4522,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4522
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements get DataView.prototype.byteOffset in order against the spec: RequireInternalSlot via require_data_view with `?` propagation (step 2), IsViewOutOfBounds check throwing a TypeError (step 5), then returning the stored byte offset as a Number (steps 6-7). No test-specific branches, no swallowed errors, no fabricated values. Step 4 (MakeDataViewWithBufferWitnessRecord) has no explicit call, but its only operations (IsDetachedBuffer, ArrayBufferByteLength) are internal and unobservable from JS, and the is_view_out_of_bounds helper receives the view data directly, so I do not count it as a skipped observable step. The helpers are imported from crate::support::typed_array, which is outside the diff; I did not verify their bodies, but the build passes and the gate reports 16 new test262 passes with no regressions. Minor style issue only: the original stub comment block for steps 1-7 is kept above the code and the step comments are repeated below it, which is cosmetic and not a spec defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements get DataView.prototype.byteOffset in order against the spec: RequireInternalSlot via require_data_view with `?` propagation (step 2), IsViewOutOfBounds check throwing a TypeError (step 5), then returning the stored byte offset as a Number (steps 6-7). No test-specific branches, no swallowed errors, no fabricated values. Step 4 (MakeDataViewWithBufferWitnessRecord) has no explicit call, but its only operations (IsDetachedBuffer, ArrayBufferByteLength) are internal and unobservable from JS, and the is_view_out_of_bounds helper receives the view data directly, so I do not count it as a skipped observable step. The helpers are imported from crate::support::typed_array, which is outside the diff; I did not verify their bodies, but the build passes and the gate reports 16 new test262 passes with no regressions. Minor style issue only: the original stub comment block for steps 1-7 is kept above the code and the step comments are repeated below it, which is cosmetic and not a spec defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11467,
+  "type": "result",
+  "duration_ms": 13486,
+  "uuid": "142de61d-b880-4093-bb2e-cb847952968b",
+  "ttft_stream_ms": 3200,
+  "time_to_request_ms": 1779,
+  "time_to_request_phases_ms": {
+    "other": 158,
+    "system_prompt": 544,
+    "resume_other": 1,
+    "process_user_input": 37,
+    "input_attachments": 648,
+    "input_hooks": 19,
+    "tool_pool_refresh": 9,
+    "init_message": 29,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 150,
+    "autocompact": 10,
+    "query_setup": 18,
+    "model_gates": 20,
+    "tool_schema_build": 28,
+    "message_normalization": 20,
+    "client_creation": 25,
+    "request_build": 50
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 432,
+  "time_to_request_cpu_ms": 367,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 927,
+  "process_wall_ms_turn": 13485,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 609,
+    "cpu_ms": 68,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3226,
+  "time_to_request_from_spawn_ms": 23159152,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002614637.067,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.14,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

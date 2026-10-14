@@ -1,0 +1,39 @@
+diff --git a/crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs b/crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs
+index 46bdbec..d49572d 100644
+--- a/crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs
++++ b/crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs
+@@ -4,20 +4,28 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use kahvi_core::object::typed_array::{array_buffer_data, is_fixed_length_array_buffer};
++
+ /// get ArrayBuffer.prototype.resizable
+ pub(crate) fn prototype_get_resizable(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // `ArrayBuffer.prototype.resizable` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
+-    //
+     // 1. Let _obj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferData]]).
++    let obj = match this {
++        Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
++        _ => return Err(agent.throw_type_error("not an ArrayBuffer")),
++    };
+     // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
++    // The engine has no Shared Data Block representation: an object with
++    // [[ArrayBufferData]] is never shared, so this check is always *false*.
+     // 4. If IsFixedLengthArrayBuffer(_obj_) is *false*, return *true*.
++    if !is_fixed_length_array_buffer(agent, obj) {
++        return Ok(Value::Boolean(true));
++    }
+     // 5. Return *false*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get ArrayBuffer.prototype.resizable"))
++    Ok(Value::Boolean(false))
+ }
