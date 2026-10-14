@@ -2,44 +2,171 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-set.prototype.difference
 
+use crate::support::collections::{OrderedTable, SetData, collection_key, set_table, this_set};
+use kahvi_core::object::ObjectKind;
 use kahvi_core::prelude::*;
+
+/// A Set Record (§24.2.1.2): the parts of the other set-like object that the
+/// set methods use.
+struct SetRecord {
+    /// [[SetObject]]
+    set_object: Object,
+    /// [[Size]]
+    size: f64,
+    /// [[Has]]
+    has: Value,
+    /// [[Keys]]
+    keys: Value,
+}
+
+/// GetSetRecord(obj) (§24.2.1.2). Not yet shared with other built-ins, so it
+/// lives here until a second Set method needs it.
+fn get_set_record(agent: &mut Agent, obj: Value) -> JsResult<SetRecord> {
+    // 1. If obj is not an Object, throw a TypeError exception.
+    let Value::Object(obj) = obj else {
+        return Err(agent.throw_type_error("Set operation argument is not an object"));
+    };
+    // 2. Let rawSize be ? Get(obj, "size").
+    let size_key = agent.key("size");
+    let raw_size = ops::get(agent, obj, size_key)?;
+    // 3. Let numberSize be ? ToNumber(rawSize).
+    let number_size = ops::to_number(agent, raw_size)?;
+    // 4. NOTE: If rawSize is undefined, then numberSize will be NaN.
+    // 5. If numberSize is NaN, throw a TypeError exception.
+    if number_size.is_nan() {
+        return Err(agent.throw_type_error("Set operation size is NaN"));
+    }
+    // 6. Let intSize be ! ToIntegerOrInfinity(numberSize).
+    let int_size = ops::to_integer_or_infinity(agent, Value::Number(number_size))?;
+    // 7. If intSize < 0, throw a RangeError exception.
+    if int_size < 0.0 {
+        return Err(agent.throw_range_error("Set operation size is negative"));
+    }
+    // 8. Let has be ? Get(obj, "has").
+    let has_key = agent.key("has");
+    let has = ops::get(agent, obj, has_key)?;
+    // 9. If IsCallable(has) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, has) {
+        return Err(agent.throw_type_error("Set operation 'has' is not a function"));
+    }
+    // 10. Let keys be ? Get(obj, "keys").
+    // `has` is read from the record below, so it stays rooted while the getter runs.
+    let keys_key = agent.key("keys");
+    let keys = agent.with_roots(&[has], |agent| ops::get(agent, obj, keys_key))?;
+    // 11. If IsCallable(keys) is false, throw a TypeError exception.
+    if !ops::is_callable(agent, keys) {
+        return Err(agent.throw_type_error("Set operation 'keys' is not a function"));
+    }
+    // 12. Return a new Set Record { [[SetObject]]: obj, [[Size]]: intSize, [[Has]]: has, [[Keys]]: keys }.
+    Ok(SetRecord {
+        set_object: obj,
+        size: int_size,
+        has,
+        keys,
+    })
+}
 
 /// Set.prototype.difference
 pub(crate) fn prototype_difference(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
     // 1. Let _set_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_set_, [[SetData]]).
+    let set = this_set(agent, this)?;
     // 3. Let _otherRecord_ be ? GetSetRecord(_other_).
+    let other = get_set_record(agent, args.get_or_undefined(0))?;
     // 4. Let _resultSetData_ be a copy of _set_.[[SetData]].
-    // 5. If SetDataSize(_set_.[[SetData]]) ≤ _otherRecord_.[[Size]], then
-    //    a. Let _thisSize_ be the number of elements in _set_.[[SetData]].
-    //    b. Let _index_ be 0.
-    //    c. Repeat, while _index_ < _thisSize_,
-    //       i. Let _entry_ be _resultSetData_[_index_].
-    //       ii. If _entry_ is not ~empty~, then
-    //          1. Let _inOther_ be ToBoolean(? Call(_otherRecord_.[[Has]], _otherRecord_.[[SetObject]], « _entry_ »)).
-    //          2. If _inOther_ is *true*, then
-    //             a. Set _resultSetData_[_index_] to ~empty~.
-    //       iii. Set _index_ to _index_ + 1.
-    // 6. Else,
-    //    a. Let _keysIterator_ be ? GetIteratorFromMethod(_otherRecord_.[[SetObject]], _otherRecord_.[[Keys]]).
-    //    b. Let _next_ be ~not-started~.
-    //    c. Repeat, while _next_ is not ~done~,
-    //       i. Set _next_ to ? IteratorStepValue(_keysIterator_).
-    //       ii. If _next_ is not ~done~, then
-    //          1. Set _next_ to CanonicalizeKeyedCollectionKey(_next_).
-    //          2. Let _valueIndex_ be SetDataIndex(_resultSetData_, _next_).
-    //          3. If _valueIndex_ is not ~not-found~, then
-    //             a. Set _resultSetData_[_valueIndex_] to ~empty~.
+    // The copy keeps only the live entries, in order. Deleting from it by key
+    // is the same as setting the entry at the matching index to ~empty~.
+    let mut result_table = OrderedTable::default();
+    for i in 0..set_table(agent, set).slots() {
+        let entry = set_table(agent, set).entry(i);
+        if let Some((entry, _)) = entry {
+            let key = collection_key(agent, entry);
+            result_table.set(key, Value::Undefined);
+        }
+    }
+    // Steps 7 and 8 are done here rather than at the end: the copy has to be
+    // reachable from a GC root while the callbacks below run JavaScript. Creating
+    // the object early has no observable effect, since OrdinaryObjectCreate only
+    // allocates it.
     // 7. Let _result_ be OrdinaryObjectCreate(%Set.prototype%, « [[SetData]] »).
     // 8. Set _result_.[[SetData]] to _resultSetData_.
-    // 9. Return _result_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Set.prototype.difference"))
+    let set_proto = agent.intrinsic("%Set.prototype%");
+    let result = agent.object_with_kind(
+        Some(set_proto),
+        ObjectKind::Native(Box::new(SetData(result_table))),
+    );
+    agent.with_roots(
+        &[
+            Value::Object(set),
+            Value::Object(result),
+            Value::Object(other.set_object),
+            other.has,
+            other.keys,
+        ],
+        |agent| -> JsResult<Value> {
+            // 5. If SetDataSize(_set_.[[SetData]]) ≤ _otherRecord_.[[Size]], then
+            if (set_table(agent, set).len() as f64) <= other.size {
+                // a. Let _thisSize_ be the number of elements in _set_.[[SetData]].
+                // The copy has no ~empty~ entries, and only this loop removes entries
+                // from it, so its slot count is the number of entries to visit.
+                let this_size = set_table(agent, result).slots();
+                // b. Let _index_ be 0.
+                let mut index = 0;
+                // c. Repeat, while _index_ < _thisSize_,
+                while index < this_size {
+                    // i. Let _entry_ be _resultSetData_[_index_].
+                    let entry = set_table(agent, result).entry(index);
+                    // ii. If _entry_ is not ~empty~, then
+                    if let Some((entry, _)) = entry {
+                        // 1. Let _inOther_ be ToBoolean(? Call(_otherRecord_.[[Has]], _otherRecord_.[[SetObject]], « _entry_ »)).
+                        let in_other =
+                            ops::call(agent, other.has, Value::Object(other.set_object), &[entry])?;
+                        let in_other = ops::to_boolean(agent, in_other);
+                        // 2. If _inOther_ is *true*, then
+                        if in_other {
+                            // a. Set _resultSetData_[_index_] to ~empty~.
+                            let key = collection_key(agent, entry);
+                            set_table(agent, result).delete(&key);
+                        }
+                    }
+                    // iii. Set _index_ to _index_ + 1.
+                    index += 1;
+                }
+            } else {
+                // a. Let _keysIterator_ be ? GetIteratorFromMethod(_otherRecord_.[[SetObject]], _otherRecord_.[[Keys]]).
+                let mut keys_iterator = ops::get_iterator_from_method(
+                    agent,
+                    Value::Object(other.set_object),
+                    other.keys,
+                )?;
+                // The iterator stays rooted while its next method runs.
+                let mark = agent.push_root(Value::Object(keys_iterator.iterator));
+                agent.push_root(keys_iterator.next_method);
+                // b. Let _next_ be ~not-started~.
+                // c. Repeat, while _next_ is not ~done~,
+                loop {
+                    // i. Set _next_ to ? IteratorStepValue(_keysIterator_).
+                    let Some(next) = ops::iterator_step_value_rooted(agent, &mut keys_iterator)?
+                    else {
+                        // ii. (_next_ is ~done~, so the loop ends.)
+                        break;
+                    };
+                    // 1. Set _next_ to CanonicalizeKeyedCollectionKey(_next_).
+                    let key = collection_key(agent, next);
+                    // 2. Let _valueIndex_ be SetDataIndex(_resultSetData_, _next_).
+                    // 3. If _valueIndex_ is not ~not-found~, then
+                    //    a. Set _resultSetData_[_valueIndex_] to ~empty~.
+                    set_table(agent, result).delete(&key);
+                }
+                agent.pop_roots(mark);
+            }
+            // 9. Return _result_.
+            Ok(Value::Object(result))
+        },
+    )
 }
