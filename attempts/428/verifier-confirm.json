@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5807,
+  "stop_reason": "tool_use",
+  "session_id": "d8219944-2c41-4353-ac47-4b8634f5cb8a",
+  "total_cost_usd": 0.0202362,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3759,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 453,
+    "output_tokens_details": {
+      "thinking_tokens": 91
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3759,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 453,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3759,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3759
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.atan follows the spec steps in order. It uses `?` on `ops::to_number`, and returns NaN, +0 and -0 unchanged (`n == 0.0` is true for both zeros). It returns \u00b1\u03c0/2 for \u00b1\u221e and `f64::atan` otherwise. Each step has its spec comment above its code. Only the in-scope file changed. The gate report shows build and clippy clean, with 6 new passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.atan follows the spec steps in order. It uses `?` on `ops::to_number`, and returns NaN, +0 and -0 unchanged (`n == 0.0` is true for both zeros). It returns \u00b1\u03c0/2 for \u00b1\u221e and `f64::atan` otherwise. Each step has its spec comment above its code. Only the in-scope file changed. The gate report shows build and clippy clean, with 6 new passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3843,
+  "type": "result",
+  "duration_ms": 5745,
+  "uuid": "7dd33572-c2f5-489b-b25a-65bde7b5697c",
+  "ttft_stream_ms": 2693,
+  "time_to_request_ms": 569,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 415,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 68,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 1,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 146,
+  "time_to_request_cpu_ms": 392,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 680,
+  "process_wall_ms_turn": 5744,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 59,
+    "cpu_ms": 107,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2694,
+  "time_to_request_from_spawn_ms": 26084377,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005544446.7637,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.48,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

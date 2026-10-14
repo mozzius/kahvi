@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-acosh",
+  "base": "f9cdf181921d74ecd3e6adf3871659acf20c7de9",
+  "head": "c359ea77b3e749daeeffb6f0e72f80eb675cbfd4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/acosh.rs",
+      "added": 18,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

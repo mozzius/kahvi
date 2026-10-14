@@ -1,0 +1,142 @@
+{
+  "duration_api_ms": 13714,
+  "stop_reason": "tool_use",
+  "session_id": "1bb7382e-697d-44eb-b156-70e36954f7a0",
+  "total_cost_usd": 0.00313258,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6040,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 2512,
+    "output_tokens_details": {
+      "thinking_tokens": 1670
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6040,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2512,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 6040,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6040
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.setUTCSeconds following the spec steps in order. Step 2 (brand check) runs before the time value is read, and ToNumber(second) runs before ToNumber(millisecond). NaN tv returns NaN without writing the slot. Missing millisecond falls back to MillisecondFromTime(tv). MakeDate/MakeTime/TimeClip are applied in spec order, and the value is stored and returned. No special-cased inputs, no made-up values, no swallowed errors, and no new Rust tests. The only blemish is that the spec's length/NOTE comment lines were dropped from the stub. These are not steps, so this is cosmetic. The date:: helpers (this_time_value, set_time_value, make_time, etc.) live outside this diff and were not reviewed here.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/date/prototype_set_utc_seconds.rs\",\"question\":\"unrelated_changes\",\"issue\":\"Minor: the stub's trailing spec comments (the '\\\"length\\\" property is 2' line and the NOTE about getUTCMilliseconds) were deleted. They are not algorithm steps, so this does not affect behaviour, but the stub was meant to be kept as spec comments. Restoring them would be tidier.\"}],\"notes_for_next_attempt\":\"The implementation looks spec-faithful and can be merged as is. Optionally restore the deleted '\\\"length\\\" property' and NOTE comment lines at the bottom of the function so the stub's spec text stays intact. The date:: helpers used here (this_time_value, set_time_value, make_date, make_time, time_clip, day, hour_from_time, min_from_time, ms_from_time) are defined outside this diff and were not reviewed. Confirm that this_time_value performs RequireInternalSlot with a TypeError, and that args.get(1) reflects the real argument count (not padded to length), since presence of millisecond depends on it.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.setUTCSeconds following the spec steps in order. Step 2 (brand check) runs before the time value is read, and ToNumber(second) runs before ToNumber(millisecond). NaN tv returns NaN without writing the slot. Missing millisecond falls back to MillisecondFromTime(tv). MakeDate/MakeTime/TimeClip are applied in spec order, and the value is stored and returned. No special-cased inputs, no made-up values, no swallowed errors, and no new Rust tests. The only blemish is that the spec's length/NOTE comment lines were dropped from the stub. These are not steps, so this is cosmetic. The date:: helpers (this_time_value, set_time_value, make_time, etc.) live outside this diff and were not reviewed here.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/date/prototype_set_utc_seconds.rs",
+        "question": "unrelated_changes",
+        "issue": "Minor: the stub's trailing spec comments (the '\"length\" property is 2' line and the NOTE about getUTCMilliseconds) were deleted. They are not algorithm steps, so this does not affect behaviour, but the stub was meant to be kept as spec comments. Restoring them would be tidier."
+      }
+    ],
+    "notes_for_next_attempt": "The implementation looks spec-faithful and can be merged as is. Optionally restore the deleted '\"length\" property' and NOTE comment lines at the bottom of the function so the stub's spec text stays intact. The date:: helpers used here (this_time_value, set_time_value, make_date, make_time, time_clip, day, hour_from_time, min_from_time, ms_from_time) are defined outside this diff and were not reviewed. Confirm that this_time_value performs RequireInternalSlot with a TypeError, and that args.get(1) reflects the real argument count (not padded to length), since presence of millisecond depends on it."
+  },
+  "ttft_ms": 10211,
+  "type": "result",
+  "duration_ms": 13527,
+  "uuid": "b2704e96-4821-4650-9d96-6bdfd96f9c31",
+  "ttft_stream_ms": 2463,
+  "time_to_request_ms": 1548,
+  "time_to_request_phases_ms": {
+    "other": 139,
+    "system_prompt": 948,
+    "resume_other": 0,
+    "process_user_input": 43,
+    "input_attachments": 148,
+    "input_hooks": 37,
+    "tool_pool_refresh": 3,
+    "init_message": 44,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 146,
+    "autocompact": 2,
+    "query_setup": 10,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 360,
+  "time_to_request_cpu_ms": 430,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 215,
+  "process_anon_mib_turn_start": 99,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 1264,
+  "process_wall_ms_turn": 13517,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 106,
+    "cpu_ms": 34,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2470,
+  "time_to_request_from_spawn_ms": 26072013,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005526858.774,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.47,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

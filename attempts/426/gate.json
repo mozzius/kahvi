@@ -1,0 +1,35 @@
+{
+  "ticket": "B-date-prototype-to-date-string",
+  "base": "a05c08af0f251957a254a0012d3ba5bee32a548c",
+  "head": "8292c76f5c9f544fe3d4ef50a6cd9a13f0ce47eb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_date_string.rs",
+      "added": 15,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 12,
+    "new_passes": 4,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Date/prototype/toDateString/negative-year.js:sloppy  Uncaught Test262Error: Date.prototype.toDateString serializes year -1 to \"-0001\" Expected SameValue(\u00ab\"-000001\"\u00bb, \u00ab\"-0001\"\u00bb) to be true",
+      "built-ins/Date/prototype/toDateString/negative-year.js:strict  Uncaught Test262Error: Date.prototype.toDateString serializes year -1 to \"-0001\" Expected SameValue(\u00ab\"-000001\"\u00bb, \u00ab\"-0001\"\u00bb) to be true"
+    ]
+  },
+  "decision": "pass"
+}
