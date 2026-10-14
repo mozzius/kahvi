@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8606,
+  "stop_reason": "tool_use",
+  "session_id": "03d0ac97-a703-4be8-ae23-6964e57995ec",
+  "total_cost_usd": 0.028825200000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4628,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 955,
+    "output_tokens_details": {
+      "thinking_tokens": 536
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4628,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 955,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4628,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4628
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec step by step. It calls ToObject, then ToPropertyKey, then loops over [[GetOwnProperty]] and [[GetPrototypeOf]], using `?` on every fallible call. It returns the getter for accessor descriptors, undefined for data descriptors, and undefined at the end of the prototype chain. The step comments are in place and there are no special cases or swallowed errors. The only edit besides the implementation is renaming `new_target` to `_new_target`, which is needed to avoid an unused-variable warning. The gate report shows 26 new passes, 0 regressions and clean clippy.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec step by step. It calls ToObject, then ToPropertyKey, then loops over [[GetOwnProperty]] and [[GetPrototypeOf]], using `?` on every fallible call. It returns the getter for accessor descriptors, undefined for data descriptors, and undefined at the end of the prototype chain. The step comments are in place and there are no special cases or swallowed errors. The only edit besides the implementation is renaming `new_target` to `_new_target`, which is needed to avoid an unused-variable warning. The gate report shows 26 new passes, 0 regressions and clean clippy.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6190,
+  "type": "result",
+  "duration_ms": 8311,
+  "uuid": "c7df4210-536d-489b-ad18-8df0f5b0f024",
+  "ttft_stream_ms": 1644,
+  "time_to_request_ms": 512,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 375,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 19,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 4,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 17,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 90,
+  "time_to_request_cpu_ms": 281,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 683,
+  "process_wall_ms_turn": 8310,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1645,
+  "time_to_request_from_spawn_ms": 21240635,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000700596.0964,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
