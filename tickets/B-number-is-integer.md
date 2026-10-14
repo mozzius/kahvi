@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/number/is_integer.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-number.isinteger"]
 target = ["built-ins/Number/isInteger/"]
-priority = 10
+priority = 12
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

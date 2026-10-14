@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/reg_exp/prototype_get_multiline.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/regexp.rs", "crates/kahvi-builtins/src/reg_exp/prototype_test.rs"]
 spec = ["sec-get-regexp.prototype.multiline"]
 target = ["built-ins/RegExp/prototype/multiline/"]
-priority = 30
+priority = 44
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.
