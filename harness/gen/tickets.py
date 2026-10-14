@@ -41,7 +41,7 @@ WORKER_GROUPS = {
     "string_iterator_prototype", "date", "reg_exp", "reg_exp_string_iterator_prototype",
     "array_buffer", "typed_array", "data_view",
     "iterator", "iterator_helper_prototype", "wrap_for_valid_iterator_prototype",
-    "disposable_stack", "async_disposable_stack",
+    "disposable_stack", "async_disposable_stack", "big_int", "uint8_array", "async_iterator_prototype",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
