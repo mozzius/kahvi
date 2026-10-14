@@ -1,0 +1,43 @@
+{
+  "ticket": "B-string-prototype-substring",
+  "base": "204730c08e4d7bf0957c39747a4a46e7b6187b38",
+  "head": "ec57617eb39548cfeee02970b56f127c764b4fba",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_substring.rs",
+      "added": 22,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 92,
+    "before": 16,
+    "after": 82,
+    "new_passes": 66,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 10,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T1.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T1.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T11.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T11.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T2.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T2.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T3.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T3.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T4.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/substring/S15.5.4.15_A3_T4.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

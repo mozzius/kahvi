@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 9272,
+  "stop_reason": "tool_use",
+  "session_id": "fe9d76d3-2ff5-46df-ba8d-d3070feb4983",
+  "total_cost_usd": 0.00251306,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5558,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1774,
+    "output_tokens_details": {
+      "thinking_tokens": 1166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5558,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1774,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 5558,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5558
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.substring in the stub's file and follows the spec steps in order. RequireObjectCoercible and ToString run before the length is read. ToIntegerOrInfinity is called on start, then on end only when end is not undefined, and each result is clamped to [0, length]. The swap into from/to is correct. Errors propagate with `?`, and there are no special-cased inputs, hardcoded values or catch-all fallbacks. The 10 remaining failures are the engine's not-implemented error from Array.prototype.toString, which is the honest outcome. I could not inspect the definitions of agent.str_len and agent.substring from the diff alone; the build passing suggests they exist. The only deviation is cosmetic: the spec NOTE comment was deleted, and the unused parameter was renamed to _new_target.\",\"problems\":[],\"notes_for_next_attempt\":\"Behaviour looks correct, so this diff is worth keeping. Minor nit: the stub's \\\"NOTE: This method is intentionally generic...\\\" comment was removed; restore it so the file matches the stub's spec text. Also confirm that agent.str_len returns UTF-16 code-unit length and that agent.substring slices by code units, since from/to are cast with `as usize`.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.substring in the stub's file and follows the spec steps in order. RequireObjectCoercible and ToString run before the length is read. ToIntegerOrInfinity is called on start, then on end only when end is not undefined, and each result is clamped to [0, length]. The swap into from/to is correct. Errors propagate with `?`, and there are no special-cased inputs, hardcoded values or catch-all fallbacks. The 10 remaining failures are the engine's not-implemented error from Array.prototype.toString, which is the honest outcome. I could not inspect the definitions of agent.str_len and agent.substring from the diff alone; the build passing suggests they exist. The only deviation is cosmetic: the spec NOTE comment was deleted, and the unused parameter was renamed to _new_target.",
+    "problems": [],
+    "notes_for_next_attempt": "Behaviour looks correct, so this diff is worth keeping. Minor nit: the stub's \"NOTE: This method is intentionally generic...\" comment was removed; restore it so the file matches the stub's spec text. Also confirm that agent.str_len returns UTF-16 code-unit length and that agent.substring slices by code units, since from/to are cast with `as usize`."
+  },
+  "ttft_ms": 6455,
+  "type": "result",
+  "duration_ms": 8934,
+  "uuid": "a824bcbc-506f-4b66-9684-19fa4ed7f8a8",
+  "ttft_stream_ms": 965,
+  "time_to_request_ms": 110,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 18,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 5,
+    "engine_pickup": 0,
+    "message_prep": 1,
+    "model_config_wait": 42,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 7,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 5,
+  "time_to_request_cpu_ms": 114,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 473,
+  "process_wall_ms_turn": 8934,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 965,
+  "time_to_request_from_spawn_ms": 3702117,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791951579413.2065,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.81,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
