@@ -6,3 +6,4 @@
 [16:01:00] B-reg-exp-prototype-get-has-indices: attempt 100 finished ($0.007, 10 turns)
 [16:01:36] B-typed-array-prototype-filter: attempt 101 finished ($0.014, 15 turns)
 [16:04:27] B-math-floor: verifier: accept Math.floor now follows all five spec steps in order. ToNumber is called with `?`. Non-finite values and ±0 are returned as-is, and the (0,1) range ret
+[16:04:30] B-reg-exp-prototype-get-has-indices: verifier: accept The diff implements get RegExp.prototype.hasIndices as the spec describes. The getter binds this to regexp, uses code unit 0x0064, and calls RegExpHas
