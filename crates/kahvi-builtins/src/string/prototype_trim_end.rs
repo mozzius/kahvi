@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use super::prototype_trim::{TrimWhere, trim_string};
+
 /// String.prototype.trimEnd
 pub(crate) fn prototype_trim_end(
     agent: &mut Agent,
@@ -19,6 +21,10 @@ pub(crate) fn prototype_trim_end(
     //
     // NOTE:
     // This method is intentionally generic; it does not require that its *this* value be a String object. Therefore, it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.trimEnd"))
+    let _ = (args, new_target);
+    // 1. Let _string_ be the *this* value.
+    let string = this;
+    // 2. Return ? TrimString(_string_, ~end~).
+    let trimmed = trim_string(agent, string, TrimWhere::End)?;
+    Ok(Value::String(trimmed))
 }
