@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 23741,
+  "stop_reason": "end_turn",
+  "session_id": "403e2114-905c-478a-9269-d92824b9fae4",
+  "total_cost_usd": 0.00932668,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 25607,
+    "cache_read_input_tokens": 136558,
+    "output_tokens": 5017,
+    "output_tokens_details": {
+      "thinking_tokens": 1115
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25607,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 629,
+        "cache_read_input_tokens": 31636,
+        "cache_creation_input_tokens": 1614,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1614
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_015v8PfyUe5ymTJSeqmqay7J",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/async_disposable_stack/prototype_adopt.rs <<'EOF'\n//! AsyncDisposableStack.prototype.adopt ( _value_, _onDisposeAsync_ )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-asyncdisposablestack.prototype.adopt\n\nuse kahvi_core::function::{builtin_slots, create_builtin_function};\nuse kahvi_core::ops::dispose::DisposeKind;\nuse kahvi_core::prelude::*;\n\nuse crate::support::disposable_stack::{\n    add_disposable_resource, async_disposable_stack, require_async_disposable_stack,\n};\n\n/// AsyncDisposableStack.prototype.adopt\npub(crate) fn prototype_adopt(\n    agent: &mut Agent,\n    this: Value,\n    args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    let value = args.get_or_undefined(0);\n    let on_dispose_async = args.get_or_undefined(1);\n    // 1. Let _asyncDisposableStack_ be the *this* value.\n    // 2. Perform ? RequireInternalSlot(_asyncDisposableStack_, [[AsyncDisposableState]]).\n    let o = require_async_disposable_stack(agent, this)?;\n    // 3. If _asyncDisposableStack_.[[AsyncDisposableState]] is ~disposed~, throw a *ReferenceError* exception.\n    if async_disposable_stack(agent, o).disposed {\n        return Err(agent.throw_reference_error(\"the AsyncDisposableStack is already disposed\"));\n    }\n    // 4. If IsCallable(_onDisposeAsync_) is *false*, throw a *TypeError* exception.\n    if !ops::is_callable(agent, on_dispose_async) {\n        return Err(agent.throw_type_error(\"AsyncDisposableStack.prototype.adopt requires a callable\"));\n    }\n    // 5. Let _closure_ be a new Abstract Closure with no parameters that captures _value_ and _onDisposeAsync_ and performs the following steps when called:\n    //    a. Return ? Call(_onDisposeAsync_, *undefined*, \u00ab _value_ \u00bb).\n    //\n    // The captured values are the built-in's slots: [_value_, _onDisposeAsync_].\n    // 6. Let _func_ be CreateBuiltinFunction(_closure_, 0, *\"\"*, \u00ab \u00bb).\n    let empty = PropertyKey::String(agent.string(\"\"));\n    let func = create_builtin_function(\n        agent,\n        adopt_closure,\n        0,\n        empty,\n        vec![value, on_dispose_async],\n        None,\n        None,\n        None,\n        false,\n    );\n    // 7. Perform ? AddDisposableResource(_asyncDisposableStack_.[[DisposableResourceStack]], *undefined*, ~async-dispose~, _func_).\n    add_disposable_resource(\n        agent,\n        o,\n        Value::Undefined,\n        DisposeKind::Async,\n        Some(Value::Object(func)),\n    )?;\n    // 8. Return _value_.\n    Ok(value)\n}\n\n/// The Abstract Closure of step 5, run as the function created in step 6.\nfn adopt_closure(\n    agent: &mut Agent,\n    _this: Value,\n    _args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    let f = agent.active_function().expect(\"a running built-in\");\n    let slots = builtin_slots(agent, f);\n    let (value, on_dispose_async) = match slots {\n        [value, on_dispose_async] => (*value, *on_dispose_async),\n        _ => unreachable!(\"an adopt closure without its captured values\"),\n    };\n    // a. Return ? Call(_onDisposeAsync_, *undefined*, \u00ab _value_ \u00bb).\n    ops::call(agent, on_dispose_async, Value::Undefined, &[value])\n}\nEOF\ncargo fmt -p kahvi-builtins 2>&1 | tail -3; cargo build -p kahvi-cli 2>&1 | grep -E \"^(error|warning)\" -A6 | head -60; ./t262 built-ins/AsyncDisposableStack/prototype/adopt/ 2>&1 | tail -15",
+        "description": "Write adopt implementation, format, build and run tests"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 7,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `AsyncDisposableStack.prototype.adopt` in its own file, following the spec steps with each step as a comment. I did not build or run the tests: Bash was denied in this session, so `cargo build`, `cargo fmt`, `cargo clippy` and `./t262 built-ins/AsyncDisposableStack/prototype/adopt/` have not been run, and the code is checked only by reading.\n\nThe closure in step 5 is a builtin created with `[value, onDisposeAsync]` as its slots, and it calls `onDisposeAsync` with `value`. It is registered through `add_disposable_resource` with `DisposeKind::Async`. No other files were touched, and no helpers were added to shared code.",
+  "ttft_ms": 2034,
+  "type": "result",
+  "duration_ms": 26199,
+  "uuid": "0ab7e17a-0648-4332-8706-6f9689d54af1",
+  "ttft_stream_ms": 1453,
+  "time_to_request_ms": 512,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 392,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 31,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 14,
+    "message_normalization": 5,
+    "client_creation": 6,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 67,
+  "time_to_request_cpu_ms": 286,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 2928,
+  "process_wall_ms_turn": 26198,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1454,
+  "time_to_request_from_spawn_ms": 23409766,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002869844.3428,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.16,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6497,
+  "stop_reason": "tool_use",
+  "session_id": "28cd5b31-85d1-4010-b021-925273757196",
+  "total_cost_usd": 0.024764,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4387,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 648,
+    "output_tokens_details": {
+      "thinking_tokens": 249
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4387,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 648,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4387,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4387
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order. It checks the receiver with this_weak_map (RequireInternalSlot), returns undefined when CanBeHeldWeakly is false, then looks the key up in the weak map table and returns undefined if it is absent. The helpers it uses were already in the shared collections support module, and the diff touches only the one file in scope. The gate report shows 18 new passes with no regressions. The code comment says a SameValueZero lookup equals SameValue here. That holds, because the only keys that reach the lookup are objects and non-registered symbols.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order. It checks the receiver with this_weak_map (RequireInternalSlot), returns undefined when CanBeHeldWeakly is false, then looks the key up in the weak map table and returns undefined if it is absent. The helpers it uses were already in the shared collections support module, and the diff touches only the one file in scope. The gate report shows 18 new passes with no regressions. The code comment says a SameValueZero lookup equals SameValue here. That holds, because the only keys that reach the lookup are objects and non-registered symbols.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4240,
+  "type": "result",
+  "duration_ms": 6510,
+  "uuid": "c0e7f346-f35e-47c3-be9e-e4f1ef9666f8",
+  "ttft_stream_ms": 2038,
+  "time_to_request_ms": 1012,
+  "time_to_request_phases_ms": {
+    "other": 62,
+    "system_prompt": 531,
+    "resume_other": 0,
+    "process_user_input": 30,
+    "input_attachments": 81,
+    "input_hooks": 16,
+    "tool_pool_refresh": 4,
+    "init_message": 27,
+    "engine_pickup": 4,
+    "message_prep": 9,
+    "model_config_wait": 178,
+    "autocompact": 6,
+    "query_setup": 4,
+    "model_gates": 5,
+    "tool_schema_build": 7,
+    "message_normalization": 9,
+    "client_creation": 10,
+    "request_build": 29
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 293,
+  "time_to_request_cpu_ms": 329,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 729,
+  "process_wall_ms_turn": 6505,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 47,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2040,
+  "time_to_request_from_spawn_ms": 23486155,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002942975.1833,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.16,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

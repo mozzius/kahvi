@@ -1,0 +1,45 @@
+{
+  "ticket": "B-async-disposable-stack-prototype-adopt",
+  "base": "aa733c3077aa27faefeff355fad41b7b15af75ff",
+  "head": "a3c218ff41b37080e38b7adbc840f473cb5c631e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/async_disposable_stack/prototype_adopt.rs",
+      "added": 56,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/async_disposable_stack/prototype_adopt.rs",
+      "line": 71,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let f = agent.active_function().expect(\"a running built-in\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/async_disposable_stack/prototype_adopt.rs",
+      "line": 74,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "_ => unreachable!(\"an adopt closure without its captured values\"),"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 8,
+    "after": 24,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
