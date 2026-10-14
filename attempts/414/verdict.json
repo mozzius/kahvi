@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "Implements Number.isFinite in crates/kahvi-builtins/src/number/is_finite.rs. Step 1 checks for a Number value via `if let Value::Number(number) = args.get_or_undefined(0)` and returns true when `number.is_finite()`. Step 2 returns false otherwise. Non-Number arguments (including BigInt and strings) fall through to false, which matches the spec. The step comments are kept above the code, the unused parameters are underscored, and nothing is special-cased or swallowed. No observable operations are required by the spec, so none are skipped. Gate reports build and clippy ok, 8 new test262 passes and 0 regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found. The change matches the spec: the Number check, the finite test, and the false fallback. Merge as is.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
