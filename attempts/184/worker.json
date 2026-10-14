@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 15796,
+  "stop_reason": "end_turn",
+  "session_id": "a381cd55-a876-44dd-bb11-f1af9abb6c94",
+  "total_cost_usd": 0.005925359999999999,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 14751,
+    "cache_read_input_tokens": 138716,
+    "output_tokens": 2624,
+    "output_tokens_details": {
+      "thinking_tokens": 258
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14751,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 328,
+        "cache_read_input_tokens": 22147,
+        "cache_creation_input_tokens": 247,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 247
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01NcgvapjdJ1s8vZ5eoES5MU",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2021 crates/kahvi-builtins/src/data_view/prototype_set_uint16.rs",
+        "description": "Check formatting of the edited file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.setUint16` in `crates/kahvi-builtins/src/data_view/prototype_set_uint16.rs`, mirroring the finished `setFloat32` sibling. It calls the existing `set_view_value` helper with `ElementType::Uint16` and returns `undefined`. The build, clippy and `cargo fmt --check` are clean.\n\nThe target tests do not all pass yet: `./t262 built-ins/DataView/prototype/setUint16/` gives 32 pass and 14 fail. Every failure is `not implemented: DataView.prototype.getUint16`, because the tests use `getUint16` to read back what was written and that stub is in another file, which I was not allowed to touch.\n\nBLOCKED: DataView.prototype.getUint16 (crates/kahvi-builtins/src/data_view/prototype_get_uint16.rs) is still a not-implemented stub, so the 14 setUint16 tests that read back values cannot pass.",
+  "ttft_ms": 1823,
+  "type": "result",
+  "duration_ms": 33548,
+  "uuid": "9030d474-79e0-4456-9800-157f08fa4466",
+  "ttft_stream_ms": 1639,
+  "time_to_request_ms": 860,
+  "time_to_request_phases_ms": {
+    "other": 77,
+    "system_prompt": 557,
+    "resume_other": 3,
+    "process_user_input": 13,
+    "input_attachments": 32,
+    "input_hooks": 14,
+    "tool_pool_refresh": 10,
+    "init_message": 21,
+    "engine_pickup": 10,
+    "message_prep": 3,
+    "model_config_wait": 53,
+    "autocompact": 8,
+    "query_setup": 1,
+    "model_gates": 3,
+    "tool_schema_build": 18,
+    "message_normalization": 7,
+    "client_creation": 11,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 240,
+  "time_to_request_cpu_ms": 366,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3019,
+  "process_wall_ms_turn": 33547,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1640,
+  "time_to_request_from_spawn_ms": 19769965,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999228990.9546,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

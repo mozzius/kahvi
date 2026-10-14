@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19867,
+  "stop_reason": "end_turn",
+  "session_id": "3a066900-3821-414d-a5ca-d722bfc86932",
+  "total_cost_usd": 0.00662114,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 17195,
+    "cache_read_input_tokens": 148904,
+    "output_tokens": 2835,
+    "output_tokens_details": {
+      "thinking_tokens": 436
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17195,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 301,
+        "cache_read_input_tokens": 24440,
+        "cache_creation_input_tokens": 398,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 398
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.setInt16` in `crates/kahvi-builtins/src/data_view/prototype_set_int16.rs` by calling the existing `set_view_value` helper with `ElementType::Int16`, and it builds, passes clippy and is rustfmt-clean. The `./t262 built-ins/DataView/prototype/setInt16/` run gives 32 passing and 14 failing; all 14 fail with \"not implemented: DataView.prototype.getInt16\", because the tests read values back through the `getInt16` stub, which is outside this ticket's scope. The \"Done when\" condition is therefore not met until `getInt16` is implemented.\n\nBLOCKED: DataView.prototype.getInt16 (crates/kahvi-builtins/src/data_view/prototype_get_int16.rs) is still a not-implemented stub, which the setInt16 tests need to read back written values.",
+  "ttft_ms": 1877,
+  "type": "result",
+  "duration_ms": 37224,
+  "uuid": "2b92d7cc-a876-4efe-8f1e-a08ca2e06355",
+  "ttft_stream_ms": 1624,
+  "time_to_request_ms": 653,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 348,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 15,
+    "input_hooks": 8,
+    "tool_pool_refresh": 4,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 203,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 135,
+  "time_to_request_cpu_ms": 467,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3359,
+  "process_wall_ms_turn": 37224,
+  "input_attachments_detail": {
+    "slowest_producer": "environment",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1625,
+  "time_to_request_from_spawn_ms": 19759735,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999219530.9712,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

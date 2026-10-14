@@ -1,0 +1,47 @@
+{
+  "ticket": "B-data-view-prototype-set-float64",
+  "base": "aa404e6bd739dc5bbeb6c34762e400a15d6d83e9",
+  "head": "9dd82ec30651751513b06f813bdefa5219fca654",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_set_float64.rs",
+      "added": 19,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 6,
+    "after": 32,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DataView/prototype/setFloat64/index-is-out-of-range.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/index-is-out-of-range.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/negative-byteoffset-throws.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/negative-byteoffset-throws.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/no-value-arg.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/no-value-arg.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/set-values-little-endian-order.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/set-values-little-endian-order.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/set-values-return-undefined.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/set-values-return-undefined.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/to-boolean-littleendian.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/to-boolean-littleendian.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/toindex-byteoffset.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat64",
+      "built-ins/DataView/prototype/setFloat64/toindex-byteoffset.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat64"
+    ]
+  },
+  "decision": "pass"
+}
