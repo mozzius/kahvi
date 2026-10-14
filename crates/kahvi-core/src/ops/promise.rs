@@ -312,7 +312,8 @@ pub(crate) fn run_job(agent: &mut Agent, job: Job) -> JsResult<()> {
     let realm = match job {
         Job::PromiseReaction { realm, .. }
         | Job::PromiseResolveThenable { realm, .. }
-        | Job::FinalizationRegistryCleanup { realm, .. } => realm,
+        | Job::FinalizationRegistryCleanup { realm, .. }
+        | Job::Callback { realm, .. } => realm,
     };
     agent.contexts.push(ExecutionContext {
         function: None,
@@ -332,6 +333,10 @@ pub(crate) fn run_job(agent: &mut Agent, job: Job) -> JsResult<()> {
         Job::FinalizationRegistryCleanup { registry, .. } => {
             // 1-2. Errors from the callback are reported to the host.
             crate::object::weak::cleanup_finalization_registry(agent, registry)
+        }
+        // The job's data is a root while it runs (docs/GC.md).
+        Job::Callback { callback, .. } => {
+            call_rooted(agent, callback, Value::Undefined, &[]).map(|_| ())
         }
     };
     agent.contexts.pop();

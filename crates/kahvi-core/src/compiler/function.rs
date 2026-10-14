@@ -80,7 +80,27 @@ pub(super) fn compile_function(
         FunctionBody::Expr(_) => &empty,
     };
     c.collect_declarations(body);
+    if !f.strict {
+        let mut params: Vec<&str> = Vec::new();
+        for p in &f.params {
+            params.extend(early::bound_names(&p.target));
+        }
+        if let Some(r) = &f.rest {
+            params.extend(early::bound_names(r));
+        }
+        c.collect_annex_b_functions(body, &params);
+    }
 
+    // A direct eval can add bindings to this function's environments: no
+    // binding caches in it or in the functions nested in it.
+    if f.has_direct_eval {
+        c.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes += 1;
+    }
     // FunctionDeclarationInstantiation steps 24-28: bind the parameters.
     c.compile_parameters(f);
     // Steps 29-36.
@@ -112,6 +132,14 @@ pub(super) fn compile_function(
             c.emit(Op::Return);
         }
     }
+    if f.has_direct_eval {
+        c.agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes -= 1;
+    }
     c.finish()
 }
 
@@ -141,6 +169,9 @@ impl Compiler<'_> {
     /// Script and eval code: declarations, then the statements.
     pub(super) fn compile_toplevel(&mut self, body: &[Stmt]) {
         self.collect_declarations(body);
+        if !self.code.strict {
+            self.collect_annex_b_functions(body, &[]);
+        }
         self.emit(Op::Undefined);
         self.emit(Op::SetCompletion);
         self.compile_statements(body);
@@ -259,6 +290,19 @@ impl Compiler<'_> {
         self.code.decls.lexical = lexical;
     }
 
+    /// Annex B.3.2: the block-level function declarations of a non-strict
+    /// body that may also get a var binding.
+    fn collect_annex_b_functions(&mut self, body: &[Stmt], params: &[&str]) {
+        for f in early::annex_b_function_candidates(body, params) {
+            self.annex_b.push(std::rc::Rc::as_ptr(f));
+            let name = f.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
+            let name = self.string(name);
+            if !self.code.decls.annex_b_functions.contains(&name) {
+                self.code.decls.annex_b_functions.push(name);
+            }
+        }
+    }
+
     /// Top-level lexical declarations (let/const/class) as (name, is_const).
     fn lexical_declarations(&mut self, body: &[Stmt]) -> Vec<(JsString, bool)> {
         let mut out = Vec::new();
@@ -307,7 +351,11 @@ impl Compiler<'_> {
         if lexical.is_empty() && functions.is_empty() {
             return None;
         }
-        self.code.scopes.push(ScopeInfo { lexical, functions });
+        self.code.scopes.push(ScopeInfo {
+            lexical,
+            functions,
+            is_catch: false,
+        });
         Some((self.code.scopes.len() - 1) as u32)
     }
 

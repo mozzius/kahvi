@@ -1,0 +1,14 @@
+[package]
+name = "kahvi-runtime"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "kahvi-run"
+path = "src/main.rs"
+
+[dependencies]
+kahvi = { path = "../kahvi" }
+kahvi-core = { path = "../kahvi-core" }
+kahvi-builtins = { path = "../kahvi-builtins" }

@@ -7,8 +7,8 @@ Database. The version is pinned to what the pinned test262 expects.
 The tables cover what ECMAScript needs: identifier characters, the
 properties RegExp property escapes accept (spec tables
 table-nonbinary-unicode-properties, table-binary-unicode-properties and
-table-binary-unicode-properties-of-strings), simple case folding, and the
-unconditional full case mappings.
+table-binary-unicode-properties-of-strings), simple case folding, the
+unconditional full case mappings, and the normalization data (UAX #15).
 """
 
 import re
@@ -261,6 +261,48 @@ def main():
             items.append(f"(0x{cp:X}, [0x{v[0]:X}, 0x{v[1]:X}, 0x{v[2]:X}])")
         static(name, "&[(u32, [u32; 3])]",
                "&[\n" + "\n".join("    " + ", ".join(items[i : i + 3]) + "," for i in range(0, len(items), 3)) + "\n]")
+
+    # ---- Normalization (UAX #15): canonical combining classes, decomposition
+    # mappings (compatibility ones flagged) and the primary composites.
+    ccc, decomp = [], {}
+    for line in fetch("UnicodeData.txt").splitlines():
+        f = line.split(";")
+        cp = int(f[0], 16)
+        if int(f[3]):
+            ccc.append((cp, cp, int(f[3])))
+        if f[5]:
+            parts = f[5].split()
+            compat = parts[0].startswith("<")
+            decomp[cp] = (compat, [int(x, 16) for x in (parts[1:] if compat else parts)])
+    merged = []
+    for lo, hi, c in ccc:
+        if merged and merged[-1][1] + 1 == lo and merged[-1][2] == c:
+            merged[-1] = (merged[-1][0], hi, c)
+        else:
+            merged.append((lo, hi, c))
+    static("CANONICAL_COMBINING_CLASS", "&[(u32, u32, u8)]",
+           "&[\n" + "\n".join(f"    (0x{lo:X}, 0x{hi:X}, {c})," for lo, hi, c in merged) + "\n]")
+    flat, entries = [], []
+    for cp in sorted(decomp):
+        compat, cps = decomp[cp]
+        entries.append(f"(0x{cp:X}, {str(compat).lower()}, {len(flat)}, {len(cps)})")
+        flat.extend(cps)
+    static("DECOMPOSITION", "&[(u32, bool, u16, u8)]",
+           "&[\n" + "\n".join("    " + ", ".join(entries[i : i + 4]) + "," for i in range(0, len(entries), 4)) + "\n]")
+    static("DECOMPOSITION_DATA", "&[u32]",
+           "&[\n" + "\n".join("    " + ", ".join(f"0x{x:X}" for x in flat[i : i + 10]) + "," for i in range(0, len(flat), 10)) + "\n]")
+    excluded = set()
+    for f, _ in data_lines(fetch("DerivedNormalizationProps.txt")):
+        if len(f) >= 2 and f[1] == "Full_Composition_Exclusion":
+            lo, _, hi = f[0].partition("..")
+            excluded.update(range(int(lo, 16), int(hi or lo, 16) + 1))
+    composites = sorted(
+        (cps[0], cps[1], cp) for cp, (compat, cps) in decomp.items()
+        if not compat and len(cps) == 2 and cp not in excluded
+    )
+    items = [f"(0x{a:X}, 0x{b:X}, 0x{c:X})" for a, b, c in composites]
+    static("COMPOSITION", "&[(u32, u32, u32)]",
+           "&[\n" + "\n".join("    " + ", ".join(items[i : i + 4]) + "," for i in range(0, len(items), 4)) + "\n]")
 
     OUT.write_text("".join(out).rstrip() + "\n")
     print(f"wrote {OUT}", file=sys.stderr)

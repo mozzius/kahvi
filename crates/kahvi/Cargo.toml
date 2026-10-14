@@ -1,0 +1,9 @@
+[package]
+name = "kahvi"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+kahvi-core = { path = "../kahvi-core" }
+kahvi-builtins = { path = "../kahvi-builtins" }

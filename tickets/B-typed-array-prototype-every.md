@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/typed_array/prototype_every.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/typed_array.rs", "crates/kahvi-core/src/object/typed_array.rs", "crates/kahvi-builtins/src/typed_array/prototype_get_length.rs"]
 spec = ["sec-%typedarray%.prototype.every"]
 target = ["built-ins/TypedArray/prototype/every/"]
-priority = 8
+priority = 80
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

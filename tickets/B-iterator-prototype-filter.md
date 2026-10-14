@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/iterator/prototype_filter.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/iterator_helper.rs", "crates/kahvi-builtins/src/iterator/prototype_map.rs"]
 spec = ["sec-iterator.prototype.filter"]
 target = ["built-ins/Iterator/prototype/filter/"]
-priority = 34
+priority = 62
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

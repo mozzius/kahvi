@@ -45,6 +45,7 @@ impl Compiler<'_> {
         self.code.scopes.push(ScopeInfo {
             lexical,
             functions: Vec::new(),
+            is_catch: false,
         });
         let scope = (self.code.scopes.len() - 1) as u32;
         self.emit(Op::PushScope(scope));

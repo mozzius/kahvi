@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/object/prototype_get_proto.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-get-object.prototype.__proto__"]
 target = ["built-ins/Object/prototype/__proto__/"]
-priority = 6
+priority = 10
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

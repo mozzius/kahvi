@@ -86,7 +86,10 @@ impl Compiler<'_> {
         match e {
             Expr::Ident(id) => {
                 let name = self.string(&id.name);
-                self.emit(Op::GetName(name));
+                {
+                    let ic = self.name_cache();
+                    self.emit(Op::GetName(name, ic));
+                }
             }
             Expr::This(_) => {
                 self.emit(Op::This);
@@ -491,7 +494,10 @@ impl Compiler<'_> {
             Expr::Ident(id) => {
                 let name = self.string(&id.name);
                 self.position(id.span);
-                self.emit(Op::GetNameForCall(name));
+                {
+                    let ic = self.name_cache();
+                    self.emit(Op::GetNameForCall(name, ic));
+                }
             }
             Expr::Member {
                 object,
@@ -680,7 +686,10 @@ impl Compiler<'_> {
                 },
                 ObjectProp::Shorthand(id) => {
                     let name = self.string(&id.name);
-                    self.emit(Op::GetName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::GetName(name, ic));
+                    }
                     let k = self.agent.key_from_string(name);
                     self.emit(Op::DefineField(k));
                 }
@@ -769,7 +778,10 @@ impl Compiler<'_> {
             UnaryOp::Typeof => {
                 if let Expr::Ident(id) = arg.unparen() {
                     let name = self.string(&id.name);
-                    self.emit(Op::TypeofName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::TypeofName(name, ic));
+                    }
                 } else {
                     self.compile_expr(arg);
                     self.emit(Op::Typeof);
@@ -874,7 +886,10 @@ impl Compiler<'_> {
         match target.unparen() {
             Expr::Ident(id) => {
                 let name = self.string(&id.name);
-                self.emit(Op::ResolveName(name));
+                {
+                    let ic = self.name_cache();
+                    self.emit(Op::ResolveName(name, ic));
+                }
                 self.emit(Op::GetRef);
                 self.emit(Op::ToNumeric);
                 if !prefix {
@@ -987,7 +1002,10 @@ impl Compiler<'_> {
             AssignOp::Assign => match target {
                 Pattern::Ident(id) => {
                     let name = self.string(&id.name);
-                    self.emit(Op::ResolveName(name));
+                    {
+                        let ic = self.name_cache();
+                        self.emit(Op::ResolveName(name, ic));
+                    }
                     // NamedEvaluation only if IsIdentifierRef of LeftHandSideExpression.
                     if is_identifier_ref(id, span) {
                         self.compile_named_expr(value, target);
@@ -1009,7 +1027,10 @@ impl Compiler<'_> {
                 match target {
                     Pattern::Ident(id) => {
                         let name = self.string(&id.name);
-                        self.emit(Op::ResolveName(name));
+                        {
+                            let ic = self.name_cache();
+                            self.emit(Op::ResolveName(name, ic));
+                        }
                         self.emit(Op::GetRef);
                         self.compile_expr(value);
                         self.position(span);
@@ -1085,7 +1106,10 @@ impl Compiler<'_> {
                 match target {
                     Pattern::Ident(id) => {
                         let name = self.string(&id.name);
-                        self.emit(Op::ResolveName(name));
+                        {
+                            let ic = self.name_cache();
+                            self.emit(Op::ResolveName(name, ic));
+                        }
                         self.emit(Op::GetRef);
                         let skip = self.emit(jump(lop));
                         self.emit(Op::Pop);
