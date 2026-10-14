@@ -1,0 +1,32 @@
+{
+  "ticket": "B-weak-set-prototype-delete",
+  "base": "e2037d873d1f812fc1cdd8019d41182d98dbec4f",
+  "head": "13ec9b34f040533cf2c90db4f14bd83c63e202c6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_set/prototype_delete.rs",
+      "added": 19,
+      "removed": 16
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 8,
+    "after": 40,
+    "new_passes": 32,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

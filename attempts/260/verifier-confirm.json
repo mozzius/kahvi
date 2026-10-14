@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7133,
+  "stop_reason": "tool_use",
+  "session_id": "3c584a91-629e-4073-8b14-02bd778e16ac",
+  "total_cost_usd": 0.025893799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4733,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 619,
+    "output_tokens_details": {
+      "thinking_tokens": 206
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4733,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 619,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4733,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4733
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements WeakSet.prototype.delete in spec order. It calls shared helpers that already exist in support/collections: this_weak_set for RequireInternalSlot, can_be_held_weakly, collection_key, and the table's delete. `?` propagates, step 3 returns false for values that can't be held weakly, and the table delete result is returned as true or false. The diff touches only the one in-scope file. The gate report shows 32 new passes with 0 regressions and 0 not-implemented. I could not open the helper files, so I did not check their internals against the spec. The `_new_target` rename is harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements WeakSet.prototype.delete in spec order. It calls shared helpers that already exist in support/collections: this_weak_set for RequireInternalSlot, can_be_held_weakly, collection_key, and the table's delete. `?` propagates, step 3 returns false for values that can't be held weakly, and the table delete result is returned as true or false. The diff touches only the one in-scope file. The gate report shows 32 new passes with 0 regressions and 0 not-implemented. I could not open the helper files, so I did not check their internals against the spec. The `_new_target` rename is harmless.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4527,
+  "type": "result",
+  "duration_ms": 6847,
+  "uuid": "9375dbb0-1bde-4d77-ba17-33dc8c85b00c",
+  "ttft_stream_ms": 2076,
+  "time_to_request_ms": 600,
+  "time_to_request_phases_ms": {
+    "other": 49,
+    "system_prompt": 346,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 21,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 32,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 108,
+    "autocompact": 3,
+    "query_setup": 3,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 134,
+  "time_to_request_cpu_ms": 353,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 654,
+  "process_wall_ms_turn": 6846,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2078,
+  "time_to_request_from_spawn_ms": 21882004,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001341494.1917,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
