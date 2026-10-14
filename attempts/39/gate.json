@@ -1,0 +1,45 @@
+{
+  "ticket": "B-string-prototype-index-of",
+  "base": "c458a4c9de057f1061110dd34f3dfb4d24d7de1c",
+  "head": "261100d030ed1f5f1960e24c7c1bb1d9257ffc53",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_index_of.rs",
+      "added": 43,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 94,
+    "before": 18,
+    "after": 82,
+    "new_passes": 64,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 12,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/indexOf/position-tointeger-bigint.js:sloppy  Uncaught InternalError: not implemented: BigInt.prototype.valueOf",
+      "built-ins/String/prototype/indexOf/position-tointeger-bigint.js:strict  Uncaught InternalError: not implemented: BigInt.prototype.valueOf",
+      "built-ins/String/prototype/indexOf/position-tointeger-errors.js:sloppy  Uncaught InternalError: not implemented: Symbol.prototype[Symbol.toPrimitive]",
+      "built-ins/String/prototype/indexOf/position-tointeger-errors.js:strict  Uncaught InternalError: not implemented: Symbol.prototype[Symbol.toPrimitive]",
+      "built-ins/String/prototype/indexOf/position-tointeger.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/indexOf/position-tointeger.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/indexOf/searchstring-tostring-bigint.js:sloppy  Uncaught InternalError: not implemented: BigInt.prototype.toString",
+      "built-ins/String/prototype/indexOf/searchstring-tostring-bigint.js:strict  Uncaught InternalError: not implemented: BigInt.prototype.toString",
+      "built-ins/String/prototype/indexOf/searchstring-tostring-errors.js:sloppy  Uncaught InternalError: not implemented: Symbol.prototype[Symbol.toPrimitive]",
+      "built-ins/String/prototype/indexOf/searchstring-tostring-errors.js:strict  Uncaught InternalError: not implemented: Symbol.prototype[Symbol.toPrimitive]",
+      "built-ins/String/prototype/indexOf/searchstring-tostring.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toString",
+      "built-ins/String/prototype/indexOf/searchstring-tostring.js:strict  Uncaught InternalError: not implemented: Array.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

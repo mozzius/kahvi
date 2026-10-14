@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 11959,
+  "stop_reason": "tool_use",
+  "session_id": "b7aba1b2-d2e6-44c0-a347-3438a43a1796",
+  "total_cost_usd": 0.00316356,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6426,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2552,
+    "output_tokens_details": {
+      "thinking_tokens": 2025
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6426,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2552,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6426,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6426
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.indexOf step by step. this is passed through RequireObjectCoercible, then ToString(this), then ToString(searchString), then ToIntegerOrInfinity(position). These come in the spec's order, and every fallible call uses `?`. Length is clamped to [0, length]. A private StringIndexOf helper follows steps 1-5: the empty-search case, the empty-range case when searchLength > length, and the ascending scan with slice comparison. The not-found value maps to -1. Nothing is keyed on test inputs and no errors are swallowed. The 12 remaining failures come from other built-ins (BigInt, Symbol, Array.prototype.toString) that throw the engine's not-implemented error, which is honest. Minor observations only: the trailing spec NOTE about generic `this` was deleted from the stub, and the `new_target` parameter was renamed to `_new_target`. Neither changes behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.indexOf step by step. this is passed through RequireObjectCoercible, then ToString(this), then ToString(searchString), then ToIntegerOrInfinity(position). These come in the spec's order, and every fallible call uses `?`. Length is clamped to [0, length]. A private StringIndexOf helper follows steps 1-5: the empty-search case, the empty-range case when searchLength > length, and the ascending scan with slice comparison. The not-found value maps to -1. Nothing is keyed on test inputs and no errors are swallowed. The 12 remaining failures come from other built-ins (BigInt, Symbol, Array.prototype.toString) that throw the engine's not-implemented error, which is honest. Minor observations only: the trailing spec NOTE about generic `this` was deleted from the stub, and the `new_target` parameter was renamed to `_new_target`. Neither changes behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9562,
+  "type": "result",
+  "duration_ms": 11475,
+  "uuid": "bef49115-b660-475c-b09c-855b94fbf346",
+  "ttft_stream_ms": 820,
+  "time_to_request_ms": 110,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 25,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 1,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 6,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 98,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 821,
+  "time_to_request_from_spawn_ms": 20894784,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791939868790.4817,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.33,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.52,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
