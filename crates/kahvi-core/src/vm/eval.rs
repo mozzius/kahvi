@@ -47,6 +47,7 @@ pub(super) fn register_script(
         realm,
         source,
         name: name.to_string(),
+        module: None,
     });
     (agent.scripts.len() - 1) as u32
 }

@@ -111,7 +111,7 @@ pub enum Environment {
         outer: Option<EnvId>,
         function: Option<Box<FunctionEnvData>>,
         /// Module environments resolve imports through other modules' environments.
-        imports: crate::hash::FxHashMap<JsString, (EnvId, JsString)>,
+        imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
         is_module: bool,
     },
     /// Object environment records (`with` and the global object part).
@@ -249,10 +249,23 @@ impl EnvId {
         }
     }
 
-    fn import_of(self, agent: &Agent, name: JsString) -> Option<(EnvId, JsString)> {
+    fn import_of(self, agent: &Agent, name: JsString) -> Option<(u32, JsString)> {
         match agent.env(self) {
             Environment::Declarative { imports, .. } => imports.get(&name).copied(),
             _ => None,
+        }
+    }
+
+    /// CreateImportBinding(N, M, N2) (§9.1.1.5.5): N reads binding N2 of module M.
+    pub fn create_import_binding(
+        self,
+        agent: &mut Agent,
+        name: JsString,
+        module: u32,
+        target: JsString,
+    ) {
+        if let Environment::Declarative { imports, .. } = agent.env_mut(self) {
+            imports.insert(name, (module, target));
         }
     }
 
@@ -492,7 +505,12 @@ impl EnvId {
     ) -> JsResult<Value> {
         match self.kind(agent) {
             Kind::Declarative => {
-                if let Some((env, target)) = self.import_of(agent, name) {
+                // An indirect import binding: the target module's binding, once it has an environment.
+                if let Some((module, target)) = self.import_of(agent, name) {
+                    let Some(env) = agent.modules[module as usize].environment else {
+                        let msg = format!("{} is not initialized", agent.str_lossy(name));
+                        return Err(agent.throw_reference_error(&msg));
+                    };
                     return env.get_binding_value(agent, target, true);
                 }
                 match self.binding(agent, name).and_then(|b| b.value) {

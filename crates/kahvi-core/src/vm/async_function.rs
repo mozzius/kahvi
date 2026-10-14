@@ -20,7 +20,10 @@ use crate::value::{Args, Object, Value};
 struct AsyncContext {
     frame: Option<Box<Frame>>,
     capability: PromiseCapability,
-    function: Object,
+    /// The async function, or None for a module's top-level await.
+    function: Option<Object>,
+    realm: crate::realm::RealmId,
+    script_or_module: Option<crate::ScriptOrModule>,
 }
 
 /// How the async context continues.
@@ -50,10 +53,16 @@ pub(super) fn start_async_function(
         // 4. Else, perform AsyncFunctionStart(promiseCapability, FunctionBody).
         Ok(()) => {
             let proto = agent.intrinsic("%Object.prototype%");
+            let (realm, script_or_module) = match &agent.obj(f).kind {
+                ObjectKind::Function(e) => (e.realm, e.script_or_module),
+                _ => (agent.current_realm(), None),
+            };
             let ctx = AsyncContext {
                 frame: Some(Box::new(frame)),
                 capability,
-                function: f,
+                function: Some(f),
+                realm,
+                script_or_module,
             };
             let ctx = agent.object_with_kind(Some(proto), ObjectKind::Native(Box::new(ctx)));
             resume(agent, ctx, Resumption::Start)?;
@@ -63,10 +72,31 @@ pub(super) fn start_async_function(
     Ok(capability.promise)
 }
 
+/// AsyncBlockStart(promiseCapability, module body, moduleContext) for a
+/// module with top-level await (ExecuteModule step 3 of §16.2.1.6.5).
+pub(super) fn start_async_module(
+    agent: &mut Agent,
+    module: u32,
+    frame: Frame,
+    capability: PromiseCapability,
+) -> JsResult<()> {
+    let proto = agent.intrinsic("%Object.prototype%");
+    let realm = agent.modules[module as usize].realm;
+    let ctx = AsyncContext {
+        frame: Some(Box::new(frame)),
+        capability,
+        function: None,
+        realm,
+        script_or_module: Some(crate::ScriptOrModule::Module(module)),
+    };
+    let ctx = agent.object_with_kind(Some(proto), ObjectKind::Native(Box::new(ctx)));
+    resume(agent, ctx, Resumption::Start)
+}
+
 /// Runs the async context until it awaits, returns or throws (AsyncBlockStart).
 fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
     loop {
-        let (mut frame, capability, function) = {
+        let (mut frame, capability, function, realm, script_or_module) = {
             let c = agent
                 .native_mut::<AsyncContext>(ctx)
                 .expect("async context");
@@ -74,6 +104,8 @@ fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
                 c.frame.take().expect("suspended async frame"),
                 c.capability,
                 c.function,
+                c.realm,
+                c.script_or_module,
             )
         };
         let result = match how {
@@ -88,12 +120,8 @@ fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
         let result = match result {
             Some(r) => r,
             None => {
-                let (realm, script_or_module) = match &agent.obj(function).kind {
-                    ObjectKind::Function(e) => (e.realm, e.script_or_module),
-                    _ => (agent.current_realm(), None),
-                };
                 agent.contexts.push(ExecutionContext {
-                    function: Some(function),
+                    function,
                     realm,
                     script_or_module,
                 });

@@ -82,10 +82,16 @@ fn run(args: &Args) -> u8 {
         Ok(r) => r,
         Err(e) => return report(&mut agent, e),
     };
-    if args.module {
-        return report(&mut agent, JsError::NotImplemented("modules".into()));
-    }
-    for path in args.preludes.iter().chain(std::iter::once(&args.file)) {
+    agent.host_load_module = Some(host::load_module);
+    let scripts: Vec<&String> = if args.module {
+        args.preludes.iter().collect()
+    } else {
+        args.preludes
+            .iter()
+            .chain(std::iter::once(&args.file))
+            .collect()
+    };
+    for path in scripts {
         let source = match std::fs::read(path) {
             Ok(b) => String::from_utf8_lossy(&b).into_owned(),
             Err(err) => {
@@ -104,12 +110,42 @@ fn run(args: &Args) -> u8 {
         realm,
         script_or_module: None,
     });
+    // The entry module: load, link and evaluate it, then settle its promise.
+    let mut evaluation = None;
+    if args.module {
+        let path = std::path::Path::new(&args.file);
+        let key = path
+            .canonicalize()
+            .map(|p| p.to_string_lossy().into_owned())
+            .unwrap_or_else(|_| args.file.clone());
+        let source = match std::fs::read(path) {
+            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Err(err) => {
+                eprintln!("kahvi: cannot read {}: {err}", args.file);
+                return 2;
+            }
+        };
+        match vm::run_module(&mut agent, realm, &key, &source) {
+            Ok(Value::Object(p)) => evaluation = Some(p),
+            Ok(_) => {}
+            Err(e) => {
+                agent.contexts.pop();
+                return report(&mut agent, e);
+            }
+        }
+    }
     let jobs = agent.run_jobs();
     agent.contexts.pop();
-    match jobs {
-        Ok(()) => 0,
-        Err(e) => report(&mut agent, e),
+    if let Err(e) = jobs {
+        return report(&mut agent, e);
     }
+    // A module whose evaluation rejected threw at its top level.
+    if let Some(p) = evaluation
+        && let Some(Err(reason)) = ops::promise::promise_result(&agent, p)
+    {
+        return report(&mut agent, JsError::Throw(reason));
+    }
+    0
 }
 
 /// Prints `Uncaught <Name>: <message>` for an uncaught exception.

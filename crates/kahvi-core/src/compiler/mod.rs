@@ -472,6 +472,21 @@ pub fn compile_eval(
     c.finish()
 }
 
+/// Compiles module code; the module's declarations are in `decls`.
+pub fn compile_module(
+    agent: &mut Agent,
+    module: &ast::Module,
+    source: Arc<str>,
+    script_id: u32,
+) -> Arc<FunctionCode> {
+    let mut c = Compiler::new(agent, CodeKind::Module, source, script_id, module.span);
+    c.code.strict = true;
+    c.compile_module_body(&module.body);
+    // [[HasTLA]]: the module's own code awaits.
+    c.code.is_async = c.code.ops.iter().any(|op| matches!(op, Op::Await));
+    c.finish()
+}
+
 /// Compiles a standalone function (CreateDynamicFunction).
 pub fn compile_dynamic_function(
     agent: &mut Agent,

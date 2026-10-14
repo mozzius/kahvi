@@ -16,12 +16,18 @@ impl Object {
         if let Some(r) = crate::object::proxy::get_prototype_of(agent, self) {
             return r;
         }
+        if let Some(r) = super::namespace::get_prototype_of(agent, self) {
+            return r;
+        }
         Ok(agent.obj(self).prototype)
     }
 
     /// O.[[SetPrototypeOf]](V)
     pub fn internal_set_prototype_of(self, agent: &mut Agent, v: Option<Object>) -> JsResult<bool> {
         if let Some(r) = crate::object::proxy::set_prototype_of(agent, self, v) {
+            return r;
+        }
+        if let Some(r) = super::namespace::set_prototype_of(agent, self, v) {
             return r;
         }
         if matches!(agent.obj(self).kind, ObjectKind::ImmutablePrototype) {
@@ -36,12 +42,18 @@ impl Object {
         if let Some(r) = crate::object::proxy::is_extensible(agent, self) {
             return r;
         }
+        if let Some(r) = super::namespace::is_extensible(agent, self) {
+            return r;
+        }
         Ok(agent.obj(self).extensible)
     }
 
     /// O.[[PreventExtensions]]()
     pub fn internal_prevent_extensions(self, agent: &mut Agent) -> JsResult<bool> {
         if let Some(r) = crate::object::proxy::prevent_extensions(agent, self) {
+            return r;
+        }
+        if let Some(r) = super::namespace::prevent_extensions(agent, self) {
             return r;
         }
         agent.obj_mut(self).extensible = false;
@@ -57,6 +69,9 @@ impl Object {
         key: PropertyKey,
     ) -> JsResult<Option<PropertyDescriptor>> {
         if let Some(r) = crate::object::proxy::get_own_property(agent, self, key) {
+            return r;
+        }
+        if let Some(r) = super::namespace::get_own_property(agent, self, key) {
             return r;
         }
         match &agent.obj(self).kind {
@@ -82,6 +97,9 @@ impl Object {
         desc: PropertyDescriptor,
     ) -> JsResult<bool> {
         if let Some(r) = crate::object::proxy::define_own_property(agent, self, key, desc) {
+            return r;
+        }
+        if let Some(r) = super::namespace::define_own_property(agent, self, key, desc) {
             return r;
         }
         match &agent.obj(self).kind {
@@ -118,6 +136,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::has_property(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::namespace::has_property(agent, self, key) {
+            return r;
+        }
         ordinary_has_property(agent, self, key)
     }
 
@@ -129,6 +150,9 @@ impl Object {
         receiver: Value,
     ) -> JsResult<Value> {
         if let Some(r) = crate::object::proxy::get(agent, self, key, receiver) {
+            return r;
+        }
+        if let Some(r) = super::namespace::get(agent, self, key, receiver) {
             return r;
         }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_)))
@@ -150,6 +174,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::set(agent, self, key, value, receiver) {
             return r;
         }
+        if let Some(r) = super::namespace::set(agent, self) {
+            return r;
+        }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_))) {
             return crate::function::arguments_set(agent, self, key, value, receiver);
         }
@@ -161,6 +188,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::delete(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::namespace::delete(agent, self, key) {
+            return r;
+        }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_))) {
             return crate::function::arguments_delete(agent, self, key);
         }
@@ -170,6 +200,9 @@ impl Object {
     /// O.[[OwnPropertyKeys]]()
     pub fn internal_own_property_keys(self, agent: &mut Agent) -> JsResult<Vec<PropertyKey>> {
         if let Some(r) = crate::object::proxy::own_property_keys(agent, self) {
+            return r;
+        }
+        if let Some(r) = super::namespace::own_property_keys(agent, self) {
             return r;
         }
         if let ObjectKind::StringObject(s) = &agent.obj(self).kind {
