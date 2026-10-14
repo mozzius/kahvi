@@ -4,24 +4,44 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::disposable_stack::{
+    DisposableStackData, disposable_stack, require_disposable_stack,
+};
+
 /// DisposableStack.prototype.move
 pub(crate) fn prototype_move(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
     // 1. Let _disposableStack_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_disposableStack_, [[DisposableState]]).
+    let disposable_stack_obj = require_disposable_stack(agent, this)?;
     // 3. If _disposableStack_.[[DisposableState]] is ~disposed~, throw a *ReferenceError* exception.
+    if disposable_stack(agent, disposable_stack_obj).disposed {
+        return Err(agent.throw_reference_error("the DisposableStack is already disposed"));
+    }
     // 4. Let _newDisposableStack_ be ? OrdinaryCreateFromConstructor(%DisposableStack%, *"%DisposableStack.prototype%"*, « [[DisposableState]], [[DisposableResourceStack]] »).
+    let ctor = agent.intrinsic("%DisposableStack%");
+    let new_disposable_stack = ops::ordinary_create_from_constructor(
+        agent,
+        ctor,
+        "%DisposableStack.prototype%",
+        ObjectKind::Native(Box::new(DisposableStackData {
+            disposed: false,
+            stack: Vec::new(),
+        })),
+    )?;
     // 5. Set _newDisposableStack_.[[DisposableState]] to ~pending~.
+    // (Created above with `disposed: false`.)
     // 6. Set _newDisposableStack_.[[DisposableResourceStack]] to _disposableStack_.[[DisposableResourceStack]].
+    let moved = std::mem::take(&mut disposable_stack(agent, disposable_stack_obj).stack);
+    disposable_stack(agent, new_disposable_stack).stack = moved;
     // 7. Set _disposableStack_.[[DisposableResourceStack]] to a new empty List.
+    // (Taken above, so the source stack is now empty.)
     // 8. Set _disposableStack_.[[DisposableState]] to ~disposed~.
+    disposable_stack(agent, disposable_stack_obj).disposed = true;
     // 9. Return _newDisposableStack_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("DisposableStack.prototype.move"))
+    Ok(Value::Object(new_disposable_stack))
 }
