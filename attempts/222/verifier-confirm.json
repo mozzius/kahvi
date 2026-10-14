@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5524,
+  "stop_reason": "tool_use",
+  "session_id": "9329a37d-c785-41db-8150-a7b21d0844d6",
+  "total_cost_usd": 0.0225042,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4142,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 522,
+    "output_tokens_details": {
+      "thinking_tokens": 166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4142,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 522,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4142,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4142
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1-6 in order. A non-object `this` throws a TypeError. The hint is compared by string value against \\\"string\\\", \\\"default\\\" and \\\"number\\\", and any other hint, including a non-string, throws a TypeError. It then returns `ops::ordinary_to_primitive` with `?`-style propagation. The diff touches only the one in-scope file. The gate shows 36 of 36 target tests passing with 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1-6 in order. A non-object `this` throws a TypeError. The hint is compared by string value against \"string\", \"default\" and \"number\", and any other hint, including a non-string, throws a TypeError. It then returns `ops::ordinary_to_primitive` with `?`-style propagation. The diff touches only the one in-scope file. The gate shows 36 of 36 target tests passing with 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3626,
+  "type": "result",
+  "duration_ms": 5288,
+  "uuid": "46c60a06-ec5e-45a3-a327-0520826a6cb9",
+  "ttft_stream_ms": 2023,
+  "time_to_request_ms": 623,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 359,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 17,
+    "input_hooks": 5,
+    "tool_pool_refresh": 4,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 136,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 2,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 18,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 78,
+  "time_to_request_cpu_ms": 373,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 215,
+  "process_anon_mib_turn_start": 98,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 638,
+  "process_wall_ms_turn": 5288,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2024,
+  "time_to_request_from_spawn_ms": 20913185,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000370266.2012,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -797,3 +797,5 @@ test262 at last merge: 72953/81183 runs passing
 [17:52:19] B-date-prototype-symbol-to-primitive: attempt 222 finished ($0.009, 15 turns)
 [17:52:30] B-typed-array-prototype-reverse: attempt 224 finished ($0.010, 13 turns)
 [17:52:43] B-reflect-delete-property: verifier: accept The change implements Reflect.deleteProperty in the spec's three steps, in order. Step 1 checks `Value::Object` and throws a TypeError before any conv
+[17:52:48] B-array-prototype-reverse: attempt on slot 2 with haiku
+[17:53:00] B-date-prototype-symbol-to-primitive: verifier: accept The change implements Date.prototype[Symbol.toPrimitive] in its single in-scope file and follows the spec. Step 2 throws a TypeError for a non-object 
