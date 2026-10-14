@@ -398,3 +398,4 @@
 {"ticket": "B-date-prototype-set-milliseconds", "attempt": 297, "ts": 1792002434.375326, "text": "worker reported BLOCKED but changed files: Date.prototype.setTime (not implemented; the `date-value-read-before-tonumber-*` tests call it to set up the Date value)"}
 {"ticket": "B-date-prototype-set-year", "attempt": 298, "ts": 1792002444.3102164, "text": "worker reported BLOCKED but changed files: `Date.prototype.getFullYear` and `Date.prototype.setTime` are not implemented (needed by the setYear tests' own setup code)"}
 {"ticket": "B-map-prototype-get-or-insert", "attempt": 300, "ts": 1792002487.2051928, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-object-prototype-set-proto", "attempt": 301, "ts": 1792002541.975603, "text": "worker reported BLOCKED but changed files: the getter `get Object.prototype.__proto__` is not implemented; the 6 failing `get-*` tests under built-ins/Object/prototype/__proto__/ need it."}
