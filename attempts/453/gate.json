@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-cbrt",
+  "base": "2532233b84fadbd79affbafe8cfe8b846232c7a2",
+  "head": "02f8e694bc455e01f898f256e94109648a9252c5",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/cbrt.rs",
+      "added": 10,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 13645,
+  "stop_reason": "end_turn",
+  "session_id": "af1ff2f2-a50c-42c5-aa1d-0633917fec52",
+  "total_cost_usd": 0.00494617,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 12740,
+    "cache_read_input_tokens": 110047,
+    "output_tokens": 2130,
+    "output_tokens_details": {
+      "thinking_tokens": 52
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12740,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 128,
+        "cache_read_input_tokens": 20103,
+        "cache_creation_input_tokens": 280,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 280
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.atanh` in `crates/kahvi-builtins/src/math/atanh.rs`, following the spec steps with each step's text as a comment. All 10 test262 runs under `built-ins/Math/atanh/` pass (the ticket said 8 on main), and `cargo build` and `cargo clippy` are clean. No other files were touched and no helpers were added.",
+  "ttft_ms": 1636,
+  "type": "result",
+  "duration_ms": 35212,
+  "uuid": "6dbb7cc0-492e-4eac-bf73-998f92d12aaf",
+  "ttft_stream_ms": 1412,
+  "time_to_request_ms": 562,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 366,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 5,
+    "message_prep": 3,
+    "model_config_wait": 106,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 412,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 2995,
+  "process_wall_ms_turn": 35211,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1414,
+  "time_to_request_from_spawn_ms": 27342904,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006802898.321,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

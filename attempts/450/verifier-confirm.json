@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5736,
+  "stop_reason": "tool_use",
+  "session_id": "29cebeb7-bbe3-4034-ac52-700f801b8a56",
+  "total_cost_usd": 0.020157199999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3489,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 556,
+    "output_tokens_details": {
+      "thinking_tokens": 144
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3489,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 556,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3489,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3489
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.asinh is implemented as the spec says. It calls ops::to_number with `?`, so abrupt completions propagate. It returns n unchanged when n is non-finite or \u00b10 (`n == 0.0` is true for both zeros, and the sign is kept). Otherwise it returns the platform's f64::asinh, which is the approximation step 3 allows. Only the one in-scope file changed. The gate shows 8 of 10 tests passing before and 10 of 10 after, with no regressions. The step comments are duplicated (the stub's block remains above the new per-step comments), which is harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.asinh is implemented as the spec says. It calls ops::to_number with `?`, so abrupt completions propagate. It returns n unchanged when n is non-finite or \u00b10 (`n == 0.0` is true for both zeros, and the sign is kept). Otherwise it returns the platform's f64::asinh, which is the approximation step 3 allows. Only the one in-scope file changed. The gate shows 8 of 10 tests passing before and 10 of 10 after, with no regressions. The step comments are duplicated (the stub's block remains above the new per-step comments), which is harmless.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3436,
+  "type": "result",
+  "duration_ms": 5722,
+  "uuid": "e9641428-6de7-49c3-b9ae-40d1bc2cda4e",
+  "ttft_stream_ms": 1697,
+  "time_to_request_ms": 746,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 437,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 52,
+    "input_hooks": 11,
+    "tool_pool_refresh": 3,
+    "init_message": 29,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 105,
+    "autocompact": 12,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 9,
+    "message_normalization": 5,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 125,
+  "time_to_request_cpu_ms": 309,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 636,
+  "process_wall_ms_turn": 5722,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 26,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1706,
+  "time_to_request_from_spawn_ms": 27383560,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006842181.7307,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

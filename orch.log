@@ -4087,3 +4087,9 @@ test262 at last merge: 76432/81183 runs passing
 [19:39:59] B-json-is-raw-json: attempt on slot 2 with haiku
 [19:40:02] B-math-atanh: attempt on slot 0 with haiku
 [19:40:06] B-data-view-prototype-set-big-uint64: verifier: accept The change is a thin wrapper. setBigUint64 takes `this`, defaults littleEndian to false when absent, and calls the existing shared helper `set_view_va
+[19:40:09] B-math-cbrt: attempt on slot 3 with haiku
+[19:40:16] B-math-asinh: attempt 450 finished ($0.004, 8 turns)
+[19:40:36] B-math-cbrt: attempt 453 finished ($0.004, 8 turns)
+[19:40:39] B-json-is-raw-json: attempt 451 finished ($0.006, 13 turns)
+[19:40:40] B-math-atanh: attempt 452 finished ($0.005, 11 turns)
+[19:40:51] B-math-asinh: verifier: accept Math.asinh is implemented per the spec steps. Step 1 calls ops::to_number(agent, x)? with the abrupt completion propagated. Step 2 returns n unchanged
