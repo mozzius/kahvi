@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6927,
+  "stop_reason": "tool_use",
+  "session_id": "d3bfac71-8bac-4fe2-9d5d-6837fc63a435",
+  "total_cost_usd": 0.027549499999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4934,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 702,
+    "output_tokens_details": {
+      "thinking_tokens": 262
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4934,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 702,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4934,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4934
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements WeakMap.prototype.getOrInsert in spec order. It checks the this value, then CanBeHeldWeakly with a TypeError, then looks the key up and returns the existing value. If there is no entry, it appends one and returns the value. It uses the shared collection helpers and propagates errors with `?`. The change touches only the one in-scope file. The 4 remaining test262 failures come from the unimplemented WeakMap.prototype.get, which is a separate ticket. I could not see the helper files, so I did not verify that `OrderedTable::set` appends and `OrderedTable::get` uses SameValue. Both are plausible given the helper names and the passing tests.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements WeakMap.prototype.getOrInsert in spec order. It checks the this value, then CanBeHeldWeakly with a TypeError, then looks the key up and returns the existing value. If there is no entry, it appends one and returns the value. It uses the shared collection helpers and propagates errors with `?`. The change touches only the one in-scope file. The 4 remaining test262 failures come from the unimplemented WeakMap.prototype.get, which is a separate ticket. I could not see the helper files, so I did not verify that `OrderedTable::set` appends and `OrderedTable::get` uses SameValue. Both are plausible given the helper names and the passing tests.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3803,
+  "type": "result",
+  "duration_ms": 6351,
+  "uuid": "ccf2fad9-4015-4f1a-8c39-e5b47141fbf1",
+  "ttft_stream_ms": 1601,
+  "time_to_request_ms": 487,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 370,
+    "resume_other": 0,
+    "process_user_input": 12,
+    "input_attachments": 23,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 8,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 75,
+  "time_to_request_cpu_ms": 256,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 682,
+  "process_wall_ms_turn": 6350,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1602,
+  "time_to_request_from_spawn_ms": 21837144,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001297328.581,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
