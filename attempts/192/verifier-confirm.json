@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7943,
+  "stop_reason": "tool_use",
+  "session_id": "0e598047-9225-4884-97b9-e19f33fb3f8b",
+  "total_cost_usd": 0.0313585,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5481,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 859,
+    "output_tokens_details": {
+      "thinking_tokens": 453
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5481,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 859,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5481,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5481
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.find as the spec describes. The order is ToObject, then LengthOfArrayLike, then the IsCallable check inside FindViaPredicate. The ascending loop does Get, then Call with (kValue, k, obj), then ToBoolean. It returns the record's value, or undefined when nothing matches. Every `?` propagates its error. The only added code is rooting for the GC. The 6 remaining failures are the resizable-buffer tests, which hit the engine's own \\\"not implemented: BigInt\\\" error; that is honest partial work and not a defect here.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.find as the spec describes. The order is ToObject, then LengthOfArrayLike, then the IsCallable check inside FindViaPredicate. The ascending loop does Get, then Call with (kValue, k, obj), then ToBoolean. It returns the record's value, or undefined when nothing matches. Every `?` propagates its error. The only added code is rooting for the GC. The 6 remaining failures are the resizable-buffer tests, which hit the engine's own \"not implemented: BigInt\" error; that is honest partial work and not a defect here.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5561,
+  "type": "result",
+  "duration_ms": 7687,
+  "uuid": "cbe21679-9951-451d-8d74-0c48e8d9042b",
+  "ttft_stream_ms": 1752,
+  "time_to_request_ms": 566,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 353,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 119,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 11,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 79,
+  "time_to_request_cpu_ms": 324,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 604,
+  "process_wall_ms_turn": 7687,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1753,
+  "time_to_request_from_spawn_ms": 20050790,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999510664.412,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
