@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 42224,
+  "stop_reason": "end_turn",
+  "session_id": "8db96d66-df4f-4a10-bb54-4ca9cbff30e1",
+  "total_cost_usd": 0.01668586,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 42805,
+    "cache_read_input_tokens": 376206,
+    "output_tokens": 7798,
+    "output_tokens_details": {
+      "thinking_tokens": 3667
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 42805,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 431,
+        "cache_read_input_tokens": 50115,
+        "cache_creation_input_tokens": 333,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 333
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.fill` in `crates/kahvi-builtins/src/typed_array/prototype_fill.rs`, with each spec step kept as a comment above its code. `./t262 built-ins/TypedArray/prototype/fill/` gives 98 of 102 runs passing. `cargo clippy -p kahvi-builtins` is clean.\n\nThe four remaining failures are not in the fill code. Two tests call the `BigInt` global, which is not implemented, and two call `TypedArray.prototype.values`, which is also not implemented. Both are outside this ticket's scope.\n\nI added a private `to_clamped_index` helper in my file, copying the pattern used in `typed_array/prototype_slice.rs`, since `ops` has no `ToClampedIndex` yet. I did not edit any other file.\n\n`git status` also shows changes to `crates/kahvi-core/src/host.rs`, `crates/kahvi-core/src/object/host_object.rs` and `crates/kahvi-ffi/src/lib.rs`. I did not touch those files and left them alone.",
+  "ttft_ms": 1928,
+  "type": "result",
+  "duration_ms": 70585,
+  "uuid": "98cbe602-a2c8-4fbc-989d-b4ed6c17d799",
+  "ttft_stream_ms": 1629,
+  "time_to_request_ms": 661,
+  "time_to_request_phases_ms": {
+    "other": 40,
+    "system_prompt": 376,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 13,
+    "input_hooks": 8,
+    "tool_pool_refresh": 7,
+    "init_message": 18,
+    "engine_pickup": 4,
+    "message_prep": 3,
+    "model_config_wait": 124,
+    "autocompact": 3,
+    "query_setup": 4,
+    "model_gates": 5,
+    "tool_schema_build": 25,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 152,
+  "time_to_request_cpu_ms": 397,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 4530,
+  "process_wall_ms_turn": 70584,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1630,
+  "time_to_request_from_spawn_ms": 17751038,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997209688.5283,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

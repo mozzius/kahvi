@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-search",
+  "base": "e189f3435eed122a4ade3cfedd64f08d32d543cc",
+  "head": "ce61b1f26b1dbad3cd0a0fc5a8250491ac0569fe",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_search.rs",
+      "added": 29,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 8,
+    "after": 46,
+    "new_passes": 38,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
