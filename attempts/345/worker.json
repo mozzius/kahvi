@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 13520,
+  "stop_reason": "end_turn",
+  "session_id": "dbb359a3-86aa-4f25-a95a-7a59c348536e",
+  "total_cost_usd": 0.0041995800000000005,
+  "usage": {
+    "input_tokens": 7,
+    "cache_creation_input_tokens": 12522,
+    "cache_read_input_tokens": 58108,
+    "output_tokens": 1543,
+    "output_tokens_details": {
+      "thinking_tokens": 517
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12522,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 376,
+        "cache_read_input_tokens": 19569,
+        "cache_creation_input_tokens": 596,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 596
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Date.prototype.toString` is implemented in `prototype_to_string.rs` and passes 14 of 16 runs under `built-ins/Date/prototype/toString/`. The two failures are `negative-year.js` (sloppy and strict), which expects `\"-0001\"` and gets `\"-000001\"`. That comes from `year_string` in `support/date.rs`, which pads negative years with `{:06}` where the spec's DateString uses `ToZeroPaddedDecimalString(abs(yv), 4)`. That file is outside my ticket scope, so I left it alone and did not reimplement DateString in my file.\n\n`this_time_value` already throws a TypeError for non-Date receivers, so RequireInternalSlot steps 1\u20132 are covered. `cargo clippy -p kahvi-builtins` is clean.\n\nBLOCKED: `support/date.rs` `year_string` must pad negative years with `{:04}` instead of `{:06}` (spec DateString: `-` plus `ToZeroPaddedDecimalString(abs(yv), 4)`); this needs an architect-owned fix or a scope exception for that file.",
+  "ttft_ms": 1970,
+  "type": "result",
+  "duration_ms": 33647,
+  "uuid": "67ab1743-75fc-469e-b773-819ffd0e9cc1",
+  "ttft_stream_ms": 1525,
+  "time_to_request_ms": 584,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 338,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 5,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 134,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 102,
+  "time_to_request_cpu_ms": 268,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2299,
+  "process_wall_ms_turn": 33646,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1526,
+  "time_to_request_from_spawn_ms": 24345431,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003802672.872,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 12742,
+  "stop_reason": "end_turn",
+  "session_id": "bad0d78b-ed56-4b72-9f22-1f0a9d691292",
+  "total_cost_usd": 0.00391549,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 9877,
+    "cache_read_input_tokens": 80049,
+    "output_tokens": 1926,
+    "output_tokens_details": {
+      "thinking_tokens": 174
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9877,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 171,
+        "cache_read_input_tokens": 16785,
+        "cache_creation_input_tokens": 735,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 735
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Number.isInteger` is implemented in `crates/kahvi-builtins/src/number/is_integer.rs`, and all 18 runs under `built-ins/Number/isInteger/` pass (up from 8 on main). Clippy and `cargo fmt --check` report nothing for the file. No helpers were added and no other files were touched.\n\nThe body uses the existing `ops::is_integral_number`, which takes a `Value` and returns a plain `bool`, so no fallible path was needed.\n\nBLOCKED: none",
+  "ttft_ms": 1625,
+  "type": "result",
+  "duration_ms": 38289,
+  "uuid": "c03f408a-6fa8-405d-9c8f-1e20d5b5e5ae",
+  "ttft_stream_ms": 1410,
+  "time_to_request_ms": 552,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 384,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 60,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 110,
+  "time_to_request_cpu_ms": 445,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3205,
+  "process_wall_ms_turn": 38288,
+  "input_attachments_detail": {
+    "slowest_producer": "environment",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1411,
+  "time_to_request_from_spawn_ms": 24375117,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003834926.2446,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

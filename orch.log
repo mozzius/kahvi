@@ -1945,3 +1945,8 @@ test262 at last merge: 74349/81183 runs passing
 [18:50:31] B-math-sqrt: verifier: accept Math.sqrt implementation follows the spec. Step 1 uses ops::to_number with `?`. Step 2 returns n for NaN, ±0 and +∞ (the `n == 0.0` test covers both z
 [18:50:34] B-disposable-stack-prototype-move: verifier: accept The diff implements DisposableStack.prototype.move in its own file, in spec order. It runs RequireInternalSlot via require_disposable_stack, then the 
 [18:50:34] B-number-is-integer: attempt on slot 0 with haiku
+[18:50:38] B-number-is-safe-integer: attempt on slot 2 with haiku
+[18:50:41] B-date-prototype-to-string: attempt 345 finished ($0.004, 6 turns)
+[18:51:15] B-number-is-integer: attempt 347 finished ($0.004, 11 turns)
+[18:51:15] B-number-is-safe-integer: attempt 348 finished ($0.004, 9 turns)
+[18:51:30] B-date-prototype-to-string: verifier: revise The diff is a thin wrapper. It keeps the spec step comments, calls date::this_time_value (step 2 RequireInternalSlot and step 3) and date::to_date_str
