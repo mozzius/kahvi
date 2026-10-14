@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9594,
+  "stop_reason": "tool_use",
+  "session_id": "171a9430-2db6-4ba4-883a-c339ec68a1a5",
+  "total_cost_usd": 0.0314728,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5899,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 699,
+    "output_tokens_details": {
+      "thinking_tokens": 295
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5899,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 699,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5899,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5899
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.toReversed following the spec steps 1\u20136 in order. Each step is a comment directly above its code. The observable operations are ToObject, LengthOfArrayLike, ArrayCreate, Get and CreateDataPropertyOrThrow. They run in spec order, and `?` is propagated for every abrupt completion. The `!` operations (key_from_index) are infallible. The gate shows 34 of 34 target tests passing with no regressions, which fits the diff. Rooting is added around the Get call, and nothing is special-cased or invented.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.toReversed following the spec steps 1\u20136 in order. Each step is a comment directly above its code. The observable operations are ToObject, LengthOfArrayLike, ArrayCreate, Get and CreateDataPropertyOrThrow. They run in spec order, and `?` is propagated for every abrupt completion. The `!` operations (key_from_index) are infallible. The gate shows 34 of 34 target tests passing with no regressions, which fits the diff. Rooting is added around the Get call, and nothing is special-cased or invented.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7168,
+  "type": "result",
+  "duration_ms": 9195,
+  "uuid": "62b41bae-18f4-4b63-8c79-0bc7b903d202",
+  "ttft_stream_ms": 4493,
+  "time_to_request_ms": 1208,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 1091,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 20,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 1,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 608,
+  "time_to_request_cpu_ms": 429,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 747,
+  "process_wall_ms_turn": 9194,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4494,
+  "time_to_request_from_spawn_ms": 21571126,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001028515.533,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
