@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18955,
+  "stop_reason": "end_turn",
+  "session_id": "141c8e2b-b0a2-4a70-8632-a5306ea0b4cf",
+  "total_cost_usd": 0.0656331,
+  "usage": {
+    "input_tokens": 13,
+    "cache_creation_input_tokens": 10383,
+    "cache_read_input_tokens": 96293,
+    "output_tokens": 1424,
+    "output_tokens_details": {
+      "thinking_tokens": 150
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10383,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 269,
+        "cache_read_input_tokens": 16762,
+        "cache_creation_input_tokens": 484,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 484
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented the getter, but the target tests still pass 0 of 4. The getter returns `%Iterator%`, and the build is clean. It never runs because of a problem in a file I can't edit.\n\nThe \"constructor and prototype links\" pass in `table.rs` (lines 893\u2013903) defines a data property `constructor` on `%Iterator.prototype%`. That overwrites the accessor, so `prop-desc.js` and `weird-setter.js` still fail. Attempt 472 hit the same problem.\n\nBLOCKED: `crates/kahvi-builtins/src/table.rs` (lines 893\u2013903) must skip the `prototype.constructor` data-property link for Iterator, or install the `constructor` accessor after that pass.",
+  "ttft_ms": 4333,
+  "type": "result",
+  "duration_ms": 24304,
+  "uuid": "5b0978e1-720c-40a9-a663-43eb457fe5e3",
+  "ttft_stream_ms": 3565,
+  "time_to_request_ms": 749,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 593,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 19,
+    "input_hooks": 5,
+    "tool_pool_refresh": 8,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 35,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 93,
+  "time_to_request_cpu_ms": 498,
+  "time_to_request_major_faults": 1,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2307,
+  "process_wall_ms_turn": 24303,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3566,
+  "time_to_request_from_spawn_ms": 27809298,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007269131.5322,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.64,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
