@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 31077,
+  "stop_reason": "end_turn",
+  "session_id": "dde9e482-e137-44af-92cb-5fa828a2ffb4",
+  "total_cost_usd": 0.01145325,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 27603,
+    "cache_read_input_tokens": 257635,
+    "output_tokens": 5952,
+    "output_tokens_details": {
+      "thinking_tokens": 1132
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27603,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 343,
+        "cache_read_input_tokens": 34101,
+        "cache_creation_input_tokens": 1145,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1145
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01JuuqiD6cJ6RDDn3Ftt7hgH",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/iterator/prototype_set_symbol_to_string_tag.rs",
+        "description": "Format the edited file with rustfmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 24,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented the setter in `prototype_set_symbol_to_string_tag.rs`, and it builds and passes clippy. The target suite is still 2 pass / 2 fail, so the \"Done when\" condition is not met.\n\nThe two failures are in `weird-setter.js`, which calls `get.call()` on the `Symbol.toStringTag` getter. That getter is a separate ticket and still throws not-implemented. I also added `SetterThatIgnoresPrototypeProperties` as a private helper in my file, because no shared version exists yet; `prototype_set_constructor.rs` will need the same helper, so it should move to `support/` when that ticket lands. I could not run `cargo fmt` (shell access was denied), so I hand-formatted the file to match rustfmt's diff.\n\nBLOCKED: the `get Iterator.prototype[Symbol.toStringTag]` getter (its stub in `iterator/`) must be implemented before `built-ins/Iterator/prototype/Symbol.toStringTag/` can fully pass.",
+  "ttft_ms": 1721,
+  "type": "result",
+  "duration_ms": 50787,
+  "uuid": "c49b8bac-c129-43f9-9d44-c6519d25eb00",
+  "ttft_stream_ms": 1470,
+  "time_to_request_ms": 588,
+  "time_to_request_phases_ms": {
+    "other": 64,
+    "system_prompt": 327,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 139,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 74,
+  "time_to_request_cpu_ms": 420,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 253,
+  "process_cpu_ms_turn": 4534,
+  "process_wall_ms_turn": 50787,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1475,
+  "time_to_request_from_spawn_ms": 27912788,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007373160.3984,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.66,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
