@@ -15,7 +15,7 @@ mod generator;
 mod instantiate;
 mod operators;
 
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
 use std::sync::Arc;
 
 pub use async_from_sync::{
@@ -95,7 +95,7 @@ struct Handler {
 pub struct ForInIterator {
     object: Option<Object>,
     object_was_visited: bool,
-    visited: HashSet<PropertyKey>,
+    visited: crate::hash::FxHashSet<PropertyKey>,
     remaining: VecDeque<PropertyKey>,
 }
 
@@ -104,7 +104,7 @@ impl ForInIterator {
         ForInIterator {
             object,
             object_was_visited: false,
-            visited: HashSet::new(),
+            visited: Default::default(),
             remaining: VecDeque::new(),
         }
     }

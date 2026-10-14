@@ -6,7 +6,6 @@ pub mod internal;
 pub mod proxy;
 
 use std::any::Any;
-use std::collections::HashMap;
 
 use crate::value::{BigInt, JsString, Object, Symbol, Value};
 
@@ -154,7 +153,7 @@ impl PropertyDescriptor {
 /// Own properties in creation order, with O(1) lookup.
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
-    index: HashMap<PropertyKey, usize>,
+    index: crate::hash::FxHashMap<PropertyKey, usize>,
     entries: Vec<Option<(PropertyKey, Property)>>,
     removed: usize,
 }

@@ -1,8 +1,6 @@
 //! Environment Records (ECMA-262 §9.1). Implemented literally: bindings are
 //! looked up by name, which keeps `eval` and `with` simple and correct.
 
-use std::collections::{HashMap, HashSet};
-
 use crate::agent::Agent;
 use crate::error::JsResult;
 use crate::object::PropertyKey;
@@ -42,11 +40,11 @@ pub struct FunctionEnvData {
 pub enum Environment {
     /// Declarative (and function, and module) environment records.
     Declarative {
-        bindings: HashMap<JsString, Binding>,
+        bindings: crate::hash::FxHashMap<JsString, Binding>,
         outer: Option<EnvId>,
         function: Option<Box<FunctionEnvData>>,
         /// Module environments resolve imports through other modules' environments.
-        imports: HashMap<JsString, (EnvId, JsString)>,
+        imports: crate::hash::FxHashMap<JsString, (EnvId, JsString)>,
         is_module: bool,
     },
     /// Object environment records (`with` and the global object part).
@@ -60,7 +58,7 @@ pub enum Environment {
         object_record: EnvId,
         global_this: Object,
         declarative_record: EnvId,
-        var_names: HashSet<JsString>,
+        var_names: crate::hash::FxHashSet<JsString>,
     },
 }
 
@@ -81,10 +79,10 @@ enum Kind {
 impl Environment {
     pub fn new_declarative(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer,
             function: None,
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: false,
         })
     }
@@ -98,7 +96,7 @@ impl Environment {
         lexical_this: bool,
     ) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer: Some(outer),
             function: Some(Box::new(FunctionEnvData {
                 this_value: Value::Undefined,
@@ -110,17 +108,17 @@ impl Environment {
                 function_object: f,
                 new_target,
             })),
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: false,
         })
     }
 
     pub fn new_module(agent: &mut Agent, outer: EnvId) -> EnvId {
         agent.alloc_env(Environment::Declarative {
-            bindings: HashMap::new(),
+            bindings: Default::default(),
             outer: Some(outer),
             function: None,
-            imports: HashMap::new(),
+            imports: Default::default(),
             is_module: true,
         })
     }
@@ -142,7 +140,7 @@ impl Environment {
             object_record,
             global_this: this_value,
             declarative_record,
-            var_names: HashSet::new(),
+            var_names: Default::default(),
         })
     }
 
@@ -240,7 +238,7 @@ impl EnvId {
         }
     }
 
-    fn decl_bindings(self, agent: &mut Agent) -> &mut HashMap<JsString, Binding> {
+    fn decl_bindings(self, agent: &mut Agent) -> &mut crate::hash::FxHashMap<JsString, Binding> {
         match agent.env_mut(self) {
             Environment::Declarative { bindings, .. } => bindings,
             _ => unreachable!("declarative environment expected"),

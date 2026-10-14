@@ -392,6 +392,11 @@ pub fn string_create(agent: &mut Agent, s: JsString, proto: Object) -> Object {
 
 /// ToPropertyKey(argument) (§7.1.19)
 pub fn to_property_key(agent: &mut Agent, v: Value) -> JsResult<PropertyKey> {
+    // A Number is already primitive, and key_from_index is ToString's key
+    // for it, without formatting and interning an array index.
+    if let Value::Number(n) = v {
+        return Ok(agent.key_from_index(n));
+    }
     // 1. Let key be ? ToPrimitive(argument, string).
     let key = to_primitive(agent, v, PreferredType::String)?;
     // 2. If key is a Symbol, return key.
