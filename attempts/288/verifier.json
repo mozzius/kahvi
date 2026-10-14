@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 33896,
+  "stop_reason": "tool_use",
+  "session_id": "3ebf03d7-494d-4a28-b370-461219acdeab",
+  "total_cost_usd": 0.006655680000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9934,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 7418,
+    "output_tokens_details": {
+      "thinking_tokens": 6862
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9934,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 7418,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 9934,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9934
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Number.prototype.toExponential in its file, following the spec steps 1 to 16 in order. ThisNumberValue and ToIntegerOrInfinity run first, and the non-finite return precedes the RangeError checks. Both the fractionDigits-defined path (round half up on the exact decimal expansion, with carry into a new exponent) and the undefined path (shortest round-trip digits from Rust's {:e}) match the normative steps. The zero, sign, exponent and fraction-point formatting also match. No test-shaped branches, no fallback values, and no swallowed errors. The two unreachable! calls are on std formatting invariants for finite inputs, so they are truly unreachable. The only other change is renaming the unused new_target parameter to _new_target.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. The two lint flags (unreachable! in split_exponential, prototype_to_exponential.rs ~lines 114 and 117) guard invariants of Rust's float formatting for finite inputs and are acceptable as written. Merge candidate as-is.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Number.prototype.toExponential in its file, following the spec steps 1 to 16 in order. ThisNumberValue and ToIntegerOrInfinity run first, and the non-finite return precedes the RangeError checks. Both the fractionDigits-defined path (round half up on the exact decimal expansion, with carry into a new exponent) and the undefined path (shortest round-trip digits from Rust's {:e}) match the normative steps. The zero, sign, exponent and fraction-point formatting also match. No test-shaped branches, no fallback values, and no swallowed errors. The two unreachable! calls are on std formatting invariants for finite inputs, so they are truly unreachable. The only other change is renaming the unused new_target parameter to _new_target.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. The two lint flags (unreachable! in split_exponential, prototype_to_exponential.rs ~lines 114 and 117) guard invariants of Rust's float formatting for finite inputs and are acceptable as written. Merge candidate as-is."
+  },
+  "ttft_ms": 31441,
+  "type": "result",
+  "duration_ms": 33715,
+  "uuid": "88fe0fb6-272a-4c4d-ad12-6f7e9ba4547d",
+  "ttft_stream_ms": 1529,
+  "time_to_request_ms": 664,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 304,
+    "resume_other": 0,
+    "process_user_input": 15,
+    "input_attachments": 104,
+    "input_hooks": 12,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 160,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 157,
+  "time_to_request_cpu_ms": 439,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 1354,
+  "process_wall_ms_turn": 33714,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 76,
+    "cpu_ms": 108,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1530,
+  "time_to_request_from_spawn_ms": 22802048,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002261923.5679,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.78,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.08,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.78,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

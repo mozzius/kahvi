@@ -391,3 +391,6 @@
 {"ticket": "B-string-prototype-substr", "attempt": 290, "ts": 1792002197.1931257, "text": "worker reported BLOCKED but changed files: `Number.isNaN` (needed by annexB/built-ins/String/prototype/substr/start-and-length-as-numbers.js; the engine returns not-implemented for it)"}
 {"ticket": "B-promise-try", "attempt": 289, "ts": 1792002206.213952, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-number-prototype-to-exponential", "attempt": 288, "ts": 1792002240.518996, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "C-proxy-set-prototype-of", "attempt": 294, "ts": 1792002300.4390771, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-typed-array-prototype-reduce", "attempt": 292, "ts": 1792002306.399209, "text": "worker reported BLOCKED but changed files: BigInt and `BigInt64Array`/`BigUint64Array` are not implemented in the engine, which the three `resizable-buffer*.js` tests need."}
+{"ticket": "B-typed-array-prototype-reduce-right", "attempt": 293, "ts": 1792002308.6025608, "text": "worker reported BLOCKED but changed files: BigInt support is not implemented in the engine, and the three `resizable-buffer*.js` tests need it."}

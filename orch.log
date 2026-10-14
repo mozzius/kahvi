@@ -1415,3 +1415,8 @@ test262 at last merge: 74349/81183 runs passing
 [18:24:09] B-string-prototype-substr: verifier: accept The change implements String.prototype.substr in the single in-scope file, following the spec steps 1-8 in order. RequireObjectCoercible runs before T
 [18:24:13] B-promise-try: verifier: accept The diff implements Promise.try in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object `this`. Step 3 calls th
 [18:24:13] B-typed-array-prototype-reduce-right: attempt on slot 1 with sonnet
+[18:24:18] C-proxy-set-prototype-of: attempt on slot 2 with haiku
+[18:25:00] C-proxy-set-prototype-of: attempt 294 finished ($0.008, 11 turns)
+[18:25:06] B-typed-array-prototype-reduce: attempt 292 finished ($0.140, 12 turns)
+[18:25:08] B-typed-array-prototype-reduce-right: attempt 293 finished ($0.175, 15 turns)
+[18:25:10] B-number-prototype-to-exponential: verifier: accept The diff implements Number.prototype.toExponential in its file, following the spec steps 1 to 16 in order. ThisNumberValue and ToIntegerOrInfinity run

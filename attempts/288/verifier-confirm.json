@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11119,
+  "stop_reason": "tool_use",
+  "session_id": "a7fa43a4-e1db-46f4-9252-00c65ee4d601",
+  "total_cost_usd": 0.0535757,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9946,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1250,
+    "output_tokens_details": {
+      "thinking_tokens": 757
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9946,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1250,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 9946,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9946
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order. It uses this_number_value and ops::to_integer_or_infinity with `?`, so abrupt completions propagate. The non-finite check comes before the range checks, as the spec requires. -0 gives \\\"0e+0\\\". Step 11.a rounds on the exact decimal expansion (`{:.1100e}`, enough for any double) and rounds half up, which matches the \\\"pick the larger\\\" tie rule. The carry case where all digits are 9 is handled. Step 11.b uses Rust's shortest round-trip `{:e}`, which agrees with Number::toString. The two `unreachable!` lint flags guard Rust `{:e}` output that always contains an 'e' and an integer exponent, so they are acceptable. There is no special-casing, and the test262 target moved from 8 to 30 passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order. It uses this_number_value and ops::to_integer_or_infinity with `?`, so abrupt completions propagate. The non-finite check comes before the range checks, as the spec requires. -0 gives \"0e+0\". Step 11.a rounds on the exact decimal expansion (`{:.1100e}`, enough for any double) and rounds half up, which matches the \"pick the larger\" tie rule. The carry case where all digits are 9 is handled. Step 11.b uses Rust's shortest round-trip `{:e}`, which agrees with Number::toString. The two `unreachable!` lint flags guard Rust `{:e}` output that always contains an 'e' and an integer exponent, so they are acceptable. There is no special-casing, and the test262 target moved from 8 to 30 passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7296,
+  "type": "result",
+  "duration_ms": 11196,
+  "uuid": "323c933f-cf24-45a5-befe-0e638565ec8f",
+  "ttft_stream_ms": 1427,
+  "time_to_request_ms": 679,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 466,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 35,
+    "input_hooks": 4,
+    "tool_pool_refresh": 8,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 108,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 41,
+  "time_to_request_cpu_ms": 417,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 790,
+  "process_wall_ms_turn": 11196,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 36,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1428,
+  "time_to_request_from_spawn_ms": 22837921,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002297593.5032,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.1,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
