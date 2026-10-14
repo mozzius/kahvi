@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11487,
+  "stop_reason": "end_turn",
+  "session_id": "e4cfd7f6-40a1-40b5-91b2-e3fe39e8df89",
+  "total_cost_usd": 0.00501305,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 14934,
+    "cache_read_input_tokens": 83185,
+    "output_tokens": 1687,
+    "output_tokens_details": {
+      "thinking_tokens": 339
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14934,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 258,
+        "cache_read_input_tokens": 22156,
+        "cache_creation_input_tokens": 421,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 421
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`DataView.prototype.setInt16` was already implemented in its file, and I made no edits. `./t262 built-ins/DataView/prototype/setInt16/` passes 46 of 46 runs with 0 failures. Clippy is clean and the file is rustfmt-clean.\n\nThe earlier BLOCKED report is stale: `DataView.prototype.getInt16` and the `get_view_value`/`set_view_value` helpers are now implemented on this branch, so the setInt16 tests no longer hit the not-implemented stub.",
+  "ttft_ms": 1506,
+  "type": "result",
+  "duration_ms": 17788,
+  "uuid": "ddba02f4-6ff6-48d9-a4ea-0cb12b51925e",
+  "ttft_stream_ms": 1323,
+  "time_to_request_ms": 610,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 515,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 21,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 1,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 76,
+  "time_to_request_cpu_ms": 434,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 110,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 2352,
+  "process_wall_ms_turn": 17787,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1325,
+  "time_to_request_from_spawn_ms": 25170214,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004630154.3977,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.32,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
