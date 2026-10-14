@@ -12,3 +12,8 @@
 [00:44:45] B-weak-set-constructor: attempt 36 finished ($0.007, 11 turns)
 [00:45:14] B-weak-set-constructor: verifier: accept The diff implements the WeakSet constructor steps 1-8 in order, one step per comment, in crate::weak_set::constructor. Step 1 throws a TypeError when 
 [00:50:33] B-array-prototype-sort: merged (+83, 59758 total)
+[00:50:35] B-object-prototype-is-prototype-of: attempt on slot 0 with haiku
+[00:50:37] B-weak-set-constructor: full test262 run for merge
+[00:51:02] B-object-prototype-is-prototype-of: attempt 37 finished ($0.005, 14 turns)
+[00:51:26] B-object-prototype-is-prototype-of: verifier: accept The change implements Object.prototype.isPrototypeOf faithfully. Step 1 returns false for non-object arguments via a let-else. Step 2 calls ops::to_ob
+[00:56:52] B-weak-set-constructor: merged (+36, 59794 total)

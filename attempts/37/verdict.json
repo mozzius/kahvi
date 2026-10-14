@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements Object.prototype.isPrototypeOf faithfully. Step 1 returns false for non-object arguments via a let-else. Step 2 calls ops::to_object(this) with `?`. Step 3 loops, calling internal_get_prototype_of with `?`, returns false on null, and returns true when ops::same_value matches. Steps are in spec order, each has its spec-text comment above it, and errors propagate. The only other edit is renaming the unused `new_target` parameter to `_new_target`, which is confined to the in-scope file and needed once the `let _ = (...)` line is gone. The two failing test262 cases fail on the engine's own not-implemented error for Proxy [[GetPrototypeOf]], which is honest partial work.",
+  "problems": [],
+  "notes_for_next_attempt": "No changes needed for this ticket. The remaining two test262 failures (arg-is-proxy.js) depend on Proxy [[GetPrototypeOf]] being implemented elsewhere, and that is out of scope for this ticket.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

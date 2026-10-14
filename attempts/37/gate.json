@@ -1,0 +1,35 @@
+{
+  "ticket": "B-object-prototype-is-prototype-of",
+  "base": "b733015183fc7114b6559c92ab0b1cd48a43201c",
+  "head": "912d5e41a5affed1f4495653f24be1ec998df2c3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_is_prototype_of.rs",
+      "added": 20,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/prototype/isPrototypeOf/arg-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[GetPrototypeOf]]",
+      "built-ins/Object/prototype/isPrototypeOf/arg-is-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[GetPrototypeOf]]"
+    ]
+  },
+  "decision": "pass"
+}
