@@ -16,10 +16,6 @@ conformance suite.
 
 <!-- test262:end -->
 
-> **Status: early.** The harness (milestone M0) is in place. The engine itself
-> is a stub: `crates/kahvi-cli` is the only engine crate so far, and the
-> engine spine (M1) has not been written. Nothing in test262 passes yet.
-
 ## How it works
 
 - **test262 is the only judge.** It is pinned in `vendor/test262`, agents
@@ -66,7 +62,7 @@ module and raw modes. The engine binary's contract with the runner is in
 
 | Path | Contents |
 |---|---|
-| `crates/` | The engine (currently just `kahvi-cli`) |
+| `crates/` | The engine
 | `harness/t262` | test262 runner with anti-faking measures and canary tests |
 | `harness/orch`, `orch` | Orchestrator: claims tickets, runs workers, gates, verifier, merge bot |
 | `harness/spec.py`, `spec` | ECMA-262 clause lookup |
