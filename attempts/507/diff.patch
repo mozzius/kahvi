@@ -1,0 +1,131 @@
+diff --git a/crates/kahvi-builtins/src/uint8_array/prototype_to_base64.rs b/crates/kahvi-builtins/src/uint8_array/prototype_to_base64.rs
+index ddfea42..be15a29 100644
+--- a/crates/kahvi-builtins/src/uint8_array/prototype_to_base64.rs
++++ b/crates/kahvi-builtins/src/uint8_array/prototype_to_base64.rs
+@@ -2,29 +2,121 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-uint8array.prototype.tobase64
+ 
++use kahvi_core::object::typed_array::{ElementType, get_value_from_buffer, typed_array_data};
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{byte_offset, length, out_of_bounds, ta_record, viewed_buffer};
++
+ /// Uint8Array.prototype.toBase64
+ pub(crate) fn prototype_to_base64(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // 1. Let _obj_ be the *this* value.
+     // 2. Perform ? ValidateUint8Array(_obj_).
++    // ValidateUint8Array: RequireInternalSlot(ta, [[TypedArrayName]]), then the name must be "Uint8Array".
++    let obj = match this {
++        Value::Object(o)
++            if typed_array_data(agent, o).is_some_and(|d| d.kind == ElementType::Uint8) =>
++        {
++            o
++        }
++        _ => return Err(agent.throw_type_error("not a Uint8Array")),
++    };
+     // 3. Let _optionsObj_ be ? GetOptionsObject(_options_).
++    let options_obj = match args.get_or_undefined(0) {
++        // 1. If options is undefined, return OrdinaryObjectCreate(null).
++        Value::Undefined => agent.ordinary_object_create(None),
++        // 2. If options is an Object, return options.
++        Value::Object(o) => o,
++        // 3. Throw a TypeError exception.
++        _ => return Err(agent.throw_type_error("options must be an object")),
++    };
+     // 4. Let _alphabet_ be ? Get(_optionsObj_, *"alphabet"*).
++    let key = agent.key("alphabet");
++    let alphabet = ops::get(agent, options_obj, key)?;
+     // 5. If _alphabet_ is *undefined*, set _alphabet_ to *"base64"*.
+     // 6. If _alphabet_ is neither *"base64"* nor *"base64url"*, throw a *TypeError* exception.
++    let url = match alphabet {
++        Value::Undefined => false,
++        Value::String(s) => {
++            let units = agent.str(s);
++            let is = |name: &str| units.iter().copied().eq(name.encode_utf16());
++            if is("base64") {
++                false
++            } else if is("base64url") {
++                true
++            } else {
++                return Err(agent.throw_type_error("alphabet must be \"base64\" or \"base64url\""));
++            }
++        }
++        _ => return Err(agent.throw_type_error("alphabet must be \"base64\" or \"base64url\"")),
++    };
+     // 7. Let _omitPadding_ be ToBoolean(? Get(_optionsObj_, *"omitPadding"*)).
++    let key = agent.key("omitPadding");
++    let omit = ops::get(agent, options_obj, key)?;
++    let omit_padding = ops::to_boolean(agent, omit);
+     // 8. Let _toEncode_ be ? GetUint8ArrayBytes(_obj_).
++    // 1. Let buffer be ta.[[ViewedArrayBuffer]].
++    let buffer = viewed_buffer(agent, obj);
++    // 2. Let taRecord be ? ValidateTypedArrayBounds(ta, seq-cst).
++    let rec = ta_record(agent, obj);
++    if out_of_bounds(agent, rec) {
++        return Err(agent.throw_type_error("TypedArray is out of bounds or detached"));
++    }
++    // 3. Let length be TypedArrayLength(taRecord).
++    let len = length(agent, rec);
++    // 4. Let byteOffset be ta.[[ByteOffset]].
++    let offset = byte_offset(agent, obj);
++    // 5. Let bytes be a new empty List.
++    let mut to_encode: Vec<u8> = Vec::with_capacity(len);
++    // 6. Let index be 0.
++    // 7. Repeat, while index < length,
++    for index in 0..len {
++        // a. Let byteIndex be byteOffset + index.
++        let byte_index = offset + index;
++        // b. Let byte be ℝ(GetValueFromBuffer(buffer, byteIndex, uint8, true, unordered)).
++        let byte = get_value_from_buffer(agent, buffer, byte_index, ElementType::Uint8, true);
++        // c. Append byte to bytes.
++        match byte {
++            Value::Number(n) => to_encode.push(n as u8),
++            _ => return Err(agent.throw_type_error("unexpected non-Number byte value")),
++        }
++        // d. Set index to index + 1.
++    }
+     // 9. If _alphabet_ is *"base64"*, then
+-    //    a. Let _outAscii_ be the sequence of code points which results from encoding _toEncode_ according to the base64 encoding specified in section 4 of RFC 4648. Padding is included if and only if _omitPadding_ is *false*.
++    //    a. Let _outAscii_ be ... base64 encoding specified in section 4 of RFC 4648.
+     // 10. Else,
+     //    a. Assert: _alphabet_ is *"base64url"*.
+-    //    b. Let _outAscii_ be the sequence of code points which results from encoding _toEncode_ according to the base64url encoding specified in section 5 of RFC 4648. Padding is included if and only if _omitPadding_ is *false*.
++    //    b. Let _outAscii_ be ... base64url encoding specified in section 5 of RFC 4648.
++    // Padding is included if and only if _omitPadding_ is *false*.
++    let table: &[u8; 64] = if url {
++        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
++    } else {
++        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
++    };
++    let mut out_ascii: Vec<u16> = Vec::with_capacity(to_encode.len().div_ceil(3) * 4);
++    for chunk in to_encode.chunks(3) {
++        let b0 = chunk[0] as u32;
++        let b1 = chunk.get(1).copied().unwrap_or(0) as u32;
++        let b2 = chunk.get(2).copied().unwrap_or(0) as u32;
++        let n = (b0 << 16) | (b1 << 8) | b2;
++        let sextet = |shift: u32| table[((n >> shift) & 63) as usize] as u16;
++        out_ascii.push(sextet(18));
++        out_ascii.push(sextet(12));
++        if chunk.len() > 1 {
++            out_ascii.push(sextet(6));
++        } else if !omit_padding {
++            out_ascii.push(b'=' as u16);
++        }
++        if chunk.len() > 2 {
++            out_ascii.push(sextet(0));
++        } else if !omit_padding {
++            out_ascii.push(b'=' as u16);
++        }
++    }
+     // 11. Return CodePointsToString(_outAscii_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Uint8Array.prototype.toBase64"))
++    Ok(Value::String(agent.intern(&out_ascii)))
+ }

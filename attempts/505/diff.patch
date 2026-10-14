@@ -1,0 +1,131 @@
+diff --git a/crates/kahvi-builtins/src/uint8_array/from_hex.rs b/crates/kahvi-builtins/src/uint8_array/from_hex.rs
+index 3e61057..68927a5 100644
+--- a/crates/kahvi-builtins/src/uint8_array/from_hex.rs
++++ b/crates/kahvi-builtins/src/uint8_array/from_hex.rs
+@@ -2,8 +2,86 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-uint8array.fromhex
+ 
++use crate::support::typed_array::{allocate_typed_array, constructor_of, viewed_buffer};
++use kahvi_core::object::typed_array::{ElementType, set_value_in_buffer};
+ use kahvi_core::prelude::*;
+ 
++/// The Record returned by FromHex: [[Read]], [[Bytes]] and [[Error]].
++pub(crate) struct FromHexResult {
++    #[allow(dead_code)] // read by Uint8Array.prototype.setFromHex
++    pub(crate) read: usize,
++    pub(crate) bytes: Vec<u8>,
++    pub(crate) error: Option<JsError>,
++}
++
++/// The value of a hexit code unit, if it is one of "0123456789abcdefABCDEF".
++fn hexit_value(unit: u16) -> Option<u8> {
++    match u8::try_from(unit).ok()? {
++        c @ b'0'..=b'9' => Some(c - b'0'),
++        c @ b'a'..=b'f' => Some(c - b'a' + 10),
++        c @ b'A'..=b'F' => Some(c - b'A' + 10),
++        _ => None,
++    }
++}
++
++/// FromHex ( string [ , maxLength ] ) (sec-fromhex)
++pub(crate) fn from_hex_record(
++    agent: &mut Agent,
++    string: JsString,
++    max_length: Option<usize>,
++) -> FromHexResult {
++    // 1. If maxLength is not present, set maxLength to 2^53 - 1.
++    let max_length = max_length.unwrap_or((1usize << 53) - 1);
++    // 2. Let length be the length of string.
++    let length = agent.str_len(string);
++    // 3. Let bytes be a new empty List.
++    let mut bytes = Vec::new();
++    // 4. Let read be 0.
++    let mut read = 0;
++    // 5. If length modulo 2 ≠ 0, then
++    if length % 2 != 0 {
++        // a. Let error be a newly created SyntaxError object.
++        let error = agent.throw_syntax_error("hex string must have an even length");
++        // b. Return the Record { [[Read]]: read, [[Bytes]]: bytes, [[Error]]: error }.
++        return FromHexResult {
++            read,
++            bytes,
++            error: Some(error),
++        };
++    }
++    // 6. Repeat, while read < length and the number of elements in bytes < maxLength,
++    while read < length && bytes.len() < max_length {
++        // a. Let hexits be the substring of string from read to read + 2.
++        let (hi, lo) = {
++            let units = agent.str(string);
++            (hexit_value(units[read]), hexit_value(units[read + 1]))
++        };
++        // b. If hexits contains any code units which are not in "0123456789abcdefABCDEF", then
++        let (Some(hi), Some(lo)) = (hi, lo) else {
++            // i. Let error be a newly created SyntaxError object.
++            let error = agent.throw_syntax_error("invalid hex digit");
++            // ii. Return the Record { [[Read]]: read, [[Bytes]]: bytes, [[Error]]: error }.
++            return FromHexResult {
++                read,
++                bytes,
++                error: Some(error),
++            };
++        };
++        // c. Set read to read + 2.
++        read += 2;
++        // d. Let byte be the integer value represented by hexits in base-16 notation.
++        let byte = hi * 16 + lo;
++        // e. Append byte to bytes.
++        bytes.push(byte);
++    }
++    // 7. Return the Record { [[Read]]: read, [[Bytes]]: bytes, [[Error]]: none }.
++    FromHexResult {
++        read,
++        bytes,
++        error: None,
++    }
++}
++
+ /// Uint8Array.fromHex
+ pub(crate) fn from_hex(
+     agent: &mut Agent,
+@@ -11,15 +89,36 @@ pub(crate) fn from_hex(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = (this, new_target);
+     // 1. If _string_ is not a String, throw a *TypeError* exception.
++    let Value::String(string) = args.get_or_undefined(0) else {
++        return Err(agent.throw_type_error("Uint8Array.fromHex requires a string"));
++    };
+     // 2. Let _result_ be FromHex(_string_).
++    let result = from_hex_record(agent, string, None);
+     // 3. If _result_.[[Error]] is not ~none~, then
+-    //    a. Throw _result_.[[Error]].
++    if let Some(error) = result.error {
++        // a. Throw _result_.[[Error]].
++        return Err(error);
++    }
+     // 4. Let _resultLength_ be the number of elements in _result_.[[Bytes]].
++    let result_length = result.bytes.len();
+     // 5. Let _ta_ be ? AllocateTypedArray(*"Uint8Array"*, %Uint8Array%, *"%Uint8Array.prototype%"*, _resultLength_).
++    let ctor = constructor_of(agent, ElementType::Uint8);
++    let ta = allocate_typed_array(agent, ElementType::Uint8, ctor, Some(result_length as f64))?;
+     // 6. Assert: _ta_.[[ViewedArrayBuffer]].[[ArrayBufferByteLength]] is the number of elements in _result_.[[Bytes]].
+     // 7. Set the value at each index of _ta_.[[ViewedArrayBuffer]].[[ArrayBufferData]] to the value at the corresponding index of _result_.[[Bytes]].
++    let buffer = viewed_buffer(agent, ta);
++    for (i, byte) in result.bytes.iter().enumerate() {
++        set_value_in_buffer(
++            agent,
++            buffer,
++            i,
++            ElementType::Uint8,
++            Value::Number(f64::from(*byte)),
++            true,
++        );
++    }
+     // 8. Return _ta_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Uint8Array.fromHex"))
++    Ok(Value::Object(ta))
+ }

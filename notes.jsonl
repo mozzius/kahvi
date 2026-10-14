@@ -848,3 +848,4 @@
 {"ticket": "B-typed-array-prototype-subarray", "attempt": null, "ts": 1792010564.6018312, "text": "every target run passes after later merges"}
 {"ticket": "B-typed-array-prototype-to-locale-string", "attempt": null, "ts": 1792010564.646487, "text": "every target run passes after later merges"}
 {"ticket": "B-typed-array-prototype-values", "attempt": null, "ts": 1792010564.6778305, "text": "every target run passes after later merges"}
+{"ticket": "B-uint8-array-from-hex", "attempt": 505, "ts": 1792011062.5646236, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_hex.rs:11: #[allow(dead_code)] // read by Uint8Array.prototype.setFromHex"}

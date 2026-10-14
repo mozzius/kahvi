@@ -1,0 +1,26 @@
+{
+  "ticket": "B-uint8-array-from-hex",
+  "base": "2985a456f5d0ddce1552cb0f90531fab179ce480",
+  "head": "de90e3a826591514ff6a76cdcd4d861eaa90e5a7",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_hex.rs:11: #[allow(dead_code)] // read by Uint8Array.prototype.setFromHex"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/uint8_array/from_hex.rs",
+      "added": 102,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/from_hex.rs",
+      "line": 11,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // read by Uint8Array.prototype.setFromHex"
+    }
+  ],
+  "lint_flag": [],
+  "decision": "reject"
+}

@@ -1,0 +1,130 @@
+{
+  "duration_api_ms": 39822,
+  "stop_reason": "end_turn",
+  "session_id": "86ea7f4a-8237-45f4-9d0a-9c3517956a78",
+  "total_cost_usd": 0.1773444,
+  "usage": {
+    "input_tokens": 25,
+    "cache_creation_input_tokens": 25653,
+    "cache_read_input_tokens": 315399,
+    "output_tokens": 4281,
+    "output_tokens_details": {
+      "thinking_tokens": 172
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25653,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 208,
+        "cache_read_input_tokens": 31870,
+        "cache_creation_input_tokens": 646,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 646
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01TDzD7jDKC18uNYDQGq8EVY",
+      "tool_input": {
+        "command": "cat > /home/user/kahvi/work/slots/slot-1/scratchpad_unused 2>/dev/null; echo ok"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `AsyncIteratorPrototype[Symbol.asyncDispose]` in `symbol_async_dispose.rs`, with the spec steps as comments. All 18 runs under `built-ins/AsyncIteratorPrototype/Symbol.asyncDispose/` pass, and `cargo clippy` is clean.\n\nI wrote a local `reject_if_abrupt` helper in that file for IfAbruptRejectPromise. A private copy of the same helper already exists in `vm/async_from_sync.rs`, but it isn't exported, so I couldn't reuse it without editing a file outside my scope.",
+  "ttft_ms": 2637,
+  "type": "result",
+  "duration_ms": 75432,
+  "uuid": "2a077f2e-00dd-45c2-a57a-3281e58f3485",
+  "ttft_stream_ms": 1850,
+  "time_to_request_ms": 559,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 393,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 11,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 59,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 107,
+  "time_to_request_cpu_ms": 408,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 4642,
+  "process_wall_ms_turn": 75432,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1851,
+  "time_to_request_from_spawn_ms": 31508742,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792010968815.1372,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792020000,
+    "rateLimitType": "five_hour",
+    "utilization": 0.91,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.9,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.91,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.89,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

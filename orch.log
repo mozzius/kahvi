@@ -4887,3 +4887,42 @@ test262 at last merge: 80373/81183 runs passing
 [20:39:14] stack: pushed stack/0030 as #47 with arch-locale
 [20:42:42] stack: stack/0030 (#47) green: 80909/81183 passing, +536
 [20:42:44] stack: partial tickets after stack/0030: {'done': 55}
+[20:42:53] nothing left to do
+tickets: blocked 3, done 393, needs-architect 1, open 3, partial 7
+  A-gc-collect-code open             tier=architect attempts=0 strikes=0
+  A-gc-collect-in-callbacks open             tier=architect attempts=0 strikes=0
+  A-gc-string-storage open             tier=architect attempts=0 strikes=0
+  B-array-prototype-to-string partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: 2 other failures
+  B-iterator-zip partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2)
+  B-iterator-zip-keyed partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2)
+  B-json-is-raw-json needs-architect  tier=sonnet  attempts=5 strikes=1  5 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-json-raw-json partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not p
+  B-object-freeze partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: 2 other failures
+  B-reg-exp-prototype-symbol-match-all partial          tier=haiku   attempts=2 strikes=0  20 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2
+  B-reg-exp-string-iterator-prototype-next blocked          tier=sonnet  attempts=3 strikes=0  `CreateRegExpStringIterator` must be implemented in `reg_exp/prototype_symbol_match_all.rs
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-string-prototype-match-all partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (1
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+attempts: 504  merged: 386  spend: $21.73 (workers $7.97, verifier $13.76)  new test262 passes: 19368  ($0.001 per pass)
+  haiku   accept       385
+  haiku   blocked      6
+  haiku   gate-reject  41
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       16
+  sonnet  accept       5
+  sonnet  blocked      1
+  sonnet  gate-reject  25
+  sonnet  no-diff      8
+plan usage at last run: allowed_warning; five_hour 81% (resets Wed 23:20), seven_day 88% (resets Thu 09:00)
+test262 at last merge: 80909/81183 runs passing
+[20:49:27] building trusted runner; integration branch stack, 4 slots
+[20:49:28] B-uint8-array-from-base64: attempt on slot 3 with sonnet
+[20:49:28] B-uint8-array-prototype-to-base64: attempt on slot 2 with sonnet
+[20:49:28] B-async-iterator-prototype-symbol-async-dispose: attempt on slot 1 with sonnet
+[20:49:28] B-uint8-array-from-hex: attempt on slot 0 with sonnet
+[20:49:45] stack: pushed stack/0031 as #48 with arch-regexp-iter
+[20:50:46] B-async-iterator-prototype-symbol-async-dispose: attempt 506 finished ($0.177, 20 turns)
+[20:50:54] B-uint8-array-prototype-to-base64: attempt 507 finished ($0.200, 13 turns)
+[20:51:01] B-uint8-array-from-hex: attempt 505 finished ($0.208, 16 turns)
+[20:51:02] B-uint8-array-from-hex: gate rejected attempt 505: lint: lint suppression is architect-only at crates/kahvi-builtins/src/uint8_array/from_hex.rs:11: #[allow(dead_code)] // read by Uint8Array.prototype.setFromHex
