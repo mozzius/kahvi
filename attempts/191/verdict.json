@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements WeakMap.prototype.getOrInsertComputed in the stub's file, following the spec steps 1-11 in order. RequireInternalSlot, CanBeHeldWeakly, IsCallable, the first lookup, Call with undefined this and [key], the re-check after the callback (which covers the case where the callback deleted the key), and the insert all happen in spec order. Abrupt completions propagate with `?`. No test-shaped branches, hardcoded values, or swallowed errors. The gate shows 27 new passing tests and 0 regressions, and the 12 remaining failures are all not-implemented errors from other built-ins (WeakMap.has/get, Symbol.for). The only non-step change is renaming the unused `new_target` parameter to `_new_target` and dropping the header comment, both harmless.",
+  "problems": [],
+  "notes_for_next_attempt": "Nothing needs fixing in this file. I could not see the helpers in crate support::collections (this_weak_map, can_be_held_weakly, collection_key, weak_map_table). Whoever lands this should confirm that can_be_held_weakly returns false for symbols registered with Symbol.for (KeyForSymbol), and that this_weak_map throws a TypeError when RequireInternalSlot fails. The throw-if-key-cannot-be-held-weakly test cannot exercise that path yet because Symbol.for is not implemented.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

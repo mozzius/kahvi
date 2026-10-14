@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12005,
+  "stop_reason": "tool_use",
+  "session_id": "df7e34b3-6e25-4583-ac3e-911537fb11ea",
+  "total_cost_usd": 0.0028206800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5485,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2419,
+    "output_tokens_details": {
+      "thinking_tokens": 2015
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5485,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2419,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5485,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5485
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Array.prototype.find per spec: ToObject, LengthOfArrayLike, then a private FindViaPredicate helper (ascending only) doing IsCallable check, then per-index ToString key, Get, Call(predicate, thisArg, \u00abkValue, k, obj\u00bb), ToBoolean, and returning (-1, undefined) when nothing matches. Every abrupt completion is propagated with `?`, step order matches the spec, and no inputs are special-cased. The 6 remaining failures are BigInt not-implemented errors from the test harness, not from this code.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Array.prototype.find per spec: ToObject, LengthOfArrayLike, then a private FindViaPredicate helper (ascending only) doing IsCallable check, then per-index ToString key, Get, Call(predicate, thisArg, \u00abkValue, k, obj\u00bb), ToBoolean, and returning (-1, undefined) when nothing matches. Every abrupt completion is propagated with `?`, step order matches the spec, and no inputs are special-cased. The 6 remaining failures are BigInt not-implemented errors from the test harness, not from this code.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10674,
+  "type": "result",
+  "duration_ms": 12139,
+  "uuid": "2be44e55-12e4-4a67-a7d7-12c6439cc391",
+  "ttft_stream_ms": 1718,
+  "time_to_request_ms": 747,
+  "time_to_request_phases_ms": {
+    "other": 44,
+    "system_prompt": 388,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 50,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 198,
+    "autocompact": 2,
+    "query_setup": 3,
+    "model_gates": 3,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 78,
+  "time_to_request_cpu_ms": 390,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 922,
+  "process_wall_ms_turn": 12138,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1719,
+  "time_to_request_from_spawn_ms": 20036774,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999495848.645,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

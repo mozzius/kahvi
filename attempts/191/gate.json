@@ -1,0 +1,45 @@
+{
+  "ticket": "B-weak-map-prototype-get-or-insert-computed",
+  "base": "412969d1f2a2ced8ea334b819461e3bcd773dafb",
+  "head": "46b7131421c0292de7453cbe2b8207551190fb92",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_map/prototype_get_or_insert_computed.rs",
+      "added": 28,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 43,
+    "before": 4,
+    "after": 31,
+    "new_passes": 27,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 12,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-object-element.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.has",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-object-element.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.has",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-symbol-element.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.has",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-symbol-element.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.has",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-value-different-callbackfn.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/adds-value-different-callbackfn.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/check-state-after-callback-fn-throws.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/check-state-after-callback-fn-throws.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/overwrites-mutation-from-callbackfn.js:sloppy  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/overwrites-mutation-from-callbackfn.js:strict  Uncaught InternalError: not implemented: WeakMap.prototype.get",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/throw-if-key-cannot-be-held-weakly.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakMap/prototype/getOrInsertComputed/throw-if-key-cannot-be-held-weakly.js:strict  Uncaught InternalError: not implemented: Symbol.for"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19608,
+  "stop_reason": "end_turn",
+  "session_id": "10c1b29c-5401-486a-a1f1-55a8e792223a",
+  "total_cost_usd": 0.00631451,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 15490,
+    "cache_read_input_tokens": 115501,
+    "output_tokens": 3578,
+    "output_tokens_details": {
+      "thinking_tokens": 524
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15490,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 299,
+        "cache_read_input_tokens": 22466,
+        "cache_creation_input_tokens": 667,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 667
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Array.prototype.find` is implemented in `crates/kahvi-builtins/src/array/prototype_find.rs`, with each spec step commented above its code. `./t262 built-ins/Array/prototype/find/` gives 38 of 44 runs passing; `cargo build`, `cargo clippy` and `cargo fmt` are clean.\n\nThe six failures are all `resizable-buffer*` tests (sloppy and strict) that stop with \"not implemented: BigInt\", so they need BigInt support the engine doesn't have yet. The ticket's \"every test passes\" condition is therefore not met.\n\nI wrote `FindViaPredicate` as a private helper in my own file, mirroring the typed-array version. No other files were touched.\n\nBLOCKED: BigInt is not implemented in the engine, which the six `Array/prototype/find/resizable-buffer*` tests (BigInt64Array) require.",
+  "ttft_ms": 1738,
+  "type": "result",
+  "duration_ms": 38779,
+  "uuid": "22374fe7-9f2b-4618-9088-856b604f8bf6",
+  "ttft_stream_ms": 1512,
+  "time_to_request_ms": 641,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 467,
+    "resume_other": 2,
+    "process_user_input": 6,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 60,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 4,
+    "client_creation": 8,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 161,
+  "time_to_request_cpu_ms": 405,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3196,
+  "process_wall_ms_turn": 38779,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1513,
+  "time_to_request_from_spawn_ms": 19974429,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999434538.2683,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

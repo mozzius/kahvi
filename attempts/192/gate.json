@@ -1,0 +1,39 @@
+{
+  "ticket": "B-array-prototype-find",
+  "base": "e2924e400698765e70be288172f6734da56b264d",
+  "head": "a87bd414bbb89276cc224f951747096fb14b9f34",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_find.rs",
+      "added": 55,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 44,
+    "before": 8,
+    "after": 38,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/find/resizable-buffer-grow-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/find/resizable-buffer-grow-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/find/resizable-buffer-shrink-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/find/resizable-buffer-shrink-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/find/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/find/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
