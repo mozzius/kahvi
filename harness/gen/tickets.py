@@ -45,7 +45,6 @@ WORKER_GROUPS = {
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
-    "RegExp.prototype.compile": "Annex B, out of scope until annexB/ is enabled",
     "Iterator.prototype.join": "not in the pinned spec's test scope (skipped feature)",
 }
 

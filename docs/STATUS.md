@@ -6,8 +6,8 @@ when handing off.
 ## As of 2026-10-14
 
 - **test262:** 69,294 passing runs (86.7% of those in scope;
-  `conformance/skip.txt` excludes intl402, staging, Annex B and proposals
-  not in the pinned spec). The ratchet (`conformance/expected-pass.txt`)
+  `conformance/skip.txt` excludes intl402, staging and proposals not in
+  the pinned spec; Annex B is in scope). The ratchet (`conformance/expected-pass.txt`)
   has never regressed.
 - **Branches:** `m1-spine` is the integration branch (the swarm's merge bot
   lands on it; architect work lands with `harness/land.sh`). `arch` is the
@@ -70,12 +70,14 @@ pauses itself at the limit; architect sessions should stop well before it
 
 ## Open architect work
 
-- `tickets/A-gc-*` (tier `architect`, never dispatched): collection inside
-  built-in callbacks and iterator steps, collecting compiled code, storing
-  strings once. Design: `docs/GC.md`.
-- Performance: compile-time resolution of bindings to slots.
-- Scope still skipped: Annex B, intl402; `String.prototype.normalize` needs
-  normalization tables.
+- Done: the A-gc-* tickets (`docs/GC.md`), binding caches (name
+  instructions remember the (hops, slot) of declarative bindings; off in
+  code with direct eval or `with`), `String.prototype.normalize` (UAX #15
+  tables in kahvi-unicode), Annex B block-level functions (B.3.2), catch
+  `var` redeclaration (B.3.4) and call assignment targets. Annex B's
+  built-ins (escape, substr, the HTML methods, getYear/setYear,
+  RegExp.prototype.compile) are swarm tickets.
+- Scope still skipped: intl402.
 - Triage the `partial` tickets whose remaining failures are not in their own
   code (the failures name the missing piece).
 - Then M4 (runtime: event loop, console, timers, ESM loading) and M5 (React

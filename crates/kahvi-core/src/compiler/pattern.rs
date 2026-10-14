@@ -104,9 +104,12 @@ impl Compiler<'_> {
                 self.emit(Op::Pop);
                 self.emit(Op::Pop);
             }
-            _ => {
+            other => {
+                // `for (f() in o)` in sloppy code: the call happens, then a ReferenceError.
+                self.compile_expr(other);
                 self.emit(Op::Pop);
-                self.throw_error(ErrorType::Reference, "invalid destructuring target");
+                self.emit(Op::Pop);
+                self.throw_error(ErrorType::Reference, "invalid assignment target");
             }
         }
     }

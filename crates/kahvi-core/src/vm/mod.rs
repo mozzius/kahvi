@@ -231,6 +231,10 @@ pub struct Frame {
     pub delegate_kind: u8,
     /// Set by an instruction that must run again on resumption.
     pub resume_pc: Option<usize>,
+    /// Annex B.3.2: the block-level function names that declaration
+    /// instantiation gave a var binding (from `code.decls`, which keeps the
+    /// strings alive).
+    pub annex_b: Vec<JsString>,
 }
 
 impl Frame {
@@ -258,6 +262,7 @@ impl Frame {
             delegating: false,
             delegate_kind: 0,
             resume_pc: None,
+            annex_b: Vec::new(),
         }
     }
 
@@ -782,6 +787,18 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let v = frame.pop();
             frame.env.initialize_binding(agent, name, v)?;
         }
+        Op::AnnexBFunction(name) => {
+            if frame.annex_b.contains(&name) {
+                // i. Let fenv be the running execution context's VariableEnvironment.
+                // ii. Let benv be the running execution context's LexicalEnvironment.
+                // iii. Let fobj be ! benv.GetBindingValue(F, false).
+                let fobj = frame.env.get_binding_value(agent, name, false)?;
+                // iv. Perform ? fenv.SetMutableBinding(F, fobj, false).
+                frame
+                    .var_env
+                    .set_mutable_binding(agent, name, fobj, false)?;
+            }
+        }
         Op::DeleteName(name) => {
             let r = resolve_binding(agent, frame.env, name)?;
             let result = match r {
@@ -793,8 +810,12 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
 
         // ---- environments
         Op::PushScope(i) => {
-            let env = Environment::new_declarative(agent, Some(frame.env));
             let code = frame.code.clone();
+            let env = if code.scopes[i as usize].is_catch {
+                Environment::new_catch(agent, Some(frame.env))
+            } else {
+                Environment::new_declarative(agent, Some(frame.env))
+            };
             instantiate::block_declaration_instantiation(
                 agent,
                 frame,

@@ -45,7 +45,15 @@ impl Compiler<'_> {
         match s {
             Stmt::Var(decl) => self.compile_var_decl(decl),
             // Hoisted by declaration instantiation.
-            Stmt::Function(_) => {}
+            Stmt::Function(f) => {
+                // Annex B.3.2: the declaration's evaluation copies the block's
+                // binding to the var binding, if instantiation created one.
+                if self.annex_b.contains(&std::rc::Rc::as_ptr(f)) {
+                    let name = f.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
+                    let name = self.string(name);
+                    self.emit(Op::AnnexBFunction(name));
+                }
+            }
             Stmt::Class(c) => {
                 self.compile_class(c, FnName::Own);
                 let name = c.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
@@ -355,6 +363,7 @@ impl Compiler<'_> {
                 self.code.scopes.push(ScopeInfo {
                     lexical,
                     functions: Vec::new(),
+                    is_catch: false,
                 });
                 let scope = (self.code.scopes.len() - 1) as u32;
                 self.emit(Op::PushScope(scope));
@@ -450,6 +459,7 @@ impl Compiler<'_> {
             self.code.scopes.push(ScopeInfo {
                 lexical: names,
                 functions: Vec::new(),
+                is_catch: false,
             });
             (self.code.scopes.len() - 1) as u32
         });
@@ -481,6 +491,7 @@ impl Compiler<'_> {
             self.code.scopes.push(ScopeInfo {
                 lexical: lexical_names.clone(),
                 functions: Vec::new(),
+                is_catch: false,
             });
             (self.code.scopes.len() - 1) as u32
         });
@@ -715,6 +726,7 @@ impl Compiler<'_> {
                     self.code.scopes.push(ScopeInfo {
                         lexical,
                         functions: Vec::new(),
+                        is_catch: true,
                     });
                     let scope = (self.code.scopes.len() - 1) as u32;
                     self.emit(Op::PushScope(scope));

@@ -80,6 +80,9 @@ pub(crate) struct Compiler<'a> {
     optional_exits: Vec<Vec<usize>>,
     /// Binding caches handed out so far (`name_cache`).
     name_cache_count: u32,
+    /// Annex B.3.2: the block-level function declarations whose evaluation
+    /// sets the var binding of their name (`Op::AnnexBFunction`).
+    annex_b: Vec<*const ast::Function>,
 }
 
 /// Errors detected while compiling (things the parser accepts but that are
@@ -137,6 +140,7 @@ impl<'a> Compiler<'a> {
             completion: false,
             optional_exits: Vec::new(),
             name_cache_count: 0,
+            annex_b: Vec::new(),
         }
     }
 

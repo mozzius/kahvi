@@ -103,7 +103,7 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
             var_names.push(*n);
         }
     }
-    let var_env = if !code.params.has_expressions {
+    let (var_env, mut instantiated) = if !code.params.has_expressions {
         // 27. NOTE: Only a single Environment Record is needed for the parameters and top-level vars.
         // b. Let instantiatedVarNames be a copy of the List parameterBindings.
         let mut instantiated = param_bindings.clone();
@@ -115,7 +115,7 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
                 env_record.initialize_binding(agent, n, Value::Undefined)?;
             }
         }
-        env_record
+        (env_record, instantiated)
     } else {
         // 28. A separate Environment Record for the body's var declarations.
         let var_env = Environment::new_declarative(agent, Some(env_record));
@@ -133,9 +133,33 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
                 var_env.initialize_binding(agent, n, initial)?;
             }
         }
-        var_env
+        (var_env, instantiated)
     };
     frame.var_env = var_env;
+    // 30.a If the host supports Block-Level Function Declarations Web Legacy
+    //      Compatibility Semantics (code.decls.annex_b_functions is empty for strict code), then
+    //   i. For each FunctionDeclaration f directly contained in the StatementList of a Block,
+    //      CaseClause, or DefaultClause, such that replacing it with a `var F` would not produce
+    //      any Early Errors (the compiler's static check), do
+    let arguments = agent.names.arguments;
+    for &name in &decls.annex_b_functions {
+        // 2. ... and F is not an element of parameterNames (the formals, and "arguments"
+        //    when there is an arguments object), then
+        if param_bindings.contains(&name) {
+            continue;
+        }
+        // b. If instantiatedVarNames does not contain F and F is not "arguments", then
+        if !instantiated.contains(&name) && name != arguments {
+            // i. Perform ! varEnv.CreateMutableBinding(F, false).
+            var_env.create_mutable_binding(agent, name, false)?;
+            // ii. Perform ! varEnv.InitializeBinding(F, undefined).
+            var_env.initialize_binding(agent, name, Value::Undefined)?;
+            // iii. Append F to instantiatedVarNames.
+            instantiated.push(name);
+        }
+        // c. When the FunctionDeclaration f is evaluated, set varEnv's F (Op::AnnexBFunction).
+        frame.annex_b.push(name);
+    }
     // 30-31. Non-strict functions put top-level lexical declarations in their own environment.
     let lex_env = if code.strict {
         var_env
@@ -312,12 +336,13 @@ fn redeclaration(agent: &mut Agent, name: JsString) -> crate::error::JsError {
     agent.throw_syntax_error(&msg)
 }
 
-/// GlobalDeclarationInstantiation(script, env) (§16.1.7)
+/// GlobalDeclarationInstantiation(script, env) (§16.1.7). Returns the
+/// Annex B.3.2 function names that got a var binding.
 pub(crate) fn global_declaration_instantiation(
     agent: &mut Agent,
     code: &FunctionCode,
     env: EnvId,
-) -> JsResult<()> {
+) -> JsResult<Vec<JsString>> {
     let decls = &code.decls;
     let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
     // 3. For each element name of lexNames, do
@@ -360,6 +385,39 @@ pub(crate) fn global_declaration_instantiation(
             declared_var_names.push(name);
         }
     }
+    // 12. If the host supports Block-Level Function Declarations Web Legacy Compatibility
+    //     Semantics, then (a-b. If strict is false: annex_b_functions is empty otherwise)
+    let mut hoisted: Vec<JsString> = Vec::new();
+    // i. Let declaredFunctionOrVarNames be the list-concatenation of declaredFunctionNames
+    //    and declaredVarNames.
+    let mut declared_func_or_var_names: Vec<JsString> = func_names
+        .iter()
+        .chain(declared_var_names.iter())
+        .copied()
+        .collect();
+    // ii. For each FunctionDeclaration f directly contained in the StatementList of a Block,
+    //     CaseClause, or DefaultClause, such that replacing it with a `var F` would not
+    //     produce any Early Errors for script (the compiler's static check), do
+    for &name in &decls.annex_b_functions {
+        // a. If env.HasLexicalDeclaration(F) is false, then
+        if has_lexical_declaration(agent, env, name)? {
+            continue;
+        }
+        // i. Let fnDefinable be ? env.CanDeclareGlobalVar(F).
+        // ii. If fnDefinable is true, then
+        if !can_declare_global_var(agent, env, name)? {
+            continue;
+        }
+        // 2. If declaredFunctionOrVarNames does not contain F, then
+        if !declared_func_or_var_names.contains(&name) {
+            // i. Perform ? env.CreateGlobalVarBinding(F, false).
+            create_global_var_binding(agent, env, name, false)?;
+            // ii. Append F to declaredFunctionOrVarNames.
+            declared_func_or_var_names.push(name);
+        }
+        // 3. When the FunctionDeclaration f is evaluated, set the global F (Op::AnnexBFunction).
+        hoisted.push(name);
+    }
     // 15. Lexical declarations.
     for &(name, is_const) in &decls.lexical {
         if is_const {
@@ -383,10 +441,11 @@ pub(crate) fn global_declaration_instantiation(
     for name in declared_var_names {
         create_global_var_binding(agent, env, name, false)?;
     }
-    Ok(())
+    Ok(hoisted)
 }
 
-/// EvalDeclarationInstantiation(body, varEnv, lexEnv, privateEnv, strict) (§19.2.1.3)
+/// EvalDeclarationInstantiation(body, varEnv, lexEnv, privateEnv, strict)
+/// (§19.2.1.3). Returns the Annex B.3.2 function names that got a var binding.
 pub(super) fn eval_declaration_instantiation(
     agent: &mut Agent,
     code: &FunctionCode,
@@ -394,7 +453,7 @@ pub(super) fn eval_declaration_instantiation(
     lex_env: EnvId,
     private_env: Option<std::sync::Arc<super::PrivateEnv>>,
     strict: bool,
-) -> JsResult<()> {
+) -> JsResult<Vec<JsString>> {
     let decls = &code.decls;
     let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
     let var_names: Vec<JsString> = decls
@@ -423,8 +482,10 @@ pub(super) fn eval_declaration_instantiation(
             // i. If thisEnv is not an Object Environment Record, then
             if !matches!(agent.env(e), Environment::Object { .. }) {
                 for &name in &var_names {
-                    // 1. If ! thisEnv.HasBinding(name) is true, throw a SyntaxError exception.
-                    if e.has_binding(agent, name)? {
+                    // a. If ! thisEnv.HasBinding(name) is true, then
+                    //   i. (Annex B.3.4) If thisEnv is not the Environment Record for a
+                    //      Catch clause, throw a SyntaxError exception.
+                    if e.has_binding(agent, name)? && !Environment::is_catch(agent, e) {
                         return Err(redeclaration(agent, name));
                     }
                 }
@@ -455,6 +516,78 @@ pub(super) fn eval_declaration_instantiation(
         if !declared_var_names.contains(&name) {
             declared_var_names.push(name);
         }
+    }
+    // 13. If strict is false and the host supports Block-Level Function Declarations Web
+    //     Legacy Compatibility Semantics (annex_b_functions is empty for strict code), then
+    let mut hoisted: Vec<JsString> = Vec::new();
+    // a. Let declaredFunctionOrVarNames be the list-concatenation of declaredFunctionNames
+    //    and declaredVarNames.
+    let mut declared_func_or_var_names: Vec<JsString> = func_names
+        .iter()
+        .chain(declared_var_names.iter())
+        .copied()
+        .collect();
+    // b. For each FunctionDeclaration f directly contained in the StatementList of a Block,
+    //    CaseClause, or DefaultClause, such that replacing it with a `var F` would not
+    //    produce any Early Errors for body (the compiler's static check), do
+    for &name in &decls.annex_b_functions {
+        // 1. Let bindingExists be false.
+        let mut binding_exists = false;
+        // 2. Let thisEnv be lexEnv.
+        let mut this_env = Some(lex_env);
+        // 4. Repeat, while thisEnv is not varEnv,
+        while let Some(e) = this_env {
+            if e == var_env {
+                break;
+            }
+            // a. If thisEnv is not an Object Environment Record, then
+            //   i. If ! thisEnv.HasBinding(F) is true, then
+            //     1. (Annex B.3.4) If thisEnv is not the Environment Record for a Catch
+            //        clause, let bindingExists be true.
+            if !matches!(agent.env(e), Environment::Object { .. })
+                && e.has_binding(agent, name)?
+                && !Environment::is_catch(agent, e)
+            {
+                binding_exists = true;
+            }
+            // b. Set thisEnv to thisEnv.[[OuterEnv]].
+            this_env = e.outer(agent);
+        }
+        // 5. If bindingExists is false and varEnv is a Global Environment Record, then
+        let fn_definable = if !binding_exists && global {
+            // a. If varEnv.HasLexicalDeclaration(F) is false, then
+            //   i. Let fnDefinable be ? varEnv.CanDeclareGlobalVar(F).
+            // b. Else, let fnDefinable be false.
+            !has_lexical_declaration(agent, var_env, name)?
+                && can_declare_global_var(agent, var_env, name)?
+        } else {
+            // 6. Else, let fnDefinable be true.
+            true
+        };
+        // 7. If bindingExists is false and fnDefinable is true, then
+        if binding_exists || !fn_definable {
+            continue;
+        }
+        // a. If declaredFunctionOrVarNames does not contain F, then
+        if !declared_func_or_var_names.contains(&name) {
+            if global {
+                // i. If varEnv is a Global Environment Record, then
+                //   1. Perform ? varEnv.CreateGlobalVarBinding(F, true).
+                create_global_var_binding(agent, var_env, name, true)?;
+            } else if !var_env.has_binding(agent, name)? {
+                // ii. Else,
+                //   1. Let bindingExists be ! varEnv.HasBinding(F).
+                //   2. If bindingExists is false, then
+                //     a. Perform ! varEnv.CreateMutableBinding(F, true).
+                //     b. Perform ! varEnv.InitializeBinding(F, undefined).
+                var_env.create_mutable_binding(agent, name, true)?;
+                var_env.initialize_binding(agent, name, Value::Undefined)?;
+            }
+            // iii. Append F to declaredFunctionOrVarNames.
+            declared_func_or_var_names.push(name);
+        }
+        // b. When the FunctionDeclaration f is evaluated, set varEnv's F (Op::AnnexBFunction).
+        hoisted.push(name);
     }
     // 15. Lexical declarations go in lexEnv.
     for &(name, is_const) in &decls.lexical {
@@ -491,5 +624,5 @@ pub(super) fn eval_declaration_instantiation(
             var_env.initialize_binding(agent, name, Value::Undefined)?;
         }
     }
-    Ok(())
+    Ok(hoisted)
 }

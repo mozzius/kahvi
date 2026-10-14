@@ -114,6 +114,9 @@ pub enum Environment {
         /// Module environments resolve imports through other modules' environments.
         imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
         is_module: bool,
+        /// The environment of a Catch clause's parameter (Annex B.3.4 lets a
+        /// direct eval's `var` redeclare its names).
+        is_catch: bool,
         /// [[DisposableResourceStack]]: the resources of its `using` declarations.
         disposable_resource_stack: Vec<DisposableResource>,
     },
@@ -154,6 +157,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         }
     }
@@ -165,8 +169,26 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
+    }
+
+    /// A new declarative environment for a Catch clause's parameter.
+    pub fn new_catch(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
+        let env = Environment::new_declarative(agent, outer);
+        if let Environment::Declarative { is_catch, .. } = agent.env_mut(env) {
+            *is_catch = true;
+        }
+        env
+    }
+
+    /// Whether `env` is the Environment Record for a Catch clause.
+    pub fn is_catch(agent: &Agent, env: EnvId) -> bool {
+        matches!(
+            agent.env(env),
+            Environment::Declarative { is_catch: true, .. }
+        )
     }
 
     /// NewFunctionEnvironment(F, newTarget)
@@ -192,6 +214,7 @@ impl Environment {
             })),
             imports: Default::default(),
             is_module: false,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
     }
@@ -203,6 +226,7 @@ impl Environment {
             function: None,
             imports: Default::default(),
             is_module: true,
+            is_catch: false,
             disposable_resource_stack: Vec::new(),
         })
     }
@@ -779,6 +803,7 @@ impl Trace for Environment {
                 function,
                 imports,
                 is_module: _,
+                is_catch: _,
                 disposable_resource_stack,
             } => {
                 bindings.trace(t);

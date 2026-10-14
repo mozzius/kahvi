@@ -251,7 +251,12 @@ impl Parser<'_> {
             {
                 return self.err("generator declarations are not allowed here", start);
             }
-            return Ok(f);
+            // The declaration behaves as if it were the only statement of a Block.
+            let span = self.span_from(start);
+            return Ok(Stmt::Block(Block {
+                body: vec![f],
+                span,
+            }));
         }
         self.parse_substatement_not_labelled_function()
     }
@@ -668,7 +673,11 @@ impl Parser<'_> {
             if is_await && !is_of {
                 return self.unexpected();
             }
-            let target = self.expr_to_assignment_target(expr, true)?;
+            let target = if self.is_web_compat_call(&expr) {
+                Pattern::Expr(Box::new(expr))
+            } else {
+                self.expr_to_assignment_target(expr, true)?
+            };
             self.next()?;
             return self.finish_for_in_of(start, ForHead::Assign(target), is_of, is_await);
         }

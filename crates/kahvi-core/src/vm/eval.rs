@@ -106,9 +106,11 @@ pub fn evaluate_script(agent: &mut Agent, script: &ParsedScript) -> JsResult<Val
     });
     let result = (|| {
         // 12. Let result be Completion(GlobalDeclarationInstantiation(script, globalEnv)).
-        instantiate::global_declaration_instantiation(agent, &script.code, global_env)?;
+        let annex_b =
+            instantiate::global_declaration_instantiation(agent, &script.code, global_env)?;
         // 13. If result is a normal completion, set result to Completion(Evaluation of script).
         let mut frame = Frame::new(script.code.clone(), global_env, None, None);
+        frame.annex_b = annex_b;
         match run_frame(agent, &mut frame)? {
             FrameResult::Return(v) => Ok(v),
             _ => Ok(Value::Undefined),
@@ -211,7 +213,7 @@ pub fn perform_eval(
     });
     let result = (|| {
         // 28. Let result be Completion(EvalDeclarationInstantiation(body, varEnv, lexEnv, privateEnv, strictEval)).
-        instantiate::eval_declaration_instantiation(
+        let annex_b = instantiate::eval_declaration_instantiation(
             agent,
             &code,
             var_env,
@@ -222,6 +224,7 @@ pub fn perform_eval(
         // 29. Evaluation of body.
         let mut frame = Frame::new(code.clone(), lex_env, private_env, None);
         frame.var_env = var_env;
+        frame.annex_b = annex_b;
         match run_frame(agent, &mut frame)? {
             FrameResult::Return(v) => Ok(v),
             _ => Ok(Value::Undefined),

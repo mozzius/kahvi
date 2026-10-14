@@ -69,6 +69,10 @@ pub enum Op {
     InitName(JsString),
     /// [] -> [bool]: `delete name`.
     DeleteName(JsString),
+    /// Annex B.3.2: the evaluation of a block-level FunctionDeclaration whose
+    /// name got a var binding at declaration instantiation: the var binding
+    /// is set to the block's function object.
+    AnnexBFunction(JsString),
 
     // ---- environments ------------------------------------------------------
     /// BlockDeclarationInstantiation of [`FunctionCode::scopes`]`[i]` in a new
@@ -475,6 +479,8 @@ pub struct ScopeInfo {
     pub lexical: Vec<(JsString, bool)>,
     /// Function declarations to initialize: (name, index into `functions`).
     pub functions: Vec<(JsString, u32)>,
+    /// The scope of a Catch clause's parameter.
+    pub is_catch: bool,
 }
 
 /// Declarations of a script, function body or eval code, for the
@@ -488,7 +494,9 @@ pub struct Declarations {
     pub functions: Vec<(JsString, u32)>,
     /// Top-level lexical declarations: (name, is_const).
     pub lexical: Vec<(JsString, bool)>,
-    /// Annex B.3.2 function-in-block names hoisted to var scope (sloppy only).
+    /// Annex B.3.2: the names of the block-level function declarations that
+    /// may also get a var binding (non-strict code only), once each. The
+    /// declaration-instantiation algorithms decide which do.
     pub annex_b_functions: Vec<JsString>,
 }
 
