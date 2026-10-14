@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19375,
+  "stop_reason": "end_turn",
+  "session_id": "3893ca58-944a-4de4-95c2-31f9f881dc2f",
+  "total_cost_usd": 0.00583281,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 14420,
+    "cache_read_input_tokens": 99181,
+    "output_tokens": 3259,
+    "output_tokens_details": {
+      "thinking_tokens": 779
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14420,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 308,
+        "cache_read_input_tokens": 21652,
+        "cache_creation_input_tokens": 411,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 411
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `String.prototype.substr` in `crates/kahvi-builtins/src/string/prototype_substr.rs`, with each spec step as a comment above its code. 28 of 30 runs under `annexB/built-ins/String/prototype/substr/` pass. The 2 failures are in `start-and-length-as-numbers.js` and come from the test calling `Number.isNaN`, which the engine doesn't implement yet. Clippy and `cargo fmt --check` are clean.\n\nI wrote a file-local `to_clamped_index` helper, copied from `string/prototype_slice.rs`, since no shared one exists in `ops`. It is a copy, not a shared helper, and several other built-ins also keep their own copies.\n\nBLOCKED: `Number.isNaN` (needed by annexB/built-ins/String/prototype/substr/start-and-length-as-numbers.js; the engine returns not-implemented for it)",
+  "ttft_ms": 2563,
+  "type": "result",
+  "duration_ms": 37965,
+  "uuid": "0bf673a0-6107-418f-8b40-3ef1b5991698",
+  "ttft_stream_ms": 2482,
+  "time_to_request_ms": 1269,
+  "time_to_request_phases_ms": {
+    "other": 114,
+    "system_prompt": 534,
+    "resume_other": 0,
+    "process_user_input": 25,
+    "input_attachments": 17,
+    "input_hooks": 29,
+    "tool_pool_refresh": 43,
+    "init_message": 20,
+    "engine_pickup": 17,
+    "message_prep": 13,
+    "model_config_wait": 247,
+    "autocompact": 14,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 78,
+    "message_normalization": 44,
+    "client_creation": 28,
+    "request_build": 44
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 503,
+  "time_to_request_cpu_ms": 372,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 118,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 2478,
+  "process_wall_ms_turn": 37965,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2484,
+  "time_to_request_from_spawn_ms": 22697563,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002155715.976,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.01,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

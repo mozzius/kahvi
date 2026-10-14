@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8469,
+  "stop_reason": "tool_use",
+  "session_id": "83016b88-e229-46c0-bdbd-194927433bd4",
+  "total_cost_usd": 0.028552699999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4872,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 828,
+    "output_tokens_details": {
+      "thinking_tokens": 351
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4872,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 828,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4872,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4872
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements each spec step in order with `?` propagation. It validates the typed array, takes its length, converts the index with a local ToAbsoluteIndex, returns undefined when the index is out of range, and otherwise calls TypedArrayGetElement. The local ToAbsoluteIndex helper is allowed by the ticket. It matches the spec: ToIntegerOrInfinity with `?`, then add length if the value is finite and negative. The length is captured before index coercion, as the spec requires, so a resize or detach during `valueOf` is handled by the element-lookup helper's validity check. I did not see that helper's code. The only remaining failures are two BigInt not-implemented errors in resizable-buffer.js, which come from other parts of the engine. The gate shows +22 passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements each spec step in order with `?` propagation. It validates the typed array, takes its length, converts the index with a local ToAbsoluteIndex, returns undefined when the index is out of range, and otherwise calls TypedArrayGetElement. The local ToAbsoluteIndex helper is allowed by the ticket. It matches the spec: ToIntegerOrInfinity with `?`, then add length if the value is finite and negative. The length is captured before index coercion, as the spec requires, so a resize or detach during `valueOf` is handled by the element-lookup helper's validity check. I did not see that helper's code. The only remaining failures are two BigInt not-implemented errors in resizable-buffer.js, which come from other parts of the engine. The gate shows +22 passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5300,
+  "type": "result",
+  "duration_ms": 7790,
+  "uuid": "2d0994d4-0062-4940-bf37-5208a1a90d21",
+  "ttft_stream_ms": 2272,
+  "time_to_request_ms": 602,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 316,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 28,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 32,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 129,
+    "autocompact": 6,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 92,
+  "time_to_request_cpu_ms": 247,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 235,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 630,
+  "process_wall_ms_turn": 7790,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2273,
+  "time_to_request_from_spawn_ms": 22772954,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002232210.731,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.78,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.06,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.78,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

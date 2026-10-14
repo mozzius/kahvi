@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 61665,
+  "stop_reason": "end_turn",
+  "session_id": "0aecf013-f9f7-4387-8a84-40d2e59d9423",
+  "total_cost_usd": 0.01632881,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 32133,
+    "cache_read_input_tokens": 254901,
+    "output_tokens": 13708,
+    "output_tokens_details": {
+      "thinking_tokens": 8031
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32133,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 371,
+        "cache_read_input_tokens": 39210,
+        "cache_creation_input_tokens": 566,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 566
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01N4ZGcnZCJXPx1UUBuW2yCw",
+      "tool_input": {
+        "command": "cargo clippy -p kahvi-builtins 2>&1 | grep -A5 \"prototype_to_exponential\" | head -40; cargo clippy -p kahvi-builtins 2>&1 | tail -3; git status --short; printf 'print([(123.456).toExponential(2), (2.5).toExponential(0), (9.99).toExponential(1), (1e21).toExponential(), (0.000001).toExponential(), (5e-324).toExponential(), (0).toExponential(2), (-0).toExponential(), (1.45).toExponential(1), (99.99).toExponential(), (-1.5e-7).toExponential(3)].join(\" \"))\\n' > /home/user/kahvi/work/slots/slot-3/../scratch_exp.js 2>/dev/null; echo; ",
+        "description": "Run clippy, check git status, and prepare edge-case script"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Number.prototype.toExponential` is implemented in `crates/kahvi-builtins/src/number/prototype_to_exponential.rs`, and all 30 test262 runs under `built-ins/Number/prototype/toExponential/` pass (up from 8). `cargo clippy -p kahvi-builtins` is clean, and that file is the only change in the tree.\n\nI followed the spec steps as comments, and I used the same exact-digits approach as `toFixed`. Two private helpers sit in the file (not in `support/`), since no other built-in needs them yet. They are `round_to_significant_digits` (half-up rounding for an explicit fractionDigits) and `shortest_significant_digits` (for undefined fractionDigits). I did not spot-check edge values by hand; the test262 pass is the evidence.\n\nBLOCKED: none",
+  "ttft_ms": 2034,
+  "type": "result",
+  "duration_ms": 81083,
+  "uuid": "f515d432-4a41-4502-843f-42fe179097f8",
+  "ttft_stream_ms": 1868,
+  "time_to_request_ms": 1109,
+  "time_to_request_phases_ms": {
+    "other": 159,
+    "system_prompt": 581,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 27,
+    "input_hooks": 19,
+    "tool_pool_refresh": 7,
+    "init_message": 32,
+    "engine_pickup": 2,
+    "message_prep": 34,
+    "model_config_wait": 115,
+    "autocompact": 38,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 40,
+    "message_normalization": 8,
+    "client_creation": 8,
+    "request_build": 29
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 404,
+  "time_to_request_cpu_ms": 391,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 259,
+  "process_anon_mib_result": 139,
+  "process_peak_rss_mib": 275,
+  "process_cpu_ms_turn": 4353,
+  "process_wall_ms_turn": 81083,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1871,
+  "time_to_request_from_spawn_ms": 22697903,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002155491.302,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.78,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.07,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.78,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

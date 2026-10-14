@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 14465,
+  "stop_reason": "tool_use",
+  "session_id": "539a77e1-2db8-4830-8466-d01049f52eb3",
+  "total_cost_usd": 0.00298638,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4870,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3116,
+    "output_tokens_details": {
+      "thinking_tokens": 2414
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4870,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3116,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4870,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4870
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.at step by step, with the spec step comments kept above the code. Order matches the spec: ValidateTypedArray (with ?), then TypedArrayLength, then ToAbsoluteIndex (with ? on ToIntegerOrInfinity, so the valueOf side effect happens), then the k<0 / k>=length check returning undefined, then the element read. ToAbsoluteIndex is written locally with the spec's three steps, and the doc comment says it is not yet in ops, which the ticket allows as long as the report says so. No test-shaped branches, no swallowed errors, no made-up values. The two BigInt failures are reported as not-implemented, which is the honest path. Nothing unrelated changed beyond renaming the unused new_target parameter to _new_target. Lint flags are 0.\",\"problems\":[],\"notes_for_next_attempt\":\"Not a blocker, but unverified from the diff alone: (1) confirm that support::typed_array::typed_array_get_element re-checks IsValidIntegerIndex (TypedArrayGetElement step 1) on the fresh buffer state, since ToAbsoluteIndex's valueOf can detach or resize the buffer between steps 3 and 6. (2) The helper returns a plain Value rather than a JsResult, so confirm the BigInt not-implemented path raises a real thrown error and does not return undefined silently. (3) Confirm ops does not already export a to_absolute_index; if it does, the local copy should be replaced by it.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.at step by step, with the spec step comments kept above the code. Order matches the spec: ValidateTypedArray (with ?), then TypedArrayLength, then ToAbsoluteIndex (with ? on ToIntegerOrInfinity, so the valueOf side effect happens), then the k<0 / k>=length check returning undefined, then the element read. ToAbsoluteIndex is written locally with the spec's three steps, and the doc comment says it is not yet in ops, which the ticket allows as long as the report says so. No test-shaped branches, no swallowed errors, no made-up values. The two BigInt failures are reported as not-implemented, which is the honest path. Nothing unrelated changed beyond renaming the unused new_target parameter to _new_target. Lint flags are 0.",
+    "problems": [],
+    "notes_for_next_attempt": "Not a blocker, but unverified from the diff alone: (1) confirm that support::typed_array::typed_array_get_element re-checks IsValidIntegerIndex (TypedArrayGetElement step 1) on the fresh buffer state, since ToAbsoluteIndex's valueOf can detach or resize the buffer between steps 3 and 6. (2) The helper returns a plain Value rather than a JsResult, so confirm the BigInt not-implemented path raises a real thrown error and does not return undefined silently. (3) Confirm ops does not already export a to_absolute_index; if it does, the local copy should be replaced by it."
+  },
+  "ttft_ms": 12575,
+  "type": "result",
+  "duration_ms": 15295,
+  "uuid": "7f3c86d5-9c28-49e4-92f4-2d82816d4852",
+  "ttft_stream_ms": 2327,
+  "time_to_request_ms": 1493,
+  "time_to_request_phases_ms": {
+    "other": 146,
+    "system_prompt": 546,
+    "resume_other": 5,
+    "process_user_input": 11,
+    "input_attachments": 110,
+    "input_hooks": 9,
+    "tool_pool_refresh": 8,
+    "init_message": 53,
+    "engine_pickup": 2,
+    "message_prep": 21,
+    "model_config_wait": 438,
+    "autocompact": 19,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 25,
+    "message_normalization": 6,
+    "client_creation": 9,
+    "request_build": 84
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 374,
+  "time_to_request_cpu_ms": 373,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 1123,
+  "process_wall_ms_turn": 15295,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 63,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2362,
+  "time_to_request_from_spawn_ms": 22755850,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002211641.3757,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.78,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.02,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.78,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

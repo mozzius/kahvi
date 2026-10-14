@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 15372,
+  "stop_reason": "end_turn",
+  "session_id": "588a4585-7680-4c0d-8b3c-e5ac7ef0d3e9",
+  "total_cost_usd": 0.00940435,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 30551,
+    "cache_read_input_tokens": 161205,
+    "output_tokens": 2744,
+    "output_tokens_details": {
+      "thinking_tokens": 422
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 30551,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 336,
+        "cache_read_input_tokens": 37734,
+        "cache_creation_input_tokens": 460,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 460
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.at` in `crates/kahvi-builtins/src/typed_array/prototype_at.rs`, with each spec step kept as a comment above its code. `./t262 built-ins/TypedArray/prototype/at/` now gives 28 of 30 runs passing. Clippy and rustfmt are clean.\n\nThe two remaining failures are `resizable-buffer.js` in both sloppy and strict modes, and both fail with \"not implemented: BigInt\". That comes from the test's own BigInt usage, not from the `at` logic.\n\nI wrote a local `to_absolute_index` helper in the file because the existing copies in other typed-array files are private. It is the same pattern as `typed_array/prototype_last_index_of.rs`, so it is a candidate for moving into `ops` later.\n\nBLOCKED: BigInt is not implemented in the engine, which blocks `built-ins/TypedArray/prototype/at/resizable-buffer.js` (sloppy and strict).",
+  "ttft_ms": 2522,
+  "type": "result",
+  "duration_ms": 31705,
+  "uuid": "503254b9-559c-43b9-9f9e-8fcfe69d8b3f",
+  "ttft_stream_ms": 2327,
+  "time_to_request_ms": 1550,
+  "time_to_request_phases_ms": {
+    "other": 134,
+    "system_prompt": 654,
+    "resume_other": 0,
+    "process_user_input": 35,
+    "input_attachments": 50,
+    "input_hooks": 20,
+    "tool_pool_refresh": 20,
+    "init_message": 16,
+    "engine_pickup": 31,
+    "message_prep": 44,
+    "model_config_wait": 463,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 14,
+    "message_normalization": 2,
+    "client_creation": 14,
+    "request_build": 41
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 388,
+  "time_to_request_cpu_ms": 393,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2718,
+  "process_wall_ms_turn": 31704,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 36,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2328,
+  "time_to_request_from_spawn_ms": 22697691,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002155697.453,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.01,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

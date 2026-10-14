@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15759,
+  "stop_reason": "tool_use",
+  "session_id": "75e131fc-2672-4173-9dbc-5d1e1b0d52b9",
+  "total_cost_usd": 0.00329568,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5552,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3330,
+    "output_tokens_details": {
+      "thinking_tokens": 2614
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5552,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3330,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5552,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5552
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.substr in the single in-scope file, following the spec steps 1-8 in order. RequireObjectCoercible runs before ToString, and ToString, ToIntegerOrInfinity and the clamping are done with the spec's `?` propagation. ToClampedIndex is a local helper whose ToAbsoluteIndex branches (-inf -> 0, negative -> max(len+rel, 0), else min(rel, len)) match the standard semantics. The undefined-length path, the -inf/+inf clamping through f64::clamp, and the empty result for intStart >= intEnd are all correct. No special-casing, no swallowed errors, and no made-up values were found. The 2 remaining test262 failures are the engine's honest not-implemented error for Number.isNaN, which is outside this file.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. Minor points for the architect: (1) confirm kahvi_core::ops does not already provide a to_clamped_index or to_absolute_index helper, since the ticket says to use ops rather than re-implement; if one is missing and other built-ins need it, the worker should say so in the report. (2) The ToAbsoluteIndex comment in to_clamped_index paraphrases an abstract operation that is not in the supplied spec text, so it is worth checking against the pinned edition. (3) The original NOTE comment about the method being intentionally generic was removed; restoring it would keep the stub's spec text intact. (4) The `_new_target` rename is a harmless consequence of the parameter going unused.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.substr in the single in-scope file, following the spec steps 1-8 in order. RequireObjectCoercible runs before ToString, and ToString, ToIntegerOrInfinity and the clamping are done with the spec's `?` propagation. ToClampedIndex is a local helper whose ToAbsoluteIndex branches (-inf -> 0, negative -> max(len+rel, 0), else min(rel, len)) match the standard semantics. The undefined-length path, the -inf/+inf clamping through f64::clamp, and the empty result for intStart >= intEnd are all correct. No special-casing, no swallowed errors, and no made-up values were found. The 2 remaining test262 failures are the engine's honest not-implemented error for Number.isNaN, which is outside this file.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. Minor points for the architect: (1) confirm kahvi_core::ops does not already provide a to_clamped_index or to_absolute_index helper, since the ticket says to use ops rather than re-implement; if one is missing and other built-ins need it, the worker should say so in the report. (2) The ToAbsoluteIndex comment in to_clamped_index paraphrases an abstract operation that is not in the supplied spec text, so it is worth checking against the pinned edition. (3) The original NOTE comment about the method being intentionally generic was removed; restoring it would keep the stub's spec text intact. (4) The `_new_target` rename is a harmless consequence of the parameter going unused."
+  },
+  "ttft_ms": 12920,
+  "type": "result",
+  "duration_ms": 15627,
+  "uuid": "b85cc249-d909-47a1-96f5-aafbaf13a98e",
+  "ttft_stream_ms": 1624,
+  "time_to_request_ms": 910,
+  "time_to_request_phases_ms": {
+    "other": 84,
+    "system_prompt": 439,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 57,
+    "input_hooks": 12,
+    "tool_pool_refresh": 2,
+    "init_message": 19,
+    "engine_pickup": 10,
+    "message_prep": 4,
+    "model_config_wait": 203,
+    "autocompact": 7,
+    "query_setup": 1,
+    "model_gates": 10,
+    "tool_schema_build": 4,
+    "message_normalization": 7,
+    "client_creation": 17,
+    "request_build": 24
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 160,
+  "time_to_request_cpu_ms": 406,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1137,
+  "process_wall_ms_turn": 15626,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 41,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1625,
+  "time_to_request_from_spawn_ms": 22761700,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002220966.733,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.78,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.05,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.78,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

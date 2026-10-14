@@ -387,3 +387,7 @@
 {"ticket": "B-data-view-prototype-get-uint16", "attempt": 284, "ts": 1792002000.78204, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-date-prototype-set-date", "attempt": 286, "ts": 1792002013.2403152, "text": "worker reported BLOCKED but changed files: `Date.prototype.setTime` (sec-date.prototype.settime) is not implemented, and the 4 `date-value-read-before-tonumber-*` setDate tests depend on it."}
 {"ticket": "B-disposable-stack-prototype-defer", "attempt": 287, "ts": 1792002069.0179403, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-typed-array-prototype-at", "attempt": 291, "ts": 1792002190.4782772, "text": "worker reported BLOCKED but changed files: BigInt is not implemented in the engine, which blocks `built-ins/TypedArray/prototype/at/resizable-buffer.js` (sloppy and strict)."}
+{"ticket": "B-string-prototype-substr", "attempt": 290, "ts": 1792002197.1931257, "text": "worker reported BLOCKED but changed files: `Number.isNaN` (needed by annexB/built-ins/String/prototype/substr/start-and-length-as-numbers.js; the engine returns not-implemented for it)"}
+{"ticket": "B-promise-try", "attempt": 289, "ts": 1792002206.213952, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-number-prototype-to-exponential", "attempt": 288, "ts": 1792002240.518996, "text": "worker reported BLOCKED but changed files: none"}
