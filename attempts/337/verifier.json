@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 14878,
+  "stop_reason": "tool_use",
+  "session_id": "158bf57a-c92b-479d-a133-9031937151d2",
+  "total_cost_usd": 0.0029094800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4776,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3014,
+    "output_tokens_details": {
+      "thinking_tokens": 2428
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4776,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3014,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4776,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4776
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements AsyncDisposableStack.prototype.move in the spec's order: RequireInternalSlot via require_async_disposable_stack (with ?), the disposed check that throws a ReferenceError, OrdinaryCreateFromConstructor (with ?) before any state is mutated, a move of the resource list with mem::take, setting the source to disposed, and returning the new stack. There are no test-shaped branches, no swallowed errors, and no fabricated return values. Minor style nits only: step 5 (pending) is represented by disposed: false in the constructed data rather than a separate comment-plus-code step, and step 7 is marked \\\"(taken above)\\\". I could not see the helper implementations (require_async_disposable_stack, ops::ordinary_create_from_constructor, agent.intrinsic), so I judged their use from the call sites only.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Optional polish: put the step 5 comment directly above the ObjectKind initializer (where disposed: false encodes ~pending~), and drop the \\\"(taken above)\\\" placeholder by putting the step 7 comment directly above the mem::take line. Neither changes behaviour.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements AsyncDisposableStack.prototype.move in the spec's order: RequireInternalSlot via require_async_disposable_stack (with ?), the disposed check that throws a ReferenceError, OrdinaryCreateFromConstructor (with ?) before any state is mutated, a move of the resource list with mem::take, setting the source to disposed, and returning the new stack. There are no test-shaped branches, no swallowed errors, and no fabricated return values. Minor style nits only: step 5 (pending) is represented by disposed: false in the constructed data rather than a separate comment-plus-code step, and step 7 is marked \"(taken above)\". I could not see the helper implementations (require_async_disposable_stack, ops::ordinary_create_from_constructor, agent.intrinsic), so I judged their use from the call sites only.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Optional polish: put the step 5 comment directly above the ObjectKind initializer (where disposed: false encodes ~pending~), and drop the \"(taken above)\" placeholder by putting the step 7 comment directly above the mem::take line. Neither changes behaviour."
+  },
+  "ttft_ms": 12422,
+  "type": "result",
+  "duration_ms": 14747,
+  "uuid": "e16bb877-60d7-4f24-964b-446a6fea5517",
+  "ttft_stream_ms": 1922,
+  "time_to_request_ms": 775,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 373,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 20,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 15,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 290,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 222,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 235,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 1043,
+  "process_wall_ms_turn": 14747,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1931,
+  "time_to_request_from_spawn_ms": 24229503,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003689235.8945,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.23,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
