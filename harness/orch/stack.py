@@ -12,6 +12,7 @@ front of the queue in halves until the one that breaks something is found.
 
 import json
 import re
+import sys
 import threading
 import time
 from pathlib import Path
@@ -241,6 +242,13 @@ class Stacker:
         if baseline is not None and (TREE / BASELINE).read_text() != baseline:
             (TREE / BASELINE).write_text(baseline)
             git("add", BASELINE, cwd=TREE)
+            # The README's pass rate rides along: main's rules refuse CI's
+            # own pushes, so layers are how the number reaches main.
+            summary = LAYERS / str(floor["id"]) / "summary.json"
+            if summary.exists():
+                run([sys.executable, ".github/scripts/readme_pass_rate.py", str(summary), "README.md"],
+                    cwd=TREE, check=False)
+                git("add", "README.md", cwd=TREE)
             _commit(f"test262 baseline: what the layer below passes in CI\n\n{baseline.count(chr(10))} expected passing runs.")
         head = git("rev-parse", "HEAD", cwd=TREE)
         base_branch = floor["branch"] if floor else self.trunk_branch()
@@ -336,6 +344,15 @@ class Stacker:
     def poll(self):
         layer = self.db.one("SELECT * FROM layers WHERE status = 'pending' ORDER BY id LIMIT 1")
         if not layer:
+            return False
+        # Merging the bottom of a GitHub stack rebases the PRs above it. The
+        # old head's CI is then cancelled or stale: re-running it would
+        # cancel the new head's run. Judge the head the PR has now.
+        head = self.gh.pr(layer["pr"])["head"]["sha"] if layer["pr"] else layer["head"]
+        if head != layer["head"]:
+            self.db.q("UPDATE layers SET head = ?, reruns = 0, rerun_of = NULL, updated = ? WHERE id = ?",
+                      head, time.time(), layer["id"])
+            log(f"stack: {layer['branch']} (#{layer['pr']}) moved on GitHub to {head[:10]}; judging that")
             return False
         runs = {}
         for c in self.gh.check_runs(layer["head"]):
