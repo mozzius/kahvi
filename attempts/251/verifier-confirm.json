@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9307,
+  "stop_reason": "tool_use",
+  "session_id": "a4a041c6-6dbc-49b5-8f19-3563152dcfc6",
+  "total_cost_usd": 0.03565940000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6398,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 902,
+    "output_tokens_details": {
+      "thinking_tokens": 503
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6398,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 902,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6398,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6398
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1-12 in order and reuses the shared `support::date` helpers. It reads the date value before `ToNumber`. It runs `ToNumber(second)` and then `ToNumber(millisecond)` only when a second argument is present. `NaN` is checked only after both conversions. An explicit `undefined` millisecond counts as present, so it becomes `NaN`. I didn't see the helper bodies, only the call sites. The 4 remaining failures come from `Date.prototype.setTime` not being implemented, which is a different ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1-12 in order and reuses the shared `support::date` helpers. It reads the date value before `ToNumber`. It runs `ToNumber(second)` and then `ToNumber(millisecond)` only when a second argument is present. `NaN` is checked only after both conversions. An explicit `undefined` millisecond counts as present, so it becomes `NaN`. I didn't see the helper bodies, only the call sites. The 4 remaining failures come from `Date.prototype.setTime` not being implemented, which is a different ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6603,
+  "type": "result",
+  "duration_ms": 8505,
+  "uuid": "f7a2d5f6-f7ea-4300-a498-47bba15f2089",
+  "ttft_stream_ms": 2216,
+  "time_to_request_ms": 690,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 433,
+    "resume_other": 0,
+    "process_user_input": 14,
+    "input_attachments": 30,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 85,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 49,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 128,
+  "time_to_request_cpu_ms": 361,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 237,
+  "process_anon_mib_turn_start": 120,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 238,
+  "process_cpu_ms_turn": 735,
+  "process_wall_ms_turn": 8505,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 34,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2216,
+  "time_to_request_from_spawn_ms": 21626907,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001086910.3765,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

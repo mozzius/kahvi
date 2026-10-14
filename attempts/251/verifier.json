@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 16205,
+  "stop_reason": "tool_use",
+  "session_id": "619fbb2e-e1eb-46c6-a8c8-bb889d6318b7",
+  "total_cost_usd": 0.00359548,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6402,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3415,
+    "output_tokens_details": {
+      "thinking_tokens": 2733
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6402,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3415,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6402,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6402
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setSeconds in its own file and follows the spec's 12 steps in order. Argument ToNumber calls happen in the spec order (second, then millisecond when present). The NaN early return happens before LocalTime. The default millisecond is taken from MillisecondFromTime after LocalTime. MakeDate, MakeTime, UTC and TimeClip are applied in order, and the result is stored and returned. Errors propagate with `?`. No test-shaped branches, hardcoded values or made-up results appear. The four sample failures come from Date.prototype.setTime, which is not implemented, so they are not caused by this diff. The only things I could not verify are the support::date helpers (make_time's ToIntegerOrInfinity handling, make_date's non-finite handling, and utc's NaN handling), which are outside the diff. The 22 new passes suggest they are correct.\",\"problems\":[],\"notes_for_next_attempt\":\"Minor, optional: the diff drops the stub's non-step comment lines (the \\\"The *length* property ... is 2\\\" line and the NOTE about millisecond defaulting to getMilliseconds()). Restoring them above the return would keep the stub's spec text intact. Also, the explicit `let Value::Object(date_obj) = this else` TypeError runs before RequireInternalSlot. It produces the same error type, so it is acceptable, but it could be left to this_time_value. Nothing else needs changing; the logic matches the spec.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setSeconds in its own file and follows the spec's 12 steps in order. Argument ToNumber calls happen in the spec order (second, then millisecond when present). The NaN early return happens before LocalTime. The default millisecond is taken from MillisecondFromTime after LocalTime. MakeDate, MakeTime, UTC and TimeClip are applied in order, and the result is stored and returned. Errors propagate with `?`. No test-shaped branches, hardcoded values or made-up results appear. The four sample failures come from Date.prototype.setTime, which is not implemented, so they are not caused by this diff. The only things I could not verify are the support::date helpers (make_time's ToIntegerOrInfinity handling, make_date's non-finite handling, and utc's NaN handling), which are outside the diff. The 22 new passes suggest they are correct.",
+    "problems": [],
+    "notes_for_next_attempt": "Minor, optional: the diff drops the stub's non-step comment lines (the \"The *length* property ... is 2\" line and the NOTE about millisecond defaulting to getMilliseconds()). Restoring them above the return would keep the stub's spec text intact. Also, the explicit `let Value::Object(date_obj) = this else` TypeError runs before RequireInternalSlot. It produces the same error type, so it is acceptable, but it could be left to this_time_value. Nothing else needs changing; the logic matches the spec."
+  },
+  "ttft_ms": 13513,
+  "type": "result",
+  "duration_ms": 16394,
+  "uuid": "cd9f9c0d-72b5-4261-8f85-9ea64c4031aa",
+  "ttft_stream_ms": 1624,
+  "time_to_request_ms": 861,
+  "time_to_request_phases_ms": {
+    "other": 107,
+    "system_prompt": 422,
+    "resume_other": 1,
+    "process_user_input": 23,
+    "input_attachments": 64,
+    "input_hooks": 6,
+    "tool_pool_refresh": 14,
+    "init_message": 31,
+    "engine_pickup": 2,
+    "message_prep": 17,
+    "model_config_wait": 80,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 20,
+    "message_normalization": 6,
+    "client_creation": 32,
+    "request_build": 33
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 258,
+  "time_to_request_cpu_ms": 332,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 99,
+  "process_rss_mib_result": 238,
+  "process_anon_mib_result": 119,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1253,
+  "process_wall_ms_turn": 16394,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 30,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1635,
+  "time_to_request_from_spawn_ms": 21608989,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001067612.1455,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
