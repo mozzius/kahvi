@@ -8,8 +8,8 @@ use kahvi_core::prelude::*;
 pub(crate) fn prototype_pop(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // NOTE:
     // This method removes the last element of the array and returns it.
@@ -30,6 +30,36 @@ pub(crate) fn prototype_pop(
     //
     // NOTE:
     // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.prototype.pop"))
+    // 1. Let _obj_ be ? ToObject(*this* value).
+    let obj = ops::to_object(agent, this)?;
+    // The steps below may call user code (getters, setters, proxy traps): obj stays rooted.
+    agent.with_roots(&[Value::Object(obj)], |agent| {
+        // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
+        let length = ops::length_of_array_like(agent, obj)?;
+        // 3. If _length_ = 0, then
+        if length == 0.0 {
+            // a. Perform ? Set(_obj_, *"length"*, *+0*_𝔽, *true*).
+            let length_key = PropertyKey::String(agent.names.length);
+            ops::set(agent, obj, length_key, Value::Number(0.0), true)?;
+            // b. Return *undefined*.
+            return Ok(Value::Undefined);
+        }
+        // 4. Assert: _length_ > 0.
+        // 5. Let _newLength_ be 𝔽(_length_ - 1).
+        let new_length = length - 1.0;
+        // 6. Let _index_ be ! ToString(_newLength_).
+        let index = agent.key_from_index(new_length);
+        agent.push_root_key(index);
+        // 7. Let _element_ be ? Get(_obj_, _index_).
+        let element = ops::get(agent, obj, index)?;
+        let mark = agent.push_root(element);
+        // 8. Perform ? DeletePropertyOrThrow(_obj_, _index_).
+        ops::delete_property_or_throw(agent, obj, index)?;
+        // 9. Perform ? Set(_obj_, *"length"*, _newLength_, *true*).
+        let length_key = PropertyKey::String(agent.names.length);
+        ops::set(agent, obj, length_key, Value::Number(new_length), true)?;
+        agent.pop_roots(mark);
+        // 10. Return _element_.
+        Ok(element)
+    })
 }
