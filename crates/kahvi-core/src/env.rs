@@ -698,3 +698,66 @@ impl Agent {
         }
     }
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for Bindings {
+    fn trace(&self, t: &mut Tracer) {
+        for (name, b) in &self.list {
+            t.string(*name);
+            b.value.trace(t);
+        }
+    }
+}
+
+impl Trace for FunctionEnvData {
+    fn trace(&self, t: &mut Tracer) {
+        t.value(self.this_value);
+        t.object(self.function_object);
+        t.value(self.new_target);
+    }
+}
+
+impl Trace for Environment {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Environment::Declarative {
+                bindings,
+                outer,
+                function,
+                imports,
+                is_module: _,
+                disposable_resource_stack,
+            } => {
+                bindings.trace(t);
+                outer.trace(t);
+                function.trace(t);
+                // Imports name bindings of other modules' environments (modules are roots).
+                for (local, (_, imported)) in imports {
+                    t.string(*local);
+                    t.string(*imported);
+                }
+                disposable_resource_stack.trace(t);
+            }
+            Environment::Object {
+                binding_object,
+                outer,
+                ..
+            } => {
+                t.object(*binding_object);
+                outer.trace(t);
+            }
+            Environment::Global {
+                object_record,
+                global_this,
+                declarative_record,
+            } => {
+                t.env(*object_record);
+                t.object(*global_this);
+                t.env(*declarative_record);
+            }
+        }
+    }
+}

@@ -470,3 +470,30 @@ pub(super) fn resume(agent: &mut Agent, g: Object, mut how: Completion) -> JsRes
 pub(super) fn is_async_generator(agent: &Agent, o: Object) -> bool {
     agent.native::<AsyncGeneratorData>(o).is_some()
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for Completion {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Completion::Normal(v) | Completion::Return(v) | Completion::Throw(v) => t.value(*v),
+        }
+    }
+}
+
+impl Trace for Request {
+    fn trace(&self, t: &mut Tracer) {
+        self.completion.trace(t);
+        self.capability.trace(t);
+    }
+}
+
+impl Trace for AsyncGeneratorData {
+    fn trace(&self, t: &mut Tracer) {
+        self.queue.trace(t);
+        self.frame.trace(t);
+        t.object(self.function);
+    }
+}

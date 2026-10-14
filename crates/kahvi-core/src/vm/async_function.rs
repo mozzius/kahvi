@@ -254,3 +254,11 @@ fn await_rejected(
     }
     Ok(Value::Undefined)
 }
+
+impl crate::gc::Trace for AsyncContext {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        self.frame.trace(t);
+        self.capability.trace(t);
+        self.function.trace(t);
+    }
+}

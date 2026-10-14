@@ -90,3 +90,9 @@ impl HelperClosure for MapClosure {
         Ok(Some(mapped))
     }
 }
+
+impl kahvi_core::gc::Trace for MapClosure {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        t.value(self.mapper);
+    }
+}

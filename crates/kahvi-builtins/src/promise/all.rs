@@ -275,3 +275,14 @@ fn promise_all_resolve_element(
     // k. Return undefined.
     Ok(Value::Undefined)
 }
+
+impl kahvi_core::gc::Trace for PromiseAllState {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.values.trace(t);
+        t.value(self.resolve);
+    }
+}
+
+impl kahvi_core::gc::Trace for ElementRecord {
+    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {}
+}

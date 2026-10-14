@@ -145,7 +145,8 @@ pub(crate) struct MapData(pub(crate) OrderedTable);
 #[derive(Debug, Default)]
 pub(crate) struct SetData(pub(crate) OrderedTable);
 
-/// [[WeakMapData]] / [[WeakSetData]]: without a GC, entries are simply kept.
+/// [[WeakMapData]] / [[WeakSetData]]: keys are held weakly (the collector
+/// removes entries whose key died; a WeakMap value lives as long as its key).
 #[derive(Debug, Default)]
 pub(crate) struct WeakMapData(pub(crate) OrderedTable);
 
@@ -195,7 +196,7 @@ pub(crate) fn weak_set_table(agent: &mut Agent, o: Object) -> &mut OrderedTable 
 
 /// A new collection object for a constructor: OrdinaryCreateFromConstructor
 /// with the given slot type, e.g. `create_collection(agent, nt, "%Map.prototype%", MapData::default())`.
-pub(crate) fn create_collection<T: std::fmt::Debug + Send + 'static>(
+pub(crate) fn create_collection<T: std::fmt::Debug + Send + kahvi_core::gc::Trace + 'static>(
     agent: &mut Agent,
     new_target: Object,
     default_proto: &str,
@@ -322,5 +323,75 @@ pub(crate) fn collection_iterator_step(agent: &mut Agent, it: Object) -> Option<
         if let Some(e) = entry {
             return Some(e);
         }
+    }
+}
+
+// ---- garbage collection ----------------------------------------------------
+
+use kahvi_core::gc::{Liveness, Trace, Tracer};
+
+impl OrderedTable {
+    /// Removes the entries whose key died (the keys of a WeakMap or WeakSet
+    /// are objects or symbols).
+    fn remove_dead_keys(&mut self, live: &Liveness) {
+        for i in 0..self.entries.len() {
+            if let Some((k, _)) = self.entries[i]
+                && !live.is_live(k)
+            {
+                let repr = match k {
+                    Value::Object(o) => KeyRepr::Object(o),
+                    Value::Symbol(s) => KeyRepr::Symbol(s),
+                    _ => unreachable!("a weakly held key that is not an object or symbol"),
+                };
+                self.index.remove(&repr);
+                self.entries[i] = None;
+                self.size -= 1;
+            }
+        }
+    }
+}
+
+impl Trace for OrderedTable {
+    fn trace(&self, t: &mut Tracer) {
+        for (k, v) in self.entries.iter().flatten() {
+            t.value(*k);
+            t.value(*v);
+        }
+    }
+}
+
+impl Trace for MapData {
+    fn trace(&self, t: &mut Tracer) {
+        self.0.trace(t);
+    }
+}
+
+impl Trace for SetData {
+    fn trace(&self, t: &mut Tracer) {
+        self.0.trace(t);
+    }
+}
+
+impl Trace for WeakMapData {
+    fn trace(&self, t: &mut Tracer) {
+        for (k, v) in self.0.entries.iter().flatten() {
+            t.ephemeron(*k, *v);
+        }
+    }
+    fn sweep_weak(&mut self, live: &Liveness) {
+        self.0.remove_dead_keys(live);
+    }
+}
+
+impl Trace for WeakSetData {
+    fn trace(&self, _t: &mut Tracer) {}
+    fn sweep_weak(&mut self, live: &Liveness) {
+        self.0.remove_dead_keys(live);
+    }
+}
+
+impl Trace for CollectionIterator {
+    fn trace(&self, t: &mut Tracer) {
+        self.collection.trace(t);
     }
 }

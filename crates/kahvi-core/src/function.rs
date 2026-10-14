@@ -757,3 +757,81 @@ pub fn create_mapped_arguments_object(
     );
     Ok(obj)
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for PrivateName {
+    fn trace(&self, t: &mut Tracer) {
+        t.string(self.description);
+    }
+}
+
+impl Trace for PrivateElement {
+    fn trace(&self, t: &mut Tracer) {
+        self.key.trace(t);
+        t.value(self.value);
+        t.value(self.get);
+        t.value(self.set);
+    }
+}
+
+impl Trace for FieldName {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            FieldName::Key(k) => t.key(*k),
+            FieldName::Private(p) => p.trace(t),
+        }
+    }
+}
+
+impl Trace for ClassFieldDefinition {
+    fn trace(&self, t: &mut Tracer) {
+        self.name.trace(t);
+        self.initializer.trace(t);
+    }
+}
+
+impl Trace for ClassPending {
+    fn trace(&self, t: &mut Tracer) {
+        self.static_private_methods.trace(t);
+        self.static_elements.trace(t);
+    }
+}
+
+impl Trace for EcmaFunction {
+    fn trace(&self, t: &mut Tracer) {
+        // [[ECMAScriptCode]]'s constants are pinned when compiled; realms and
+        // scripts are not collected.
+        t.env(self.environment);
+        self.private_environment.trace(t);
+        self.home_object.trace(t);
+        self.fields.trace(t);
+        self.private_methods.trace(t);
+        self.class_field_initializer_name.trace(t);
+        self.class_pending.trace(t);
+    }
+}
+
+impl Trace for BuiltinFunction {
+    fn trace(&self, t: &mut Tracer) {
+        self.initial_name.trace(t);
+        self.slots.trace(t);
+    }
+}
+
+impl Trace for BoundFunction {
+    fn trace(&self, t: &mut Tracer) {
+        t.object(self.target);
+        t.value(self.bound_this);
+        self.bound_args.trace(t);
+    }
+}
+
+impl Trace for MappedArguments {
+    fn trace(&self, t: &mut Tracer) {
+        t.env(self.env);
+        self.mapped.trace(t);
+    }
+}

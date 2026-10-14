@@ -1857,3 +1857,80 @@ pub fn this_mode_of(agent: &Agent, f: Object) -> Option<ThisMode> {
         _ => None,
     }
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for PrivateEnv {
+    fn trace(&self, t: &mut Tracer) {
+        self.outer.trace(t);
+        self.names.trace(t);
+    }
+}
+
+impl Trace for Reference {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Reference::Env(env, name) => {
+                t.env(*env);
+                t.string(*name);
+            }
+            Reference::Unresolvable(name) => t.string(*name),
+        }
+    }
+}
+
+impl Trace for ForInIterator {
+    fn trace(&self, t: &mut Tracer) {
+        self.object.trace(t);
+        self.visited.trace(t);
+        self.remaining.trace(t);
+    }
+}
+
+impl Trace for FrameIter {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            FrameIter::Iter(r) => r.trace(t),
+            FrameIter::ForIn(f) => f.trace(t),
+        }
+    }
+}
+
+impl Trace for Handler {
+    fn trace(&self, t: &mut Tracer) {
+        t.env(self.env);
+        self.private_env.trace(t);
+    }
+}
+
+impl Trace for PendingBody {
+    fn trace(&self, t: &mut Tracer) {
+        self.env_record.trace(t);
+        self.param_bindings.trace(t);
+    }
+}
+
+impl Trace for Frame {
+    fn trace(&self, t: &mut Tracer) {
+        // The code's constants are pinned when compiled.
+        self.stack.trace(t);
+        self.refs.trace(t);
+        self.iters.trace(t);
+        self.handlers.trace(t);
+        t.env(self.env);
+        t.env(self.var_env);
+        self.private_env.trace(t);
+        self.function.trace(t);
+        self.args.trace(t);
+        t.value(self.completion);
+        self.pending.trace(t);
+    }
+}
+
+impl Trace for DisposeState {
+    fn trace(&self, t: &mut Tracer) {
+        self.dispose.trace(t);
+    }
+}

@@ -492,3 +492,7 @@ pub(crate) fn parse_iso(agent: &Agent, s: &str) -> Option<f64> {
     let t = time_clip(t);
     (!t.is_nan()).then_some(t)
 }
+
+impl kahvi_core::gc::Trace for DateValue {
+    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {}
+}

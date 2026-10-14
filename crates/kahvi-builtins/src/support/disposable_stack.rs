@@ -228,3 +228,26 @@ fn async_dispose_rejected(
     continue_async_dispose(agent, state, Some(reason))?;
     Ok(Value::Undefined)
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use kahvi_core::gc::{Trace, Tracer};
+
+impl Trace for DisposableStackData {
+    fn trace(&self, t: &mut Tracer) {
+        self.stack.trace(t);
+    }
+}
+
+impl Trace for AsyncDisposableStackData {
+    fn trace(&self, t: &mut Tracer) {
+        self.stack.trace(t);
+    }
+}
+
+impl Trace for AsyncDispose {
+    fn trace(&self, t: &mut Tracer) {
+        self.dispose.trace(t);
+        self.capability.trace(t);
+    }
+}

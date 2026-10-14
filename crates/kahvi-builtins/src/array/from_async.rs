@@ -592,3 +592,43 @@ fn type_error_value(agent: &mut Agent, message: &str) -> JsResult<Value> {
         other => Err(other),
     }
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use kahvi_core::gc::{Trace, Tracer};
+
+impl Trace for Pending {
+    fn trace(&self, t: &mut Tracer) {
+        match self {
+            Pending::Idle => {}
+            Pending::Next {
+                iterator, array, ..
+            }
+            | Pending::Mapped {
+                iterator, array, ..
+            } => {
+                iterator.trace(t);
+                t.object(*array);
+            }
+            Pending::Close { error } => t.value(*error),
+            Pending::ArrayLikeValue {
+                array_like, array, ..
+            }
+            | Pending::ArrayLikeMapped {
+                array_like, array, ..
+            } => {
+                t.object(*array_like);
+                t.object(*array);
+            }
+        }
+    }
+}
+
+impl Trace for FromAsyncState {
+    fn trace(&self, t: &mut Tracer) {
+        self.capability.trace(t);
+        t.value(self.mapper);
+        t.value(self.this_arg);
+        self.pending.trace(t);
+    }
+}

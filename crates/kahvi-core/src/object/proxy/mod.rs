@@ -203,3 +203,10 @@ pub fn construct(
     let p = data_of(agent, o)?;
     Some(construct::construct(agent, o, &p, args, new_target))
 }
+
+impl crate::gc::Trace for ProxyData {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        self.target.trace(t);
+        self.handler.trace(t);
+    }
+}

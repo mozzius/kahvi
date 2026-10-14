@@ -288,3 +288,11 @@ pub(crate) fn all_settled(
         Err(e) => reject_on_throw(agent, capability, e),
     }
 }
+
+impl kahvi_core::gc::Trace for AlreadyCalled {
+    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {}
+}
+
+impl kahvi_core::gc::Trace for RemainingElements {
+    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {}
+}

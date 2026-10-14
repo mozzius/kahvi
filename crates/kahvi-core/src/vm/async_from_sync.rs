@@ -296,3 +296,9 @@ fn close_iterator(
     }
     Err(JsError::Throw(error))
 }
+
+impl crate::gc::Trace for AsyncFromSyncIterator {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        self.sync.trace(t);
+    }
+}

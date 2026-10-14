@@ -26,8 +26,47 @@ pub struct ExecutionContext {
     pub script_or_module: Option<crate::ScriptOrModule>,
 }
 
-/// A pending job (§9.5): a closure run when the stack is empty.
-pub type Job = Box<dyn FnOnce(&mut Agent) -> JsResult<()> + Send>;
+/// A pending job (§9.5), run when the execution context stack is empty.
+/// Jobs are data (not closures) so the collector can trace them.
+#[derive(Debug, Clone, Copy)]
+pub enum Job {
+    /// NewPromiseReactionJob(reaction, argument)
+    PromiseReaction {
+        realm: RealmId,
+        reaction: crate::ops::promise::PromiseReaction,
+        argument: Value,
+    },
+    /// NewPromiseResolveThenableJob(promiseToResolve, thenable, then)
+    PromiseResolveThenable {
+        realm: RealmId,
+        promise: Object,
+        thenable: Value,
+        then: Value,
+    },
+}
+
+impl crate::gc::Trace for Job {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        match self {
+            Job::PromiseReaction {
+                reaction, argument, ..
+            } => {
+                reaction.trace(t);
+                t.value(*argument);
+            }
+            Job::PromiseResolveThenable {
+                promise,
+                thenable,
+                then,
+                ..
+            } => {
+                t.object(*promise);
+                t.value(*thenable);
+                t.value(*then);
+            }
+        }
+    }
+}
 
 /// The well-known symbols (§6.1.5.1).
 #[derive(Debug, Clone, Copy)]
@@ -92,6 +131,9 @@ pub struct Agent {
     pub realms: Vec<Realm>,
     pub contexts: Vec<ExecutionContext>,
     pub jobs: VecDeque<Job>,
+    /// The jobs being run (a job can run others only through the host, so
+    /// this is at most a few deep); their data is a root.
+    pub(crate) running_jobs: Vec<Job>,
     /// [[GlobalSymbolRegistry]]: Symbol.for keys.
     pub symbol_registry: Vec<(JsString, Symbol)>,
     pub symbols_wk: WellKnownSymbols,
@@ -145,6 +187,7 @@ impl Agent {
             realms: Vec::new(),
             contexts: Vec::new(),
             jobs: VecDeque::new(),
+            running_jobs: Vec::new(),
             symbol_registry: Vec::new(),
             symbols_wk: WellKnownSymbols {
                 async_iterator: Symbol(0),
@@ -536,7 +579,10 @@ impl Agent {
     /// Runs queued jobs until the queue is empty.
     pub fn run_jobs(&mut self) -> JsResult<()> {
         while let Some(job) = self.jobs.pop_front() {
-            job(self)?;
+            self.running_jobs.push(job);
+            let r = crate::ops::promise::run_job(self, job);
+            self.running_jobs.pop();
+            r?;
         }
         Ok(())
     }

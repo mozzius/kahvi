@@ -277,3 +277,14 @@ fn promise_any_reject_element(
     // viii. Return undefined.
     Ok(Value::Undefined)
 }
+
+impl kahvi_core::gc::Trace for PromiseAnyState {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.errors.trace(t);
+        t.value(self.reject);
+    }
+}
+
+impl kahvi_core::gc::Trace for ElementRecord {
+    fn trace(&self, _t: &mut kahvi_core::gc::Tracer) {}
+}

@@ -302,3 +302,23 @@ impl DisposeResources {
         self.output
     }
 }
+
+// ---- garbage collection ----------------------------------------------------
+
+use crate::gc::{Trace, Tracer};
+
+impl Trace for DisposableResource {
+    fn trace(&self, t: &mut Tracer) {
+        t.value(self.value);
+        t.value(self.method);
+    }
+}
+
+impl Trace for DisposeResources {
+    fn trace(&self, t: &mut Tracer) {
+        self.stack.trace(t);
+        match self.output {
+            Ok(v) | Err(v) => t.value(v),
+        }
+    }
+}

@@ -217,3 +217,10 @@ pub fn generator_resume_abrupt(
         },
     )
 }
+
+impl crate::gc::Trace for GeneratorData {
+    fn trace(&self, t: &mut crate::gc::Tracer) {
+        self.frame.trace(t);
+        t.object(self.function);
+    }
+}

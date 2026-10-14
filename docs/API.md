@@ -82,6 +82,19 @@ pub(crate) fn prototype_map(agent: &mut Agent, this: Value, args: &[Value], new_
   the wrapper kinds (`BooleanObject`, `NumberObject`, `StringObject`, …);
   built-ins with their own slots store a struct in `ObjectKind::Native` and
   read it with `agent.native::<T>(o)` / `agent.native_mut::<T>(o)`.
+- A struct stored in `ObjectKind::Native` (or an iterator helper's
+  `HelperClosure`) must implement `kahvi_core::gc::Trace`, reporting every
+  `Value`, `Object`, `JsString`, ... it holds, so the garbage collector keeps
+  them alive (see `support/collections.rs`; docs/GC.md):
+
+  ```rust
+  impl kahvi_core::gc::Trace for MyState {
+      fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+          t.value(self.callback);
+          self.items.trace(t); // Vec<Value>, Option<Object>, ... trace themselves
+      }
+  }
+  ```
 
 ## Abstract operations (`kahvi_core::ops`)
 
