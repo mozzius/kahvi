@@ -1933,3 +1933,9 @@ test262 at last merge: 74349/81183 runs passing
 [18:48:34] B-async-disposable-stack-prototype-move: verifier: accept The diff implements AsyncDisposableStack.prototype.move in the spec's order: RequireInternalSlot via require_async_disposable_stack (with ?), the disp
 [18:48:39] B-math-clz32: attempt on slot 1 with haiku
 [18:49:08] B-disposable-stack-prototype-get-disposed: verifier: accept The change implements get DisposableStack.prototype.disposed in its own file, following the four spec steps in order. Step 1 binds `this`. Step 2 call
+[18:49:10] B-date-prototype-to-string: attempt 342 finished ($0.005, 4 turns)
+[18:49:12] B-math-sqrt: attempt on slot 0 with haiku
+[18:49:22] B-math-clz32: attempt 343 finished ($0.004, 9 turns)
+[18:49:30] B-disposable-stack-prototype-move: attempt 341 finished ($0.013, 18 turns)
+[18:49:49] B-math-sqrt: attempt 344 finished ($0.005, 9 turns)
+[18:49:55] B-date-prototype-to-string: verifier: revise The change wires Date.prototype.toString to the spec steps in the right order: RequireInternalSlot via date::this_time_value with `?`, then ToDateStri

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-clz32",
+  "base": "2096fe24f38f21742782a02b0d836b4db6a3c7e3",
+  "head": "db1d7eb9960e33cdbe66bcb15404e69482652486",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/clz32.rs",
+      "added": 6,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
