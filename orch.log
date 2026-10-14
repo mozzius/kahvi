@@ -989,3 +989,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:15:05] C-proxy-delete: attempt on slot 1 with haiku
 [18:15:10] B-string-prototype-repeat: verifier: accept The diff implements String.prototype.repeat in its own file and follows the spec steps in order. RequireObjectCoercible and ToString run before ToInte
 [18:15:16] B-data-view-prototype-get-big-int64: attempt on slot 2 with haiku
+[18:15:19] B-data-view-prototype-get-big-uint64: attempt on slot 3 with haiku
+[18:15:23] B-symbol-key-for: verifier: accept The change implements Symbol.keyFor in its file. Step 1 throws a TypeError when the argument is not a Symbol, and step 2 (KeyForSymbol) searches the a
