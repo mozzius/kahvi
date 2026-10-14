@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 18048,
+  "stop_reason": "tool_use",
+  "session_id": "f90b1fc0-06b1-4b9e-b87a-af2b85b48169",
+  "total_cost_usd": 0.0039410800000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7112,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3683,
+    "output_tokens_details": {
+      "thinking_tokens": 2948
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7112,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3683,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7112,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7112
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements JSON.rawJSON steps 1-4 and 8-11 in raw_json.rs, in spec order, with SyntaxError throws for steps 2-4 and the frozen-object creation for steps 9-10. Step 5 (ParseJSON) is honestly stubbed: it returns Err(agent.not_implemented(...)) naming the missing pub(crate) exposure of parse_json, which is out of scope to change. No special-casing, no made-up values, no swallowed errors. The rename of this/new_target to underscore-prefixed names and the added RawJsonData slot marker are related to the ticket. I found no spec deviation on any reachable path.\",\"problems\":[],\"notes_for_next_attempt\":\"Step 5 is the only blocker. Once json/parse.rs exposes parse_json as pub(crate) (a change outside this ticket's files, so it needs the architect or a separate ticket), replace the not_implemented stub with `let parse_result = ops-level ParseJSON(json_string)?` and use its value only for the step 6 assertion. Also note: the object is created (step 8) before the with_roots guard, and json_string is not rooted between ops::to_string and with_roots. Object allocation can trigger GC, so json_string could be collected under KAHVI_GC_STRESS=1. This path is unreachable today because step 5 throws first, but it must be fixed by rooting json_string before object_with_kind once step 5 is implemented. Step 10 uses `?` where the spec says `Perform !`. That is harmless since the fresh extensible object cannot fail, so leave it or match the spec's `!` convention.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements JSON.rawJSON steps 1-4 and 8-11 in raw_json.rs, in spec order, with SyntaxError throws for steps 2-4 and the frozen-object creation for steps 9-10. Step 5 (ParseJSON) is honestly stubbed: it returns Err(agent.not_implemented(...)) naming the missing pub(crate) exposure of parse_json, which is out of scope to change. No special-casing, no made-up values, no swallowed errors. The rename of this/new_target to underscore-prefixed names and the added RawJsonData slot marker are related to the ticket. I found no spec deviation on any reachable path.",
+    "problems": [],
+    "notes_for_next_attempt": "Step 5 is the only blocker. Once json/parse.rs exposes parse_json as pub(crate) (a change outside this ticket's files, so it needs the architect or a separate ticket), replace the not_implemented stub with `let parse_result = ops-level ParseJSON(json_string)?` and use its value only for the step 6 assertion. Also note: the object is created (step 8) before the with_roots guard, and json_string is not rooted between ops::to_string and with_roots. Object allocation can trigger GC, so json_string could be collected under KAHVI_GC_STRESS=1. This path is unreachable today because step 5 throws first, but it must be fixed by rooting json_string before object_with_kind once step 5 is implemented. Step 10 uses `?` where the spec says `Perform !`. That is harmless since the fresh extensible object cannot fail, so leave it or match the spec's `!` convention."
+  },
+  "ttft_ms": 14973,
+  "type": "result",
+  "duration_ms": 18050,
+  "uuid": "f01977f5-5c17-4acc-9836-3f6ab63d852e",
+  "ttft_stream_ms": 1464,
+  "time_to_request_ms": 568,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 323,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 49,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 25,
+    "engine_pickup": 1,
+    "message_prep": 56,
+    "model_config_wait": 39,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 159,
+  "time_to_request_cpu_ms": 337,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 235,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 1199,
+  "process_wall_ms_turn": 18050,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 35,
+    "cpu_ms": 46,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1465,
+  "time_to_request_from_spawn_ms": 25719524,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005179260.653,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.39,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
