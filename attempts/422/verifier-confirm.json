@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7587,
+  "stop_reason": "tool_use",
+  "session_id": "96a6bc80-747d-4737-9df1-27575413a042",
+  "total_cost_usd": 0.0303557,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5665,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 683,
+    "output_tokens_details": {
+      "thinking_tokens": 308
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5665,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 683,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 5665,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5665
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements setUTCMilliseconds in spec order. It checks this and the [[DateValue]] slot first. It then calls ToNumber with `?`, and returns NaN if tv is NaN. After that it runs MakeTime, MakeDate and TimeClip through the shared date helpers, stores the value and returns it. The gate report shows build and clippy ok, 8 new passes, and no regressions. I did not open the `support::date` helpers, so I assumed they follow the spec.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements setUTCMilliseconds in spec order. It checks this and the [[DateValue]] slot first. It then calls ToNumber with `?`, and returns NaN if tv is NaN. After that it runs MakeTime, MakeDate and TimeClip through the shared date helpers, stores the value and returns it. The gate report shows build and clippy ok, 8 new passes, and no regressions. I did not open the `support::date` helpers, so I assumed they follow the spec.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4823,
+  "type": "result",
+  "duration_ms": 6729,
+  "uuid": "54186ade-3c2c-4033-8a44-3a19c687b288",
+  "ttft_stream_ms": 1924,
+  "time_to_request_ms": 531,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 367,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 94,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 20,
+  "time_to_request_cpu_ms": 310,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 667,
+  "process_wall_ms_turn": 6728,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1925,
+  "time_to_request_from_spawn_ms": 25998923,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005459153.859,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.46,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
