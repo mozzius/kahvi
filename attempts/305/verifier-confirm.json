@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6903,
+  "stop_reason": "tool_use",
+  "session_id": "70377cff-d70b-4d80-ba18-f7e28c3684d9",
+  "total_cost_usd": 0.0209618,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4004,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 425,
+    "output_tokens_details": {
+      "thinking_tokens": 90
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4004,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 425,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4004,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4004
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.toJSON as the spec describes, in order, with each step as a comment. ToObject, ToPrimitive(number) and Invoke each propagate errors with `?`. The finite-Number check returns null as step 3 requires. The gate shows 26 of 26 target tests passing with no regressions. Only the one in-scope file changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.toJSON as the spec describes, in order, with each step as a comment. ToObject, ToPrimitive(number) and Invoke each propagate errors with `?`. The finite-Number check returns null as step 3 requires. The gate shows 26 of 26 target tests passing with no regressions. Only the one in-scope file changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5671,
+  "type": "result",
+  "duration_ms": 7354,
+  "uuid": "48b5fec1-e087-45dd-b35b-5c76f97ce105",
+  "ttft_stream_ms": 4470,
+  "time_to_request_ms": 1754,
+  "time_to_request_phases_ms": {
+    "other": 160,
+    "system_prompt": 627,
+    "resume_other": 1,
+    "process_user_input": 18,
+    "input_attachments": 115,
+    "input_hooks": 31,
+    "tool_pool_refresh": 26,
+    "init_message": 43,
+    "engine_pickup": 2,
+    "message_prep": 14,
+    "model_config_wait": 577,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 14,
+    "tool_schema_build": 32,
+    "message_normalization": 10,
+    "client_creation": 24,
+    "request_build": 57
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 405,
+  "time_to_request_cpu_ms": 441,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 225,
+  "process_cpu_ms_turn": 706,
+  "process_wall_ms_turn": 7341,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 75,
+    "cpu_ms": 34,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4486,
+  "time_to_request_from_spawn_ms": 23239357,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002693591.1423,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.15,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

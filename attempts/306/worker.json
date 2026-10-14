@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 22450,
+  "stop_reason": "end_turn",
+  "session_id": "4ce5a173-00d9-4e75-a4cf-2e3c7ec27ce5",
+  "total_cost_usd": 0.0062023300000000016,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 14358,
+    "cache_read_input_tokens": 165713,
+    "output_tokens": 2990,
+    "output_tokens_details": {
+      "thinking_tokens": 644
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14358,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 366,
+        "cache_read_input_tokens": 21635,
+        "cache_creation_input_tokens": 366,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 366
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Error.isError` in `crates/kahvi-builtins/src/error/is_error.rs`: non-objects return `false`, objects return `true` only when their kind is `ObjectKind::Error`, and each spec step is commented above its code. `cargo build`, `cargo clippy -p kahvi-builtins` and `cargo fmt --check` are clean. `./t262 built-ins/Error/isError/` gives 22 of 24 runs passing. The two failures are `bigints.js` (sloppy and strict), which fail with \"not implemented: BigInt\" because the engine has no BigInt support.\n\nBLOCKED: BigInt literals and the `BigInt()` global are not implemented in the engine, which `built-ins/Error/isError/bigints.js` requires.",
+  "ttft_ms": 2219,
+  "type": "result",
+  "duration_ms": 42220,
+  "uuid": "14892f7f-95fe-4d23-9d20-6ffb821bbc1d",
+  "ttft_stream_ms": 2018,
+  "time_to_request_ms": 996,
+  "time_to_request_phases_ms": {
+    "other": 94,
+    "system_prompt": 321,
+    "resume_other": 1,
+    "process_user_input": 48,
+    "input_attachments": 83,
+    "input_hooks": 24,
+    "tool_pool_refresh": 4,
+    "init_message": 25,
+    "engine_pickup": 3,
+    "message_prep": 11,
+    "model_config_wait": 327,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 22,
+    "message_normalization": 4,
+    "client_creation": 8,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 326,
+  "time_to_request_cpu_ms": 531,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 256,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3722,
+  "process_wall_ms_turn": 42220,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 30,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2019,
+  "time_to_request_from_spawn_ms": 23187391,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002646887.3328,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.15,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

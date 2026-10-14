@@ -400,3 +400,4 @@
 {"ticket": "B-map-prototype-get-or-insert", "attempt": 300, "ts": 1792002487.2051928, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-object-prototype-set-proto", "attempt": 301, "ts": 1792002541.975603, "text": "worker reported BLOCKED but changed files: the getter `get Object.prototype.__proto__` is not implemented; the 6 failing `get-*` tests under built-ins/Object/prototype/__proto__/ need it."}
 {"ticket": "B-reflect-get-own-property-descriptor", "attempt": 302, "ts": 1792002595.9930127, "text": "worker reported BLOCKED but changed files: none"}
+{"ticket": "B-error-is-error", "attempt": 306, "ts": 1792002691.290886, "text": "worker reported BLOCKED but changed files: BigInt literals and the `BigInt()` global are not implemented in the engine, which `built-ins/Error/isError/bigints.js` requires."}
