@@ -90,6 +90,12 @@ impl Engine {
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
+        // The engine runs with an empty environment, except GC stress mode:
+        // KAHVI_GC_STRESS set for the runner makes every engine run collect at
+        // each safe point (docs/GC.md).
+        if std::env::var_os("KAHVI_GC_STRESS").is_some() {
+            cmd.env("KAHVI_GC_STRESS", "1");
+        }
 
         let start = Instant::now();
         let mut child = match cmd.spawn() {
