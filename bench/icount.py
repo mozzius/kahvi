@@ -25,7 +25,7 @@ import run as bench  # noqa: E402
 # Short enough to run under valgrind (roughly 50x slower) in a few minutes.
 WORKLOADS = ["startup/empty", "octane/richards", "octane/deltablue", "octane/crypto", "octane/raytrace",
              "octane/splay", "octane/regexp", "realworld/zod", "realworld/lodash", "realworld/date-fns"]
-SCALE = 0.005
+SCALE = 0.002
 
 
 def count(argv, cwd, env):
