@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5719,
+  "stop_reason": "tool_use",
+  "session_id": "d8408f11-a632-49a2-9a3c-75dbbd258ea2",
+  "total_cost_usd": 0.0254798,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4535,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 659,
+    "output_tokens_details": {
+      "thinking_tokens": 278
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4535,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 659,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4535,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4535
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.charAt step by step as the spec describes. RequireObjectCoercible, ToString and ToIntegerOrInfinity are each called with `?`, in that order. The bounds check on step 6 handles \u00b1Infinity and NaN-as-0 correctly. The substring is taken from `position` to `position + 1`. There are no special cases, no swallowed errors and no changes outside the file. The gate shows 44 new passes and 0 regressions, which fits the size of the diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.charAt step by step as the spec describes. RequireObjectCoercible, ToString and ToIntegerOrInfinity are each called with `?`, in that order. The bounds check on step 6 handles \u00b1Infinity and NaN-as-0 correctly. The substring is taken from `position` to `position + 1`. There are no special cases, no swallowed errors and no changes outside the file. The gate shows 44 new passes and 0 regressions, which fits the size of the diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3487,
+  "type": "result",
+  "duration_ms": 5850,
+  "uuid": "9325e3a0-56bb-42ff-9b8e-53337f313a35",
+  "ttft_stream_ms": 1441,
+  "time_to_request_ms": 586,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 394,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 23,
+    "input_hooks": 10,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 78,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 9,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 64,
+  "time_to_request_cpu_ms": 414,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 752,
+  "process_wall_ms_turn": 5850,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1443,
+  "time_to_request_from_spawn_ms": 19074833,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998534582.6396,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
