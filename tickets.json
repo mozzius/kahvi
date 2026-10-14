@@ -1765,13 +1765,13 @@
  },
  {
   "id": "B-iterator-prototype-set-symbol-to-string-tag",
-  "status": "open",
+  "status": "claimed",
   "tier": "sonnet",
-  "attempts": 3,
+  "attempts": 4,
   "strikes": 1,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792007562.213918,
+  "updated": 1792007564.7826304,
   "errors": 0,
   "resume_attempt": null
  },
@@ -2539,7 +2539,7 @@
   "strikes": 1,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792007533.5299346,
+  "updated": 1792007578.9265482,
   "errors": 0,
   "resume_attempt": null
  },
@@ -3301,13 +3301,13 @@
  },
  {
   "id": "B-reg-exp-string-iterator-prototype-next",
-  "status": "claimed",
+  "status": "blocked",
   "tier": "sonnet",
   "attempts": 3,
   "strikes": 0,
-  "reason": "",
+  "reason": "`CreateRegExpStringIterator` must be implemented in `reg_exp/prototype_symbol_match_all.rs`, which is outside this ticket's scope. It needs a slot struct holding [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]] and [[Done]], created with `ObjectKind::Native` and `%RegExpStringIteratorPrototype%`. `next.rs` can then be written against that struct.",
   "salvage_attempt": null,
-  "updated": 1792007561.963552,
+  "updated": 1792007579.0804324,
   "errors": 0,
   "resume_attempt": null
  },

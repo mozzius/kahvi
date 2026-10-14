@@ -1,0 +1,130 @@
+{
+  "duration_api_ms": 22390,
+  "stop_reason": "end_turn",
+  "session_id": "7a43268f-b5b4-4833-991d-9d3c1c6398f5",
+  "total_cost_usd": 0.07322160000000001,
+  "usage": {
+    "input_tokens": 15,
+    "cache_creation_input_tokens": 10314,
+    "cache_read_input_tokens": 107765,
+    "output_tokens": 2095,
+    "output_tokens_details": {
+      "thinking_tokens": 69
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10314,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 190,
+        "cache_read_input_tokens": 16974,
+        "cache_creation_input_tokens": 203,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 203
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01BvYhM38b9q11kfsKFoe841",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/number/prototype_to_locale_string.rs <<'EOF'\n//! Number.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-number.prototype.tolocalestring\n\nuse crate::support::this_value::this_number_value;\nuse kahvi_core::prelude::*;\n\n/// Number.prototype.toLocaleString\npub(crate) fn prototype_to_locale_string(\n    agent: &mut Agent,\n    this: Value,\n    _args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:\n    // This method produces a String value that represents this Number value formatted according to the conventions of the host environment's current locale. This method is implementation-defined, and it is permissible, but not encouraged, for it to return the same thing as `toString`.\n    // The meanings of the optional parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.\n    // Implementation-defined: the host has no locale data, so format as Number::toString(x, 10).\n    let x = this_number_value(agent, this)?;\n    Ok(Value::String(ops::number_to_js_string(agent, x)))\n}\nEOF\ncargo clippy"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I replaced the `not_implemented` stub in `prototype_to_locale_string.rs` with a real implementation. It validates `this` with `this_number_value`, then returns the base-10 `Number::toString` result. The engine has no locale data, so the spec allows this, and the optional parameters are ignored.\n\n`cargo clippy` and `cargo build` are clean, and `./t262 built-ins/Number/prototype/toLocaleString/` still shows 8 of 8 passing, the same as before my change. Those 8 tests already passed, so the target gate has no new passes to count.",
+  "ttft_ms": 3258,
+  "type": "result",
+  "duration_ms": 42215,
+  "uuid": "14e7e738-273d-4491-996f-6627a988bf52",
+  "ttft_stream_ms": 2560,
+  "time_to_request_ms": 713,
+  "time_to_request_phases_ms": {
+    "other": 63,
+    "system_prompt": 454,
+    "resume_other": 8,
+    "process_user_input": 6,
+    "input_attachments": 39,
+    "input_hooks": 9,
+    "tool_pool_refresh": 11,
+    "init_message": 25,
+    "engine_pickup": 5,
+    "message_prep": 4,
+    "model_config_wait": 24,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 24,
+    "message_normalization": 3,
+    "client_creation": 20,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 232,
+  "time_to_request_cpu_ms": 312,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2793,
+  "process_wall_ms_turn": 42214,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2562,
+  "time_to_request_from_spawn_ms": 28074841,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007534036.086,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.69,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

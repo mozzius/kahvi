@@ -4239,3 +4239,7 @@ test262 at last merge: 76432/81183 runs passing
 [19:52:39] B-reg-exp-string-iterator-prototype-next: escalating haiku -> sonnet
 [19:52:42] B-reg-exp-string-iterator-prototype-next: attempt on slot 3 with sonnet
 [19:52:42] B-iterator-prototype-set-symbol-to-string-tag: gate rejected attempt 493: no new test262 passes in target
+[19:52:44] B-iterator-prototype-set-symbol-to-string-tag: attempt on slot 2 with sonnet
+[19:52:58] B-number-prototype-to-locale-string: attempt 494 finished ($0.073, 12 turns)
+[19:52:59] B-reg-exp-string-iterator-prototype-next: attempt 496 finished ($0.056, 4 turns)
+[19:52:59] B-reg-exp-string-iterator-prototype-next: blocked: `CreateRegExpStringIterator` must be implemented in `reg_exp/prototype_symbol_match_all.rs`, which is outside this ticket's scope. It needs a slot struct holding [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]] and [[Done]], created with `ObjectKind::Native` and `%RegExpStringIteratorPrototype%`. `next.rs` can then be written against that struct.
