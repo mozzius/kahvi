@@ -1,6 +1,7 @@
 name: Bench
 
-# Kahvi against other engines (bench/run.py). Nightly on main and on demand;
+# Kahvi against other engines (bench/run.py). Nightly on main, but only when
+# main has moved since the last benchmarked commit, and on demand;
 # a run on main adds its results to the bench-results branch, whose README.md
 # is the dashboard (bench/publish.py). PRs labelled `bench` run it too and get
 # the table in their job summary, without publishing.
@@ -24,8 +25,32 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  bench:
+  # The nightly run skips itself unless something has landed on main since
+  # the commit bench-results last recorded.
+  changed:
+    name: anything new on main
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'bench')
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" != schedule ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          last=$(gh api "repos/$GITHUB_REPOSITORY/contents/results?ref=bench-results" \
+            --jq '[.[].name] | sort | last' 2>/dev/null || true)
+          echo "last result: ${last:-none}; main is ${GITHUB_SHA::10}"
+          if [[ "$last" == *"-${GITHUB_SHA::10}.json" ]]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  bench:
+    needs: changed
+    if: needs.changed.outputs.run == 'true'
     name: benchmarks
     runs-on: ubuntu-latest
     timeout-minutes: 240
