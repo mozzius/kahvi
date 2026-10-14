@@ -1,0 +1,556 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_every.rs b/crates/kahvi-builtins/src/typed_array/prototype_every.rs
+index 5fb26e3..7fcaec0 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_every.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_every.rs
+@@ -2,14 +2,17 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.every
+ 
++use kahvi_core::object::typed_array::{typed_array_get_element, typed_array_length};
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::validate_typed_array;
++
+ /// TypedArray.prototype.every
+ pub(crate) fn prototype_every(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // The interpretation and use of the arguments of this method are the same as for `Array.prototype.every` as defined in [sec-array.prototype.every].
+     // This method performs the following steps when called:
+@@ -27,6 +30,44 @@ pub(crate) fn prototype_every(
+     // 7. Return *true*.
+     //
+     // This method is not generic. The *this* value must be an object with a [[TypedArrayName]] internal slot.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.every"))
++    // 1. Let _obj_ be the *this* value.
++    // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, this)?;
++    let o = ta_record.object;
++    // 3. Let _length_ be TypedArrayLength(_taRecord_).
++    let length = typed_array_length(agent, ta_record) as f64;
++    // 4. If IsCallable(_callback_) is *false*, throw a *TypeError* exception.
++    let callback = args.get_or_undefined(0);
++    if !ops::is_callable(agent, callback) {
++        return Err(agent.throw_type_error("TypedArray.prototype.every callback is not a function"));
++    }
++    let this_arg = args.get_or_undefined(1);
++    // The callback may collect garbage: O, callback and thisArg stay rooted.
++    agent.with_roots(&[Value::Object(o), callback, this_arg], |agent| {
++        // 5. Let _k_ be 0.
++        let mut k = 0.0;
++        // 6. Repeat, while _k_ < _length_,
++        while k < length {
++            // a. Let _kValue_ be TypedArrayGetElement(_obj_, 𝔽(_k_)).
++            let k_value = typed_array_get_element(agent, o, k);
++            // b. Let _testResult_ be ToBoolean(? Call(_callback_, _thisArg_, « _kValue_, 𝔽(_k_), _obj_ »)).
++            let mark = agent.push_root(k_value);
++            let result = ops::call_rooted(
++                agent,
++                callback,
++                this_arg,
++                &[k_value, Value::Number(k), Value::Object(o)],
++            )?;
++            let test_result = ops::to_boolean(agent, result);
++            agent.pop_roots(mark);
++            // c. If _testResult_ is *false*, return *false*.
++            if !test_result {
++                return Ok(Value::Boolean(false));
++            }
++            // d. Set _k_ to _k_ + 1.
++            k += 1.0;
++        }
++        // 7. Return *true*.
++        Ok(Value::Boolean(true))
++    })
+ }
+diff --git a/crates/kahvi-core/src/host.rs b/crates/kahvi-core/src/host.rs
+index 15eb0a7..974d25a 100644
+--- a/crates/kahvi-core/src/host.rs
++++ b/crates/kahvi-core/src/host.rs
+@@ -123,9 +123,15 @@ impl Agent {
+         let Value::Object(f) = v else { return None };
+         match &self.obj(f).kind {
+             crate::object::ObjectKind::Builtin(b)
+-                if std::ptr::fn_addr_eq(b.behaviour, call_host_function as crate::function::NativeFn) =>
++                if std::ptr::fn_addr_eq(
++                    b.behaviour,
++                    call_host_function as crate::function::NativeFn,
++                ) =>
+             {
+-                b.slots.first().and_then(|v| v.as_number()).map(|n| n as usize)
++                b.slots
++                    .first()
++                    .and_then(|v| v.as_number())
++                    .map(|n| n as usize)
+             }
+             _ => None,
+         }
+diff --git a/crates/kahvi-core/src/object/host_object.rs b/crates/kahvi-core/src/object/host_object.rs
+index 8518fc7..0199d5d 100644
+--- a/crates/kahvi-core/src/object/host_object.rs
++++ b/crates/kahvi-core/src/object/host_object.rs
+@@ -85,7 +85,11 @@ pub(crate) fn define_own_property(
+     })
+ }
+ 
+-pub(crate) fn has_property(agent: &mut Agent, o: Object, key: PropertyKey) -> Option<JsResult<bool>> {
++pub(crate) fn has_property(
++    agent: &mut Agent,
++    o: Object,
++    key: PropertyKey,
++) -> Option<JsResult<bool>> {
+     let host = host_of(agent, o)?;
+     Some((|| {
+         if host.property_names(agent, o)?.contains(&key) {
+@@ -103,7 +107,12 @@ pub(crate) fn get(agent: &mut Agent, o: Object, key: PropertyKey) -> Option<JsRe
+     Some(host.get(agent, o, key))
+ }
+ 
+-pub(crate) fn set(agent: &mut Agent, o: Object, key: PropertyKey, value: Value) -> Option<JsResult<bool>> {
++pub(crate) fn set(
++    agent: &mut Agent,
++    o: Object,
++    key: PropertyKey,
++    value: Value,
++) -> Option<JsResult<bool>> {
+     let host = host_of(agent, o)?;
+     Some(host.set(agent, o, key, value).map(|_| true))
+ }
+@@ -113,7 +122,10 @@ pub(crate) fn delete(agent: &Agent, o: Object) -> Option<JsResult<bool>> {
+     Some(Ok(true))
+ }
+ 
+-pub(crate) fn own_property_keys(agent: &mut Agent, o: Object) -> Option<JsResult<Vec<PropertyKey>>> {
++pub(crate) fn own_property_keys(
++    agent: &mut Agent,
++    o: Object,
++) -> Option<JsResult<Vec<PropertyKey>>> {
+     let host = host_of(agent, o)?;
+     Some(host.property_names(agent, o))
+ }
+diff --git a/crates/kahvi-ffi/src/lib.rs b/crates/kahvi-ffi/src/lib.rs
+index f9415d9..3efc1e7 100644
+--- a/crates/kahvi-ffi/src/lib.rs
++++ b/crates/kahvi-ffi/src/lib.rs
+@@ -224,7 +224,11 @@ unsafe fn op(
+ 
+ /// Calls into C from a host callback: the API's agent becomes the one the
+ /// engine passed in for the duration.
+-unsafe fn enter_callback<T>(rt: *mut KahviRuntime, agent: &mut Agent, f: impl FnOnce(*mut Agent) -> T) -> T {
++unsafe fn enter_callback<T>(
++    rt: *mut KahviRuntime,
++    agent: &mut Agent,
++    f: impl FnOnce(*mut Agent) -> T,
++) -> T {
+     let ptr: *mut Agent = agent;
+     let prev = unsafe { (*rt).agent.replace(ptr) };
+     let r = f(ptr);
+@@ -273,7 +277,8 @@ pub unsafe extern "C" fn kahvi_eval(
+     name_len: usize,
+     out: *mut KahviValue,
+ ) -> bool {
+-    let source = String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();
++    let source =
++        String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();
+     let name = if name.is_null() {
+         String::from("<eval>")
+     } else {
+@@ -291,7 +296,11 @@ pub unsafe extern "C" fn kahvi_eval(
+ /// Runs queued jobs (promise reactions, microtasks) until there are none.
+ #[unsafe(no_mangle)]
+ pub unsafe extern "C" fn kahvi_run_jobs(rt: *mut KahviRuntime) -> bool {
+-    unsafe { op(rt, std::ptr::null_mut(), |agent| agent.run_jobs().map(|_| Value::Undefined)) }
++    unsafe {
++        op(rt, std::ptr::null_mut(), |agent| {
++            agent.run_jobs().map(|_| Value::Undefined)
++        })
++    }
+ }
+ 
+ /// Queues a call of `f` with no arguments as a job (`queueMicrotask`).
+@@ -360,7 +369,11 @@ pub unsafe extern "C" fn kahvi_value_clone(v: KahviValue) -> KahviValue {
+ }
+ 
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_strict_equals(rt: *mut KahviRuntime, a: KahviValue, b: KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_strict_equals(
++    rt: *mut KahviRuntime,
++    a: KahviValue,
++    b: KahviValue,
++) -> bool {
+     unsafe {
+         with_agent(rt, |agent| {
+             let (a, b) = (from_c(agent, &a), from_c(agent, &b));
+@@ -370,7 +383,11 @@ pub unsafe extern "C" fn kahvi_strict_equals(rt: *mut KahviRuntime, a: KahviValu
+ }
+ 
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_string_new(rt: *mut KahviRuntime, utf8: *const u8, len: usize) -> KahviValue {
++pub unsafe extern "C" fn kahvi_string_new(
++    rt: *mut KahviRuntime,
++    utf8: *const u8,
++    len: usize,
++) -> KahviValue {
+     let s = String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(utf8, len) }).into_owned();
+     unsafe {
+         with_agent(rt, |agent| {
+@@ -383,14 +400,20 @@ pub unsafe extern "C" fn kahvi_string_new(rt: *mut KahviRuntime, utf8: *const u8
+ /// The UTF-8 contents of a string (lone surrogates become U+FFFD), to be
+ /// freed with `kahvi_utf8_free`; NULL if `v` is not a string.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_string_utf8(rt: *mut KahviRuntime, v: KahviValue, len: *mut usize) -> *mut u8 {
++pub unsafe extern "C" fn kahvi_string_utf8(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    len: *mut usize,
++) -> *mut u8 {
+     let s = unsafe {
+         with_agent(rt, |agent| match from_c(agent, &v) {
+             Value::String(s) => Some(agent.str_lossy(s)),
+             _ => None,
+         })
+     };
+-    let Some(s) = s else { return std::ptr::null_mut() };
++    let Some(s) = s else {
++        return std::ptr::null_mut();
++    };
+     let bytes = s.into_bytes().into_boxed_slice();
+     unsafe { *len = bytes.len() };
+     Box::into_raw(bytes) as *mut u8
+@@ -405,7 +428,11 @@ pub unsafe extern "C" fn kahvi_utf8_free(p: *mut u8, len: usize) {
+ 
+ /// ToString(v) (may run JavaScript).
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_to_string(rt: *mut KahviRuntime, v: KahviValue, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_to_string(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let v = from_c(agent, &v);
+@@ -416,7 +443,10 @@ pub unsafe extern "C" fn kahvi_to_string(rt: *mut KahviRuntime, v: KahviValue, o
+ 
+ /// SymbolDescriptiveString: "Symbol(description)".
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_symbol_to_string(rt: *mut KahviRuntime, v: KahviValue) -> KahviValue {
++pub unsafe extern "C" fn kahvi_symbol_to_string(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++) -> KahviValue {
+     unsafe {
+         with_agent(rt, |agent| {
+             let Value::Symbol(s) = from_c(agent, &v) else {
+@@ -482,7 +512,11 @@ pub unsafe extern "C" fn kahvi_bigint_truncate(
+ }
+ 
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_bigint_to_string(rt: *mut KahviRuntime, v: KahviValue, radix: u32) -> KahviValue {
++pub unsafe extern "C" fn kahvi_bigint_to_string(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    radix: u32,
++) -> KahviValue {
+     unsafe {
+         with_agent(rt, |agent| {
+             let Value::BigInt(b) = from_c(agent, &v) else {
+@@ -508,7 +542,11 @@ pub unsafe extern "C" fn kahvi_object_new(rt: *mut KahviRuntime) -> KahviValue {
+ }
+ 
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_array_new(rt: *mut KahviRuntime, len: usize, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_array_new(
++    rt: *mut KahviRuntime,
++    len: usize,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             kahvi_core::object::array::array_create(agent, len as f64, None).map(Value::Object)
+@@ -518,7 +556,12 @@ pub unsafe extern "C" fn kahvi_array_new(rt: *mut KahviRuntime, len: usize, out:
+ 
+ /// `obj[key]`; `key` is converted with ToPropertyKey.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_get(rt: *mut KahviRuntime, obj: KahviValue, key: KahviValue, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_get(
++    rt: *mut KahviRuntime,
++    obj: KahviValue,
++    key: KahviValue,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let o = object_arg(agent, &obj)?;
+@@ -531,7 +574,12 @@ pub unsafe extern "C" fn kahvi_get(rt: *mut KahviRuntime, obj: KahviValue, key:
+ 
+ /// `obj[key] = value` (throws on failure, as in strict code).
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_set(rt: *mut KahviRuntime, obj: KahviValue, key: KahviValue, value: KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_set(
++    rt: *mut KahviRuntime,
++    obj: KahviValue,
++    key: KahviValue,
++    value: KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, std::ptr::null_mut(), |agent| {
+             let o = object_arg(agent, &obj)?;
+@@ -545,7 +593,12 @@ pub unsafe extern "C" fn kahvi_set(rt: *mut KahviRuntime, obj: KahviValue, key:
+ 
+ /// `key in obj`.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_has(rt: *mut KahviRuntime, obj: KahviValue, key: KahviValue, out: *mut bool) -> bool {
++pub unsafe extern "C" fn kahvi_has(
++    rt: *mut KahviRuntime,
++    obj: KahviValue,
++    key: KahviValue,
++    out: *mut bool,
++) -> bool {
+     unsafe {
+         with_agent(rt, |agent| {
+             let r = (|| {
+@@ -568,7 +621,11 @@ pub unsafe extern "C" fn kahvi_has(rt: *mut KahviRuntime, obj: KahviValue, key:
+ /// An array of the enumerable string-keyed property names of `obj` and its
+ /// prototype chain (the names a for-in loop visits).
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_property_names(rt: *mut KahviRuntime, obj: KahviValue, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_property_names(
++    rt: *mut KahviRuntime,
++    obj: KahviValue,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let mut o = Some(object_arg(agent, &obj)?);
+@@ -636,7 +693,9 @@ pub unsafe extern "C" fn kahvi_construct(
+             if !ops::is_constructor(agent, fv) {
+                 return Err(agent.throw_type_error("not a constructor"));
+             }
+-            let Value::Object(fo) = fv else { unreachable!() };
++            let Value::Object(fo) = fv else {
++                unreachable!()
++            };
+             let args = collect_args(agent, args, argc);
+             ops::construct(agent, fo, &args, None).map(Value::Object)
+         })
+@@ -656,7 +715,12 @@ unsafe fn collect_args(agent: &Agent, args: *const KahviValue, argc: usize) -> V
+ 
+ /// `v instanceof ctor`.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_instance_of(rt: *mut KahviRuntime, v: KahviValue, ctor: KahviValue, out: *mut bool) -> bool {
++pub unsafe extern "C" fn kahvi_instance_of(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    ctor: KahviValue,
++    out: *mut bool,
++) -> bool {
+     unsafe {
+         with_agent(rt, |agent| {
+             let (v, c) = (from_c(agent, &v), from_c(agent, &ctor));
+@@ -703,7 +767,11 @@ pub unsafe extern "C" fn kahvi_is_array_buffer(rt: *mut KahviRuntime, v: KahviVa
+ 
+ /// ToLength(Get(v, "length")).
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_length(rt: *mut KahviRuntime, v: KahviValue, out: *mut usize) -> bool {
++pub unsafe extern "C" fn kahvi_length(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    out: *mut usize,
++) -> bool {
+     unsafe {
+         with_agent(rt, |agent| {
+             let r = (|| {
+@@ -723,7 +791,11 @@ pub unsafe extern "C" fn kahvi_length(rt: *mut KahviRuntime, v: KahviValue, out:
+ 
+ /// A new ArrayBuffer of `len` zero bytes.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_array_buffer_new(rt: *mut KahviRuntime, len: usize, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_array_buffer_new(
++    rt: *mut KahviRuntime,
++    len: usize,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let ctor = agent.intrinsic("%ArrayBuffer%");
+@@ -736,7 +808,11 @@ pub unsafe extern "C" fn kahvi_array_buffer_new(rt: *mut KahviRuntime, len: usiz
+ /// An ArrayBuffer's bytes (valid until the buffer is detached, resized or
+ /// collected); NULL if `v` is not an attached ArrayBuffer.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_array_buffer_data(rt: *mut KahviRuntime, v: KahviValue, len: *mut usize) -> *mut u8 {
++pub unsafe extern "C" fn kahvi_array_buffer_data(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++    len: *mut usize,
++) -> *mut u8 {
+     unsafe {
+         with_agent(rt, |agent| {
+             let Value::Object(o) = from_c(agent, &v) else {
+@@ -758,7 +834,11 @@ pub unsafe extern "C" fn kahvi_array_buffer_data(rt: *mut KahviRuntime, v: Kahvi
+ 
+ /// `new WeakRef(obj)`.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_weak_new(rt: *mut KahviRuntime, obj: KahviValue, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_weak_new(
++    rt: *mut KahviRuntime,
++    obj: KahviValue,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let target = from_c(agent, &obj);
+@@ -770,7 +850,11 @@ pub unsafe extern "C" fn kahvi_weak_new(rt: *mut KahviRuntime, obj: KahviValue,
+ 
+ /// The target of a WeakRef made by `kahvi_weak_new`, or undefined.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_weak_lock(rt: *mut KahviRuntime, weak: KahviValue, out: *mut KahviValue) -> bool {
++pub unsafe extern "C" fn kahvi_weak_lock(
++    rt: *mut KahviRuntime,
++    weak: KahviValue,
++    out: *mut KahviValue,
++) -> bool {
+     unsafe {
+         op(rt, out, |agent| {
+             let w = from_c(agent, &weak);
+@@ -823,25 +907,38 @@ pub unsafe extern "C" fn kahvi_function_new(
+     let ctx = context as usize;
+     unsafe {
+         with_agent(rt, move |agent| {
+-            let behaviour = move |agent: &mut Agent, this: Value, args: &[Value]| -> JsResult<Value> {
+-                let _keep = &guard;
+-                let rt = rt_addr as *mut KahviRuntime;
+-                enter_callback(rt, agent, |agent| {
+-                    let agent = &mut *agent;
+-                    let this_c = to_c(agent, this);
+-                    let args_c: Vec<KahviValue> = args.iter().map(|&a| to_c(agent, a)).collect();
+-                    let mut out = UNDEFINED;
+-                    let ok = f(rt, ctx as *mut c_void, this_c, args_c.as_ptr(), args_c.len(), &mut out);
+-                    let agent = &mut *(*rt).agent.get();
+-                    let result = from_c(agent, &out);
+-                    kahvi_value_release(out);
+-                    kahvi_value_release(this_c);
+-                    for a in args_c {
+-                        kahvi_value_release(a);
+-                    }
+-                    if ok { Ok(result) } else { Err(JsError::Throw(result)) }
+-                })
+-            };
++            let behaviour =
++                move |agent: &mut Agent, this: Value, args: &[Value]| -> JsResult<Value> {
++                    let _keep = &guard;
++                    let rt = rt_addr as *mut KahviRuntime;
++                    enter_callback(rt, agent, |agent| {
++                        let agent = &mut *agent;
++                        let this_c = to_c(agent, this);
++                        let args_c: Vec<KahviValue> =
++                            args.iter().map(|&a| to_c(agent, a)).collect();
++                        let mut out = UNDEFINED;
++                        let ok = f(
++                            rt,
++                            ctx as *mut c_void,
++                            this_c,
++                            args_c.as_ptr(),
++                            args_c.len(),
++                            &mut out,
++                        );
++                        let agent = &mut *(*rt).agent.get();
++                        let result = from_c(agent, &out);
++                        kahvi_value_release(out);
++                        kahvi_value_release(this_c);
++                        for a in args_c {
++                            kahvi_value_release(a);
++                        }
++                        if ok {
++                            Ok(result)
++                        } else {
++                            Err(JsError::Throw(result))
++                        }
++                    })
++                };
+             let fo = agent.host_function(&name, length, behaviour);
+             let index = agent
+                 .host_function_index(Value::Object(fo))
+@@ -893,7 +990,13 @@ impl HostObject for FfiHostObject {
+         }
+     }
+ 
+-    fn set(&self, agent: &mut Agent, _this: Object, key: PropertyKey, value: Value) -> JsResult<()> {
++    fn set(
++        &self,
++        agent: &mut Agent,
++        _this: Object,
++        key: PropertyKey,
++        value: Value,
++    ) -> JsResult<()> {
+         let rt = self.rt as *mut KahviRuntime;
+         unsafe {
+             enter_callback(rt, agent, |agent| {
+@@ -902,7 +1005,13 @@ impl HostObject for FfiHostObject {
+                 let name_c = to_c(agent, name);
+                 let value_c = to_c(agent, value);
+                 let mut exception = UNDEFINED;
+-                let ok = (self.class.set)(rt, self.context as *mut c_void, name_c, value_c, &mut exception);
++                let ok = (self.class.set)(
++                    rt,
++                    self.context as *mut c_void,
++                    name_c,
++                    value_c,
++                    &mut exception,
++                );
+                 let agent = &mut *(*rt).agent.get();
+                 let e = from_c(agent, &exception);
+                 kahvi_value_release(exception);
+@@ -963,7 +1072,10 @@ pub unsafe extern "C" fn kahvi_host_object_new(
+ 
+ /// The context of a host object made by `kahvi_host_object_new`, else NULL.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_host_object_context(rt: *mut KahviRuntime, v: KahviValue) -> *mut c_void {
++pub unsafe extern "C" fn kahvi_host_object_context(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++) -> *mut c_void {
+     unsafe {
+         with_agent(rt, |agent| {
+             let Value::Object(o) = from_c(agent, &v) else {
+@@ -983,7 +1095,10 @@ pub unsafe extern "C" fn kahvi_host_object_context(rt: *mut KahviRuntime, v: Kah
+ 
+ /// The context of a function made by `kahvi_function_new`, else NULL.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_host_function_context(rt: *mut KahviRuntime, v: KahviValue) -> *mut c_void {
++pub unsafe extern "C" fn kahvi_host_function_context(
++    rt: *mut KahviRuntime,
++    v: KahviValue,
++) -> *mut c_void {
+     unsafe {
+         with_agent(rt, |agent| {
+             let f = from_c(agent, &v);
+@@ -1022,7 +1137,10 @@ pub unsafe extern "C" fn kahvi_set_native_state(
+ 
+ /// The context attached with `kahvi_set_native_state`, else NULL.
+ #[unsafe(no_mangle)]
+-pub unsafe extern "C" fn kahvi_get_native_state(rt: *mut KahviRuntime, object: KahviValue) -> *mut c_void {
++pub unsafe extern "C" fn kahvi_get_native_state(
++    rt: *mut KahviRuntime,
++    object: KahviValue,
++) -> *mut c_void {
+     unsafe {
+         with_agent(rt, |agent| {
+             let Value::Object(o) = from_c(agent, &object) else {
+@@ -1030,7 +1148,10 @@ pub unsafe extern "C" fn kahvi_get_native_state(rt: *mut KahviRuntime, object: K
+             };
+             agent
+                 .native_state(o)
+-                .and_then(|s| s.downcast_ref::<Finalize>().map(|f| f.context as *mut c_void))
++                .and_then(|s| {
++                    s.downcast_ref::<Finalize>()
++                        .map(|f| f.context as *mut c_void)
++                })
+                 .unwrap_or(std::ptr::null_mut())
+         })
+     }

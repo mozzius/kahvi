@@ -1,0 +1,139 @@
+{
+  "duration_api_ms": 36067,
+  "stop_reason": "end_turn",
+  "session_id": "4780c775-fcde-4a4a-8343-b223385c277d",
+  "total_cost_usd": 0.014473320000000003,
+  "usage": {
+    "input_tokens": 23,
+    "cache_creation_input_tokens": 36135,
+    "cache_read_input_tokens": 405262,
+    "output_tokens": 5626,
+    "output_tokens_details": {
+      "thinking_tokens": 1361
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 36135,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 438,
+        "cache_read_input_tokens": 42427,
+        "cache_creation_input_tokens": 1351,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1351
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01EMV1peu22F3MGmT8aoY6F3",
+      "tool_input": {
+        "command": "git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs && git status --short && cargo clippy -p kahvi-builtins 2>&1 | tail -3 && ./t262 built-ins/TypedArray/prototype/every/ 2>&1 | grep -E \"^t262|pass \"",
+        "description": "Restore out-of-scope files, then re-run clippy and tests"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_014a5Ff7ZKkuLLduWPFrfyBk",
+      "tool_input": {
+        "command": "git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs",
+        "description": "Restore the three out-of-scope files to HEAD"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.every` in `crates/kahvi-builtins/src/typed_array/prototype_every.rs`, with each spec step as a comment above its code. The `every/` suite gives 78 pass, 10 fail; every failure is a \"not implemented\" error from something outside this file (`BigInt` or `Array.prototype.unshift`), not a wrong result. Clippy is clean for `kahvi-builtins`.\n\n**Out-of-scope changes, needs your action:** my `cargo fmt` call reformatted three files I did not mean to touch: `crates/kahvi-core/src/host.rs`, `crates/kahvi-core/src/object/host_object.rs` and `crates/kahvi-ffi/src/lib.rs`. Restoring them with `git checkout` was denied, so they are still modified in the worktree. Run `git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs` before this is merged; the diffs are formatting only.\n\nBLOCKED: `BigInt` support (needed for the BigInt and resizable-buffer tests) and `Array.prototype.unshift` (needed by the BigInt test setup) are not implemented in the engine.",
+  "ttft_ms": 1922,
+  "type": "result",
+  "duration_ms": 81527,
+  "uuid": "59bfb894-57c3-4781-acfd-ae862c71e8e9",
+  "ttft_stream_ms": 1669,
+  "time_to_request_ms": 645,
+  "time_to_request_phases_ms": {
+    "other": 44,
+    "system_prompt": 427,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 21,
+    "input_hooks": 8,
+    "tool_pool_refresh": 5,
+    "init_message": 10,
+    "engine_pickup": 1,
+    "message_prep": 7,
+    "model_config_wait": 74,
+    "autocompact": 2,
+    "query_setup": 4,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 95,
+  "time_to_request_cpu_ms": 289,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 263,
+  "process_anon_mib_result": 144,
+  "process_peak_rss_mib": 278,
+  "process_cpu_ms_turn": 4706,
+  "process_wall_ms_turn": 81526,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1670,
+  "time_to_request_from_spawn_ms": 18024860,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997484645.5977,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
