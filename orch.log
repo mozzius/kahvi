@@ -4790,3 +4790,100 @@ test262 at last merge: 76889/81183 runs passing
 [20:30:30] B-math-tanh: merged (+2, 80359 total)
 [20:30:49] stack: pushed stack/0029 as #46 with arch-iterator-accessors
 [20:34:15] stack: stack/0029 (#46) green: 80373/81183 passing, +14
+[20:34:22] nothing left to do
+tickets: blocked 3, done 329, needs-architect 5, open 8, partial 62
+  A-gc-collect-code open             tier=architect attempts=0 strikes=0
+  A-gc-collect-in-callbacks open             tier=architect attempts=0 strikes=0
+  A-gc-string-storage open             tier=architect attempts=0 strikes=0
+  B-array-from-async partial          tier=haiku   attempts=2 strikes=0  1 target runs still failing: BigInt.prototype.valueOf (1)
+  B-array-prototype-at partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-array-prototype-copy-within partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-array-prototype-every partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-fill partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-array-prototype-filter partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-find partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-find-index partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-find-last partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-find-last-index partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-for-each partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-includes partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-array-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-last-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-reduce partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-reduce-right partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-reverse partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-array-prototype-slice partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-some partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-sort partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (8)
+  B-array-prototype-symbol-iterator open             tier=haiku   attempts=0 strikes=0
+  B-array-prototype-to-locale-string partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: Number.prototype.toLocaleString (6)
+  B-array-prototype-to-string partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: 2 other failures
+  B-data-view-prototype-get-big-int64 partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt.prototype.valueOf (2)
+  B-data-view-prototype-get-big-uint64 partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt.prototype.valueOf (2)
+  B-data-view-prototype-set-big-int64 partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-error-is-error partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-iterator-prototype-get-constructor needs-architect  tier=sonnet  attempts=4 strikes=2  4 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-iterator-prototype-get-symbol-to-string-tag needs-architect  tier=sonnet  attempts=4 strikes=2  4 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-iterator-prototype-set-constructor needs-architect  tier=sonnet  attempts=4 strikes=2  4 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-iterator-prototype-set-symbol-to-string-tag needs-architect  tier=sonnet  attempts=4 strikes=2  4 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-iterator-zip partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2)
+  B-iterator-zip-keyed partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2)
+  B-json-is-raw-json needs-architect  tier=sonnet  attempts=5 strikes=1  5 attempts without finishing; last: rejected by gates: no new test262 passes in target
+  B-json-raw-json partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not p
+  B-json-stringify partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (2), BigInt.prototype.toString (2)
+  B-number-parse-float open             tier=haiku   attempts=0 strikes=0
+  B-number-parse-int open             tier=haiku   attempts=0 strikes=0
+  B-object-define-properties partial          tier=haiku   attempts=2 strikes=0  2 target runs still failing: BigInt (2)
+  B-object-freeze partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: 2 other failures
+  B-reg-exp-prototype-symbol-match-all partial          tier=haiku   attempts=2 strikes=0  20 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (2
+  B-reg-exp-string-iterator-prototype-next blocked          tier=sonnet  attempts=3 strikes=0  `CreateRegExpStringIterator` must be implemented in `reg_exp/prototype_symbol_match_all.rs
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-string-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt.prototype.valueOf (2), BigInt.prototype.toString (2)
+  B-string-prototype-match-all partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: CreateRegExpStringIterator (RegExp String Iterator slots) (1
+  B-string-prototype-trim-left open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-trim-right open             tier=haiku   attempts=0 strikes=0
+  B-typed-array-prototype-at partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-typed-array-prototype-copy-within partial          tier=sonnet  attempts=3 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-entries partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-every partial          tier=haiku   attempts=2 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-fill partial          tier=haiku   attempts=2 strikes=0  4 target runs still failing: BigInt (4)
+  B-typed-array-prototype-filter partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-index partial          tier=sonnet  attempts=3 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-last partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-last-index partial          tier=haiku   attempts=2 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-for-each partial          tier=haiku   attempts=2 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-includes partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-typed-array-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-join partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-typed-array-prototype-keys partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-last-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-map partial          tier=haiku   attempts=1 strikes=0  10 target runs still failing: BigInt (10)
+  B-typed-array-prototype-reduce partial          tier=sonnet  attempts=5 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-reduce-right partial          tier=sonnet  attempts=5 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-reverse partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-typed-array-prototype-set partial          tier=haiku   attempts=2 strikes=0  12 target runs still failing: BigInt (12)
+  B-typed-array-prototype-slice partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (8)
+  B-typed-array-prototype-some partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-sort partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (8)
+  B-typed-array-prototype-subarray partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-to-locale-string partial          tier=haiku   attempts=1 strikes=0  19 target runs still failing: Number.prototype.toLocaleString (12), BigInt.prototype.toLoc
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+  B-typed-array-prototype-values partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+attempts: 504  merged: 386  spend: $21.73 (workers $7.97, verifier $13.76)  new test262 passes: 19368  ($0.001 per pass)
+  haiku   accept       385
+  haiku   blocked      6
+  haiku   gate-reject  41
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       16
+  sonnet  accept       5
+  sonnet  blocked      1
+  sonnet  gate-reject  25
+  sonnet  no-diff      8
+plan usage at last run: allowed_warning; five_hour 81% (resets Wed 23:20), seven_day 88% (resets Thu 09:00)
+test262 at last merge: 80373/81183 runs passing
+[20:38:58] building trusted runner; integration branch stack, 4 slots
+[20:39:14] stack: pushed stack/0030 as #47 with arch-locale
+[20:42:42] stack: stack/0030 (#47) green: 80909/81183 passing, +536
+[20:42:44] stack: partial tickets after stack/0030: {'done': 55}
