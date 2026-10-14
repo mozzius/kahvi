@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7668,
+  "stop_reason": "tool_use",
+  "session_id": "60581166-9958-4199-a907-ad909446f115",
+  "total_cost_usd": 0.0290769,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5029,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 816,
+    "output_tokens_details": {
+      "thinking_tokens": 363
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5029,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 816,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5029,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5029
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements StringIteratorPrototype.next over the engine's native StringIterator state. It throws TypeError for a non-String-Iterator receiver. It returns {undefined, true} once the iterator is completed. It marks the iterator completed when the position reaches the string length. Otherwise it yields the next code point, treating a valid surrogate pair as one unit and a lone surrogate as a single code unit. There are no special cases or hardcoded values. The two `.expect` calls follow a successful `native::<StringIterator>(it)` lookup on the same object, so they cannot panic. The local CodePointAt helper follows the spec steps and is disclosed in a comment. The gate shows 6 new passes and 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements StringIteratorPrototype.next over the engine's native StringIterator state. It throws TypeError for a non-String-Iterator receiver. It returns {undefined, true} once the iterator is completed. It marks the iterator completed when the position reaches the string length. Otherwise it yields the next code point, treating a valid surrogate pair as one unit and a lone surrogate as a single code unit. There are no special cases or hardcoded values. The two `.expect` calls follow a successful `native::<StringIterator>(it)` lookup on the same object, so they cannot panic. The local CodePointAt helper follows the spec steps and is disclosed in a comment. The gate shows 6 new passes and 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5065,
+  "type": "result",
+  "duration_ms": 7753,
+  "uuid": "262adcb0-c577-4d23-ba82-7c23b12165e3",
+  "ttft_stream_ms": 1835,
+  "time_to_request_ms": 629,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 386,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 5,
+    "init_message": 10,
+    "engine_pickup": 6,
+    "message_prep": 2,
+    "model_config_wait": 131,
+    "autocompact": 2,
+    "query_setup": 4,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 51,
+  "time_to_request_cpu_ms": 366,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 682,
+  "process_wall_ms_turn": 7753,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1836,
+  "time_to_request_from_spawn_ms": 18756361,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998216055.59,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
