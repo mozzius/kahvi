@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 24884,
+  "stop_reason": "tool_use",
+  "session_id": "f0334e04-8ab0-4bef-a38d-073a405768ed",
+  "total_cost_usd": 0.004920280000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7918,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 5154,
+    "output_tokens_details": {
+      "thinking_tokens": 4617
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7918,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5154,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7918,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7918
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"No defects found in prototype_to_fixed.rs. Every spec step (1-12) is implemented in order with the right abrupt-completion handling: ThisNumberValue and ToIntegerOrInfinity are called with `?`, the RangeError checks cover infinity and the 0..=100 range, non-finite values go through Number::toString, and the >= 1e21 branch uses ToString. The digit computation formats the double exactly (`{:.1100}`, enough for the 1074 maximum fractional digits of a double), takes fractionCount digits, and rounds half-up on the next digit, which matches \\\"closest, ties pick the larger\\\". The zero-padding, intPart/fractionalPart split and sign handling also match the spec. Only cosmetic issues: the spec NOTE block was dropped from the comments, and -0 is handled by mapping '-' to digit 0 through saturating_sub. That second point is correct in practice (-0 leads to \\\"0.00\\\"), but it is fragile.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "No defects found in prototype_to_fixed.rs. Every spec step (1-12) is implemented in order with the right abrupt-completion handling: ThisNumberValue and ToIntegerOrInfinity are called with `?`, the RangeError checks cover infinity and the 0..=100 range, non-finite values go through Number::toString, and the >= 1e21 branch uses ToString. The digit computation formats the double exactly (`{:.1100}`, enough for the 1074 maximum fractional digits of a double), takes fractionCount digits, and rounds half-up on the next digit, which matches \"closest, ties pick the larger\". The zero-padding, intPart/fractionalPart split and sign handling also match the spec. Only cosmetic issues: the spec NOTE block was dropped from the comments, and -0 is handled by mapping '-' to digit 0 through saturating_sub. That second point is correct in practice (-0 leads to \"0.00\"), but it is fragile.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 22795,
+  "type": "result",
+  "duration_ms": 24940,
+  "uuid": "e70a359d-1bf8-45c5-beed-1df40c3b5c49",
+  "ttft_stream_ms": 2012,
+  "time_to_request_ms": 655,
+  "time_to_request_phases_ms": {
+    "other": 56,
+    "system_prompt": 327,
+    "resume_other": 0,
+    "process_user_input": 13,
+    "input_attachments": 59,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 104,
+    "autocompact": 14,
+    "query_setup": 1,
+    "model_gates": 9,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 14,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 225,
+  "time_to_request_cpu_ms": 270,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 1103,
+  "process_wall_ms_turn": 24939,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 49,
+    "cpu_ms": 41,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2021,
+  "time_to_request_from_spawn_ms": 21677277,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001137369.457,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

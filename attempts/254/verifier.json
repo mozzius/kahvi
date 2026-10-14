@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13076,
+  "stop_reason": "tool_use",
+  "session_id": "ee1ef9e4-a0ea-4f8e-aa65-3129351ecd21",
+  "total_cost_usd": 0.00313108,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6069,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2689,
+    "output_tokens_details": {
+      "thinking_tokens": 2187
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6069,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2689,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6069,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6069
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Map.prototype.forEach in its single file, following the spec steps. RequireInternalSlot is done through this_map, and IsCallable is checked before anything else is read. Entries are walked by index with the count refreshed after each callback, and empty (deleted) entries are skipped. Callback errors propagate with `?`. Map, callback, thisArg, and each entry's key and value are rooted for GC. No test-specific branches, hardcoded results, or swallowed errors appear. The gate shows 22 new passes, no regressions, and 6 failures that are the honest not-implemented error from Map.prototype.delete, which belongs to another ticket. I could not run the code, so the root-stack behaviour on the early-return error path (push_root without pop_roots) and the semantics of slots() counting tombstones are unverified from the diff alone. Neither looks like a defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Map.prototype.forEach in its single file, following the spec steps. RequireInternalSlot is done through this_map, and IsCallable is checked before anything else is read. Entries are walked by index with the count refreshed after each callback, and empty (deleted) entries are skipped. Callback errors propagate with `?`. Map, callback, thisArg, and each entry's key and value are rooted for GC. No test-specific branches, hardcoded results, or swallowed errors appear. The gate shows 22 new passes, no regressions, and 6 failures that are the honest not-implemented error from Map.prototype.delete, which belongs to another ticket. I could not run the code, so the root-stack behaviour on the early-return error path (push_root without pop_roots) and the semantics of slots() counting tombstones are unverified from the diff alone. Neither looks like a defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11108,
+  "type": "result",
+  "duration_ms": 13118,
+  "uuid": "62c176e3-ddaf-484f-b6ce-15b881e9d53f",
+  "ttft_stream_ms": 1392,
+  "time_to_request_ms": 529,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 303,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 18,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 73,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 40,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 116,
+  "time_to_request_cpu_ms": 309,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 124,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 241,
+  "process_cpu_ms_turn": 971,
+  "process_wall_ms_turn": 13117,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1394,
+  "time_to_request_from_spawn_ms": 21697428,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001157236.7493,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

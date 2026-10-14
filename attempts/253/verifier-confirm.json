@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10405,
+  "stop_reason": "tool_use",
+  "session_id": "85a11701-3fb2-4786-8b0d-b15168518422",
+  "total_cost_usd": 0.044536000000000006,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7919,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1177,
+    "output_tokens_details": {
+      "thinking_tokens": 679
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7919,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1177,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7919,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7919
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Number.prototype.toFixed following the spec steps in order. ThisNumberValue runs first, then ToIntegerOrInfinity. Infinite and out-of-range counts throw RangeError, and non-finite numbers go through Number::toString. Values of 1e21 or more use ToString. For smaller values it formats the exact decimal expansion of the double with 1100 fractional digits, which is enough for every f64. Rounding is half-up on the next digit, which matches the spec's \\\"pick the larger intValue\\\" rule. Zero-padding and the intPart/fractionalPart split match the spec. Negative values that round to zero keep the \\\"-\\\" sign, as the spec requires, and -0 gets no sign. The gate report shows 32 of 32 target tests passing with 0 regressions. I found no special-casing, swallowed errors or unrelated changes.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Number.prototype.toFixed following the spec steps in order. ThisNumberValue runs first, then ToIntegerOrInfinity. Infinite and out-of-range counts throw RangeError, and non-finite numbers go through Number::toString. Values of 1e21 or more use ToString. For smaller values it formats the exact decimal expansion of the double with 1100 fractional digits, which is enough for every f64. Rounding is half-up on the next digit, which matches the spec's \"pick the larger intValue\" rule. Zero-padding and the intPart/fractionalPart split match the spec. Negative values that round to zero keep the \"-\" sign, as the spec requires, and -0 gets no sign. The gate report shows 32 of 32 target tests passing with 0 regressions. I found no special-casing, swallowed errors or unrelated changes.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6963,
+  "type": "result",
+  "duration_ms": 10147,
+  "uuid": "368323bf-793d-4458-b457-6fcfba9802de",
+  "ttft_stream_ms": 1916,
+  "time_to_request_ms": 803,
+  "time_to_request_phases_ms": {
+    "other": 110,
+    "system_prompt": 356,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 30,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 22,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 116,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 79,
+    "request_build": 53
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 323,
+  "time_to_request_cpu_ms": 300,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 856,
+  "process_wall_ms_turn": 10146,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1922,
+  "time_to_request_from_spawn_ms": 21706056,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001164469.1829,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "ticket": "B-map-prototype-for-each",
+  "base": "71af1d63b520dcbd0d27bafb850f4aceccb3548b",
+  "head": "e2c23575fa9f2adfbc96aebe585eb39e95f0a967",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_for_each.rs",
+      "added": 37,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 8,
+    "after": 30,
+    "new_passes": 22,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Map/prototype/forEach/deleted-values-during-foreach.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/forEach/deleted-values-during-foreach.js:strict  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/forEach/iterates-in-key-insertion-order.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/forEach/iterates-in-key-insertion-order.js:strict  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/forEach/iterates-values-deleted-then-readded.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.delete",
+      "built-ins/Map/prototype/forEach/iterates-values-deleted-then-readded.js:strict  Uncaught InternalError: not implemented: Map.prototype.delete"
+    ]
+  },
+  "decision": "pass"
+}

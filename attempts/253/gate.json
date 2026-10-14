@@ -1,0 +1,32 @@
+{
+  "ticket": "B-number-prototype-to-fixed",
+  "base": "71af1d63b520dcbd0d27bafb850f4aceccb3548b",
+  "head": "0b99044e6166618de146aa0401f0a70d45f41c23",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/number/prototype_to_fixed.rs",
+      "added": 95,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 10,
+    "after": 32,
+    "new_passes": 22,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

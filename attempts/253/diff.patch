@@ -1,0 +1,150 @@
+diff --git a/crates/kahvi-builtins/src/number/prototype_to_fixed.rs b/crates/kahvi-builtins/src/number/prototype_to_fixed.rs
+index 63f0cc3..dab5e20 100644
+--- a/crates/kahvi-builtins/src/number/prototype_to_fixed.rs
++++ b/crates/kahvi-builtins/src/number/prototype_to_fixed.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-number.prototype.tofixed
+ 
++use crate::support::this_value::this_number_value;
+ use kahvi_core::prelude::*;
+ 
+ /// Number.prototype.toFixed
+@@ -9,43 +10,115 @@ pub(crate) fn prototype_to_fixed(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // NOTE:
+     // This method returns a String containing this Number value represented in decimal fixed-point notation with _fractionDigits_ digits after the decimal point. If _fractionDigits_ is *undefined*, 0 is assumed.
+     // It performs the following steps when called:
+     //
+     // 1. Let _number_ be ? ThisNumberValue(*this* value).
++    let mut number = this_number_value(agent, this)?;
+     // 2. Let _fractionCount_ be ? ToIntegerOrInfinity(_fractionDigits_).
++    let fraction_digits = args.get_or_undefined(0);
++    let fraction_count = ops::to_integer_or_infinity(agent, fraction_digits)?;
+     // 3. Assert: If _fractionDigits_ is *undefined*, then _fractionCount_ is 0.
++    debug_assert!(!matches!(fraction_digits, Value::Undefined) || fraction_count == 0.0);
+     // 4. If _fractionCount_ is not an integer, throw a *RangeError* exception.
++    //    (ToIntegerOrInfinity yields an integer or ±∞; ±∞ is not an integer.)
++    if fraction_count.is_infinite() {
++        return Err(agent.throw_range_error("toFixed() digits argument must be between 0 and 100"));
++    }
+     // 5. If _fractionCount_ < 0 or _fractionCount_ > 100, throw a *RangeError* exception.
++    if !(0.0..=100.0).contains(&fraction_count) {
++        return Err(agent.throw_range_error("toFixed() digits argument must be between 0 and 100"));
++    }
++    // The count is now an integer in 0..=100.
++    let fraction_count = fraction_count as usize;
+     // 6. If _number_ is not a finite Number, return Number::toString(_number_, 10).
++    if !number.is_finite() {
++        return Ok(Value::String(ops::number_to_js_string(agent, number)));
++    }
+     // 7. Set _number_ to ℝ(_number_).
++    // (A Number is already an exact value here; the arithmetic below works on its exact decimal expansion.)
+     // 8. Let _sign_ be the empty String.
++    let mut units: Vec<u16> = Vec::new();
+     // 9. If _number_ < 0, then
+-    //    a. Set _sign_ to *"-"*.
+-    //    b. Set _number_ to -_number_.
++    if number < 0.0 {
++        // a. Set _sign_ to *"-"*.
++        units.push(u16::from(b'-'));
++        // b. Set _number_ to -_number_.
++        number = -number;
++    }
+     // 10. If _number_ ≥ 10^21, then
+-    //    a. Let _digitString_ be ! ToString(𝔽(_number_)).
++    if number >= 1e21 {
++        // a. Let _digitString_ be ! ToString(𝔽(_number_)).
++        let digit_string = ops::number_to_js_string(agent, number);
++        units.extend_from_slice(agent.str(digit_string));
+     // 11. Else,
+-    //    a. Let _intValue_ be an integer for which _intValue_ / 10^_fractionCount_ - _number_ is as close to zero as possible. If there are two such _intValue_, pick the larger _intValue_.
+-    //    b. If _intValue_ = 0, let _digitString_ be *"0"*; else let _digitString_ be the String value consisting of the digits of the decimal representation of _intValue_ (in order, with no leading zeroes).
+-    //    c. If _fractionCount_ ≠ 0, then
+-    //       i. Let _digitCount_ be the length of _digitString_.
+-    //       ii. If _digitCount_ ≤ _fractionCount_, then
+-    //          1. Let _zeroPad_ be the String value consisting of _fractionCount_ + 1 - _digitCount_ occurrences of the code unit 0x0030 (DIGIT ZERO).
+-    //          2. Set _digitString_ to the string-concatenation of _zeroPad_ and _digitString_.
+-    //          3. Set _digitCount_ to _fractionCount_ + 1.
+-    //       iii. Let _intPart_ be the first _digitCount_ - _fractionCount_ code units of _digitString_.
+-    //       iv. Let _fractionalPart_ be the other _fractionCount_ code units of _digitString_.
+-    //       v. Set _digitString_ to the string-concatenation of _intPart_, *"."*, and _fractionalPart_.
++    } else {
++        // a. Let _intValue_ be an integer for which _intValue_ / 10^_fractionCount_ - _number_ is as close to zero as possible. If there are two such _intValue_, pick the larger _intValue_.
++        // The exact decimal expansion of a double is finite (at most 1074 fractional digits), so it is
++        // formatted in full; the digits up to _fractionCount_ form _intValue_ and the next digit decides the rounding.
++        let exact = format!("{number:.1100}");
++        let (int_part, frac_part) = exact.split_once('.').unwrap_or((exact.as_str(), ""));
++        let mut int_value: Vec<u8> = int_part
++            .bytes()
++            .chain(frac_part.bytes().take(fraction_count))
++            .map(|b| b.saturating_sub(b'0'))
++            .collect();
++        // Round half up: a next digit of 5 or more means the remainder is at least half a unit, and ties pick the larger value.
++        let round_up = frac_part
++            .as_bytes()
++            .get(fraction_count)
++            .is_some_and(|&b| b >= b'5');
++        if round_up {
++            let mut carry = true;
++            for digit in int_value.iter_mut().rev() {
++                if !carry {
++                    break;
++                }
++                if *digit == 9 {
++                    *digit = 0;
++                } else {
++                    *digit += 1;
++                    carry = false;
++                }
++            }
++            if carry {
++                int_value.insert(0, 1);
++            }
++        }
++        // Remove leading zeroes; a zero value leaves a single "0".
++        let first_nonzero = int_value.iter().position(|&d| d != 0);
++        let mut digits: Vec<u8> = match first_nonzero {
++            Some(i) => int_value.split_off(i),
++            None => vec![0],
++        };
++        // b. If _intValue_ = 0, let _digitString_ be *"0"*; else let _digitString_ be the String value consisting of the digits of the decimal representation of _intValue_ (in order, with no leading zeroes).
++        // c. If _fractionCount_ ≠ 0, then
++        if fraction_count != 0 {
++            // i. Let _digitCount_ be the length of _digitString_.
++            let mut digit_count = digits.len();
++            // ii. If _digitCount_ ≤ _fractionCount_, then
++            if digit_count <= fraction_count {
++                // 1. Let _zeroPad_ be the String value consisting of _fractionCount_ + 1 - _digitCount_ occurrences of the code unit 0x0030 (DIGIT ZERO).
++                let zero_pad = fraction_count + 1 - digit_count;
++                // 2. Set _digitString_ to the string-concatenation of _zeroPad_ and _digitString_.
++                digits.splice(0..0, std::iter::repeat_n(0, zero_pad));
++                // 3. Set _digitCount_ to _fractionCount_ + 1.
++                digit_count = fraction_count + 1;
++            }
++            // iii. Let _intPart_ be the first _digitCount_ - _fractionCount_ code units of _digitString_.
++            // iv. Let _fractionalPart_ be the other _fractionCount_ code units of _digitString_.
++            let split = digit_count - fraction_count;
++            // v. Set _digitString_ to the string-concatenation of _intPart_, *"."*, and _fractionalPart_.
++            units.extend(digits[..split].iter().map(|&d| u16::from(b'0' + d)));
++            units.push(u16::from(b'.'));
++            units.extend(digits[split..].iter().map(|&d| u16::from(b'0' + d)));
++        } else {
++            units.extend(digits.iter().map(|&d| u16::from(b'0' + d)));
++        }
++    }
+     // 12. Return the string-concatenation of _sign_ and _digitString_.
+-    //
+-    // NOTE:
+-    // The output of `toFixed` may be more precise than `toString` for some values because toString only prints enough significant digits to distinguish the number from adjacent Number values. For example,
+-    // `(1000000000000000128).toString()` returns *"1000000000000000100"*, while
+-    // `(1000000000000000128).toFixed(0)` returns *"1000000000000000128"*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Number.prototype.toFixed"))
++    Ok(Value::String(agent.intern(&units)))
+ }
