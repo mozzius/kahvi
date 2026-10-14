@@ -5,6 +5,10 @@ A JavaScript engine written in Rust, built mostly by a swarm of cheap models
 progress against the official [test262](https://github.com/tc39/test262)
 conformance suite.
 
+<!-- test262:start -->
+**test262:** not measured yet. CI fills this in on the next push to `main`.
+<!-- test262:end -->
+
 > **Status: early.** The harness (milestone M0) is in place. The engine itself
 > is a stub: `crates/kahvi-cli` is the only engine crate so far, and the
 > engine spine (M1) has not been written. Nothing in test262 passes yet.
