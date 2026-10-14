@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9343,
+  "stop_reason": "tool_use",
+  "session_id": "8ab33373-2331-48b6-a7db-dcbd13eadbab",
+  "total_cost_usd": 0.0396494,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7476,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 870,
+    "output_tokens_details": {
+      "thinking_tokens": 443
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7476,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 870,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7476,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7476
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1-8 of %TypedArray%.prototype.map in order. ValidateTypedArray runs first, then TypedArrayLength, then the IsCallable check, then TypedArraySpeciesCreate. The loop reads the element, calls the callback, and sets the element on the result, using `?` on the call and on the set. It adds only GC rooting and no extra behaviour. The 10 remaining test failures are all \\\"not implemented: BigInt\\\", which comes from outside this file. The `unreachable!` after ValidateTypedArray is a real invariant, because validation requires the TypedArrayName slot and so only objects pass.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1-8 of %TypedArray%.prototype.map in order. ValidateTypedArray runs first, then TypedArrayLength, then the IsCallable check, then TypedArraySpeciesCreate. The loop reads the element, calls the callback, and sets the element on the result, using `?` on the call and on the set. It adds only GC rooting and no extra behaviour. The 10 remaining test failures are all \"not implemented: BigInt\", which comes from outside this file. The `unreachable!` after ValidateTypedArray is a real invariant, because validation requires the TypedArrayName slot and so only objects pass.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6859,
+  "type": "result",
+  "duration_ms": 9216,
+  "uuid": "df9579fa-e2af-4cd8-9a04-6a9da3feea9a",
+  "ttft_stream_ms": 3058,
+  "time_to_request_ms": 804,
+  "time_to_request_phases_ms": {
+    "other": 57,
+    "system_prompt": 346,
+    "resume_other": 1,
+    "process_user_input": 13,
+    "input_attachments": 75,
+    "input_hooks": 13,
+    "tool_pool_refresh": 2,
+    "init_message": 26,
+    "engine_pickup": 2,
+    "message_prep": 7,
+    "model_config_wait": 201,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 11,
+    "message_normalization": 9,
+    "client_creation": 11,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 206,
+  "time_to_request_cpu_ms": 414,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 225,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 235,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 840,
+  "process_wall_ms_turn": 9216,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 62,
+    "cpu_ms": 45,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3060,
+  "time_to_request_from_spawn_ms": 17771138,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997230175.8315,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

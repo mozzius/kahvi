@@ -13,3 +13,6 @@
 [16:59:35] B-data-view-prototype-set-uint8: verifier: accept The diff implements DataView.prototype.setUint8 in its one in-scope file. Step 1 binds the this value to `view`. Step 2 calls `set_view_value(agent, v
 [16:59:39] B-typed-array-prototype-values: attempt on slot 2 with haiku
 [17:00:05] B-typed-array-prototype-subarray: verifier: accept The diff implements %TypedArray%.prototype.subarray steps 1-15 in order, in the single in-scope file. RequireInternalSlot throws a TypeError for non-T
+[17:00:09] B-typed-array-prototype-fill: attempt on slot 1 with haiku
+[17:00:20] B-typed-array-prototype-values: attempt 107 finished ($0.008, 13 turns)
+[17:00:42] B-typed-array-prototype-map: verifier: accept The diff implements %TypedArray%.prototype.map in spec order. It runs ValidateTypedArray (step 2) with `?`, then TypedArrayLength (step 3), the IsCall

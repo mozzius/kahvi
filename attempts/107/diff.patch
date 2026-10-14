@@ -1,0 +1,43 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_values.rs b/crates/kahvi-builtins/src/typed_array/prototype_values.rs
+index f9c9373..44cbf2a 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_values.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_values.rs
+@@ -2,20 +2,29 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.values
+ 
++use crate::support::array_iterator::{IterationKind, create_array_iterator};
++use crate::support::typed_array::validate_typed_array;
+ use kahvi_core::prelude::*;
+ 
+ /// TypedArray.prototype.values
+ pub(crate) fn prototype_values(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+-    // 1. Let _obj_ be the *this* value.
+-    // 2. Perform ? ValidateTypedArray(_obj_, ~seq-cst~).
+-    // 3. Return CreateArrayIterator(_obj_, ~value~).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.values"))
++    // 1. Let obj be the this value.
++    let obj = this;
++    // 2. Perform ? ValidateTypedArray(obj, seq-cst).
++    validate_typed_array(agent, obj)?;
++    // 3. Return CreateArrayIterator(obj, value).
++    let Value::Object(obj) = obj else {
++        // ValidateTypedArray has already rejected every non-object value.
++        return Err(agent.throw_type_error("not a TypedArray"));
++    };
++    Ok(Value::Object(create_array_iterator(
++        agent,
++        obj,
++        IterationKind::Value,
++    )))
+ }

@@ -1,0 +1,50 @@
+{
+  "ticket": "B-typed-array-prototype-map",
+  "base": "3de31d4f42f1c78decdb9980b62baaa5b5669ea9",
+  "head": "8c2f4d81b3302d4657be65d4b3eb9a5589758cd5",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_map.rs",
+      "added": 53,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_map.rs",
+      "line": 28,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 168,
+    "before": 8,
+    "after": 158,
+    "new_passes": 150,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 10,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/map/resizable-buffer-grow-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/resizable-buffer-grow-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/resizable-buffer-shrink-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/resizable-buffer-shrink-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/speciesctor-resizable-buffer-grow.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/speciesctor-resizable-buffer-grow.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/speciesctor-resizable-buffer-shrink.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/map/speciesctor-resizable-buffer-shrink.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
