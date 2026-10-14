@@ -112,6 +112,17 @@ pub struct Agent {
     /// Host hook: LocalTZA(t, isUTC) (§21.4.1.25), the local time zone
     /// offset in milliseconds. Without it, local time is UTC.
     pub host_local_tza: Option<fn(f64, bool) -> f64>,
+    /// Module Records, by index.
+    pub modules: Vec<crate::vm::ModuleRecord>,
+    /// The module loaded for each (realm, host key), so a module is loaded once.
+    pub module_map: crate::hash::FxHashMap<(crate::realm::RealmId, Box<str>), u32>,
+    /// IncrementModuleAsyncEvaluationCount's counter.
+    pub module_async_evaluation_count: u64,
+    /// Host hook: HostLoadImportedModule's loading step. Without it, every
+    /// import fails.
+    pub host_load_module: Option<crate::vm::HostLoadModule>,
+    /// Host hook: HostGetImportMetaProperties, called with the new import.meta object.
+    pub host_import_meta: Option<fn(&mut Agent, u32, Object)>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -186,6 +197,11 @@ impl Agent {
             next_private_name: 0,
             bigints: Vec::new(),
             regexp_matcher_check: None,
+            modules: Vec::new(),
+            module_map: Default::default(),
+            module_async_evaluation_count: 0,
+            host_load_module: None,
+            host_import_meta: None,
             host_now: None,
             host_local_tza: None,
         };

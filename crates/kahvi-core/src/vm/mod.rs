@@ -13,6 +13,7 @@ mod dynamic_function;
 mod eval;
 mod generator;
 mod instantiate;
+mod module;
 mod operators;
 
 use std::collections::VecDeque;
@@ -32,6 +33,11 @@ pub use call::{
 pub use dynamic_function::{DynamicFunctionKind, create_dynamic_function};
 pub use eval::{ParsedScript, evaluate_script, line_col, parse_script, perform_eval};
 pub use generator::{GeneratorData, GeneratorState, generator_resume, generator_resume_abrupt};
+pub use module::{
+    HostLoadModule, LoadedModuleSource, ModuleRecord, ModuleStatus, evaluate as evaluate_module,
+    get_active_script_or_module, get_module_namespace, link as link_module, load_requested_modules,
+    module_namespace_get, parse_module, run_module,
+};
 pub use operators::{apply_binary_operator, number_exponentiate, type_of};
 
 use crate::ScriptOrModule;
@@ -52,6 +58,16 @@ pub struct ScriptRecord {
     pub source: Arc<str>,
     /// The file name or URL the host gave, for error messages.
     pub name: String,
+    /// The module this is the source of, for module code.
+    pub module: Option<u32>,
+}
+
+/// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.
+pub fn script_or_module_of(agent: &Agent, script: u32) -> ScriptOrModule {
+    match agent.scripts[script as usize].module {
+        Some(m) => ScriptOrModule::Module(m),
+        None => ScriptOrModule::Script(script),
+    }
 }
 
 /// A PrivateEnvironment Record (§9.2): the private names of a class body.
@@ -1081,8 +1097,16 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 .unwrap_or(Value::Undefined);
             frame.push(nt);
         }
-        Op::ImportMeta => return Err(agent.not_implemented("import.meta")),
-        Op::ImportCall => return Err(agent.not_implemented("import()")),
+        Op::ImportMeta => {
+            let v = module::import_meta(agent)?;
+            frame.push(v);
+        }
+        Op::ImportCall => {
+            let options = frame.pop();
+            let specifier = frame.pop();
+            let p = module::evaluate_import_call(agent, specifier, options)?;
+            frame.push(p);
+        }
         Op::GetArg(i) => {
             let v = frame
                 .args
@@ -1689,12 +1713,5 @@ pub fn this_mode_of(agent: &Agent, f: Object) -> Option<ThisMode> {
     match &agent.obj(f).kind {
         ObjectKind::Function(e) => Some(e.this_mode),
         _ => None,
-    }
-}
-
-impl Frame {
-    /// The script or module the frame's code belongs to.
-    pub fn script_or_module(&self) -> Option<ScriptOrModule> {
-        Some(ScriptOrModule::Script(self.code.script))
     }
 }

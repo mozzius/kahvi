@@ -137,6 +137,72 @@ impl Compiler<'_> {
         self.emit(Op::Return);
     }
 
+    /// A module body (§16.2.1.6.4 InitializeEnvironment reads `code.decls`;
+    /// ModuleItem evaluation is the code). In module code, function
+    /// declarations are lexical bindings, created and initialized up front.
+    pub(super) fn compile_module_body(&mut self, items: &[ast::ModuleItem]) {
+        use ast::{ExportDecl, ModuleItem};
+        let default_name = self.string("*default*");
+        let declaring: Vec<Stmt> = items
+            .iter()
+            .filter_map(|item| match item {
+                ModuleItem::Stmt(s)
+                | ModuleItem::Export(ExportDecl::Decl(s) | ExportDecl::DefaultDecl(s)) => {
+                    Some(s.clone())
+                }
+                _ => None,
+            })
+            .collect();
+        self.collect_declarations(&declaring);
+        // `export default function () {}` binds "*default*".
+        let empty = self.string("");
+        for (name, _) in self.code.decls.functions.iter_mut() {
+            if *name == empty {
+                *name = default_name;
+            }
+        }
+        // `export default class {}` and `export default <expression>` bind "*default*".
+        for item in items {
+            match item {
+                ModuleItem::Export(ExportDecl::DefaultExpr(..)) => {
+                    self.code.decls.lexical.push((default_name, false));
+                }
+                ModuleItem::Export(ExportDecl::DefaultDecl(Stmt::Class(c))) if c.id.is_none() => {
+                    self.code.decls.lexical.push((default_name, false));
+                }
+                _ => {}
+            }
+        }
+        for item in items {
+            match item {
+                ModuleItem::Stmt(s) | ModuleItem::Export(ExportDecl::Decl(s)) => {
+                    self.compile_stmt(s)
+                }
+                ModuleItem::Export(ExportDecl::DefaultDecl(Stmt::Class(c))) if c.id.is_none() => {
+                    // ClassDeclaration : class ClassTail, with className "default".
+                    let name = self.string("default");
+                    self.compile_class(c, super::expr::FnName::Static(name));
+                    self.emit(Op::InitName(default_name));
+                }
+                ModuleItem::Export(ExportDecl::DefaultDecl(s)) => self.compile_stmt(s),
+                ModuleItem::Export(ExportDecl::DefaultExpr(e, _)) => {
+                    // 1-2. NamedEvaluation with "default" for an anonymous function definition.
+                    if e.is_anonymous_function_definition() {
+                        let name = self.string("default");
+                        self.compile_named(e, super::expr::FnName::Static(name));
+                    } else {
+                        self.compile_expr(e);
+                    }
+                    // 3. Perform ? InitializeBoundName("*default*", value, env).
+                    self.emit(Op::InitName(default_name));
+                }
+                ModuleItem::Import(_) | ModuleItem::Export(_) => {}
+            }
+        }
+        self.emit(Op::Undefined);
+        self.emit(Op::Return);
+    }
+
     /// Fills `code.decls` from a function/script body's top-level statements.
     pub(super) fn collect_declarations(&mut self, body: &[Stmt]) {
         // VarDeclaredNames (without functions).

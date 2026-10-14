@@ -3,6 +3,7 @@
 
 pub mod array;
 pub mod internal;
+pub mod namespace;
 pub mod proxy;
 
 use std::any::Any;
@@ -356,6 +357,8 @@ pub enum ObjectKind {
     BoundFunction(Box<crate::function::BoundFunction>),
     /// Arguments exotic object (§10.4.4); `None` for unmapped arguments.
     Arguments(Option<Box<crate::function::MappedArguments>>),
+    /// Module namespace exotic object (§10.4.6).
+    ModuleNamespace(Box<namespace::NamespaceData>),
     /// Has an [[ErrorData]] slot.
     Error,
     /// [[BooleanData]], [[NumberData]], [[StringData]] (String exotic, §10.4.3),

@@ -82,6 +82,16 @@ struct CapabilityCells {
 }
 
 /// IsPromise(x) (§27.2.1.6)
+/// A settled promise's result: Ok for fulfilled, Err for rejected; None while pending.
+pub fn promise_result(agent: &Agent, p: Object) -> Option<Result<Value, Value>> {
+    let d = agent.native::<PromiseData>(p)?;
+    match d.state {
+        PromiseState::Pending => None,
+        PromiseState::Fulfilled => Some(Ok(d.result)),
+        PromiseState::Rejected => Some(Err(d.result)),
+    }
+}
+
 pub fn is_promise(agent: &Agent, x: Value) -> bool {
     matches!(x, Value::Object(o) if agent.native::<PromiseData>(o).is_some())
 }

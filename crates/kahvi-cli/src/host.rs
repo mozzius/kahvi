@@ -112,3 +112,39 @@ pub fn new_realm(agent: &mut Agent) -> JsResult<RealmId> {
     agent.contexts.pop();
     Ok(realm)
 }
+
+/// HostLoadImportedModule for files: `./`, `../` and `/` specifiers resolve
+/// against the importing file's directory (or the working directory). A
+/// module's key is its canonical path.
+pub fn load_module(
+    _agent: &mut Agent,
+    referrer: &str,
+    specifier: &str,
+    attributes: &[(String, String)],
+) -> Result<vm::LoadedModuleSource, String> {
+    if let Some((_, ty)) = attributes.iter().find(|(k, _)| k == "type")
+        && ty != "json"
+    {
+        return Err(format!(
+            "cannot load '{specifier}': modules of type '{ty}' are not supported"
+        ));
+    }
+    if !(specifier.starts_with("./") || specifier.starts_with("../") || specifier.starts_with('/'))
+    {
+        return Err(format!("cannot resolve module specifier '{specifier}'"));
+    }
+    let base = std::path::Path::new(referrer)
+        .parent()
+        .map(|p| p.to_path_buf())
+        .unwrap_or_default();
+    let path = base.join(specifier);
+    let path = path
+        .canonicalize()
+        .map_err(|e| format!("cannot load module '{specifier}': {e}"))?;
+    let source =
+        std::fs::read(&path).map_err(|e| format!("cannot read module '{specifier}': {e}"))?;
+    Ok(vm::LoadedModuleSource {
+        key: path.to_string_lossy().into_owned(),
+        source: String::from_utf8_lossy(&source).into_owned(),
+    })
+}

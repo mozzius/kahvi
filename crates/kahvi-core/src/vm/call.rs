@@ -41,7 +41,7 @@ pub(crate) fn ordinary_function_create(
     private_env: Option<Arc<PrivateEnv>>,
 ) -> Object {
     let realm = agent.current_realm();
-    let script_or_module = Some(crate::ScriptOrModule::Script(code.script));
+    let script_or_module = Some(super::script_or_module_of(agent, code.script));
     let length = code.length;
     let this_mode = code.this_mode;
     let f = agent.alloc(ObjectData::new(

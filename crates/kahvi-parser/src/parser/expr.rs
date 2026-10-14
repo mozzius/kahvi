@@ -391,6 +391,14 @@ impl Parser<'_> {
             if self.fn_ctx().in_static_block {
                 return self.err("await is not allowed in class static blocks", start);
             }
+            // In a module `await` is reserved everywhere, but an AwaitExpression
+            // only exists at the top level and in async functions.
+            if !self.fn_ctx().is_async {
+                return self.err(
+                    "await is only valid in async functions and the top level of modules",
+                    start,
+                );
+            }
             self.fn_ctx_mut().yield_or_await_pos.get_or_insert(start);
             self.next()?;
             let arg = self.parse_unary(&mut Cover::default())?;
