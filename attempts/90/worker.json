@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11063,
+  "stop_reason": "end_turn",
+  "session_id": "3195936c-77bf-43d0-8fb7-054d9a363cd7",
+  "total_cost_usd": 0.006244500000000001,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 21347,
+    "cache_read_input_tokens": 66290,
+    "output_tokens": 2088,
+    "output_tokens_details": {
+      "thinking_tokens": 327
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21347,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 222,
+        "cache_read_input_tokens": 25348,
+        "cache_creation_input_tokens": 887,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 887
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `AsyncDisposableStack.prototype.use` in its file. It requires the async disposable stack slot, throws a ReferenceError if the stack is already disposed, adds the value as an async-dispose resource, and returns the value. All 48 test262 runs under `built-ins/AsyncDisposableStack/prototype/use/` pass, and clippy and rustfmt are clean. No helpers were added, and no files outside the ticket's scope were changed.",
+  "ttft_ms": 1745,
+  "type": "result",
+  "duration_ms": 62886,
+  "uuid": "c1052d14-5571-4e6d-8463-bc96153641a8",
+  "ttft_stream_ms": 1499,
+  "time_to_request_ms": 586,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 376,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 115,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 14,
+    "message_normalization": 4,
+    "client_creation": 7,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 79,
+  "time_to_request_cpu_ms": 433,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 253,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 253,
+  "process_cpu_ms_turn": 3188,
+  "process_wall_ms_turn": 62885,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1499,
+  "time_to_request_from_spawn_ms": 92750,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791979552867.1982,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

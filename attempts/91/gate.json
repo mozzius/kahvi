@@ -1,0 +1,42 @@
+{
+  "ticket": "B-iterator-concat",
+  "base": "f7f695e111e75d0138db0bf9fc668e67fb918349",
+  "head": "7538ea5bb6c1599284e3ad080267e755331dbd6b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/concat.rs",
+      "added": 127,
+      "removed": 23
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/iterator/concat.rs",
+      "line": 96,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"the current iterator was opened above\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 64,
+    "before": 12,
+    "after": 62,
+    "new_passes": 50,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/concat/iterable-primitive-wrapper-objects.js:sloppy  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/concat/iterable-primitive-wrapper-objects.js:strict  Uncaught InternalError: not implemented: StringIteratorPrototype.next"
+    ]
+  },
+  "decision": "pass"
+}

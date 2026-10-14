@@ -1,10 +1,11 @@
-[11:41:38] building trusted runner; integration branch m1-spine, 2 slots
-[11:41:38] C-proxy-define-own-property: attempt on slot 1 with haiku
-[11:41:38] B-array-prototype-to-spliced: attempt on slot 0 with haiku
-[11:42:49] C-proxy-define-own-property: attempt 88 finished ($0.014, 13 turns)
-[11:42:54] B-array-prototype-to-spliced: attempt 87 finished ($0.013, 14 turns)
-[11:43:39] C-proxy-define-own-property: verifier: accept The diff implements Proxy [[DefineOwnProperty]] step by step, with each spec step kept as a comment above its code. Steps 1-5 use validate_non_revoked
-[11:43:46] B-array-prototype-to-spliced: verifier: accept The diff implements Array.prototype.toSpliced in its own file, following the spec steps in order. ToObject and LengthOfArrayLike run first, then ToCla
-[11:43:52] C-proxy-define-own-property: full test262 run for merge
-[11:56:43] C-proxy-define-own-property: merged (+46, 69310 total)
-[11:56:45] B-array-prototype-to-spliced: full test262 run for merge
+[12:05:38] building trusted runner; integration branch m1-spine, 3 slots
+[12:05:51] B-array-prototype-to-spliced: attempt on slot 2 with haiku
+[12:05:51] B-async-disposable-stack-prototype-use: attempt on slot 1 with haiku
+[12:05:51] B-iterator-concat: attempt on slot 0 with haiku
+[12:06:26] B-array-prototype-to-spliced: attempt 89 finished ($0.011, 8 turns)
+[12:06:58] B-async-disposable-stack-prototype-use: attempt 90 finished ($0.006, 10 turns)
+[12:07:56] B-iterator-concat: attempt 91 finished ($0.014, 12 turns)
+[12:08:28] B-array-prototype-to-spliced: verifier: accept Implements Array.prototype.toSpliced steps 1-18 in prototype_to_spliced.rs, with each spec step kept as a comment above its code. I walked the steps a
+[12:08:58] B-async-disposable-stack-prototype-use: verifier: accept The diff implements AsyncDisposableStack.prototype.use in order: it reads the argument, then RequireInternalSlot via require_async_disposable_stack wi
+[12:09:19] B-array-prototype-to-spliced: full test262 run for merge
+[12:10:03] B-iterator-concat: verifier: revise The diff implements Iterator.concat as a helper closure: argument validation (steps 2.a-2.d), lazy opening of each iterable (3.a.i-iii), the step 3.a.
