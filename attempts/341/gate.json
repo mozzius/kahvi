@@ -1,0 +1,37 @@
+{
+  "ticket": "B-disposable-stack-prototype-move",
+  "base": "83c194e9ed53688a1142416aa2afdc0016bb39ad",
+  "head": "e749a5e94865ee78a7bec32e455aae157200d69c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/disposable_stack/prototype_move.rs",
+      "added": 26,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 26,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DisposableStack/prototype/move/returns-new-disposablestack-that-is-still-pending.js:sloppy  Uncaught InternalError: not implemented: get DisposableStack.prototype.disposed",
+      "built-ins/DisposableStack/prototype/move/returns-new-disposablestack-that-is-still-pending.js:strict  Uncaught InternalError: not implemented: get DisposableStack.prototype.disposed",
+      "built-ins/DisposableStack/prototype/move/sets-state-to-disposed.js:sloppy  Uncaught InternalError: not implemented: get DisposableStack.prototype.disposed",
+      "built-ins/DisposableStack/prototype/move/sets-state-to-disposed.js:strict  Uncaught InternalError: not implemented: get DisposableStack.prototype.disposed"
+    ]
+  },
+  "decision": "pass"
+}

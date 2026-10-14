@@ -1939,3 +1939,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:49:30] B-disposable-stack-prototype-move: attempt 341 finished ($0.013, 18 turns)
 [18:49:49] B-math-sqrt: attempt 344 finished ($0.005, 9 turns)
 [18:49:55] B-date-prototype-to-string: verifier: revise The change wires Date.prototype.toString to the spec steps in the right order: RequireInternalSlot via date::this_time_value with `?`, then ToDateStri
+[18:50:01] B-date-prototype-to-string: attempt on slot 3 with haiku
+[18:50:17] B-math-clz32: verifier: accept The diff implements Math.clz32 in its file, in the spec's three steps. Step 1 calls ops::to_uint32(agent, args.get_or_undefined(0))? and propagates ab
