@@ -2823,3 +2823,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:06:26] B-reg-exp-prototype-get-unicode-sets: verifier: accept The diff implements the get RegExp.prototype.unicodeSets accessor as specified. It passes the receiver and code unit 0x0076 to a local RegExpHasFlag h
 [19:06:29] B-date-prototype-get-day: attempt on slot 0 with haiku
 [19:06:39] B-date-prototype-get-date: verifier: accept The diff implements Date.prototype.getDate in its own file and follows the five spec steps in order. Step 2 (RequireInternalSlot) is delegated to `dat
+[19:06:41] B-reg-exp-prototype-get-unicode: verifier: accept The diff implements get RegExp.prototype.unicode per the spec: it takes the this value, uses code unit 0x0075, and calls a file-local regexp_has_flag 
+[19:06:42] B-date-prototype-get-hours: attempt on slot 2 with haiku

@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements get RegExp.prototype.unicode per the spec: it takes the this value, uses code unit 0x0075, and calls a file-local regexp_has_flag helper that mirrors RegExpHasFlag. The helper throws a TypeError for non-objects, returns undefined when the receiver is %RegExp.prototype% without [[OriginalFlags]], throws a TypeError for other receivers without the slot, and otherwise checks whether the stored original flags contain the code unit. Errors are propagated, no values are made up, and nothing is special-cased. The helper stays in the in-scope file, and the only import added is the RegExpData type. The gate reports build, clippy and test262 all clean (+10 passing, 0 regressions). I found no defects.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found; this diff can be merged as is. Other RegExp flag getters (dotAll, global, hasIndices, ignoreCase, multiline, sticky, unicodeSets) can reuse the same regexp_has_flag pattern, which lives in this file. If another built-in needs it, it should be moved to a shared support module as a separate change.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6428,
+  "stop_reason": "tool_use",
+  "session_id": "a7366db3-52cb-4871-a5fe-2dd9c319142a",
+  "total_cost_usd": 0.022447599999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3978,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 584,
+    "output_tokens_details": {
+      "thinking_tokens": 188
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3978,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 584,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3978,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3978
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The getter follows the spec. It passes the this value and code unit 0x75 to a local RegExpHasFlag helper. The helper throws a TypeError for a non-object. For an object with no [[OriginalFlags]] slot (no RegExpData native), it returns undefined if the object is %RegExp.prototype% and throws a TypeError otherwise. If the slot exists, it returns whether the flags contain the code unit. Each step is a comment above its code. The change touches only the in-scope file. The gate shows 10 new passes with 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The getter follows the spec. It passes the this value and code unit 0x75 to a local RegExpHasFlag helper. The helper throws a TypeError for a non-object. For an object with no [[OriginalFlags]] slot (no RegExpData native), it returns undefined if the object is %RegExp.prototype% and throws a TypeError otherwise. If the slot exists, it returns whether the flags contain the code unit. Each step is a comment above its code. The change touches only the in-scope file. The gate shows 10 new passes with 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3993,
+  "type": "result",
+  "duration_ms": 5982,
+  "uuid": "6466b177-4934-45b1-8c37-81e3ccf840e2",
+  "ttft_stream_ms": 1887,
+  "time_to_request_ms": 493,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 322,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 1,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 59,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 90,
+  "time_to_request_cpu_ms": 297,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 239,
+  "process_cpu_ms_turn": 737,
+  "process_wall_ms_turn": 5981,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1888,
+  "time_to_request_from_spawn_ms": 25333371,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004793606.027,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.34,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
