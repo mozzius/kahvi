@@ -4986,3 +4986,6 @@ test262 at last merge: 80909/81183 runs passing
 [21:30:21] B-uint8-array-prototype-set-from-base64: verifier: accept The diff implements Uint8Array.prototype.setFromBase64 in full, in spec order. ValidateUint8Array (step 2), the String check (3), GetOptionsObject and
 [21:30:37] stack: pushed stack/0034 as #52 with B-uint8-array-prototype-set-from-base64
 [21:30:46] B-json-raw-json: verifier: accept The diff replaces the not-implemented throw at step 5 with a call to the public JSON.parse entry (`parse::parse`) with no reviver, and discards the re
+[21:30:50] B-json-is-raw-json: attempt on slot 2 with sonnet
+[21:31:29] B-json-is-raw-json: attempt 516 finished ($0.067, 10 turns)
+[21:31:58] B-json-is-raw-json: verifier: accept The change implements JSON.isRawJSON per spec. Step 1 checks that the argument is an Object and that it has the [[IsRawJSON]] slot, via `agent.native:

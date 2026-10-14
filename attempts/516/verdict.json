@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements JSON.isRawJSON per spec. Step 1 checks that the argument is an Object and that it has the [[IsRawJSON]] slot, via `agent.native::<RawJsonData>(obj).is_some()`, and returns true. Step 2 returns false. Errors are not swallowed and nothing is hardcoded or special-cased. The diff touches only the target file. The gate reports build and clippy ok and two new passing test262 runs with no regressions. I could not compile or run anything, so the `agent.native` helper and `raw_json::RawJsonData` are taken from the diff and gate report, not checked against their definitions.",
+  "problems": [],
+  "notes_for_next_attempt": "Minor cleanup only: the original stub comment block above `let _ = (this, new_target);` still exists and the spec steps are now repeated as new comments directly above the code. Keep one copy of each step, placed directly above its code. Also confirm that `agent.native` does not unwrap Proxy objects, since a Proxy should not count as having [[IsRawJSON]].",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

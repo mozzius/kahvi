@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 7476,
+  "stop_reason": "tool_use",
+  "session_id": "026f952a-0063-4530-82c4-a3ae726236a1",
+  "total_cost_usd": 0.00157081,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3035,
+    "cache_read_input_tokens": 3681,
+    "output_tokens": 1402,
+    "output_tokens_details": {
+      "thinking_tokens": 857
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3035,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1402,
+        "cache_read_input_tokens": 3681,
+        "cache_creation_input_tokens": 3035,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3035
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements JSON.isRawJSON per spec. Step 1 checks that the argument is an Object and that it has the [[IsRawJSON]] slot, via `agent.native::<RawJsonData>(obj).is_some()`, and returns true. Step 2 returns false. Errors are not swallowed and nothing is hardcoded or special-cased. The diff touches only the target file. The gate reports build and clippy ok and two new passing test262 runs with no regressions. I could not compile or run anything, so the `agent.native` helper and `raw_json::RawJsonData` are taken from the diff and gate report, not checked against their definitions.\",\"problems\":[],\"notes_for_next_attempt\":\"Minor cleanup only: the original stub comment block above `let _ = (this, new_target);` still exists and the spec steps are now repeated as new comments directly above the code. Keep one copy of each step, placed directly above its code. Also confirm that `agent.native` does not unwrap Proxy objects, since a Proxy should not count as having [[IsRawJSON]].\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements JSON.isRawJSON per spec. Step 1 checks that the argument is an Object and that it has the [[IsRawJSON]] slot, via `agent.native::<RawJsonData>(obj).is_some()`, and returns true. Step 2 returns false. Errors are not swallowed and nothing is hardcoded or special-cased. The diff touches only the target file. The gate reports build and clippy ok and two new passing test262 runs with no regressions. I could not compile or run anything, so the `agent.native` helper and `raw_json::RawJsonData` are taken from the diff and gate report, not checked against their definitions.",
+    "problems": [],
+    "notes_for_next_attempt": "Minor cleanup only: the original stub comment block above `let _ = (this, new_target);` still exists and the spec steps are now repeated as new comments directly above the code. Keep one copy of each step, placed directly above its code. Also confirm that `agent.native` does not unwrap Proxy objects, since a Proxy should not count as having [[IsRawJSON]]."
+  },
+  "ttft_ms": 5508,
+  "type": "result",
+  "duration_ms": 7512,
+  "uuid": "6bf5dbd9-f4e1-4bd2-95a2-038765755b5f",
+  "ttft_stream_ms": 1229,
+  "time_to_request_ms": 545,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 326,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 154,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 47,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 245,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 250,
+  "process_cpu_ms_turn": 814,
+  "process_wall_ms_turn": 7512,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1230,
+  "time_to_request_from_spawn_ms": 647783,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792013502922.9297,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792030800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.06,
+        "resetsAt": 1792030800
+      },
+      "seven_day": {
+        "utilization": 0.01,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

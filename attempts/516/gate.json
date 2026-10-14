@@ -1,0 +1,32 @@
+{
+  "ticket": "B-json-is-raw-json",
+  "base": "02dfe0d3370f75719c5958b117a96672c2746818",
+  "head": "3690219c989939577f84942202ad01ceb5c34412",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/json/is_raw_json.rs",
+      "added": 9,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 12,
+    "before": 10,
+    "after": 12,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
