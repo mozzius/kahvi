@@ -1,0 +1,39 @@
+{
+  "ticket": "B-uint8-array-prototype-to-hex",
+  "base": "bf923a25ec6b458a5f96b16b995792e3ee9648d6",
+  "head": "c80b27d159822bd284fe68f892bde5d6931388d6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/uint8_array/prototype_to_hex.rs",
+      "added": 63,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/uint8_array/prototype_to_hex.rs",
+      "line": 57,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"a Uint8 element is a Number\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

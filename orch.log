@@ -4936,3 +4936,22 @@ test262 at last merge: 80909/81183 runs passing
 [20:52:08] B-uint8-array-from-hex: attempt 509 finished ($0.217, 15 turns)
 [20:52:47] B-uint8-array-prototype-to-hex: attempt 511 finished ($0.014, 19 turns)
 [20:52:56] B-uint8-array-from-hex: verifier: accept The diff implements Uint8Array.fromHex and a pub(crate) FromHex in from_hex.rs, following the spec steps in order. Step 1 throws a TypeError for non-s
+[20:52:58] stack: stack/0031 (#48) green: 80999/81183 passing, +90
+[20:52:58] stack: partial tickets after stack/0031: {'done': 4}
+[20:52:59] B-uint8-array-prototype-set-from-hex: attempt on slot 0 with sonnet
+[20:52:59] stack: stack/0016 (#31) merged into main
+[20:53:00] stack: stack/0019 (#35) merged into stack/0016
+[20:53:01] stack: stack/0020 (#37) merged into stack/0019
+[20:53:01] stack: stack/0021 (#38) merged into stack/0020
+[20:53:02] stack: stack/0022 (#39) merged into stack/0021
+[20:53:03] stack: stack/0023 (#40) merged into stack/0022
+[20:53:03] stack: stack/0024 (#41) merged into stack/0023
+[20:53:04] stack: stack/0025 (#42) merged into stack/0024
+[20:53:04] stack: stack/0026 (#43) merged into stack/0025
+[20:53:05] stack: stack/0027 (#44) merged into stack/0026
+[20:53:06] stack: stack/0028 (#45) merged into stack/0027
+[20:53:06] stack: stack/0029 (#46) merged into stack/0028
+[20:53:07] stack: stack/0030 (#47) merged into stack/0029
+[20:53:08] stack: stack/0031 (#48) merged into main
+[20:53:13] stack: pushed stack/0032 as #49 with arch-tickets-u8
+[20:53:24] B-uint8-array-prototype-to-hex: verifier: accept The diff implements Uint8Array.prototype.toHex as the spec describes. Step 2 (ValidateUint8Array) throws a TypeError for non-objects, objects without 
