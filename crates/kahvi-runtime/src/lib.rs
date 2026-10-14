@@ -9,6 +9,7 @@
 pub mod console;
 pub mod inspect;
 pub mod loader;
+pub mod package;
 pub mod timers;
 
 use std::path::Path;
