@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-symbol-to-primitive",
+  "base": "11d20762a3ae3ea1346975b543989cbb12477d68",
+  "head": "117e562bdbe9aea950aa3711857e7f7f24ce5195",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_symbol_to_primitive.rs",
+      "added": 33,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 6,
+    "after": 36,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

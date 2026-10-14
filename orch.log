@@ -793,3 +793,7 @@ test262 at last merge: 72953/81183 runs passing
 [17:51:46] B-typed-array-prototype-reverse: attempt on slot 3 with haiku
 [17:52:03] B-array-prototype-with: verifier: accept The change implements Array.prototype.with in prototype_with.rs in spec order: ToObject, LengthOfArrayLike, ToAbsoluteIndex, the RangeError check, Arr
 [17:52:03] B-reflect-delete-property: attempt 223 finished ($0.004, 11 turns)
+[17:52:07] B-map-prototype-get-or-insert-computed: attempt on slot 1 with haiku
+[17:52:19] B-date-prototype-symbol-to-primitive: attempt 222 finished ($0.009, 15 turns)
+[17:52:30] B-typed-array-prototype-reverse: attempt 224 finished ($0.010, 13 turns)
+[17:52:43] B-reflect-delete-property: verifier: accept The change implements Reflect.deleteProperty in the spec's three steps, in order. Step 1 checks `Value::Object` and throws a TypeError before any conv

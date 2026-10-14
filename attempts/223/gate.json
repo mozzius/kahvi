@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reflect-delete-property",
+  "base": "10590ee6fe48827c7792598c32a5e6f68696d6b8",
+  "head": "82e0d8b263676f1a59291cbd16fe42a2f2c05b05",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/delete_property.rs",
+      "added": 10,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 20,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Reflect/deleteProperty/return-abrupt-from-result.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Delete]]",
+      "built-ins/Reflect/deleteProperty/return-abrupt-from-result.js:strict  Uncaught InternalError: not implemented: Proxy [[Delete]]"
+    ]
+  },
+  "decision": "pass"
+}
