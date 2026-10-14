@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-starts-with",
+  "base": "4a8790e1e01b58b8ce5b8605d342e2b6c1e13425",
+  "head": "5f11e30360e8cf0a7e90ebead25b5da0bcb6d5b4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_starts_with.rs",
+      "added": 45,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 8,
+    "after": 42,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

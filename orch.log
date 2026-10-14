@@ -359,3 +359,6 @@
 [17:45:12] B-string-prototype-concat: attempt 210 finished ($0.006, 12 turns)
 [17:45:25] B-string-prototype-starts-with: attempt 211 finished ($0.009, 10 turns)
 [17:45:26] B-object-values: verifier: accept The diff implements Object.values as the spec describes. It calls ops::to_object on args[0] with `?`, then ops::enumerable_own_properties with the Val
+[17:45:28] B-set-prototype-is-subset-of: attempt 209 finished ($0.011, 17 turns)
+[17:45:30] B-string-prototype-to-locale-upper-case: attempt on slot 3 with haiku
+[17:45:54] B-string-prototype-concat: verifier: accept The diff implements String.prototype.concat following the spec steps in order. RequireObjectCoercible(this) and ToString(this) run first, then for eac

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-concat",
+  "base": "57a15c9eac80fed404ab3bdcb6b1998310e9eece",
+  "head": "74bef0fd7b61b1f11081f17702910b91df6027c3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_concat.rs",
+      "added": 25,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 44,
+    "before": 16,
+    "after": 44,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
