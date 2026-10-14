@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7174,
+  "stop_reason": "tool_use",
+  "session_id": "70bd36b3-5886-4c3a-8db3-ac820980bd5f",
+  "total_cost_usd": 0.00167888,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3574,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1274,
+    "output_tokens_details": {
+      "thinking_tokens": 621
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3574,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1274,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3574,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3574
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.getUTCFullYear in its own file. It gets the time value through `date::this_time_value(agent, this)?`, which should cover the RequireInternalSlot step. It returns NaN when the time value is NaN, and otherwise returns `Value::Number(date::year_from_time(tv))`. The step comments are kept above the matching code. The `args`/`new_target` parameters are renamed to `_args`/`_new_target` because they are now unused, which is the only non-logic change. The gate reports a build with no errors, clippy clean, and 8 new test262 passes with no regressions. No special-casing, hardcoded values, or swallowed errors appear in the diff. I could not read `crate::support::date`, so I have not checked that `this_time_value` performs the RequireInternalSlot check or that `year_from_time` computes YearFromTime correctly. Those helpers are the only thing a later reviewer should verify.\",\"problems\":[],\"notes_for_next_attempt\":\"The diff looks correct as submitted. Before merging, confirm that `support::date::this_time_value` throws a TypeError when `this` is not an object or lacks [[DateValue]], as RequireInternalSlot does, and that `support::date::year_from_time` implements YearFromTime (the largest integer y with TimeFromYear(y) <= tv). Neither helper is visible in this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.getUTCFullYear in its own file. It gets the time value through `date::this_time_value(agent, this)?`, which should cover the RequireInternalSlot step. It returns NaN when the time value is NaN, and otherwise returns `Value::Number(date::year_from_time(tv))`. The step comments are kept above the matching code. The `args`/`new_target` parameters are renamed to `_args`/`_new_target` because they are now unused, which is the only non-logic change. The gate reports a build with no errors, clippy clean, and 8 new test262 passes with no regressions. No special-casing, hardcoded values, or swallowed errors appear in the diff. I could not read `crate::support::date`, so I have not checked that `this_time_value` performs the RequireInternalSlot check or that `year_from_time` computes YearFromTime correctly. Those helpers are the only thing a later reviewer should verify.",
+    "problems": [],
+    "notes_for_next_attempt": "The diff looks correct as submitted. Before merging, confirm that `support::date::this_time_value` throws a TypeError when `this` is not an object or lacks [[DateValue]], as RequireInternalSlot does, and that `support::date::year_from_time` implements YearFromTime (the largest integer y with TimeFromYear(y) <= tv). Neither helper is visible in this diff."
+  },
+  "ttft_ms": 4334,
+  "type": "result",
+  "duration_ms": 6871,
+  "uuid": "66fcb64f-5248-40db-bdce-004cf85eac82",
+  "ttft_stream_ms": 1471,
+  "time_to_request_ms": 443,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 287,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 22,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 41,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 6,
+    "client_creation": 4,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 80,
+  "time_to_request_cpu_ms": 272,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 911,
+  "process_wall_ms_turn": 6870,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1472,
+  "time_to_request_from_spawn_ms": 25513306,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004973595.7627,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.36,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
