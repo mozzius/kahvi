@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6561,
+  "stop_reason": "tool_use",
+  "session_id": "fbe7d526-535a-4325-960a-bb5a3075dcbf",
+  "total_cost_usd": 0.0221717,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3869,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 601,
+    "output_tokens_details": {
+      "thinking_tokens": 192
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3869,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 601,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3869,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3869
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements the three spec steps. It sets view to this and defaults littleEndian to false when it is absent. It then delegates to the existing shared helper get_view_value with ElementType::Int16 and propagates the result with no error handling of its own. The ToIndex, ToBoolean, bounds and buffer-read steps (GetViewValue 1-13) belong to that helper, which I did not see in the diff. The gate shows all 36 target tests passing, with no regressions and no not-implemented results. The only other edit is renaming new_target to _new_target, which is needed once the parameter is unused.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements the three spec steps. It sets view to this and defaults littleEndian to false when it is absent. It then delegates to the existing shared helper get_view_value with ElementType::Int16 and propagates the result with no error handling of its own. The ToIndex, ToBoolean, bounds and buffer-read steps (GetViewValue 1-13) belong to that helper, which I did not see in the diff. The gate shows all 36 target tests passing, with no regressions and no not-implemented results. The only other edit is renaming new_target to _new_target, which is needed once the parameter is unused.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3909,
+  "type": "result",
+  "duration_ms": 6327,
+  "uuid": "d1d456f4-474b-45bd-883e-1d3818b2e000",
+  "ttft_stream_ms": 1899,
+  "time_to_request_ms": 622,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 521,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 18,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 11,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 46,
+  "time_to_request_cpu_ms": 298,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 616,
+  "process_wall_ms_turn": 6327,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1900,
+  "time_to_request_from_spawn_ms": 22504423,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001964203.1638,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

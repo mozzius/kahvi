@@ -1022,3 +1022,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:19:28] B-data-view-prototype-get-int32: verifier: accept The diff is a thin wrapper. It maps this to view, maps an absent or undefined littleEndian to false, and delegates to crate::support::typed_array::get
 [18:19:31] B-data-view-prototype-get-float64: verifier: accept The change replaces the not-implemented stub for DataView.prototype.getFloat64 with a direct call to the shared helper get_view_value(agent, this, byt
 [18:19:31] B-data-view-prototype-get-uint16: attempt on slot 1 with haiku
+[18:19:32] B-data-view-prototype-get-int16: verifier: accept The change implements DataView.prototype.getInt16 as a thin wrapper that follows the three spec steps: `this` is taken as view, a missing littleEndian
+[18:19:34] B-data-view-prototype-get-uint32: attempt on slot 3 with haiku
