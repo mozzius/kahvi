@@ -318,6 +318,10 @@ impl Parser<'_> {
             self.next()?;
             // RelationalExpression : PrivateIdentifier `in` ShiftExpression
             let right = self.parse_binary(8, cover)?;
+            if let Expr::Arrow(f) = &right {
+                // An arrow function is an AssignmentExpression, not a ShiftExpression.
+                return self.err("unexpected arrow function", f.span.start as usize);
+            }
             Expr::PrivateIn(tok.ident, Box::new(right), self.span_from(start))
         } else {
             self.parse_unary(cover)?
@@ -342,6 +346,10 @@ impl Parser<'_> {
             } else {
                 self.parse_binary(prec, cover)?
             };
+            if let Expr::Arrow(f) = &right {
+                // An arrow function is an AssignmentExpression, never a binary operand.
+                return self.err("unexpected arrow function", f.span.start as usize);
+            }
             let span = self.span_from(start);
             left = match op {
                 BinOrLogical::Binary(b) => Expr::Binary(b, Box::new(left), Box::new(right), span),
@@ -1008,9 +1016,13 @@ impl Parser<'_> {
                     }
                     seen_proto = true;
                 }
+                let is_spread = matches!(prop, ObjectProp::Spread(..));
                 props.push(prop);
                 if !p.is(P::RBrace) {
                     p.expect(P::Comma)?;
+                    if is_spread {
+                        p.spread_trailing_comma.insert(start);
+                    }
                 }
             }
             p.next()?;
@@ -1191,13 +1203,18 @@ impl Parser<'_> {
         let async_tok = self.next()?;
         self.next()?; // (
         let saved_yield = self.fn_ctx_mut().yield_or_await_pos.take();
+        let saved_await_ident = self.fn_ctx().await_ident_pos.take();
         let mut inner = Cover::default();
         let mut items: Vec<Arg> = Vec::new();
         let mut rest: Option<Pattern> = None;
         let mut rest_expr: Option<Expr> = None;
+        // Where a comma follows a final spread argument: allowed in a call,
+        // but not after an async arrow's rest parameter.
+        let mut spread_trailing_comma = None;
         self.with_in(true, |p| {
             while !p.is(P::RParen) {
-                if p.eat(P::Ellipsis)? {
+                let is_spread = p.eat(P::Ellipsis)?;
+                if is_spread {
                     let e = p.parse_assignment_cover(&mut inner)?;
                     if p.is(P::RParen) && rest.is_none() {
                         rest_expr = Some(e.clone());
@@ -1206,21 +1223,35 @@ impl Parser<'_> {
                 } else {
                     items.push(Arg::Expr(p.parse_assignment_cover(&mut inner)?));
                 }
+                let comma = p.tok.start;
                 if !p.eat(P::Comma)? {
                     break;
                 }
+                spread_trailing_comma = (is_spread && p.is(P::RParen)).then_some(comma);
             }
             p.expect(P::RParen)?;
             Ok(())
         })?;
         let inner_yield = self.fn_ctx_mut().yield_or_await_pos.take();
         self.fn_ctx_mut().yield_or_await_pos = saved_yield.or(inner_yield);
+        let inner_await_ident = self.fn_ctx().await_ident_pos.take();
+        self.fn_ctx()
+            .await_ident_pos
+            .set(saved_await_ident.or(inner_await_ident));
         if self.is(P::Arrow) && !self.tok.nl_before {
             if let Some(pos) = inner_yield {
                 return self.err(
                     "yield/await expressions are not allowed in arrow parameters",
                     pos,
                 );
+            }
+            // The head is reparsed as AsyncArrowHead with [+Await]: `await` there
+            // is an AwaitExpression or a reserved word, never an identifier.
+            if let Some(pos) = inner_await_ident {
+                return self.err("'await' is not allowed in async arrow parameters", pos);
+            }
+            if let Some(pos) = spread_trailing_comma {
+                return self.err("rest parameter may not have a trailing comma", pos);
             }
             let mut params = Vec::new();
             let n = items.len();

@@ -287,6 +287,12 @@ impl Parser<'_> {
         span: Span,
         binding: bool,
     ) -> PResult<Pattern> {
+        if self.spread_trailing_comma.contains(&(span.start as usize)) {
+            return self.err(
+                "rest element may not have a trailing comma",
+                span.start as usize,
+            );
+        }
         let mut out = Vec::new();
         let mut rest = None;
         let n = props.len();
