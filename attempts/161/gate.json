@@ -1,0 +1,45 @@
+{
+  "ticket": "B-object-from-entries",
+  "base": "30e8aae763cbf285936160d2975e227d3143b618",
+  "head": "eb4f8d485d58f97eaa8a992d1f85e18da263466f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/from_entries.rs",
+      "added": 45,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/object/from_entries.rs",
+      "line": 56,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a built-in runs with an active function\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/object/from_entries.rs",
+      "line": 58,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"Object.fromEntries adder is created with _obj_ in its slots\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 50,
+    "before": 6,
+    "after": 50,
+    "new_passes": 44,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

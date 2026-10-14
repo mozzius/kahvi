@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 20561,
+  "stop_reason": "tool_use",
+  "session_id": "4e0a0958-b531-44ef-9f21-19ed125bcb5b",
+  "total_cost_usd": 0.00452868,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8460,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4049,
+    "output_tokens_details": {
+      "thinking_tokens": 3305
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8460,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4049,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8460,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8460
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Set.prototype.union and a local GetSetRecord helper are implemented in the expected order: RequireInternalSlot, GetSetRecord (Get size, ToNumber, NaN check, ToIntegerOrInfinity, negative RangeError, Get has, IsCallable, Get keys, IsCallable), GetIteratorFromMethod, copy of [[SetData]], then the IteratorStepValue loop with CanonicalizeKeyedCollectionKey and SetDataHas before append. No test-specific branches, no fabricated values, and no swallowed errors were found. The gate's still-failing tests fail on other built-ins (Set.prototype.size getter, SetIteratorPrototype.next, Map.prototype.size) that this ticket does not own. The one ordering change, creating the result object before the copy, is not observable. Remaining concern: GC rooting is not verified in the window between object_with_kind and with_roots.\",\"problems\":[],\"notes_for_next_attempt\":\"The diff matches the spec and can be kept as is. Two things to check before landing. (1) Under KAHVI_GC_STRESS=1, keys_iterator.iterator and next_method are not rooted between get_iterator_from_method and with_roots. The result object is allocated in that window via object_with_kind, so if that allocation can trigger GC, root the iterator earlier. (2) The result object is created before step 5's copy. This is not observable, but the step-8 comment sits out of order with the code; that is acceptable. Remaining failures in the gate report belong to Set.prototype.size, SetIteratorPrototype.next and Map.prototype.size, which are separate tickets.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Set.prototype.union and a local GetSetRecord helper are implemented in the expected order: RequireInternalSlot, GetSetRecord (Get size, ToNumber, NaN check, ToIntegerOrInfinity, negative RangeError, Get has, IsCallable, Get keys, IsCallable), GetIteratorFromMethod, copy of [[SetData]], then the IteratorStepValue loop with CanonicalizeKeyedCollectionKey and SetDataHas before append. No test-specific branches, no fabricated values, and no swallowed errors were found. The gate's still-failing tests fail on other built-ins (Set.prototype.size getter, SetIteratorPrototype.next, Map.prototype.size) that this ticket does not own. The one ordering change, creating the result object before the copy, is not observable. Remaining concern: GC rooting is not verified in the window between object_with_kind and with_roots.",
+    "problems": [],
+    "notes_for_next_attempt": "The diff matches the spec and can be kept as is. Two things to check before landing. (1) Under KAHVI_GC_STRESS=1, keys_iterator.iterator and next_method are not rooted between get_iterator_from_method and with_roots. The result object is allocated in that window via object_with_kind, so if that allocation can trigger GC, root the iterator earlier. (2) The result object is created before step 5's copy. This is not observable, but the step-8 comment sits out of order with the code; that is acceptable. Remaining failures in the gate report belong to Set.prototype.size, SetIteratorPrototype.next and Map.prototype.size, which are separate tickets."
+  },
+  "ttft_ms": 16826,
+  "type": "result",
+  "duration_ms": 19876,
+  "uuid": "8766097c-b917-4dbb-99cd-aebe6b802e1c",
+  "ttft_stream_ms": 1772,
+  "time_to_request_ms": 578,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 303,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 16,
+    "input_hooks": 5,
+    "tool_pool_refresh": 5,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 166,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 109,
+  "time_to_request_cpu_ms": 384,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 239,
+  "process_anon_mib_result": 120,
+  "process_peak_rss_mib": 250,
+  "process_cpu_ms_turn": 1230,
+  "process_wall_ms_turn": 19876,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1773,
+  "time_to_request_from_spawn_ms": 19171919,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998631076.0398,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

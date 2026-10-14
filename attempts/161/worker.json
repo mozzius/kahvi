@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 24259,
+  "stop_reason": "end_turn",
+  "session_id": "34a70e40-f021-4f4a-9a7f-556be54e0190",
+  "total_cost_usd": 0.00973031,
+  "usage": {
+    "input_tokens": 17,
+    "cache_creation_input_tokens": 24878,
+    "cache_read_input_tokens": 212271,
+    "output_tokens": 4483,
+    "output_tokens_details": {
+      "thinking_tokens": 1000
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24878,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 183,
+        "cache_read_input_tokens": 32087,
+        "cache_creation_input_tokens": 434,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 434
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Object.fromEntries` is implemented in `crates/kahvi-builtins/src/object/from_entries.rs`. All 50 runs under `built-ins/Object/fromEntries/` pass (up from 6), and clippy and `cargo fmt --check` are clean.\n\nIt reuses the existing `support::collections::add_entries_from_iterable` and builds the adder with `create_builtin_function`, holding `obj` in its slots as `proxy/revocable.rs` does. No other files changed, and no helpers were added.\n\nBLOCKED: none",
+  "ttft_ms": 2238,
+  "type": "result",
+  "duration_ms": 38150,
+  "uuid": "abaefea5-1f39-4675-8650-dc6ed438476a",
+  "ttft_stream_ms": 1928,
+  "time_to_request_ms": 981,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 469,
+    "resume_other": 5,
+    "process_user_input": 5,
+    "input_attachments": 34,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 12,
+    "model_config_wait": 180,
+    "autocompact": 2,
+    "query_setup": 8,
+    "model_gates": 1,
+    "tool_schema_build": 74,
+    "message_normalization": 18,
+    "client_creation": 72,
+    "request_build": 38
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 327,
+  "time_to_request_cpu_ms": 406,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 3807,
+  "process_wall_ms_turn": 38148,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 23,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1929,
+  "time_to_request_from_spawn_ms": 19145314,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998604460.6755,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

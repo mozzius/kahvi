@@ -190,3 +190,6 @@
 [17:23:37] B-date-utc: verifier: accept Implements Date.UTC in crates/kahvi-builtins/src/date/utc.rs. Step 1 is ToNumber(year). Steps 2-7 use ToNumber on each optional argument in order, and
 [17:23:57] B-set-prototype-difference: attempt on slot 1 with haiku
 [17:23:59] B-iterator-from: verifier: accept The diff implements Iterator.from in its own file, in spec step order. GetIteratorFlattenable (string-primitive variant) is a local helper: it throws 
+[17:24:02] B-set-prototype-intersection: attempt on slot 3 with haiku
+[17:24:04] B-object-from-entries: attempt 161 finished ($0.010, 17 turns)
+[17:24:27] B-set-prototype-union: verifier: accept Set.prototype.union and a local GetSetRecord helper are implemented in the expected order: RequireInternalSlot, GetSetRecord (Get size, ToNumber, NaN 
