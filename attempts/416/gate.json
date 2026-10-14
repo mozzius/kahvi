@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-is-well-formed",
+  "base": "24797a017048ae246ef7cea3680f10a3572924d5",
+  "head": "0019bcf21ccc1499cd30789b0a36e695f69508c3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_is_well_formed.rs",
+      "added": 45,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

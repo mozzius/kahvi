@@ -1,0 +1,134 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_to_well_formed.rs b/crates/kahvi-builtins/src/string/prototype_to_well_formed.rs
+index 1c88123..04e9e0e 100644
+--- a/crates/kahvi-builtins/src/string/prototype_to_well_formed.rs
++++ b/crates/kahvi-builtins/src/string/prototype_to_well_formed.rs
+@@ -8,26 +8,119 @@ use kahvi_core::prelude::*;
+ pub(crate) fn prototype_to_well_formed(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method returns a String representation of this object with all leading surrogates and trailing surrogates that are not part of a surrogate pair replaced with U+FFFD (REPLACEMENT CHARACTER).
+     // It performs the following steps when called:
+     //
+     // 1. Let _thisValue_ be the *this* value.
++    let this_value = this;
+     // 2. Perform ? RequireObjectCoercible(_thisValue_).
++    ops::require_object_coercible(agent, this_value)?;
+     // 3. Let _string_ be ? ToString(_thisValue_).
++    let string = ops::to_string(agent, this_value)?;
+     // 4. Let _stringLength_ be the length of _string_.
++    let string_length = agent.str_len(string);
+     // 5. Let _k_ be 0.
++    let mut k = 0;
+     // 6. Let _result_ be the empty String.
++    let mut result: Vec<u16> = Vec::with_capacity(string_length);
+     // 7. Repeat, while _k_ < _stringLength_,
+-    //    a. Let _codePoint_ be CodePointAt(_string_, _k_).
+-    //    b. If _codePoint_.[[IsUnpairedSurrogate]] is *true*, then
+-    //       i. Set _result_ to the string-concatenation of _result_ and 0xFFFD (REPLACEMENT CHARACTER).
+-    //    c. Else,
+-    //       i. Set _result_ to the string-concatenation of _result_ and UTF16EncodeCodePoint(_codePoint_.[[CodePoint]]).
+-    //    d. Set _k_ to _k_ + _codePoint_.[[CodeUnitCount]].
++    while k < string_length {
++        // a. Let _codePoint_ be CodePointAt(_string_, _k_).
++        let code_point = code_point_at(agent.str(string), k);
++        // b. If _codePoint_.[[IsUnpairedSurrogate]] is *true*, then
++        if code_point.is_unpaired_surrogate {
++            // i. Set _result_ to the string-concatenation of _result_ and 0xFFFD (REPLACEMENT CHARACTER).
++            result.push(0xFFFD);
++        }
++        // c. Else,
++        else {
++            // i. Set _result_ to the string-concatenation of _result_ and UTF16EncodeCodePoint(_codePoint_.[[CodePoint]]).
++            utf16_encode_code_point(&mut result, code_point.code_point);
++        }
++        // d. Set _k_ to _k_ + _codePoint_.[[CodeUnitCount]].
++        k += code_point.code_unit_count;
++    }
+     // 8. Return _result_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.toWellFormed"))
++    Ok(Value::String(agent.intern(&result)))
++}
++
++/// The Record returned by CodePointAt ( _string_, _position_ ).
++struct CodePointRecord {
++    /// [[CodePoint]]
++    code_point: u32,
++    /// [[CodeUnitCount]]
++    code_unit_count: usize,
++    /// [[IsUnpairedSurrogate]]
++    is_unpaired_surrogate: bool,
++}
++
++/// CodePointAt ( _string_, _position_ )
++///
++/// Local to this file: no shared CodePointAt helper exists yet.
++fn code_point_at(units: &[u16], position: usize) -> CodePointRecord {
++    // 1. Let _size_ be the length of _string_.
++    let size = units.len();
++    // 2. Assert: 0 ≤ _position_ < _size_.
++    // 3. Let _first_ be the code unit at index _position_ within _string_.
++    let first = units.get(position).copied().unwrap_or(0);
++    // 4. Let _cp_ be CodePoint(_first_).
++    // 5. If _cp_ is not a leading surrogate and not a trailing surrogate, then
++    if !(0xD800..=0xDFFF).contains(&first) {
++        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *false* }.
++        return CodePointRecord {
++            code_point: u32::from(first),
++            code_unit_count: 1,
++            is_unpaired_surrogate: false,
++        };
++    }
++    // 6. If _cp_ is a trailing surrogate, or _position_ + 1 = _size_, then
++    if first >= 0xDC00 || position + 1 == size {
++        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *true* }.
++        return CodePointRecord {
++            code_point: u32::from(first),
++            code_unit_count: 1,
++            is_unpaired_surrogate: true,
++        };
++    }
++    // 7. Let _second_ be the code unit at index _position_ + 1 within _string_.
++    let second = units.get(position + 1).copied().unwrap_or(0);
++    // 8. If _second_ is not a trailing surrogate, then
++    if !(0xDC00..=0xDFFF).contains(&second) {
++        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *true* }.
++        return CodePointRecord {
++            code_point: u32::from(first),
++            code_unit_count: 1,
++            is_unpaired_surrogate: true,
++        };
++    }
++    // 9. Set _cp_ to UTF16SurrogatePairToCodePoint(_first_, _second_).
++    // 10. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 2, [[IsUnpairedSurrogate]]: *false* }.
++    let code_point = 0x10000 + ((u32::from(first) - 0xD800) << 10) + (u32::from(second) - 0xDC00);
++    CodePointRecord {
++        code_point,
++        code_unit_count: 2,
++        is_unpaired_surrogate: false,
++    }
++}
++
++/// UTF16EncodeCodePoint ( _cp_ )
++///
++/// Local to this file: the shared version is private to other built-ins.
++fn utf16_encode_code_point(out: &mut Vec<u16>, cp: u32) {
++    // 1. Assert: 0 ≤ _cp_ ≤ 0x10FFFF.
++    // 2. If _cp_ ≤ 0xFFFF, return the code unit whose numeric value is _cp_.
++    if cp <= 0xFFFF {
++        out.push(cp as u16);
++    } else {
++        // 3. Let _cpPart_ be _cp_ - 0x10000.
++        let cp_part = cp - 0x10000;
++        // 4. Let _lead_ be the code unit 0xD800 + (_cpPart_ / 0x400).
++        // 5. Let _trail_ be the code unit 0xDC00 + (_cpPart_ modulo 0x400).
++        // 6. Return the two code units (_lead_ followed by _trail_).
++        out.push(0xD800 + (cp_part >> 10) as u16);
++        out.push(0xDC00 + (cp_part & 0x3FF) as u16);
++    }
+ }

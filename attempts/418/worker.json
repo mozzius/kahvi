@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17244,
+  "stop_reason": "end_turn",
+  "session_id": "15ff8240-fb37-4d08-a3b2-1d2c0752653a",
+  "total_cost_usd": 0.01008998,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 28794,
+    "cache_read_input_tokens": 222288,
+    "output_tokens": 3436,
+    "output_tokens_details": {
+      "thinking_tokens": 726
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 28794,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 214,
+        "cache_read_input_tokens": 36145,
+        "cache_creation_input_tokens": 292,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 292
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`%TypedArray%.prototype.toReversed` is implemented in `crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs`, with each spec step kept as a comment above its code. All 18 test262 runs under `built-ins/TypedArray/prototype/toReversed/` pass (the ticket said 8 on main), and build, clippy and `cargo fmt --check` are clean. I changed no other files and wrote no new helpers.\n\nThe `TypedArraySetElement` call uses `?` rather than `!`. The spec's `!` holds because the value is already the right kind, but I didn't add an unwrap.",
+  "ttft_ms": 1504,
+  "type": "result",
+  "duration_ms": 35963,
+  "uuid": "e70f5217-5a9f-4a2c-a9dd-6dfca4c225ef",
+  "ttft_stream_ms": 1260,
+  "time_to_request_ms": 740,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 418,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 15,
+    "input_hooks": 12,
+    "tool_pool_refresh": 3,
+    "init_message": 24,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 174,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 144,
+  "time_to_request_cpu_ms": 409,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 236,
+  "process_anon_mib_turn_start": 120,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 3730,
+  "process_wall_ms_turn": 35962,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1344,
+  "time_to_request_from_spawn_ms": 25752959,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005212084.8198,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.4,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

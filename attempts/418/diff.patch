@@ -1,0 +1,66 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs b/crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs
+index 1774f50..60e98c1 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs
+@@ -2,8 +2,14 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.toreversed
+ 
++use kahvi_core::object::typed_array::typed_array_length;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{
++    typed_array_create_same_type, typed_array_get_element, typed_array_set_element,
++    validate_typed_array,
++};
++
+ /// TypedArray.prototype.toReversed
+ pub(crate) fn prototype_to_reversed(
+     agent: &mut Agent,
+@@ -11,19 +17,35 @@ pub(crate) fn prototype_to_reversed(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
++    let _ = (args, new_target);
+     // 1. Let _obj_ be the *this* value.
++    let obj = this;
+     // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, obj)?;
++    let obj = ta_record.object;
+     // 3. Let _length_ be TypedArrayLength(_taRecord_).
++    let length = typed_array_length(agent, ta_record) as f64;
+     // 4. Let _resultArray_ be ? TypedArrayCreateSameType(_obj_, _length_).
+-    // 5. Let _k_ be 0.
+-    // 6. Repeat, while _k_ < _length_,
+-    //    a. Let _from_ be _length_ - _k_ - 1.
+-    //    b. Let _fromValue_ be TypedArrayGetElement(_obj_, 𝔽(_from_)).
+-    //    c. Perform ! TypedArraySetElement(_resultArray_, 𝔽(_k_), _fromValue_).
+-    //    d. Set _k_ to _k_ + 1.
+-    // 7. Return _resultArray_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.toReversed"))
++    let result_array = typed_array_create_same_type(agent, obj, length)?;
++    // The loop may collect garbage: _obj_ and _resultArray_ stay rooted.
++    agent.with_roots(
++        &[Value::Object(obj), Value::Object(result_array)],
++        |agent| {
++            // 5. Let _k_ be 0.
++            let mut k = 0.0;
++            // 6. Repeat, while _k_ < _length_,
++            while k < length {
++                // a. Let _from_ be _length_ - _k_ - 1.
++                let from = length - k - 1.0;
++                // b. Let _fromValue_ be TypedArrayGetElement(_obj_, 𝔽(_from_)).
++                let from_value = typed_array_get_element(agent, obj, from);
++                // c. Perform ! TypedArraySetElement(_resultArray_, 𝔽(_k_), _fromValue_).
++                typed_array_set_element(agent, result_array, k, from_value)?;
++                // d. Set _k_ to _k_ + 1.
++                k += 1.0;
++            }
++            // 7. Return _resultArray_.
++            Ok(Value::Object(result_array))
++        },
++    )
+ }

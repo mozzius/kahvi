@@ -1,0 +1,32 @@
+{
+  "ticket": "B-typed-array-prototype-to-reversed",
+  "base": "dcbe8e76823add4016f17ec55c21216f98a69d01",
+  "head": "1d612732455d3421499cc6907ef6e9f539fdd759",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_to_reversed.rs",
+      "added": 33,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

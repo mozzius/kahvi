@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10365,
+  "stop_reason": "tool_use",
+  "session_id": "ca1efaba-dd90-4ccf-a5ec-82753164f043",
+  "total_cost_usd": 0.00277028,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5832,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2107,
+    "output_tokens_details": {
+      "thinking_tokens": 1549
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5832,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2107,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5832,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5832
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.toReversed in its own file, following the spec steps in order. Step 1 sets obj to this. Step 2 calls ValidateTypedArray with ?. Step 3 computes the length once via TypedArrayLength. Step 4 calls TypedArrayCreateSameType with ?. Steps 5-6 run the reverse loop with from = length - k - 1, TypedArrayGetElement, and TypedArraySetElement. Step 7 returns resultArray. The step comments sit directly above their code. Both objects are rooted with with_roots across the loop. No branches key on test inputs, no values are made up, and no errors are swallowed. The only deviation is that step 6c uses ? where the spec uses !. This is not observable: the value comes from TypedArrayGetElement, so ToNumber/ToBigInt cannot throw there. The gate report shows 10 new passing tests and no regressions, which fits a change of this size.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes needed. The implementation follows the spec. Merge as is.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.toReversed in its own file, following the spec steps in order. Step 1 sets obj to this. Step 2 calls ValidateTypedArray with ?. Step 3 computes the length once via TypedArrayLength. Step 4 calls TypedArrayCreateSameType with ?. Steps 5-6 run the reverse loop with from = length - k - 1, TypedArrayGetElement, and TypedArraySetElement. Step 7 returns resultArray. The step comments sit directly above their code. Both objects are rooted with with_roots across the loop. No branches key on test inputs, no values are made up, and no errors are swallowed. The only deviation is that step 6c uses ? where the spec uses !. This is not observable: the value comes from TypedArrayGetElement, so ToNumber/ToBigInt cannot throw there. The gate report shows 10 new passing tests and no regressions, which fits a change of this size.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes needed. The implementation follows the spec. Merge as is."
+  },
+  "ttft_ms": 8254,
+  "type": "result",
+  "duration_ms": 10380,
+  "uuid": "940ea94c-b162-41d5-aa80-f8a8f29fe19a",
+  "ttft_stream_ms": 1406,
+  "time_to_request_ms": 667,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 423,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 56,
+    "input_hooks": 13,
+    "tool_pool_refresh": 38,
+    "init_message": 22,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 48,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 13,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 94,
+  "time_to_request_cpu_ms": 412,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 916,
+  "process_wall_ms_turn": 10379,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 45,
+    "cpu_ms": 37,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1408,
+  "time_to_request_from_spawn_ms": 25809276,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005268675.6587,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.41,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

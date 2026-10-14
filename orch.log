@@ -2930,3 +2930,13 @@ test262 at last merge: 74823/81183 runs passing
 [19:13:28] B-json-raw-json: verifier: accept The diff implements JSON.rawJSON steps 1-4 and 8-11 in raw_json.rs, in spec order, with SyntaxError throws for steps 2-4 and the frozen-object creatio
 [19:13:31] B-typed-array-prototype-to-reversed: attempt on slot 3 with haiku
 [19:13:48] B-number-is-nan: verifier: accept The change implements Number.isNaN in is_nan.rs. Step 1 returns false when the argument is not a Value::Number. Step 2 returns true when the number is
+[19:13:51] stack: stack/0012 (#26) merged into main
+[19:13:51] stack: stack/0013 (#27) merged into stack/0012
+[19:13:51] B-date-prototype-get-year: attempt on slot 1 with haiku
+[19:13:52] stack: stack/0014 (#29) merged into stack/0013
+[19:13:53] stack: stack/0015 (#30) merged into stack/0014
+[19:13:56] B-string-prototype-is-well-formed: attempt 416 finished ($0.007, 15 turns)
+[19:13:57] B-string-prototype-to-well-formed: attempt 417 finished ($0.011, 10 turns)
+[19:14:11] B-typed-array-prototype-to-reversed: attempt 418 finished ($0.010, 13 turns)
+[19:14:22] B-date-prototype-get-year: attempt 419 finished ($0.005, 7 turns)
+[19:14:36] B-string-prototype-is-well-formed: verifier: accept The change implements String.prototype.isWellFormed as specified. It runs RequireObjectCoercible and then ToString on the this value, propagating erro
