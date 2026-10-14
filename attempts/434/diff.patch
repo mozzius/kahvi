@@ -1,0 +1,28 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_fontsize.rs b/crates/kahvi-builtins/src/string/prototype_fontsize.rs
+index 8d0c335..afce0f4 100644
+--- a/crates/kahvi-builtins/src/string/prototype_fontsize.rs
++++ b/crates/kahvi-builtins/src/string/prototype_fontsize.rs
+@@ -4,17 +4,20 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::generated::string::prototype_anchor::create_html;
++
+ /// String.prototype.fontsize
+ pub(crate) fn prototype_fontsize(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let size = args.get_or_undefined(0);
+     // This method performs the following steps when called:
+     //
+     // 1. Let _string_ be the *this* value.
++    let string = this;
+     // 2. Return ? CreateHTML(_string_, *"font"*, *"size"*, _size_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.fontsize"))
++    create_html(agent, string, "font", "size", size)
+ }

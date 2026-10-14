@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-fontsize",
+  "base": "dbe6b1d8297fd9afe849c14af56adc8cddbb0625",
+  "head": "0753273cc66e36f38d2bac27f75725b6ac69dccf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_fontsize.rs",
+      "added": 6,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

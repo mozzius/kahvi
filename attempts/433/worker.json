@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18078,
+  "stop_reason": "end_turn",
+  "session_id": "ccd492aa-95c0-40b4-9b9c-96dd3e1c9937",
+  "total_cost_usd": 0.006438050000000002,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 19533,
+    "cache_read_input_tokens": 120865,
+    "output_tokens": 2163,
+    "output_tokens_details": {
+      "thinking_tokens": 506
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19533,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 180,
+        "cache_read_input_tokens": 26720,
+        "cache_creation_input_tokens": 456,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 456
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.link` is implemented in `crates/kahvi-builtins/src/string/prototype_link.rs`. All 14 runs under `annexB/built-ins/String/prototype/link/` pass, and clippy and rustfmt are clean.\n\nIt reuses the existing `create_html` in `prototype_anchor.rs` (called as `super::prototype_anchor::create_html`) instead of copying it, so no helper was added and no other file was touched. The ticket asked for no Rust tests, and none were written.\n\nBLOCKED: none",
+  "ttft_ms": 3446,
+  "type": "result",
+  "duration_ms": 41282,
+  "uuid": "92690d1a-ca24-4a46-b641-86222c6f7f2a",
+  "ttft_stream_ms": 3215,
+  "time_to_request_ms": 880,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 507,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 23,
+    "input_hooks": 6,
+    "tool_pool_refresh": 6,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 5,
+    "model_config_wait": 233,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 149,
+  "time_to_request_cpu_ms": 466,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2794,
+  "process_wall_ms_turn": 41280,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3216,
+  "time_to_request_from_spawn_ms": 26861054,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006319586.097,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.53,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

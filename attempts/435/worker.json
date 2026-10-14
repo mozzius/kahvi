@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19809,
+  "stop_reason": "end_turn",
+  "session_id": "1b9b4d69-6c3d-45ae-819f-7db33208237d",
+  "total_cost_usd": 0.009552920000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 27629,
+    "cache_read_input_tokens": 187482,
+    "output_tokens": 3278,
+    "output_tokens_details": {
+      "thinking_tokens": 872
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27629,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 157,
+        "cache_read_input_tokens": 35049,
+        "cache_creation_input_tokens": 223,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 223
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.setUTCFullYear` in `crates/kahvi-builtins/src/date/prototype_set_utc_full_year.rs`, with each spec step kept as a comment above its code. All 12 runs under `built-ins/Date/prototype/setUTCFullYear/` pass (up from 8 on main), clippy is clean, and formatting checks out. No helpers were needed beyond the existing `support::date` ones, and no other files changed.",
+  "ttft_ms": 2190,
+  "type": "result",
+  "duration_ms": 45627,
+  "uuid": "dac1ba0b-8618-45b1-afa6-4cee9b533466",
+  "ttft_stream_ms": 1978,
+  "time_to_request_ms": 1023,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 541,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 17,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 337,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 4,
+    "client_creation": 10,
+    "request_build": 17
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 177,
+  "time_to_request_cpu_ms": 566,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3312,
+  "process_wall_ms_turn": 45620,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1979,
+  "time_to_request_from_spawn_ms": 26861303,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006319899.4788,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
