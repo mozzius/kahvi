@@ -2753,3 +2753,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:02:08] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 362: no new test262 passes in target
 [19:02:13] C-proxy-prevent-extensions: attempt on slot 3 with haiku
 [19:02:32] B-reflect-is-extensible: verifier: accept The diff implements Reflect.isExtensible in its stub file and follows the spec. Step 1 throws a TypeError when the argument is not an Object. Step 2 r
+[19:02:34] B-object-prototype-get-proto: verifier: accept The change implements get Object.prototype.__proto__ in the two steps the spec gives. Step 1 calls ops::to_object(agent, this)? and step 2 calls obj.i
+[19:02:36] B-data-view-prototype-set-float16: attempt on slot 1 with haiku
