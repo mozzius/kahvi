@@ -4085,3 +4085,5 @@ test262 at last merge: 76432/81183 runs passing
 [19:39:57] B-json-is-raw-json: gate rejected attempt 449: no new test262 passes in target
 [19:39:57] B-string-prototype-sup: verifier: accept The diff implements String.prototype.sup by keeping the spec's two steps as comments: it binds `this` to `string`, then returns `?` CreateHTML(string,
 [19:39:59] B-json-is-raw-json: attempt on slot 2 with haiku
+[19:40:02] B-math-atanh: attempt on slot 0 with haiku
+[19:40:06] B-data-view-prototype-set-big-uint64: verifier: accept The change is a thin wrapper. setBigUint64 takes `this`, defaults littleEndian to false when absent, and calls the existing shared helper `set_view_va
