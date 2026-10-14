@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 14827,
+  "stop_reason": "end_turn",
+  "session_id": "570710f2-128c-4825-9cc1-adf489ae77a6",
+  "total_cost_usd": 0.007303630000000001,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 22738,
+    "cache_read_input_tokens": 134433,
+    "output_tokens": 2410,
+    "output_tokens_details": {
+      "thinking_tokens": 297
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22738,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 212,
+        "cache_read_input_tokens": 30206,
+        "cache_creation_input_tokens": 175,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 175
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Date.prototype.toLocaleDateString` is implemented in `crates/kahvi-builtins/src/date/prototype_to_locale_date_string.rs`, following the spec's non-ECMA-402 fallback. All 8 tests under `built-ins/Date/prototype/toLocaleDateString/` pass, and clippy and `cargo fmt --check` are clean.\n\nThe method checks the `this` value via `date::this_time_value`, returns `\"Invalid Date\"` for NaN, and otherwise formats `LocalTime(tv)` with the existing `date::date_string` helper. No other files were touched and no helpers were added.",
+  "ttft_ms": 1471,
+  "type": "result",
+  "duration_ms": 26645,
+  "uuid": "913a32d3-7d62-477e-8748-ed3f4c39bb21",
+  "ttft_stream_ms": 1225,
+  "time_to_request_ms": 499,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 334,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 64,
+    "autocompact": 2,
+    "query_setup": 2,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 69,
+  "time_to_request_cpu_ms": 456,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 2914,
+  "process_wall_ms_turn": 26645,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1226,
+  "time_to_request_from_spawn_ms": 27653731,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007114052.5432,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

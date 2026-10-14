@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-tanh",
+  "base": "dee8ded5df7e280b12e13907b400fa484d4f7035",
+  "head": "47c20911d939bc8f0ecc2a32c8cd93c04c69e03a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/tanh.rs",
+      "added": 18,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

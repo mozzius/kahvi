@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11329,
+  "stop_reason": "end_turn",
+  "session_id": "c201bb21-a973-4aab-8b69-5981471f93b5",
+  "total_cost_usd": 0.00500422,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 14190,
+    "cache_read_input_tokens": 98482,
+    "output_tokens": 1893,
+    "output_tokens_details": {
+      "thinking_tokens": 81
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14190,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 174,
+        "cache_read_input_tokens": 21598,
+        "cache_creation_input_tokens": 235,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 235
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.tanh` in `crates/kahvi-builtins/src/math/tanh.rs`, the only file changed. It follows the `Math.atan` pattern: `ToNumber`, NaN/\u00b10 passthrough, \u00b1\u221e returning \u00b11, and `f64::tanh` otherwise. `./t262 built-ins/Math/tanh/` passes 10 of 10 (up from 8 on main), and `cargo clippy -p kahvi-builtins` is clean.\n\nBLOCKED: none",
+  "ttft_ms": 1580,
+  "type": "result",
+  "duration_ms": 19503,
+  "uuid": "d438c895-04e9-4857-be7e-2e1c44767fd2",
+  "ttft_stream_ms": 1380,
+  "time_to_request_ms": 578,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 375,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 8,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 109,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 59,
+  "time_to_request_cpu_ms": 463,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 2231,
+  "process_wall_ms_turn": 19503,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1381,
+  "time_to_request_from_spawn_ms": 27648204,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007108605.275,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

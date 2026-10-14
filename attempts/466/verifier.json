@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5833,
+  "stop_reason": "tool_use",
+  "session_id": "6052f803-96e6-49e6-98fc-b22d3a2f33fe",
+  "total_cost_usd": 0.00163818,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3702,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1123,
+    "output_tokens_details": {
+      "thinking_tokens": 649
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3702,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1123,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3702,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3702
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Math.tanh in crates/kahvi-builtins/src/math/tanh.rs, following the five spec steps in order. Step 1 calls ops::to_number(agent, x)? and propagates abrupt completions. Step 2 returns n for NaN and for \u00b10 (n == 0.0 is true for -0.0, and n is returned unchanged, so the sign is preserved). Steps 3 and 4 return \u00b11 for \u00b1Infinity. Step 5 returns n.tanh(), which the spec allows as an implementation approximation. The only file touched is the in-scope one. The step comments sit directly above their code. No test-shaped branches, no swallowed errors, no placeholder values. The gate report shows build and clippy passing and 2 new test262 passes with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Math.tanh in crates/kahvi-builtins/src/math/tanh.rs, following the five spec steps in order. Step 1 calls ops::to_number(agent, x)? and propagates abrupt completions. Step 2 returns n for NaN and for \u00b10 (n == 0.0 is true for -0.0, and n is returned unchanged, so the sign is preserved). Steps 3 and 4 return \u00b11 for \u00b1Infinity. Step 5 returns n.tanh(), which the spec allows as an implementation approximation. The only file touched is the in-scope one. The step comments sit directly above their code. No test-shaped branches, no swallowed errors, no placeholder values. The gate report shows build and clippy passing and 2 new test262 passes with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4185,
+  "type": "result",
+  "duration_ms": 5857,
+  "uuid": "f32ea013-3476-4666-ba3b-2ff39a6b529f",
+  "ttft_stream_ms": 1248,
+  "time_to_request_ms": 524,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 360,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 71,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 71,
+  "time_to_request_cpu_ms": 349,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 814,
+  "process_wall_ms_turn": 5856,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1249,
+  "time_to_request_from_spawn_ms": 27680513,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007140804.9854,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

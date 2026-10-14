@@ -4134,3 +4134,10 @@ test262 at last merge: 76432/81183 runs passing
 [19:45:05] B-math-log2: verifier: accept The diff implements Math.log2 in crates/kahvi-builtins/src/math/log2.rs and follows the spec steps in order. Step 1 calls ops::to_number and propagate
 [19:45:08] B-math-tanh: attempt on slot 0 with haiku
 [19:45:10] B-math-sign: verifier: accept The diff implements Math.sign in crates/kahvi-builtins/src/math/sign.rs and follows the four spec steps in order. Step 1 calls ops::to_number(...)? so
+[19:45:13] B-math-sinh: verifier: accept The diff implements Math.sinh in its own file, following the three spec steps. Step 1 calls ops::to_number(agent, x) and propagates the error with ?. 
+[19:45:13] B-date-prototype-to-locale-date-string: attempt on slot 1 with haiku
+[19:45:14] stack: stack/0019 (#35) was rebased on GitHub to a87e52ea25; restacking on it
+[19:45:19] B-math-random: verifier: accept Implements Math.random with a SplitMix64 generator held in a process-wide static AtomicU64, seeded once from std's RandomState. Each call takes the to
+[19:45:29] B-math-tanh: attempt 466 finished ($0.005, 9 turns)
+[19:45:42] B-date-prototype-to-locale-date-string: attempt 467 finished ($0.007, 11 turns)
+[19:45:53] B-date-prototype-to-locale-date-string: gate rejected attempt 467: no new test262 passes in target
