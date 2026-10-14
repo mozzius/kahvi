@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 6782,
+  "stop_reason": "tool_use",
+  "session_id": "738cb559-9462-4738-b109-fbb5d0f9c442",
+  "total_cost_usd": 0.0017219600000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3623,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1349,
+    "output_tokens_details": {
+      "thinking_tokens": 804
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3623,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1349,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 3623,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3623
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Object.setPrototypeOf in the order of the spec's six steps. Step 1 calls ops::require_object_coercible with ?. Step 2 throws a TypeError unless proto is an Object or null, and runs before step 3. Step 3 returns non-object obj unchanged. Step 4 calls [[SetPrototypeOf]] with ?. Step 5 throws a TypeError when the status is false. Step 6 returns obj. Each step keeps its spec comment above the code for it. The only remaining gap is Proxy [[SetPrototypeOf]], which the gate report shows failing with the engine's not-implemented error. That is an honest partial, not a defect. No special-casing, swallowed errors, or made-up values were found.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. The remaining test262 failures (set-error.js) come from Proxy [[SetPrototypeOf]] being unimplemented, which throws the engine's not-implemented error. That belongs to the Proxy ticket, not this one.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Object.setPrototypeOf in the order of the spec's six steps. Step 1 calls ops::require_object_coercible with ?. Step 2 throws a TypeError unless proto is an Object or null, and runs before step 3. Step 3 returns non-object obj unchanged. Step 4 calls [[SetPrototypeOf]] with ?. Step 5 throws a TypeError when the status is false. Step 6 returns obj. Each step keeps its spec comment above the code for it. The only remaining gap is Proxy [[SetPrototypeOf]], which the gate report shows failing with the engine's not-implemented error. That is an honest partial, not a defect. No special-casing, swallowed errors, or made-up values were found.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. The remaining test262 failures (set-error.js) come from Proxy [[SetPrototypeOf]] being unimplemented, which throws the engine's not-implemented error. That belongs to the Proxy ticket, not this one."
+  },
+  "ttft_ms": 4249,
+  "type": "result",
+  "duration_ms": 6206,
+  "uuid": "ffe2697f-8efd-4aec-a515-dfdd9e7c9980",
+  "ttft_stream_ms": 737,
+  "time_to_request_ms": 108,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 37,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 57,
+  "time_to_request_cpu_ms": 132,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 737,
+  "time_to_request_from_spawn_ms": 21253943,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791940228865.1843,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.36,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.52,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

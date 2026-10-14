@@ -27,3 +27,8 @@
 [01:04:17] B-string-prototype-index-of: attempt 39 finished ($0.007, 14 turns)
 [01:04:51] B-string-prototype-index-of: verifier: accept The diff implements String.prototype.indexOf step by step. this is passed through RequireObjectCoercible, then ToString(this), then ToString(searchStr
 [01:10:02] B-array-from: merged (+78, 59978 total)
+[01:10:04] B-object-set-prototype-of: attempt on slot 1 with haiku
+[01:10:04] B-string-prototype-index-of: full test262 run for merge
+[01:10:23] B-object-set-prototype-of: attempt 40 finished ($0.004, 12 turns)
+[01:10:41] B-object-set-prototype-of: verifier: accept The change implements Object.setPrototypeOf in the order of the spec's six steps. Step 1 calls ops::require_object_coercible with ?. Step 2 throws a T
+[01:14:27] B-string-prototype-index-of: merged (+90, 60068 total)

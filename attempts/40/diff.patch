@@ -1,0 +1,43 @@
+diff --git a/crates/kahvi-builtins/src/object/set_prototype_of.rs b/crates/kahvi-builtins/src/object/set_prototype_of.rs
+index e960b6b..997d3e8 100644
+--- a/crates/kahvi-builtins/src/object/set_prototype_of.rs
++++ b/crates/kahvi-builtins/src/object/set_prototype_of.rs
+@@ -7,18 +7,32 @@ use kahvi_core::prelude::*;
+ /// Object.setPrototypeOf
+ pub(crate) fn set_prototype_of(
+     agent: &mut Agent,
+-    this: Value,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
++    let obj = args.get_or_undefined(0);
++    let proto = args.get_or_undefined(1);
+     // 1. Perform ? RequireObjectCoercible(_obj_).
++    ops::require_object_coercible(agent, obj.clone())?;
+     // 2. If _proto_ is not an Object and _proto_ is not *null*, throw a *TypeError* exception.
++    let proto = match proto {
++        Value::Object(p) => Some(p.clone()),
++        Value::Null => None,
++        _ => {
++            return Err(agent.throw_type_error("Object prototype may only be an Object or null"));
++        }
++    };
+     // 3. If _obj_ is not an Object, return _obj_.
++    let Value::Object(o) = obj else {
++        return Ok(obj.clone());
++    };
+     // 4. Let _status_ be ? _obj_.[[SetPrototypeOf]](_proto_).
++    let status = o.internal_set_prototype_of(agent, proto)?;
+     // 5. If _status_ is *false*, throw a *TypeError* exception.
++    if !status {
++        return Err(agent.throw_type_error("Object.setPrototypeOf failed to set the prototype"));
++    }
+     // 6. Return _obj_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.setPrototypeOf"))
++    Ok(obj.clone())
+ }

@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 13484,
+  "stop_reason": "end_turn",
+  "session_id": "a6a9668b-ffdb-40ff-bfc4-b2064afc88d9",
+  "total_cost_usd": 0.00428212,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 10260,
+    "cache_read_input_tokens": 81512,
+    "output_tokens": 2412,
+    "output_tokens_details": {
+      "thinking_tokens": 329
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10260,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 452,
+        "cache_read_input_tokens": 17100,
+        "cache_creation_input_tokens": 640,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 640
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Object.setPrototypeOf` in `crates/kahvi-builtins/src/object/set_prototype_of.rs`, with each spec step as a comment above its code. 22 of 24 runs under `built-ins/Object/setPrototypeOf/` pass, and clippy is clean on `kahvi-builtins`. The remaining two failures (`set-error.js`, sloppy and strict) need Proxy `[[SetPrototypeOf]]`, which the engine doesn't implement yet and which is outside this ticket's file scope.\n\nBLOCKED: Proxy [[SetPrototypeOf]] internal method (needed by built-ins/Object/setPrototypeOf/set-error.js)",
+  "ttft_ms": 1274,
+  "type": "result",
+  "duration_ms": 17943,
+  "uuid": "5708ce85-d650-4611-9c63-671e5376704b",
+  "ttft_stream_ms": 1043,
+  "time_to_request_ms": 160,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 13,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 25,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 49,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 56,
+  "time_to_request_cpu_ms": 155,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1044,
+  "time_to_request_from_spawn_ms": 21229732,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791940204644.4072,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.36,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.52,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
