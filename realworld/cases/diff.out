@@ -1,0 +1,22 @@
+lines: ["=1","-1","+1","=2","-1","+1","=2","+1"]
+words: ["=the ","-quick","+slow","= brown ","-fox","+dog jumps"]
+chars: -k|+s|=itt|-e|+i|=n|+g
+===================================================================
+--- a.txt	old
++++ b.txt	new
+@@ -1,7 +1,8 @@
+ one
+-two
++2
+ three
+ four
+-five
++five and a half
+ six
+ seven
++eight
+
+apply: true
+parse: [[1,7,1,8]]
+structured: [" a","-b"," c","+d"]
+big: ["-line 500","+LINE 500","-line 1500"]

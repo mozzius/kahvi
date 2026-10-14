@@ -1,0 +1,47 @@
+name: Real-world
+
+# npm packages run under kahvi-run and checked against Node (realworld/,
+# ./rw). Report-only for now: not a required check. It fails only on a
+# regression (a case in realworld/expected-pass.txt that no longer passes)
+# or when a recorded .out no longer matches what Node prints.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CHECKOUT_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  realworld:
+    name: real-world packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.CHECKOUT_REF }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo build --release -p kahvi-runtime
+      # The runner image's Node installs the pinned packages and checks the
+      # recorded output still matches what Node prints.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: realworld
+      - name: goldens match Node
+        run: |
+          node --version
+          ./rw --record
+          git diff --exit-code -- realworld/cases
+      - run: ./rw --engine target/release/kahvi-run --json rw-results.json
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rw-results
+          path: rw-results.json
+          if-no-files-found: ignore

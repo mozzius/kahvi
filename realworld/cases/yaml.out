@@ -1,0 +1,34 @@
+parse: {"name":"kahvi","version":1.2,"features":["modules","async/await","generators"],"limits":{"stack":4096,"heap":1000000000,"enabled":"yes"},"anchors":{"base":{"a":1,"b":2},"derived":{"a":1,"b":3}},"multiline":"line one\nline two\n","folded":"folded text\n","dates":"2001-12-14t21:59:43.10-05:00","nothing":null}
+# config
+name: kahvi-run # the engine
+version: 1.2
+features: [ modules, "async/await", generators, ESM ]
+limits:
+  stack: 0x1000
+  heap: 1e+9
+  enabled: yes
+anchors:
+  base: &base { a: 1, b: 2 }
+  derived: { <<: *base, b: 3 }
+multiline: |
+  line one
+  line two
+folded: >
+  folded text
+dates: 2001-12-14t21:59:43.10-05:00
+nothing: ~
+
+list:
+  - 1
+  - two
+  - three:
+      - 3
+      - null
+      - true
+"key with: colon": |-
+  value
+  with newline
+empty: {}
+
+errors: ["BLOCK_AS_IMPLICIT_KEY","MULTILINE_IMPLICIT_KEY","BAD_INDENT"]
+all docs: [{"a":1},{"b":2}]
