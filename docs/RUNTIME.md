@@ -52,7 +52,6 @@ stay test262's job. They are architect-owned.
 
 ## Next
 
-- Bare specifiers (a `node_modules`-style or import-map resolver).
 - `error.stack` (source positions are already in the bytecode).
 - More host APIs as real programs need them (`TextEncoder`, `URL`,
   `fetch`, `structuredClone`), each with e2e tests.
