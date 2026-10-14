@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 13504,
+  "stop_reason": "tool_use",
+  "session_id": "c52a553b-5b5b-44d4-ae04-0f796224bc06",
+  "total_cost_usd": 0.0343432,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6033,
+    "cache_read_input_tokens": 3681,
+    "output_tokens": 931,
+    "output_tokens_details": {
+      "thinking_tokens": 549
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6033,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 931,
+        "cache_read_input_tokens": 3681,
+        "cache_creation_input_tokens": 6033,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6033
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change replaces the not-implemented stub for step 5 (ParseJSON) with a call to the public JSON.parse entry point. Called with no reviver and a String argument, it does the same work as ParseJSON. Its SyntaxError propagates with `?`. The first/last code unit checks mean only primitive texts reach it, so the step 6 assertion holds. Only the in-scope file changed. The remaining test262 failures come from JSON.stringify not handling raw JSON objects, which is a different ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change replaces the not-implemented stub for step 5 (ParseJSON) with a call to the public JSON.parse entry point. Called with no reviver and a String argument, it does the same work as ParseJSON. Its SyntaxError propagates with `?`. The first/last code unit checks mean only primitive texts reach it, so the step 6 assertion holds. Only the in-scope file changed. The remaining test262 failures come from JSON.stringify not handling raw JSON objects, which is a different ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11421,
+  "type": "result",
+  "duration_ms": 13110,
+  "uuid": "727dfb11-a822-4294-b0fb-e83eaf568c78",
+  "ttft_stream_ms": 6205,
+  "time_to_request_ms": 1214,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 518,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 630,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 35,
+  "time_to_request_cpu_ms": 317,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 708,
+  "process_wall_ms_turn": 13110,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 6206,
+  "time_to_request_from_spawn_ms": 577461,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792013431443.6465,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792030800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.05,
+        "resetsAt": 1792030800
+      },
+      "seven_day": {
+        "utilization": 0.01,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
