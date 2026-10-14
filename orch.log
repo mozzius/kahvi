@@ -1,15 +1,11 @@
-[15:58:57] building trusted runner; integration branch m1-spine, 3 slots
-[15:58:57] B-reg-exp-prototype-get-has-indices: attempt on slot 2 with haiku
-[15:58:57] B-math-floor: attempt on slot 1 with haiku
-[15:58:57] B-typed-array-prototype-filter: attempt on slot 0 with haiku
-[16:01:00] B-math-floor: attempt 99 finished ($0.007, 14 turns)
-[16:01:00] B-reg-exp-prototype-get-has-indices: attempt 100 finished ($0.007, 10 turns)
-[16:01:36] B-typed-array-prototype-filter: attempt 101 finished ($0.014, 15 turns)
-[16:04:27] B-math-floor: verifier: accept Math.floor now follows all five spec steps in order. ToNumber is called with `?`. Non-finite values and ±0 are returned as-is, and the (0,1) range ret
-[16:04:30] B-reg-exp-prototype-get-has-indices: verifier: accept The diff implements get RegExp.prototype.hasIndices as the spec describes. The getter binds this to regexp, uses code unit 0x0064, and calls RegExpHas
-[16:04:56] B-typed-array-prototype-filter: verifier: accept The diff implements %TypedArray%.prototype.filter steps 1-12 in spec order, with each step kept as a comment above its code. ValidateTypedArray and Ty
-[16:05:27] full test262 run for merge: B-math-floor
-[16:29:54] B-math-floor: merged (+456, 71203 total)
-[16:30:00] full test262 run for merge: B-reg-exp-prototype-get-has-indices, B-typed-array-prototype-filter
-[16:53:51] B-reg-exp-prototype-get-has-indices: merged (+10, 71374 total)
-[16:53:51] B-typed-array-prototype-filter: merged (+158, 71374 total)
+[16:54:30] building trusted runner; integration branch stack, 4 slots
+[16:54:37] B-typed-array-prototype-map: attempt on slot 3 with haiku
+[16:54:37] B-data-view-prototype-set-uint8: attempt on slot 2 with haiku
+[16:54:37] B-typed-array-prototype-subarray: attempt on slot 1 with haiku
+[16:54:37] B-reflect-define-property: attempt on slot 0 with haiku
+[16:54:46] stack: pushed stack/0001 as #12 with arch-stack
+[16:56:24] B-reflect-define-property: attempt 104 finished ($0.007, 11 turns)
+[16:56:30] B-data-view-prototype-set-uint8: attempt 102 finished ($0.008, 12 turns)
+[16:56:37] B-typed-array-prototype-subarray: attempt 103 finished ($0.014, 13 turns)
+[16:57:55] B-typed-array-prototype-map: attempt 105 finished ($0.022, 26 turns)
+[16:59:14] B-reflect-define-property: verifier: accept The change implements Reflect.defineProperty in its file and follows the four spec steps in order. Step 1 throws a TypeError when the target is not an

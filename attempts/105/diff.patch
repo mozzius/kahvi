@@ -1,0 +1,90 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_map.rs b/crates/kahvi-builtins/src/typed_array/prototype_map.rs
+index ce0c57a..7b98f2a 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_map.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_map.rs
+@@ -2,32 +2,73 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.map
+ 
++use kahvi_core::object::typed_array::typed_array_length;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{
++    typed_array_get_element, typed_array_set_element, typed_array_species_create,
++    validate_typed_array,
++};
++
+ /// TypedArray.prototype.map
+ pub(crate) fn prototype_map(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // The interpretation and use of the arguments of this method are the same as for `Array.prototype.map` as defined in [sec-array.prototype.map].
+     // This method performs the following steps when called:
+     //
+     // 1. Let _obj_ be the *this* value.
++    let obj = this;
+     // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, obj)?;
++    let Value::Object(obj) = obj else {
++        unreachable!("ValidateTypedArray accepted a non-object")
++    };
+     // 3. Let _length_ be TypedArrayLength(_taRecord_).
++    let length = typed_array_length(agent, ta_record);
+     // 4. If IsCallable(_callback_) is *false*, throw a *TypeError* exception.
++    let callback = args.get_or_undefined(0);
++    if !ops::is_callable(agent, callback) {
++        return Err(agent.throw_type_error("TypedArray.prototype.map callback is not a function"));
++    }
++    let this_arg = args.get_or_undefined(1);
+     // 5. Let _result_ be ? TypedArraySpeciesCreate(_obj_, « 𝔽(_length_) »).
+-    // 6. Let _k_ be 0.
+-    // 7. Repeat, while _k_ < _length_,
+-    //    a. Let _kValue_ be TypedArrayGetElement(_obj_, 𝔽(_k_)).
+-    //    b. Let _mappedValue_ be ? Call(_callback_, _thisArg_, « _kValue_, 𝔽(_k_), _obj_ »).
+-    //    c. Perform ? TypedArraySetElement(_result_, 𝔽(_k_), _mappedValue_).
+-    //    d. Set _k_ to _k_ + 1.
+-    // 8. Return _result_.
+-    //
+-    // This method is not generic. The *this* value must be an object with a [[TypedArrayName]] internal slot.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.map"))
++    let result = typed_array_species_create(agent, obj, &[Value::Number(length as f64)])?;
++    // The callback may collect garbage: obj, callback, thisArg and result stay rooted.
++    agent.with_roots(
++        &[
++            Value::Object(obj),
++            callback,
++            this_arg,
++            Value::Object(result),
++        ],
++        |agent| {
++            // 6. Let _k_ be 0.
++            let mut k: usize = 0;
++            // 7. Repeat, while _k_ < _length_,
++            while k < length {
++                // a. Let _kValue_ be TypedArrayGetElement(_obj_, 𝔽(_k_)).
++                let k_value = typed_array_get_element(agent, obj, k as f64);
++                let mark = agent.push_root(k_value);
++                // b. Let _mappedValue_ be ? Call(_callback_, _thisArg_, « _kValue_, 𝔽(_k_), _obj_ »).
++                let mapped_value = ops::call_rooted(
++                    agent,
++                    callback,
++                    this_arg,
++                    &[k_value, Value::Number(k as f64), Value::Object(obj)],
++                )?;
++                agent.push_root(mapped_value);
++                // c. Perform ? TypedArraySetElement(_result_, 𝔽(_k_), _mappedValue_).
++                typed_array_set_element(agent, result, k as f64, mapped_value)?;
++                agent.pop_roots(mark);
++                // d. Set _k_ to _k_ + 1.
++                k += 1;
++            }
++            // 8. Return _result_.
++            Ok(Value::Object(result))
++        },
++    )
+ }

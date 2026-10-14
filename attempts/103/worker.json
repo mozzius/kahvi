@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 28918,
+  "stop_reason": "end_turn",
+  "session_id": "3466e9f5-84f6-4c50-ab23-55b89f6bf804",
+  "total_cost_usd": 0.014149950000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 39444,
+    "cache_read_input_tokens": 270445,
+    "output_tokens": 6150,
+    "output_tokens_details": {
+      "thinking_tokens": 1984
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 39444,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 643,
+        "cache_read_input_tokens": 45832,
+        "cache_creation_input_tokens": 1255,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1255
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `subarray` implementation is in place and builds clean under clippy, but 14 of the subarray test runs still fail. They fail on other unimplemented features, not on this file's logic.\n\nChanges are confined to `crates/kahvi-builtins/src/typed_array/prototype_subarray.rs`. The steps are commented in place, and `to_clamped_index` is a local copy, since it is not yet in `ops`. The 14 remaining failures are `not implemented` throws from other built-ins: `BigInt` (6), `TypedArray.prototype.join` (4), and the `ArrayBuffer.prototype.resizable` getter (4).\n\nBLOCKED: `BigInt` support, `TypedArray.prototype.join`, and `get ArrayBuffer.prototype.resizable` are not implemented in the engine, so the remaining subarray tests cannot pass.",
+  "ttft_ms": 1956,
+  "type": "result",
+  "duration_ms": 114726,
+  "uuid": "5c74834f-c321-42b9-8783-f4aa3972df4c",
+  "ttft_stream_ms": 1779,
+  "time_to_request_ms": 864,
+  "time_to_request_phases_ms": {
+    "other": 57,
+    "system_prompt": 378,
+    "resume_other": 1,
+    "process_user_input": 12,
+    "input_attachments": 30,
+    "input_hooks": 7,
+    "tool_pool_refresh": 7,
+    "init_message": 31,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 306,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 193,
+  "time_to_request_cpu_ms": 476,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 233,
+  "process_anon_mib_turn_start": 116,
+  "process_rss_mib_result": 253,
+  "process_anon_mib_result": 133,
+  "process_peak_rss_mib": 263,
+  "process_cpu_ms_turn": 4860,
+  "process_wall_ms_turn": 114722,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1780,
+  "time_to_request_from_spawn_ms": 17419754,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791996878290.2712,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792014600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 4602,
+  "stop_reason": "tool_use",
+  "session_id": "bc0be355-55f8-439b-a10f-2443425fd2e1",
+  "total_cost_usd": 0.019104200000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3414,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 481,
+    "output_tokens_details": {
+      "thinking_tokens": 94
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3414,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 481,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3414,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3414
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all four spec steps in order. Step 1 throws a TypeError for a non-object target. Steps 2 and 3 use `?` to propagate errors from `ops::to_property_key` and `ops::to_property_descriptor`. Step 4 calls `[[DefineOwnProperty]]` with `?` and returns its boolean result. The only other changes are the underscore prefixes on the unused parameters. The gate report shows 24 of 24 target tests passing with no regressions. I did not run the tests myself.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all four spec steps in order. Step 1 throws a TypeError for a non-object target. Steps 2 and 3 use `?` to propagate errors from `ops::to_property_key` and `ops::to_property_descriptor`. Step 4 calls `[[DefineOwnProperty]]` with `?` and returns its boolean result. The only other changes are the underscore prefixes on the unused parameters. The gate report shows 24 of 24 target tests passing with no regressions. I did not run the tests myself.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3156,
+  "type": "result",
+  "duration_ms": 5063,
+  "uuid": "09238c5c-0952-460d-8341-d2e82184bfa9",
+  "ttft_stream_ms": 2133,
+  "time_to_request_ms": 1001,
+  "time_to_request_phases_ms": {
+    "other": 77,
+    "system_prompt": 466,
+    "resume_other": 1,
+    "process_user_input": 30,
+    "input_attachments": 271,
+    "input_hooks": 17,
+    "tool_pool_refresh": 7,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 12,
+    "model_config_wait": 38,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 16,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 26,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 333,
+  "time_to_request_cpu_ms": 439,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 723,
+  "process_wall_ms_turn": 5063,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 104,
+    "cpu_ms": 120,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2140,
+  "time_to_request_from_spawn_ms": 17687226,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997142566.157,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792014600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

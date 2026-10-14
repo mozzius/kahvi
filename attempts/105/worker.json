@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 48423,
+  "stop_reason": "end_turn",
+  "session_id": "c90fc261-b141-4090-9e10-32ea8d7723d9",
+  "total_cost_usd": 0.021541450000000004,
+  "usage": {
+    "input_tokens": 28,
+    "cache_creation_input_tokens": 51517,
+    "cache_read_input_tokens": 580405,
+    "output_tokens": 9975,
+    "output_tokens_details": {
+      "thinking_tokens": 4996
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 51517,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 409,
+        "cache_read_input_tokens": 57878,
+        "cache_creation_input_tokens": 1282,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1282
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01CB3nCCvpo8pXHtANBQqcmD",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/typed_array/prototype_map.rs",
+        "description": "Format the edited file with rustfmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 26,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.map` in `crates/kahvi-builtins/src/typed_array/prototype_map.rs`, following the spec steps with each step as a comment. `./t262 built-ins/TypedArray/prototype/map/` gives 158 pass and 10 fail. All 10 failures are the same `not implemented: BigInt` error, which comes from the stub in `big_int/constructor.rs`, so they are outside this file. Clippy is clean.\n\nBLOCKED: the `BigInt` constructor (`crates/kahvi-builtins/src/big_int/constructor.rs`) is a not-implemented stub, so the 10 resizable-buffer and speciesctor-resizable-buffer tests that call `BigInt(n)` and use `1n` literals cannot pass.\n\nTwo other notes:\n- `rustfmt` was denied in this session, so I formatted the one `with_roots` array by hand to match rustfmt's output. I did not run `cargo fmt` because it would reformat unrelated files.\n- The GC rooting follows `array/prototype_map.rs`: the callback, `thisArg`, the object and the result stay rooted across calls, and each mapped value is rooted until it is stored.",
+  "ttft_ms": 1563,
+  "type": "result",
+  "duration_ms": 191150,
+  "uuid": "7bef976d-3758-4d32-8f82-b7a433bc457a",
+  "ttft_stream_ms": 1362,
+  "time_to_request_ms": 726,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 374,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 18,
+    "input_hooks": 6,
+    "tool_pool_refresh": 4,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 212,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 21,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 97,
+  "time_to_request_cpu_ms": 460,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 268,
+  "process_anon_mib_result": 148,
+  "process_peak_rss_mib": 282,
+  "process_cpu_ms_turn": 5961,
+  "process_wall_ms_turn": 191149,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1364,
+  "time_to_request_from_spawn_ms": 17420296,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791996878639.5295,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792014600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
