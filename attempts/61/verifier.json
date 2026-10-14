@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 16568,
+  "stop_reason": "tool_use",
+  "session_id": "cebf9901-4f59-45eb-a07e-34b1be0066bc",
+  "total_cost_usd": 0.00418266,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8101,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3583,
+    "output_tokens_details": {
+      "thinking_tokens": 2945
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8101,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3583,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 8101,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8101
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.copyWithin following all ten spec steps in order, with the step comments kept above the code. ToObject, LengthOfArrayLike, ToClampedIndex (via a local helper), HasProperty, Get, Set(throw=true) and DeletePropertyOrThrow are all called with `?`. The from/to/count arithmetic and the direction rule match steps 6\u20138. The loop's observable order matches step 9 (both keys built, then HasProperty, then Get/Set or Delete). The remaining not-implemented paths come from the engine's Proxy and ArrayBuffer gaps and are reported as errors, not made-up values. No test-shaped branches, swallowed errors or unrelated edits were found. The renamed `_new_target` parameter is a consequence of the body no longer using it.\",\"problems\":[],\"notes_for_next_attempt\":\"No blocking issues. Non-blocking: the local to_clamped_index helper is documented as \\\"not yet in ops\\\". If ops already exports an equivalent (I could not check ops), use it instead of the local copy. If other built-ins (fill, slice, TypedArray methods) will need ToClampedIndex, it should move to ops in a separate ticket. The Proxy [[HasProperty]] and ArrayBuffer failures are engine gaps, not defects in this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.copyWithin following all ten spec steps in order, with the step comments kept above the code. ToObject, LengthOfArrayLike, ToClampedIndex (via a local helper), HasProperty, Get, Set(throw=true) and DeletePropertyOrThrow are all called with `?`. The from/to/count arithmetic and the direction rule match steps 6\u20138. The loop's observable order matches step 9 (both keys built, then HasProperty, then Get/Set or Delete). The remaining not-implemented paths come from the engine's Proxy and ArrayBuffer gaps and are reported as errors, not made-up values. No test-shaped branches, swallowed errors or unrelated edits were found. The renamed `_new_target` parameter is a consequence of the body no longer using it.",
+    "problems": [],
+    "notes_for_next_attempt": "No blocking issues. Non-blocking: the local to_clamped_index helper is documented as \"not yet in ops\". If ops already exports an equivalent (I could not check ops), use it instead of the local copy. If other built-ins (fill, slice, TypedArray methods) will need ToClampedIndex, it should move to ops in a separate ticket. The Proxy [[HasProperty]] and ArrayBuffer failures are engine gaps, not defects in this diff."
+  },
+  "ttft_ms": 13631,
+  "type": "result",
+  "duration_ms": 16051,
+  "uuid": "4de4c505-4284-4e18-9558-bd9043f6ae6b",
+  "ttft_stream_ms": 867,
+  "time_to_request_ms": 109,
+  "time_to_request_phases_ms": {
+    "other": 16,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 12,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 3,
+    "message_prep": 1,
+    "model_config_wait": 49,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 10,
+  "time_to_request_cpu_ms": 107,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 118,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 633,
+  "process_wall_ms_turn": 16051,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 868,
+  "time_to_request_from_spawn_ms": 5805695,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791953682959.3364,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.82,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

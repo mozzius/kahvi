@@ -1,0 +1,126 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_copy_within.rs b/crates/kahvi-builtins/src/array/prototype_copy_within.rs
+index 5c0098e..a34557e 100644
+--- a/crates/kahvi-builtins/src/array/prototype_copy_within.rs
++++ b/crates/kahvi-builtins/src/array/prototype_copy_within.rs
+@@ -9,7 +9,7 @@ pub(crate) fn prototype_copy_within(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // NOTE:
+     // The _end_ argument is optional. If it is not provided, the length of the *this* value is used.
+@@ -18,34 +18,91 @@ pub(crate) fn prototype_copy_within(
+     // This method performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
++    let length = ops::length_of_array_like(agent, obj)?;
+     // 3. Let _to_ be ? ToClampedIndex(_target_, _length_).
++    let target = args.get_or_undefined(0);
++    let mut to = to_clamped_index(agent, target, length)?;
+     // 4. Let _from_ be ? ToClampedIndex(_start_, _length_).
++    let start = args.get_or_undefined(1);
++    let mut from = to_clamped_index(agent, start, length)?;
+     // 5. If _end_ is *undefined*, let _final_ be _length_; else let _final_ be ? ToClampedIndex(_end_, _length_).
++    let end = args.get_or_undefined(2);
++    let final_index = if matches!(end, Value::Undefined) {
++        length
++    } else {
++        to_clamped_index(agent, end, length)?
++    };
+     // 6. Let _count_ be min(_final_ - _from_, _length_ - _to_).
++    let mut count = (final_index - from).min(length - to);
+     // 7. If _from_ < _to_ and _to_ < _from_ + _count_, then
+-    //    a. Let _direction_ be -1.
+-    //    b. Set _from_ to _from_ + _count_ - 1.
+-    //    c. Set _to_ to _to_ + _count_ - 1.
++    let direction = if from < to && to < from + count {
++        // a. Let _direction_ be -1.
++        let direction = -1.0;
++        // b. Set _from_ to _from_ + _count_ - 1.
++        from = from + count - 1.0;
++        // c. Set _to_ to _to_ + _count_ - 1.
++        to = to + count - 1.0;
++        direction
++    }
+     // 8. Else,
+-    //    a. Let _direction_ be 1.
++    else {
++        // a. Let _direction_ be 1.
++        1.0
++    };
+     // 9. Repeat, while _count_ > 0,
+-    //    a. Let _fromKey_ be ! ToString(𝔽(_from_)).
+-    //    b. Let _toKey_ be ! ToString(𝔽(_to_)).
+-    //    c. Let _fromPresent_ be ? HasProperty(_obj_, _fromKey_).
+-    //    d. If _fromPresent_ is *true*, then
+-    //       i. Let _fromValue_ be ? Get(_obj_, _fromKey_).
+-    //       ii. Perform ? Set(_obj_, _toKey_, _fromValue_, *true*).
+-    //    e. Else,
+-    //       i. Assert: _fromPresent_ is *false*.
+-    //       ii. Perform ? DeletePropertyOrThrow(_obj_, _toKey_).
+-    //    f. Set _from_ to _from_ + _direction_.
+-    //    g. Set _to_ to _to_ + _direction_.
+-    //    h. Set _count_ to _count_ - 1.
++    while count > 0.0 {
++        // a. Let _fromKey_ be ! ToString(𝔽(_from_)).
++        let from_key = agent.key_from_index(from);
++        // b. Let _toKey_ be ! ToString(𝔽(_to_)).
++        let to_key = agent.key_from_index(to);
++        // c. Let _fromPresent_ be ? HasProperty(_obj_, _fromKey_).
++        let from_present = ops::has_property(agent, obj, from_key)?;
++        // d. If _fromPresent_ is *true*, then
++        if from_present {
++            // i. Let _fromValue_ be ? Get(_obj_, _fromKey_).
++            let from_value = ops::get(agent, obj, from_key)?;
++            // ii. Perform ? Set(_obj_, _toKey_, _fromValue_, *true*).
++            ops::set(agent, obj, to_key, from_value, true)?;
++        }
++        // e. Else,
++        else {
++            // i. Assert: _fromPresent_ is *false*.
++            // ii. Perform ? DeletePropertyOrThrow(_obj_, _toKey_).
++            ops::delete_property_or_throw(agent, obj, to_key)?;
++        }
++        // f. Set _from_ to _from_ + _direction_.
++        from += direction;
++        // g. Set _to_ to _to_ + _direction_.
++        to += direction;
++        // h. Set _count_ to _count_ - 1.
++        count -= 1.0;
++    }
+     // 10. Return _obj_.
+-    //
+-    // NOTE:
+-    // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.copyWithin"))
++    Ok(Value::Object(obj))
++}
++
++/// ToClampedIndex ( _value_, _length_ )
++///
++/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
++///
++/// Not yet in `ops`; only this built-in needs it so far.
++fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
++    //    ToAbsoluteIndex ( _start_, _length_ ):
++    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
++    let relative_index = ops::to_integer_or_infinity(agent, value)?;
++    //    2. If _relativeIndex_ is -∞, return +0𝔽.
++    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
++    //    4. Else, return min(_relativeIndex_, _length_).
++    let index = if relative_index == f64::NEG_INFINITY {
++        0.0
++    } else if relative_index < 0.0 {
++        (length + relative_index).max(0.0)
++    } else {
++        relative_index.min(length)
++    };
++    // 2. Return the result of clamping _index_ between 0 and _length_.
++    Ok(index.max(0.0).min(length))
+ }

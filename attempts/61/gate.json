@@ -1,0 +1,39 @@
+{
+  "ticket": "B-array-prototype-copy-within",
+  "base": "1c70aa70d35ac85afb48cdbef82badfee705afa5",
+  "head": "42de6bff0010ea5f723aff9889e3778eac8d4b88",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_copy_within.rs",
+      "added": 79,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 78,
+    "before": 8,
+    "after": 72,
+    "new_passes": 64,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/copyWithin/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/copyWithin/resizable-buffer.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/copyWithin/return-abrupt-from-delete-proxy-target.js:sloppy  Uncaught InternalError: not implemented: Proxy [[HasProperty]]",
+      "built-ins/Array/prototype/copyWithin/return-abrupt-from-delete-proxy-target.js:strict  Uncaught InternalError: not implemented: Proxy [[HasProperty]]",
+      "built-ins/Array/prototype/copyWithin/return-abrupt-from-has-start.js:sloppy  Uncaught InternalError: not implemented: Proxy [[HasProperty]]",
+      "built-ins/Array/prototype/copyWithin/return-abrupt-from-has-start.js:strict  Uncaught InternalError: not implemented: Proxy [[HasProperty]]"
+    ]
+  },
+  "decision": "pass"
+}
