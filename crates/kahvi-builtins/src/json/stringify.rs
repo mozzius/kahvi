@@ -217,6 +217,21 @@ fn serialize_json_property_steps(
     }
     // 4. If _value_ is an Object, then
     if let Value::Object(value_obj) = value {
+        // a. If _value_ has an [[IsRawJSON]] internal slot, then
+        if agent
+            .native::<super::raw_json::RawJsonData>(value_obj)
+            .is_some()
+        {
+            // i. Let _rawJSON_ be ! Get(_value_, *"rawJSON"*).
+            let raw_json_key = agent.key("rawJSON");
+            let raw_json = ops::get(agent, value_obj, raw_json_key)?;
+            // ii. Assert: _rawJSON_ is a String.
+            let Value::String(raw_json) = raw_json else {
+                unreachable!("a raw JSON object's frozen rawJSON property is a String")
+            };
+            // iii. Return _rawJSON_.
+            return Ok(Some(agent.str(raw_json).to_vec()));
+        }
         // b. If _value_ has a [[NumberData]] internal slot, then
         if matches!(agent.obj(value_obj).kind, ObjectKind::NumberObject(_)) {
             // i. Set _value_ to ? ToNumber(_value_).
