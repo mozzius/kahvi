@@ -59,9 +59,8 @@ def ident(s):
 def expected_length(params, body):
     """The "length" property: explicit in the prose, else the count of
     required parameters before the first optional or rest one."""
-    m = re.search(r'The <code>"length"</code> property of this (?:function|method) is \*(\d+)\*', body) or re.search(
-        r'"length" property (?:of|whose value is) [^.]*?\*(\d+)\*', body
-    )
+    # The spec source writes it as `The *"length"* property of this function is *2*<sub>𝔽</sub>.`
+    m = re.search(r'(?:\*|<code>)"length"(?:\*|</code>) property of this (?:function|method) is \*\+?(\d+)\*', body)
     if m:
         return int(m.group(1))
     params = spec.strip_tags(params or "").strip()
@@ -147,9 +146,33 @@ def expand_templates(head):
     return [head]
 
 
+CTOR_PROPS_RE = re.compile(r"Properties of the (\S+) (?:Constructors?|Intrinsic Object)$")
+CTOR_LENGTH_RE = re.compile(r'has a \*"length"\* property whose value is \*\+?(\d+)\*')
+
+
+def constructor_lengths(text):
+    """Constructor "length" values, which the spec gives in the constructor's
+    "Properties of the X Constructor" clause rather than under its heading."""
+    lengths = {}
+    for _cid, _typ, start, end in spec.clause_spans(text):
+        body = text[start:end]
+        m = spec.H1_RE.search(body)
+        title = m and CTOR_PROPS_RE.match(spec.strip_tags(m.group(1)).strip())
+        if not title:
+            continue
+        # Only the clause's own text, not its subclauses (the static methods).
+        own = body[: body.find("<emu-clause", m.end())] if "<emu-clause" in body[m.end():] else body
+        n = CTOR_LENGTH_RE.search(own)
+        if n:
+            for name in expand_templates(title.group(1)):
+                lengths[name] = int(n.group(1))
+    return lengths
+
+
 def collect(text):
     fns = []
     seen = set()
+    ctor_lengths = constructor_lengths(text)
     for cid, typ, start, end in spec.clause_spans(text):
         if typ != "built-in function":
             continue
@@ -183,6 +206,8 @@ def collect(text):
                 continue
             seen.add(sig)
             length = 0 if acc else expected_length(params, body)
+            if constructor and key in ctor_lengths:
+                length = ctor_lengths[key]
             fns.append(Fn(cid, head, owner, key, sym, acc, length, attributes(body), body, constructor))
     return fns
 
