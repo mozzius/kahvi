@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10052,
+  "stop_reason": "tool_use",
+  "session_id": "423b48f5-1f91-43fd-bdd2-d60f1f43bb4e",
+  "total_cost_usd": 0.00204168,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3799,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1873,
+    "output_tokens_details": {
+      "thinking_tokens": 1308
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3799,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1873,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3799,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3799
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change replaces the not-implemented stub in prototype_entries.rs with a delegation: it calls this_set(agent, this)? (which should perform RequireInternalSlot(set, [[SetData]]) as CreateSetIterator step 1 requires), then returns create_collection_iterator(agent, set, KeyValue, true) wrapped in Value::Object. The method's step 1 (this value) and step 2 (return ? CreateSetIterator(set, key+value)) are both reflected in order, and errors propagate with `?`. No special-casing, no hardcoded values, no swallowed errors. The closure steps (iterate SetData by index, skip empty, re-read count after yield, yield [entry, entry] for key+value) live in the shared helper support/collections, which is not in this diff, so I could not verify them directly. The gate report (26 new passes, 0 regressions) is consistent with the helper being correct. Minor readability nits only: the bare `true` argument is not self-describing, and the step-2 comment is an abbreviated pointer rather than the spec text.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change replaces the not-implemented stub in prototype_entries.rs with a delegation: it calls this_set(agent, this)? (which should perform RequireInternalSlot(set, [[SetData]]) as CreateSetIterator step 1 requires), then returns create_collection_iterator(agent, set, KeyValue, true) wrapped in Value::Object. The method's step 1 (this value) and step 2 (return ? CreateSetIterator(set, key+value)) are both reflected in order, and errors propagate with `?`. No special-casing, no hardcoded values, no swallowed errors. The closure steps (iterate SetData by index, skip empty, re-read count after yield, yield [entry, entry] for key+value) live in the shared helper support/collections, which is not in this diff, so I could not verify them directly. The gate report (26 new passes, 0 regressions) is consistent with the helper being correct. Minor readability nits only: the bare `true` argument is not self-describing, and the step-2 comment is an abbreviated pointer rather than the spec text.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7732,
+  "type": "result",
+  "duration_ms": 10200,
+  "uuid": "e681451c-3178-4efe-a99e-6ea68688bc88",
+  "ttft_stream_ms": 1580,
+  "time_to_request_ms": 976,
+  "time_to_request_phases_ms": {
+    "other": 106,
+    "system_prompt": 683,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 44,
+    "input_hooks": 16,
+    "tool_pool_refresh": 2,
+    "init_message": 23,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 15,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 11,
+    "tool_schema_build": 9,
+    "message_normalization": 8,
+    "client_creation": 12,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 213,
+  "time_to_request_cpu_ms": 403,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 821,
+  "process_wall_ms_turn": 10200,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1581,
+  "time_to_request_from_spawn_ms": 21534126,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000993007.1174,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

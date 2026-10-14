@@ -869,3 +869,8 @@ test262 at last merge: 72953/81183 runs passing
 [18:02:01] B-set-prototype-entries: attempt on slot 2 with haiku
 [18:02:01] C-proxy-is-extensible: attempt on slot 1 with haiku
 [18:02:31] B-set-prototype-delete: verifier: accept The diff implements Set.prototype.delete in its own file. It follows the spec order: this_set(agent, this)? performs RequireInternalSlot(set, [[SetDat
+[18:02:35] B-array-prototype-to-reversed: attempt on slot 3 with haiku
+[18:02:39] B-set-prototype-entries: attempt 249 finished ($0.007, 10 turns)
+[18:02:43] C-proxy-is-extensible: attempt 248 finished ($0.005, 9 turns)
+[18:03:13] B-array-prototype-to-reversed: attempt 250 finished ($0.006, 10 turns)
+[18:03:36] B-set-prototype-entries: verifier: accept The change replaces the not-implemented stub in prototype_entries.rs with a delegation: it calls this_set(agent, this)? (which should perform RequireI

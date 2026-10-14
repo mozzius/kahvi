@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-is-extensible",
+  "base": "71c6d5729315373a371c66fb85428168ebbf8eb4",
+  "head": "4f24765adb034c96629f1c79867a579a749c0d34",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/is_extensible.rs",
+      "added": 23,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 0,
+    "after": 24,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
