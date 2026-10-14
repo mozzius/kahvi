@@ -1,0 +1,41 @@
+{
+  "ticket": "B-typed-array-from",
+  "base": "eb867675d77e06d77a6a1cbcc046acfb58ca005a",
+  "head": "506548b9634cfc2e41749a5b711a3fee3b73574a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/from.rs",
+      "added": 82,
+      "removed": 30
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/from/from-typedarray-into-itself-mapper-detaches-result.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-into-itself-mapper-detaches-result.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-into-itself-mapper-makes-result-out-of-bounds.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-into-itself-mapper-makes-result-out-of-bounds.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-mapper-detaches-result.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-mapper-detaches-result.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-mapper-makes-result-out-of-bounds.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.values",
+      "built-ins/TypedArray/from/from-typedarray-mapper-makes-result-out-of-bounds.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.values"
+    ]
+  },
+  "decision": "pass"
+}

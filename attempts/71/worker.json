@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 37661,
+  "stop_reason": "end_turn",
+  "session_id": "16dfb6d2-c119-47c1-a207-ae91aca65bff",
+  "total_cost_usd": 0.01570104,
+  "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 37051,
+    "cache_read_input_tokens": 408324,
+    "output_tokens": 7329,
+    "output_tokens_details": {
+      "thinking_tokens": 1230
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 37051,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 207,
+        "cache_read_input_tokens": 43939,
+        "cache_creation_input_tokens": 592,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 592
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_013vVM7ZVpiLrQekQXLU1hVq",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/typed_array/from.rs <<'EOF'\n//! %TypedArray%.from ( _source_ [ , _mapper_ [ , _thisArg_ ] ] )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-%typedarray%.from\n\nuse kahvi_core::prelude::*;\n\nuse crate::support::typed_array::{typed_array_create_from_constructor, typed_array_set_element};\n\n/// TypedArray.from\npub(crate) fn from(\n    agent: &mut Agent,\n    this: Value,\n    args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    let source = args.get_or_undefined(0);\n    let mapper = args.get_or_undefined(1);\n    let this_arg = args.get_or_undefined(2);\n    // 1. Let _ctor_ be the *this* value.\n    let ctor = this;\n    // 2. If IsConstructor(_ctor_) is *false*, throw a *TypeError* exception.\n    let Value::Object(ctor) = ctor else {\n        return Err(agent.throw_type_error(\"TypedArray.from: this is not a constructor\"));\n    };\n    if !ops::is_constructor(agent, Value::Object(ctor)) {\n        return Err(agent.throw_type_error(\"TypedArray.from: this is not a constructor\"));\n    }\n    // 3. If _mapper_ is *undefined*, then\n    let mapping = if mapper.is_undefined() {\n        // a. Let _mapping_ be *false*.\n        false\n    } else {\n        // 4. Else,\n        // a. If IsCallable(_mapper_) is *false*, throw a *TypeError* exception.\n        if !ops::is_callable(agent, mapper) {\n            return Err(agent.throw_type_error(\"TypedArray.from: mapper is not a function\"));\n        }\n        // b. Let _mapping_ be *true*.\n        true\n    };\n    // 5. Let _usingIterator_ be ? GetMethod(_source_, %Symbol.iterator%).\n    let iterator_key = PropertyKey::Symbol(agent.symbols_wk.iterator);\n    let using_iterator = ops::get_method(agent, *source, iterator_key)?;\n    // 6. If _usingIterator_ is not *undefined*, then\n    if !using_iterator.is_undefined() {\n        // a. Let _values_ be ? IteratorToList(? GetIteratorFromMethod(_source_, _usingIterator_)).\n        let mut record = ops::get_iterator_from_method(agent, *source, using_iterator)?;\n        let values = ops::iterator_to_list(agent, &mut record)?;\n        // b. Let _length_ be the number of elements in _values_.\n        let length = values.len() as f64;\n        // c. Let _targetObj_ be ? TypedArrayCreateFromConstructor(_ctor_, \u00ab \ud835\udd3d(_length_) \u00bb).\n        let target_obj =\n            typed_array_create_from_constructor(agent, ctor, &[Value::Number(length)])?;\n        // d. Let _k_ be 0.\n        let mut k = 0.0;\n        // e. Repeat, while _k_ < _length_,\n        for k_value in values {\n            if k >= length {\n                break;\n            }\n            // i. Let _kValue_ be _values_[_k_].\n            // ii. If _mapping_ is *true*, then\n            let mapped_value = if mapping {\n                // 1. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, \u00ab _kValue_, \ud835\udd3d(_k_) \u00bb).\n                ops::call(agent, *mapper, *this_arg, &[k_value, Value::Number(k)])?\n            } else {\n                // iii. Else,\n                // 1. Let _mappedValue_ be _kValue_.\n                k_value\n            };\n            // iv. Perform ? TypedArraySetElement(_targetObj_, \ud835\udd3d(_k_), _mappedValue_).\n            typed_array_set_element(agent, target_obj, k, mapped_value)?;\n            // v. Set _k_ to _k_ + 1.\n            k += 1.0;\n        }\n        // f. Return _targetObj_.\n        return Ok(Value::Object(target_obj));\n    }\n    // 7. NOTE: _source_ is not an iterable object, so assume it is already an array-like object.\n    // 8. Let _arrayLike_ be ! ToObject(_source_).\n    let array_like = ops::to_object(agent, *source)?;\n    // 9. Let _length_ be ? LengthOfArrayLike(_arrayLike_).\n    let length = ops::length_of_array_like(agent, array_like)?;\n    // 10. Let _targetObj_ be ? TypedArrayCreateFromConstructor(_ctor_, \u00ab \ud835\udd3d(_length_) \u00bb).\n    let target_obj = typed_array_create_from_constructor(agent, ctor, &[Value::Number(length)])?;\n    // 11. Let _k_ be 0.\n    let mut k = 0.0;\n    // 12. Repeat, while _k_ < _length_,\n    while k < length {\n        // a. Let _propertyKey_ be ! ToString(\ud835\udd3d(_k_)).\n        let property_key = agent.key_from_index(k);\n        // b. Let _kValue_ be ? Get(_arrayLike_, _propertyKey_).\n        let k_value = ops::get(agent, array_like, property_key)?;\n        // c. If _mapping_ is *true*, then\n        let mapped_value = if mapping {\n            // i. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, \u00ab _kValue_, \ud835\udd3d(_k_) \u00bb).\n            ops::call(agent, *mapper, *this_arg, &[k_value, Value::Number(k)])?\n        } else {\n            // d. Else,\n            // i. Let _mappedValue_ be _kValue_.\n            k_value\n        };\n        // e. Perform ? TypedArraySetElement(_targetObj_, \ud835\udd3d(_k_), _mappedValue_).\n        typed_array_set_element(agent, target_obj, k, mapped_value)?;\n        // f. Set _k_ to _k_ + 1.\n        k += 1.0;\n    }\n    // 13. Return _targetObj_.\n    Ok(Value::Object(target_obj))\n}\nEOF\ncargo build -p kahvi-cli 2>&1 | tail -30 && ./t262 built-ins/TypedArray/from/ 2>&1 | tail -15",
+        "description": "Write from.rs, build engine, run target tests"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`TypedArray.from` is implemented in `crates/kahvi-builtins/src/typed_array/from.rs`, following the spec steps. `./t262 built-ins/TypedArray/from/` gives 34 pass, 8 fail; all 8 fail with \"not implemented: TypedArray.prototype.values\", which is outside this ticket's scope. Clippy is clean and the file is rustfmt-formatted.\n\nBLOCKED: `%TypedArray%.prototype.values` (needed by the 8 remaining failing `built-ins/TypedArray/from/` tests, which use it to iterate a typed array source)",
+  "ttft_ms": 1701,
+  "type": "result",
+  "duration_ms": 74978,
+  "uuid": "dda87035-a3c9-4f67-9232-3743f312260d",
+  "ttft_stream_ms": 1229,
+  "time_to_request_ms": 134,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 13,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 33,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 84,
+  "time_to_request_cpu_ms": 162,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 270,
+  "process_cpu_ms_turn": 3435,
+  "process_wall_ms_turn": 74977,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1229,
+  "time_to_request_from_spawn_ms": 16046977,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791963924174.0872,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.76,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.68,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
