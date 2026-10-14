@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 30435,
+  "stop_reason": "end_turn",
+  "session_id": "4cce2abe-a274-44f2-8274-37ae151dbc1e",
+  "total_cost_usd": 0.01066682,
+  "usage": {
+    "input_tokens": 15,
+    "cache_creation_input_tokens": 25489,
+    "cache_read_input_tokens": 189122,
+    "output_tokens": 6447,
+    "output_tokens_details": {
+      "thinking_tokens": 2184
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25489,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 224,
+        "cache_read_input_tokens": 32905,
+        "cache_creation_input_tokens": 227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01LjTsnPhRjCX3bKt8RLPNZ2",
+      "tool_input": {
+        "command": "cat crates/kahvi-builtins/Cargo.toml crates/kahvi-core/Cargo.toml; ls ~/.cargo/registry/cache/*/ 2>/dev/null | grep -i -E \"unicode|icu\" | head",
+        "description": "Show crate manifests and cached unicode crates"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.localeCompare` is implemented in `crates/kahvi-builtins/src/string/prototype_locale_compare.rs`, the only file changed. `./t262 built-ins/String/prototype/localeCompare/` passes 26/26 runs, clippy and `cargo fmt --check` are clean.\n\nThe comparison is by UTF-16 code units of each string's NFC form, so canonically equivalent strings return `+0` and the ordering is total. The two private helpers (`to_code_points` and `from_code_points`) duplicate ones in `string/prototype_normalize.rs`; a shared helper would be a follow-up, since I was told not to edit other files.",
+  "ttft_ms": 1552,
+  "type": "result",
+  "duration_ms": 54496,
+  "uuid": "35c12f56-efc6-401a-9b50-90d531c700b6",
+  "ttft_stream_ms": 1387,
+  "time_to_request_ms": 562,
+  "time_to_request_phases_ms": {
+    "other": 46,
+    "system_prompt": 335,
+    "resume_other": 4,
+    "process_user_input": 18,
+    "input_attachments": 53,
+    "input_hooks": 8,
+    "tool_pool_refresh": 7,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 29,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 22,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 196,
+  "time_to_request_cpu_ms": 294,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3741,
+  "process_wall_ms_turn": 54495,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 23,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1388,
+  "time_to_request_from_spawn_ms": 25243846,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004703783.7988,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.33,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
