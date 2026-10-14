@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9882,
+  "stop_reason": "tool_use",
+  "session_id": "91f0c29e-b749-4eed-8f38-4020a5a03b93",
+  "total_cost_usd": 0.061349100000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 12283,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1140,
+    "output_tokens_details": {
+      "thinking_tokens": 715
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12283,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1140,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 12283,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 12283
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Iterator.concat follows spec steps 1-6 in order. It checks each item is an Object, calls GetMethod for Symbol.iterator, and throws a TypeError if the method is undefined. The closure is a state machine that does Call, an Object check, GetIteratorDirect, then IteratorStepValue and yield. A return completion goes through on_return, which closes only the current inner iterator. Errors are propagated with `?`. The change touches only the ticket file. Target tests went from 12 to 62 passing with 0 regressions. The remaining 2 failures hit a not-implemented StringIteratorPrototype.next outside this file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Iterator.concat follows spec steps 1-6 in order. It checks each item is an Object, calls GetMethod for Symbol.iterator, and throws a TypeError if the method is undefined. The closure is a state machine that does Call, an Object check, GetIteratorDirect, then IteratorStepValue and yield. A return completion goes through on_return, which closes only the current inner iterator. Errors are propagated with `?`. The change touches only the ticket file. Target tests went from 12 to 62 passing with 0 regressions. The remaining 2 failures hit a not-implemented StringIteratorPrototype.next outside this file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7743,
+  "type": "result",
+  "duration_ms": 9861,
+  "uuid": "3bf96140-864c-4233-bd43-a3c9bdc7ca56",
+  "ttft_stream_ms": 2070,
+  "time_to_request_ms": 845,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 591,
+    "resume_other": 0,
+    "process_user_input": 9,
+    "input_attachments": 49,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 120,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 148,
+  "time_to_request_cpu_ms": 451,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 719,
+  "process_wall_ms_turn": 9861,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2072,
+  "time_to_request_from_spawn_ms": 4063956,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791983523258.0315,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

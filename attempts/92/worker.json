@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 20878,
+  "stop_reason": "end_turn",
+  "session_id": "8466e050-8e00-4cac-b76f-ebfe2e430c86",
+  "total_cost_usd": 0.00791945,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 21293,
+    "cache_read_input_tokens": 159645,
+    "output_tokens": 3168,
+    "output_tokens_details": {
+      "thinking_tokens": 1299
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21293,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 473,
+        "cache_read_input_tokens": 25420,
+        "cache_creation_input_tokens": 761,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 761
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_015GEVgfrUxBe7Zd7PDdXXUq",
+      "tool_input": {
+        "command": "cargo fmt --check -- crates/kahvi-builtins/src/set/constructor.rs 2>&1 | head -20; echo fmt-exit-$?",
+        "description": "Check formatting of the constructor file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The Set constructor was already implemented in the working tree and matches the spec steps, so I made no changes. Its own tests pass (`constructor.js`, the `set-*` constructor tests except six that call `size`, and `proto-from-ctor-realm.js`). `./t262 built-ins/Set/` is still 280 pass / 484 not implemented; the failures are in other Set methods and `get Set.prototype.size`. Clippy reported no warnings. I could not run `cargo fmt --check` because that command was denied.\n\nBLOCKED: `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries, union and the rest), which the Set constructor tests that check `size` depend on",
+  "ttft_ms": 1737,
+  "type": "result",
+  "duration_ms": 136769,
+  "uuid": "52ff1429-27c5-4500-b952-a1d17dcd2581",
+  "ttft_stream_ms": 1625,
+  "time_to_request_ms": 751,
+  "time_to_request_phases_ms": {
+    "other": 46,
+    "system_prompt": 426,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 17,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 174,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 122,
+  "time_to_request_cpu_ms": 391,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 265,
+  "process_cpu_ms_turn": 4147,
+  "process_wall_ms_turn": 136768,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1626,
+  "time_to_request_from_spawn_ms": 3983899,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791983442321.325,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
