@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 17622,
+  "stop_reason": "tool_use",
+  "session_id": "56ac29f1-b0b2-44c0-98be-edb92bbce90d",
+  "total_cost_usd": 0.0031681799999999996,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4774,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 3536,
+    "output_tokens_details": {
+      "thinking_tokens": 2820
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4774,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3536,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 4774,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4774
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.toTimeString in its own file using existing helpers from crate::support::date. The steps run in spec order: this_time_value with `?` (covers RequireInternalSlot and the [[DateValue]] read), the NaN check returning \\\"Invalid Date\\\", LocalTime(tv), then TimeString(t) followed by TimeZoneString(tv), concatenated in that order. Errors propagate with `?`, nothing is special-cased, and no value is invented beyond the spec's \\\"Invalid Date\\\". I could not inspect the support::date helpers (this_time_value, local_time, time_string, time_zone_string) because they are outside the diff, so I did not verify that time_zone_string computes the real offset rather than returning a fixed string. The test262 gain (+4, 0 regressions) fits a change this size.\",\"problems\":[],\"notes_for_next_attempt\":\"Non-blocking: the stub's spec comments were paraphrased rather than kept verbatim. The header line \\\"This method performs the following steps when called:\\\" was dropped, the names were changed to dateObj/tv/t instead of _dateObj_/_tv_/localTime, and step 2 became a parenthetical about thisTimeValue. CLAUDE.md asks for each step as a comment with the spec's text, so restoring the original comment text is preferable. Separately, check that support::date::time_zone_string derives the offset from the system time zone (SystemTimeZoneIdentifier / GetNamedTimeZoneOffsetNanoseconds) and does not hardcode UTC; that code is outside this diff.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.toTimeString in its own file using existing helpers from crate::support::date. The steps run in spec order: this_time_value with `?` (covers RequireInternalSlot and the [[DateValue]] read), the NaN check returning \"Invalid Date\", LocalTime(tv), then TimeString(t) followed by TimeZoneString(tv), concatenated in that order. Errors propagate with `?`, nothing is special-cased, and no value is invented beyond the spec's \"Invalid Date\". I could not inspect the support::date helpers (this_time_value, local_time, time_string, time_zone_string) because they are outside the diff, so I did not verify that time_zone_string computes the real offset rather than returning a fixed string. The test262 gain (+4, 0 regressions) fits a change this size.",
+    "problems": [],
+    "notes_for_next_attempt": "Non-blocking: the stub's spec comments were paraphrased rather than kept verbatim. The header line \"This method performs the following steps when called:\" was dropped, the names were changed to dateObj/tv/t instead of _dateObj_/_tv_/localTime, and step 2 became a parenthetical about thisTimeValue. CLAUDE.md asks for each step as a comment with the spec's text, so restoring the original comment text is preferable. Separately, check that support::date::time_zone_string derives the offset from the system time zone (SystemTimeZoneIdentifier / GetNamedTimeZoneOffsetNanoseconds) and does not hardcode UTC; that code is outside this diff."
+  },
+  "ttft_ms": 14707,
+  "type": "result",
+  "duration_ms": 17330,
+  "uuid": "ac74fcbc-e8b4-4949-9a7d-77563ef9f074",
+  "ttft_stream_ms": 1916,
+  "time_to_request_ms": 706,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 369,
+    "resume_other": 0,
+    "process_user_input": 92,
+    "input_attachments": 43,
+    "input_hooks": 10,
+    "tool_pool_refresh": 7,
+    "init_message": 21,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 64,
+    "autocompact": 6,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 6,
+    "client_creation": 15,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 106,
+  "time_to_request_cpu_ms": 414,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 119,
+  "process_peak_rss_mib": 247,
+  "process_cpu_ms_turn": 1365,
+  "process_wall_ms_turn": 17329,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1917,
+  "time_to_request_from_spawn_ms": 27102201,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006561905.4019,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

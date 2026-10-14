@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5895,
+  "stop_reason": "tool_use",
+  "session_id": "fa38ef00-5bc3-4522-abff-e168b0873178",
+  "total_cost_usd": 0.0209891,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3506,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 632,
+    "output_tokens_details": {
+      "thinking_tokens": 156
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3506,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 632,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3506,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3506
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec. It binds this as string, then calls the shared create_html helper from prototype_anchor with tag \\\"blink\\\" and an empty attr, and propagates the result with the tail expression. CreateHTML's RequireObjectCoercible and ToString steps are therefore performed by the helper, and errors pass through. The attrValue argument is Value::Undefined instead of the spec's \\\"\\\". That is not observable, because CreateHTML only reads attrValue when attr is non-empty. The gate shows the build and clippy passing and the target going from 8 to 12 passing with no regressions. The only edits are the underscore prefixes on the unused parameters, which are in scope. I did not open prototype_anchor.rs, so I did not check the body of create_html. I am relying on the build passing and the gate results for that.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec. It binds this as string, then calls the shared create_html helper from prototype_anchor with tag \"blink\" and an empty attr, and propagates the result with the tail expression. CreateHTML's RequireObjectCoercible and ToString steps are therefore performed by the helper, and errors pass through. The attrValue argument is Value::Undefined instead of the spec's \"\". That is not observable, because CreateHTML only reads attrValue when attr is non-empty. The gate shows the build and clippy passing and the target going from 8 to 12 passing with no regressions. The only edits are the underscore prefixes on the unused parameters, which are in scope. I did not open prototype_anchor.rs, so I did not check the body of create_html. I am relying on the build passing and the gate results for that.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 2927,
+  "type": "result",
+  "duration_ms": 5736,
+  "uuid": "e47b9de5-9d0a-4f4c-9fd9-f9c5413542e1",
+  "ttft_stream_ms": 1524,
+  "time_to_request_ms": 528,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 364,
+    "resume_other": 1,
+    "process_user_input": 12,
+    "input_attachments": 73,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 1,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 114,
+  "time_to_request_cpu_ms": 405,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 709,
+  "process_wall_ms_turn": 5735,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 60,
+    "cpu_ms": 110,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1526,
+  "time_to_request_from_spawn_ms": 27116937,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006576978.0537,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

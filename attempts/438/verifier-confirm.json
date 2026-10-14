@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5979,
+  "stop_reason": "tool_use",
+  "session_id": "78cd9c0a-6d6e-4d07-9a17-8601cfb53695",
+  "total_cost_usd": 0.0256659,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4778,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 578,
+    "output_tokens_details": {
+      "thinking_tokens": 185
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4778,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 578,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 4778,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4778
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec's six steps in order. this_time_value covers steps 1\u20133, including the TypeError when the receiver is not a Date object. NaN returns \\\"Invalid Date\\\". LocalTime, TimeString and TimeZoneString come from the shared support::date helpers. Errors propagate with `?`. Only the one in-scope file changed. The gate shows +4 passing and no regressions. I did not read the support::date helpers, so I am trusting that they are correct and that this_time_value does the RequireInternalSlot check as the comment says.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec's six steps in order. this_time_value covers steps 1\u20133, including the TypeError when the receiver is not a Date object. NaN returns \"Invalid Date\". LocalTime, TimeString and TimeZoneString come from the shared support::date helpers. Errors propagate with `?`. Only the one in-scope file changed. The gate shows +4 passing and no regressions. I did not read the support::date helpers, so I am trusting that they are correct and that this_time_value does the RequireInternalSlot check as the comment says.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3451,
+  "type": "result",
+  "duration_ms": 5647,
+  "uuid": "363a590a-56c9-4006-b3a4-3e927c2c136b",
+  "ttft_stream_ms": 1752,
+  "time_to_request_ms": 470,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 342,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 19,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 40,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 46,
+  "time_to_request_cpu_ms": 262,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 709,
+  "process_wall_ms_turn": 5646,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1753,
+  "time_to_request_from_spawn_ms": 27120797,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006581086.288,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

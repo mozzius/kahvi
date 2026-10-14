@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7448,
+  "stop_reason": "tool_use",
+  "session_id": "f7f285ac-fd10-4b6e-8997-3e54466cdc8e",
+  "total_cost_usd": 0.00169028,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3518,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1341,
+    "output_tokens_details": {
+      "thinking_tokens": 875
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3518,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1341,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3518,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3518
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.big as the spec describes: step 1 binds `this` to `string`, and step 2 calls CreateHTML with tag \\\"big\\\", an empty attr, and an empty attrValue. It delegates to `create_html` from the sibling prototype_anchor module, which is a reuse of an existing helper rather than a new one. No special-casing, no swallowed errors, and no made-up values. The unused `args` and `new_target` parameters were renamed with underscores, which is harmless. I could not open prototype_anchor.rs, so I did not verify that `create_html` itself implements CreateHTML faithfully (RequireObjectCoercible, ToString ordering, and the attr-empty skip). The gate's +4 passing tests suggest it does work.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.big as the spec describes: step 1 binds `this` to `string`, and step 2 calls CreateHTML with tag \"big\", an empty attr, and an empty attrValue. It delegates to `create_html` from the sibling prototype_anchor module, which is a reuse of an existing helper rather than a new one. No special-casing, no swallowed errors, and no made-up values. The unused `args` and `new_target` parameters were renamed with underscores, which is harmless. I could not open prototype_anchor.rs, so I did not verify that `create_html` itself implements CreateHTML faithfully (RequireObjectCoercible, ToString ordering, and the attr-empty skip). The gate's +4 passing tests suggest it does work.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5764,
+  "type": "result",
+  "duration_ms": 7356,
+  "uuid": "3f5dbc7b-5d21-492d-89c2-5c7394a8db62",
+  "ttft_stream_ms": 1577,
+  "time_to_request_ms": 447,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 271,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 106,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 39,
+  "time_to_request_cpu_ms": 297,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 796,
+  "process_wall_ms_turn": 7356,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1578,
+  "time_to_request_from_spawn_ms": 27107354,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006567660.604,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

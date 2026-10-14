@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5554,
+  "stop_reason": "tool_use",
+  "session_id": "b20daaa0-3bfb-4db9-ae9a-1d11bda8765f",
+  "total_cost_usd": 0.0205123,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3529,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 575,
+    "output_tokens_details": {
+      "thinking_tokens": 201
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3529,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 575,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3529,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3529
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change matches the spec. bold passes this as `string`, then calls `create_html(agent, string, \\\"b\\\", \\\"\\\", empty)` and returns the result with `?` semantics. The gate shows 12/12 target tests passing, 0 regressions and 0 lint flags. I didn't see the `create_html` body (it is in prototype_anchor.rs), so I'm trusting it for the CreateHTML steps. The target tests passing, including the null/undefined `this` cases, is consistent with that.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change matches the spec. bold passes this as `string`, then calls `create_html(agent, string, \"b\", \"\", empty)` and returns the result with `?` semantics. The gate shows 12/12 target tests passing, 0 regressions and 0 lint flags. I didn't see the `create_html` body (it is in prototype_anchor.rs), so I'm trusting it for the CreateHTML steps. The target tests passing, including the null/undefined `this` cases, is consistent with that.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3630,
+  "type": "result",
+  "duration_ms": 5536,
+  "uuid": "3abdb75a-2b8b-44bc-b051-e0b064bbd85d",
+  "ttft_stream_ms": 1581,
+  "time_to_request_ms": 480,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 345,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 51,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 46,
+  "time_to_request_cpu_ms": 321,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 759,
+  "process_wall_ms_turn": 5535,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1582,
+  "time_to_request_from_spawn_ms": 27161456,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006621823.197,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

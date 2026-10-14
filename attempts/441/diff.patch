@@ -1,0 +1,29 @@
+diff --git a/crates/kahvi-builtins/src/string/prototype_bold.rs b/crates/kahvi-builtins/src/string/prototype_bold.rs
+index 2746c2b..8396efa 100644
+--- a/crates/kahvi-builtins/src/string/prototype_bold.rs
++++ b/crates/kahvi-builtins/src/string/prototype_bold.rs
+@@ -4,17 +4,21 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use super::prototype_anchor::create_html;
++
+ /// String.prototype.bold
+ pub(crate) fn prototype_bold(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = args;
+     // This method performs the following steps when called:
+     //
+     // 1. Let _string_ be the *this* value.
++    let string = this;
+     // 2. Return ? CreateHTML(_string_, *"b"*, *""*, *""*).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("String.prototype.bold"))
++    let empty = Value::String(agent.intern(&[]));
++    create_html(agent, string, "b", "", empty)
+ }
