@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 20652,
+  "stop_reason": "tool_use",
+  "session_id": "8cb4c88b-acc6-43f0-9308-25f0b61ffde2",
+  "total_cost_usd": 0.00454578,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7816,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4465,
+    "output_tokens_details": {
+      "thinking_tokens": 3851
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7816,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4465,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7816,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7816
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Set.prototype.isSubsetOf faithfully. RequireInternalSlot is done via this_set. GetSetRecord is a local helper that performs Get(size), ToNumber, the NaN and negative checks, Get(has), the callable check, Get(keys) and the callable check, in spec order. Step 4 compares SetDataSize (len) against the size. Step 5 takes thisSize from slots(), which includes empty entries as the spec's List does. The loop in step 7 skips empty entries, calls has with ToBoolean(? Call(...)), returns false early, and refreshes thisSize only inside the non-empty branch, as step 7.c.iv requires. Step 8 returns true. All errors propagate with ?. Spec step comments are kept above the code. The gate report's 14 failures come from other built-ins (Set/Map size getters, Set.prototype.delete) that throw the engine's not-implemented error, which is acceptable. I found no special-casing, made-up values, swallowed errors or unrelated edits. One thing I could not verify from the diff: pop_roots(mark) is skipped on the ? error path, so correctness there depends on with_roots restoring the root stack on exit.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Set.prototype.isSubsetOf faithfully. RequireInternalSlot is done via this_set. GetSetRecord is a local helper that performs Get(size), ToNumber, the NaN and negative checks, Get(has), the callable check, Get(keys) and the callable check, in spec order. Step 4 compares SetDataSize (len) against the size. Step 5 takes thisSize from slots(), which includes empty entries as the spec's List does. The loop in step 7 skips empty entries, calls has with ToBoolean(? Call(...)), returns false early, and refreshes thisSize only inside the non-empty branch, as step 7.c.iv requires. Step 8 returns true. All errors propagate with ?. Spec step comments are kept above the code. The gate report's 14 failures come from other built-ins (Set/Map size getters, Set.prototype.delete) that throw the engine's not-implemented error, which is acceptable. I found no special-casing, made-up values, swallowed errors or unrelated edits. One thing I could not verify from the diff: pop_roots(mark) is skipped on the ? error path, so correctness there depends on with_roots restoring the root stack on exit.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 18458,
+  "type": "result",
+  "duration_ms": 20679,
+  "uuid": "2517febd-3caa-4fde-b496-d2f995a62c44",
+  "ttft_stream_ms": 1504,
+  "time_to_request_ms": 515,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 356,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 95,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 43,
+  "time_to_request_cpu_ms": 302,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 1119,
+  "process_wall_ms_turn": 20679,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1505,
+  "time_to_request_from_spawn_ms": 20490915,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999951254.7395,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

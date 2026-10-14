@@ -1,0 +1,27 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "[confirming verifier overruled the screen] The spec steps are implemented in order with correct `?` propagation, and the test262 target passes (42 of 42). However, `string` is not rooted while user code can run in steps 4 and 6, which is a GC safety bug. The project requires GC-affecting changes to pass under KAHVI_GC_STRESS=1.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/string/prototype_starts_with.rs",
+      "line": 20,
+      "question": "contradicts_spec",
+      "issue": "`string` (from step 3 ToString) is held in a Rust local but not rooted while step 4 (`is_regexp`, which does Get(@@match) and can run a getter or proxy trap) and step 6 (`to_string(search_string_arg)`, which can call user toString/valueOf) run. A GC during those calls can collect `string`. The code's own comment says rooting is needed around user-code conversions, but `with_roots` only starts after step 6. `search_string` is also unrooted at its creation, though nothing runs user code between that and `with_roots`."
+    }
+  ],
+  "notes_for_next_attempt": "Root `string` before step 4. For example, wrap steps 4-16 in `with_roots(&[Value::String(string)], ...)`. Inside that closure, call ToString(searchString) and then root `search_string` as well, either with a nested `with_roots` or by building the root set incrementally. The rest of the step order and the `?` handling are correct and can stay. Check the result with KAHVI_GC_STRESS=1 on built-ins/String/prototype/startsWith/. Also confirm that `agent.str()` returns UTF-16 code units. The slice indexing is only correct if it does, though the test262 target passing suggests it does.",
+  "model": "claude-sonnet-5-5",
+  "defects": [
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}
