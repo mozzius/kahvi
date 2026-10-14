@@ -1,6 +1,6 @@
 //! ES module loading from the file system. Specifiers are paths relative to
-//! the importing module (`./x.js`, `../x.js`), absolute paths, or `file:`
-//! URLs. Bare specifiers (packages) are not resolved yet.
+//! the importing module (`./x.js`, `../x.js`), absolute paths, `file:` URLs,
+//! or bare package specifiers resolved from `node_modules` (`package.rs`).
 
 use std::path::{Path, PathBuf};
 
@@ -42,10 +42,16 @@ pub fn resolve(referrer: &str, specifier: &str) -> Result<PathBuf, String> {
             .map(Path::to_path_buf)
             .unwrap_or_default();
         base.join(specifier)
-    } else {
+    } else if specifier.starts_with('#') {
         return Err(format!(
-            "cannot resolve '{specifier}': package imports are not supported yet (use a relative path)"
+            "cannot resolve '{specifier}': package.json \"imports\" are not supported"
         ));
+    } else {
+        let base = Path::new(referrer)
+            .parent()
+            .map(Path::to_path_buf)
+            .unwrap_or_default();
+        crate::package::resolve_package(&base, specifier)?
     };
     path.canonicalize()
         .map_err(|e| format!("cannot load module '{specifier}': {e}"))
