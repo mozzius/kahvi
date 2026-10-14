@@ -935,6 +935,54 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         let key = key_of(agent, key);
         define(agent, o, key, value, w, e, c);
     }
+    // Array.prototype [ %Symbol.unscopables% ] (§23.1.3.41).
+    if let Some(&array_proto) = agent.realm(realm).intrinsics.get("%Array.prototype%") {
+        // 1. Let unscopableList be OrdinaryObjectCreate(null).
+        let unscopable_list = agent.object_with_kind(None, ObjectKind::Ordinary);
+        // 2-17. Perform ! CreateDataPropertyOrThrow(unscopableList, name, true) for each name.
+        for name in [
+            "at",
+            "copyWithin",
+            "entries",
+            "fill",
+            "find",
+            "findIndex",
+            "findLast",
+            "findLastIndex",
+            "flat",
+            "flatMap",
+            "includes",
+            "keys",
+            "toReversed",
+            "toSorted",
+            "toSpliced",
+            "values",
+        ] {
+            let k = agent.key(name);
+            define(
+                agent,
+                unscopable_list,
+                k,
+                Value::Boolean(true),
+                true,
+                true,
+                true,
+            );
+        }
+        // 18. Return unscopableList.
+        // { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: true }
+        let k = PropertyKey::Symbol(agent.symbols_wk.unscopables);
+        define(
+            agent,
+            array_proto,
+            k,
+            Value::Object(unscopable_list),
+            false,
+            false,
+            true,
+        );
+    }
+
     // BYTES_PER_ELEMENT of each TypedArray constructor and prototype (§23.2.6.1, §23.2.7.1).
     for kind in kahvi_core::object::typed_array::ALL_ELEMENT_TYPES {
         let size = Value::Number(kind.size() as f64);
