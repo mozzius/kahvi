@@ -1,0 +1,35 @@
+{
+  "ticket": "B-global-decode-uri",
+  "base": "857287cb9ed845fd377de20b02b80021a1c72917",
+  "head": "492e2ec913f4a2c4d16793844bd136981b03dea0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/global/decode_uri.rs",
+      "added": 120,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 110,
+    "before": 20,
+    "after": 108,
+    "new_passes": 88,
+    "regressions": [],
+    "timeout": 2,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/decodeURI/S15.1.3.1_A2.5_T1.js:sloppy  timed out after 10s",
+      "built-ins/decodeURI/S15.1.3.1_A2.5_T1.js:strict  timed out after 10s"
+    ]
+  },
+  "decision": "pass"
+}

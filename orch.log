@@ -7,3 +7,8 @@
 [03:21:10] B-reg-exp-prototype-symbol-match: full test262 run for merge
 [03:21:30] B-global-decode-uri-component: verifier: accept The diff implements decodeURIComponent per the pinned spec. It does ToString on the argument, then Decode with an empty preserveEscapeSet, and follows
 [03:32:26] B-reg-exp-prototype-symbol-match: merged (+12, 65635 total)
+[03:32:30] B-global-decode-uri-component: full test262 run for merge
+[03:32:31] B-global-decode-uri: attempt on slot 1 with haiku
+[03:34:29] B-global-decode-uri: attempt 54 finished ($0.016, 22 turns)
+[03:35:41] B-global-decode-uri: verifier: accept The diff implements decodeURI in crates/kahvi-builtins/src/global/decode_uri.rs and follows the spec closely. decodeURI does ToString(encodedURI) firs
+[03:44:17] B-global-decode-uri-component: merged (+90, 65725 total)

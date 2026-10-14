@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 62011,
+  "stop_reason": "end_turn",
+  "session_id": "19ace6c6-3663-4da8-b11a-cc6a7b05fa8e",
+  "total_cost_usd": 0.01605726,
+  "usage": {
+    "input_tokens": 30,
+    "cache_creation_input_tokens": 27648,
+    "cache_read_input_tokens": 343976,
+    "output_tokens": 13394,
+    "output_tokens_details": {
+      "thinking_tokens": 6737
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27648,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 318,
+        "cache_read_input_tokens": 34789,
+        "cache_creation_input_tokens": 339,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 339
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01SR8VtUZE2xcFynAE7VVs9u",
+      "tool_input": {
+        "command": "printf 'var c=0; for (var a=0;a<64;a++) for (var b=0;b<64;b++) for (var d=0;d<64;d++) for (var e=0;e<64;e++) { c++; }\\n' > /home/user/kahvi/work/slots/slot-1/../slot-1/scratch_loop.js 2>/dev/null || true; printf 'var c=0; for (var a=0;a<64;a++) for (var b=0;b<64;b++) for (var d=0;d<64;d++) for (var e=0;e<64;e++) { c++; }\\n' > /tmp/claude-0/-home-user-kahvi-work-slots-slot-1/19ace6c6-3663-4da8-b11a-cc6a7b05fa8e/scratchpad/loop.js; time target/debug/kahvi /tmp/claude-0/-home-user-kahvi-work-slots-slot-1/19ace6c6-3663-4da8-b11a-cc6a7b05fa8e/scratchpad/loop.js",
+        "description": "Time a bare 1M-iteration loop in the engine"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `decodeURI` in `crates/kahvi-builtins/src/global/decode_uri.rs`, with each spec step as a comment above its code. 108 of 110 `built-ins/decodeURI/` runs pass, with no failures and clippy clean. The remaining two are timeouts on `S15.1.3.1_A2.5_T1` (sloppy and strict), a test that runs about a million loop iterations; I believe the timeout is interpreter speed rather than this code, but I could not confirm that because a timing command was denied.\n\nThe `Decode` abstract operation did not exist in the engine, so I wrote it in this file as a `pub(crate)` helper. `decodeURIComponent` needs the same helper, so the architect may want to move it into `support/` when that ticket lands. Nothing outside this file was changed.\n\nBLOCKED: none for `decodeURI` itself; the two timeouts need an engine performance check on the 1M-iteration loop.",
+  "ttft_ms": 1503,
+  "type": "result",
+  "duration_ms": 116462,
+  "uuid": "81808634-92ac-4907-8071-971f4d4dec9e",
+  "ttft_stream_ms": 1277,
+  "time_to_request_ms": 192,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 12,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 107,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 40,
+  "time_to_request_cpu_ms": 165,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 253,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 271,
+  "process_cpu_ms_turn": 3724,
+  "process_wall_ms_turn": 116461,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1277,
+  "time_to_request_from_spawn_ms": 874241,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791948751431.9243,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.78,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
