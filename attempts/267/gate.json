@@ -1,0 +1,41 @@
+{
+  "ticket": "B-map-group-by",
+  "base": "bca19e0e817af4886cbb173a4828ce44935217ac",
+  "head": "ee881dfee1c9cf394079bcc75caef81f66647290",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/group_by.rs",
+      "added": 100,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 4,
+    "after": 20,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Map/groupBy/evenOdd.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/evenOdd.js:strict  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/groupLength.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/groupLength.js:strict  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/string.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/string.js:strict  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/toPropertyKey.js:sloppy  Uncaught InternalError: not implemented: Map.prototype.keys",
+      "built-ins/Map/groupBy/toPropertyKey.js:strict  Uncaught InternalError: not implemented: Map.prototype.keys"
+    ]
+  },
+  "decision": "pass"
+}
