@@ -59,6 +59,14 @@ def cmd_run(args):
         pipeline.STACKER = stacker
         stacker.start()
         merges = stacker
+        # Accepted attempts the merge bot never got to go on the stack.
+        for row in unmerged:
+            a = db.one("SELECT * FROM attempts WHERE id = ?", row["aid"])
+            if row["ticket"] in pool and a["head"]:
+                log(f"{row['ticket']}: onto the stack (attempt {a['id']}, accepted before the switch)")
+                stacker.accept(pool[row["ticket"]], pipeline.worker.Attempt(
+                    a["id"], "", a["base"], a["head"], 0.0, 0, None, None,
+                    str(pipeline.worker.ATTEMPTS / str(a["id"]))), "accept")
         unmerged = []
     else:
         merges = pipeline.MergeQueue(cfg, db)
