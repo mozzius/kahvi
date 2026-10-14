@@ -2852,3 +2852,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:07:26] B-date-prototype-get-day: verifier: accept The diff implements Date.prototype.getDay in its own file. It calls date::this_time_value(agent, this)? for steps 1-3, which covers RequireInternalSlo
 [19:07:41] B-date-prototype-get-minutes: attempt on slot 0 with haiku
 [19:07:44] B-date-prototype-get-hours: verifier: accept Diff implements Date.prototype.getHours in its own file, following the spec steps. Step 1-3 are delegated to `date::this_time_value(agent, this)?`, wh
+[19:07:47] B-date-prototype-get-month: attempt on slot 2 with haiku
+[19:07:50] B-date-prototype-get-milliseconds: verifier: accept The change implements Date.prototype.getMilliseconds in its own file. It calls date::this_time_value (which should cover steps 1-3: this-value, Requir
