@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 23095,
+  "stop_reason": "end_turn",
+  "session_id": "97291957-f6e7-4c1a-a24a-dc8385ec0456",
+  "total_cost_usd": 0.0073081,
+  "usage": {
+    "input_tokens": 13,
+    "cache_creation_input_tokens": 18711,
+    "cache_read_input_tokens": 136300,
+    "output_tokens": 3539,
+    "output_tokens_details": {
+      "thinking_tokens": 1836
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18711,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 493,
+        "cache_read_input_tokens": 25661,
+        "cache_creation_input_tokens": 693,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 693
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01RBp8F1mTTEexkBrFQ9BFEL",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2024 crates/kahvi-builtins/src/string/prototype_locale_compare.rs; echo \"rustfmt exit: $?\"",
+        "description": "Check rustfmt on the changed file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.localeCompare` is implemented in `crates/kahvi-builtins/src/string/prototype_locale_compare.rs`. All 26 `built-ins/String/prototype/localeCompare/` tests pass, and `cargo clippy` is clean. The file is staged, not committed.\n\nChanges from the previous attempt:\n- The spec NOTE example comments are back to the stub's exact text.\n- The steps run in spec order, with `?` on `RequireObjectCoercible` and both `ToString` calls.\n- The comparison uses NFC code units, which gives 0 for canonically equivalent strings.\n- The local `to_code_points`/`from_code_points` helpers stay, because `kahvi_core::ops` has no UTF-16 code-point helper. `prototype_normalize.rs` has private copies of the same helpers, so the duplication could later move into a shared place.\n- Lone surrogates pass through `normalize_code_points` without a panic: the decomposition lookup is a bounds-checked binary search.\n\nI could not run `rustfmt --check` directly because that command was denied. The earlier `cargo fmt --check` printed no diff.\n\nBLOCKED: none",
+  "ttft_ms": 1672,
+  "type": "result",
+  "duration_ms": 35674,
+  "uuid": "b69ec2bd-ddba-46b8-882b-2586e3fd61f3",
+  "ttft_stream_ms": 1422,
+  "time_to_request_ms": 500,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 313,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 87,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 57,
+  "time_to_request_cpu_ms": 421,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 3392,
+  "process_wall_ms_turn": 35673,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1423,
+  "time_to_request_from_spawn_ms": 25495114,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004955253.9587,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.37,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

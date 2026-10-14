@@ -2873,3 +2873,6 @@ test262 at last merge: 74823/81183 runs passing
 [19:09:36] B-date-prototype-get-utc-date: verifier: accept The diff implements Date.prototype.getUTCDate in its own file, following the five spec steps. It gets the this value's time value through date::this_t
 [19:09:39] B-date-prototype-get-utc-hours: attempt on slot 2 with haiku
 [19:09:47] B-date-prototype-get-utc-day: verifier: accept The diff implements Date.prototype.getUTCDay in its own file only. Step 2 goes through date::this_time_value(agent, this)?, which should be the Requir
+[19:09:48] B-date-prototype-get-utc-full-year: verifier: accept The diff implements Date.prototype.getUTCFullYear in its own file. It gets the time value through `date::this_time_value(agent, this)?`, which should 
+[19:09:50] B-date-prototype-get-utc-milliseconds: attempt on slot 0 with haiku
+[19:09:52] B-string-prototype-locale-compare: attempt 404 finished ($0.007, 8 turns)
