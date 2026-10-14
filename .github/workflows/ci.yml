@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@1.97.0
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
       # vendor/ecma262 is only needed by ./spec, so skip it.
       - run: git submodule update --init --depth 1 vendor/test262
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@1.97.0
       - uses: Swatinem/rust-cache@v2
       # Full suite against the ratchet: exit 1 on any regression, 3 if the
       # canaries say the run is invalid. Hosted runners are slower than the
