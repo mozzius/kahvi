@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11667,
+  "stop_reason": "end_turn",
+  "session_id": "a586677d-445d-4276-b9c0-d19037fcd0da",
+  "total_cost_usd": 0.00552508,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 16889,
+    "cache_read_input_tokens": 90798,
+    "output_tokens": 1565,
+    "output_tokens_details": {
+      "thinking_tokens": 386
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16889,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 258,
+        "cache_read_input_tokens": 24157,
+        "cache_creation_input_tokens": 375,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 375
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`DataView.prototype.setInt32` is already fully implemented in `crates/kahvi-builtins/src/data_view/prototype_set_int32.rs`, so I made no changes. `./t262 built-ins/DataView/prototype/setInt32/` passes 46 of 46 runs with 0 failures, which covers the 32 files the ticket counts. `cargo clippy` reports nothing for the crate, and `cargo fmt --check` passes on the file.\n\nThe previous BLOCKED report was about `getInt32` being a stub. In this worktree `prototype_get_int32.rs` is implemented, so that blocker no longer applies.",
+  "ttft_ms": 1966,
+  "type": "result",
+  "duration_ms": 16405,
+  "uuid": "1e04a561-ba14-4a1e-9aeb-af9cd5af31bc",
+  "ttft_stream_ms": 1659,
+  "time_to_request_ms": 794,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 428,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 19,
+    "input_hooks": 9,
+    "tool_pool_refresh": 4,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 5,
+    "model_config_wait": 205,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 18,
+    "message_normalization": 3,
+    "client_creation": 26,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 123,
+  "time_to_request_cpu_ms": 397,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2109,
+  "process_wall_ms_turn": 16404,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1660,
+  "time_to_request_from_spawn_ms": 25173843,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004633465.454,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.32,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
