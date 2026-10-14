@@ -4,29 +4,104 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::regexp::RegExpData;
+
 /// get RegExp.prototype.source
 pub(crate) fn prototype_get_source(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // `RegExp.prototype.source` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
     //
     // 1. Let _regexp_ be the *this* value.
+    let regexp = this;
     // 2. If _regexp_ is not an Object, throw a *TypeError* exception.
+    let Value::Object(regexp) = regexp else {
+        return Err(agent.throw_type_error("RegExp.prototype.source called on a non-object"));
+    };
     // 3. If _regexp_ does not have an [[OriginalSource]] internal slot, then
-    //    a. If SameValue(_regexp_, %RegExp.prototype%) is *true*, return *"(?:)"*.
-    //    b. Throw a *TypeError* exception.
+    let data = match agent.native::<RegExpData>(regexp) {
+        Some(data) => data,
+        None => {
+            // a. If SameValue(_regexp_, %RegExp.prototype%) is *true*, return *"(?:)"*.
+            let proto = agent.intrinsic("%RegExp.prototype%");
+            if ops::same_value(agent, Value::Object(regexp), Value::Object(proto)) {
+                return Ok(Value::String(agent.string("(?:)")));
+            }
+            // b. Throw a *TypeError* exception.
+            return Err(agent.throw_type_error(
+                "RegExp.prototype.source called on an object that is not a RegExp",
+            ));
+        }
+    };
     // 4. Assert: _regexp_ has an [[OriginalFlags]] internal slot.
     // 5. Let _source_ be _regexp_.[[OriginalSource]].
+    let source = data.original_source;
     // 6. Let _flags_ be _regexp_.[[OriginalFlags]].
     // 7. Return EscapeRegExpPattern(_source_, _flags_).
     //
-    // [subclause sec-escaperegexppattern: EscapeRegExpPattern (
-    // _pattern_: a String,
-    // _flags_: a String,
-    // ): a String]
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get RegExp.prototype.source"))
+    // The escaping below does not depend on the flags: `\/` and the escaped line
+    // terminators are valid in every pattern mode.
+    Ok(Value::String(escape_regexp_pattern(agent, source)))
+}
+
+/// EscapeRegExpPattern(pattern, flags) (§22.2.6.13.1)
+fn escape_regexp_pattern(agent: &mut Agent, pattern: JsString) -> JsString {
+    // 1-3. Let patternSymbol be Pattern[+UnicodeMode, +UnicodeSetsMode] when flags contains "v",
+    //      Pattern[+UnicodeMode, ~UnicodeSetsMode] when it contains "u", and
+    //      Pattern[~UnicodeMode, ~UnicodeSetsMode] otherwise. The escapes produced below are
+    //      valid in each of these, so the result is the same for all flags.
+    //
+    // 4. Let escapedPattern be a String in the form of a patternSymbol equivalent to pattern
+    //    interpreted as UTF-16 encoded Unicode code points, in which certain code points are
+    //    escaped as described below.
+    //
+    // 6. If pattern is the empty String, this specification can be met by letting escapedPattern be "(?:)".
+    if agent.str(pattern).is_empty() {
+        return agent.string("(?:)");
+    }
+    // 5. The code points `/` or any LineTerminator occurring in the pattern shall be escaped in
+    //    escapedPattern as necessary to ensure that the string-concatenation of "/", escapedPattern,
+    //    "/", and flags can be parsed as a RegularExpressionLiteral.
+    let units = agent.str(pattern);
+    let mut escaped: Vec<u16> = Vec::with_capacity(units.len());
+    let mut i = 0;
+    while let Some(&u) = units.get(i) {
+        i += 1;
+        if u == u16::from(b'\\') {
+            // A backslash followed by a LineTerminator is a literal LineTerminator, so the
+            // backslash is replaced by the escape for that character instead of being kept.
+            match units.get(i).copied() {
+                Some(next) => {
+                    i += 1;
+                    match line_terminator_escape(next) {
+                        Some(esc) => escaped.extend(esc.encode_utf16()),
+                        None => escaped.extend([u, next]),
+                    }
+                }
+                None => escaped.push(u),
+            }
+        } else if u == u16::from(b'/') {
+            escaped.extend([u16::from(b'\\'), u]);
+        } else if let Some(esc) = line_terminator_escape(u) {
+            escaped.extend(esc.encode_utf16());
+        } else {
+            escaped.push(u);
+        }
+    }
+    // 6. Return escapedPattern.
+    agent.intern(&escaped)
+}
+
+/// The escape sequence for a LineTerminator code unit, if it is one.
+fn line_terminator_escape(u: u16) -> Option<&'static str> {
+    match u {
+        0x000A => Some("\\n"),
+        0x000D => Some("\\r"),
+        0x2028 => Some("\\u2028"),
+        0x2029 => Some("\\u2029"),
+        _ => None,
+    }
 }
