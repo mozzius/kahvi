@@ -1,0 +1,32 @@
+{
+  "ticket": "B-async-disposable-stack-prototype-defer",
+  "base": "9ae3f6c3e66be0c347d48dcd4995a2cc734f0df5",
+  "head": "2c2f238d6728959d8e5166aaa7a17d1dad1802c2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/async_disposable_stack/prototype_defer.rs",
+      "added": 24,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

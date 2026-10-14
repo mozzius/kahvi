@@ -1,0 +1,32 @@
+{
+  "ticket": "B-data-view-prototype-get-uint8",
+  "base": "46232c1b0ca1afa9e3d35c8b946c9549e05c6d96",
+  "head": "725c7e00c719eb32a4f293424011f32a7a42af38",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_uint8.rs",
+      "added": 12,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 6,
+    "after": 34,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
