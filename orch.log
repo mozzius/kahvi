@@ -1918,3 +1918,9 @@ test262 at last merge: 74349/81183 runs passing
 [18:46:46] B-array-buffer-prototype-get-max-byte-length: verifier: accept The change implements get ArrayBuffer.prototype.maxByteLength on every reachable path. Step 2 (RequireInternalSlot) throws a TypeError for non-objects
 [18:46:49] B-date-prototype-get-full-year: attempt on slot 2 with haiku
 [18:46:54] B-typed-array-prototype-to-sorted: verifier: accept The diff implements %TypedArray%.prototype.toSorted in the single in-scope file, following the spec steps in order. Step 1 comparator check, ValidateT
+[18:46:57] B-array-buffer-prototype-get-detached: attempt 336 finished ($0.105, 14 turns)
+[18:46:57] B-date-prototype-to-string: attempt on slot 3 with haiku
+[18:47:30] B-date-prototype-get-full-year: attempt 338 finished ($0.008, 12 turns)
+[18:47:35] B-async-disposable-stack-prototype-move: attempt 337 finished ($0.012, 17 turns)
+[18:47:37] B-date-prototype-to-string: attempt 339 finished ($0.006, 8 turns)
+[18:47:42] B-array-buffer-prototype-get-detached: verifier: accept The change implements the get ArrayBuffer.prototype.detached steps in the single in-scope file. Step 2 (RequireInternalSlot for [[ArrayBufferData]]) i

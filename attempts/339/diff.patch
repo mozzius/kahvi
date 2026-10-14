@@ -1,0 +1,37 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_to_string.rs b/crates/kahvi-builtins/src/date/prototype_to_string.rs
+index 9775518..d847b87 100644
+--- a/crates/kahvi-builtins/src/date/prototype_to_string.rs
++++ b/crates/kahvi-builtins/src/date/prototype_to_string.rs
+@@ -2,14 +2,15 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.tostring
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.toString
+ pub(crate) fn prototype_to_string(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+@@ -34,6 +35,12 @@ pub(crate) fn prototype_to_string(
+     // [subclause sec-todatestring: ToDateString (
+     // _tv_: an integral Number or *NaN*,
+     // ): a String]
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.toString"))
++    // 1. Let dateObj be the this value.
++    let date_obj = this;
++    // 2. Perform ? RequireInternalSlot(dateObj, [[DateValue]]).
++    // 3. Let tv be dateObj.[[DateValue]].
++    let tv = date::this_time_value(agent, date_obj)?;
++    // 4. Return ToDateString(tv).
++    let s = date::to_date_string(agent, tv);
++    Ok(Value::String(agent.string(&s)))
+ }
