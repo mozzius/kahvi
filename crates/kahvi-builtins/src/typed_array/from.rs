@@ -4,52 +4,104 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::typed_array::{typed_array_create_from_constructor, typed_array_set_element};
+
 /// TypedArray.from
 pub(crate) fn from(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
+    let source = args.get_or_undefined(0);
+    let mapper = args.get_or_undefined(1);
+    let this_arg = args.get_or_undefined(2);
     // 1. Let _ctor_ be the *this* value.
+    let ctor_value = this;
     // 2. If IsConstructor(_ctor_) is *false*, throw a *TypeError* exception.
+    if !ops::is_constructor(agent, ctor_value) {
+        return Err(agent.throw_type_error("TypedArray.from: this is not a constructor"));
+    }
+    let Value::Object(ctor) = ctor_value else {
+        return Err(agent.throw_type_error("TypedArray.from: this is not a constructor"));
+    };
     // 3. If _mapper_ is *undefined*, then
-    //    a. Let _mapping_ be *false*.
-    // 4. Else,
-    //    a. If IsCallable(_mapper_) is *false*, throw a *TypeError* exception.
-    //    b. Let _mapping_ be *true*.
+    let mapping = if mapper.is_undefined() {
+        // a. Let _mapping_ be *false*.
+        false
+    } else {
+        // 4. Else,
+        // a. If IsCallable(_mapper_) is *false*, throw a *TypeError* exception.
+        if !ops::is_callable(agent, mapper) {
+            return Err(agent.throw_type_error("TypedArray.from: mapper is not a function"));
+        }
+        // b. Let _mapping_ be *true*.
+        true
+    };
     // 5. Let _usingIterator_ be ? GetMethod(_source_, %Symbol.iterator%).
+    let iterator_key = PropertyKey::Symbol(agent.symbols_wk.iterator);
+    let using_iterator = ops::get_method(agent, source, iterator_key)?;
     // 6. If _usingIterator_ is not *undefined*, then
-    //    a. Let _values_ be ? IteratorToList(? GetIteratorFromMethod(_source_, _usingIterator_)).
-    //    b. Let _length_ be the number of elements in _values_.
-    //    c. Let _targetObj_ be ? TypedArrayCreateFromConstructor(_ctor_, « 𝔽(_length_) »).
-    //    d. Let _k_ be 0.
-    //    e. Repeat, while _k_ < _length_,
-    //       i. Let _kValue_ be _values_[_k_].
-    //       ii. If _mapping_ is *true*, then
-    //          1. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, « _kValue_, 𝔽(_k_) »).
-    //       iii. Else,
-    //          1. Let _mappedValue_ be _kValue_.
-    //       iv. Perform ? TypedArraySetElement(_targetObj_, 𝔽(_k_), _mappedValue_).
-    //       v. Set _k_ to _k_ + 1.
-    //    f. Return _targetObj_.
+    if !using_iterator.is_undefined() {
+        // a. Let _values_ be ? IteratorToList(? GetIteratorFromMethod(_source_, _usingIterator_)).
+        let mut record = ops::get_iterator_from_method(agent, source, using_iterator)?;
+        let values = ops::iterator_to_list(agent, &mut record)?;
+        // b. Let _length_ be the number of elements in _values_.
+        let length = values.len() as f64;
+        // c. Let _targetObj_ be ? TypedArrayCreateFromConstructor(_ctor_, « 𝔽(_length_) »).
+        let target_obj =
+            typed_array_create_from_constructor(agent, ctor, &[Value::Number(length)])?;
+        // d. Let _k_ be 0.
+        let mut k = 0.0;
+        // e. Repeat, while _k_ < _length_,
+        for k_value in values {
+            // i. Let _kValue_ be _values_[_k_].
+            // ii. If _mapping_ is *true*, then
+            let mapped_value = if mapping {
+                // 1. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, « _kValue_, 𝔽(_k_) »).
+                ops::call(agent, mapper, this_arg, &[k_value, Value::Number(k)])?
+            } else {
+                // iii. Else,
+                // 1. Let _mappedValue_ be _kValue_.
+                k_value
+            };
+            // iv. Perform ? TypedArraySetElement(_targetObj_, 𝔽(_k_), _mappedValue_).
+            typed_array_set_element(agent, target_obj, k, mapped_value)?;
+            // v. Set _k_ to _k_ + 1.
+            k += 1.0;
+        }
+        // f. Return _targetObj_.
+        return Ok(Value::Object(target_obj));
+    }
     // 7. NOTE: _source_ is not an iterable object, so assume it is already an array-like object.
     // 8. Let _arrayLike_ be ! ToObject(_source_).
+    let array_like = ops::to_object(agent, source)?;
     // 9. Let _length_ be ? LengthOfArrayLike(_arrayLike_).
+    let length = ops::length_of_array_like(agent, array_like)?;
     // 10. Let _targetObj_ be ? TypedArrayCreateFromConstructor(_ctor_, « 𝔽(_length_) »).
+    let target_obj = typed_array_create_from_constructor(agent, ctor, &[Value::Number(length)])?;
     // 11. Let _k_ be 0.
+    let mut k = 0.0;
     // 12. Repeat, while _k_ < _length_,
-    //    a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
-    //    b. Let _kValue_ be ? Get(_arrayLike_, _propertyKey_).
-    //    c. If _mapping_ is *true*, then
-    //       i. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, « _kValue_, 𝔽(_k_) »).
-    //    d. Else,
-    //       i. Let _mappedValue_ be _kValue_.
-    //    e. Perform ? TypedArraySetElement(_targetObj_, 𝔽(_k_), _mappedValue_).
-    //    f. Set _k_ to _k_ + 1.
+    while k < length {
+        // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
+        let property_key = agent.key_from_index(k);
+        // b. Let _kValue_ be ? Get(_arrayLike_, _propertyKey_).
+        let k_value = ops::get(agent, array_like, property_key)?;
+        // c. If _mapping_ is *true*, then
+        let mapped_value = if mapping {
+            // i. Let _mappedValue_ be ? Call(_mapper_, _thisArg_, « _kValue_, 𝔽(_k_) »).
+            ops::call(agent, mapper, this_arg, &[k_value, Value::Number(k)])?
+        } else {
+            // d. Else,
+            // i. Let _mappedValue_ be _kValue_.
+            k_value
+        };
+        // e. Perform ? TypedArraySetElement(_targetObj_, 𝔽(_k_), _mappedValue_).
+        typed_array_set_element(agent, target_obj, k, mapped_value)?;
+        // f. Set _k_ to _k_ + 1.
+        k += 1.0;
+    }
     // 13. Return _targetObj_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("TypedArray.from"))
+    Ok(Value::Object(target_obj))
 }
