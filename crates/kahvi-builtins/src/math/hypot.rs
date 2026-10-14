@@ -7,9 +7,9 @@ use kahvi_core::prelude::*;
 /// Math.hypot
 pub(crate) fn hypot(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // Given zero or more arguments, this function returns the square root of the sum of squares of its arguments.
     // It performs the following steps when called:
@@ -30,6 +30,50 @@ pub(crate) fn hypot(
     // The *"length"* property of this function is *2*_𝔽.
     // NOTE:
     // Implementations should take care to avoid the loss of precision from overflows and underflows that are prone to occur in naive implementations when this function is called with two or more arguments.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.hypot"))
+    // 1. Let _coerced_ be a new empty List.
+    let mut coerced: Vec<f64> = Vec::with_capacity(args.len());
+    // 2. For each element _arg_ of _args_, do
+    for arg in args.iter().copied() {
+        // a. Let _n_ be ? ToNumber(_arg_).
+        let n = ops::to_number(agent, arg)?;
+        // b. Append _n_ to _coerced_.
+        coerced.push(n);
+    }
+    // 3. For each element _number_ of _coerced_, do
+    for number in coerced.iter().copied() {
+        // a. If _number_ is either *+∞*_𝔽 or *-∞*_𝔽, return *+∞*_𝔽.
+        if number.is_infinite() {
+            return Ok(Value::Number(f64::INFINITY));
+        }
+    }
+    // 4. Let _onlyZero_ be *true*.
+    let mut only_zero = true;
+    // 5. For each element _number_ of _coerced_, do
+    for number in coerced.iter().copied() {
+        // a. If _number_ is *NaN*, return *NaN*.
+        if number.is_nan() {
+            return Ok(Value::Number(f64::NAN));
+        }
+        // b. If _number_ is neither *+0*_𝔽 nor *-0*_𝔽, set _onlyZero_ to *false*.
+        if number != 0.0 {
+            only_zero = false;
+        }
+    }
+    // 6. If _onlyZero_ is *true*, return *+0*_𝔽.
+    if only_zero {
+        return Ok(Value::Number(0.0));
+    }
+    // 7. Return an implementation-approximated Number value representing the square root of the sum of squares of the mathematical values of the elements of _coerced_.
+    // Scale by the largest magnitude so that squaring cannot overflow or underflow.
+    let largest = coerced
+        .iter()
+        .fold(0.0_f64, |acc, n| if n.abs() > acc { n.abs() } else { acc });
+    let sum_of_squares: f64 = coerced
+        .iter()
+        .map(|n| {
+            let scaled = n / largest;
+            scaled * scaled
+        })
+        .sum();
+    Ok(Value::Number(sum_of_squares.sqrt() * largest))
 }
