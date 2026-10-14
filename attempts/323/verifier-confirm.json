@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6611,
+  "stop_reason": "tool_use",
+  "session_id": "fc7f5501-0143-45ba-ad6a-7bb33662bd3d",
+  "total_cost_usd": 0.025464900000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4483,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 679,
+    "output_tokens_details": {
+      "thinking_tokens": 312
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4483,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 679,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4483,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4483
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.at as the spec describes. It keeps the steps in order, each with its spec comment. It propagates every `?` error. It adds a local ToAbsoluteIndex helper, which the ticket allows when `ops` lacks one. Every `k` case (negative, \u00b1Infinity, out of range) is handled, and `k` is only cast to usize after the range check. The gate report shows 22 of 22 test262 runs passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.at as the spec describes. It keeps the steps in order, each with its spec comment. It propagates every `?` error. It adds a local ToAbsoluteIndex helper, which the ticket allows when `ops` lacks one. Every `k` case (negative, \u00b1Infinity, out of range) is handled, and `k` is only cast to usize after the range check. The gate report shows 22 of 22 test262 runs passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4595,
+  "type": "result",
+  "duration_ms": 6419,
+  "uuid": "9e6c8485-d765-414f-a696-decc21576e85",
+  "ttft_stream_ms": 1843,
+  "time_to_request_ms": 585,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 346,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 18,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 120,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 92,
+  "time_to_request_cpu_ms": 370,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 706,
+  "process_wall_ms_turn": 6418,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1844,
+  "time_to_request_from_spawn_ms": 23795066,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003254793.7822,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.19,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
