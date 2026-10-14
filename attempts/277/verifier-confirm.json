@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5817,
+  "stop_reason": "tool_use",
+  "session_id": "111f80b8-1388-4596-946c-acbf14214ee1",
+  "total_cost_usd": 0.022750799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3971,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 617,
+    "output_tokens_details": {
+      "thinking_tokens": 178
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3971,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 617,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3971,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3971
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change is a thin wrapper that matches the spec. Step 1 binds `view` to `this`. Step 2 calls the shared `get_view_value` helper with `byteOffset` (arg 0), `littleEndian` (arg 1) and `ElementType::BigUint64`. It propagates the result with no error handling of its own. The gate report shows +34 passes with no regressions. The two remaining failures come from the unimplemented `BigInt.prototype.valueOf`, which is another ticket's work and throws the not-implemented error. I could not read `get_view_value` itself, so I did not check GetViewValue steps 1\u201313 inside it. The wrapper delegates all of them.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change is a thin wrapper that matches the spec. Step 1 binds `view` to `this`. Step 2 calls the shared `get_view_value` helper with `byteOffset` (arg 0), `littleEndian` (arg 1) and `ElementType::BigUint64`. It propagates the result with no error handling of its own. The gate report shows +34 passes with no regressions. The two remaining failures come from the unimplemented `BigInt.prototype.valueOf`, which is another ticket's work and throws the not-implemented error. I could not read `get_view_value` itself, so I did not check GetViewValue steps 1\u201313 inside it. The wrapper delegates all of them.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3398,
+  "type": "result",
+  "duration_ms": 5915,
+  "uuid": "3305423f-d35e-4bfb-8ffb-6f08e380418e",
+  "ttft_stream_ms": 1697,
+  "time_to_request_ms": 588,
+  "time_to_request_phases_ms": {
+    "other": 79,
+    "system_prompt": 379,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 47,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 118,
+  "time_to_request_cpu_ms": 391,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 718,
+  "process_wall_ms_turn": 5915,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1698,
+  "time_to_request_from_spawn_ms": 22365676,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001825138.9307,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

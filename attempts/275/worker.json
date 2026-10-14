@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 22415,
+  "stop_reason": "end_turn",
+  "session_id": "95035da2-14c9-44ba-b809-1854071c8ee0",
+  "total_cost_usd": 0.01023769,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 27059,
+    "cache_read_input_tokens": 206489,
+    "output_tokens": 4822,
+    "output_tokens_details": {
+      "thinking_tokens": 196
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27059,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 117,
+        "cache_read_input_tokens": 34525,
+        "cache_creation_input_tokens": 177,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 177
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Proxy [[Delete]] is implemented in `crates/kahvi-core/src/object/proxy/delete.rs`, with each spec step kept as a comment above its code. All 30 tests under `built-ins/Proxy/deleteProperty/` pass, and clippy and fmt are clean. I did not commit anything.\n\nBLOCKED: none",
+  "ttft_ms": 1645,
+  "type": "result",
+  "duration_ms": 46907,
+  "uuid": "1cefc56b-08db-44c1-8a90-533d3dafbba6",
+  "ttft_stream_ms": 1473,
+  "time_to_request_ms": 579,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 343,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 28,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 100,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 21,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 86,
+  "time_to_request_cpu_ms": 393,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3825,
+  "process_wall_ms_turn": 46904,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 32,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1474,
+  "time_to_request_from_spawn_ms": 22246814,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001705987.2737,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

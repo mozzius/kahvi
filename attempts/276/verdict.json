@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change replaces the not-implemented stub with a direct call to the shared get_view_value helper using ElementType::BigInt64. The two spec steps are kept as comments, step 1 binds this to view, and step 2 forwards byteOffset and littleEndian (missing arguments become undefined, which the helper's ToBoolean handles). No special-casing, made-up values, or swallowed errors. The renaming of new_target to _new_target only silences an unused-variable warning. The GetViewValue steps (RequireInternalSlot, ToIndex, bounds checks, GetValueFromBuffer) live in the helper outside this diff, so I could not check them here. The gate shows 34 new passing test262 runs with 0 regressions. The remaining failures come from BigInt.prototype.valueOf being unimplemented elsewhere, which is an honest not-implemented error and not a defect in this file.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

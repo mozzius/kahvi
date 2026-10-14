@@ -1,0 +1,35 @@
+{
+  "ticket": "B-data-view-prototype-get-big-uint64",
+  "base": "f70982cd5d61a22d813fc9fd1296c935596d1c94",
+  "head": "34ccfccf6922f575c107dcd1587f3e4688983e7e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_get_big_uint64.rs",
+      "added": 12,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 6,
+    "after": 40,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DataView/prototype/getBigUint64/toindex-byteoffset-errors.js:sloppy  Uncaught InternalError: not implemented: BigInt.prototype.valueOf",
+      "built-ins/DataView/prototype/getBigUint64/toindex-byteoffset-errors.js:strict  Uncaught InternalError: not implemented: BigInt.prototype.valueOf"
+    ]
+  },
+  "decision": "pass"
+}

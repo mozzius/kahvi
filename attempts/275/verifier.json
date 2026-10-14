@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11532,
+  "stop_reason": "tool_use",
+  "session_id": "8a2a55fd-556e-48fb-9eaf-c077cce20227",
+  "total_cost_usd": 0.00284728,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5800,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2279,
+    "output_tokens_details": {
+      "thinking_tokens": 1685
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5800,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2279,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Proxy [[Delete]] in crates/kahvi-core/src/object/proxy/delete.rs now follows spec steps 1-14 in order. It calls validate_non_revoked with `?`, then get_method for \\\"deleteProperty\\\", and returns target.internal_delete when the trap is undefined. Otherwise it runs the trap via ops::call, applies to_boolean, and returns false on a false result. It then runs target.internal_get_own_property with `?`, returns true when the descriptor is absent, throws TypeError when configurable is Some(false), and checks is_extensible with `?`, throwing TypeError when the target is non-extensible. Ends with Ok(true). The not-implemented stub is gone for this method. No test-shaped branches, no swallowed errors, and no made-up values. The removed NOTE comment and the removed allow(unused_imports) are cleanup tied to this change.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Minor observations only: `let _ = o;` is an unused-parameter workaround, and the configurable check uses `== Some(false)` rather than a plain boolean test, which is fine for complete descriptors returned by [[GetOwnProperty]].\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Proxy [[Delete]] in crates/kahvi-core/src/object/proxy/delete.rs now follows spec steps 1-14 in order. It calls validate_non_revoked with `?`, then get_method for \"deleteProperty\", and returns target.internal_delete when the trap is undefined. Otherwise it runs the trap via ops::call, applies to_boolean, and returns false on a false result. It then runs target.internal_get_own_property with `?`, returns true when the descriptor is absent, throws TypeError when configurable is Some(false), and checks is_extensible with `?`, throwing TypeError when the target is non-extensible. Ends with Ok(true). The not-implemented stub is gone for this method. No test-shaped branches, no swallowed errors, and no made-up values. The removed NOTE comment and the removed allow(unused_imports) are cleanup tied to this change.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Minor observations only: `let _ = o;` is an unused-parameter workaround, and the configurable check uses `== Some(false)` rather than a plain boolean test, which is fine for complete descriptors returned by [[GetOwnProperty]]."
+  },
+  "ttft_ms": 8878,
+  "type": "result",
+  "duration_ms": 11097,
+  "uuid": "16acabe7-1277-4127-8ac6-ccf02a24f882",
+  "ttft_stream_ms": 1608,
+  "time_to_request_ms": 754,
+  "time_to_request_phases_ms": {
+    "other": 113,
+    "system_prompt": 390,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 22,
+    "input_hooks": 12,
+    "tool_pool_refresh": 5,
+    "init_message": 28,
+    "engine_pickup": 2,
+    "message_prep": 15,
+    "model_config_wait": 10,
+    "autocompact": 10,
+    "query_setup": 16,
+    "model_gates": 15,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 56,
+    "request_build": 31
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 325,
+  "time_to_request_cpu_ms": 296,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 228,
+  "process_anon_mib_turn_start": 111,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 931,
+  "process_wall_ms_turn": 11096,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1609,
+  "time_to_request_from_spawn_ms": 22353427,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001811398.8362,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

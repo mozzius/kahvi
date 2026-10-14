@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 16489,
+  "stop_reason": "end_turn",
+  "session_id": "d0210645-c0a0-410a-89cb-2aedc08f53dc",
+  "total_cost_usd": 0.005640260000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 14609,
+    "cache_read_input_tokens": 116516,
+    "output_tokens": 2575,
+    "output_tokens_details": {
+      "thinking_tokens": 223
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14609,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 204,
+        "cache_read_input_tokens": 21981,
+        "cache_creation_input_tokens": 271,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 271
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.getFloat16` in `crates/kahvi-builtins/src/data_view/prototype_get_float16.rs` by forwarding to the existing `get_view_value` helper with `ElementType::Float16`. All 42 test262 runs under `built-ins/DataView/prototype/getFloat16/` pass, up from 6 on main. The build, clippy and format check are clean.\n\nI passed `args[1]` straight through rather than substituting `false`, since `ToBoolean(undefined)` is `false` and the helper applies that conversion. No other files were changed and no helpers were added.",
+  "ttft_ms": 2125,
+  "type": "result",
+  "duration_ms": 46408,
+  "uuid": "074a3fe1-dc3b-46d3-8297-fbbac87a5111",
+  "ttft_stream_ms": 1836,
+  "time_to_request_ms": 540,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 360,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 84,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 14,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 70,
+  "time_to_request_cpu_ms": 265,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2735,
+  "process_wall_ms_turn": 46408,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1837,
+  "time_to_request_from_spawn_ms": 22276597,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001736423.5784,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

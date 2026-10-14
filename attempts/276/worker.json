@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 14612,
+  "stop_reason": "end_turn",
+  "session_id": "2d101747-e22a-4cc3-a3c2-18f99158c38e",
+  "total_cost_usd": 0.005081940000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 12908,
+    "cache_read_input_tokens": 106904,
+    "output_tokens": 2334,
+    "output_tokens_details": {
+      "thinking_tokens": 341
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12908,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 224,
+        "cache_read_input_tokens": 20002,
+        "cache_creation_input_tokens": 549,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 549
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.getBigInt64` in its file by delegating to the existing `get_view_value` helper with `ElementType::BigInt64`, following the spec's two steps. Clippy and fmt are clean. 40 of 42 test262 runs pass. The two failures in `toindex-byteoffset-errors.js` come from `BigInt.prototype.valueOf` being unimplemented, which is outside this ticket's file scope.\n\nBLOCKED: BigInt.prototype.valueOf is not implemented (needed by built-ins/DataView/prototype/getBigInt64/toindex-byteoffset-errors.js:sloppy and :strict)",
+  "ttft_ms": 1612,
+  "type": "result",
+  "duration_ms": 38752,
+  "uuid": "459eff1a-856b-4166-b90e-b0498f456a64",
+  "ttft_stream_ms": 1296,
+  "time_to_request_ms": 499,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 390,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 1,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 7,
+    "client_creation": 12,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 71,
+  "time_to_request_cpu_ms": 292,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 119,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2766,
+  "process_wall_ms_turn": 38751,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1297,
+  "time_to_request_from_spawn_ms": 22257225,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001716960.938,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

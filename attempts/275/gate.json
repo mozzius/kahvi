@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-delete",
+  "base": "ab5ec479eb86088ad7107deeee217f668c040231",
+  "head": "b4c4760a1ca2da2c0c8ec16c551e13e0fa2b4de9",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/delete.rs",
+      "added": 37,
+      "removed": 16
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 0,
+    "after": 30,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
