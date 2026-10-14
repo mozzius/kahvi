@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::regexp_string_iterator::create_regexp_string_iterator;
+
 /// RegExp.prototype[Symbol.matchAll]
 pub(crate) fn prototype_symbol_match_all(
     agent: &mut Agent,
@@ -50,9 +52,11 @@ pub(crate) fn prototype_symbol_match_all(
     // 12. Else, let _fullUnicode_ be *false*.
     let full_unicode = flags_text.contains('u') || flags_text.contains('v');
     // 13. Return CreateRegExpStringIterator(_matcher_, _string_, _global_, _fullUnicode_).
-    //     CreateRegExpStringIterator needs the [[IteratingRegExp]], [[IteratedString]],
-    //     [[Global]], [[Unicode]] and [[Done]] slots on an object whose prototype is
-    //     %RegExpStringIteratorPrototype%; no slot type for them exists yet.
-    let _ = (matcher, string, global, full_unicode);
-    Err(agent.not_implemented("CreateRegExpStringIterator (RegExp String Iterator slots)"))
+    Ok(Value::Object(create_regexp_string_iterator(
+        agent,
+        matcher,
+        string,
+        global,
+        full_unicode,
+    )))
 }
