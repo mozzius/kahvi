@@ -383,3 +383,4 @@
 [17:47:39] B-weak-map-prototype-delete: attempt 216 finished ($0.006, 9 turns)
 [17:48:01] B-symbol-prototype-symbol-to-primitive: verifier: accept The change replaces the not-implemented stub with `Ok(Value::Symbol(this_symbol_value(agent, this)?))`, which is a direct implementation of step 1 (`R
 [17:48:15] B-string-prototype-starts-with: verifier: accept The diff implements String.prototype.startsWith in the stub file, following the spec's 16 steps in order. RequireObjectCoercible, ToString(this), IsRe
+[17:48:20] B-weak-map-prototype-delete: verifier: accept The diff implements WeakMap.prototype.delete in the single in-scope file. Steps 1-5 are each kept as comments and mapped to code in spec order: this_w
