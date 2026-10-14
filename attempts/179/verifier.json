@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11368,
+  "stop_reason": "tool_use",
+  "session_id": "f5abe73d-cea5-46b6-9b09-61301e4409d1",
+  "total_cost_usd": 0.00263058,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5003,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2322,
+    "output_tokens_details": {
+      "thinking_tokens": 1721
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5003,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2322,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5003,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5003
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff replaces the not-implemented stub for DataView.prototype.setFloat16 with a direct port of the three spec steps. Step 1 takes `this` as the view. Step 2 defaults littleEndian to false when fewer than three arguments are passed. Step 3 calls the shared `set_view_value` helper with ElementType::Float16 and propagates its error with `?`. Step 4 returns undefined. The spec step comments are kept above the code. No branch keys on test inputs, no errors are swallowed, and no values are invented. The change touches only the in-scope file. The gate reports 26 new passing tests and 0 regressions. The remaining failures are the expected not-implemented getFloat16 calls the tests use for verification.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. The reviewer could not inspect `crate::support::typed_array::set_view_value` (it is outside the diff), so the SetViewValue steps 1\u201316 and the Float16 conversion in SetValueInBuffer are assumed to be implemented there. The gate's 26 passing tests are the evidence for that. The remaining setFloat16 tests need DataView.prototype.getFloat16, which is a separate ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff replaces the not-implemented stub for DataView.prototype.setFloat16 with a direct port of the three spec steps. Step 1 takes `this` as the view. Step 2 defaults littleEndian to false when fewer than three arguments are passed. Step 3 calls the shared `set_view_value` helper with ElementType::Float16 and propagates its error with `?`. Step 4 returns undefined. The spec step comments are kept above the code. No branch keys on test inputs, no errors are swallowed, and no values are invented. The change touches only the in-scope file. The gate reports 26 new passing tests and 0 regressions. The remaining failures are the expected not-implemented getFloat16 calls the tests use for verification.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. The reviewer could not inspect `crate::support::typed_array::set_view_value` (it is outside the diff), so the SetViewValue steps 1\u201316 and the Float16 conversion in SetValueInBuffer are assumed to be implemented there. The gate's 26 passing tests are the evidence for that. The remaining setFloat16 tests need DataView.prototype.getFloat16, which is a separate ticket."
+  },
+  "ttft_ms": 9320,
+  "type": "result",
+  "duration_ms": 11419,
+  "uuid": "fe91a1c9-028e-4a3d-a983-9d6299303f51",
+  "ttft_stream_ms": 1637,
+  "time_to_request_ms": 711,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 354,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 20,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 243,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 93,
+  "time_to_request_cpu_ms": 390,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 803,
+  "process_wall_ms_turn": 11419,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1644,
+  "time_to_request_from_spawn_ms": 19734287,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999192820.4248,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

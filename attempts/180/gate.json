@@ -1,0 +1,47 @@
+{
+  "ticket": "B-data-view-prototype-set-float32",
+  "base": "55f9d9709ad108ce28cb932959da3c21a77db0ac",
+  "head": "9aa25ff454fc7b7c105e866bc745a08e11f0f7c8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_set_float32.rs",
+      "added": 15,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 6,
+    "after": 32,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DataView/prototype/setFloat32/index-is-out-of-range.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/index-is-out-of-range.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/negative-byteoffset-throws.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/negative-byteoffset-throws.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/no-value-arg.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/no-value-arg.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/set-values-little-endian-order.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/set-values-little-endian-order.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/set-values-return-undefined.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/set-values-return-undefined.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/to-boolean-littleendian.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/to-boolean-littleendian.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/toindex-byteoffset.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getFloat32",
+      "built-ins/DataView/prototype/setFloat32/toindex-byteoffset.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getFloat32"
+    ]
+  },
+  "decision": "pass"
+}

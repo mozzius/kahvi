@@ -1,0 +1,40 @@
+{
+  "ticket": "C-proxy-prevent-extensions",
+  "base": "622a82b9cb5115fa903e7c035d5e2e00dd1e120f",
+  "head": "a1789f62faacd68494192afc4947b5275f7f53bf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/prevent_extensions.rs",
+      "added": 36,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 23,
+    "before": 0,
+    "after": 16,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 7,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/preventExtensions/return-false.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/return-false.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/return-true-target-is-not-extensible.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/return-true-target-is-not-extensible.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/trap-is-undefined-target-is-proxy.js:module  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/trap-is-undefined.js:sloppy  Uncaught InternalError: not implemented: Reflect.preventExtensions",
+      "built-ins/Proxy/preventExtensions/trap-is-undefined.js:strict  Uncaught InternalError: not implemented: Reflect.preventExtensions"
+    ]
+  },
+  "decision": "pass"
+}
