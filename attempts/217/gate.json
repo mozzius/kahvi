@@ -1,0 +1,67 @@
+{
+  "ticket": "B-array-buffer-prototype-transfer",
+  "base": "e757d63c450fdbf05b0b41d764bd9ca91b79ecd0",
+  "head": "1f0cfe3c0bfe04c97bca9860363e5cbe8a1a77a7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs",
+      "added": 83,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs",
+      "line": 58,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"an ArrayBuffer\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs",
+      "line": 74,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"source buffer is not detached\")[..copy_length]"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs",
+      "line": 78,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"new buffer is not detached\")[..copy_length]"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 44,
+    "before": 10,
+    "after": 28,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 16,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-larger.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-larger.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-same.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-same.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-smaller.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-smaller.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-zero.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-fixed-to-zero.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-larger.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-larger.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-same.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-same.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-smaller.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-smaller.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/ArrayBuffer/prototype/transfer/from-resizable-to-zero.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable"
+    ]
+  },
+  "decision": "pass"
+}
