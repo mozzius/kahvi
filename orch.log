@@ -4105,3 +4105,6 @@ test262 at last merge: 76432/81183 runs passing
 [19:41:26] B-math-cosh: attempt 455 finished ($0.005, 9 turns)
 [19:41:34] B-math-expm1: attempt 456 finished ($0.004, 11 turns)
 [19:41:42] B-json-is-raw-json: gate rejected attempt 454: no new test262 passes in target
+[19:41:46] B-json-is-raw-json: attempt on slot 1 with sonnet
+[19:41:57] B-math-f16round: attempt 457 finished ($0.008, 11 turns)
+[19:42:01] B-math-cosh: verifier: accept The diff implements Math.cosh in cosh.rs step by step. Step 1 calls ops::to_number(agent, x) with `?`, so abrupt completions propagate. Step 2 returns

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6589,
+  "stop_reason": "tool_use",
+  "session_id": "c8c1bc23-e479-4a5e-8ea8-f45fba932624",
+  "total_cost_usd": 0.0016065799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3669,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1080,
+    "output_tokens_details": {
+      "thinking_tokens": 596
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3669,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1080,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3669,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3669
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Math.cosh in cosh.rs step by step. Step 1 calls ops::to_number(agent, x) with `?`, so abrupt completions propagate. Step 2 returns NaN for NaN input. Step 3 returns +Infinity for either infinity via is_infinite(). Step 4 returns 1 for +0 and -0 via n == 0.0. Step 5 returns n.cosh(), an approximation the spec allows. Each step has its spec comment directly above its code, the original NOTE is kept, and only the target file changed. The gate report is clean (build, clippy, +2 tests, no regressions). I found no test-shaped branches, swallowed errors, or made-up values. I did not verify that ops::to_number exists and matches the spec's ToNumber, but the build passing implies it does.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Math.cosh in cosh.rs step by step. Step 1 calls ops::to_number(agent, x) with `?`, so abrupt completions propagate. Step 2 returns NaN for NaN input. Step 3 returns +Infinity for either infinity via is_infinite(). Step 4 returns 1 for +0 and -0 via n == 0.0. Step 5 returns n.cosh(), an approximation the spec allows. Each step has its spec comment directly above its code, the original NOTE is kept, and only the target file changed. The gate report is clean (build, clippy, +2 tests, no regressions). I found no test-shaped branches, swallowed errors, or made-up values. I did not verify that ops::to_number exists and matches the spec's ToNumber, but the build passing implies it does.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5410,
+  "type": "result",
+  "duration_ms": 7111,
+  "uuid": "56f10d6d-ddd2-40bc-aef9-febc20286889",
+  "ttft_stream_ms": 2738,
+  "time_to_request_ms": 1169,
+  "time_to_request_phases_ms": {
+    "other": 61,
+    "system_prompt": 652,
+    "resume_other": 1,
+    "process_user_input": 12,
+    "input_attachments": 44,
+    "input_hooks": 12,
+    "tool_pool_refresh": 6,
+    "init_message": 27,
+    "engine_pickup": 2,
+    "message_prep": 10,
+    "model_config_wait": 291,
+    "autocompact": 12,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 6,
+    "client_creation": 6,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 150,
+  "time_to_request_cpu_ms": 487,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 855,
+  "process_wall_ms_turn": 7110,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2739,
+  "time_to_request_from_spawn_ms": 27445623,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006904605.038,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.57,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-cosh",
+  "base": "af164c890551e6034f2612a919f758aca3ecd387",
+  "head": "30c38f471c3df3cfb7e4f6e651eee2294f04e9c2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/cosh.rs",
+      "added": 18,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

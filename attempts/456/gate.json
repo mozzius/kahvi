@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-expm1",
+  "base": "e8198ead202dc8d167f1bfc9d02545818f4d2cea",
+  "head": "4f4b0440d87d43b47455f921935cd22a44d8619a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/expm1.rs",
+      "added": 15,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
