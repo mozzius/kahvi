@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5637,
+  "stop_reason": "tool_use",
+  "session_id": "44f5d9d6-fe9c-4571-9393-db4950bc364c",
+  "total_cost_usd": 0.0259492,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4840,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 581,
+    "output_tokens_details": {
+      "thinking_tokens": 221
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4840,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 581,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4840,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4840
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1\u20137 in order, with a comment above each step. It uses the shared helpers `typed_array_create_from_constructor` and `typed_array_set_element`. Every `?` propagates. The GC rooting wrapper is reasonable. The gate shows 8 new passes and no regressions, which fits a diff this size. I did not read the helper implementations. They were not changed here, and any bugs in them are outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1\u20137 in order, with a comment above each step. It uses the shared helpers `typed_array_create_from_constructor` and `typed_array_set_element`. Every `?` propagates. The GC rooting wrapper is reasonable. The gate shows 8 new passes and no regressions, which fits a diff this size. I did not read the helper implementations. They were not changed here, and any bugs in them are outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4049,
+  "type": "result",
+  "duration_ms": 5857,
+  "uuid": "7031fb7c-cb1e-4455-9212-bfcfa72b5af4",
+  "ttft_stream_ms": 1748,
+  "time_to_request_ms": 662,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 426,
+    "resume_other": 1,
+    "process_user_input": 13,
+    "input_attachments": 39,
+    "input_hooks": 7,
+    "tool_pool_refresh": 4,
+    "init_message": 18,
+    "engine_pickup": 7,
+    "message_prep": 4,
+    "model_config_wait": 54,
+    "autocompact": 7,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 132,
+  "time_to_request_cpu_ms": 345,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 691,
+  "process_wall_ms_turn": 5856,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1749,
+  "time_to_request_from_spawn_ms": 18745321,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998205630.7283,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

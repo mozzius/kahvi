@@ -1,0 +1,45 @@
+{
+  "ticket": "B-string-iterator-prototype-next",
+  "base": "0ec508846a76b6ff54b3c80d5c57b3183da05ae4",
+  "head": "4ea539ca5e3df7ff4a471f1960a40f85ab0ab576",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string_iterator_prototype/next.rs",
+      "added": 83,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/string_iterator_prototype/next.rs",
+      "line": 43,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a String Iterator\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/string_iterator_prototype/next.rs",
+      "line": 60,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a String Iterator\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 4,
+    "after": 10,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

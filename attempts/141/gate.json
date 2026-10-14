@@ -1,0 +1,50 @@
+{
+  "ticket": "B-typed-array-prototype-sort",
+  "base": "cbc12ef10a685654d4f2d3e6db1eb438def69fc4",
+  "head": "2e7424af142b343176166300357ce22876b09eb6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_sort.rs",
+      "added": 110,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_sort.rs",
+      "line": 107,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 70,
+    "before": 8,
+    "after": 60,
+    "new_passes": 52,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 10,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/sort/comparefn-grow.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/comparefn-grow.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/comparefn-resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/comparefn-resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/comparefn-shrink.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/comparefn-shrink.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/resizable-buffer-default-comparator.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/resizable-buffer-default-comparator.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/sort/stability.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.reverse",
+      "built-ins/TypedArray/prototype/sort/stability.js:strict  Uncaught InternalError: not implemented: Array.prototype.reverse"
+    ]
+  },
+  "decision": "pass"
+}

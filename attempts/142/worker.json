@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 35166,
+  "stop_reason": "end_turn",
+  "session_id": "bed38c71-61fb-47e1-86f1-081fe9e99a6f",
+  "total_cost_usd": 0.011131930000000002,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 26501,
+    "cache_read_input_tokens": 198493,
+    "output_tokens": 6658,
+    "output_tokens_details": {
+      "thinking_tokens": 1921
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 26501,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 194,
+        "cache_read_input_tokens": 33885,
+        "cache_creation_input_tokens": 259,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 259
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Iterator.prototype.drop` in `crates/kahvi-builtins/src/iterator/prototype_drop.rs`, the only file changed. All 68 runs under `built-ins/Iterator/prototype/drop/` pass (the ticket said 12; the runner reports 68 runs across 34 files), and `cargo clippy -p kahvi-builtins` is clean.\n\nThe closure keeps the remaining skip count as its state and uses the existing `HelperClosure` and `if_abrupt_close_iterator` helpers. I did not need any new shared helpers.",
+  "ttft_ms": 2283,
+  "type": "result",
+  "duration_ms": 47543,
+  "uuid": "2c78c01d-60c0-4d69-9e25-16fae2cdcca9",
+  "ttft_stream_ms": 2065,
+  "time_to_request_ms": 781,
+  "time_to_request_phases_ms": {
+    "other": 58,
+    "system_prompt": 422,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 212,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 135,
+  "time_to_request_cpu_ms": 411,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 254,
+  "process_anon_mib_result": 135,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3889,
+  "process_wall_ms_turn": 47542,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2071,
+  "time_to_request_from_spawn_ms": 18659378,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998118725.4724,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

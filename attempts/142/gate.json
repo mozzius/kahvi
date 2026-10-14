@@ -1,0 +1,39 @@
+{
+  "ticket": "B-iterator-prototype-drop",
+  "base": "7fb7e529bc0e3dd322ab1bbe73b5d15b603c72fa",
+  "head": "dc78fca8d17dc7383f1e70995efc44ed2c7f59bc",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_drop.rs",
+      "added": 86,
+      "removed": 21
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_drop.rs",
+      "line": 74,
+      "rule": "skipping something: check what and why",
+      "text": "/// Step 11's closure: captures _intLimit_ (as the remaining count to skip)."
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 68,
+    "before": 12,
+    "after": 68,
+    "new_passes": 56,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
