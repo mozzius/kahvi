@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13659,
+  "stop_reason": "tool_use",
+  "session_id": "9ce03cc5-db50-4feb-95af-a97b5ae17d0f",
+  "total_cost_usd": 0.0033553800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6526,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2863,
+    "output_tokens_details": {
+      "thinking_tokens": 2351
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6526,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2863,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6526,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6526
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.atan2 is implemented in full, following spec steps 1-15 in order. ToNumber(y) and ToNumber(x) run first and propagate with `?`. NaN, the infinity cases, the \u00b10 cases, the ny>0 and ny<0 special cases, and the general atan(|ny/nx|) path with its quadrant adjustments all match the spec. I checked the signed-zero combinations by hand, for example atan2(+0,-0)=\u03c0 and atan2(-0,-0)=-\u03c0. The only other changes are renaming the now-unused `this`/`new_target` parameters to underscore names, which is needed to avoid unused warnings. No special-casing, no made-up values, and no swallowed errors. The step comments are paraphrased rather than verbatim spec text, and the original full-spec comment block is kept above them, so the comments are duplicated. That is a style nit, not a correctness issue.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.atan2 is implemented in full, following spec steps 1-15 in order. ToNumber(y) and ToNumber(x) run first and propagate with `?`. NaN, the infinity cases, the \u00b10 cases, the ny>0 and ny<0 special cases, and the general atan(|ny/nx|) path with its quadrant adjustments all match the spec. I checked the signed-zero combinations by hand, for example atan2(+0,-0)=\u03c0 and atan2(-0,-0)=-\u03c0. The only other changes are renaming the now-unused `this`/`new_target` parameters to underscore names, which is needed to avoid unused warnings. No special-casing, no made-up values, and no swallowed errors. The step comments are paraphrased rather than verbatim spec text, and the original full-spec comment block is kept above them, so the comments are duplicated. That is a style nit, not a correctness issue.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11814,
+  "type": "result",
+  "duration_ms": 13825,
+  "uuid": "b150ff9a-3494-406b-b3af-106a4d21b4ff",
+  "ttft_stream_ms": 1581,
+  "time_to_request_ms": 800,
+  "time_to_request_phases_ms": {
+    "other": 77,
+    "system_prompt": 454,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 25,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 35,
+    "engine_pickup": 1,
+    "message_prep": 11,
+    "model_config_wait": 123,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 12,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 229,
+  "time_to_request_cpu_ms": 401,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 1042,
+  "process_wall_ms_turn": 13819,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1582,
+  "time_to_request_from_spawn_ms": 23896214,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003355703.2393,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

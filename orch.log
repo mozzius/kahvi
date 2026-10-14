@@ -1889,3 +1889,6 @@ test262 at last merge: 74349/81183 runs passing
 [18:42:20] B-array-buffer-prototype-get-max-byte-length: verifier: revise The diff implements steps 1, 2, 4, 5, 6 and 7 of get ArrayBuffer.prototype.maxByteLength in the right order, with correct ? handling for RequireIntern
 [18:42:27] B-array-buffer-prototype-get-max-byte-length: attempt on slot 2 with haiku
 [18:42:46] B-date-prototype-set-time: verifier: accept The diff implements Date.prototype.setTime in the spec's step order: the this-value slot check (via date::this_time_value, propagated with ?), then op
+[18:42:49] B-math-round: attempt on slot 3 with haiku
+[18:43:01] B-math-max: verifier: accept Implements Math.max in crates/kahvi-builtins/src/math/max.rs following the spec steps. All ToNumber conversions happen first (step 2) with `?` propaga
+[18:43:02] B-math-atan2: verifier: accept Math.atan2 is implemented in full, following spec steps 1-15 in order. ToNumber(y) and ToNumber(x) run first and propagate with `?`. NaN, the infinity
