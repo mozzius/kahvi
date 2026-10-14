@@ -1,0 +1,130 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_to_sorted.rs b/crates/kahvi-builtins/src/array/prototype_to_sorted.rs
+index a5fc705..ad3fdc5 100644
+--- a/crates/kahvi-builtins/src/array/prototype_to_sorted.rs
++++ b/crates/kahvi-builtins/src/array/prototype_to_sorted.rs
+@@ -2,29 +2,116 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-array.prototype.tosorted
+ 
++use kahvi_core::object::array::array_create;
+ use kahvi_core::prelude::*;
+ 
++use crate::generated::array::prototype_sort::sort_indexed_properties;
++
+ /// Array.prototype.toSorted
+ pub(crate) fn prototype_to_sorted(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. If _comparator_ is not *undefined* and IsCallable(_comparator_) is *false*, throw a *TypeError* exception.
++    let comparator = args.get_or_undefined(0);
++    if !matches!(comparator, Value::Undefined) && !ops::is_callable(agent, comparator) {
++        return Err(agent.throw_type_error(
++            "Array.prototype.toSorted comparator must be a function or undefined",
++        ));
++    }
+     // 2. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 3. Let _length_ be ? LengthOfArrayLike(_obj_).
++    let length = ops::length_of_array_like(agent, obj)?;
+     // 4. Let _array_ be ? ArrayCreate(_length_).
++    let array = array_create(agent, length, None)?;
+     // 5. Let _sortCompare_ be a new Abstract Closure with parameters (_x_, _y_) that captures _comparator_ and performs the following steps when called:
+     //    a. Return ? CompareArrayElements(_x_, _y_, _comparator_).
+-    // 6. Let _sortedList_ be ? SortIndexedProperties(_obj_, _length_, _sortCompare_, ~read-through-holes~).
+-    // 7. Let _j_ be 0.
+-    // 8. Repeat, while _j_ < _length_,
+-    //    a. Perform ! CreateDataPropertyOrThrow(_array_, ! ToString(𝔽(_j_)), _sortedList_[_j_]).
+-    //    b. Set _j_ to _j_ + 1.
+-    // 9. Return _array_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.toSorted"))
++    let mut sort_compare =
++        |agent: &mut Agent, x: Value, y: Value| compare_array_elements(agent, x, y, comparator);
++    // The comparator may collect garbage: obj, the comparator and the new array stay rooted
++    // (SortIndexedProperties roots the items).
++    agent.with_roots(
++        &[Value::Object(obj), comparator, Value::Object(array)],
++        |agent| {
++            // 6. Let _sortedList_ be ? SortIndexedProperties(_obj_, _length_, _sortCompare_, ~read-through-holes~).
++            let sorted_list =
++                sort_indexed_properties(agent, obj, length, &mut sort_compare, false)?;
++            // The sorted items stay rooted while they are written into the new array.
++            agent.with_roots(&sorted_list, |agent| {
++                // 7. Let _j_ be 0.
++                let mut j = 0.0;
++                // 8. Repeat, while _j_ < _length_,
++                //    (_sortedList_ has exactly _length_ items under ~read-through-holes~, so
++                //    _j_ < _length_ holds for each item in turn)
++                for item in sorted_list.iter().copied() {
++                    // a. Perform ! CreateDataPropertyOrThrow(_array_, ! ToString(𝔽(_j_)), _sortedList_[_j_]).
++                    let pj = agent.key_from_index(j);
++                    ops::create_data_property_or_throw(agent, array, pj, item)?;
++                    // b. Set _j_ to _j_ + 1.
++                    j += 1.0;
++                }
++                // 9. Return _array_.
++                Ok(Value::Object(array))
++            })
++        },
++    )
++}
++
++/// CompareArrayElements ( _x_, _y_, _comparator_ )
++///
++/// Spec: https://tc39.es/ecma262/#sec-comparearrayelements
++fn compare_array_elements(
++    agent: &mut Agent,
++    x: Value,
++    y: Value,
++    comparator: Value,
++) -> JsResult<f64> {
++    // 1. If _x_ is *undefined* and _y_ is *undefined*, return *+0*𝔽.
++    if matches!(x, Value::Undefined) && matches!(y, Value::Undefined) {
++        return Ok(0.0);
++    }
++    // 2. If _x_ is *undefined*, return *1*𝔽.
++    if matches!(x, Value::Undefined) {
++        return Ok(1.0);
++    }
++    // 3. If _y_ is *undefined*, return *-1*𝔽.
++    if matches!(y, Value::Undefined) {
++        return Ok(-1.0);
++    }
++    // 4. If _comparator_ is not *undefined*, then
++    if !matches!(comparator, Value::Undefined) {
++        // a. Let _result_ be ? ToNumber(? Call(_comparator_, *undefined*, « _x_, _y_ »)).
++        // x and y are among the items SortIndexedProperties keeps rooted.
++        let result = ops::call_rooted(agent, comparator, Value::Undefined, &[x, y])?;
++        let result = ops::to_number(agent, result)?;
++        // b. If _result_ is *NaN*, return *+0*𝔽.
++        if result.is_nan() {
++            return Ok(0.0);
++        }
++        // c. Return _result_.
++        return Ok(result);
++    }
++    // 5. Let _xString_ be ? ToString(_x_).
++    let x_string = Value::String(ops::to_string(agent, x)?);
++    // 6. Let _yString_ be ? ToString(_y_).
++    let y_string = Value::String(ops::to_string(agent, y)?);
++    // 7. Let _xSmaller_ be ! IsLessThan(_xString_, _yString_, *true*).
++    let x_smaller = ops::is_less_than(agent, x_string, y_string, true)?;
++    // 8. If _xSmaller_ is *true*, return *-1*𝔽.
++    if x_smaller == Some(true) {
++        return Ok(-1.0);
++    }
++    // 9. Let _ySmaller_ be ! IsLessThan(_yString_, _xString_, *true*).
++    let y_smaller = ops::is_less_than(agent, y_string, x_string, true)?;
++    // 10. If _ySmaller_ is *true*, return *1*𝔽.
++    if y_smaller == Some(true) {
++        return Ok(1.0);
++    }
++    // 11. Return *+0*𝔽.
++    Ok(0.0)
+ }

@@ -1,0 +1,139 @@
+{
+  "duration_api_ms": 54344,
+  "stop_reason": "end_turn",
+  "session_id": "a4b150f0-2dc4-48e5-820f-c2266c8c58c9",
+  "total_cost_usd": 0.023559739999999996,
+  "usage": {
+    "input_tokens": 21,
+    "cache_creation_input_tokens": 61596,
+    "cache_read_input_tokens": 532864,
+    "output_tokens": 11251,
+    "output_tokens_details": {
+      "thinking_tokens": 4949
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 61596,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 331,
+        "cache_read_input_tokens": 67648,
+        "cache_creation_input_tokens": 1591,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1591
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01E3grButv4RHdKJe6hMz2QE",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs && cargo fmt -- --check crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs; echo \"fmt exit $?\"; git status --short",
+        "description": "Format the edited file and confirm working tree scope"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01DzphVktL7JuAWMmFNfTxKZ",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/array_buffer/prototype_transfer.rs",
+        "description": "Format the edited transfer file with rustfmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 26,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `ArrayBuffer.prototype.transfer` in its file, but the ticket's \"done when\" is not met: 28 of 44 runs pass and 16 fail. All 16 failures throw `not implemented: get ArrayBuffer.prototype.resizable`, from the `resizable` getter, which lives in another file.\n\nI wrote `ArrayBufferCopyAndDetach` as a private function in `prototype_transfer.rs`, since no shared helper exists. `transferToFixedLength` (sibling file, out of scope) will need the same function, so it should be moved into `support/typed_array.rs` or `kahvi_core` by whoever takes that ticket. Clippy is clean and the file is formatted.\n\nBLOCKED: `get ArrayBuffer.prototype.resizable` (`crates/kahvi-builtins/src/array_buffer/prototype_get_resizable.rs`) is still a not-implemented stub, and the 16 remaining transfer tests depend on it.",
+  "ttft_ms": 1877,
+  "type": "result",
+  "duration_ms": 86642,
+  "uuid": "4bb75612-90fc-4bfa-94de-46e4e808382e",
+  "ttft_stream_ms": 1662,
+  "time_to_request_ms": 701,
+  "time_to_request_phases_ms": {
+    "other": 67,
+    "system_prompt": 361,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 17,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 21,
+    "engine_pickup": 6,
+    "message_prep": 5,
+    "model_config_wait": 100,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 39,
+    "message_normalization": 5,
+    "client_creation": 23,
+    "request_build": 30
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 251,
+  "time_to_request_cpu_ms": 414,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 254,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 281,
+  "process_cpu_ms_turn": 5180,
+  "process_wall_ms_turn": 86641,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1663,
+  "time_to_request_from_spawn_ms": 20687953,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000147216.173,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

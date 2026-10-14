@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 21876,
+  "stop_reason": "tool_use",
+  "session_id": "f4419cd1-271d-44e5-a629-4b1ca43a8a84",
+  "total_cost_usd": 0.00384118,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5557,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4414,
+    "output_tokens_details": {
+      "thinking_tokens": 3679
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5557,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4414,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5557,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5557
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.findIndex as specified. Steps 1 and 2 use ops::to_object and ops::length_of_array_like, and step 3 calls a local find_via_predicate helper. That helper does the IsCallable check first, then for each k does Get, Call(predicate, thisArg, \u00abkValue, \ud835\udd3d(k), obj\u00bb), and ToBoolean, and returns the index on the first truthy result. Otherwise it returns -1. Operation order, abrupt-completion propagation with `?`, and the -1 result all match the spec. No input-specific branches, no swallowed errors, and no fabricated values. The six remaining failures are BigInt not-implemented errors raised outside this file, which is honest. The one residual concern is GC rooting, not spec fidelity. The wrapper object from to_object on a primitive `this` is not rooted during length_of_array_like, which can run a user getter that allocates. This is a latent hazard under KAHVI_GC_STRESS and not a spec deviation.\",\"problems\":[],\"notes_for_next_attempt\":\"Diff is acceptable and can be merged as is. Optional hardening: when `this` is a primitive, to_object creates a fresh wrapper object that is held only in a Rust local. Before the `agent.with_roots` call, that object is not rooted while length_of_array_like performs Get(obj, \\\"length\\\"), which may invoke a user getter that allocates and triggers GC. Consider rooting obj (push_root or with_roots) across the length computation. The removed NOTE comment about the method being intentionally generic could be restored for spec-text fidelity, but this is cosmetic.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.findIndex as specified. Steps 1 and 2 use ops::to_object and ops::length_of_array_like, and step 3 calls a local find_via_predicate helper. That helper does the IsCallable check first, then for each k does Get, Call(predicate, thisArg, \u00abkValue, \ud835\udd3d(k), obj\u00bb), and ToBoolean, and returns the index on the first truthy result. Otherwise it returns -1. Operation order, abrupt-completion propagation with `?`, and the -1 result all match the spec. No input-specific branches, no swallowed errors, and no fabricated values. The six remaining failures are BigInt not-implemented errors raised outside this file, which is honest. The one residual concern is GC rooting, not spec fidelity. The wrapper object from to_object on a primitive `this` is not rooted during length_of_array_like, which can run a user getter that allocates. This is a latent hazard under KAHVI_GC_STRESS and not a spec deviation.",
+    "problems": [],
+    "notes_for_next_attempt": "Diff is acceptable and can be merged as is. Optional hardening: when `this` is a primitive, to_object creates a fresh wrapper object that is held only in a Rust local. Before the `agent.with_roots` call, that object is not rooted while length_of_array_like performs Get(obj, \"length\"), which may invoke a user getter that allocates and triggers GC. Consider rooting obj (push_root or with_roots) across the length computation. The removed NOTE comment about the method being intentionally generic could be restored for spec-text fidelity, but this is cosmetic."
+  },
+  "ttft_ms": 18730,
+  "type": "result",
+  "duration_ms": 21888,
+  "uuid": "ccec94b6-bb9d-4a56-9e8b-db2769fb2a0e",
+  "ttft_stream_ms": 1557,
+  "time_to_request_ms": 497,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 302,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 25,
+    "input_hooks": 7,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 58,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 4,
+    "client_creation": 6,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 88,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 235,
+  "process_anon_mib_result": 117,
+  "process_peak_rss_mib": 249,
+  "process_cpu_ms_turn": 1243,
+  "process_wall_ms_turn": 21888,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1559,
+  "time_to_request_from_spawn_ms": 20744829,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000204858.6348,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18906,
+  "stop_reason": "end_turn",
+  "session_id": "cfd02a38-5f7e-45e2-b6bb-c1b191fe5606",
+  "total_cost_usd": 0.006416860000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 15956,
+    "cache_read_input_tokens": 119576,
+    "output_tokens": 3507,
+    "output_tokens_details": {
+      "thinking_tokens": 340
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15956,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 278,
+        "cache_read_input_tokens": 23161,
+        "cache_creation_input_tokens": 438,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 438
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Array.prototype.findIndex` in `crates/kahvi-builtins/src/array/prototype_find_index.rs`, following the spec steps with comments above each. It builds, clippy and fmt are clean, and 38 of 44 test262 runs under `built-ins/Array/prototype/findIndex/` pass.\n\nThe 6 failing runs are all `resizable-buffer*.js` tests that fail with \"not implemented: BigInt\", so the ticket's \"all pass\" condition isn't met. This is outside this file's scope.\n\nThe FindViaPredicate step lives in a local helper, mirroring `prototype_find.rs`, rather than a shared op. No files outside the ticket were changed.\n\nBLOCKED: BigInt support is missing from the engine; the resizable-buffer findIndex tests (6 runs) need it.",
+  "ttft_ms": 1582,
+  "type": "result",
+  "duration_ms": 33364,
+  "uuid": "5d7e6b8d-e044-4f04-a755-a185a1ac50b2",
+  "ttft_stream_ms": 1367,
+  "time_to_request_ms": 633,
+  "time_to_request_phases_ms": {
+    "other": 40,
+    "system_prompt": 339,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 18,
+    "input_hooks": 10,
+    "tool_pool_refresh": 6,
+    "init_message": 19,
+    "engine_pickup": 7,
+    "message_prep": 5,
+    "model_config_wait": 122,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 22,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 166,
+  "time_to_request_cpu_ms": 354,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 262,
+  "process_cpu_ms_turn": 3064,
+  "process_wall_ms_turn": 33359,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1369,
+  "time_to_request_from_spawn_ms": 20689452,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000147742.9226,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
