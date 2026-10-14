@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use crate::generated::string::prototype_trim::{TrimWhere, trim_string};
+
 /// parseFloat
 pub(crate) fn parse_float(
     agent: &mut Agent,
@@ -25,6 +27,113 @@ pub(crate) fn parse_float(
     //
     // NOTE:
     // This function may interpret only a leading portion of _string_ as a Number value; it ignores any code units that cannot be interpreted as part of the notation of a decimal literal, and no indication is given that any such code units were ignored.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("parseFloat"))
+    let _ = (this, new_target);
+    // 1. Let _inputString_ be ? ToString(_string_).
+    let input_string = ops::to_string(agent, args.get_or_undefined(0))?;
+    // 2. Let _trimmedString_ be ! TrimString(_inputString_, ~start~).
+    let trimmed_string = trim_string(agent, Value::String(input_string), TrimWhere::Start)?;
+    // 3. Let _trimmed_ be StringToCodePoints(_trimmedString_).
+    //    The StrDecimalLiteral grammar is ASCII, so scanning the UTF-16 code units
+    //    finds the same longest prefix as scanning the code points.
+    let trimmed = agent.str(trimmed_string);
+    // 4. - 7. See str_decimal_literal_prefix_value.
+    Ok(Value::Number(str_decimal_literal_prefix_value(trimmed)))
+}
+
+/// Steps 4 to 7 of parseFloat: find the longest prefix of _trimmed_ that satisfies
+/// |StrDecimalLiteral| and return its StringNumericValue. Returns NaN when there is
+/// no such prefix.
+fn str_decimal_literal_prefix_value(units: &[u16]) -> f64 {
+    let is_digit = |i: usize| units.get(i).is_some_and(|&u| matches!(u, 0x30..=0x39));
+    let ascii = |range: std::ops::Range<usize>| {
+        units
+            .get(range)
+            .unwrap_or_default()
+            .iter()
+            .map(|&u| char::from(u as u8))
+            .collect::<String>()
+    };
+    let mut i = 0;
+    // StrDecimalLiteral ::: StrUnsignedDecimalLiteral | + StrUnsignedDecimalLiteral | - StrUnsignedDecimalLiteral
+    let mut negative = false;
+    match units.first().copied() {
+        Some(0x2B) => i = 1,
+        Some(0x2D) => {
+            negative = true;
+            i = 1;
+        }
+        _ => {}
+    }
+    // StrUnsignedDecimalLiteral ::: Infinity
+    let infinity: Vec<u16> = "Infinity".encode_utf16().collect();
+    let magnitude = if units
+        .get(i..)
+        .is_some_and(|rest| rest.starts_with(&infinity))
+    {
+        f64::INFINITY
+    } else {
+        // StrUnsignedDecimalLiteral ::: DecimalDigits . DecimalDigits_opt ExponentPart_opt
+        //   | . DecimalDigits ExponentPart_opt | DecimalDigits ExponentPart_opt
+        let int_start = i;
+        while is_digit(i) {
+            i += 1;
+        }
+        let int_digits = ascii(int_start..i);
+        let mut frac_digits = String::new();
+        if units.get(i).copied() == Some(0x2E) {
+            let frac_start = i + 1;
+            let mut j = frac_start;
+            while is_digit(j) {
+                j += 1;
+            }
+            // A '.' is part of the literal only when it has digits before or after it.
+            if !int_digits.is_empty() || j > frac_start {
+                frac_digits = ascii(frac_start..j);
+                i = j;
+            }
+        }
+        if int_digits.is_empty() && frac_digits.is_empty() {
+            // No prefix satisfies |StrDecimalLiteral|: return NaN.
+            return f64::NAN;
+        }
+        // ExponentPart: e|E [+|-] DecimalDigits. An incomplete exponent is not consumed.
+        let mut exponent = String::new();
+        if matches!(units.get(i).copied(), Some(0x65 | 0x45)) {
+            let mut digits_start = i + 1;
+            let exp_sign = match units.get(digits_start).copied() {
+                Some(0x2B) => {
+                    digits_start += 1;
+                    ""
+                }
+                Some(0x2D) => {
+                    digits_start += 1;
+                    "-"
+                }
+                _ => "",
+            };
+            let mut j = digits_start;
+            while is_digit(j) {
+                j += 1;
+            }
+            if j > digits_start {
+                exponent = format!("e{exp_sign}{}", ascii(digits_start..j));
+            }
+        }
+        // The consumed text is a valid Rust float literal (digits, '.', digits, exponent).
+        let int_text = if int_digits.is_empty() {
+            "0".to_owned()
+        } else {
+            int_digits
+        };
+        let frac_text = if frac_digits.is_empty() {
+            "0".to_owned()
+        } else {
+            frac_digits
+        };
+        format!("{int_text}.{frac_text}{exponent}")
+            .parse::<f64>()
+            .unwrap_or(f64::NAN)
+    };
+    // 7. Return the StringNumericValue of _parsedNumber_.
+    if negative { -magnitude } else { magnitude }
 }
