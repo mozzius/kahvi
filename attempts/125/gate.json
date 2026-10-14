@@ -1,0 +1,43 @@
+{
+  "ticket": "B-typed-array-prototype-every",
+  "base": "22d58e9f33c9da2cf8c7e7b55f78807970dc90b3",
+  "head": "4baeda256d30b58484e4f8cfc08f1288a607cdc6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_every.rs",
+      "added": 40,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 88,
+    "before": 8,
+    "after": 78,
+    "new_passes": 70,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 10,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/every/BigInt/returns-true-if-every-cb-returns-true.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.unshift",
+      "built-ins/TypedArray/prototype/every/BigInt/returns-true-if-every-cb-returns-true.js:strict  Uncaught InternalError: not implemented: Array.prototype.unshift",
+      "built-ins/TypedArray/prototype/every/resizable-buffer-grow-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/resizable-buffer-grow-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/resizable-buffer-shrink-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/resizable-buffer-shrink-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/every/returns-true-if-every-cb-returns-true.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.unshift",
+      "built-ins/TypedArray/prototype/every/returns-true-if-every-cb-returns-true.js:strict  Uncaught InternalError: not implemented: Array.prototype.unshift"
+    ]
+  },
+  "decision": "pass"
+}

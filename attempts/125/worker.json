@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 32964,
+  "stop_reason": "end_turn",
+  "session_id": "5b23a979-8d61-476d-a1c0-e494cfbff474",
+  "total_cost_usd": 0.01657116,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 47748,
+    "cache_read_input_tokens": 350976,
+    "output_tokens": 5969,
+    "output_tokens_details": {
+      "thinking_tokens": 1753
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 47748,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 435,
+        "cache_read_input_tokens": 54199,
+        "cache_creation_input_tokens": 1192,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1192
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Ks2GT68EyZfWT9seVC8wNM",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/typed_array/prototype_every.rs && git status --short && cargo clippy -p kahvi-builtins 2>&1 | tail -3 && ./t262 built-ins/TypedArray/prototype/every/ 2>&1 | grep -E \"^t262|pass|not implemented\" -A3 | head -20",
+        "description": "Format my file, verify git scope, clippy and rerun tests"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.every` in `crates/kahvi-builtins/src/typed_array/prototype_every.rs`, following the spec steps with each step as a comment. Clippy is clean, and `./t262 built-ins/TypedArray/prototype/every/` reports 78 of 88 runs passing. The 10 failures are all \"not implemented\" errors: 6 need BigInt and 4 need `Array.prototype.unshift`, neither of which exists in the engine. I did not run `rustfmt` because that command was denied, so I formatted the file by hand to match `cargo fmt --check` for this file.\n\nBLOCKED: BigInt support (needed by the BigInt and resizable-buffer tests) and `Array.prototype.unshift` (needed by the BigInt test setup and the non-BigInt cases) are not implemented in the engine.",
+  "ttft_ms": 1791,
+  "type": "result",
+  "duration_ms": 75022,
+  "uuid": "f217ee61-3465-44cd-9d36-f2a4c1784508",
+  "ttft_stream_ms": 1580,
+  "time_to_request_ms": 640,
+  "time_to_request_phases_ms": {
+    "other": 54,
+    "system_prompt": 374,
+    "resume_other": 5,
+    "process_user_input": 14,
+    "input_attachments": 25,
+    "input_hooks": 12,
+    "tool_pool_refresh": 3,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 71,
+    "autocompact": 8,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 21,
+    "message_normalization": 7,
+    "client_creation": 10,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 172,
+  "time_to_request_cpu_ms": 318,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 275,
+  "process_anon_mib_result": 156,
+  "process_peak_rss_mib": 278,
+  "process_cpu_ms_turn": 4934,
+  "process_wall_ms_turn": 75021,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1582,
+  "time_to_request_from_spawn_ms": 18112136,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997571839.2188,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
