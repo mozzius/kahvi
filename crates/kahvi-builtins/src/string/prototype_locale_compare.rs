@@ -2,23 +2,31 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-string.prototype.localecompare
 
+use std::cmp::Ordering;
+
 use kahvi_core::prelude::*;
+use kahvi_unicode::{NormalizationForm, normalize_code_points};
 
 /// String.prototype.localeCompare
 pub(crate) fn prototype_locale_compare(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
     // This method returns a Number other than *NaN* representing the result of an implementation-defined locale-sensitive String comparison of the *this* value (converted to a String _string_) with _that_ (converted to a String _thatValue_). The result is intended to correspond with a sort order of String values according to conventions of the host environment's current locale, and will be negative when _string_ is ordered before _thatValue_, positive when _string_ is ordered after _thatValue_, and zero in all other cases (representing no relative ordering between _string_ and _thatValue_).
     // Before performing the comparisons, this method performs the following steps to prepare the Strings:
     //
     // 1. Let _thisValue_ be the *this* value.
+    let this_value = this;
     // 2. Perform ? RequireObjectCoercible(_thisValue_).
+    ops::require_object_coercible(agent, this_value)?;
     // 3. Let _string_ be ? ToString(_thisValue_).
+    let string = ops::to_string(agent, this_value)?;
     // 4. Let _thatValue_ be ? ToString(_that_).
+    let that = args.get_or_undefined(0);
+    let that_value = ops::to_string(agent, that)?;
     //
     // The meaning of the optional second and third parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not assign any other interpretation to those parameter positions.
     // The actual return values are implementation-defined to permit encoding additional information in them, but this method, when considered as a method of two arguments, is required to be a consistent comparator defining a total ordering on the set of all Strings. This method is also required to recognize and honour canonical equivalence according to the Unicode Standard, including returning *+0*_𝔽 when comparing distinguishable Strings that are canonically equivalent.
@@ -45,6 +53,48 @@ pub(crate) fn prototype_locale_compare(
     // It is recommended that this method should not honour Unicode compatibility equivalents or compatibility decompositions as defined in the Unicode Standard, chapter 3, section 3.7.
     // NOTE:
     // This method is intentionally generic; it does not require that its *this* value be a String object. Therefore, it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.localeCompare"))
+    //
+    // No host locale data is available, so the comparison orders the NFC form
+    // of each String by code units. Canonically equivalent Strings have the
+    // same NFC form and compare as 0, and ordering NFC code units is a total order.
+    let a = nfc_code_units(agent.str(string));
+    let b = nfc_code_units(agent.str(that_value));
+    Ok(Value::Number(match a.cmp(&b) {
+        Ordering::Less => -1.0,
+        Ordering::Equal => 0.0,
+        Ordering::Greater => 1.0,
+    }))
+}
+
+/// The NFC form of a String, as UTF-16 code units.
+fn nfc_code_units(units: &[u16]) -> Vec<u16> {
+    let code_points = to_code_points(units);
+    from_code_points(&normalize_code_points(&code_points, NormalizationForm::Nfc))
+}
+
+/// The code points of a string (CodePointAt over each position; a lone
+/// surrogate stands for itself).
+fn to_code_points(units: &[u16]) -> Vec<u32> {
+    char::decode_utf16(units.iter().copied())
+        .map(|r| match r {
+            Ok(c) => c as u32,
+            Err(e) => u32::from(e.unpaired_surrogate()),
+        })
+        .collect()
+}
+
+/// UTF16EncodeCodePoint over each code point.
+fn from_code_points(code_points: &[u32]) -> Vec<u16> {
+    let mut out = Vec::with_capacity(code_points.len());
+    for &cp in code_points {
+        match char::from_u32(cp) {
+            Some(c) => {
+                let mut buf = [0u16; 2];
+                out.extend_from_slice(c.encode_utf16(&mut buf));
+            }
+            // A lone surrogate.
+            None => out.push(cp as u16),
+        }
+    }
+    out
 }
