@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements %TypedArray%.prototype.some in its own file, keeping the spec step comments in place. Steps 1-7 follow the spec in order: ValidateTypedArray is propagated with `?`, TypedArrayLength is taken once, the IsCallable check throws a TypeError before any element access, and the loop runs TypedArrayGetElement then Call(callback, thisArg, kValue, k, obj) with `?`, then ToBoolean, returning true early and false at the end. There are no special-cased inputs, no made-up values and no swallowed errors. The one lint flag (unreachable! after ValidateTypedArray) is truly unreachable, because RequireInternalSlot throws for non-objects. The BigInt failures are honest not-implemented errors from elsewhere in the engine.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

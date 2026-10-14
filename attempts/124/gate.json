@@ -1,0 +1,35 @@
+{
+  "ticket": "B-iterator-prototype-flat-map",
+  "base": "22d58e9f33c9da2cf8c7e7b55f78807970dc90b3",
+  "head": "0f873ee57c70a22986edc3a10775c5f95567207d",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_flat_map.rs",
+      "added": 162,
+      "removed": 27
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 88,
+    "before": 12,
+    "after": 86,
+    "new_passes": 74,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/prototype/flatMap/strings-are-not-flattened.js:sloppy  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/prototype/flatMap/strings-are-not-flattened.js:strict  Uncaught InternalError: not implemented: StringIteratorPrototype.next"
+    ]
+  },
+  "decision": "pass"
+}

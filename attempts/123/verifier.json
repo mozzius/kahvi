@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15044,
+  "stop_reason": "tool_use",
+  "session_id": "988d5585-b4b5-43af-a88a-43b51bbbc8a4",
+  "total_cost_usd": 0.00325708,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6398,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2740,
+    "output_tokens_details": {
+      "thinking_tokens": 2260
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6398,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2740,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6398,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6398
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.some in its own file, keeping the spec step comments in place. Steps 1-7 follow the spec in order: ValidateTypedArray is propagated with `?`, TypedArrayLength is taken once, the IsCallable check throws a TypeError before any element access, and the loop runs TypedArrayGetElement then Call(callback, thisArg, kValue, k, obj) with `?`, then ToBoolean, returning true early and false at the end. There are no special-cased inputs, no made-up values and no swallowed errors. The one lint flag (unreachable! after ValidateTypedArray) is truly unreachable, because RequireInternalSlot throws for non-objects. The BigInt failures are honest not-implemented errors from elsewhere in the engine.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.some in its own file, keeping the spec step comments in place. Steps 1-7 follow the spec in order: ValidateTypedArray is propagated with `?`, TypedArrayLength is taken once, the IsCallable check throws a TypeError before any element access, and the loop runs TypedArrayGetElement then Call(callback, thisArg, kValue, k, obj) with `?`, then ToBoolean, returning true early and false at the end. There are no special-cased inputs, no made-up values and no swallowed errors. The one lint flag (unreachable! after ValidateTypedArray) is truly unreachable, because RequireInternalSlot throws for non-objects. The BigInt failures are honest not-implemented errors from elsewhere in the engine.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11192,
+  "type": "result",
+  "duration_ms": 13296,
+  "uuid": "3615a683-554f-40ea-a604-67a5bf36d4cf",
+  "ttft_stream_ms": 1240,
+  "time_to_request_ms": 627,
+  "time_to_request_phases_ms": {
+    "other": 51,
+    "system_prompt": 386,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 56,
+    "input_hooks": 16,
+    "tool_pool_refresh": 7,
+    "init_message": 20,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 41,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 108,
+  "time_to_request_cpu_ms": 365,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 977,
+  "process_wall_ms_turn": 13295,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 33,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1242,
+  "time_to_request_from_spawn_ms": 18141728,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997601340.6462,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

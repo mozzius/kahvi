@@ -69,3 +69,10 @@
 [17:06:11] B-typed-array-prototype-every: attempt on slot 1 with haiku
 [17:06:17] B-typed-array-prototype-reduce-right: attempt 121 finished ($0.205, 19 turns)
 [17:06:18] B-typed-array-prototype-reduce-right: gate rejected attempt 121: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 
+[17:06:20] B-typed-array-prototype-reduce-right: attempt on slot 2 with sonnet
+[17:06:23] B-typed-array-prototype-some: attempt 123 finished ($0.015, 17 turns)
+[17:06:47] B-iterator-prototype-flat-map: attempt 124 finished ($0.014, 11 turns)
+[17:06:59] stack: stack/0001 (#12) green: 71379/81183 passing, +4
+[17:07:01] stack: partial tickets after stack/0001: {'done': 2}
+[17:07:10] B-typed-array-prototype-some: verifier: accept The diff implements %TypedArray%.prototype.some in its own file, keeping the spec step comments in place. Steps 1-7 follow the spec in order: Validate
+[17:07:11] stack: pushed stack/0002 as #14 with arch-rn
