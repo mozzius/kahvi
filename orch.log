@@ -3341,3 +3341,7 @@ test262 at last merge: 76432/81183 runs passing
 [19:18:33] B-date-prototype-to-date-string: attempt 426 finished ($0.006, 11 turns)
 [19:18:34] B-math-acosh: attempt 427 finished ($0.005, 11 turns)
 [19:19:12] B-math-atan: verifier: accept The diff implements Math.atan in crates/kahvi-builtins/src/math/atan.rs following all five spec steps in order. Step 1 uses ops::to_number with `?`, s
+[19:19:13] B-math-acosh: verifier: accept The diff implements Math.acosh in crates/kahvi-builtins/src/math/acosh.rs and follows the five spec steps in order. Step 1 uses ops::to_number with `?
+[19:19:14] B-reg-exp-prototype-to-string: attempt on slot 0 with haiku
+[19:19:15] B-date-prototype-set-utc-seconds: verifier: accept The change implements Date.prototype.setUTCSeconds following the spec steps in order. Step 2 (brand check) runs before the time value is read, and ToN
+[19:19:16] B-date-prototype-to-date-string: verifier: revise Small, mostly faithful change. It keeps the RequireInternalSlot/NaN/LocalTime flow and propagates errors with `?`. It relies on existing helpers in su

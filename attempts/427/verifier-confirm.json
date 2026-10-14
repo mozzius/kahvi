@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5314,
+  "stop_reason": "tool_use",
+  "session_id": "305c1689-c27e-4756-85cb-7356a7c09441",
+  "total_cost_usd": 0.0193548,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3617,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 423,
+    "output_tokens_details": {
+      "thinking_tokens": 87
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3617,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 423,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3617,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3617
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Math.acosh with the spec steps in order. It calls ops::to_number and propagates its error with `?`. It handles NaN and +\u221e, then 1 \u2192 +0, then n < 1 \u2192 NaN, then uses Rust's f64::acosh for the approximation. Only the one in-scope file changed. The gate report shows 14/14 passing with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Math.acosh with the spec steps in order. It calls ops::to_number and propagates its error with `?`. It handles NaN and +\u221e, then 1 \u2192 +0, then n < 1 \u2192 NaN, then uses Rust's f64::acosh for the approximation. Only the one in-scope file changed. The gate report shows 14/14 passing with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 2727,
+  "type": "result",
+  "duration_ms": 4263,
+  "uuid": "9545de08-e0c9-4189-a9ab-ce146deb2299",
+  "ttft_stream_ms": 1577,
+  "time_to_request_ms": 458,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 284,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 16,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 83,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 250,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 594,
+  "process_wall_ms_turn": 4262,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1578,
+  "time_to_request_from_spawn_ms": 26086897,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005547186.9106,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.48,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

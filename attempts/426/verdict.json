@@ -1,0 +1,26 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/date/prototype_to_date_string.rs",
+      "question": "contradicts_spec",
+      "issue": "Line 26 calls date::date_string(t), which is a pre-existing helper outside this diff. For negative years it produces \"-000001\" for year -1 instead of the spec's \"-0001\". DateString step 6 requires ToZeroPaddedDecimalString(abs(yv), 4), so the padding must be 4 digits. The gate's test262 run confirms this: negative-year.js fails in sloppy and strict modes. The bug is in the helper, not in the diff text, but this path reached through the diff returns a wrong value. The ticket forbids editing other files, so the worker should have written DateString(t) in this file per the spec steps, or reported the helper bug instead of passing its wrong output through."
+    }
+  ],
+  "worth_keeping": true,
+  "summary": "Small, mostly faithful change. It keeps the RequireInternalSlot/NaN/LocalTime flow and propagates errors with `?`. It relies on existing helpers in support::date, which the build accepts. The one defect is that the DateString output for negative years is wrong (\"-000001\" instead of \"-0001\"), so the target test negative-year.js still fails. Step comments are paraphrased rather than the spec text.",
+  "notes_for_next_attempt": "Start from this diff. Fix the negative-year output so it matches DateString step 6: ToZeroPaddedDecimalString(abs(yv), 4), giving \"-0001\" for year -1. Either implement DateString steps 1-7 in this file (WeekDay and MonthFromTime index tables, DateFromTime, YearFromTime, zero-padding of abs year to 4 digits) or confirm the padding in support::date::date_string and report the helper bug if it is out of scope. Also restore the spec step text in the comments (e.g. \"Let dateObj be the this value\" instead of paraphrase). The original stub comments were the spec text. Keep the `?` on this_time_value and ensure RequireInternalSlot is actually performed by that helper.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}
