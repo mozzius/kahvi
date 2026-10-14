@@ -115,7 +115,9 @@ Named as in the spec, in snake_case. Most take `agent` first.
 
 Helpers shared between built-ins live in `crates/kahvi-builtins/src/support/`
 (`this_value.rs` has ThisNumberValue and friends, `error.rs` the error
-constructors, `array_iterator.rs` CreateArrayIterator).
+constructors, `array_iterator.rs` CreateArrayIterator, `regexp.rs` the RegExp
+internal slots (`RegExpData`, `require_regexp`) and RegExpCreate, RegExpExec,
+RegExpBuiltinExec and AdvanceStringIndex).
 
 ## Checking your work
 

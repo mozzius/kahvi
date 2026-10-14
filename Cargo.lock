@@ -7,6 +7,7 @@ name = "kahvi-builtins"
 version = "0.0.0"
 dependencies = [
  "kahvi-core",
+ "kahvi-regexp",
 ]
 
 [[package]]
@@ -27,6 +28,14 @@ dependencies = [
 
 [[package]]
 name = "kahvi-parser"
+version = "0.0.0"
+dependencies = [
+ "kahvi-regexp",
+ "kahvi-unicode",
+]
+
+[[package]]
+name = "kahvi-regexp"
 version = "0.0.0"
 dependencies = [
  "kahvi-unicode",

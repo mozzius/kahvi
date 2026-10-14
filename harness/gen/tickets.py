@@ -38,11 +38,11 @@ WORKER_GROUPS = {
     "object", "array", "array_iterator_prototype", "string", "number", "boolean", "symbol", "math", "json",
     "reflect", "global", "error", "aggregate_error", "suppressed_error", "function", "promise",
     "map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype",
-    "string_iterator_prototype", "date",
+    "string_iterator_prototype", "date", "reg_exp", "reg_exp_string_iterator_prototype",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
-    "Function": "CreateDynamicFunction needs parser entry points for parameters and bodies",
+    "RegExp.prototype.compile": "Annex B, out of scope until annexB/ is enabled",
     "String.prototype.normalize": "needs Unicode normalization tables",
     "Promise.try": "needs the Promise.try proposal semantics reviewed first",
 }
@@ -77,7 +77,15 @@ for _g in ("map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_
     ]
 EXTRA_READ["date"] = ["crates/kahvi-builtins/src/support/date.rs", "crates/kahvi-builtins/src/date/constructor.rs"]
 EXTRA_READ["string_iterator_prototype"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
-EXTRA_READ["string"] = ["crates/kahvi-builtins/src/support/string_iterator.rs"]
+EXTRA_READ["string"] = [
+    "crates/kahvi-builtins/src/support/string_iterator.rs",
+    "crates/kahvi-builtins/src/support/regexp.rs",
+]
+for _g in ("reg_exp", "reg_exp_string_iterator_prototype"):
+    EXTRA_READ[_g] = [
+        "crates/kahvi-builtins/src/support/regexp.rs",
+        "crates/kahvi-builtins/src/reg_exp/prototype_test.rs",
+    ]
 
 NOTES = """\
 Implement this built-in in its file, following the spec steps already in

@@ -4,20 +4,20 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::regexp::{regexp_builtin_exec, require_regexp};
+
 /// RegExp.prototype.exec
 pub(crate) fn prototype_exec(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method searches _string_ for an occurrence of the regular expression pattern and returns an Array containing the results of the match, or *null* if _string_ did not match.
-    // It performs the following steps when called:
-    //
-    // 1. Let _regexp_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_regexp_, [[RegExpMatcher]]).
-    // 3. Set _string_ to ? ToString(_string_).
-    // 4. Return ? RegExpBuiltinExec(_regexp_, _string_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("RegExp.prototype.exec"))
+    // 1. Let R be the this value.
+    // 2. Perform ? RequireInternalSlot(R, [[RegExpMatcher]]).
+    let r = require_regexp(agent, this)?;
+    // 3. Let S be ? ToString(string).
+    let s = ops::to_string(agent, args.get_or_undefined(0))?;
+    // 4. Return ? RegExpBuiltinExec(R, S).
+    regexp_builtin_exec(agent, r, s)
 }

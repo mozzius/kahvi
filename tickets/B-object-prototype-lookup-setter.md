@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/object/prototype_lookup_setter.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-object.prototype.__lookupSetter__"]
 target = ["built-ins/Object/prototype/__lookupSetter__/"]
-priority = 8
+priority = 22
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

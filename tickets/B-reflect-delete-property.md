@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/reflect/delete_property.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs"]
 spec = ["sec-reflect.deleteproperty"]
 target = ["built-ins/Reflect/deleteProperty/"]
-priority = 12
+priority = 23
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

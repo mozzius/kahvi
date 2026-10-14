@@ -833,6 +833,24 @@ impl Parser<'_> {
                 self.tok = self.lx.rescan_regexp(self.tok.start, self.tok.nl_before)?;
                 let t = self.next()?;
                 validate_regexp_flags(&t.regex_flags, t.start)?;
+                // It is a Syntax Error if IsValidRegularExpressionLiteral(RegularExpressionLiteral) is false.
+                let flags = kahvi_regexp::Flags {
+                    ignore_case: t.regex_flags.contains('i'),
+                    multiline: t.regex_flags.contains('m'),
+                    dot_all: t.regex_flags.contains('s'),
+                    unicode: t.regex_flags.contains('u'),
+                    unicode_sets: t.regex_flags.contains('v'),
+                };
+                if let Err(e) = kahvi_regexp::validate(&t.str_val, flags) {
+                    return Err(SyntaxError::new(
+                        format!(
+                            "invalid regular expression /{}/: {}",
+                            String::from_utf16_lossy(&t.str_val),
+                            e
+                        ),
+                        t.start,
+                    ));
+                }
                 Ok(Expr::RegExp {
                     span: t.span(),
                     pattern: t.str_val,
