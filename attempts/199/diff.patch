@@ -1,0 +1,34 @@
+diff --git a/crates/kahvi-builtins/src/reflect/set_prototype_of.rs b/crates/kahvi-builtins/src/reflect/set_prototype_of.rs
+index 5a73271..0ec6063 100644
+--- a/crates/kahvi-builtins/src/reflect/set_prototype_of.rs
++++ b/crates/kahvi-builtins/src/reflect/set_prototype_of.rs
+@@ -7,15 +7,25 @@ use kahvi_core::prelude::*;
+ /// Reflect.setPrototypeOf
+ pub(crate) fn set_prototype_of(
+     agent: &mut Agent,
+-    this: Value,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This function performs the following steps when called:
+     //
+     // 1. If _target_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(target) = args.get_or_undefined(0) else {
++        return Err(agent.throw_type_error("Reflect.setPrototypeOf called on non-object"));
++    };
+     // 2. If _proto_ is not an Object and _proto_ is not *null*, throw a *TypeError* exception.
++    let proto = match args.get_or_undefined(1) {
++        Value::Object(p) => Some(p.clone()),
++        Value::Null => None,
++        _ => {
++            return Err(agent.throw_type_error("Object prototype may only be an Object or null"));
++        }
++    };
+     // 3. Return ? _target_.[[SetPrototypeOf]](_proto_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Reflect.setPrototypeOf"))
++    let status = target.internal_set_prototype_of(agent, proto)?;
++    Ok(Value::Boolean(status))
+ }

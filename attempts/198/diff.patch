@@ -1,0 +1,28 @@
+diff --git a/crates/kahvi-builtins/src/object/entries.rs b/crates/kahvi-builtins/src/object/entries.rs
+index 684bb10..81418ab 100644
+--- a/crates/kahvi-builtins/src/object/entries.rs
++++ b/crates/kahvi-builtins/src/object/entries.rs
+@@ -7,15 +7,17 @@ use kahvi_core::prelude::*;
+ /// Object.entries
+ pub(crate) fn entries(
+     agent: &mut Agent,
+-    this: Value,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
+     // 1. Let _coerced_ be ? ToObject(_obj_).
++    let coerced = ops::to_object(agent, args.get_or_undefined(0))?;
+     // 2. Let _entryList_ be ? EnumerableOwnProperties(_coerced_, ~key+value~).
++    let entry_list = ops::enumerable_own_properties(agent, coerced, ops::EnumerableKind::KeyValue)?;
+     // 3. Return CreateArrayFromList(_entryList_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.entries"))
++    Ok(Value::Object(ops::create_array_from_list(
++        agent,
++        &entry_list,
++    )))
+ }

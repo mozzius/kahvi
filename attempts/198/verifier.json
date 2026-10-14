@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8380,
+  "stop_reason": "tool_use",
+  "session_id": "887691a6-1855-4763-81d1-1efc59ed2f73",
+  "total_cost_usd": 0.00188328,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4158,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1343,
+    "output_tokens_details": {
+      "thinking_tokens": 747
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4158,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1343,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4158,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4158
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Object.entries in the stub's three spec steps. ToObject(obj) is called with `?`, then EnumerableOwnProperties(coerced, key+value) with `?`, then CreateArrayFromList of the result. Each step keeps its spec comment directly above its code. Errors propagate and nothing is hardcoded or special-cased. The only other change is renaming the unused `this` and `new_target` parameters to `_this` and `_new_target`, which is needed once they are no longer read. The gate reports 34 new passing test262 runs and no regressions. I could only see the diff, not the `ops` helpers, so I did not verify their internals.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. The `ops` helpers (to_object, enumerable_own_properties with EnumerableKind::KeyValue, create_array_from_list, and args.get_or_undefined) are used but not shown here, so their correctness rests on the existing ops code. The line `let entry_list = ops::enumerable_own_properties(agent, coerced, ops::EnumerableKind::KeyValue)?;` is about 101 characters and may need rustfmt wrapping, which is cosmetic only.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Object.entries in the stub's three spec steps. ToObject(obj) is called with `?`, then EnumerableOwnProperties(coerced, key+value) with `?`, then CreateArrayFromList of the result. Each step keeps its spec comment directly above its code. Errors propagate and nothing is hardcoded or special-cased. The only other change is renaming the unused `this` and `new_target` parameters to `_this` and `_new_target`, which is needed once they are no longer read. The gate reports 34 new passing test262 runs and no regressions. I could only see the diff, not the `ops` helpers, so I did not verify their internals.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. The `ops` helpers (to_object, enumerable_own_properties with EnumerableKind::KeyValue, create_array_from_list, and args.get_or_undefined) are used but not shown here, so their correctness rests on the existing ops code. The line `let entry_list = ops::enumerable_own_properties(agent, coerced, ops::EnumerableKind::KeyValue)?;` is about 101 characters and may need rustfmt wrapping, which is cosmetic only."
+  },
+  "ttft_ms": 6455,
+  "type": "result",
+  "duration_ms": 9100,
+  "uuid": "a1518331-7ffe-4905-ad0d-d21f220e392c",
+  "ttft_stream_ms": 3372,
+  "time_to_request_ms": 1373,
+  "time_to_request_phases_ms": {
+    "other": 101,
+    "system_prompt": 804,
+    "resume_other": 0,
+    "process_user_input": 14,
+    "input_attachments": 60,
+    "input_hooks": 17,
+    "tool_pool_refresh": 13,
+    "init_message": 46,
+    "engine_pickup": 2,
+    "message_prep": 15,
+    "model_config_wait": 193,
+    "autocompact": 11,
+    "query_setup": 0,
+    "model_gates": 21,
+    "tool_schema_build": 17,
+    "message_normalization": 2,
+    "client_creation": 18,
+    "request_build": 39
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 282,
+  "time_to_request_cpu_ms": 375,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 765,
+  "process_wall_ms_turn": 9100,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3373,
+  "time_to_request_from_spawn_ms": 20215649,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999669523.2131,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

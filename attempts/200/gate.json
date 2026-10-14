@@ -1,0 +1,48 @@
+{
+  "ticket": "B-reg-exp-prototype-compile",
+  "base": "b3ed95fb8d349bd2b15f9c8c46f0c2dc3ca47166",
+  "head": "5a882f385a35350caec00eebf3a0ff06e19a1f97",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_compile.rs",
+      "added": 26,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 6,
+    "after": 26,
+    "new_passes": 20,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 16,
+    "canaries_ok": true,
+    "failing_sample": [
+      "annexB/built-ins/RegExp/prototype/compile/flags-string-invalid.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/flags-string-invalid.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/flags-to-string.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "annexB/built-ins/RegExp/prototype/compile/flags-to-string.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "annexB/built-ins/RegExp/prototype/compile/flags-undefined.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "annexB/built-ins/RegExp/prototype/compile/flags-undefined.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.global",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-distinct.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-distinct.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-immutable-lastindex.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-immutable-lastindex.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-same.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-regexp-same.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-string-invalid-u.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-string-invalid-u.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "annexB/built-ins/RegExp/prototype/compile/pattern-string-invalid.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

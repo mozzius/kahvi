@@ -314,3 +314,9 @@
 [17:40:21] B-array-prototype-find-last-index: verifier: accept The diff implements Array.prototype.findLastIndex and a FindViaPredicate helper (descending only) in the ticket's file. Steps 1-4 of findLastIndex run
 [17:40:24] B-reg-exp-prototype-compile: attempt on slot 3 with haiku
 [17:40:36] B-date-prototype-set-hours: verifier: accept The diff implements Date.prototype.setHours following the 16 spec steps in order. The brand check, the [[DateValue]] read before the ToNumber calls, t
+[17:40:39] B-string-prototype-trim-end: attempt on slot 1 with haiku
+[17:40:46] B-object-entries: attempt 198 finished ($0.009, 17 turns)
+[17:41:01] B-reflect-set-prototype-of: attempt 199 finished ($0.006, 14 turns)
+[17:41:02] B-reg-exp-prototype-compile: attempt 200 finished ($0.007, 11 turns)
+[17:41:15] B-string-prototype-trim-end: attempt 201 finished ($0.005, 9 turns)
+[17:41:36] B-object-entries: verifier: accept The diff implements Object.entries in the stub's three spec steps. ToObject(obj) is called with `?`, then EnumerableOwnProperties(coerced, key+value) 

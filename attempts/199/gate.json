@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reflect-set-prototype-of",
+  "base": "d4651e428dd53a5226e0d60b4119365556ef1ddb",
+  "head": "eb4d6629bf247c97f52ba7bd5f78a919aed4b104",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/set_prototype_of.rs",
+      "added": 14,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 8,
+    "after": 26,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Reflect/setPrototypeOf/return-abrupt-from-result.js:sloppy  Uncaught InternalError: not implemented: Proxy [[SetPrototypeOf]]",
+      "built-ins/Reflect/setPrototypeOf/return-abrupt-from-result.js:strict  Uncaught InternalError: not implemented: Proxy [[SetPrototypeOf]]"
+    ]
+  },
+  "decision": "pass"
+}
