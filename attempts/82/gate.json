@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-construct",
+  "base": "c6e88645680073c0b26fdff5ecc1dfb4ba1b8601",
+  "head": "3e407acb9670bc2f3131a928aaad7e2bdffba0d4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/construct.rs",
+      "added": 35,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 58,
+    "before": 0,
+    "after": 58,
+    "new_passes": 58,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -60,3 +60,8 @@
 [09:44:00] B-set-prototype-values: attempt 81 finished ($0.005, 12 turns)
 [09:44:23] B-set-prototype-values: verifier: accept The diff replaces the not-implemented stub in Set.prototype.values with a call to this_set (RequireInternalSlot on [[SetData]]) followed by create_col
 [09:56:16] B-reg-exp-prototype-get-source: merged (+36, 68814 total)
+[09:56:17] B-set-prototype-values: full test262 run for merge
+[09:56:18] C-proxy-construct: attempt on slot 0 with haiku
+[09:56:50] C-proxy-construct: attempt 82 finished ($0.009, 19 turns)
+[09:57:16] C-proxy-construct: verifier: accept The diff implements Proxy [[Construct]] in construct.rs, following the spec steps 1-11 in order. It calls ValidateNonRevokedProxy via p.validate_non_r
+[10:09:05] B-set-prototype-values: merged (+28, 68842 total)

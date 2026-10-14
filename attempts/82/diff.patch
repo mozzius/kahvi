@@ -1,0 +1,60 @@
+diff --git a/crates/kahvi-core/src/object/proxy/construct.rs b/crates/kahvi-core/src/object/proxy/construct.rs
+index 47f989f..d60735b 100644
+--- a/crates/kahvi-core/src/object/proxy/construct.rs
++++ b/crates/kahvi-core/src/object/proxy/construct.rs
+@@ -7,12 +7,13 @@
+ use super::ProxyData;
+ use crate::agent::Agent;
+ use crate::error::JsResult;
++use crate::ops;
+ use crate::value::{Object, Value};
+ 
+ /// The [[Construct]] internal method of the Proxy exotic object `o` with slots `p`.
+ pub(crate) fn construct(
+     agent: &mut Agent,
+-    o: Object,
++    _o: Object,
+     p: &ProxyData,
+     args: &[Value],
+     new_target: Object,
+@@ -38,7 +39,37 @@ pub(crate) fn construct(
+     // [[Construct]] for Proxy objects enforces the following invariants:
+     // -
+     // The result of [[Construct]] must be an Object.
+-    let _ = (o, p);
+-    let _ = (args, new_target);
+-    Err(agent.not_implemented("Proxy [[Construct]]"))
++    // 1. Perform ? ValidateNonRevokedProxy(_obj_).
++    let (target, handler) = p.validate_non_revoked(agent)?;
++    // 2. Let _target_ be _obj_.[[ProxyTarget]].
++    // 3. Assert: IsConstructor(_target_) is *true*.
++    // 4. Let _handler_ be _obj_.[[ProxyHandler]].
++    // 5. Assert: _handler_ is an Object.
++    // 6. Let _trap_ be ? GetMethod(_handler_, *"construct"*).
++    let construct_key = agent.key("construct");
++    let trap = ops::get_method(agent, Value::Object(handler), construct_key)?;
++    // 7. If _trap_ is *undefined*, then
++    if trap.is_undefined() {
++        // a. Return ? Construct(_target_, _argList_, _newTarget_).
++        return ops::construct(agent, target, args, Some(new_target));
++    }
++    // 8. Let _argArray_ be CreateArrayFromList(_argList_).
++    let arg_array = ops::create_array_from_list(agent, args);
++    // 9. Let _newObj_ be ? Call(_trap_, _handler_, « _target_, _argArray_, _newTarget_ »).
++    let new_obj = ops::call(
++        agent,
++        trap,
++        Value::Object(handler),
++        &[
++            Value::Object(target),
++            Value::Object(arg_array),
++            Value::Object(new_target),
++        ],
++    )?;
++    // 10. If _newObj_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(new_obj) = new_obj else {
++        return Err(agent.throw_type_error("Proxy [[Construct]] trap returned a non-object"));
++    };
++    // 11. Return _newObj_.
++    Ok(new_obj)
+ }
