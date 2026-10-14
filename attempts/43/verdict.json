@@ -1,0 +1,38 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": true,
+    "skips_observable_steps": true,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The state-machine design is sound and most steps match the spec in order: GetMethod lookups, sync-to-async wrapping, Construct/ArrayCreate branches, the 2^53-1 check, next/Await/IteratorComplete/IteratorValue, mapping with IfAbruptCloseAsyncIterator, the array-like path, and the promise rejection on abrupt completion. One real defect: when CreateDataPropertyOrThrow fails (step 8.d.xi/xii), define_or_close delegates to close_on_error. If the iterator has a return() method, close_on_error returns Ok(()) while the return() result is awaited. Both call sites then ignore that and continue the loop: they call next() again, overwrite the Close pending state with Next, and never reject with the original TypeError. Per spec, IfAbruptCloseAsyncIterator must return the throw completion once the await finishes, with no further next() calls.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/array/from_async.rs",
+      "question": "contradicts_spec",
+      "issue": "In next_fulfilled (around line 366-368), define_or_close(...)? is followed by iter_step(...). When CreateDataPropertyOrThrow fails and the iterator has a return() method, close_on_error -> async_iterator_close sets Pending::Close and returns Ok(()) while the return() result is awaited. define_or_close then returns Ok and the code calls iter_step, which calls next() again and overwrites Pending::Close with Pending::Next. Spec step 8.d.xii (IfAbruptCloseAsyncIterator) requires the throw completion to be returned after the close, with no further loop iterations. Fix: stop the loop when the close is pending (e.g. make define_or_close return a flag or return early so iter_step is not called)."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/from_async.rs",
+      "question": "swallows_errors",
+      "issue": "The same path (around lines 366-368 in next_fulfilled and 268-269 in step, Pending::Mapped) discards the CreateDataPropertyOrThrow error. The ? on define_or_close only propagates the Ok returned while the return() await is pending, so the original TypeError is never rethrown after the close completes. Spec step 8.d.xii requires that completion to be returned via AsyncIteratorClose."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/from_async.rs",
+      "question": "skips_observable_steps",
+      "issue": "After a define failure with an async return() in progress, the code performs an extra Call(iterator.next) (step 8.d.iii) and an extra Get of next result, which the spec never performs because the function must return after closing. This is observable through the iterator's next method and the order of return() calls."
+    }
+  ],
+  "notes_for_next_attempt": "Fix the define-failure close path. In define_or_close (used from next_fulfilled, the non-mapping branch at roughly lines 366-368, and from step's Pending::Mapped arm at roughly lines 268-269), a pending AsyncIteratorClose must stop the loop. Right now close_on_error returns Ok(()) once return() is being awaited, and the callers then run iter_step, which calls next() again and overwrites Pending::Close. Change define_or_close so that, when the close is pending, the caller returns immediately (for example, return a bool \"continue\" flag, or return Ok(()) early from the caller instead of calling iter_step). Also check that the rejection with the original TypeError still happens after the return() await settles (Pending::Close returns the stored error). Everything else in the diff matched the spec on review; keep it.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "swallows_errors",
+    "skips_observable_steps",
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

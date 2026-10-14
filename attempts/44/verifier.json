@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 8917,
+  "stop_reason": "tool_use",
+  "session_id": "c9206d1e-1364-4aab-80e4-700e4a5d6751",
+  "total_cost_usd": 0.00199036,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4375,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1441,
+    "output_tokens_details": {
+      "thinking_tokens": 871
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4375,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1441,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 4375,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4375
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Object.seal in crates/kahvi-builtins/src/object/seal.rs and matches the spec's four steps in order. Step 1 returns non-objects unchanged. Step 2 propagates errors from ops::set_integrity_level(agent, o, Sealed) with `?`. Step 3 throws a TypeError when the status is false. Step 4 returns the object. Each step's comment sits directly above its code, and no other file is touched. The remaining failures in the gate report come from Proxy [[PreventExtensions]] and Object.isSealed being unimplemented, which is an honest not-implemented path, not a defect in this change. I found no special-casing, swallowed errors, made-up values or unrelated edits. The SetIntegrityLevel logic lives in ops and is not part of this diff, so I did not review it.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes needed for seal.rs. The remaining test262 failures come from unimplemented dependencies: Object.isSealed and Proxy [[PreventExtensions]]. Those belong to other tickets and should keep throwing the not-implemented error.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Object.seal in crates/kahvi-builtins/src/object/seal.rs and matches the spec's four steps in order. Step 1 returns non-objects unchanged. Step 2 propagates errors from ops::set_integrity_level(agent, o, Sealed) with `?`. Step 3 throws a TypeError when the status is false. Step 4 returns the object. Each step's comment sits directly above its code, and no other file is touched. The remaining failures in the gate report come from Proxy [[PreventExtensions]] and Object.isSealed being unimplemented, which is an honest not-implemented path, not a defect in this change. I found no special-casing, swallowed errors, made-up values or unrelated edits. The SetIntegrityLevel logic lives in ops and is not part of this diff, so I did not review it.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes needed for seal.rs. The remaining test262 failures come from unimplemented dependencies: Object.isSealed and Proxy [[PreventExtensions]]. Those belong to other tickets and should keep throwing the not-implemented error."
+  },
+  "ttft_ms": 6069,
+  "type": "result",
+  "duration_ms": 8231,
+  "uuid": "3091e2b5-d346-4a56-97f1-b2d831393b33",
+  "ttft_stream_ms": 2028,
+  "time_to_request_ms": 147,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 87,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 46,
+  "time_to_request_cpu_ms": 158,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2029,
+  "time_to_request_from_spawn_ms": 25097778,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791944072405.7563,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.71,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

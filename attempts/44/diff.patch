@@ -1,0 +1,27 @@
+diff --git a/crates/kahvi-builtins/src/object/seal.rs b/crates/kahvi-builtins/src/object/seal.rs
+index b45ad26..564ad85 100644
+--- a/crates/kahvi-builtins/src/object/seal.rs
++++ b/crates/kahvi-builtins/src/object/seal.rs
+@@ -11,12 +11,18 @@ pub(crate) fn seal(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
++    let _ = (this, new_target);
+     // 1. If _obj_ is not an Object, return _obj_.
++    let obj = args.get_or_undefined(0).clone();
++    let Value::Object(o) = obj else {
++        return Ok(obj);
++    };
+     // 2. Let _status_ be ? SetIntegrityLevel(_obj_, ~sealed~).
++    let status = ops::set_integrity_level(agent, o, ops::IntegrityLevel::Sealed)?;
+     // 3. If _status_ is *false*, throw a *TypeError* exception.
++    if !status {
++        return Err(agent.throw_type_error("Object.seal could not seal the object"));
++    }
+     // 4. Return _obj_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.seal"))
++    Ok(Value::Object(o))
+ }

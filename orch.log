@@ -1,11 +1,8 @@
-[01:31:43] building trusted runner; integration branch m1-spine, 2 slots
-[01:31:44] B-set-prototype-add: attempt on slot 1 with haiku
-[01:31:44] C-proxy-get: attempt on slot 0 with haiku
-[01:32:26] B-set-prototype-add: attempt 42 finished ($0.007, 10 turns)
-[01:32:44] C-proxy-get: attempt 41 finished ($0.012, 19 turns)
-[01:33:12] B-set-prototype-add: verifier: accept The diff in prototype_add.rs follows the spec steps in order. It calls this_set (RequireInternalSlot, step 2), collection_key (CanonicalizeKeyedCollec
-[01:33:26] B-set-prototype-add: full test262 run for merge
-[01:33:32] C-proxy-get: verifier: accept The diff implements Proxy [[Get]] steps 1-10 in order, in get.rs. ValidateNonRevokedProxy uses `?`, GetMethod(handler, "get") uses `?`, and the undefi
-[01:44:53] B-set-prototype-add: merged (+30, 63624 total)
-[01:44:55] C-proxy-get: full test262 run for merge
-[01:56:25] C-proxy-get: merged (+114, 63738 total)
+[02:13:46] building trusted runner; integration branch m1-spine, 2 slots
+[02:13:46] B-array-from-async: attempt on slot 1 with haiku
+[02:13:46] B-object-seal: attempt on slot 0 with haiku
+[02:14:16] B-object-seal: attempt 44 finished ($0.004, 9 turns)
+[02:14:47] B-object-seal: verifier: accept The diff implements Object.seal in crates/kahvi-builtins/src/object/seal.rs and matches the spec's four steps in order. Step 1 returns non-objects unc
+[02:14:58] B-object-seal: full test262 run for merge
+[02:16:33] B-array-from-async: attempt 43 finished ($0.041, 16 turns)
+[02:18:07] B-array-from-async: verifier: revise The state-machine design is sound and most steps match the spec in order: GetMethod lookups, sync-to-async wrapping, Construct/ArrayCreate branches, t

@@ -1,0 +1,123 @@
+{
+  "duration_api_ms": 164123,
+  "stop_reason": "end_turn",
+  "session_id": "3ebb7ac1-ed3a-420a-9a68-de8377c5d589",
+  "total_cost_usd": 0.040631310000000004,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 73008,
+    "cache_read_input_tokens": 510921,
+    "output_tokens": 40608,
+    "output_tokens_details": {
+      "thinking_tokens": 27027
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 73008,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 321,
+        "cache_read_input_tokens": 77735,
+        "cache_creation_input_tokens": 2753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01SH7umZwBDs267c5unr1CLp",
+      "tool_input": {
+        "command": "cargo build -p kahvi-cli 2>&1 | grep -E \"^(error|warning)\" -A12 | head -150; echo BUILD_EXIT=${PIPESTATUS[0]}",
+        "timeout": 600000,
+        "description": "Build the engine CLI and show errors"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I rewrote `crates/kahvi-builtins/src/array/from_async.rs` to implement Array.fromAsync, but I have not compiled it or run any test262 tests. The build command was denied in this session, so the file is unverified.\n\nThe engine has no native await, so the file uses a state machine. The function's state lives in a native object, and each Await registers a promise reaction closure that resumes it. The iterator path, the array-like path, the mapper, and AsyncIteratorClose are all implemented, and the spec steps are kept as comments above the code. The only file changed is the one in scope.\n\nNext step: run `cargo build -p kahvi-cli`, `cargo clippy`, `cargo fmt`, and `./t262 built-ins/Array/fromAsync/` to confirm it builds and the tests pass.\n\nBLOCKED: I could not build or run the Rust compiler or test262 here because the `cargo build` command was denied by the environment, so compile errors and test results are unknown.",
+  "ttft_ms": 1173,
+  "type": "result",
+  "duration_ms": 164993,
+  "uuid": "e2de31c4-82d8-4609-a1f0-6ed3024d0ab9",
+  "ttft_stream_ms": 866,
+  "time_to_request_ms": 129,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 17,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 44,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 22,
+  "time_to_request_cpu_ms": 162,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 866,
+  "time_to_request_from_spawn_ms": 25051833,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791944026792.4102,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.72,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

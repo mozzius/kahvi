@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 11288,
+  "stop_reason": "end_turn",
+  "session_id": "0988f6f8-a399-4463-99b8-a0509ee88689",
+  "total_cost_usd": 0.00413788,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 10501,
+    "cache_read_input_tokens": 80348,
+    "output_tokens": 1993,
+    "output_tokens_details": {
+      "thinking_tokens": 266
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10501,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 333,
+        "cache_read_input_tokens": 17568,
+        "cache_creation_input_tokens": 413,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 413
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Object.seal` in `crates/kahvi-builtins/src/object/seal.rs` as the spec steps: non-objects are returned as-is, `ops::set_integrity_level(.., Sealed)` runs, a `false` result throws a TypeError, and otherwise the object is returned. `cargo build` and `cargo clippy` are clean.\n\n`./t262 built-ins/Object/seal/` gives 118 passing runs and 66 failing. Every failure is a not-implemented error from outside this file: `Object.isSealed` (24), `Proxy [[PreventExtensions]]` (10), and other unrelated built-ins. The ticket's \"8 pass on main\" baseline is not met by this change alone, because most of the remaining failures need `Object.isSealed`, which is not in my scope.\n\nBLOCKED: Object.isSealed (and Proxy [[PreventExtensions]]) are not implemented, so the remaining built-ins/Object/seal/ tests cannot pass.",
+  "ttft_ms": 1291,
+  "type": "result",
+  "duration_ms": 28051,
+  "uuid": "5a91162a-7caa-4915-aa03-d2b343f64b81",
+  "ttft_stream_ms": 820,
+  "time_to_request_ms": 122,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 17,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 25,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 72,
+  "time_to_request_cpu_ms": 156,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 821,
+  "time_to_request_from_spawn_ms": 25051904,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791944026826.6367,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.71,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "ticket": "B-object-seal",
+  "base": "102ff2b3b91a5ac900ba56e48b0e01978f016eb3",
+  "head": "34ae1c2b0ad7663c1e68f899c44c6e6874df5bee",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/seal.rs",
+      "added": 10,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 184,
+    "before": 8,
+    "after": 118,
+    "new_passes": 110,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 66,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/seal/abrupt-completion.js:sloppy  Uncaught InternalError: not implemented: Proxy [[PreventExtensions]]",
+      "built-ins/Object/seal/abrupt-completion.js:strict  Uncaught InternalError: not implemented: Proxy [[PreventExtensions]]",
+      "built-ins/Object/seal/object-seal-o-is-a-boolean-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-boolean-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-date-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-date-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-function-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-function-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-number-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-number-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-reg-exp-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-reg-exp-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-string-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-a-string-object.js:strict  Uncaught InternalError: not implemented: Object.isSealed",
+      "built-ins/Object/seal/object-seal-o-is-an-arguments-object.js:sloppy  Uncaught InternalError: not implemented: Object.isSealed"
+    ]
+  },
+  "decision": "pass"
+}
