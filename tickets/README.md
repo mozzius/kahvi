@@ -9,7 +9,7 @@ blocked …) lives in the orchestrator's database, not here.
 id = "T-0001"
 title = "Array.prototype.flatMap"
 kind = "builtin"            # builtin | language | parser | infra
-tier = "haiku"              # starting tier: haiku | sonnet | opus
+tier = "haiku"              # starting tier: haiku | sonnet | opus | architect
 scope = ["crates/kahvi-builtins/src/array/flat_map.rs"]   # the only files the worker may change
 read = ["docs/API.md", "crates/kahvi-builtins/src/array/flat.rs"]
 spec = ["sec-array.prototype.flatmap", "sec-flattenintoarray"]
@@ -32,3 +32,6 @@ Good tickets:
   exist yet, that is another ticket in `needs`.
 - **Sized for Haiku.** If two attempts come back garbage, the ticket is
   probably too big or under-specified. Split it rather than only escalating.
+
+Tickets with `tier = "architect"` (named `A-*`) are tracked here but never
+dispatched to the swarm: they are core work the architect does by hand.
