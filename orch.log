@@ -1032,3 +1032,4 @@ test262 at last merge: 72953/81183 runs passing
 [18:20:29] B-data-view-prototype-get-int8: verifier: accept The diff makes DataView.prototype.getInt8 follow the spec: it keeps step 1 (view = this) and step 2 as comments, and delegates to the existing support
 [18:20:35] B-disposable-stack-prototype-defer: attempt on slot 2 with haiku
 [18:20:41] B-data-view-prototype-get-uint16: verifier: accept The diff implements DataView.prototype.getUint16 in its single in-scope file. Step 1 binds `this` to view. Step 2 maps an absent or undefined littleEn
+[18:20:56] B-data-view-prototype-get-uint32: verifier: accept The diff wires DataView.prototype.getUint32 to the existing support helper get_view_value with ElementType::Uint32. Step 1 (this as view) and step 2 (

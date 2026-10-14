@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 14869,
+  "stop_reason": "tool_use",
+  "session_id": "f1534dba-89d1-4da3-9319-9397a5fa7f37",
+  "total_cost_usd": 0.0033726800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6358,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2998,
+    "output_tokens_details": {
+      "thinking_tokens": 2315
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6358,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2998,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6358,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6358
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setDate in its own file, with each spec step as a comment above its code. Steps run in spec order: this-check via date::this_time_value (step 2-3), then ops::to_number on the argument (step 4), NaN early return (step 5), LocalTime, MakeDate/MakeDay with YearFromTime/MonthFromTime/TimeWithinDay (step 7), TimeClip(UTC()) (step 8), store to [[DateValue]] (step 9), and return (step 10). Errors propagate with `?`. There are no test-specific branches and no made-up values. The only remaining not-implemented failures come from Date.prototype.setTime, which is outside this ticket. The one thing I could not check from the diff alone is that date::this_time_value really performs RequireInternalSlot and that the date:: helpers (make_day, make_date, utc, time_clip, local_time) match their spec algorithms, since those live in files not shown here.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing to fix in this diff. Before merging, confirm that crate::support::date::this_time_value throws a TypeError for non-Date receivers (RequireInternalSlot), and that make_day, make_date, utc, time_clip and local_time follow their spec algorithms (non-finite handling, ToIntegerOrInfinity, 8.64e15 bound). The 4 remaining failures need Date.prototype.setTime, which belongs to another ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setDate in its own file, with each spec step as a comment above its code. Steps run in spec order: this-check via date::this_time_value (step 2-3), then ops::to_number on the argument (step 4), NaN early return (step 5), LocalTime, MakeDate/MakeDay with YearFromTime/MonthFromTime/TimeWithinDay (step 7), TimeClip(UTC()) (step 8), store to [[DateValue]] (step 9), and return (step 10). Errors propagate with `?`. There are no test-specific branches and no made-up values. The only remaining not-implemented failures come from Date.prototype.setTime, which is outside this ticket. The one thing I could not check from the diff alone is that date::this_time_value really performs RequireInternalSlot and that the date:: helpers (make_day, make_date, utc, time_clip, local_time) match their spec algorithms, since those live in files not shown here.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing to fix in this diff. Before merging, confirm that crate::support::date::this_time_value throws a TypeError for non-Date receivers (RequireInternalSlot), and that make_day, make_date, utc, time_clip and local_time follow their spec algorithms (non-finite handling, ToIntegerOrInfinity, 8.64e15 bound). The 4 remaining failures need Date.prototype.setTime, which belongs to another ticket."
+  },
+  "ttft_ms": 12579,
+  "type": "result",
+  "duration_ms": 15087,
+  "uuid": "ed5af4f8-ade8-4d42-8a57-7c083971a74f",
+  "ttft_stream_ms": 2328,
+  "time_to_request_ms": 1178,
+  "time_to_request_phases_ms": {
+    "other": 90,
+    "system_prompt": 600,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 106,
+    "input_hooks": 198,
+    "tool_pool_refresh": 2,
+    "init_message": 37,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 85,
+    "autocompact": 13,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 19,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 473,
+  "time_to_request_cpu_ms": 339,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 118,
+  "process_peak_rss_mib": 237,
+  "process_cpu_ms_turn": 1062,
+  "process_wall_ms_turn": 15086,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 74,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2329,
+  "time_to_request_from_spawn_ms": 22574287,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002032499.7263,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

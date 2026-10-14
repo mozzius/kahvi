@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10068,
+  "stop_reason": "tool_use",
+  "session_id": "125d3088-c93f-4400-bd96-59ce41ac00fc",
+  "total_cost_usd": 0.00198858,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3874,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1719,
+    "output_tokens_details": {
+      "thinking_tokens": 1147
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3874,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1719,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3874,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3874
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff wires DataView.prototype.getUint32 to the existing support helper get_view_value with ElementType::Uint32. Step 1 (this as view) and step 2 (littleEndian defaults to false when absent) are present, and step 3 delegates to GetViewValue. An explicitly passed undefined still reaches ToBoolean inside the helper, which gives the same result as the spec. The only other change is renaming the unused new_target parameter to _new_target. No special-casing, made-up values, swallowed errors, or unrelated edits were found. The GetViewValue steps (RequireInternalSlot, ToIndex ordering, bounds checks) live in the helper, which is outside this diff, so I did not verify them directly.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in this diff. The GetViewValue steps (RequireInternalSlot, ToIndex, ToBoolean ordering, the out-of-bounds TypeError and the RangeError) are implemented in crate::support::typed_array::get_view_value, which this diff does not touch. Confirm that helper is spec-faithful when reviewing its other callers.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff wires DataView.prototype.getUint32 to the existing support helper get_view_value with ElementType::Uint32. Step 1 (this as view) and step 2 (littleEndian defaults to false when absent) are present, and step 3 delegates to GetViewValue. An explicitly passed undefined still reaches ToBoolean inside the helper, which gives the same result as the spec. The only other change is renaming the unused new_target parameter to _new_target. No special-casing, made-up values, swallowed errors, or unrelated edits were found. The GetViewValue steps (RequireInternalSlot, ToIndex ordering, bounds checks) live in the helper, which is outside this diff, so I did not verify them directly.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in this diff. The GetViewValue steps (RequireInternalSlot, ToIndex, ToBoolean ordering, the out-of-bounds TypeError and the RangeError) are implemented in crate::support::typed_array::get_view_value, which this diff does not touch. Confirm that helper is spec-faithful when reviewing its other callers."
+  },
+  "ttft_ms": 7039,
+  "type": "result",
+  "duration_ms": 9139,
+  "uuid": "a6c61211-d432-4fd9-b08a-26de57d9d47f",
+  "ttft_stream_ms": 1860,
+  "time_to_request_ms": 465,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 326,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 9,
+    "engine_pickup": 1,
+    "message_prep": 6,
+    "model_config_wait": 58,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 222,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 237,
+  "process_anon_mib_turn_start": 121,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 245,
+  "process_cpu_ms_turn": 734,
+  "process_wall_ms_turn": 9139,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1861,
+  "time_to_request_from_spawn_ms": 22577323,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002037602.9656,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
