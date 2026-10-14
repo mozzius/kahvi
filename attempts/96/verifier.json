@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 19666,
+  "stop_reason": "tool_use",
+  "session_id": "ef23d3fe-4e6c-4a82-9824-9d3431d45637",
+  "total_cost_usd": 0.0035434399999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5534,
+    "cache_read_input_tokens": 3504,
+    "output_tokens": 3827,
+    "output_tokens_details": {
+      "thinking_tokens": 3247
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5534,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3827,
+        "cache_read_input_tokens": 3504,
+        "cache_creation_input_tokens": 5534,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5534
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.raw in crates/kahvi-builtins/src/string/raw.rs and follows the spec steps 1\u20138 in order. Each step is kept as a comment above its code. ToObject, Get, LengthOfArrayLike, Get per index, ToString on literals and substitutions, and the early returns all use `?` and match the spec's observable operation order. Substitutions are read as args[nextIndex+1], which is the correct offset because args[0] is the template. Nothing is special-cased, no value is made up, and no error is swallowed. The only file changed is raw.rs. The 52 newly passing test262 tests fit a change of this size.\",\"problems\":[],\"notes_for_next_attempt\":\"No blocking issues. Minor GC-rooting observation, not a defect I can confirm: `literals` is not rooted between `ops::to_object(agent, raw_value)` and entry to `agent.with_roots`, which covers the `ops::length_of_array_like` call. That call can run user code through a `length` getter. Check that the engine roots the receiver for the duration of getter calls, and confirm under KAHVI_GC_STRESS=1 if that is in scope.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.raw in crates/kahvi-builtins/src/string/raw.rs and follows the spec steps 1\u20138 in order. Each step is kept as a comment above its code. ToObject, Get, LengthOfArrayLike, Get per index, ToString on literals and substitutions, and the early returns all use `?` and match the spec's observable operation order. Substitutions are read as args[nextIndex+1], which is the correct offset because args[0] is the template. Nothing is special-cased, no value is made up, and no error is swallowed. The only file changed is raw.rs. The 52 newly passing test262 tests fit a change of this size.",
+    "problems": [],
+    "notes_for_next_attempt": "No blocking issues. Minor GC-rooting observation, not a defect I can confirm: `literals` is not rooted between `ops::to_object(agent, raw_value)` and entry to `agent.with_roots`, which covers the `ops::length_of_array_like` call. That call can run user code through a `length` getter. Check that the engine roots the receiver for the duration of getter calls, and confirm under KAHVI_GC_STRESS=1 if that is in scope."
+  },
+  "ttft_ms": 17230,
+  "type": "result",
+  "duration_ms": 19382,
+  "uuid": "618b6b9f-4f98-42bc-8f21-f550dac28ed0",
+  "ttft_stream_ms": 2210,
+  "time_to_request_ms": 1021,
+  "time_to_request_phases_ms": {
+    "other": 95,
+    "system_prompt": 535,
+    "resume_other": 1,
+    "process_user_input": 18,
+    "input_attachments": 72,
+    "input_hooks": 14,
+    "tool_pool_refresh": 10,
+    "init_message": 55,
+    "engine_pickup": 1,
+    "message_prep": 13,
+    "model_config_wait": 28,
+    "autocompact": 10,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 15,
+    "client_creation": 103,
+    "request_build": 34
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 351,
+  "time_to_request_cpu_ms": 429,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 1052,
+  "process_wall_ms_turn": 19382,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 39,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2211,
+  "time_to_request_from_spawn_ms": 9735722,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791989194614.495,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
