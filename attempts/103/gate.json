@@ -1,0 +1,54 @@
+{
+  "ticket": "B-typed-array-prototype-subarray",
+  "base": "3de31d4f42f1c78decdb9980b62baaa5b5669ea9",
+  "head": "c3f5a9ad8ebf6a2efd26be66d19a6f99eee495fb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_subarray.rs",
+      "added": 75,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_subarray.rs",
+      "line": 69,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let data = typed_array_data(agent, obj).expect(\"a TypedArray\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 134,
+    "before": 8,
+    "after": 120,
+    "new_passes": 112,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/subarray/BigInt/results-with-different-length.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.join",
+      "built-ins/TypedArray/prototype/subarray/BigInt/results-with-different-length.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.join",
+      "built-ins/TypedArray/prototype/subarray/BigInt/speciesctor-get-species-custom-ctor-invocation.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/TypedArray/prototype/subarray/BigInt/speciesctor-get-species-custom-ctor-invocation.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/TypedArray/prototype/subarray/coerced-begin-end-grow.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/coerced-begin-end-grow.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/coerced-begin-end-shrink.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/coerced-begin-end-shrink.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/subarray/results-with-different-length.js:sloppy  Uncaught InternalError: not implemented: TypedArray.prototype.join",
+      "built-ins/TypedArray/prototype/subarray/results-with-different-length.js:strict  Uncaught InternalError: not implemented: TypedArray.prototype.join",
+      "built-ins/TypedArray/prototype/subarray/speciesctor-get-species-custom-ctor-invocation.js:sloppy  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable",
+      "built-ins/TypedArray/prototype/subarray/speciesctor-get-species-custom-ctor-invocation.js:strict  Uncaught InternalError: not implemented: get ArrayBuffer.prototype.resizable"
+    ]
+  },
+  "decision": "pass"
+}

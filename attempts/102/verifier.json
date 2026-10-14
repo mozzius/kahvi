@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9177,
+  "stop_reason": "tool_use",
+  "session_id": "0af77f53-c7fa-49a6-9759-fffa818739d3",
+  "total_cost_usd": 0.0019478800000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3955,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1587,
+    "output_tokens_details": {
+      "thinking_tokens": 973
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3955,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1587,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3955,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3955
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements DataView.prototype.setUint8 in its one in-scope file. Step 1 binds the this value to `view`. Step 2 calls `set_view_value(agent, view, byteOffset, Value::Boolean(true), ElementType::Uint8, value)?` with the error propagated. Step 3 returns Ok(Value::Undefined). The step comments are kept in order and nothing is special-cased or hardcoded. The `let _ = new_target;` line is a harmless leftover. The helper `crate::support::typed_array::set_view_value` is not part of this diff, so its internals (ToIndex, ToNumber/ToBigInt ordering, the detached and bounds checks, SetValueInBuffer) are unverified here. The gate shows build and clippy are clean and test262 passes 42 of 42 with 0 regressions, which is consistent with a correct delegation to an existing helper.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the diff. The helper set_view_value lives outside the ticket's file and was not part of this change. Anyone reviewing it separately should confirm it follows SetViewValue steps 1-16 in order. The `let _ = new_target;` line could be dropped as cleanup, but it is not a defect.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements DataView.prototype.setUint8 in its one in-scope file. Step 1 binds the this value to `view`. Step 2 calls `set_view_value(agent, view, byteOffset, Value::Boolean(true), ElementType::Uint8, value)?` with the error propagated. Step 3 returns Ok(Value::Undefined). The step comments are kept in order and nothing is special-cased or hardcoded. The `let _ = new_target;` line is a harmless leftover. The helper `crate::support::typed_array::set_view_value` is not part of this diff, so its internals (ToIndex, ToNumber/ToBigInt ordering, the detached and bounds checks, SetValueInBuffer) are unverified here. The gate shows build and clippy are clean and test262 passes 42 of 42 with 0 regressions, which is consistent with a correct delegation to an existing helper.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the diff. The helper set_view_value lives outside the ticket's file and was not part of this change. Anyone reviewing it separately should confirm it follows SetViewValue steps 1-16 in order. The `let _ = new_target;` line could be dropped as cleanup, but it is not a defect."
+  },
+  "ttft_ms": 6769,
+  "type": "result",
+  "duration_ms": 9209,
+  "uuid": "8e1655db-a1a2-417b-bdef-a9a6c0e7c937",
+  "ttft_stream_ms": 2164,
+  "time_to_request_ms": 1068,
+  "time_to_request_phases_ms": {
+    "other": 145,
+    "system_prompt": 638,
+    "resume_other": 1,
+    "process_user_input": 19,
+    "input_attachments": 62,
+    "input_hooks": 11,
+    "tool_pool_refresh": 11,
+    "init_message": 47,
+    "engine_pickup": 16,
+    "message_prep": 6,
+    "model_config_wait": 6,
+    "autocompact": 18,
+    "query_setup": 21,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 16,
+    "client_creation": 5,
+    "request_build": 22
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 321,
+  "time_to_request_cpu_ms": 310,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 867,
+  "process_wall_ms_turn": 9208,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 34,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2176,
+  "time_to_request_from_spawn_ms": 17694017,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997150208.6045,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792014600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
