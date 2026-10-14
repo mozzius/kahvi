@@ -2,16 +2,21 @@
   "files": 48751,
   "skipped_files": 6236,
   "runs": 81183,
-  "pass": 81167,
-  "fail": 16,
+  "pass": 81171,
+  "fail": 12,
   "timeout": 0,
   "crash": 0,
   "not_implemented": 0,
   "engine": "/home/runner/work/kahvi/kahvi/target/release/kahvi",
   "canaries_ok": true,
-  "elapsed_ms": 108503,
+  "elapsed_ms": 109534,
   "shards_lost": 0,
   "valid": true,
   "regressions": [],
-  "new_passes": []
+  "new_passes": [
+    "built-ins/JSON/rawJSON/basic.js:sloppy",
+    "built-ins/JSON/rawJSON/basic.js:strict",
+    "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:sloppy",
+    "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:strict"
+  ]
 }
