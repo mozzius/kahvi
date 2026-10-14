@@ -1,0 +1,13 @@
+[package]
+name = "kahvi-ffi"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lib]
+name = "kahvi_ffi"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+kahvi = { path = "../kahvi" }
+kahvi-core = { path = "../kahvi-core" }
