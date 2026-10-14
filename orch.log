@@ -111,3 +111,6 @@
 [17:12:01] B-array-buffer-prototype-slice: verifier: accept The diff implements ArrayBuffer.prototype.slice steps 1-23 in order, with each spec step kept as a comment above its code. Observable operations match
 [17:12:01] stack: pushed stack/0003 as #15 with arch
 [17:12:10] B-iterator-prototype-filter: attempt on slot 2 with haiku
+[17:12:13] B-typed-array-prototype-find-last: attempt on slot 1 with haiku
+[17:12:30] B-typed-array-prototype-find-last-index: attempt 135 finished ($0.019, 20 turns)
+[17:12:31] B-typed-array-prototype-find-last-index: gate rejected attempt 135: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: lint suppression is architect-only at crates/kahvi-builtins/src/type

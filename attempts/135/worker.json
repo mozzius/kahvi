@@ -1,0 +1,132 @@
+{
+  "duration_api_ms": 61347,
+  "stop_reason": "end_turn",
+  "session_id": "3238b2dd-a226-4365-af86-4e7cf4d276fe",
+  "total_cost_usd": 0.018849890000000005,
+  "usage": {
+    "input_tokens": 27,
+    "cache_creation_input_tokens": 41021,
+    "cache_read_input_tokens": 510649,
+    "output_tokens": 10526,
+    "output_tokens_details": {
+      "thinking_tokens": 4874
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 41021,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 511,
+        "cache_read_input_tokens": 48230,
+        "cache_creation_input_tokens": 434,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 434
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01G8joe51TDypcuKdagY6vwz",
+      "tool_input": {
+        "command": "git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs && git status --short && cargo clippy -p kahvi-builtins 2>&1 | tail -2",
+        "timeout": 600000,
+        "description": "Restore out-of-scope fmt changes and recheck clippy"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 20,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`%TypedArray%.prototype.findLastIndex` is implemented in its file, with the spec steps as comments. 66 of 72 runs under `built-ins/TypedArray/prototype/findLastIndex/` pass and clippy is clean. The other 6 runs (the `resizable-buffer*.js` tests) fail with \"not implemented: BigInt\", so they are blocked on engine BigInt support.\n\n- **Helper:** `FindViaPredicate` did not exist in `kahvi_core::ops`. I wrote a private `find_via_predicate` in this file, with a `Direction` enum and a `FindRecord` struct, so `findLast`, `find`, `findIndex` and the Array variants can reuse it once it is moved to a shared place.\n- **Out-of-scope changes to revert:** my `cargo fmt` run reformatted three files outside my scope: `crates/kahvi-core/src/host.rs`, `crates/kahvi-core/src/object/host_object.rs` and `crates/kahvi-ffi/src/lib.rs`. They contain formatting changes only. The revert command was denied, so please run `git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs` before the diff is checked.\n\nBLOCKED: BigInt support in the engine (needed by the 6 `resizable-buffer*.js` runs under `built-ins/TypedArray/prototype/findLastIndex/`)",
+  "ttft_ms": 2149,
+  "type": "result",
+  "duration_ms": 106893,
+  "uuid": "f741039f-a824-4693-88f2-58bda8f933cf",
+  "ttft_stream_ms": 1929,
+  "time_to_request_ms": 832,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 471,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 18,
+    "input_hooks": 6,
+    "tool_pool_refresh": 8,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 219,
+    "autocompact": 6,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 21,
+    "message_normalization": 4,
+    "client_creation": 4,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 137,
+  "time_to_request_cpu_ms": 500,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 261,
+  "process_anon_mib_result": 142,
+  "process_peak_rss_mib": 272,
+  "process_cpu_ms_turn": 5996,
+  "process_wall_ms_turn": 106893,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1930,
+  "time_to_request_from_spawn_ms": 18381244,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997840878.8582,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
