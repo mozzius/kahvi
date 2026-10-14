@@ -1893,3 +1893,9 @@ test262 at last merge: 74349/81183 runs passing
 [18:43:01] B-math-max: verifier: accept Implements Math.max in crates/kahvi-builtins/src/math/max.rs following the spec steps. All ToNumber conversions happen first (step 2) with `?` propaga
 [18:43:02] B-math-atan2: verifier: accept Math.atan2 is implemented in full, following spec steps 1-15 in order. ToNumber(y) and ToNumber(x) run first and propagate with `?`. NaN, the infinity
 [18:43:06] B-math-sin: attempt on slot 0 with haiku
+[18:43:09] B-reg-exp-prototype-get-dot-all: attempt on slot 1 with haiku
+[18:43:21] B-math-round: attempt 329 finished ($0.004, 6 turns)
+[18:43:41] B-math-sin: attempt 330 finished ($0.005, 9 turns)
+[18:43:50] B-array-buffer-prototype-get-max-byte-length: attempt 328 finished ($0.012, 15 turns)
+[18:44:03] B-reg-exp-prototype-get-dot-all: attempt 331 finished ($0.009, 14 turns)
+[18:44:20] B-math-round: verifier: accept Implements Math.round step by step, matching the stub's spec comments. Step 1 uses ops::to_number with `?`, so ToNumber runs once and its errors propa
