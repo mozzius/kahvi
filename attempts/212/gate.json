@@ -1,0 +1,35 @@
+{
+  "ticket": "B-string-prototype-to-locale-upper-case",
+  "base": "246b941c8c20ce714c958fef5d7f7f4c0a1a76e1",
+  "head": "99dd8a31c5ff9261fe4bf904b05a6f0fcd3f7a57",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_to_locale_upper_case.rs",
+      "added": 58,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 52,
+    "before": 16,
+    "after": 50,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/toLocaleUpperCase/S15.5.4.19_A1_T14.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "built-ins/String/prototype/toLocaleUpperCase/S15.5.4.19_A1_T14.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}

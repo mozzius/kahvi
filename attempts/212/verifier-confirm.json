@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7476,
+  "stop_reason": "tool_use",
+  "session_id": "2eb08c45-e598-4718-a0cc-c4b49d8e37b5",
+  "total_cost_usd": 0.027174099999999996,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4650,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 781,
+    "output_tokens_details": {
+      "thinking_tokens": 337
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4650,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 781,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4650,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4650
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements toLocaleUpperCase as toUpperCase, which the spec's non-ECMA-402 text allows. It does RequireObjectCoercible, then ToString, both with `?`. It then maps code points to full uppercase through kahvi_unicode::to_uppercase and re-encodes to UTF-16, with lone surrogates mapping to themselves. Each step has a comment above its code. The two remaining test failures are a not-implemented error for RegExp.prototype.toString, outside this ticket. The gate report shows 0 regressions and no lint flags. I did not open kahvi_unicode, so I'm assuming `to_uppercase` returns the full special-casing mappings.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements toLocaleUpperCase as toUpperCase, which the spec's non-ECMA-402 text allows. It does RequireObjectCoercible, then ToString, both with `?`. It then maps code points to full uppercase through kahvi_unicode::to_uppercase and re-encodes to UTF-16, with lone surrogates mapping to themselves. Each step has a comment above its code. The two remaining test failures are a not-implemented error for RegExp.prototype.toString, outside this ticket. The gate report shows 0 regressions and no lint flags. I did not open kahvi_unicode, so I'm assuming `to_uppercase` returns the full special-casing mappings.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5233,
+  "type": "result",
+  "duration_ms": 7441,
+  "uuid": "f1a2166c-107a-49e3-a426-134db926578f",
+  "ttft_stream_ms": 2564,
+  "time_to_request_ms": 686,
+  "time_to_request_phases_ms": {
+    "other": 44,
+    "system_prompt": 437,
+    "resume_other": 0,
+    "process_user_input": 17,
+    "input_attachments": 66,
+    "input_hooks": 13,
+    "tool_pool_refresh": 7,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 68,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 93,
+  "time_to_request_cpu_ms": 296,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 687,
+  "process_wall_ms_turn": 7440,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 40,
+    "cpu_ms": 40,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2566,
+  "time_to_request_from_spawn_ms": 20549503,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000007575.7275,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
