@@ -195,3 +195,9 @@
 [17:24:27] B-set-prototype-union: verifier: accept Set.prototype.union and a local GetSetRecord helper are implemented in the expected order: RequireInternalSlot, GetSetRecord (Get size, ToNumber, NaN 
 [17:24:31] B-set-prototype-symmetric-difference: attempt on slot 0 with haiku
 [17:24:43] B-object-from-entries: verifier: accept Implements Object.fromEntries in from_entries.rs. Steps 1 to 6 follow the spec in order: RequireObjectCoercible(iterable) with `?`, OrdinaryObjectCrea
+[17:24:46] B-string-prototype-ends-with: attempt on slot 2 with haiku
+[17:25:20] B-set-prototype-symmetric-difference: attempt 164 finished ($0.008, 10 turns)
+[17:25:23] B-set-prototype-intersection: attempt 163 finished ($0.021, 23 turns)
+[17:25:31] B-string-prototype-ends-with: attempt 165 finished ($0.007, 13 turns)
+[17:25:38] B-set-prototype-difference: attempt 162 finished ($0.021, 10 turns)
+[17:26:28] B-string-prototype-ends-with: verifier: accept The diff implements all 15 steps of String.prototype.endsWith in the spec's order. Step 2 (RequireObjectCoercible) and step 3 (ToString(this)) come fi

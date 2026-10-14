@@ -1,0 +1,48 @@
+{
+  "ticket": "B-set-prototype-intersection",
+  "base": "762fd6dd315911448430d081a21279eb1c906015",
+  "head": "53c732aa2a4d252cbc0e9e98d8920eb3c24bb114",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_intersection.rs",
+      "added": 145,
+      "removed": 38
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 56,
+    "before": 10,
+    "after": 24,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 32,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/intersection/add-not-called.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/add-not-called.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/allows-set-like-class.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/intersection/allows-set-like-class.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/intersection/allows-set-like-object.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/intersection/allows-set-like-object.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/intersection/combines-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-same-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/intersection/combines-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}

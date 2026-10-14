@@ -1,0 +1,48 @@
+{
+  "ticket": "B-set-prototype-symmetric-difference",
+  "base": "36b2cbf146db45f2d46ff27ff4975d71d7f522e5",
+  "head": "31ad6d8dce9af4ea15e2535750f7cec62b1e6d85",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_symmetric_difference.rs",
+      "added": 116,
+      "removed": 24
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 56,
+    "before": 10,
+    "after": 24,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 32,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/symmetricDifference/add-not-called.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/add-not-called.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/allows-set-like-class.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/symmetricDifference/allows-set-like-class.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/symmetricDifference/allows-set-like-object.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/symmetricDifference/allows-set-like-object.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/symmetricDifference/combines-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-same-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/symmetricDifference/combines-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}

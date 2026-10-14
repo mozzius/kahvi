@@ -1,0 +1,48 @@
+{
+  "ticket": "B-set-prototype-difference",
+  "base": "6436cac06e536904eaae639ae01e8580493ca1e4",
+  "head": "f0a13d02b5f2b06a62285fdf198ce86e770d27f8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_difference.rs",
+      "added": 153,
+      "removed": 26
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 56,
+    "before": 10,
+    "after": 24,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 32,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/difference/add-not-called.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/add-not-called.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/allows-set-like-class.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/difference/allows-set-like-class.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/difference/allows-set-like-object.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/difference/allows-set-like-object.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/difference/combines-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/difference/combines-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/difference/combines-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-same-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/difference/combines-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}
