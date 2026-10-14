@@ -1,0 +1,45 @@
+{
+  "ticket": "B-number-prototype-to-precision",
+  "base": "f6cb8bd6111799ae9f110e08ac7d0634912c10d9",
+  "head": "effd78f5fa9f1d521a92d92647dd2533ff610d39",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/number/prototype_to_precision.rs",
+      "added": 128,
+      "removed": 31
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/number/prototype_to_precision.rs",
+      "line": 122,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"exponential formatting always contains an 'e'\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/number/prototype_to_precision.rs",
+      "line": 125,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"exponential formatting always has an integer exponent\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

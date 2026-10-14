@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-get-own-property-descriptors",
+  "base": "7c0a8e16864d810067997388e687083bde5d4455",
+  "head": "99e6fba25e7654608d231aa5d695409f84f01143",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/get_own_property_descriptors.rs",
+      "added": 33,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 8,
+    "after": 36,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

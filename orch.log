@@ -895,3 +895,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:06:18] B-number-prototype-to-fixed: verifier: accept No defects found in prototype_to_fixed.rs. Every spec step (1-12) is implemented in order with the right abrupt-completion handling: ThisNumberValue a
 [18:06:24] B-reflect-prevent-extensions: attempt on slot 3 with haiku
 [18:06:26] B-map-prototype-for-each: verifier: accept The diff implements Map.prototype.forEach in its single file, following the spec steps. RequireInternalSlot is done through this_map, and IsCallable i
+[18:06:34] B-set-prototype-clear: attempt on slot 1 with haiku
+[18:07:01] B-object-get-own-property-descriptors: verifier: accept The diff implements Object.getOwnPropertyDescriptors in its own file, with each spec step as a comment directly above its code. Order matches the spec
