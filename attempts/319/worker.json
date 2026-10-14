@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 20077,
+  "stop_reason": "end_turn",
+  "session_id": "b4b50d36-bd4a-47f0-85e8-116befc5025e",
+  "total_cost_usd": 0.0053073600000000005,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 13541,
+    "cache_read_input_tokens": 112706,
+    "output_tokens": 2478,
+    "output_tokens_details": {
+      "thinking_tokens": 422
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13541,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 239,
+        "cache_read_input_tokens": 20813,
+        "cache_creation_input_tokens": 371,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 371
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.trunc` in `crates/kahvi-builtins/src/math/trunc.rs`, following the spec steps with each step kept as a comment above its code. `./t262 built-ins/Math/trunc/` gives 22 of 24 runs passing. The two failures are `trunc-sampleTests.js` (sloppy and strict), which call `Math.ceil`; that stub is still not implemented, and it is outside this ticket's scope. Clippy is clean and the format check passes.\n\nBLOCKED: `Math.ceil` is not implemented (`crates/kahvi-builtins/src/math/ceil.rs`), which the two remaining `trunc-sampleTests.js` runs need to pass.",
+  "ttft_ms": 2367,
+  "type": "result",
+  "duration_ms": 42401,
+  "uuid": "75d2c973-f79e-425b-97c0-707e8d76423c",
+  "ttft_stream_ms": 1949,
+  "time_to_request_ms": 685,
+  "time_to_request_phases_ms": {
+    "other": 60,
+    "system_prompt": 379,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 87,
+    "input_hooks": 14,
+    "tool_pool_refresh": 6,
+    "init_message": 25,
+    "engine_pickup": 5,
+    "message_prep": 11,
+    "model_config_wait": 54,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 229,
+  "time_to_request_cpu_ms": 280,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3097,
+  "process_wall_ms_turn": 42400,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 51,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1959,
+  "time_to_request_from_spawn_ms": 23556578,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003012546.939,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.18,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ticket": "B-math-trunc",
+  "base": "1845e261dcb37aea24572793bcfd04b29f1d91ee",
+  "head": "c7505fcb8bd032a1b45e9ec9cf09f627c6fc72f3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/trunc.rs",
+      "added": 13,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Math/trunc/trunc-sampleTests.js:sloppy  Uncaught InternalError: not implemented: Math.ceil",
+      "built-ins/Math/trunc/trunc-sampleTests.js:strict  Uncaught InternalError: not implemented: Math.ceil"
+    ]
+  },
+  "decision": "pass"
+}

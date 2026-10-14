@@ -1857,3 +1857,12 @@ test262 at last merge: 74349/81183 runs passing
 [18:36:33] B-map-prototype-clear: attempt 316 finished ($0.005, 8 turns)
 [18:36:38] B-math-ceil: attempt 317 finished ($0.005, 12 turns)
 [18:36:43] B-string-prototype-pad-start: verifier: accept The diff implements String.prototype.padStart and its helpers in the single in-scope file, following the spec steps in order. RequireObjectCoercible r
+[18:36:51] B-math-trunc: attempt on slot 2 with haiku
+[18:36:52] stack: stack/0010 (#23) red: 4 regressions in the full suite
+[18:37:16] B-math-hypot: attempt 318 finished ($0.006, 12 turns)
+[18:37:20] B-map-prototype-clear: verifier: accept The change implements Map.prototype.clear in its own file. It follows the four spec steps, with each step kept as a comment above its code. Step 2 goe
+[18:37:25] B-math-ceil: verifier: accept The Math.ceil change follows the spec steps in order. It calls ToNumber once with `?` propagation. Step 2 covers NaN, ±Infinity, +0 and -0 through `!n
+[18:37:40] B-math-trunc: attempt 319 finished ($0.005, 10 turns)
+[18:38:03] B-math-hypot: verifier: accept The diff implements all seven steps of Math.hypot in order. Step 2 calls ops::to_number on every argument with `?` before any other check, as the spec
+[18:38:07] stack: pushed stack/0011 as #25 with B-reg-exp-prototype-get-multiline, B-string-prototype-includes, C-proxy-get-prototype-of, B-global-encode-uri, B-object-is, B-global-encode-uri-component, B-iterator-prototype-for-each, B-string-prototype-match-all
+[18:38:17] B-math-trunc: verifier: accept Math.trunc implementation follows all five spec steps in order. Step 1 uses ops::to_number with `?`, so ToNumber's abrupt completions propagate. Step 

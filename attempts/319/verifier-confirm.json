@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5463,
+  "stop_reason": "tool_use",
+  "session_id": "3df89eba-629b-4a9a-888d-aec7c2b6bce8",
+  "total_cost_usd": 0.0212252,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3766,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 549,
+    "output_tokens_details": {
+      "thinking_tokens": 155
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3766,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 549,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3766,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3766
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.trunc follows spec steps 1-5 in order with ToNumber propagated via `?`. Step 2 returns n unchanged for non-finite or \u00b10, so NaN, infinities and -0 are preserved. Steps 3 and 4 return +0 and -0 for the open intervals, as the spec says. Step 5 uses f64::trunc, which rounds toward zero. The two remaining test failures come from Math.ceil being unimplemented, which the test uses. They are not caused by this change. The diff touches only the in-scope file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.trunc follows spec steps 1-5 in order with ToNumber propagated via `?`. Step 2 returns n unchanged for non-finite or \u00b10, so NaN, infinities and -0 are preserved. Steps 3 and 4 return +0 and -0 for the open intervals, as the spec says. Step 5 uses f64::trunc, which rounds toward zero. The two remaining test failures come from Math.ceil being unimplemented, which the test uses. They are not caused by this change. The diff touches only the in-scope file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3760,
+  "type": "result",
+  "duration_ms": 5711,
+  "uuid": "24fc99da-cd9e-4921-9b25-0d4ec7582772",
+  "ttft_stream_ms": 2053,
+  "time_to_request_ms": 790,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 396,
+    "resume_other": 8,
+    "process_user_input": 30,
+    "input_attachments": 144,
+    "input_hooks": 11,
+    "tool_pool_refresh": 5,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 104,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 8,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 118,
+  "time_to_request_cpu_ms": 483,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 238,
+  "process_cpu_ms_turn": 762,
+  "process_wall_ms_turn": 5711,
+  "input_attachments_detail": {
+    "slowest_producer": "at_mentioned_files",
+    "slowest_producer_ms": 57,
+    "cpu_ms": 69,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2056,
+  "time_to_request_from_spawn_ms": 23630227,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003089851.411,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.18,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-ceil",
+  "base": "32a8cb0e83b566cae924e25e314ac72952763e74",
+  "head": "f20823fa016716b9751823531fadaac2754eb7ba",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/ceil.rs",
+      "added": 13,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

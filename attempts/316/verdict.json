@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements Map.prototype.clear in its own file. It follows the four spec steps, with each step kept as a comment above its code. Step 2 goes through this_map(agent, this)?, which should be RequireInternalSlot with the TypeError. Step 3 is delegated to map_table(agent, map).clear(), and the NOTE is kept. Step 4 returns Ok(Value::Undefined). The only observable operation is the slot check, so no observable steps are skipped. Nothing is special-cased, hardcoded, or swallowed. The gate reports 14 new passing test262 runs with no regressions. Two helpers, this_map and map_table, are used but not shown in the diff. I could not check that they throw the correct TypeError or that OrderedTable::clear really empties entries in place and keeps the list, as step 3 requires. Those are the only open points, and they sit outside this diff.",
+  "problems": [],
+  "notes_for_next_attempt": "Nothing required from the diff itself. Before landing, confirm that the existing helpers behave as the spec requires. this_map(agent, this)? must throw a TypeError when this is not an Object or lacks [[MapData]]. OrderedTable::clear must set each entry's key and value to empty in place and keep the list, so that live Map Iterators stay valid. Both helpers were already in the repo and are not part of this diff.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

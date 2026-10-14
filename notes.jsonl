@@ -405,3 +405,4 @@
 {"ticket": "B-string-prototype-pad-end", "attempt": 310, "ts": 1792002853.6752758, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-string-prototype-pad-end", "attempt": 310, "ts": 1792002854.3191633, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/string/prototype_pad_end.rs:36: #[allow(dead_code)]"}
 {"ticket": "B-string-prototype-pad-start", "attempt": 311, "ts": 1792002860.1178224, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/string/prototype_pad_start.rs:17: #[allow(dead_code)]"}
+{"ticket": "B-math-trunc", "attempt": 319, "ts": 1792003060.8832135, "text": "worker reported BLOCKED but changed files: `Math.ceil` is not implemented (`crates/kahvi-builtins/src/math/ceil.rs`), which the two remaining `trunc-sampleTests.js` runs need to pass."}

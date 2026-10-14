@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11314,
+  "stop_reason": "tool_use",
+  "session_id": "4914ec0f-902b-4470-8f44-e83b466cb168",
+  "total_cost_usd": 0.0022944800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4512,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1952,
+    "output_tokens_details": {
+      "thinking_tokens": 1469
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4512,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1952,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4512,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4512
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all seven steps of Math.hypot in order. Step 2 calls ops::to_number on every argument with `?` before any other check, as the spec requires. Step 3 returns +Infinity for any infinite value. Step 5 returns NaN and step 6 returns +0 in the spec's order. Step 7 scales by the largest magnitude before squaring, which avoids overflow and underflow and is a valid approximation. No branch singles out test inputs, no error is swallowed, and no value is made up. The only other change is renaming the now-unused `this` and `new_target` parameters to underscore names, which is needed to avoid unused-variable warnings.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes required. The implementation follows the spec steps and can be merged as is. I did not check that ops::to_number exists with this signature; the build gate passing implies it does.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all seven steps of Math.hypot in order. Step 2 calls ops::to_number on every argument with `?` before any other check, as the spec requires. Step 3 returns +Infinity for any infinite value. Step 5 returns NaN and step 6 returns +0 in the spec's order. Step 7 scales by the largest magnitude before squaring, which avoids overflow and underflow and is a valid approximation. No branch singles out test inputs, no error is swallowed, and no value is made up. The only other change is renaming the now-unused `this` and `new_target` parameters to underscore names, which is needed to avoid unused-variable warnings.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes required. The implementation follows the spec steps and can be merged as is. I did not check that ops::to_number exists with this signature; the build gate passing implies it does."
+  },
+  "ttft_ms": 9302,
+  "type": "result",
+  "duration_ms": 11481,
+  "uuid": "4ade5693-156b-4909-8577-a9dfa9755217",
+  "ttft_stream_ms": 2388,
+  "time_to_request_ms": 588,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 361,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 33,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 115,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 68,
+  "time_to_request_cpu_ms": 394,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 851,
+  "process_wall_ms_turn": 11480,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2389,
+  "time_to_request_from_spawn_ms": 23598201,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003058228.886,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.18,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
