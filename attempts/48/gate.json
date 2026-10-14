@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-has-own",
+  "base": "b65ab203dc7ef336c593770d4eac2bcf6eab4ee8",
+  "head": "13b8cc3bb46aafc642a19e535ba865beea6af996",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/has_own.rs",
+      "added": 6,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 124,
+    "before": 10,
+    "after": 124,
+    "new_passes": 114,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

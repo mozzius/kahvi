@@ -20,3 +20,8 @@
 [02:40:47] B-reg-exp-prototype-symbol-replace: attempt 47 finished ($0.030, 16 turns)
 [02:42:15] B-reg-exp-prototype-symbol-replace: verifier: accept I walked RegExp.prototype[Symbol.replace] steps 1-17 and the GetSubstitution steps against the pinned spec text. The steps are implemented in order, w
 [02:50:24] B-object-is-frozen: merged (+136, 65495 total)
+[02:50:26] B-object-has-own: attempt on slot 0 with haiku
+[02:50:28] B-reg-exp-prototype-symbol-replace: full test262 run for merge
+[02:51:15] B-object-has-own: attempt 48 finished ($0.005, 12 turns)
+[02:51:35] B-object-has-own: verifier: accept The diff implements Object.hasOwn in has_own.rs in three steps that follow the spec: ToObject(obj) with `?`, then ToPropertyKey(key) with `?`, then Ha
+[03:01:48] B-reg-exp-prototype-symbol-replace: merged (+12, 65507 total)

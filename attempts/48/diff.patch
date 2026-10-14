@@ -1,0 +1,26 @@
+diff --git a/crates/kahvi-builtins/src/object/has_own.rs b/crates/kahvi-builtins/src/object/has_own.rs
+index 71fcb43..0e2f8a5 100644
+--- a/crates/kahvi-builtins/src/object/has_own.rs
++++ b/crates/kahvi-builtins/src/object/has_own.rs
+@@ -7,15 +7,17 @@ use kahvi_core::prelude::*;
+ /// Object.hasOwn
+ pub(crate) fn has_own(
+     agent: &mut Agent,
+-    this: Value,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This function performs the following steps when called:
+     //
+     // 1. Let _coerced_ be ? ToObject(_obj_).
++    let coerced = ops::to_object(agent, args.get_or_undefined(0))?;
+     // 2. Let _propertyKey_ be ? ToPropertyKey(_key_).
++    let property_key = ops::to_property_key(agent, args.get_or_undefined(1))?;
+     // 3. Return ? HasOwnProperty(_coerced_, _propertyKey_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.hasOwn"))
++    let has = ops::has_own_property(agent, coerced, property_key)?;
++    Ok(Value::Boolean(has))
+ }
