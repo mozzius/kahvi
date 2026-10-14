@@ -17,3 +17,8 @@
 [00:51:02] B-object-prototype-is-prototype-of: attempt 37 finished ($0.005, 14 turns)
 [00:51:26] B-object-prototype-is-prototype-of: verifier: accept The change implements Object.prototype.isPrototypeOf faithfully. Step 1 returns false for non-object arguments via a let-else. Step 2 calls ops::to_ob
 [00:56:52] B-weak-set-constructor: merged (+36, 59794 total)
+[00:56:54] B-array-from: attempt on slot 1 with haiku
+[00:56:56] B-object-prototype-is-prototype-of: full test262 run for merge
+[00:58:04] B-array-from: attempt 38 finished ($0.017, 17 turns)
+[00:58:45] B-array-from: verifier: accept The Array.from implementation in from.rs follows the pinned spec steps 1 to 14 in order. The mapper IsCallable check comes before GetMethod. The itera
+[01:03:44] B-object-prototype-is-prototype-of: merged (+106, 59900 total)

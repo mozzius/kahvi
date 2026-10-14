@@ -1,0 +1,37 @@
+{
+  "ticket": "B-array-from",
+  "base": "b9791a8937c1aef9759b8754136302620307aac2",
+  "head": "dbcd747d094b1db24cbf03a0d5101b4504e4fcd8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/from.rs",
+      "added": 114,
+      "removed": 47
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 90,
+    "before": 8,
+    "after": 86,
+    "new_passes": 78,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/from/from-string.js:sloppy  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Array/from/from-string.js:strict  Uncaught InternalError: not implemented: String.prototype[Symbol.iterator]",
+      "built-ins/Array/from/items-is-arraybuffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/from/items-is-arraybuffer.js:strict  Uncaught InternalError: not implemented: ArrayBuffer"
+    ]
+  },
+  "decision": "pass"
+}
