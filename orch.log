@@ -4243,3 +4243,5 @@ test262 at last merge: 76432/81183 runs passing
 [19:52:58] B-number-prototype-to-locale-string: attempt 494 finished ($0.073, 12 turns)
 [19:52:59] B-reg-exp-string-iterator-prototype-next: attempt 496 finished ($0.056, 4 turns)
 [19:52:59] B-reg-exp-string-iterator-prototype-next: blocked: `CreateRegExpStringIterator` must be implemented in `reg_exp/prototype_symbol_match_all.rs`, which is outside this ticket's scope. It needs a slot struct holding [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]] and [[Done]], created with `ObjectKind::Native` and `%RegExpStringIteratorPrototype%`. `next.rs` can then be written against that struct.
+[19:53:02] B-typed-array-prototype-symbol-iterator: attempt on slot 3 with haiku
+[19:53:04] B-number-prototype-to-locale-string: gate rejected attempt 494: no new test262 passes in target
