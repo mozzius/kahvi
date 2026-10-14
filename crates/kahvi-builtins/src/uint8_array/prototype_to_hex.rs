@@ -2,24 +2,80 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-uint8array.prototype.tohex
 
+use crate::support::typed_array::{byte_offset, length, out_of_bounds, ta_record, viewed_buffer};
+use kahvi_core::object::typed_array::{ElementType, get_value_from_buffer, typed_array_data};
 use kahvi_core::prelude::*;
 
 /// Uint8Array.prototype.toHex
 pub(crate) fn prototype_to_hex(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // 1. Let _obj_ be the *this* value.
+    let obj = this;
     // 2. Perform ? ValidateUint8Array(_obj_).
+    //    ValidateUint8Array: 1. Perform ? RequireInternalSlot(_ta_, [[TypedArrayName]]).
+    let o = match obj {
+        Value::Object(o) => o,
+        _ => return Err(agent.throw_type_error("not a Uint8Array")),
+    };
+    let kind = match typed_array_data(agent, o) {
+        Some(d) => d.kind,
+        None => return Err(agent.throw_type_error("not a Uint8Array")),
+    };
+    //    2. If _ta_.[[TypedArrayName]] is not *"Uint8Array"*, throw a *TypeError* exception.
+    if kind != ElementType::Uint8 {
+        return Err(agent.throw_type_error("not a Uint8Array"));
+    }
+    //    3. Return ~unused~.
+
     // 3. Let _toEncode_ be ? GetUint8ArrayBytes(_obj_).
+    //    GetUint8ArrayBytes(_ta_): 1. Let _buffer_ be _ta_.[[ViewedArrayBuffer]].
+    let buffer = viewed_buffer(agent, o);
+    //    2. Let _taRecord_ be ? ValidateTypedArrayBounds(_ta_, ~seq-cst~).
+    let rec = ta_record(agent, o);
+    if out_of_bounds(agent, rec) {
+        return Err(agent.throw_type_error("TypedArray is out of bounds or detached"));
+    }
+    //    3. Let _length_ be TypedArrayLength(_taRecord_).
+    let len = length(agent, rec);
+    //    4. Let _byteOffset_ be _ta_.[[ByteOffset]].
+    let offset = byte_offset(agent, o);
+    //    5. Let _bytes_ be a new empty List.
+    let mut bytes: Vec<u8> = Vec::with_capacity(len);
+    //    6. Let _index_ be 0.
+    //    7. Repeat, while _index_ < _length_,
+    for index in 0..len {
+        // a. Let _byteIndex_ be _byteOffset_ + _index_.
+        let byte_index = offset + index;
+        // b. Let _byte_ be ℝ(GetValueFromBuffer(_buffer_, _byteIndex_, ~uint8~, *true*, ~unordered~)).
+        let Value::Number(byte) =
+            get_value_from_buffer(agent, buffer, byte_index, ElementType::Uint8, true)
+        else {
+            unreachable!("a Uint8 element is a Number")
+        };
+        // c. Append _byte_ to _bytes_.
+        bytes.push(byte as u8);
+        // d. Set _index_ to _index_ + 1.
+    }
+    //    8. Return _bytes_.
+
     // 4. Let _out_ be the empty String.
+    let mut out: Vec<u16> = Vec::with_capacity(len * 2);
     // 5. For each byte _byte_ of _toEncode_, do
-    //    a. Let _hex_ be Number::toString(𝔽(_byte_), 16).
-    //    b. Set _hex_ to StringPad(_hex_, 2, *"0"*, ~start~).
-    //    c. Set _out_ to the string-concatenation of _out_ and _hex_.
+    for byte in bytes {
+        // a. Let _hex_ be Number::toString(𝔽(_byte_), 16).
+        let mut hex = format!("{byte:x}");
+        // b. Set _hex_ to StringPad(_hex_, 2, *"0"*, ~start~).
+        //    StringPad with a one-unit fill: prepend "0" until the length is 2.
+        while hex.len() < 2 {
+            hex.insert(0, '0');
+        }
+        // c. Set _out_ to the string-concatenation of _out_ and _hex_.
+        out.extend(hex.encode_utf16());
+    }
     // 6. Return _out_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Uint8Array.prototype.toHex"))
+    Ok(Value::String(agent.intern(&out)))
 }
