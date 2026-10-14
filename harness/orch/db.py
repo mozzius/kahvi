@@ -98,6 +98,7 @@ class DB:
             ready = [
                 t for t in tickets.values()
                 if status.get(t.id) == "open"
+                and t.tier != "architect"
                 and (only is None or t.id in only)
                 and all(status.get(n) == "done" for n in t.needs)
             ]
