@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7453,
+  "stop_reason": "tool_use",
+  "session_id": "e05d9239-4d3a-492a-8f81-ed8d7ae69cee",
+  "total_cost_usd": 0.00212638,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4966,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1338,
+    "output_tokens_details": {
+      "thinking_tokens": 847
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4966,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1338,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4966,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4966
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements DataView.prototype.setInt16 as a thin wrapper, which matches the spec. It binds `this` as the view, defaults littleEndian to false when the argument is absent (`args.len() > 2`), and calls the existing `set_view_value` helper with `ElementType::Int16`, passing byteOffset and value through in the right order. It propagates the abrupt completion with `?` and returns `Ok(Value::Undefined)`. The spec step comments are kept in place. The only change is to this one file. The 14 still-failing tests fail because the test262 tests call the unimplemented getInt16, not because of this code. The SetViewValue steps (RequireInternalSlot, ToIndex, ToNumber, bounds checks) live in the helper, which is outside this diff, so I did not review them. I found no defects in this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements DataView.prototype.setInt16 as a thin wrapper, which matches the spec. It binds `this` as the view, defaults littleEndian to false when the argument is absent (`args.len() > 2`), and calls the existing `set_view_value` helper with `ElementType::Int16`, passing byteOffset and value through in the right order. It propagates the abrupt completion with `?` and returns `Ok(Value::Undefined)`. The spec step comments are kept in place. The only change is to this one file. The 14 still-failing tests fail because the test262 tests call the unimplemented getInt16, not because of this code. The SetViewValue steps (RequireInternalSlot, ToIndex, ToNumber, bounds checks) live in the helper, which is outside this diff, so I did not review them. I found no defects in this diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5982,
+  "type": "result",
+  "duration_ms": 7828,
+  "uuid": "b9b42f1b-9f9c-4be4-95aa-435246939d4d",
+  "ttft_stream_ms": 2260,
+  "time_to_request_ms": 1336,
+  "time_to_request_phases_ms": {
+    "other": 70,
+    "system_prompt": 972,
+    "resume_other": 1,
+    "process_user_input": 18,
+    "input_attachments": 123,
+    "input_hooks": 18,
+    "tool_pool_refresh": 10,
+    "init_message": 32,
+    "engine_pickup": 2,
+    "message_prep": 10,
+    "model_config_wait": 22,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 5,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 9,
+    "request_build": 25
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 298,
+  "time_to_request_cpu_ms": 328,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 788,
+  "process_wall_ms_turn": 7828,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 83,
+    "cpu_ms": 44,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2261,
+  "time_to_request_from_spawn_ms": 19825589,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999283686.5603,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

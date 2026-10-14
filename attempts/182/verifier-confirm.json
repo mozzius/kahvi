@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7143,
+  "stop_reason": "tool_use",
+  "session_id": "86c9aef1-3737-4a70-92f8-b9ca78a4cfef",
+  "total_cost_usd": 0.026740499999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4959,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 611,
+    "output_tokens_details": {
+      "thinking_tokens": 199
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4959,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 611,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4959,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4959
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff is a thin wrapper that follows the spec. It takes this as the view, defaults littleEndian to false when it is not present, and calls the shared set_view_value helper with ElementType::Int16. It propagates errors with `?` and returns undefined. The step comments are kept. The 14 remaining failures are not in this file: those tests call DataView.prototype.getInt16, which is not yet implemented. 26 tests newly pass and there are no regressions. The set_view_value helper is not in the diff, so I could not check SetViewValue steps 1\u201316, but the ticket says to use existing helpers.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff is a thin wrapper that follows the spec. It takes this as the view, defaults littleEndian to false when it is not present, and calls the shared set_view_value helper with ElementType::Int16. It propagates errors with `?` and returns undefined. The step comments are kept. The 14 remaining failures are not in this file: those tests call DataView.prototype.getInt16, which is not yet implemented. 26 tests newly pass and there are no regressions. The set_view_value helper is not in the diff, so I could not check SetViewValue steps 1\u201316, but the ticket says to use existing helpers.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4622,
+  "type": "result",
+  "duration_ms": 6810,
+  "uuid": "0914f992-c1af-4cf9-8dae-30993e471b96",
+  "ttft_stream_ms": 2721,
+  "time_to_request_ms": 573,
+  "time_to_request_phases_ms": {
+    "other": 67,
+    "system_prompt": 342,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 24,
+    "input_hooks": 4,
+    "tool_pool_refresh": 8,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 73,
+    "autocompact": 6,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 113,
+  "time_to_request_cpu_ms": 252,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 658,
+  "process_wall_ms_turn": 6810,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2722,
+  "time_to_request_from_spawn_ms": 19834712,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999294516.1099,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

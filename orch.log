@@ -269,3 +269,5 @@
 [17:34:25] B-data-view-prototype-set-float64: verifier: accept The diff implements DataView.prototype.setFloat64 in its own file. It keeps each spec step as a comment, defaults littleEndian to false only when the 
 [17:34:26] B-data-view-prototype-set-int32: attempt 183 finished ($0.007, 13 turns)
 [17:34:26] B-data-view-prototype-set-uint16: attempt 184 finished ($0.006, 13 turns)
+[17:34:30] B-data-view-prototype-set-uint32: attempt on slot 3 with haiku
+[17:35:03] B-data-view-prototype-set-int16: verifier: accept The diff implements DataView.prototype.setInt16 as a thin wrapper, which matches the spec. It binds `this` as the view, defaults littleEndian to false
