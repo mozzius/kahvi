@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::typed_array::{get_view_byte_length, is_view_out_of_bounds, require_data_view};
+
 /// get DataView.prototype.byteLength
 pub(crate) fn prototype_get_byte_length(
     agent: &mut Agent,
@@ -20,6 +22,18 @@ pub(crate) fn prototype_get_byte_length(
     // 5. If IsViewOutOfBounds(_viewRecord_) is *true*, throw a *TypeError* exception.
     // 6. Let _size_ be GetViewByteLength(_viewRecord_).
     // 7. Return 𝔽(_size_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get DataView.prototype.byteLength"))
+    let _ = (args, new_target);
+    // 1. Let _obj_ be the *this* value.
+    // 2. Perform ? RequireInternalSlot(_obj_, [[DataView]]).
+    // 3. Assert: _obj_ has a [[ViewedArrayBuffer]] internal slot.
+    // 4. Let _viewRecord_ be MakeDataViewWithBufferWitnessRecord(_obj_, ~seq-cst~).
+    let (_obj, d) = require_data_view(agent, this)?;
+    // 5. If IsViewOutOfBounds(_viewRecord_) is *true*, throw a *TypeError* exception.
+    if is_view_out_of_bounds(agent, d) {
+        return Err(agent.throw_type_error("DataView is out of bounds or detached"));
+    }
+    // 6. Let _size_ be GetViewByteLength(_viewRecord_).
+    let size = get_view_byte_length(agent, d);
+    // 7. Return 𝔽(_size_).
+    Ok(Value::Number(size as f64))
 }
