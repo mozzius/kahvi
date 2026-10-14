@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 22879,
+  "stop_reason": "tool_use",
+  "session_id": "a21b56f9-f67f-460d-a752-5e9a757d1110",
+  "total_cost_usd": 0.004029560000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5227,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 5004,
+    "output_tokens_details": {
+      "thinking_tokens": 4282
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5227,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5004,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 5227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements get RegExp.prototype.source in its file and follows the spec steps. Step 2 throws a TypeError for non-objects. Step 3 checks the RegExp internal slot (via agent.native::<RegExpData>), returns \\\"(?:)\\\" when the receiver is the current realm's %RegExp.prototype%, and otherwise throws a TypeError. Steps 5-7 read the original source and call a local EscapeRegExpPattern helper. The helper follows the spec's escaping rules: it escapes \\\"/\\\" and the four LineTerminators, leaves existing \\\"\\\\/\\\" intact, handles a backslash before a LineTerminator, and returns \\\"(?:)\\\" for the empty pattern (which the spec allows). It does not depend on flags, and the escapes it emits are valid in every pattern mode. I found no special-cased inputs, made-up values, swallowed errors, or extra observable operations. The only nit is that the stub's [subclause sec-escaperegexppattern] comment line was dropped in favour of a helper comment; this affects comments only.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Optional: restore the \\\"[subclause sec-escaperegexppattern: EscapeRegExpPattern (...)]\\\" comment from the stub above the get-source body for fidelity to the stub. The helper's flags-independence is justified by the comment. A reviewer may want to confirm that agent.native::<RegExpData> is the only [[OriginalSource]] slot and that RegExp.prototype does not carry RegExpData, but the gate's 18 new passing tests suggest this is correct.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements get RegExp.prototype.source in its file and follows the spec steps. Step 2 throws a TypeError for non-objects. Step 3 checks the RegExp internal slot (via agent.native::<RegExpData>), returns \"(?:)\" when the receiver is the current realm's %RegExp.prototype%, and otherwise throws a TypeError. Steps 5-7 read the original source and call a local EscapeRegExpPattern helper. The helper follows the spec's escaping rules: it escapes \"/\" and the four LineTerminators, leaves existing \"\\/\" intact, handles a backslash before a LineTerminator, and returns \"(?:)\" for the empty pattern (which the spec allows). It does not depend on flags, and the escapes it emits are valid in every pattern mode. I found no special-cased inputs, made-up values, swallowed errors, or extra observable operations. The only nit is that the stub's [subclause sec-escaperegexppattern] comment line was dropped in favour of a helper comment; this affects comments only.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Optional: restore the \"[subclause sec-escaperegexppattern: EscapeRegExpPattern (...)]\" comment from the stub above the get-source body for fidelity to the stub. The helper's flags-independence is justified by the comment. A reviewer may want to confirm that agent.native::<RegExpData> is the only [[OriginalSource]] slot and that RegExp.prototype does not carry RegExpData, but the gate's 18 new passing tests suggest this is correct."
+  },
+  "ttft_ms": 19807,
+  "type": "result",
+  "duration_ms": 22574,
+  "uuid": "cd4cd8c0-7117-43df-8d14-2f20caf59d5f",
+  "ttft_stream_ms": 847,
+  "time_to_request_ms": 155,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 44,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 49,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 160,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 244,
+  "process_cpu_ms_turn": 825,
+  "process_wall_ms_turn": 22574,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 26,
+    "cpu_ms": 52,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 848,
+  "time_to_request_from_spawn_ms": 22404185,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791970281260.627,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.81,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

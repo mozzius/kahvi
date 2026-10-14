@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 13595,
+  "stop_reason": "tool_use",
+  "session_id": "72a41580-a624-434e-ae5e-4eb558d29415",
+  "total_cost_usd": 0.03834560000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5228,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1675,
+    "output_tokens_details": {
+      "thinking_tokens": 1189
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5228,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1675,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 5228,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5228
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The getter follows the spec steps in order. It throws a TypeError for a non-object. It returns \\\"(?:)\\\" for %RegExp.prototype%, using same_value. It throws a TypeError for other objects without RegExp data. Otherwise it returns the escaped source. The escaping is general. It escapes unescaped `/` and the line terminators LF, CR, U+2028 and U+2029. It keeps existing `\\\\x` pairs, so it never double-escapes `\\\\/`. It turns a backslash followed by a line terminator into the matching escape, which matches the same character. An empty pattern gives \\\"(?:)\\\". Flags are unused, and the code comments give a valid reason: the escapes produced are valid in every pattern mode. The gate report shows all 24 target runs passing with no regressions, and the diff touches only the one in-scope file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The getter follows the spec steps in order. It throws a TypeError for a non-object. It returns \"(?:)\" for %RegExp.prototype%, using same_value. It throws a TypeError for other objects without RegExp data. Otherwise it returns the escaped source. The escaping is general. It escapes unescaped `/` and the line terminators LF, CR, U+2028 and U+2029. It keeps existing `\\x` pairs, so it never double-escapes `\\/`. It turns a backslash followed by a line terminator into the matching escape, which matches the same character. An empty pattern gives \"(?:)\". Flags are unused, and the code comments give a valid reason: the escapes produced are valid in every pattern mode. The gate report shows all 24 target runs passing with no regressions, and the diff touches only the one in-scope file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10130,
+  "type": "result",
+  "duration_ms": 12841,
+  "uuid": "2d7a9ac7-96dd-41b8-8098-df5662303c69",
+  "ttft_stream_ms": 1176,
+  "time_to_request_ms": 144,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 24,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 52,
+    "autocompact": 1,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 27,
+  "time_to_request_cpu_ms": 128,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 621,
+  "process_wall_ms_turn": 12841,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1176,
+  "time_to_request_from_spawn_ms": 22427983,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791970305112.848,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.81,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements get RegExp.prototype.source in its file and follows the spec steps. Step 2 throws a TypeError for non-objects. Step 3 checks the RegExp internal slot (via agent.native::<RegExpData>), returns \"(?:)\" when the receiver is the current realm's %RegExp.prototype%, and otherwise throws a TypeError. Steps 5-7 read the original source and call a local EscapeRegExpPattern helper. The helper follows the spec's escaping rules: it escapes \"/\" and the four LineTerminators, leaves existing \"\\/\" intact, handles a backslash before a LineTerminator, and returns \"(?:)\" for the empty pattern (which the spec allows). It does not depend on flags, and the escapes it emits are valid in every pattern mode. I found no special-cased inputs, made-up values, swallowed errors, or extra observable operations. The only nit is that the stub's [subclause sec-escaperegexppattern] comment line was dropped in favour of a helper comment; this affects comments only.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found. Optional: restore the \"[subclause sec-escaperegexppattern: EscapeRegExpPattern (...)]\" comment from the stub above the get-source body for fidelity to the stub. The helper's flags-independence is justified by the comment. A reviewer may want to confirm that agent.native::<RegExpData> is the only [[OriginalSource]] slot and that RegExp.prototype does not carry RegExpData, but the gate's 18 new passing tests suggest this is correct.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

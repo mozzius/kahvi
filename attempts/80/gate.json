@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reg-exp-prototype-get-source",
+  "base": "997171bd48cfec994a84d6d925213a6e1e90c967",
+  "head": "35a26d77f26980ef891e1e15a9fab99879e0fd01",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_get_source.rs",
+      "added": 85,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 6,
+    "after": 24,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
