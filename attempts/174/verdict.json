@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements encodeURIComponent per the pinned spec: ToString on the argument, empty extraUnescaped, then Encode. Encode and CodePointAt are written in the same file. I checked the unescaped set (ASCII alphanumerics, '_', and -.!~*'()), the unpaired-surrogate URIError path, the CodePointAt branches and surrogate-pair arithmetic, the uppercase two-digit %XX output, and the step order. All match the spec. Nothing is keyed on test inputs, no errors are swallowed, and no value is made up. The remaining test262 failures come from the test harness's use of String.prototype.toUpperCase, which is reported as a not-implemented error. The only deviations are cosmetic: step 7 of CodePointAt has no separate code and is covered by the unwrap_or(0) lookup, which gives the same result, and the unreachable char::from_u32 None branch throws URIError. Encode lives outside kahvi_core::ops, which the ticket explicitly allows.",
+  "problems": [],
+  "notes_for_next_attempt": "Encode and CodePointAt are local to this file. When encodeURI or other built-ins need them, move them into kahvi_core::ops, as the ticket's report note asks. Optionally add a code-free step 7 for CodePointAt or a comment explaining that the unwrap_or(0) lookup covers position+1 = size. Remaining test262 failures are from the missing String.prototype.toUpperCase in the harness, not from this file.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
