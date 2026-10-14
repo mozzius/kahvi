@@ -692,3 +692,5 @@
 {"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 501, "ts": 1792007701.878022, "text": "worker reported BLOCKED but changed files: `%TypedArray.prototype%[@@iterator]` must be the same function object as `%TypedArray.prototype.values%`; the install loop in `table.rs` and the `generated.rs` entry (produced by `harness/gen/builtins.py`) need an alias mechanism for this."}
 {"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 501, "ts": 1792007707.723929, "text": "rejected by gates: no new test262 passes in target"}
 {"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 501, "ts": 1792007707.727, "text": "escalated from haiku to sonnet"}
+{"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 502, "ts": 1792007747.495733, "text": "worker reported BLOCKED but changed files: same-function-object aliasing of `%TypedArray.prototype%[@@iterator]` to `values` needs an alias mechanism in `table.rs` and `generated.rs` (from `harness/gen/builtins.py`)."}
+{"ticket": "B-typed-array-prototype-symbol-iterator", "attempt": 502, "ts": 1792007752.7642777, "text": "rejected by gates: no new test262 passes in target"}
