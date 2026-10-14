@@ -223,11 +223,6 @@ pub(super) fn is_global(agent: &Agent, env: EnvId) -> bool {
     matches!(agent.env(env), Environment::Global { .. })
 }
 
-/// HasVarDeclaration(N)
-fn has_var_declaration(agent: &Agent, env: EnvId, name: JsString) -> bool {
-    matches!(agent.env(env), Environment::Global { var_names, .. } if var_names.contains(&name))
-}
-
 /// HasLexicalDeclaration(N)
 fn has_lexical_declaration(agent: &mut Agent, env: EnvId, name: JsString) -> JsResult<bool> {
     let (_, dcl, _) = global_parts(agent, env).expect("global environment");
@@ -265,12 +260,6 @@ fn can_declare_global_function(agent: &mut Agent, env: EnvId, name: JsString) ->
     }
 }
 
-fn add_var_name(agent: &mut Agent, env: EnvId, name: JsString) {
-    if let Environment::Global { var_names, .. } = agent.env_mut(env) {
-        var_names.insert(name);
-    }
-}
-
 /// CreateGlobalVarBinding(N, D)
 fn create_global_var_binding(
     agent: &mut Agent,
@@ -286,7 +275,6 @@ fn create_global_var_binding(
         obj_rec.create_mutable_binding(agent, name, deletable)?;
         obj_rec.initialize_binding(agent, name, Value::Undefined)?;
     }
-    add_var_name(agent, env, name);
     Ok(())
 }
 
@@ -313,7 +301,6 @@ fn create_global_function_binding(
     };
     ops::define_property_or_throw(agent, global, key, desc)?;
     ops::set(agent, global, key, value, false)?;
-    add_var_name(agent, env, name);
     Ok(())
 }
 
@@ -335,11 +322,11 @@ pub(crate) fn global_declaration_instantiation(
     let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
     // 3. For each element name of lexNames, do
     for &(name, _) in &decls.lexical {
-        // a. If env.HasVarDeclaration(name) is true, throw a SyntaxError exception.
-        // b. If env.HasLexicalDeclaration(name) is true, throw a SyntaxError exception.
-        // c-d. If hasRestrictedGlobal is true, throw a SyntaxError exception.
-        if has_var_declaration(agent, env, name)
-            || has_lexical_declaration(agent, env, name)?
+        // a. If HasLexicalDeclaration(envRecord, name) is true, throw a SyntaxError exception.
+        // b-d. If ? HasRestrictedGlobalProperty(envRecord, name) is true, throw a SyntaxError
+        //      exception (global var and function bindings are non-configurable, except
+        //      those introduced by non-strict direct eval).
+        if has_lexical_declaration(agent, env, name)?
             || has_restricted_global_property(agent, env, name)?
         {
             return Err(redeclaration(agent, name));

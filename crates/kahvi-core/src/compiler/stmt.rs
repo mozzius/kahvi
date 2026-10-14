@@ -750,11 +750,22 @@ impl Compiler<'_> {
             for j in entry_jumps {
                 self.patch(j);
             }
-            self.scopes.push(JumpScope::Stack(2));
-            let completion = std::mem::replace(&mut self.completion, false);
-            self.compile_block(fin);
-            self.completion = completion;
-            self.scopes.pop();
+            if self.completion {
+                // Let F be Completion(Evaluation of Finally). If F is a normal
+                // completion, set F to B. Return ? UpdateEmpty(F, undefined).
+                // F's value starts empty; B's value is restored if F is normal.
+                self.emit(Op::GetCompletion);
+                self.scopes.push(JumpScope::Stack(3));
+                self.emit(Op::Undefined);
+                self.emit(Op::SetCompletion);
+                self.compile_block(fin);
+                self.scopes.pop();
+                self.emit(Op::SetCompletion);
+            } else {
+                self.scopes.push(JumpScope::Stack(2));
+                self.compile_block(fin);
+                self.scopes.pop();
+            }
             self.emit(Op::EndFinally(index));
             if !continuations.is_empty() {
                 let skip = self.emit(Op::Jump(0));

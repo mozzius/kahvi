@@ -660,6 +660,25 @@ fn throw_type_error(
         .throw_type_error("'caller', 'callee', and 'arguments' properties may not be accessed"))
 }
 
+/// AddRestrictedFunctionProperties(func, realm) (§10.2.4), with `thrower`
+/// the realm's %ThrowTypeError%.
+fn add_restricted_function_properties(agent: &mut Agent, func: Object, thrower: Object) {
+    // 3-4. Define "caller" and "arguments" as accessors { [[Get]]: thrower, [[Set]]: thrower,
+    //      [[Enumerable]]: false, [[Configurable]]: true }.
+    for name in ["caller", "arguments"] {
+        let key = agent.key(name);
+        agent.obj_mut(func).properties.insert(
+            key,
+            Property::Accessor {
+                get: Value::Object(thrower),
+                set: Value::Object(thrower),
+                enumerable: false,
+                configurable: true,
+            },
+        );
+    }
+}
+
 fn symbol_key(agent: &Agent, name: &str) -> PropertyKey {
     let wk = &agent.symbols_wk;
     let s = match name {
@@ -747,9 +766,14 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
             }
             Shape::Boolean => agent.object_with_kind(proto, ObjectKind::BooleanObject(false)),
             Shape::Number => agent.object_with_kind(proto, ObjectKind::NumberObject(0.0)),
+            // StringCreate("", %Object.prototype%): a String exotic object whose
+            // "length" is { [[Value]]: +0, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.
             Shape::String => {
                 let empty = agent.names.empty;
-                agent.object_with_kind(proto, ObjectKind::StringObject(empty))
+                let s = agent.object_with_kind(proto, ObjectKind::StringObject(empty));
+                let len = PropertyKey::String(agent.names.length);
+                define(agent, s, len, Value::Number(0.0), false, false, false);
+                s
             }
         };
         agent.set_intrinsic(realm, name, o);
@@ -952,6 +976,9 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
     }
     agent.obj_mut(tte).extensible = false;
     agent.set_intrinsic(realm, "%ThrowTypeError%", tte);
+
+    // CreateIntrinsics: Perform AddRestrictedFunctionProperties(%Function.prototype%, realmRec).
+    add_restricted_function_properties(agent, function_proto, tte);
 
     // Well-known symbols as properties of %Symbol% (§20.4.2).
     if let Some(&symbol) = agent.realm(realm).intrinsics.get("%Symbol%") {

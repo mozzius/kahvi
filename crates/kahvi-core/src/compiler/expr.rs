@@ -19,6 +19,14 @@ pub(super) enum FnName {
     OnStack,
 }
 
+/// IsIdentifierRef of an assignment's LeftHandSideExpression whose target
+/// is the identifier `id`: false when it is parenthesized (`(fn) = ...`).
+/// The parser drops the parentheses, but then the identifier no longer
+/// starts where the assignment does.
+fn is_identifier_ref(id: &kahvi_parser::ast::Ident, assignment: kahvi_parser::ast::Span) -> bool {
+    id.span.start == assignment.start
+}
+
 pub(super) fn binary_op(op: BinaryOp) -> BinOp {
     match op {
         BinaryOp::Add => BinOp::Add,
@@ -228,7 +236,7 @@ impl Compiler<'_> {
                         self.emit(Op::GetSuperProp(k));
                     }
                     MemberProp::Computed(e) => {
-                        self.compile_expr(e);
+                        self.compile_super_reference(e);
                         self.emit(Op::GetSuperElem);
                     }
                     MemberProp::Private(..) => self.not_implemented("super.#private"),
@@ -459,6 +467,24 @@ impl Compiler<'_> {
         }
     }
 
+    /// SuperProperty : super [ Expression ] as a Super Reference: [] -> [this key base].
+    pub(super) fn compile_super_reference(&mut self, key: &Expr) {
+        // 1-2. Let actualThis be ? env.GetThisBinding().
+        self.emit(Op::This);
+        // 3-4. Let propertyNameValue be ? GetValue(? Evaluation of Expression).
+        self.compile_expr(key);
+        // 7. MakeSuperPropertyReference(actualThis, propertyNameValue, strict): GetSuperBase.
+        self.emit(Op::SuperBase);
+    }
+
+    /// SuperProperty : super . IdentifierName as a Super Reference: [] -> [this key base].
+    pub(super) fn compile_super_reference_named(&mut self, name: &str) {
+        self.emit(Op::This);
+        let s = self.string(name);
+        self.emit(Op::String(s));
+        self.emit(Op::SuperBase);
+    }
+
     /// Evaluates a callee as a reference: [] -> [func this].
     pub(super) fn compile_callee(&mut self, callee: &Expr) {
         match callee {
@@ -501,7 +527,7 @@ impl Compiler<'_> {
                         self.emit(Op::GetSuperPropForCall(k));
                     }
                     MemberProp::Computed(e) => {
-                        self.compile_expr(e);
+                        self.compile_super_reference(e);
                         self.emit(Op::GetSuperElemForCall);
                     }
                     MemberProp::Private(..) => self.not_implemented("super.#private"),
@@ -515,6 +541,23 @@ impl Compiler<'_> {
                 ) =>
             {
                 self.compile_callee(inner.unparen())
+            }
+            // `(a?.b)()`: the optional chain evaluates to a Reference, which keeps its this value.
+            Expr::Paren(inner, _) if matches!(inner.unparen(), Expr::OptionalChain(..)) => {
+                let Expr::OptionalChain(chain, _) = inner.unparen() else {
+                    unreachable!("an optional chain")
+                };
+                self.optional_exits.push(Vec::new());
+                self.compile_callee(chain);
+                let exits = self.optional_exits.pop().unwrap_or_default();
+                let end = self.emit(Op::Jump(0));
+                for j in exits {
+                    self.patch(j);
+                }
+                // Short-circuited: the chain is undefined.
+                self.emit(Op::Undefined);
+                self.emit(Op::Undefined);
+                self.patch(end);
             }
             _ => {
                 self.compile_expr(callee);
@@ -899,7 +942,31 @@ impl Compiler<'_> {
                     self.emit(Op::Pop);
                 }
             }
-            Expr::SuperMember(..) => self.not_implemented("update expression on a super property"),
+            Expr::SuperMember(prop, _) => {
+                match prop {
+                    MemberProp::Ident(name, _) => self.compile_super_reference_named(name),
+                    MemberProp::Computed(e) => self.compile_super_reference(e),
+                    MemberProp::Private(..) => {
+                        self.not_implemented("super.#private");
+                        return;
+                    }
+                }
+                self.emit(Op::GetSuperElemForUpdate);
+                self.emit(Op::ToNumeric);
+                if prefix {
+                    self.emit(step);
+                } else {
+                    // [this key base old] -> [old this key base new]
+                    self.emit(Op::Dup);
+                    self.emit(step);
+                    self.emit(Op::Swap);
+                    self.emit(Op::RotRight5);
+                }
+                self.emit(Op::SetSuperElem);
+                if !prefix {
+                    self.emit(Op::Pop);
+                }
+            }
             other => {
                 // Early error in strict code; a ReferenceError at run time otherwise.
                 self.compile_expr(other);
@@ -921,7 +988,12 @@ impl Compiler<'_> {
                 Pattern::Ident(id) => {
                     let name = self.string(&id.name);
                     self.emit(Op::ResolveName(name));
-                    self.compile_named_expr(value, target);
+                    // NamedEvaluation only if IsIdentifierRef of LeftHandSideExpression.
+                    if is_identifier_ref(id, span) {
+                        self.compile_named_expr(value, target);
+                    } else {
+                        self.compile_expr(value);
+                    }
                     self.position(span);
                     self.emit(Op::PutRef);
                 }
@@ -978,18 +1050,23 @@ impl Compiler<'_> {
                                 }
                             }
                         }
-                        Expr::SuperMember(prop, _) => match prop {
-                            MemberProp::Ident(name, _) => {
-                                let k = self.agent.key(name);
-                                self.emit(Op::GetSuperProp(k));
-                                self.compile_expr(value);
-                                self.emit(Op::Binary(bop));
-                                self.emit(Op::SetSuperProp(k));
+                        Expr::SuperMember(prop, _) => {
+                            match prop {
+                                MemberProp::Ident(name, _) => {
+                                    self.compile_super_reference_named(name)
+                                }
+                                MemberProp::Computed(e) => self.compile_super_reference(e),
+                                MemberProp::Private(..) => {
+                                    self.not_implemented("super.#private");
+                                    return;
+                                }
                             }
-                            _ => self.not_implemented(
-                                "compound assignment to a computed super property",
-                            ),
-                        },
+                            self.emit(Op::GetSuperElemForUpdate);
+                            self.compile_expr(value);
+                            self.position(span);
+                            self.emit(Op::Binary(bop));
+                            self.emit(Op::SetSuperElem);
+                        }
                         other => {
                             self.compile_expr(other);
                             self.emit(Op::Pop);
@@ -1012,7 +1089,11 @@ impl Compiler<'_> {
                         self.emit(Op::GetRef);
                         let skip = self.emit(jump(lop));
                         self.emit(Op::Pop);
-                        self.compile_named_expr(value, target);
+                        if is_identifier_ref(id, span) {
+                            self.compile_named_expr(value, target);
+                        } else {
+                            self.compile_expr(value);
+                        }
                         self.emit(Op::PutRef);
                         let end = self.emit(Op::Jump(0));
                         self.patch(skip);
@@ -1112,23 +1193,19 @@ impl Compiler<'_> {
                     }
                 }
             }
-            Expr::SuperMember(prop, _) => match prop {
-                MemberProp::Ident(name, _) => {
-                    let k = self.agent.key(name);
-                    self.emit(Op::This);
-                    self.emit(Op::Pop);
-                    self.compile_expr(value);
-                    self.emit(Op::SetSuperProp(k));
+            Expr::SuperMember(prop, _) => {
+                match prop {
+                    MemberProp::Ident(name, _) => self.compile_super_reference_named(name),
+                    MemberProp::Computed(k) => self.compile_super_reference(k),
+                    MemberProp::Private(..) => {
+                        self.not_implemented("super.#private");
+                        return;
+                    }
                 }
-                MemberProp::Computed(k) => {
-                    self.emit(Op::This);
-                    self.emit(Op::Pop);
-                    self.compile_expr(k);
-                    self.compile_expr(value);
-                    self.emit(Op::SetSuperElem);
-                }
-                MemberProp::Private(..) => self.not_implemented("super.#private"),
-            },
+                self.compile_expr(value);
+                self.position(span);
+                self.emit(Op::SetSuperElem);
+            }
             other => {
                 // `f() = 1` in sloppy code: the call happens, then a ReferenceError.
                 self.compile_expr(other);

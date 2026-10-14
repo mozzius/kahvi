@@ -155,6 +155,8 @@ impl Parser<'_> {
                 return self.unexpected();
             }
             let tok = self.next()?;
+            // ArrowParameters : BindingIdentifier
+            self.check_identifier(&tok.ident, tok.start, false)?;
             let param = Ident {
                 name: tok.ident.clone(),
                 span: tok.span(),
@@ -305,12 +307,13 @@ impl Parser<'_> {
         let mut left = if self.tok.kind == Tok::PrivateName {
             // `#x in obj`
             let tok = self.next()?;
-            if !self.is_word("in") || !self.allow_in || min_prec > 8 {
+            if !self.is_word("in") || !self.allow_in || min_prec >= 8 {
                 return self.err("unexpected private name", tok.start);
             }
             self.reference_private(&tok.ident, tok.start)?;
             self.next()?;
-            let right = self.parse_binary(9, cover)?;
+            // RelationalExpression : PrivateIdentifier `in` ShiftExpression
+            let right = self.parse_binary(8, cover)?;
             Expr::PrivateIn(tok.ident, Box::new(right), self.span_from(start))
         } else {
             self.parse_unary(cover)?

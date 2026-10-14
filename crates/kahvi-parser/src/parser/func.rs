@@ -421,7 +421,7 @@ impl Parser<'_> {
             if self.eat(P::Semi)? {
                 continue;
             }
-            let start = self.start();
+            let mut start = self.start();
             let mut is_static = false;
             if self.is_word("static") {
                 let next = self.peek()?;
@@ -438,6 +438,9 @@ impl Parser<'_> {
                 ) {
                     is_static = true;
                     self.next()?;
+                    // The element's source text (a method's [[SourceText]]) is
+                    // the MethodDefinition or FieldDefinition after `static`.
+                    start = self.start();
                 }
             }
             let mut is_async = false;

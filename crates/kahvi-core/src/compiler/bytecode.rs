@@ -37,12 +37,16 @@ pub enum Op {
     RotRight3,
     /// [a b c d] -> [d a b c]
     RotRight4,
+    /// [a b c d e] -> [e a b c d]
+    RotRight5,
     /// [.. x (n values)] -> [.. x (n values) x]: copies the value `n` below the top.
     Pick(u32),
 
     // ---- completion value (script and eval code) ---------------------------
     /// [v] -> []: the completion value of the code so far is `v`.
     SetCompletion,
+    /// [] -> [v]: the completion value of the code so far.
+    GetCompletion,
 
     // ---- identifiers -------------------------------------------------------
     /// [] -> [value]: ResolveBinding(name) then GetValue.
@@ -103,18 +107,23 @@ pub enum Op {
     RequireObjectCoercible,
 
     // ---- super and private references -------------------------------------
-    /// [] -> [value]: super[key] with a static key.
+    /// [] -> [value]: super.name (the whole SuperProperty evaluation and GetValue).
     GetSuperProp(PropertyKey),
-    /// [key] -> [value]
-    GetSuperElem,
-    /// [value] -> [value]
-    SetSuperProp(PropertyKey),
-    /// [key value] -> [value]
-    SetSuperElem,
-    /// [] -> [func this]
+    /// [] -> [func this]: super.name as a callee.
     GetSuperPropForCall(PropertyKey),
-    /// [key] -> [func this]
+    /// [] -> [base]: GetSuperBase(env) of MakeSuperPropertyReference. A Super
+    /// Reference on the stack is [this key base]: `This`, then the key value,
+    /// then `SuperBase`.
+    SuperBase,
+    /// [this key base] -> [value]: GetValue of a Super Reference.
+    GetSuperElem,
+    /// [this key base] -> [func this]
     GetSuperElemForCall,
+    /// [this key base] -> [this key' base' value]: GetValue, keeping the reference
+    /// (key converted to a property key, base to an object) for a PutValue.
+    GetSuperElemForUpdate,
+    /// [this key base value] -> [value]: PutValue of a Super Reference.
+    SetSuperElem,
     /// [base] -> [value]: PrivateGet(base, #name).
     GetPrivate(JsString),
     /// [base value] -> [value]

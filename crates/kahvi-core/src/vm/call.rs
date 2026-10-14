@@ -97,6 +97,9 @@ pub fn create_closure(
     match (code.is_async, code.is_generator) {
         // Plain functions (not arrows or methods) are constructors.
         (false, false) if code.flavor == FunctionFlavor::Normal => {
+            if !code.strict {
+                add_legacy_caller(agent, f);
+            }
             make_constructor(agent, f, true, None)
         }
         (_, true) => {
@@ -124,6 +127,73 @@ pub fn create_closure(
         func_env.initialize_binding(agent, n, Value::Object(f))?;
     }
     Ok(f)
+}
+
+/// The "caller" own property that web engines give non-strict plain
+/// functions (a legacy extension; reading it must not reach
+/// %Function.prototype%'s throwing accessor). Forbidden Extensions (§17.1)
+/// allow it for non-strict functions only, and it must never reveal a
+/// strict function: its getter returns the function that called the
+/// innermost running invocation of this one when that caller is a
+/// non-strict ECMAScript function, and null otherwise.
+fn add_legacy_caller(agent: &mut Agent, f: Object) {
+    let realm = agent.current_realm();
+    let getter = match agent.realm(realm).intrinsics.get(LEGACY_CALLER_GETTER) {
+        Some(&g) => g,
+        None => {
+            let name = agent.key("caller");
+            let g = crate::function::create_builtin_function(
+                agent,
+                legacy_caller_getter,
+                0,
+                name,
+                Vec::new(),
+                Some(realm),
+                None,
+                Some("get"),
+                false,
+            );
+            agent.set_intrinsic(realm, LEGACY_CALLER_GETTER, g);
+            g
+        }
+    };
+    let key = agent.key("caller");
+    agent.obj_mut(f).properties.insert(
+        key,
+        Property::Accessor {
+            get: Value::Object(getter),
+            set: Value::Undefined,
+            enumerable: false,
+            configurable: false,
+        },
+    );
+}
+
+/// The realm's getter for non-strict functions' "caller" property.
+const LEGACY_CALLER_GETTER: &str = "%LegacyFunctionCallerGetter%";
+
+fn legacy_caller_getter(
+    agent: &mut Agent,
+    this: Value,
+    _args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    let Value::Object(f) = this else {
+        return Ok(Value::Null);
+    };
+    // The contexts below the getter's own; the innermost one running f.
+    let contexts = &agent.contexts[..agent.contexts.len().saturating_sub(1)];
+    let Some(i) = contexts.iter().rposition(|c| c.function == Some(f)) else {
+        return Ok(Value::Null);
+    };
+    // The context that called it, if that is a non-strict ECMAScript function.
+    let caller = i.checked_sub(1).and_then(|j| contexts[j].function);
+    Ok(match caller {
+        Some(c) if matches!(&agent.obj(c).kind, ObjectKind::Function(e) if !e.code.strict) => {
+            Value::Object(c)
+        }
+        _ => Value::Null,
+    })
 }
 
 fn ecma(agent: &Agent, f: Object) -> &EcmaFunction {

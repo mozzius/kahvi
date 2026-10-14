@@ -76,6 +76,8 @@ impl Compiler<'_> {
                     }
                     MemberProp::Computed(k) => {
                         self.compile_expr(k);
+                        // [value base key] -> [base key value]
+                        self.emit(Op::RotRight3);
                         self.emit(Op::RotRight3);
                         self.emit(Op::SetElem);
                     }
@@ -87,15 +89,16 @@ impl Compiler<'_> {
                 }
                 self.emit(Op::Pop);
             }
-            Expr::SuperMember(MemberProp::Ident(name, _), _) => {
-                let k = self.agent.key(name);
-                self.emit(Op::SetSuperProp(k));
-                self.emit(Op::Pop);
-            }
-            Expr::SuperMember(MemberProp::Computed(k), _) => {
-                self.compile_expr(k);
-                self.emit(Op::Swap);
+            Expr::SuperMember(prop @ (MemberProp::Ident(..) | MemberProp::Computed(_)), _) => {
+                // [value] -> [value this key base] -> [value this key base value] -> PutValue.
+                match prop {
+                    MemberProp::Ident(name, _) => self.compile_super_reference_named(name),
+                    MemberProp::Computed(k) => self.compile_super_reference(k),
+                    MemberProp::Private(..) => unreachable!(),
+                }
+                self.emit(Op::Pick(3));
                 self.emit(Op::SetSuperElem);
+                self.emit(Op::Pop);
                 self.emit(Op::Pop);
             }
             _ => {

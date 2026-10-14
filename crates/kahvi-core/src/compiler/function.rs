@@ -101,7 +101,14 @@ pub(super) fn compile_function(
             c.emit(Op::Return);
         }
         FunctionBody::Expr(e) => {
-            c.compile_expr(e);
+            if f.kind == FunctionKind::ClassFieldInit && e.is_anonymous_function_definition() {
+                // ClassFieldDefinitionEvaluation: Let initValue be ? NamedEvaluation
+                // of Initializer with argument fieldName.
+                c.emit(Op::FieldInitializerName);
+                c.compile_named(e, super::expr::FnName::OnStack);
+            } else {
+                c.compile_expr(e);
+            }
             c.emit(Op::Return);
         }
     }

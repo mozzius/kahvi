@@ -137,7 +137,7 @@ impl Parser<'_> {
                         self.expect(P::LParen)?;
                         let object = self.parse_expression_allow_in()?;
                         self.expect(P::RParen)?;
-                        let body = self.parse_substatement()?;
+                        let body = self.parse_substatement_not_labelled_function()?;
                         return Ok(Stmt::With {
                             object,
                             body: Box::new(body),
@@ -198,7 +198,7 @@ impl Parser<'_> {
 
     fn parse_loop_body(&mut self) -> PResult<Stmt> {
         self.fn_ctx_mut().in_iteration += 1;
-        let body = self.parse_substatement();
+        let body = self.parse_substatement_not_labelled_function();
         self.fn_ctx_mut().in_iteration -= 1;
         body
     }
@@ -253,7 +253,18 @@ impl Parser<'_> {
             }
             return Ok(f);
         }
-        self.parse_substatement()
+        self.parse_substatement_not_labelled_function()
+    }
+
+    /// The Statement of an if, with or iteration statement: It is a Syntax
+    /// Error if IsLabelledFunction(Statement) is true.
+    fn parse_substatement_not_labelled_function(&mut self) -> PResult<Stmt> {
+        let start = self.start();
+        let stmt = self.parse_substatement()?;
+        if is_labelled_function(&stmt) {
+            return self.err("a labelled function declaration is not allowed here", start);
+        }
+        Ok(stmt)
     }
 
     fn parse_labelled(&mut self) -> PResult<Stmt> {
@@ -773,4 +784,19 @@ pub(crate) fn contains_using(stmts: &[Stmt]) -> Option<usize> {
         }
         _ => None,
     })
+}
+
+/// IsLabelledFunction(stmt)
+fn is_labelled_function(stmt: &Stmt) -> bool {
+    match stmt {
+        // 2. Let item be the LabelledItem of stmt.
+        Stmt::Labeled { body, .. } => match &**body {
+            // 3. If item is LabelledItem : FunctionDeclaration, return true.
+            Stmt::Function(_) => true,
+            // 4-5. If item is LabelledItem : Statement, return IsLabelledFunction(Statement).
+            other => is_labelled_function(other),
+        },
+        // 1. If stmt is not a LabelledStatement, return false.
+        _ => false,
+    }
 }

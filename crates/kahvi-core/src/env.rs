@@ -128,7 +128,6 @@ pub enum Environment {
         object_record: EnvId,
         global_this: Object,
         declarative_record: EnvId,
-        var_names: crate::hash::FxHashSet<JsString>,
     },
 }
 
@@ -213,7 +212,6 @@ impl Environment {
             object_record,
             global_this: this_value,
             declarative_record,
-            var_names: Default::default(),
         })
     }
 
