@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11053,
+  "stop_reason": "tool_use",
+  "session_id": "b311c5ca-14c5-4732-8d30-cc575ad5549f",
+  "total_cost_usd": 0.0285037,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4934,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 782,
+    "output_tokens_details": {
+      "thinking_tokens": 383
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4934,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 782,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4934,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4934
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements DisposableStack.prototype.move following spec steps 1-9 in order. Step 2 uses a TypeError check through the shared helper. Step 3 throws ReferenceError. Step 4 propagates errors from ordinary_create_from_constructor with ? and the correct intrinsic names. Steps 5-8 are done by taking the resource stack and setting the disposed flag. The 4 remaining target failures come from the unimplemented `disposed` getter, which is a separate ticket. Build and clippy are ok, with 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements DisposableStack.prototype.move following spec steps 1-9 in order. Step 2 uses a TypeError check through the shared helper. Step 3 throws ReferenceError. Step 4 propagates errors from ordinary_create_from_constructor with ? and the correct intrinsic names. Steps 5-8 are done by taking the resource stack and setting the disposed flag. The 4 remaining target failures come from the unimplemented `disposed` getter, which is a separate ticket. Build and clippy are ok, with 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7590,
+  "type": "result",
+  "duration_ms": 9709,
+  "uuid": "d42276ba-2316-4806-aa0a-be348769bd53",
+  "ttft_stream_ms": 4339,
+  "time_to_request_ms": 853,
+  "time_to_request_phases_ms": {
+    "other": 90,
+    "system_prompt": 386,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 28,
+    "input_hooks": 57,
+    "tool_pool_refresh": 8,
+    "init_message": 45,
+    "engine_pickup": 12,
+    "message_prep": 14,
+    "model_config_wait": 98,
+    "autocompact": 13,
+    "query_setup": 1,
+    "model_gates": 6,
+    "tool_schema_build": 16,
+    "message_normalization": 11,
+    "client_creation": 36,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 293,
+  "time_to_request_cpu_ms": 482,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 843,
+  "process_wall_ms_turn": 9709,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 52,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4340,
+  "time_to_request_from_spawn_ms": 24363122,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003822769.173,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
