@@ -9,16 +9,30 @@ pub(crate) fn prototype_define_setter(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method performs the following steps when called:
     //
     // 1. Let _obj_ be ? ToObject(*this* value).
+    let obj = ops::to_object(agent, this)?;
     // 2. If IsCallable(_setter_) is *false*, throw a *TypeError* exception.
+    let setter = args.get_or_undefined(1);
+    if !ops::is_callable(agent, setter) {
+        return Err(
+            agent.throw_type_error("Object.prototype.__defineSetter__ setter is not a function")
+        );
+    }
     // 3. Let _propertyDesc_ be PropertyDescriptor { [[Setter]]: _setter_, [[Enumerable]]: *true*, [[Configurable]]: *true* }.
+    let property_desc = PropertyDescriptor {
+        set: Some(setter),
+        enumerable: Some(true),
+        configurable: Some(true),
+        ..Default::default()
+    };
     // 4. Let _propertyKey_ be ? ToPropertyKey(_key_).
+    let property_key = ops::to_property_key(agent, args.get_or_undefined(0))?;
     // 5. Perform ? DefinePropertyOrThrow(_obj_, _propertyKey_, _propertyDesc_).
+    ops::define_property_or_throw(agent, obj, property_key, property_desc)?;
     // 6. Return *undefined*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.prototype.__defineSetter__"))
+    Ok(Value::Undefined)
 }
