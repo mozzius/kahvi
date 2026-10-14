@@ -259,3 +259,6 @@
 [17:33:06] B-string-prototype-match-all: verifier: accept The diff implements all six steps of String.prototype.matchAll in order. Step 2 calls RequireObjectCoercible. Step 3 runs IsRegExp, then Get "flags", 
 [17:33:11] B-data-view-prototype-set-float64: attempt on slot 3 with haiku
 [17:33:36] B-data-view-prototype-set-float16: verifier: accept The diff replaces the not-implemented stub for DataView.prototype.setFloat16 with a direct port of the three spec steps. Step 1 takes `this` as the vi
+[17:33:36] C-proxy-prevent-extensions: verifier: accept The diff implements Proxy [[PreventExtensions]] in the single in-scope file. It follows spec steps 1-9 in order: ValidateNonRevokedProxy via p.validat
+[17:33:39] B-data-view-prototype-set-int16: attempt on slot 2 with haiku
+[17:33:40] B-data-view-prototype-set-float32: verifier: accept The change is a small, spec-faithful wrapper for DataView.prototype.setFloat32. Step 1 binds the this value, step 2 defaults littleEndian to false whe
