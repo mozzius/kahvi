@@ -4,18 +4,42 @@
 
 use kahvi_core::prelude::*;
 
+/// ToAbsoluteIndex(_value_, _length_), which is not yet in `ops`.
+///
+/// Spec: https://tc39.es/ecma262/#sec-toabsoluteindex
+fn to_absolute_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
+    // 1. Let _int_ be ? ToIntegerOrInfinity(_value_).
+    let mut int = ops::to_integer_or_infinity(agent, value)?;
+    // 2. If _int_ is finite and _int_ < 0, set _int_ to _length_ + _int_.
+    if int.is_finite() && int < 0.0 {
+        int += length;
+    }
+    // 3. Return _int_.
+    Ok(int)
+}
+
 /// Array.prototype.at
 pub(crate) fn prototype_at(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // 1. Let _obj_ be ? ToObject(*this* value).
-    // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
-    // 3. Let _k_ be ? ToAbsoluteIndex(_index_, _length_).
-    // 4. If _k_ < 0 or _k_ ≥ _length_, return *undefined*.
-    // 5. Return ? Get(_obj_, ! ToString(𝔽(_k_))).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.prototype.at"))
+    let obj = ops::to_object(agent, this)?;
+    let index = args.get_or_undefined(0);
+    // The getters and conversions below may collect garbage: obj and index stay rooted.
+    agent.with_roots(&[Value::Object(obj), index], |agent| {
+        // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
+        let length = ops::length_of_array_like(agent, obj)?;
+        // 3. Let _k_ be ? ToAbsoluteIndex(_index_, _length_).
+        let k = to_absolute_index(agent, index, length)?;
+        // 4. If _k_ < 0 or _k_ ≥ _length_, return *undefined*.
+        if k < 0.0 || k >= length {
+            return Ok(Value::Undefined);
+        }
+        // 5. Return ? Get(_obj_, ! ToString(𝔽(_k_))).
+        let key = agent.key_from_index(k);
+        ops::get(agent, obj, key)
+    })
 }
