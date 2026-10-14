@@ -961,3 +961,28 @@ test262 at last merge: 72953/81183 runs passing
 [18:13:12] B-map-group-by: verifier: accept Implements Map.groupBy in crates/kahvi-builtins/src/map/group_by.rs, following the spec steps of Map.groupBy and GroupBy: RequireObjectCoercible, IsCa
 [18:13:18] B-suppressed-error-constructor: attempt on slot 2 with haiku
 [18:13:52] B-string-prototype-code-point-at: verifier: accept Implements String.prototype.codePointAt in its own file. The steps run in spec order: RequireObjectCoercible, ToString, ToIntegerOrInfinity, length ch
+[18:13:57] B-symbol-key-for: attempt on slot 0 with haiku
+[18:14:04] B-suppressed-error-constructor: attempt 273 finished ($0.008, 16 turns)
+[18:14:04] stack: stack/0009 (#22) green: 74349/81183 passing, +553
+[18:14:04] B-promise-prototype-finally: merged (+46, 74349 total)
+[18:14:05] B-iterator-prototype-reduce: merged (+48, 74349 total)
+[18:14:05] B-string-prototype-char-at: merged (+44, 74349 total)
+[18:14:05] B-array-prototype-shift: merged (+32, 74349 total)
+[18:14:05] B-date-utc: merged (+26, 74349 total)
+[18:14:05] B-string-prototype-repeat: attempt 272 finished ($0.008, 12 turns)
+[18:14:05] B-iterator-from: merged (+20, 74349 total)
+[18:14:05] B-set-prototype-union: merged (+14, 74349 total)
+[18:14:05] B-object-from-entries: merged (+44, 74349 total)
+[18:14:05] B-string-prototype-ends-with: merged (+46, 74349 total)
+[18:14:06] B-set-prototype-intersection: merged (+14, 74349 total)
+[18:14:06] B-set-prototype-symmetric-difference: merged (+14, 74349 total)
+[18:14:06] B-set-prototype-difference: merged (+14, 74349 total)
+[18:14:06] B-string-prototype-to-lower-case: merged (+42, 74349 total)
+[18:14:06] B-object-get-own-property-symbols: merged (+18, 74349 total)
+[18:14:06] B-array-prototype-fill: merged (+32, 74349 total)
+[18:14:06] B-typed-array-prototype-with: merged (+46, 74349 total)
+[18:14:07] B-object-group-by: verifier: accept The diff implements Object.groupBy and its GroupBy abstract operation (property coercion only) in group_by.rs, touching nothing else. I walked the spe
+[18:14:10] stack: partial tickets after stack/0009: {'done': 4}
+[18:14:24] stack: pushed stack/0010 as #23 with B-reg-exp-prototype-get-multiline, B-string-prototype-includes, C-proxy-get-prototype-of, B-global-encode-uri, B-object-is, B-global-encode-uri-component, B-iterator-prototype-for-each, B-string-prototype-match-all, B-data-view-prototype-set-float16, C-proxy-prevent-extensions, B-data-view-prototype-set-float32, B-data-view-prototype-set-float64, B-data-view-prototype-set-int16, B-data-view-prototype-set-int32, B-data-view-prototype-set-uint16, B-data-view-prototype-set-uint32
+[18:14:48] B-symbol-key-for: attempt 274 finished ($0.006, 18 turns)
+[18:15:00] B-suppressed-error-constructor: verifier: accept The SuppressedError constructor follows the spec's six steps in order. NewTarget falls back to the active function, OrdinaryCreateFromConstructor is c

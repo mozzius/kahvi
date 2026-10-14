@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7717,
+  "stop_reason": "tool_use",
+  "session_id": "77daac6a-6712-4729-a7cf-a8cc3cf4b4ea",
+  "total_cost_usd": 0.029833500000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5295,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 783,
+    "output_tokens_details": {
+      "thinking_tokens": 361
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5295,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 783,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5295,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5295
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements SuppressedError steps 1\u20136 in order. Step 2 uses ordinary_create_from_constructor with ObjectKind::Error. Step 3 does ToString(message) with `?` and then defines \\\"message\\\". Steps 4 and 5 define \\\"error\\\" (args[0]) and \\\"suppressed\\\" (args[1]). Errors propagate with `?`. There are no special cases or made-up values. The gate shows 44/44 passing with no regressions. The only lint flag is the `.expect` on the active function. A built-in call always has an active function, so that is an invariant, not a swallowed error. The renamed `_this` is harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements SuppressedError steps 1\u20136 in order. Step 2 uses ordinary_create_from_constructor with ObjectKind::Error. Step 3 does ToString(message) with `?` and then defines \"message\". Steps 4 and 5 define \"error\" (args[0]) and \"suppressed\" (args[1]). Errors propagate with `?`. There are no special cases or made-up values. The gate shows 44/44 passing with no regressions. The only lint flag is the `.expect` on the active function. A built-in call always has an active function, so that is an invariant, not a swallowed error. The renamed `_this` is harmless.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5339,
+  "type": "result",
+  "duration_ms": 7626,
+  "uuid": "d354b4d4-255a-4120-b216-5f4d154c982f",
+  "ttft_stream_ms": 2136,
+  "time_to_request_ms": 689,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 338,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 22,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 14,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 237,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 172,
+  "time_to_request_cpu_ms": 348,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 743,
+  "process_wall_ms_turn": 7625,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2137,
+  "time_to_request_from_spawn_ms": 22231087,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001690482.5293,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

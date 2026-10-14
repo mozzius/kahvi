@@ -1,0 +1,39 @@
+{
+  "ticket": "B-suppressed-error-constructor",
+  "base": "ae793ef37aaba7983066188f4947fb091259c455",
+  "head": "5568a55e2a328c35350131b259436645fd9c44bb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/suppressed_error/constructor.rs",
+      "added": 40,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/suppressed_error/constructor.rs",
+      "line": 30,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a built-in runs with an active function\"),"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 44,
+    "before": 20,
+    "after": 44,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
