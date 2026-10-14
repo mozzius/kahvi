@@ -4955,3 +4955,6 @@ test262 at last merge: 80909/81183 runs passing
 [20:53:08] stack: stack/0031 (#48) merged into main
 [20:53:13] stack: pushed stack/0032 as #49 with arch-tickets-u8
 [20:53:24] B-uint8-array-prototype-to-hex: verifier: accept The diff implements Uint8Array.prototype.toHex as the spec describes. Step 2 (ValidateUint8Array) throws a TypeError for non-objects, objects without 
+[20:53:46] B-uint8-array-prototype-set-from-hex: attempt 512 finished ($0.185, 14 turns)
+[20:53:53] B-uint8-array-from-base64: attempt 510 finished ($0.440, 24 turns)
+[20:54:26] B-uint8-array-prototype-set-from-hex: verifier: accept The diff implements Uint8Array.prototype.setFromHex in its own file and follows the spec steps in order. ValidateUint8Array (TypeError on non-Uint8Arr

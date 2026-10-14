@@ -1,0 +1,130 @@
+{
+  "duration_api_ms": 110983,
+  "stop_reason": "end_turn",
+  "session_id": "9aec186e-e502-4201-bca4-85c343b4fe65",
+  "total_cost_usd": 0.4396063,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 49661,
+    "cache_read_input_tokens": 462249,
+    "output_tokens": 19434,
+    "output_tokens_details": {
+      "thinking_tokens": 1160
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 49661,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 301,
+        "cache_read_input_tokens": 56325,
+        "cache_creation_input_tokens": 199,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 199
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01WGHRjoYcTBmdLTcY9mnXZ9",
+      "tool_input": {
+        "command": "cat > crates/kahvi-builtins/src/uint8_array/from_base64.rs <<'EOF'\n//! Uint8Array.fromBase64 ( _string_ [ , _options_ ] )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-uint8array.frombase64\n\nuse kahvi_core::object::typed_array::{ElementType, set_value_in_buffer};\nuse kahvi_core::prelude::*;\n\nuse crate::support::typed_array::{allocate_typed_array, constructor_of, viewed_buffer};\n\n/// The _alphabet_ option of the Uint8Array base64 methods.\n#[derive(Clone, Copy, PartialEq)]\npub(crate) enum Alphabet {\n    Base64,\n    Base64Url,\n}\n\n/// The _lastChunkHandling_ option of the Uint8Array base64 methods.\n#[derive(Clone, Copy, PartialEq)]\npub(crate) enum LastChunkHandling {\n    Loose,\n    Strict,\n    StopBeforePartial,\n}\n\n/// Whether the String value `v` is exactly the ASCII text `text`.\nfn string_is(agent: &Agent, v: Value, text: &str) -> bool {\n    match v {\n        Value::String(s) => agent.str(s).iter().copied().eq(text.encode_utf16()),\n        _ => false,\n    }\n}\n\n/// GetOptionsObject ( _options_ ) (sec-getoptionsobject)\npub(crate) fn get_options_object(agent: &mut Agent, options: Value) -> JsResult<Object> {\n    // 1. If _options_ is *undefined*, then\n    if options.is_undefined() {\n        // a. Return OrdinaryObjectCreate(*null*).\n        return Ok(agent.ordinary_object_create(None));\n    }\n    // 2. If _options_ is an Object, then\n    if let Value::Object(o) = options {\n        // a. Return _options_.\n        return Ok(o);\n    }\n    // 3. Throw a *TypeError* exception.\n    Err(agent.throw_type_error(\"options must be an object or undefined\"))\n}\n\n/// Steps 3-5 of Uint8Array.fromBase64: read and validate the _alphabet_ option.\npub(crate) fn get_alphabet_option(agent: &mut Agent, options_obj: Object) -> JsResult<Alphabet> {\n    // 3. Let _alphabet_ be ? Get(_optionsObj_, *\"alphabet\"*).\n    let key = agent.key(\"alphabet\");\n    let alphabet = ops::get(agent, options_obj, key)?;\n    // 4. If _alphabet_ is *undefined*, set _alphabet_ to *\"base64\"*.\n    if alphabet.is_undefined() {\n        return Ok(Alphabet::Base64);\n    }\n    // 5. If _alphabet_ is neither *\"base64\"* nor *\"base64url\"*, throw a *TypeError* exception.\n    if string_is(agent, alphabet, \"base64\") {\n        Ok(Alphabet::Base64)\n    } else if string_is(agent, alphabet, \"base64url\") {\n        Ok(Alphabet::Base64Url)\n    } else {\n        Err(agent.throw_type_error(\"alphabet must be \\\"base64\\\" or \\\"base64url\\\"\"))\n    }\n}\n\n/// Steps 6-8 of Uint8Array.fromBase64: read and validate the _lastChunkHandling_ option.\npub(crate) fn get_last_chunk_handling_option(\n    agent: &mut Agent,\n    options_obj: Object,\n) -> JsResult<LastChunkHandling> {\n    // 6. Let _lastChunkHandling_ be ? Get(_optionsObj_, *\"lastChunkHandling\"*).\n    let key = agent.key(\"lastChunkHandling\");\n    let handling = ops::get(agent, options_obj, key)?;\n    // 7. If _lastChunkHandling_ is *undefined*, set _lastChunkHandling_ to *\"loose\"*.\n    if handling.is_undefined() {\n        return Ok(LastChunkHandling::Loose);\n    }\n    // 8. If _lastChunkHandling_ is not one of *\"loose\"*, *\"strict\"*, or *\"stop-before-partial\"*, throw a *TypeError* exception.\n    if string_is(agent, handling, \"loose\") {\n        Ok(LastChunkHandling::Loose)\n    } else if string_is(agent, handling, \"strict\") {\n        Ok(LastChunkHandling::Strict)\n    } else if string_is(agent, handling, \"stop-before-partial\") {\n        Ok(LastChunkHandling::StopBeforePartial)\n    } else {\n        Err(agent.throw_type_error(\n            \"lastChunkHandling must be \\\"loose\\\", \\\"strict\\\" or \\\"stop-before-partial\\\"\",\n        ))\n    }\n}\n\n/// The value of a code unit in the standard base64 alphabet.\nfn base64_value(unit: u16) -> Option<u8> {\n    match u8::try_from(unit).ok()? {\n        c @ b'A'..=b'Z' => Some(c - b'A'),\n        c @ b'a'..=b'z' => Some(c - b'a' + 26),\n        c @ b'0'..=b'9' => Some(c - b'0' + 52),\n        b'+' => Some(62),\n        b'/' => Some(63),\n        _ => None,\n    }\n}\n\n/// SkipAsciiWhitespace ( _string_, _index_ )\nfn skip_ascii_whitespace(string: &[u16], mut index: usize) -> usize {\n    // 1. Let _length_ be the length of _string_.\n    // 2. Repeat, while _index_ < _length_,\n    //    a. Let _char_ be the code unit at _index_.\n    //    b. If _char_ is not ASCII whitespace, return _index_.\n    //    c. Set _index_ to _index_ + 1.\n    while let Some(&c) = string.get(index) {\n        if !matches!(c, 0x09 | 0x0A | 0x0C | 0x0D | 0x20) {\n            return index;\n        }\n        index += 1;\n    }\n    // 3. Return _length_.\n    index\n}\n\n/// DecodeFullLengthBase64Chunk ( _chunk_ ): `chunk` holds four base64 values.\nfn decode_full_length_base64_chunk(chunk: [u8; 4]) -> [u8; 3] {\n    // 1. Let _byteSequence_ be the unique sequence of 3 bytes resulting from decoding _chunk_ as base64.\n    // 2. Return a List whose elements are the elements of _byteSequence_, in order.\n    [\n        (chunk[0] << 2) | (chunk[1] >> 4),\n        (chunk[1] << 4) | (chunk[2] >> 2),\n        (chunk[2] << 6) | chunk[3],\n    ]\n}\n\n/// DecodeFinalBase64Chunk ( _chunk_, _throwOnExtraBits_ ): `chunk` holds 2 or 3 base64 values.\nfn decode_final_base64_chunk(\n    agent: &mut Agent,\n    chunk: &[u8],\n    throw_on_extra_bits: bool,\n) -> JsResult<Vec<u8>> {\n    // 1. Let _chunkLength_ be the length of _chunk_.\n    let chunk_length = chunk.len();\n    // 2. If _chunkLength_ = 2, then\n    //    a. Set _chunk_ to the string-concatenation of _chunk_ and *\"AA\"*.\n    // 3. Else,\n    //    a. Assert: _chunkLength_ is 3.\n    //    b. Set _chunk_ to the string-concatenation of _chunk_ and *\"A\"*.\n    let mut full = [0u8; 4];\n    full[..chunk_length].copy_from_slice(chunk);\n    // 4. Let _bytes_ be DecodeFullLengthBase64Chunk(_chunk_).\n    let bytes = decode_full_length_base64_chunk(full);\n    // 5. If _chunkLength_ = 2, then\n    if chunk_length == 2 {\n        // a. If _throwOnExtraBits_ is *true* and _bytes_[1] \u2260 0, throw a *SyntaxError* exception.\n        if throw_on_extra_bits && bytes[1] != 0 {\n            return Err(agent.throw_syntax_error(\"invalid base64: extra bits in the last chunk\"));\n        }\n        // b. Return \u00ab _bytes_[0] \u00bb.\n        return Ok(vec![bytes[0]]);\n    }\n    // 6. If _throwOnExtraBits_ is *true* and _bytes_[2] \u2260 0, throw a *SyntaxError* exception.\n    if throw_on_extra_bits && bytes[2] != 0 {\n        return Err(agent.throw_syntax_error(\"invalid base64: extra bits in the last chunk\"));\n    }\n    // 7. Return \u00ab _bytes_[0], _bytes_[1] \u00bb.\n    Ok(vec![bytes[0], bytes[1]])\n}\n\n/// FromBase64 ( _string_, _alphabet_, _lastChunkHandling_ [ , _maxLength_ ] )\n///\n/// Returns the Record's ([[Read]], [[Bytes]], [[Error]]) fields.\npub(crate) fn from_base64_bytes(\n    agent: &mut Agent,\n    string: JsString,\n    alphabet: Alphabet,\n    last_chunk_handling: LastChunkHandling,\n    max_length: Option<usize>,\n) -> (usize, Vec<u8>, Option<JsError>) {\n    // 1. If _maxLength_ is not present, then\n    //    a. Set _maxLength_ to 2^53 - 1.\n    let max_length = max_length.unwrap_or((1usize << 53) - 1);\n    // 3. If _maxLength_ = 0, then\n    if max_length == 0 {\n        // a. Return the Record { [[Read]]: 0, [[Bytes]]: \u00ab \u00bb, [[Error]]: ~none~ }.\n        return (0, Vec::new(), None);\n    }\n    let string: Vec<u16> = agent.str(string).to_vec();\n    // 4. Let _read_ be 0.\n    let mut read = 0;\n    // 5. Let _bytes_ be a new empty List.\n    let mut bytes: Vec<u8> = Vec::new();\n    // 6. Let _chunk_ be the empty String.\n    // 7. Let _chunkLength_ be 0.\n    // (The chunk holds the base64 values of its characters; _chunkLength_ is its length.)\n    let mut chunk: Vec<u8> = Vec::new();\n    // 8. Let _index_ be 0.\n    let mut index = 0;\n    // 9. Let _length_ be the length of _string_.\n    let length = string.len();\n    // 10. Repeat,\n    loop {\n        // a. Assert: The number of elements in _bytes_ is evenly divisible by 3.\n        // b. Set _index_ to SkipAsciiWhitespace(_string_, _index_).\n        index = skip_ascii_whitespace(&string, index);\n        // c. If _index_ = _length_, then\n        if index == length {\n            // i. If _chunkLength_ > 0, then\n            if !chunk.is_empty() {\n                // 1. If _lastChunkHandling_ is *\"stop-before-partial\"*, then\n                if last_chunk_handling == LastChunkHandling::StopBeforePartial {\n                    // a. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n                    return (read, bytes, None);\n                }\n                // 2. If _lastChunkHandling_ is *\"strict\"*, then\n                if last_chunk_handling == LastChunkHandling::Strict {\n                    // a. Let _error_ be a newly created *SyntaxError* object.\n                    let error = agent.throw_syntax_error(\"invalid base64: incomplete last chunk\");\n                    // b. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                    return (read, bytes, Some(error));\n                }\n                // 3. Assert: _lastChunkHandling_ is *\"loose\"*.\n                // 4. If _chunkLength_ = 1, then\n                if chunk.len() == 1 {\n                    // a. Let _error_ be a newly created *SyntaxError* object.\n                    let error = agent.throw_syntax_error(\"invalid base64: incomplete last chunk\");\n                    // b. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                    return (read, bytes, Some(error));\n                }\n                // 5. Set _bytes_ to the list-concatenation of _bytes_ and ! DecodeFinalBase64Chunk(_chunk_, *false*).\n                match decode_final_base64_chunk(agent, &chunk, false) {\n                    Ok(decoded) => bytes.extend(decoded),\n                    Err(error) => return (read, bytes, Some(error)),\n                }\n            }\n            // ii. Return the Record { [[Read]]: _length_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n            return (length, bytes, None);\n        }\n        // d. Let _char_ be the substring of _string_ from _index_ to _index_ + 1.\n        let mut char = string[index];\n        // e. Set _index_ to _index_ + 1.\n        index += 1;\n        // f. If _char_ is *\"=\"*, then\n        if char == u16::from(b'=') {\n            // i. If _chunkLength_ < 2, then\n            if chunk.len() < 2 {\n                // 1. Let _error_ be a newly created *SyntaxError* object.\n                let error = agent.throw_syntax_error(\"invalid base64: unexpected padding\");\n                // 2. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                return (read, bytes, Some(error));\n            }\n            // ii. Set _index_ to SkipAsciiWhitespace(_string_, _index_).\n            index = skip_ascii_whitespace(&string, index);\n            // iii. If _chunkLength_ = 2, then\n            if chunk.len() == 2 {\n                // 1. If _index_ = _length_, then\n                if index == length {\n                    // a. If _lastChunkHandling_ is *\"stop-before-partial\"*, then\n                    if last_chunk_handling == LastChunkHandling::StopBeforePartial {\n                        // i. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n                        return (read, bytes, None);\n                    }\n                    // b. Let _error_ be a newly created *SyntaxError* object.\n                    let error = agent.throw_syntax_error(\"invalid base64: incomplete padding\");\n                    // c. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                    return (read, bytes, Some(error));\n                }\n                // 2. Set _char_ to the substring of _string_ from _index_ to _index_ + 1.\n                char = string[index];\n                // 3. If _char_ is *\"=\"*, then\n                if char == u16::from(b'=') {\n                    // a. Set _index_ to SkipAsciiWhitespace(_string_, _index_ + 1).\n                    index = skip_ascii_whitespace(&string, index + 1);\n                }\n            }\n            // iv. If _index_ < _length_, then\n            if index < length {\n                // 1. Let _error_ be a newly created *SyntaxError* object.\n                let error = agent.throw_syntax_error(\"invalid base64: data after padding\");\n                // 2. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                return (read, bytes, Some(error));\n            }\n            // v. If _lastChunkHandling_ is *\"strict\"*, let _throwOnExtraBits_ be *true*; else let _throwOnExtraBits_ be *false*.\n            let throw_on_extra_bits = last_chunk_handling == LastChunkHandling::Strict;\n            // vi. Let _decodeResult_ be Completion(DecodeFinalBase64Chunk(_chunk_, _throwOnExtraBits_)).\n            // vii. If _decodeResult_ is an abrupt completion, then\n            //    1. Let _error_ be _decodeResult_.[[Value]].\n            //    2. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n            let decoded = match decode_final_base64_chunk(agent, &chunk, throw_on_extra_bits) {\n                Ok(decoded) => decoded,\n                Err(error) => return (read, bytes, Some(error)),\n            };\n            // viii. Set _bytes_ to the list-concatenation of _bytes_ and ! _decodeResult_.\n            bytes.extend(decoded);\n            // ix. Return the Record { [[Read]]: _length_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n            return (length, bytes, None);\n        }\n        // g. If _alphabet_ is *\"base64url\"*, then\n        if alphabet == Alphabet::Base64Url {\n            // i. If _char_ is either *\"+\"* or *\"/\"*, then\n            if char == u16::from(b'+') || char == u16::from(b'/') {\n                // 1. Let _error_ be a newly created *SyntaxError* object.\n                let error = agent.throw_syntax_error(\"invalid base64url character\");\n                // 2. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n                return (read, bytes, Some(error));\n            }\n            // ii. Else if _char_ is *\"-\"*, then\n            //    1. Set _char_ to *\"+\"*.\n            // iii. Else if _char_ is *\"_\"*, then\n            //    1. Set _char_ to *\"/\"*.\n            if char == u16::from(b'-') {\n                char = u16::from(b'+');\n            } else if char == u16::from(b'_') {\n                char = u16::from(b'/');\n            }\n        }\n        // h. If the sole code unit of _char_ is not an element of the standard base64 alphabet, then\n        let Some(value) = base64_value(char) else {\n            // i. Let _error_ be a newly created *SyntaxError* object.\n            let error = agent.throw_syntax_error(\"invalid base64 character\");\n            // ii. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: _error_ }.\n            return (read, bytes, Some(error));\n        };\n        // i. Let _remaining_ be _maxLength_ - the number of elements in _bytes_.\n        let remaining = max_length - bytes.len();\n        // j. If _remaining_ = 1 and _chunkLength_ = 2, or if _remaining_ = 2 and _chunkLength_ = 3, then\n        if (remaining == 1 && chunk.len() == 2) || (remaining == 2 && chunk.len() == 3) {\n            // i. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n            return (read, bytes, None);\n        }\n        // k. Set _chunk_ to the string-concatenation of _chunk_ and _char_.\n        chunk.push(value);\n        // l. Set _chunkLength_ to the length of _chunk_.\n        // m. If _chunkLength_ = 4, then\n        if chunk.len() == 4 {\n            // i. Set _bytes_ to the list-concatenation of _bytes_ and DecodeFullLengthBase64Chunk(_chunk_).\n            bytes.extend(decode_full_length_base64_chunk([\n                chunk[0], chunk[1], chunk[2], chunk[3],\n            ]));\n            // ii. Set _chunk_ to the empty String.\n            // iii. Set _chunkLength_ to 0.\n            chunk.clear();\n            // iv. Set _read_ to _index_.\n            read = index;\n            // v. If the number of elements in _bytes_ = _maxLength_, then\n            if bytes.len() == max_length {\n                // 1. Return the Record { [[Read]]: _read_, [[Bytes]]: _bytes_, [[Error]]: ~none~ }.\n                return (read, bytes, None);\n            }\n        }\n    }\n}\n\n/// Uint8Array.fromBase64\npub(crate) fn from_base64(\n    agent: &mut Agent,\n    _this: Value,\n    args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    // 1. If _string_ is not a String, throw a *TypeError* exception.\n    let Value::String(string) = args.get_or_undefined(0) else {\n        return Err(agent.throw_type_error(\"Uint8Array.fromBase64 requires a string\"));\n    };\n    // 2. Let _optionsObj_ be ? GetOptionsObject(_options_).\n    let options_obj = get_options_object(agent, args.get_or_undefined(1))?;\n    // 3-5. Let _alphabet_ be ? Get(_optionsObj_, *\"alphabet\"*), defaulting to *\"base64\"*; throw a *TypeError* if invalid.\n    let alphabet = get_alphabet_option(agent, options_obj)?;\n    // 6-8. Let _lastChunkHandling_ be ? Get(_optionsObj_, *\"lastChunkHandling\"*), defaulting to *\"loose\"*; throw a *TypeError* if invalid.\n    let last_chunk_handling = get_last_chunk_handling_option(agent, options_obj)?;\n    // 9. Let _result_ be FromBase64(_string_, _alphabet_, _lastChunkHandling_).\n    let (_, bytes, error) = from_base64_bytes(agent, string, alphabet, last_chunk_handling, None);\n    // 10. If _result_.[[Error]] is not ~none~, then\n    if let Some(error) = error {\n        // a. Throw _result_.[[Error]].\n        return Err(error);\n    }\n    // 11. Let _resultLength_ be the number of elements in _result_.[[Bytes]].\n    let result_length = bytes.len();\n    // 12. Let _ta_ be ? AllocateTypedArray(*\"Uint8Array\"*, %Uint8Array%, *\"%Uint8Array.prototype%\"*, _resultLength_).\n    let uint8_array = constructor_of(agent, ElementType::Uint8);\n    let ta = allocate_typed_array(\n        agent,\n        ElementType::Uint8,\n        uint8_array,\n        Some(result_length as f64),\n    )?;\n    // 13. Assert: _ta_.[[ViewedArrayBuffer]].[[ArrayBufferByteLength]] is the number of elements in _result_.[[Bytes]].\n    // 14. Set the value at each index of _ta_.[[ViewedArrayBuffer]].[[ArrayBufferData]] to the value at the corresponding index of _result_.[[Bytes]].\n    let buffer = viewed_buffer(agent, ta);\n    for (i, byte) in bytes.into_iter().enumerate() {\n        set_value_in_buffer(\n            agent,\n            buffer,\n            i,\n            ElementType::Uint8,\n            Value::Number(f64::from(byte)),\n            true,\n        );\n    }\n    // 15. Return _ta_.\n    Ok(Value::Object(ta))\n}\nEOF\ncargo clippy 2>&1 | tail -40"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 24,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Uint8Array.fromBase64` in `from_base64.rs`, and all 26 runs under `built-ins/Uint8Array/fromBase64/` pass. `cargo clippy` is clean and `cargo build` succeeds.\n\n`setFromBase64` can call `from_base64_bytes`, the `FromBase64` implementation, which takes an optional `max_length`. It returns a `(read, bytes, error)` tuple rather than a struct, to avoid a dead-code lint on the unused `read` field, and there's no `#[allow]` anywhere in the file. The option helpers (`get_options_object`, `get_alphabet_option`, `get_last_chunk_handling_option`) and the `Alphabet` and `LastChunkHandling` enums are `pub(crate)` in this file too. `SkipAsciiWhitespace` and the two chunk-decoding helpers are private.",
+  "ttft_ms": 2630,
+  "type": "result",
+  "duration_ms": 124947,
+  "uuid": "9ee2ee62-15a0-41de-97ec-a3ca2508e519",
+  "ttft_stream_ms": 1939,
+  "time_to_request_ms": 528,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 378,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 74,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 58,
+  "time_to_request_cpu_ms": 427,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 264,
+  "process_anon_mib_result": 145,
+  "process_peak_rss_mib": 264,
+  "process_cpu_ms_turn": 5651,
+  "process_wall_ms_turn": 124946,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1945,
+  "time_to_request_from_spawn_ms": 31646464,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792011106799.601,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792020000,
+    "rateLimitType": "five_hour",
+    "utilization": 0.98,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.9,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.98,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.9,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
