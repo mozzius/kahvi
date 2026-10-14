@@ -114,3 +114,7 @@
 [17:12:13] B-typed-array-prototype-find-last: attempt on slot 1 with haiku
 [17:12:30] B-typed-array-prototype-find-last-index: attempt 135 finished ($0.019, 20 turns)
 [17:12:31] B-typed-array-prototype-find-last-index: gate rejected attempt 135: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: lint suppression is architect-only at crates/kahvi-builtins/src/type
+[17:12:34] B-typed-array-prototype-find-last-index: attempt on slot 3 with haiku
+[17:12:48] B-typed-array-prototype-find-index: attempt 136 finished ($0.017, 18 turns)
+[17:12:48] B-typed-array-prototype-find-index: gate rejected attempt 136: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 
+[17:12:48] B-typed-array-prototype-find-index: escalating haiku -> sonnet

@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 46298,
+  "stop_reason": "end_turn",
+  "session_id": "fbcfa331-3e75-44b8-88df-5469bbf2eb91",
+  "total_cost_usd": 0.01749442,
+  "usage": {
+    "input_tokens": 23,
+    "cache_creation_input_tokens": 41351,
+    "cache_read_input_tokens": 426782,
+    "output_tokens": 9326,
+    "output_tokens_details": {
+      "thinking_tokens": 4788
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 41351,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 801,
+        "cache_read_input_tokens": 48356,
+        "cache_creation_input_tokens": 638,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 638
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01GhprA2UKwbmVwNRUa1QPT9",
+      "tool_input": {
+        "command": "git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs && git status --short",
+        "description": "Restore unrelated files reformatted by cargo fmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `findIndex` implementation is written and builds, but three files outside the ticket's scope are still modified in the working tree and need reverting.\n\n**Current state**\n- `crates/kahvi-builtins/src/typed_array/prototype_find_index.rs` implements `%TypedArray%.prototype.findIndex`. It validates the typed array, reads its length, then runs a local `find_via_predicate` helper that follows the spec's FindViaPredicate steps (ascending order). That helper is private to this file because the array and other typed-array `find*` methods need the same logic; the ticket says to say so, so this is that note.\n- `./t262 built-ins/TypedArray/prototype/findIndex/`: 66 pass, 6 fail. All 6 fail with `not implemented: BigInt` (`resizable-buffer*.js`, which call `MayNeedBigInt`), so they need engine BigInt support.\n- `cargo clippy -p kahvi-builtins`: clean. There are no lint suppressions in the file, which was the cause of the previous rejection.\n\n**Needs your action**\nMy `cargo fmt -- <file>` run also reformatted three files outside the ticket scope: `crates/kahvi-core/src/host.rs`, `crates/kahvi-core/src/object/host_object.rs` and `crates/kahvi-ffi/src/lib.rs`. These are formatting-only diffs. I tried to revert them with `git checkout --`, but the Bash permission was denied, so I did not work around that. Running `git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs` will restore them. Until then the diff touches files outside scope and may be rejected by the file-scope check.\n\nBLOCKED: BigInt support in the engine, needed by the 6 `resizable-buffer*.js` findIndex tests.",
+  "ttft_ms": 2477,
+  "type": "result",
+  "duration_ms": 82130,
+  "uuid": "c8abe623-8ebb-44b6-9d7d-ea62916443cf",
+  "ttft_stream_ms": 2332,
+  "time_to_request_ms": 1228,
+  "time_to_request_phases_ms": {
+    "other": 115,
+    "system_prompt": 643,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 32,
+    "input_hooks": 9,
+    "tool_pool_refresh": 7,
+    "init_message": 59,
+    "engine_pickup": 1,
+    "message_prep": 6,
+    "model_config_wait": 173,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 79,
+    "message_normalization": 28,
+    "client_creation": 37,
+    "request_build": 31
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 368,
+  "time_to_request_cpu_ms": 455,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 260,
+  "process_anon_mib_result": 141,
+  "process_peak_rss_mib": 275,
+  "process_cpu_ms_turn": 5040,
+  "process_wall_ms_turn": 82124,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2343,
+  "time_to_request_from_spawn_ms": 18424625,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997882577.0154,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
