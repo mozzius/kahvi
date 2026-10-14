@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Iterator.prototype.some faithfully, step by step. this-check, the IsCallable check with IteratorClose on the TypeError path, GetIteratorDirect ordering, the IteratorStepValue loop, Call(predicate, undefined, [value, counter]), IfAbruptCloseIterator, ToBoolean and IteratorClose(true) are all present in spec order. All abrupt completions propagate with `?`. The 2^53 guard on the counter matches the spec NOTE and does not depend on test inputs. The only renamed item is the unused `new_target` parameter, now `_new_target`, which is needed to satisfy lints and is not a behaviour change. I could not inspect ops::iterator_close, ops::iterator_step_value or if_abrupt_close_iterator, so I am relying on the passing build and gate for their signatures and semantics.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

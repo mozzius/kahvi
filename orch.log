@@ -149,3 +149,5 @@
 [17:18:23] B-iterator-prototype-every: verifier: accept Implements Iterator.prototype.every in prototype_every.rs, covering every spec step in order. Step 2 throws a TypeError for non-objects. Step 4 checks
 [17:18:27] B-typed-array-prototype-to-locale-string: attempt on slot 0 with haiku
 [17:18:30] B-array-prototype-includes: verifier: accept The diff implements Array.prototype.includes in its stub file, following the spec steps in order. ToObject(this) and LengthOfArrayLike use `?`, and le
+[17:18:33] B-iterator-prototype-some: verifier: accept The diff implements Iterator.prototype.some faithfully, step by step. this-check, the IsCallable check with IteratorClose on the TypeError path, GetIt
+[17:18:33] B-array-prototype-pop: attempt on slot 3 with haiku
