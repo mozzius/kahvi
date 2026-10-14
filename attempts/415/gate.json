@@ -1,0 +1,32 @@
+{
+  "ticket": "B-number-is-nan",
+  "base": "ecce4d2bad29ff8ba8a1eea54d8d548fb359d657",
+  "head": "d9a4d8ff6d34919d51176fc02f23f097140d0b76",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/number/is_nan.rs",
+      "added": 13,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5094,
+  "stop_reason": "tool_use",
+  "session_id": "95a604c5-2e6d-44e4-88c7-a62b53edf6b7",
+  "total_cost_usd": 0.00137038,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3111,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 945,
+    "output_tokens_details": {
+      "thinking_tokens": 548
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3111,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 945,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3111,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3111
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Number.isNaN in is_nan.rs. Step 1 returns false when the argument is not a Value::Number. Step 2 returns true when the number is NaN, using f64::is_nan. Step 3 returns false. The signature change from `agent` to `_agent` is needed because the not-implemented path is gone. The `let _ = (this, new_target);` line is a harmless leftover. No special-casing, no swallowed errors, no made-up values, and no out-of-scope edits. The gate report shows 6 new passes and 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Number.isNaN in is_nan.rs. Step 1 returns false when the argument is not a Value::Number. Step 2 returns true when the number is NaN, using f64::is_nan. Step 3 returns false. The signature change from `agent` to `_agent` is needed because the not-implemented path is gone. The `let _ = (this, new_target);` line is a harmless leftover. No special-casing, no swallowed errors, no made-up values, and no out-of-scope edits. The gate report shows 6 new passes and 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3749,
+  "type": "result",
+  "duration_ms": 5110,
+  "uuid": "93703382-994c-4eb2-b55a-9483c58f882b",
+  "ttft_stream_ms": 1232,
+  "time_to_request_ms": 579,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 360,
+    "resume_other": 3,
+    "process_user_input": 6,
+    "input_attachments": 48,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 104,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 37,
+  "time_to_request_cpu_ms": 413,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 108,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 714,
+  "process_wall_ms_turn": 5110,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 59,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1234,
+  "time_to_request_from_spawn_ms": 25756248,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005216500.1775,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.39,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
