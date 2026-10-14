@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18636,
+  "stop_reason": "end_turn",
+  "session_id": "ccb33e35-8ef4-4a11-8e02-91418e72b009",
+  "total_cost_usd": 0.0077808800000000004,
+  "usage": {
+    "input_tokens": 11,
+    "cache_creation_input_tokens": 22505,
+    "cache_read_input_tokens": 127068,
+    "output_tokens": 3364,
+    "output_tokens_details": {
+      "thinking_tokens": 772
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22505,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 296,
+        "cache_read_input_tokens": 29533,
+        "cache_creation_input_tokens": 615,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 615
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Date.prototype.toDateString` is now implemented in its file, and all 14 runs under `built-ins/Date/prototype/toDateString/` pass (up from 8 on main). `cargo clippy` and `cargo fmt --check` are clean on the changed file.\n\nI did not use `support::date::date_string`, because its `year_string` pads negative years to six digits, which contradicts DateString step 6. I wrote a local `date_string` that follows spec steps 1\u20137, the same way the sibling `prototype_to_string.rs` does. The shared helper is still wrong for negative years, which affects `support/date.rs` and any caller of it, so someone should fix it there. I did not edit that file since it is out of scope. The spec step comments are restored to the spec text.\n\nBLOCKED: none (the shared `support::date::date_string` year padding bug is out of scope and reported above, not blocking this ticket)",
+  "ttft_ms": 2382,
+  "type": "result",
+  "duration_ms": 28799,
+  "uuid": "18749cc0-3090-4eab-a71a-9159ca0297e7",
+  "ttft_stream_ms": 1946,
+  "time_to_request_ms": 507,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 291,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 9,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 130,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 83,
+  "time_to_request_cpu_ms": 359,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 2866,
+  "process_wall_ms_turn": 28799,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1947,
+  "time_to_request_from_spawn_ms": 26099293,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005559696.07,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.49,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

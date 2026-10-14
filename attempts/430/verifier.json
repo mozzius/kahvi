@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13729,
+  "stop_reason": "tool_use",
+  "session_id": "2c62e24c-ce3c-4eb5-ba3a-f4461aefd03c",
+  "total_cost_usd": 0.0029008799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5111,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 2802,
+    "output_tokens_details": {
+      "thinking_tokens": 2280
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5111,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2802,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 5111,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5111
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Date.prototype.toDateString in its own file. The NaN check, LocalTime, and DateString are present and in spec order. Errors from the this-value check propagate with `?`. The day and month name tables match the spec. The year sign uses `yv < 0` (so -0 gets no sign), and the year is zero-padded to four digits of its absolute value. Concatenation is SPACE-separated as specified. There are no test-shaped branches, no fallback values and no unrelated edits. The `_args`/`_new_target` renames are needed to avoid unused-variable warnings. Two things I could not check from the diff alone: that `date::this_time_value` performs RequireInternalSlot with a TypeError, and that `date::week_day` returns 0..6 for negative time values (the array index depends on it). The `date_string` helper is local to the file; if support::date already provides a DateString, it would be a duplicate, but this is not a spec defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Date.prototype.toDateString in its own file. The NaN check, LocalTime, and DateString are present and in spec order. Errors from the this-value check propagate with `?`. The day and month name tables match the spec. The year sign uses `yv < 0` (so -0 gets no sign), and the year is zero-padded to four digits of its absolute value. Concatenation is SPACE-separated as specified. There are no test-shaped branches, no fallback values and no unrelated edits. The `_args`/`_new_target` renames are needed to avoid unused-variable warnings. Two things I could not check from the diff alone: that `date::this_time_value` performs RequireInternalSlot with a TypeError, and that `date::week_day` returns 0..6 for negative time values (the array index depends on it). The `date_string` helper is local to the file; if support::date already provides a DateString, it would be a duplicate, but this is not a spec defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11533,
+  "type": "result",
+  "duration_ms": 13588,
+  "uuid": "b7f58b07-8fda-4b63-bb8b-67ea65988723",
+  "ttft_stream_ms": 1409,
+  "time_to_request_ms": 708,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 602,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 4,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 17,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 70,
+  "time_to_request_cpu_ms": 418,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 1064,
+  "process_wall_ms_turn": 13587,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1410,
+  "time_to_request_from_spawn_ms": 26150664,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005610232.4722,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.5,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

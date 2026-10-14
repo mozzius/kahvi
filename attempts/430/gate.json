@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-to-date-string",
+  "base": "4b64456b58001f4e34e5d25dad15a3bc737909fa",
+  "head": "7e921f95f8a23f6d1b118574ac732b4a71d89529",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_date_string.rs",
+      "added": 43,
+      "removed": 12
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

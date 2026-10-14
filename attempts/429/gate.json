@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reg-exp-prototype-to-string",
+  "base": "d7a29335f264cc8064080025839aad8d37773d2b",
+  "head": "154ad17be27cc26f77d3a76c8fdab866aab4ac39",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_to_string.rs",
+      "added": 29,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 16,
+    "after": 18,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

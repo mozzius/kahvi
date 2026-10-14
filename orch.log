@@ -3346,3 +3346,11 @@ test262 at last merge: 76432/81183 runs passing
 [19:19:15] B-date-prototype-set-utc-seconds: verifier: accept The change implements Date.prototype.setUTCSeconds following the spec steps in order. Step 2 (brand check) runs before the time value is read, and ToN
 [19:19:16] B-date-prototype-to-date-string: verifier: revise Small, mostly faithful change. It keeps the RequireInternalSlot/NaN/LocalTime flow and propagates errors with `?`. It relies on existing helpers in su
 [19:19:19] B-date-prototype-to-date-string: attempt on slot 3 with haiku
+[19:19:21] B-string-prototype-anchor: attempt on slot 2 with haiku
+[19:19:21] B-string-prototype-fontcolor: attempt on slot 1 with haiku
+[19:19:47] B-reg-exp-prototype-to-string: attempt 429 finished ($0.006, 12 turns)
+[19:19:50] B-date-prototype-to-date-string: attempt 430 finished ($0.008, 10 turns)
+[19:20:07] B-string-prototype-anchor: attempt 432 finished ($0.008, 13 turns)
+[19:20:15] B-string-prototype-fontcolor: attempt 431 finished ($0.009, 15 turns)
+[19:20:23] stack: arch-fixes conflicts with the stack; land it again after merging the stack top into it
+[19:20:33] B-reg-exp-prototype-to-string: verifier: accept The change implements RegExp.prototype.toString as specified. Step 2 throws a TypeError for non-objects. Step 3 does Get(source) then ToString, and st

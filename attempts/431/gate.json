@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-fontcolor",
+  "base": "4b64456b58001f4e34e5d25dad15a3bc737909fa",
+  "head": "bdabd39e8c4cca555dff358432d84cc39d42dfb4",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_fontcolor.rs",
+      "added": 64,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
