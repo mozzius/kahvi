@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6861,
+  "stop_reason": "tool_use",
+  "session_id": "1fa070f3-0c6d-45fe-a44c-764c793b3354",
+  "total_cost_usd": 0.0317039,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6011,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 676,
+    "output_tokens_details": {
+      "thinking_tokens": 283
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6011,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 676,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6011,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6011
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for Date.prototype.setUTCDate. It does the slot check, then ToNumber(day), then the NaN early return. After that it computes MakeDate/MakeDay with the time-component helpers, applies TimeClip, stores the value and returns it. Errors propagate with `?`. Each step has its comment above its code. The diff touches only the one in-scope file, and the target went from 8 to 14 passing with no regressions. I could not see the helper bodies in `support::date`, so I am relying on their names and on the gate result.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for Date.prototype.setUTCDate. It does the slot check, then ToNumber(day), then the NaN early return. After that it computes MakeDate/MakeDay with the time-component helpers, applies TimeClip, stores the value and returns it. Errors propagate with `?`. Each step has its comment above its code. The diff touches only the one in-scope file, and the target went from 8 to 14 passing with no regressions. I could not see the helper bodies in `support::date`, so I am relying on their names and on the gate result.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4381,
+  "type": "result",
+  "duration_ms": 6273,
+  "uuid": "2919b452-1e34-4656-96f2-2d1c3d6f1a3b",
+  "ttft_stream_ms": 1836,
+  "time_to_request_ms": 507,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 321,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 22,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 81,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 36,
+  "time_to_request_cpu_ms": 307,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 746,
+  "process_wall_ms_turn": 6273,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1837,
+  "time_to_request_from_spawn_ms": 25873980,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005334173.529,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.83,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.43,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.83,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
