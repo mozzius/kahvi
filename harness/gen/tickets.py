@@ -47,7 +47,6 @@ WORKER_GROUPS = {
 ARCHITECT_FIRST = {
     "RegExp.prototype.compile": "Annex B, out of scope until annexB/ is enabled",
     "Iterator.prototype.join": "not in the pinned spec's test scope (skipped feature)",
-    "String.prototype.normalize": "needs Unicode normalization tables",
 }
 
 # Installed as aliases of another built-in (see ALIASES in table.rs): the stub
