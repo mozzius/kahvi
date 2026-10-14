@@ -1,0 +1,66 @@
+//! String.prototype.slice ( _start_, _end_ )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-string.prototype.slice
+
+use kahvi_core::prelude::*;
+
+/// String.prototype.slice
+pub(crate) fn prototype_slice(
+    agent: &mut Agent,
+    this: Value,
+    args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    // This method returns a substring of the result of converting this object to a String, starting from index _start_ and running to, but not including, index _end_ (or through the end of the String if _end_ is *undefined*). If _start_ is negative, it is treated as _sourceLength_ + _start_ where _sourceLength_ is the length of the String. If _end_ is negative, it is treated as _sourceLength_ + _end_ where _sourceLength_ is the length of the String. The result is a String value, not a String object.
+    // It performs the following steps when called:
+    //
+    // 1. Let _thisValue_ be the *this* value.
+    let this_value = this;
+    // 2. Perform ? RequireObjectCoercible(_thisValue_).
+    ops::require_object_coercible(agent, this_value)?;
+    // 3. Let _string_ be ? ToString(_thisValue_).
+    let string = ops::to_string(agent, this_value)?;
+    // 4. Let _length_ be the length of _string_.
+    let length = agent.str_len(string) as f64;
+    // 5. Let _from_ be ? ToClampedIndex(_start_, _length_).
+    let from = to_clamped_index(agent, args.get_or_undefined(0), length)?;
+    // 6. If _end_ is *undefined*, let _to_ be _length_; else let _to_ be ? ToClampedIndex(_end_, _length_).
+    let end = args.get_or_undefined(1);
+    let to = if end.is_undefined() {
+        length
+    } else {
+        to_clamped_index(agent, end, length)?
+    };
+    // 7. If _from_ ≥ _to_, return the empty String.
+    if from >= to {
+        return Ok(Value::String(agent.names.empty));
+    }
+    // 8. Return the substring of _string_ from _from_ to _to_.
+    Ok(Value::String(agent.substring(
+        string,
+        from as usize,
+        to as usize,
+    )))
+}
+
+/// ToClampedIndex ( _value_, _length_ )
+///
+/// Converts _value_ to an integer (interpreting negative values relative to
+/// _length_) and clamps the result to the inclusive interval from 0 to _length_.
+fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
+    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
+    // ToAbsoluteIndex ( _relativeIndex_: a Number, _length_: a non-negative integer, ): a non-negative integer
+    //   1. If relativeIndex = -∞, return 0.
+    //   2. If relativeIndex < 0, return max(length + relativeIndex, 0).
+    //   3. Return min(relativeIndex, length).
+    let relative_index = ops::to_integer_or_infinity(agent, value)?;
+    let index = if relative_index == f64::NEG_INFINITY {
+        0.0
+    } else if relative_index < 0.0 {
+        (length + relative_index).max(0.0)
+    } else {
+        relative_index.min(length)
+    };
+    // 2. Return the result of clamping _index_ between 0 and _length_.
+    Ok(index.clamp(0.0, length))
+}

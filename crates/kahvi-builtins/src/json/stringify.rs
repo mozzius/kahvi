@@ -1,0 +1,545 @@
+//! JSON.stringify ( _value_ [ , _replacer_ [ , _space_ ] ] )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-json.stringify
+
+use kahvi_core::object::ObjectKind;
+use kahvi_core::ops::EnumerableKind;
+use kahvi_core::prelude::*;
+
+/// The JSON Serialization Record (§25.5.2.1).
+struct JsonSerializationRecord {
+    /// [[ReplacerFunction]]
+    replacer_function: Option<Object>,
+    /// [[Stack]]
+    stack: Vec<Object>,
+    /// [[Indent]]
+    indent: Vec<u16>,
+    /// [[Gap]]
+    gap: Vec<u16>,
+    /// [[PropertyList]]
+    property_list: Option<Vec<JsString>>,
+}
+
+/// JSON.stringify
+pub(crate) fn stringify(
+    agent: &mut Agent,
+    _this: Value,
+    args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    let value = args.get_or_undefined(0);
+    let replacer = args.get_or_undefined(1);
+    let space = args.get_or_undefined(2);
+
+    // 1. Let _stack_ be a new empty List.
+    let stack = Vec::new();
+    // 2. Let _indent_ be the empty String.
+    let indent = Vec::new();
+    // 3. Let _propertyList_ be *undefined*.
+    let mut property_list = None;
+    // 4. Let _replacerFunc_ be *undefined*.
+    let mut replacer_func = None;
+    // 5. If _replacer_ is an Object, then
+    if let Value::Object(replacer_obj) = replacer {
+        // a. If IsCallable(_replacer_) is *true*, then
+        if ops::is_callable(agent, replacer) {
+            // i. Set _replacerFunc_ to _replacer_.
+            replacer_func = Some(replacer_obj);
+        // b. Else,
+        } else {
+            // i. Let _isArray_ be ? IsArray(_replacer_).
+            let is_array = ops::is_array(agent, replacer)?;
+            // ii. If _isArray_ is *true*, then
+            if is_array {
+                // 1. Set _propertyList_ to a new empty List.
+                let mut list: Vec<JsString> = Vec::new();
+                // 2. Let _length_ be ? LengthOfArrayLike(_replacer_).
+                let length = ops::length_of_array_like(agent, replacer_obj)?;
+                // 3. Let _k_ be 0.
+                let mut k = 0.0;
+                // 4. Repeat, while _k_ < _length_,
+                while k < length {
+                    // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
+                    let property_key = agent.key_from_index(k);
+                    // b. Let _propertyValue_ be ? Get(_replacer_, _propertyKey_).
+                    let property_value = ops::get(agent, replacer_obj, property_key)?;
+                    // c. Let _item_ be *undefined*.
+                    let mut item = None;
+                    // d. If _propertyValue_ is a String, then
+                    if let Value::String(s) = property_value {
+                        // i. Set _item_ to _propertyValue_.
+                        item = Some(s);
+                    // e. Else if _propertyValue_ is a Number, then
+                    } else if let Value::Number(n) = property_value {
+                        // i. Set _item_ to ! ToString(_propertyValue_).
+                        item = Some(ops::number_to_js_string(agent, n));
+                    // f. Else if _propertyValue_ is an Object, then
+                    } else if let Value::Object(pv) = property_value {
+                        // i. If _propertyValue_ has a [[StringData]] or [[NumberData]] internal slot, set _item_ to ? ToString(_propertyValue_).
+                        if matches!(
+                            agent.obj(pv).kind,
+                            ObjectKind::StringObject(_) | ObjectKind::NumberObject(_)
+                        ) {
+                            item = Some(ops::to_string(agent, property_value)?);
+                        }
+                    }
+                    // g. If _item_ is not *undefined* and _propertyList_ does not contain _item_, then
+                    if let Some(item) = item {
+                        if !list.contains(&item) {
+                            // i. Append _item_ to _propertyList_.
+                            list.push(item);
+                        }
+                    }
+                    // h. Set _k_ to _k_ + 1.
+                    k += 1.0;
+                }
+                property_list = Some(list);
+            }
+        }
+    }
+    // 6. If _space_ is an Object, then
+    let mut space = space;
+    if let Value::Object(space_obj) = space {
+        // a. If _space_ has a [[NumberData]] internal slot, then
+        if matches!(agent.obj(space_obj).kind, ObjectKind::NumberObject(_)) {
+            // i. Set _space_ to ? ToNumber(_space_).
+            space = Value::Number(ops::to_number(agent, space)?);
+        // b. Else if _space_ has a [[StringData]] internal slot, then
+        } else if matches!(agent.obj(space_obj).kind, ObjectKind::StringObject(_)) {
+            // i. Set _space_ to ? ToString(_space_).
+            space = Value::String(ops::to_string(agent, space)?);
+        }
+    }
+    // 7. If _space_ is a Number, then
+    let gap: Vec<u16> = if let Value::Number(_) = space {
+        // a. Let _spaceMV_ be ! ToIntegerOrInfinity(_space_).
+        let space_mv = ops::to_integer_or_infinity(agent, space)?;
+        // b. Set _spaceMV_ to min(10, _spaceMV_).
+        let space_mv = space_mv.min(10.0);
+        // c. If _spaceMV_ < 1, let _gap_ be the empty String; else let _gap_ be the String value containing _spaceMV_ occurrences of the code unit 0x0020 (SPACE).
+        if space_mv < 1.0 {
+            Vec::new()
+        } else {
+            vec![0x20; space_mv as usize]
+        }
+    // 8. Else if _space_ is a String, then
+    } else if let Value::String(space_s) = space {
+        // a. If the length of _space_ ≤ 10, let _gap_ be _space_; else let _gap_ be the substring of _space_ from 0 to 10.
+        let units = agent.str(space_s);
+        units[..units.len().min(10)].to_vec()
+    // 9. Else,
+    } else {
+        // a. Let _gap_ be the empty String.
+        Vec::new()
+    };
+    // 10. Let _wrapper_ be OrdinaryObjectCreate(%Object.prototype%).
+    let object_prototype = agent.intrinsic("%Object.prototype%");
+    let wrapper = agent.ordinary_object_create(Some(object_prototype));
+    // 11. Perform ! CreateDataPropertyOrThrow(_wrapper_, the empty String, _value_).
+    let empty = agent.string("");
+    let empty_key = agent.key_from_string(empty);
+    ops::create_data_property_or_throw(agent, wrapper, empty_key, value)?;
+    // 12. Let _state_ be the JSON Serialization Record { [[ReplacerFunction]]: _replacerFunc_, [[Stack]]: _stack_, [[Indent]]: _indent_, [[Gap]]: _gap_, [[PropertyList]]: _propertyList_ }.
+    let mut state = JsonSerializationRecord {
+        replacer_function: replacer_func,
+        stack,
+        indent,
+        gap,
+        property_list,
+    };
+    // The callbacks may collect garbage: the wrapper, the replacer and the
+    // property list stay rooted.
+    let mut roots = vec![Value::Object(wrapper), Value::String(empty)];
+    roots.extend(state.replacer_function.map(Value::Object));
+    roots.extend(
+        state
+            .property_list
+            .iter()
+            .flatten()
+            .map(|&k| Value::String(k)),
+    );
+    let result = agent.with_roots(&roots, |agent| {
+        serialize_json_property(agent, &mut state, empty, wrapper)
+    });
+    // 13. Return ? SerializeJSONProperty(_state_, the empty String, _wrapper_).
+    match result? {
+        Some(units) => Ok(Value::String(agent.intern(&units))),
+        None => Ok(Value::Undefined),
+    }
+}
+
+/// SerializeJSONProperty ( _state_, _key_, _holder_ )
+fn serialize_json_property(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    key: JsString,
+    holder: Object,
+) -> JsResult<Option<Vec<u16>>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_property_steps(agent, state, key, holder);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_property_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    key: JsString,
+    holder: Object,
+) -> JsResult<Option<Vec<u16>>> {
+    // 1. Let _value_ be ? Get(_holder_, _key_).
+    let property_key = agent.key_from_string(key);
+    let mut value = ops::get(agent, holder, property_key)?;
+    agent.push_root(value);
+    // 2. If _value_ is an Object or _value_ is a BigInt, then
+    if matches!(value, Value::Object(_) | Value::BigInt(_)) {
+        // a. Let _toJSON_ be ? GetV(_value_, *"toJSON"*).
+        let to_json_key = agent.key("toJSON");
+        let to_json = ops::get_v(agent, value, to_json_key)?;
+        // b. If IsCallable(_toJSON_) is *true*, then
+        if ops::is_callable(agent, to_json) {
+            // i. Set _value_ to ? Call(_toJSON_, _value_, « _key_ »).
+            value = ops::call_rooted(agent, to_json, value, &[Value::String(key)])?;
+            agent.push_root(value);
+        }
+    }
+    // 3. If _state_.[[ReplacerFunction]] is not *undefined*, then
+    if let Some(replacer_function) = state.replacer_function {
+        // a. Set _value_ to ? Call(_state_.[[ReplacerFunction]], _holder_, « _key_, _value_ »).
+        value = ops::call_rooted(
+            agent,
+            Value::Object(replacer_function),
+            Value::Object(holder),
+            &[Value::String(key), value],
+        )?;
+    }
+    // 4. If _value_ is an Object, then
+    if let Value::Object(value_obj) = value {
+        // b. If _value_ has a [[NumberData]] internal slot, then
+        if matches!(agent.obj(value_obj).kind, ObjectKind::NumberObject(_)) {
+            // i. Set _value_ to ? ToNumber(_value_).
+            value = Value::Number(ops::to_number(agent, value)?);
+        // c. Else if _value_ has a [[StringData]] internal slot, then
+        } else if matches!(agent.obj(value_obj).kind, ObjectKind::StringObject(_)) {
+            // i. Set _value_ to ? ToString(_value_).
+            value = Value::String(ops::to_string(agent, value)?);
+        // d. Else if _value_ has a [[BooleanData]] internal slot, then
+        } else if let ObjectKind::BooleanObject(b) = agent.obj(value_obj).kind {
+            // i. Set _value_ to _value_.[[BooleanData]].
+            value = Value::Boolean(b);
+        // e. Else if _value_ has a [[BigIntData]] internal slot, then
+        } else if let ObjectKind::BigIntObject(b) = agent.obj(value_obj).kind {
+            // i. Set _value_ to _value_.[[BigIntData]].
+            value = Value::BigInt(b);
+        }
+    }
+    // 5. If _value_ is *null*, return *"null"*.
+    // 6. If _value_ is *true*, return *"true"*.
+    // 7. If _value_ is *false*, return *"false"*.
+    match value {
+        Value::Null => Ok(Some(ascii("null"))),
+        Value::Boolean(true) => Ok(Some(ascii("true"))),
+        Value::Boolean(false) => Ok(Some(ascii("false"))),
+        // 8. If _value_ is a String, return QuoteJSONString(_value_).
+        Value::String(s) => Ok(Some(quote_json_string(agent.str(s)))),
+        // 9. If _value_ is a Number, then
+        Value::Number(n) => {
+            // a. If _value_ is a finite Number, return ! ToString(_value_).
+            if n.is_finite() {
+                let s = ops::number_to_js_string(agent, n);
+                Ok(Some(agent.str(s).to_vec()))
+            // b. Return *"null"*.
+            } else {
+                Ok(Some(ascii("null")))
+            }
+        }
+        // 10. If _value_ is a BigInt, throw a *TypeError* exception.
+        Value::BigInt(_) => Err(agent.throw_type_error("Do not know how to serialize a BigInt")),
+        // 11. If _value_ is an Object and IsCallable(_value_) is *false*, then
+        Value::Object(o) if !o.is_callable(agent) => {
+            // a. Let _isArray_ be ? IsArray(_value_).
+            // b. If _isArray_ is *true*, then
+            if ops::is_array(agent, value)? {
+                // i. Return ? SerializeJSONArray(_state_, _value_).
+                Ok(Some(serialize_json_array(agent, state, o)?))
+            } else {
+                // c. Return ? SerializeJSONObject(_state_, _value_).
+                Ok(Some(serialize_json_object(agent, state, o)?))
+            }
+        }
+        // 12. Return *undefined*.
+        _ => Ok(None),
+    }
+}
+
+/// SerializeJSONObject ( _state_, _value_ )
+fn serialize_json_object(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_object_steps(agent, state, value);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_object_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
+    // 1. If _state_.[[Stack]] contains _value_, throw a *TypeError* exception because the structure is cyclical.
+    if state.stack.contains(&value) {
+        return Err(agent.throw_type_error("Converting circular structure to JSON"));
+    }
+    // 2. Append _value_ to _state_.[[Stack]].
+    agent.push_root(Value::Object(value));
+    state.stack.push(value);
+    // 3. Let _stepBack_ be _state_.[[Indent]].
+    let step_back = state.indent.clone();
+    // 4. Set _state_.[[Indent]] to the string-concatenation of _state_.[[Indent]] and _state_.[[Gap]].
+    state.indent.extend_from_slice(&state.gap);
+    // 5. If _state_.[[PropertyList]] is not *undefined*, then
+    let keys = if let Some(property_list) = &state.property_list {
+        // a. Let _keys_ be _state_.[[PropertyList]].
+        property_list.clone()
+    // 6. Else,
+    } else {
+        // a. Let _keys_ be ? EnumerableOwnProperties(_value_, ~key~).
+        let values = ops::enumerable_own_properties(agent, value, EnumerableKind::Key)?;
+        let mut keys = Vec::with_capacity(values.len());
+        for v in values {
+            keys.push(ops::to_string(agent, v)?);
+        }
+        keys
+    };
+    for &k in &keys {
+        agent.push_root(Value::String(k));
+    }
+    // 7. Let _partial_ be a new empty List.
+    let mut partial: Vec<Vec<u16>> = Vec::new();
+    // 8. For each element _propertyKey_ of _keys_, do
+    for property_key in keys {
+        // a. Let _stringP_ be ? SerializeJSONProperty(_state_, _propertyKey_, _value_).
+        let string_p = serialize_json_property(agent, state, property_key, value)?;
+        // b. If _stringP_ is not *undefined*, then
+        if let Some(string_p) = string_p {
+            // i. Let _member_ be QuoteJSONString(_propertyKey_).
+            let mut member = quote_json_string(agent.str(property_key));
+            // ii. Set _member_ to the string-concatenation of _member_ and *":"*.
+            member.push(0x3a);
+            // iii. If _state_.[[Gap]] is not the empty String, then
+            if !state.gap.is_empty() {
+                // 1. Set _member_ to the string-concatenation of _member_ and the code unit 0x0020 (SPACE).
+                member.push(0x20);
+            }
+            // iv. Set _member_ to the string-concatenation of _member_ and _stringP_.
+            member.extend_from_slice(&string_p);
+            // v. Append _member_ to _partial_.
+            partial.push(member);
+        }
+    }
+    // 9. If _partial_ is empty, then
+    let final_units = if partial.is_empty() {
+        // a. Let _final_ be *"{}"*.
+        ascii("{}")
+    // 10. Else,
+    } else if state.gap.is_empty() {
+        // a. If _state_.[[Gap]] is the empty String, then
+        //    i. Let _properties_ be the String value formed by concatenating all the element Strings of _partial_ with each adjacent pair of Strings separated with the code unit 0x002C (COMMA). A comma is not inserted either before the first String or after the last String.
+        let properties = join(&partial, &ascii(","));
+        //    ii. Let _final_ be the string-concatenation of *"{"*, _properties_, and *"}"*.
+        wrap(b'{', b'}', &properties)
+    } else {
+        // b. Else,
+        //    i. Let _separator_ be the string-concatenation of the code unit 0x002C (COMMA), the code unit 0x000A (LINE FEED), and _state_.[[Indent]].
+        let mut separator = ascii(",\n");
+        separator.extend_from_slice(&state.indent);
+        //    ii. Let _properties_ be the String value formed by concatenating all the element Strings of _partial_ with each adjacent pair of Strings separated with _separator_. The _separator_ String is not inserted either before the first String or after the last String.
+        let properties = join(&partial, &separator);
+        //    iii. Let _final_ be the string-concatenation of *"{"*, the code unit 0x000A (LINE FEED), _state_.[[Indent]], _properties_, the code unit 0x000A (LINE FEED), _stepBack_, and *"}"*.
+        let mut final_units = vec![b'{' as u16, 0x0a];
+        final_units.extend_from_slice(&state.indent);
+        final_units.extend_from_slice(&properties);
+        final_units.push(0x0a);
+        final_units.extend_from_slice(&step_back);
+        final_units.push(b'}' as u16);
+        final_units
+    };
+    // 11. Remove the last element of _state_.[[Stack]].
+    state.stack.pop();
+    // 12. Set _state_.[[Indent]] to _stepBack_.
+    state.indent = step_back;
+    // 13. Return _final_.
+    Ok(final_units)
+}
+
+/// SerializeJSONArray ( _state_, _value_ )
+fn serialize_json_array(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_array_steps(agent, state, value);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_array_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
+    // 1. If _state_.[[Stack]] contains _value_, throw a *TypeError* exception because the structure is cyclical.
+    if state.stack.contains(&value) {
+        return Err(agent.throw_type_error("Converting circular structure to JSON"));
+    }
+    // 2. Append _value_ to _state_.[[Stack]].
+    agent.push_root(Value::Object(value));
+    state.stack.push(value);
+    // 3. Let _stepBack_ be _state_.[[Indent]].
+    let step_back = state.indent.clone();
+    // 4. Set _state_.[[Indent]] to the string-concatenation of _state_.[[Indent]] and _state_.[[Gap]].
+    state.indent.extend_from_slice(&state.gap);
+    // 5. Let _partial_ be a new empty List.
+    let mut partial: Vec<Vec<u16>> = Vec::new();
+    // 6. Let _length_ be ? LengthOfArrayLike(_value_).
+    let length = ops::length_of_array_like(agent, value)?;
+    // 7. Let _index_ be 0.
+    let mut index = 0.0;
+    // 8. Repeat, while _index_ < _length_,
+    while index < length {
+        // a. Let _stringP_ be ? SerializeJSONProperty(_state_, ! ToString(𝔽(_index_)), _value_).
+        let index_key = ops::number_to_js_string(agent, index);
+        let string_p = serialize_json_property(agent, state, index_key, value)?;
+        // b. If _stringP_ is *undefined*, then
+        match string_p {
+            // i. Append *"null"* to _partial_.
+            None => partial.push(ascii("null")),
+            // c. Else,
+            //    i. Append _stringP_ to _partial_.
+            Some(string_p) => partial.push(string_p),
+        }
+        // d. Set _index_ to _index_ + 1.
+        index += 1.0;
+    }
+    // 9. If _partial_ is empty, then
+    let final_units = if partial.is_empty() {
+        // a. Let _final_ be *"[]"*.
+        ascii("[]")
+    // 10. Else,
+    } else if state.gap.is_empty() {
+        // a. If _state_.[[Gap]] is the empty String, then
+        //    i. Let _properties_ be the String value formed by concatenating all the element Strings of _partial_ with each adjacent pair of Strings separated with the code unit 0x002C (COMMA). A comma is not inserted either before the first String or after the last String.
+        let properties = join(&partial, &ascii(","));
+        //    ii. Let _final_ be the string-concatenation of *"["*, _properties_, and *"]"*.
+        wrap(b'[', b']', &properties)
+    } else {
+        // b. Else,
+        //    i. Let _separator_ be the string-concatenation of the code unit 0x002C (COMMA), the code unit 0x000A (LINE FEED), and _state_.[[Indent]].
+        let mut separator = ascii(",\n");
+        separator.extend_from_slice(&state.indent);
+        //    ii. Let _properties_ be the String value formed by concatenating all the element Strings of _partial_ with each adjacent pair of Strings separated with _separator_. The _separator_ String is not inserted either before the first String or after the last String.
+        let properties = join(&partial, &separator);
+        //    iii. Let _final_ be the string-concatenation of *"["*, the code unit 0x000A (LINE FEED), _state_.[[Indent]], _properties_, the code unit 0x000A (LINE FEED), _stepBack_, and *"]"*.
+        let mut final_units = vec![b'[' as u16, 0x0a];
+        final_units.extend_from_slice(&state.indent);
+        final_units.extend_from_slice(&properties);
+        final_units.push(0x0a);
+        final_units.extend_from_slice(&step_back);
+        final_units.push(b']' as u16);
+        final_units
+    };
+    // 11. Remove the last element of _state_.[[Stack]].
+    state.stack.pop();
+    // 12. Set _state_.[[Indent]] to _stepBack_.
+    state.indent = step_back;
+    // 13. Return _final_.
+    Ok(final_units)
+}
+
+/// QuoteJSONString ( _value_ )
+fn quote_json_string(value: &[u16]) -> Vec<u16> {
+    // 1. Let _product_ be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
+    let mut product = vec![0x22];
+    // 2. For each code point _codePoint_ of StringToCodePoints(_value_), do
+    let mut i = 0;
+    while let Some(&unit) = value.get(i) {
+        i += 1;
+        match unit {
+            // a. If _codePoint_ is listed in the “Code Point” column of [table-json-single-character-escapes], then
+            //    i. Set _product_ to the string-concatenation of _product_ and the escape sequence for _codePoint_ as specified in the “Escape Sequence” column of the corresponding row.
+            0x08 => product.extend_from_slice(&ascii("\\b")),
+            0x09 => product.extend_from_slice(&ascii("\\t")),
+            0x0a => product.extend_from_slice(&ascii("\\n")),
+            0x0c => product.extend_from_slice(&ascii("\\f")),
+            0x0d => product.extend_from_slice(&ascii("\\r")),
+            0x22 => product.extend_from_slice(&ascii("\\\"")),
+            0x5c => product.extend_from_slice(&ascii("\\\\")),
+            // b. Else if _codePoint_ has a numeric value less than 0x0020 (SPACE) or _codePoint_ has the same numeric value as a leading surrogate or trailing surrogate, then
+            0x00..=0x1f => product.extend_from_slice(&unicode_escape(unit)),
+            0xd800..=0xdbff => match value.get(i) {
+                // A leading surrogate that is followed by a trailing surrogate is a single code point and is kept as is (case c).
+                Some(&next) if (0xdc00..=0xdfff).contains(&next) => {
+                    product.push(unit);
+                    product.push(next);
+                    i += 1;
+                }
+                // i. Let _unit_ be the code unit whose numeric value is the numeric value of _codePoint_.
+                // ii. Set _product_ to the string-concatenation of _product_ and UnicodeEscape(_unit_).
+                _ => product.extend_from_slice(&unicode_escape(unit)),
+            },
+            0xdc00..=0xdfff => product.extend_from_slice(&unicode_escape(unit)),
+            // c. Else,
+            //    i. Set _product_ to the string-concatenation of _product_ and UTF16EncodeCodePoint(_codePoint_).
+            _ => product.push(unit),
+        }
+    }
+    // 3. Set _product_ to the string-concatenation of _product_ and the code unit 0x0022 (QUOTATION MARK).
+    product.push(0x22);
+    // 4. Return _product_.
+    product
+}
+
+/// UnicodeEscape ( _codeUnit_ )
+fn unicode_escape(code_unit: u16) -> Vec<u16> {
+    // 1. Let _n_ be the numeric value of _codeUnit_.
+    // 2. Assert: _n_ ≤ 0xFFFF.
+    // 3. Let _hex_ be the String representation of _n_, formatted as a lowercase hexadecimal number.
+    // 4. Return the string-concatenation of the code unit 0x005C (REVERSE SOLIDUS), *"u"*, and StringPad(_hex_, 4, *"0"*, ~start~).
+    ascii(&format!("\\u{:04x}", code_unit))
+}
+
+/// Encodes an ASCII literal as UTF-16 code units.
+fn ascii(s: &str) -> Vec<u16> {
+    s.encode_utf16().collect()
+}
+
+/// Concatenates `parts` with `separator` between each adjacent pair.
+fn join(parts: &[Vec<u16>], separator: &[u16]) -> Vec<u16> {
+    let mut out = Vec::new();
+    for (n, part) in parts.iter().enumerate() {
+        if n > 0 {
+            out.extend_from_slice(separator);
+        }
+        out.extend_from_slice(part);
+    }
+    out
+}
+
+/// Surrounds `inner` with the code units `open` and `close`.
+fn wrap(open: u8, close: u8, inner: &[u16]) -> Vec<u16> {
+    let mut out = Vec::with_capacity(inner.len() + 2);
+    out.push(open as u16);
+    out.extend_from_slice(inner);
+    out.push(close as u16);
+    out
+}

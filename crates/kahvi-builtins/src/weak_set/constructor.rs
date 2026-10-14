@@ -1,0 +1,56 @@
+//! WeakSet ( [ _iterable_ ] )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-weakset-iterable
+
+use crate::support::collections::{WeakSetData, create_collection};
+use kahvi_core::prelude::*;
+
+/// WeakSet
+pub(crate) fn constructor(
+    agent: &mut Agent,
+    _this: Value,
+    args: &[Value],
+    new_target: Option<Object>,
+) -> JsResult<Value> {
+    // This function performs the following steps when called:
+    //
+    // 1. If NewTarget is *undefined*, throw a *TypeError* exception.
+    let Some(new_target) = new_target else {
+        return Err(agent.throw_type_error("Constructor WeakSet requires 'new'"));
+    };
+    // 2. Let _set_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%WeakSet.prototype%"*, « [[WeakSetData]] »).
+    // 3. Set _set_.[[WeakSetData]] to a new empty List.
+    let set = create_collection(
+        agent,
+        new_target,
+        "%WeakSet.prototype%",
+        WeakSetData::default(),
+    )?;
+    // 4. If _iterable_ is either *undefined* or *null*, return _set_.
+    let iterable = args.get_or_undefined(0);
+    if iterable.is_nullish() {
+        return Ok(Value::Object(set));
+    }
+    // 5. Let _adder_ be ? Get(_set_, *"add"*).
+    let add_key = agent.key("add");
+    let adder = ops::get(agent, set, add_key)?;
+    // 6. If IsCallable(_adder_) is *false*, throw a *TypeError* exception.
+    if !ops::is_callable(agent, adder) {
+        return Err(agent.throw_type_error("WeakSet.prototype.add is not a function"));
+    }
+    // 7. Let _iteratorRecord_ be ? GetIterator(_iterable_, ~sync~).
+    let mut record = ops::get_iterator(agent, iterable, ops::IteratorKind::Sync)?;
+    // 8. Repeat,
+    loop {
+        // a. Let _next_ be ? IteratorStepValue(_iteratorRecord_).
+        let Some(next) = ops::iterator_step_value(agent, &mut record)? else {
+            // b. If _next_ is ~done~, return _set_.
+            return Ok(Value::Object(set));
+        };
+        // c. Let _status_ be Completion(Call(_adder_, _set_, « _next_ »)).
+        // d. IfAbruptCloseIterator(_status_, _iteratorRecord_).
+        if let Err(e) = ops::call(agent, adder, Value::Object(set), &[next]) {
+            return ops::iterator_close(agent, &record, Err(e));
+        }
+    }
+}

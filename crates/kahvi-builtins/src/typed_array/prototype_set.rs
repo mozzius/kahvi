@@ -1,0 +1,210 @@
+//! %TypedArray%.prototype.set ( _source_ [ , _offset_ ] )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.set
+
+use kahvi_core::object::typed_array::{
+    array_buffer_data, array_buffer_data_mut, clone_array_buffer, get_value_from_buffer,
+    is_typed_array_out_of_bounds, make_ta_record, set_value_in_buffer, typed_array_data,
+    typed_array_length, typed_array_set_element,
+};
+use kahvi_core::prelude::*;
+
+use crate::support::typed_array::validate_typed_array;
+
+/// TypedArray.prototype.set
+pub(crate) fn prototype_set(
+    agent: &mut Agent,
+    this: Value,
+    args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    // 1. Let target be the *this* value.
+    let target = this;
+    // 2. Perform ? RequireInternalSlot(target, [[TypedArrayName]]).
+    let target = match target {
+        Value::Object(o) if typed_array_data(agent, o).is_some() => o,
+        _ => return Err(agent.throw_type_error("not a TypedArray")),
+    };
+    // 3. Assert: target has a [[ViewedArrayBuffer]] internal slot.
+    // 4. Let targetOffset be ? ToIntegerOrInfinity(offset).
+    let target_offset = ops::to_integer_or_infinity(agent, args.get_or_undefined(1))?;
+    // 5. If targetOffset < 0, throw a RangeError exception.
+    if target_offset < 0.0 {
+        return Err(agent.throw_range_error("offset must not be negative"));
+    }
+    let source = args.get_or_undefined(0);
+    match source {
+        // 6. If source is an Object that has a [[TypedArrayName]] internal slot, then
+        //    a. Perform ? SetTypedArrayFromTypedArray(target, targetOffset, source).
+        Value::Object(src) if typed_array_data(agent, src).is_some() => {
+            set_typed_array_from_typed_array(agent, target, target_offset, src)?;
+        }
+        // 7. Else,
+        //    a. Perform ? SetTypedArrayFromArrayLike(target, targetOffset, source).
+        _ => set_typed_array_from_array_like(agent, target, target_offset, source)?,
+    }
+    // 8. Return undefined.
+    Ok(Value::Undefined)
+}
+
+/// SetTypedArrayFromTypedArray(target, targetOffset, source) (§23.2.3.26.1)
+fn set_typed_array_from_typed_array(
+    agent: &mut Agent,
+    target: Object,
+    target_offset: f64,
+    source: Object,
+) -> JsResult<()> {
+    let target_data = typed_array_data(agent, target).expect("a TypedArray");
+    let src_data = typed_array_data(agent, source).expect("a TypedArray");
+    // 1. Let targetBuffer be target.[[ViewedArrayBuffer]].
+    let target_buffer = target_data.buffer.expect("an initialized TypedArray");
+    // 2. Let targetRecord be MakeTypedArrayWithBufferWitnessRecord(target, seq-cst).
+    let target_record = make_ta_record(agent, target);
+    // 3. If IsTypedArrayOutOfBounds(targetRecord) is true, throw a TypeError exception.
+    if is_typed_array_out_of_bounds(agent, target_record) {
+        return Err(agent.throw_type_error("target TypedArray is out of bounds or detached"));
+    }
+    // 4. Let targetLength be TypedArrayLength(targetRecord).
+    let target_length = typed_array_length(agent, target_record) as f64;
+    // 5. Let srcBuffer be source.[[ViewedArrayBuffer]].
+    let src_buffer = src_data.buffer.expect("an initialized TypedArray");
+    // 6. Let srcRecord be MakeTypedArrayWithBufferWitnessRecord(source, seq-cst).
+    let src_record = make_ta_record(agent, source);
+    // 7. If IsTypedArrayOutOfBounds(srcRecord) is true, throw a TypeError exception.
+    if is_typed_array_out_of_bounds(agent, src_record) {
+        return Err(agent.throw_type_error("source TypedArray is out of bounds or detached"));
+    }
+    // 8. Let srcLength be TypedArrayLength(srcRecord).
+    let src_length = typed_array_length(agent, src_record) as f64;
+    // 9. If target.[[ContentType]] is not source.[[ContentType]], throw a TypeError exception.
+    if target_data.kind.is_bigint() != src_data.kind.is_bigint() {
+        return Err(agent.throw_type_error("cannot mix BigInt and Number typed arrays"));
+    }
+    // 10-11. Let targetType, targetElementSize, targetByteOffset, srcType, srcElementSize and
+    //        srcByteOffset be the element types, sizes and byte offsets of target and source.
+    let target_kind = target_data.kind;
+    let target_size = target_kind.size();
+    let target_byte_offset = target_data.byte_offset;
+    let src_kind = src_data.kind;
+    let src_size = src_kind.size();
+    let src_byte_offset = src_data.byte_offset;
+    // 12. If targetOffset = +∞, throw a RangeError exception.
+    if target_offset.is_infinite() {
+        return Err(agent.throw_range_error("offset must be finite"));
+    }
+    // 13. If srcLength + targetOffset > targetLength, throw a RangeError exception.
+    if src_length + target_offset > target_length {
+        return Err(agent.throw_range_error("source is too large for the target"));
+    }
+    // 16. If IsSharedArrayBuffer(srcBuffer) is true, IsSharedArrayBuffer(targetBuffer) is true,
+    //     and srcBuffer.[[ArrayBufferData]] is targetBuffer.[[ArrayBufferData]], let
+    //     sameSharedArrayBuffer be true; else let sameSharedArrayBuffer be false.
+    // NOTE: ArrayBufferData has no shared variant and the SharedArrayBuffer constructor is not
+    //       implemented, so no buffer here is shared and sameSharedArrayBuffer is always false.
+    let same_shared_array_buffer = false;
+    // 17. If SameValue(srcBuffer, targetBuffer) is true or sameSharedArrayBuffer is true, then
+    let (src_buffer, mut src_byte_index) = if src_buffer == target_buffer
+        || same_shared_array_buffer
+    {
+        // a. Let srcByteLength be TypedArrayByteLength(srcRecord).
+        let src_byte_length = src_length as usize * src_size;
+        // b. Set srcBuffer to ? CloneArrayBuffer(targetBuffer, srcByteOffset, srcByteLength).
+        let cloned = clone_array_buffer(agent, target_buffer, src_byte_offset, src_byte_length)?;
+        // c. Let srcByteIndex be 0.
+        (cloned, 0)
+    } else {
+        // 18. Else, let srcByteIndex be srcByteOffset.
+        (src_buffer, src_byte_offset)
+    };
+    // 19. Let targetByteIndex be targetOffset × targetElementSize + targetByteOffset.
+    let mut target_byte_index = target_offset as usize * target_size + target_byte_offset;
+    // 20. Let limit be targetByteIndex + targetElementSize × srcLength.
+    let limit = target_byte_index + target_size * src_length as usize;
+    // 21. If srcType is targetType, then
+    if src_kind == target_kind {
+        // a. NOTE: Transfer the bytes of the source to the target.
+        // b. Repeat, while targetByteIndex < limit: copy the bytes of srcBuffer at srcByteIndex
+        //    into targetBuffer at targetByteIndex.
+        let count = limit - target_byte_index;
+        let src_bytes = array_buffer_data(agent, src_buffer)
+            .and_then(|b| b.data.as_ref())
+            .and_then(|d| d.get(src_byte_index..src_byte_index + count))
+            .map(<[u8]>::to_vec);
+        let dst = array_buffer_data_mut(agent, target_buffer)
+            .and_then(|b| b.data.as_mut())
+            .and_then(|d| d.get_mut(target_byte_index..target_byte_index + count));
+        let copied = match (src_bytes, dst) {
+            (Some(src), Some(dst)) => {
+                dst.copy_from_slice(&src);
+                true
+            }
+            _ => false,
+        };
+        if !copied {
+            return Err(agent.throw_type_error("TypedArray buffer is detached"));
+        }
+    } else {
+        // 22. Else, repeat, while targetByteIndex < limit:
+        while target_byte_index < limit {
+            // a. Let value be GetValueFromBuffer(srcBuffer, srcByteIndex, srcType, true, unordered).
+            let value = get_value_from_buffer(agent, src_buffer, src_byte_index, src_kind, true);
+            // b. Perform SetValueInBuffer(targetBuffer, targetByteIndex, targetType, value, true, unordered).
+            set_value_in_buffer(
+                agent,
+                target_buffer,
+                target_byte_index,
+                target_kind,
+                value,
+                true,
+            );
+            // c. Set srcByteIndex to srcByteIndex + srcElementSize.
+            src_byte_index += src_size;
+            // d. Set targetByteIndex to targetByteIndex + targetElementSize.
+            target_byte_index += target_size;
+        }
+    }
+    // 23. Return unused.
+    Ok(())
+}
+
+/// SetTypedArrayFromArrayLike(target, targetOffset, source) (§23.2.3.26.2)
+fn set_typed_array_from_array_like(
+    agent: &mut Agent,
+    target: Object,
+    target_offset: f64,
+    source: Value,
+) -> JsResult<()> {
+    // 1. Let targetRecord be ? ValidateTypedArrayBounds(target, seq-cst).
+    let target_record = validate_typed_array(agent, Value::Object(target))?;
+    // 2. Let targetLength be TypedArrayLength(targetRecord).
+    let target_length = typed_array_length(agent, target_record) as f64;
+    // 3. Set source to ? ToObject(source).
+    let source = ops::to_object(agent, source)?;
+    // 4. Let sourceLength be ? LengthOfArrayLike(source).
+    let source_length = ops::length_of_array_like(agent, source)?;
+    // 5. If targetOffset = +∞, throw a RangeError exception.
+    if target_offset.is_infinite() {
+        return Err(agent.throw_range_error("offset must be finite"));
+    }
+    // 6. If sourceLength + targetOffset > targetLength, throw a RangeError exception.
+    if source_length + target_offset > target_length {
+        return Err(agent.throw_range_error("source is too large for the target"));
+    }
+    // 7. Let k be 0.
+    let mut k = 0.0;
+    // 8. Repeat, while k < sourceLength,
+    while k < source_length {
+        // a. Let propertyKey be ! ToString(𝔽(k)).
+        let property_key = agent.key_from_index(k);
+        // b. Let value be ? Get(source, propertyKey).
+        let value = ops::get(agent, source, property_key)?;
+        // c. Let targetIndex be 𝔽(targetOffset + k).
+        let target_index = target_offset + k;
+        // d. Perform ? TypedArraySetElement(target, targetIndex, value).
+        typed_array_set_element(agent, target, target_index, value)?;
+        // e. Set k to k + 1.
+        k += 1.0;
+    }
+    // 9. Return unused.
+    Ok(())
+}

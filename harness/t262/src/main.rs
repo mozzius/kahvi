@@ -43,6 +43,8 @@ options:
   --write-baseline FILE update a pass list with this run's results (merge bot only)
   --list                list matching test files and exit
   --no-canaries         skip the canary self-check
+  --parse-only          score only the parser: valid tests must parse, parse-phase
+                        negative tests must be SyntaxErrors (engine gets --parse-only)
   --quiet               no progress output";
 
 struct Skip {
@@ -103,6 +105,7 @@ struct Options {
     list: bool,
     canaries: bool,
     quiet: bool,
+    parse_only: bool,
 }
 
 fn parse_options(args: &[String]) -> Result<Options, String> {
@@ -123,6 +126,7 @@ fn parse_options(args: &[String]) -> Result<Options, String> {
         list: false,
         canaries: true,
         quiet: false,
+        parse_only: false,
     };
     let mut it = args.iter();
     let num = |v: Option<&String>, name: &str| -> Result<u64, String> {
@@ -148,6 +152,7 @@ fn parse_options(args: &[String]) -> Result<Options, String> {
             "--list" => o.list = true,
             "--no-canaries" => o.canaries = false,
             "--quiet" => o.quiet = true,
+            "--parse-only" => o.parse_only = true,
             "-h" | "--help" => return Err(USAGE.to_string()),
             _ if a.starts_with("--") => return Err(format!("unknown option {a}\n\n{USAGE}")),
             _ => o.filters.push(normalize_filter(a)),
@@ -234,6 +239,7 @@ struct TestResult {
 }
 
 struct Ctx {
+    parse_only: bool,
     test_dir: PathBuf,
     harness: Harness,
     engine: Engine,
@@ -271,22 +277,34 @@ fn run_file(
     let mut results = Vec::new();
     for mode in prepare::modes_for(&meta) {
         let id = format!("{rel}:{}", mode.as_str());
-        let prepared =
-            match prepare::prepare(&path, src, &meta, mode, &ctx.harness, &ctx.tmp_root, rng) {
-                Ok(p) => p,
-                Err(e) => {
-                    results.push(TestResult {
-                        id,
-                        status: Status::Fail,
-                        reason: format!("runner error: {e}"),
-                        not_implemented: None,
-                        millis: 0,
-                    });
-                    continue;
-                }
-            };
+        let prepared = match prepare::prepare(
+            &path,
+            src,
+            &meta,
+            mode,
+            &ctx.harness,
+            &ctx.tmp_root,
+            rng,
+            ctx.parse_only,
+        ) {
+            Ok(p) => p,
+            Err(e) => {
+                results.push(TestResult {
+                    id,
+                    status: Status::Fail,
+                    reason: format!("runner error: {e}"),
+                    not_implemented: None,
+                    millis: 0,
+                });
+                continue;
+            }
+        };
         let out = ctx.engine.run(&prepared.args, &prepared.dir);
-        let v = classify::classify(&meta, prepared.nonce.as_deref(), &out, ctx.timeout);
+        let v = if ctx.parse_only {
+            classify::classify_parse_only(&meta, &out, ctx.timeout)
+        } else {
+            classify::classify(&meta, prepared.nonce.as_deref(), &out, ctx.timeout)
+        };
         results.push(TestResult {
             id,
             status: v.status,
@@ -446,6 +464,7 @@ fn real_main() -> Result<ExitCode, String> {
         std::env::temp_dir().join(format!("kahvi-t262-{}-{}", std::process::id(), rng.hex()));
     std::fs::create_dir_all(&tmp_root).map_err(|e| format!("temp dir: {e}"))?;
     let ctx = Arc::new(Ctx {
+        parse_only: opts.parse_only,
         harness: Harness::new(vendor.join("test262/harness")),
         test_dir: test_dir.clone(),
         engine: Engine {
@@ -498,7 +517,7 @@ fn run(
     }
 
     let start = Instant::now();
-    let canaries = if opts.canaries {
+    let canaries = if opts.canaries && !opts.parse_only {
         Some(run_canaries(ctx, rng, false)?)
     } else {
         None

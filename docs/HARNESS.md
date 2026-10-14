@@ -10,7 +10,19 @@ git submodule update --init --depth 1     # vendor/test262 + vendor/ecma262 (pin
 ./spec sec-array.prototype.at             # read a spec clause (--refs: + called ops)
 ./orch run                                # grind the ticket pool
 ./orch status                             # what happened, what it cost
+./orch stop                               # finish in-flight attempts, then exit
+./orch snapshot                           # commit the run state to the orch-runs branch
 ```
+
+The run state (ticket statuses, every attempt's prompt, transcript, diff,
+gate report and verdicts, the logs) is versioned on its own branch,
+`orch-runs`: the orchestrator commits and pushes a snapshot after every
+attempt. The code branch stays free of these commits.
+
+The merge bot fast-forwards the integration branch in the main checkout, so
+architect work happens in a separate worktree. To land it: `./orch stop`,
+wait for `orch run` to exit (Ctrl-C also drains in-flight work), merge into
+the integration branch, re-baseline, push, start `./orch run` again.
 
 ## test262 runner (`./t262`, `harness/t262`)
 

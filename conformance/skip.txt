@@ -5,7 +5,6 @@
 # Out of scope until much later.
 path: intl402/
 path: staging/
-path: annexB/
 
 # Stage 3 proposals (top section of vendor/test262/features.txt).
 feature: Intl.Era-monthcode
@@ -25,6 +24,9 @@ feature: nonextensible-applies-to-private
 feature: await-dictionary
 feature: error-stack-accessor
 feature: Iterator.prototype.join
+# Standard in the pinned test262 but not yet in the pinned spec.html.
+feature: iterator-chunking
+feature: iterator-includes
 
 # Standard, but deferred.
 feature: Temporal

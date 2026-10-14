@@ -35,7 +35,10 @@ impl Mode {
 }
 
 pub fn modes_for(meta: &Meta) -> Vec<Mode> {
-    if meta.has_flag("raw") {
+    if meta.has_flag("module") {
+        // A raw module test is still a module; `raw` just means no harness.
+        vec![Mode::Module]
+    } else if meta.has_flag("raw") {
         vec![Mode::Raw]
     } else if meta.has_flag("module") {
         vec![Mode::Module]
@@ -137,6 +140,7 @@ fn copy_fixtures(test_dir: &Path, own_name: &str, src: &[u8], dest: &Path) -> Re
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn prepare(
     test_path: &Path,
     src: &[u8],
@@ -145,7 +149,11 @@ pub fn prepare(
     harness: &Harness,
     tmp_root: &Path,
     rng: &mut Rng,
+    parse_only: bool,
 ) -> Result<Prepared, String> {
+    if parse_only {
+        return prepare_parse_only(test_path, src, mode, tmp_root, rng);
+    }
     let dir = tmp_root.join(rng.hex());
     std::fs::create_dir_all(&dir).map_err(|e| format!("tmp dir: {e}"))?;
     let mut prepared = Prepared {
@@ -174,14 +182,14 @@ pub fn prepare(
     }
 
     let mut body = src.to_vec();
-    if mode != Mode::Raw && meta.negative.is_none() {
+    if mode != Mode::Raw && !meta.has_flag("raw") && meta.negative.is_none() {
         let nonce = format!("KAHVI-T262-DONE-{}", rng.hex());
         body.extend_from_slice(format!("\n;print('{nonce}');\n").as_bytes());
         prepared.nonce = Some(nonce);
     }
 
     let mut includes: Vec<&str> = Vec::new();
-    if mode != Mode::Raw {
+    if mode != Mode::Raw && !meta.has_flag("raw") {
         includes.extend(["assert.js", "sta.js"]);
         if meta.has_flag("async") {
             includes.push("doneprintHandle.js");
@@ -226,4 +234,39 @@ pub fn prepare(
     }
     prepared.args.push(test_file.to_string_lossy().into_owned());
     Ok(prepared)
+}
+
+/// Parse-only mode: the test file alone (no harness, no marker), as the
+/// goal and strictness the test runs under.
+fn prepare_parse_only(
+    test_path: &Path,
+    src: &[u8],
+    mode: Mode,
+    tmp_root: &Path,
+    rng: &mut Rng,
+) -> Result<Prepared, String> {
+    let dir = tmp_root.join(rng.hex());
+    std::fs::create_dir_all(&dir).map_err(|e| format!("tmp dir: {e}"))?;
+    let name = test_path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("test.js")
+        .to_string();
+    let file = dir.join(name);
+    let mut body = Vec::with_capacity(src.len() + 16);
+    if mode == Mode::Strict {
+        body.extend_from_slice(b"\"use strict\";\n");
+    }
+    body.extend_from_slice(src);
+    std::fs::write(&file, &body).map_err(|e| format!("write {}: {e}", file.display()))?;
+    let mut args = vec!["--parse-only".to_string()];
+    if mode == Mode::Module {
+        args.push("--module".into());
+    }
+    args.push(file.to_string_lossy().into_owned());
+    Ok(Prepared {
+        dir,
+        args,
+        nonce: None,
+    })
 }

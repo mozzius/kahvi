@@ -1,0 +1,154 @@
+//! Proxy [[DefineOwnProperty]] (§10.5)
+//!
+//! Spec: https://tc39.es/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-defineownproperty-p-desc
+
+#![allow(unused_imports)]
+
+use super::ProxyData;
+use crate::agent::Agent;
+use crate::error::JsResult;
+use crate::object::internal::validate_and_apply_property_descriptor;
+use crate::object::{PropertyDescriptor, PropertyKey};
+use crate::ops;
+use crate::value::{Object, Value};
+
+/// The [[DefineOwnProperty]] internal method of the Proxy exotic object `o` with slots `p`.
+pub(crate) fn define_own_property(
+    agent: &mut Agent,
+    o: Object,
+    p: &ProxyData,
+    key: PropertyKey,
+    desc: PropertyDescriptor,
+) -> JsResult<bool> {
+    // for: a Proxy exotic object _obj_
+    //
+    // 1. Perform ? ValidateNonRevokedProxy(_obj_).
+    // 2. Let _target_ be _obj_.[[ProxyTarget]].
+    // 3. Let _handler_ be _obj_.[[ProxyHandler]].
+    // 4. Assert: _handler_ is an Object.
+    // 5. Let _trap_ be ? GetMethod(_handler_, *"defineProperty"*).
+    // 6. If _trap_ is *undefined*, then
+    //    a. Return ? _target_.[[DefineOwnProperty]](_propertyKey_, _propertyDesc_).
+    // 7. Let _propertyDescObj_ be FromPropertyDescriptor(_propertyDesc_).
+    // 8. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, « _target_, _propertyKey_, _propertyDescObj_ »)).
+    // 9. If _boolTrapResult_ is *false*, return *false*.
+    // 10. Let _targetDesc_ be ? _target_.[[GetOwnProperty]](_propertyKey_).
+    // 11. Let _extensibleTarget_ be ? IsExtensible(_target_).
+    // 12. If _propertyDesc_ has a [[Configurable]] field and _propertyDesc_.[[Configurable]] is *false*, then
+    //    a. Let _settingConfigurableFalse_ be *true*.
+    // 13. Else,
+    //    a. Let _settingConfigurableFalse_ be *false*.
+    // 14. If _targetDesc_ is *undefined*, then
+    //    a. If _extensibleTarget_ is *false*, throw a *TypeError* exception.
+    //    b. If _settingConfigurableFalse_ is *true*, throw a *TypeError* exception.
+    // 15. Else,
+    //    a. If IsCompatiblePropertyDescriptor(_extensibleTarget_, _propertyDesc_, _targetDesc_) is *false*, throw a *TypeError* exception.
+    //    b. If _settingConfigurableFalse_ is *true* and _targetDesc_.[[Configurable]] is *true*, throw a *TypeError* exception.
+    //    c. If IsDataDescriptor(_targetDesc_) is *true*, _targetDesc_.[[Configurable]] is *false*, and _targetDesc_.[[Writable]] is *true*, then
+    //       i. If _propertyDesc_ has a [[Writable]] field and _propertyDesc_.[[Writable]] is *false*, throw a *TypeError* exception.
+    // 16. Return *true*.
+    //
+    // NOTE:
+    // [[DefineOwnProperty]] for Proxy objects enforces the following invariants:
+    // -
+    // The result of [[DefineOwnProperty]] is a Boolean value.
+    // -
+    // A property cannot be added, if the target object is not extensible.
+    // -
+    // A property cannot be non-configurable, unless there exists a corresponding non-configurable own property of the target object.
+    // -
+    // A non-configurable property cannot be non-writable, unless there exists a corresponding non-configurable, non-writable own property of the target object.
+    // -
+    // If a property has a corresponding target object property then applying the Property Descriptor of the property to the target object using [[DefineOwnProperty]] will not throw an exception.
+    let _ = o;
+    // 1. Perform ? ValidateNonRevokedProxy(_obj_).
+    let (target, handler) = p.validate_non_revoked(agent)?;
+    // 2. Let _target_ be _obj_.[[ProxyTarget]].
+    // 3. Let _handler_ be _obj_.[[ProxyHandler]].
+    // 4. Assert: _handler_ is an Object.
+    // 5. Let _trap_ be ? GetMethod(_handler_, *"defineProperty"*).
+    let trap_key = agent.key("defineProperty");
+    let trap = ops::get_method(agent, Value::Object(handler), trap_key)?;
+    // 6. If _trap_ is *undefined*, then
+    if matches!(trap, Value::Undefined) {
+        // a. Return ? _target_.[[DefineOwnProperty]](_propertyKey_, _propertyDesc_).
+        return target.internal_define_own_property(agent, key, desc);
+    }
+    // 7. Let _propertyDescObj_ be FromPropertyDescriptor(_propertyDesc_).
+    let property_desc_obj = ops::from_property_descriptor(agent, Some(desc));
+    // 8. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, « _target_, _propertyKey_, _propertyDescObj_ »)).
+    let key_value = agent.key_to_value(key);
+    let trap_result = ops::call(
+        agent,
+        trap,
+        Value::Object(handler),
+        &[Value::Object(target), key_value, property_desc_obj],
+    )?;
+    let bool_trap_result = ops::to_boolean(agent, trap_result);
+    // 9. If _boolTrapResult_ is *false*, return *false*.
+    if !bool_trap_result {
+        return Ok(false);
+    }
+    // 10. Let _targetDesc_ be ? _target_.[[GetOwnProperty]](_propertyKey_).
+    let target_desc = target.internal_get_own_property(agent, key)?;
+    // 11. Let _extensibleTarget_ be ? IsExtensible(_target_).
+    let extensible_target = ops::is_extensible(agent, target)?;
+    // 12. If _propertyDesc_ has a [[Configurable]] field and _propertyDesc_.[[Configurable]] is *false*, then
+    //    a. Let _settingConfigurableFalse_ be *true*.
+    // 13. Else,
+    //    a. Let _settingConfigurableFalse_ be *false*.
+    let setting_configurable_false = desc.configurable == Some(false);
+    // 14. If _targetDesc_ is *undefined*, then
+    let Some(target_desc) = target_desc else {
+        // a. If _extensibleTarget_ is *false*, throw a *TypeError* exception.
+        if !extensible_target {
+            return Err(agent.throw_type_error(
+                "Proxy defineProperty trap added a property to a non-extensible target",
+            ));
+        }
+        // b. If _settingConfigurableFalse_ is *true*, throw a *TypeError* exception.
+        if setting_configurable_false {
+            return Err(agent.throw_type_error(
+                "Proxy defineProperty trap defined a non-configurable property missing on the target",
+            ));
+        }
+        // 16. Return *true*.
+        return Ok(true);
+    };
+    // 15. Else,
+    //    a. If IsCompatiblePropertyDescriptor(_extensibleTarget_, _propertyDesc_, _targetDesc_) is *false*, throw a *TypeError* exception.
+    //    IsCompatiblePropertyDescriptor(E, Desc, current) is ValidateAndApplyPropertyDescriptor(undefined, "", E, Desc, current).
+    let compatible = validate_and_apply_property_descriptor(
+        agent,
+        None,
+        key,
+        extensible_target,
+        desc,
+        Some(target_desc),
+    );
+    if !compatible {
+        return Err(
+            agent.throw_type_error("Proxy defineProperty trap returned an incompatible descriptor")
+        );
+    }
+    //    b. If _settingConfigurableFalse_ is *true* and _targetDesc_.[[Configurable]] is *true*, throw a *TypeError* exception.
+    if setting_configurable_false && target_desc.configurable == Some(true) {
+        return Err(agent.throw_type_error(
+            "Proxy defineProperty trap defined a non-configurable property that is configurable on the target",
+        ));
+    }
+    //    c. If IsDataDescriptor(_targetDesc_) is *true*, _targetDesc_.[[Configurable]] is *false*, and _targetDesc_.[[Writable]] is *true*, then
+    if target_desc.is_data_descriptor()
+        && target_desc.configurable == Some(false)
+        && target_desc.writable == Some(true)
+    {
+        //       i. If _propertyDesc_ has a [[Writable]] field and _propertyDesc_.[[Writable]] is *false*, throw a *TypeError* exception.
+        if desc.writable == Some(false) {
+            return Err(agent.throw_type_error(
+                "Proxy defineProperty trap made a writable non-configurable property non-writable",
+            ));
+        }
+    }
+    // 16. Return *true*.
+    Ok(true)
+}

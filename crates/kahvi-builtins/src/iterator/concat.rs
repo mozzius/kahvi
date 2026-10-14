@@ -1,0 +1,144 @@
+//! Iterator.concat ( ..._items_ )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-iterator.concat
+
+use kahvi_core::ops::IteratorRecord;
+use kahvi_core::prelude::*;
+
+use crate::support::iterator_helper::{HelperClosure, create_iterator_helper};
+
+/// Iterator.concat
+pub(crate) fn concat(
+    agent: &mut Agent,
+    _this: Value,
+    args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    // 1. Let _iterables_ be a new empty List.
+    let mut iterables = Vec::new();
+    // 2. For each element _item_ of _items_, do
+    for item in args {
+        // a. If _item_ is not an Object, throw a *TypeError* exception.
+        if !matches!(item, Value::Object(_)) {
+            return Err(agent.throw_type_error("Iterator.concat: item is not an object"));
+        }
+        // b. Let _method_ be ? GetMethod(_item_, %Symbol.iterator%).
+        let method = ops::get_method(agent, *item, PropertyKey::Symbol(agent.symbols_wk.iterator))?;
+        // c. If _method_ is *undefined*, throw a *TypeError* exception.
+        if matches!(method, Value::Undefined) {
+            return Err(agent.throw_type_error("Iterator.concat: item is not iterable"));
+        }
+        // d. Append the Record { [[OpenMethod]]: _method_, [[Iterable]]: _item_ } to _iterables_.
+        iterables.push(ConcatIterable {
+            open_method: method,
+            iterable: *item,
+        });
+    }
+    // 3. Let _closure_ be a new Abstract Closure with no parameters that captures _iterables_
+    //    and performs the following steps when called:
+    let closure = ConcatClosure {
+        iterables,
+        index: 0,
+        current: None,
+    };
+    // 4. Let _gen_ be CreateIteratorFromClosure(_closure_, *"Iterator Helper"*, %IteratorHelperPrototype%, « [[UnderlyingIterators]] »).
+    // 5. Set _gen_.[[UnderlyingIterators]] to a new empty List.
+    // 6. Return _gen_.
+    Ok(Value::Object(create_iterator_helper(
+        agent,
+        Box::new(closure),
+        Vec::new(),
+    )))
+}
+
+/// An Iterator Record-like entry of _iterables_: { [[OpenMethod]], [[Iterable]] }.
+#[derive(Debug)]
+struct ConcatIterable {
+    open_method: Value,
+    iterable: Value,
+}
+
+/// Step 3's closure: captures _iterables_, plus the position of the loop in step 3.a
+/// and the Iterator Record of the inner iterator that is currently being read.
+#[derive(Debug)]
+struct ConcatClosure {
+    iterables: Vec<ConcatIterable>,
+    /// The index of _iterable_ in the loop of step 3.a.
+    index: usize,
+    /// _iteratorRecord_ of the current iterable, while _innerAlive_ is *true*.
+    current: Option<IteratorRecord>,
+}
+
+impl HelperClosure for ConcatClosure {
+    fn resume(
+        &mut self,
+        agent: &mut Agent,
+        _underlying: &mut [IteratorRecord],
+    ) -> JsResult<Option<Value>> {
+        // a. For each Record _iterable_ of _iterables_, do
+        while self.index < self.iterables.len() {
+            let iterator_record = match &mut self.current {
+                Some(iterator_record) => iterator_record,
+                None => {
+                    let open_method = self.iterables[self.index].open_method;
+                    let iterable = self.iterables[self.index].iterable;
+                    // i. Let _iterator_ be ? Call(_iterable_.[[OpenMethod]], _iterable_.[[Iterable]]).
+                    let iterator = ops::call(agent, open_method, iterable, &[])?;
+                    // ii. If _iterator_ is not an Object, throw a *TypeError* exception.
+                    let Value::Object(iterator) = iterator else {
+                        return Err(
+                            agent.throw_type_error("Iterator.concat: iterator is not an object")
+                        );
+                    };
+                    // iii. Let _iteratorRecord_ be ? GetIteratorDirect(_iterator_).
+                    let iterator_record = ops::get_iterator_direct(agent, iterator)?;
+                    self.current.insert(iterator_record)
+                }
+            };
+            // iv. Let _innerAlive_ be *true*.
+            // v. Repeat, while _innerAlive_ is *true*,
+            //    1. Let _innerValue_ be ? IteratorStepValue(_iteratorRecord_).
+            match ops::iterator_step_value(agent, iterator_record)? {
+                // 2. If _innerValue_ is ~done~, then
+                None => {
+                    // a. Set _innerAlive_ to *false*.
+                    self.current = None;
+                    self.index += 1;
+                }
+                // 3. Else,
+                Some(inner_value) => {
+                    // a. Let _completion_ be Completion(Yield(_innerValue_)).
+                    // b. If _completion_ is an abrupt completion, then
+                    //    i. Return ? IteratorClose(_iteratorRecord_, _completion_).
+                    // (A return completion resumes through on_return below.)
+                    return Ok(Some(inner_value));
+                }
+            }
+        }
+        // b. Return ReturnCompletion(*undefined*).
+        Ok(None)
+    }
+
+    /// The Yield in step 3.a.v.3.a was resumed with a return completion:
+    /// IteratorClose(_iteratorRecord_, _completion_) for the current inner iterator only.
+    fn on_return(&mut self, agent: &mut Agent, _underlying: &mut [IteratorRecord]) -> JsResult<()> {
+        if let Some(iterator_record) = self.current.take() {
+            ops::iterator_close(agent, &iterator_record, Ok(()))?;
+        }
+        Ok(())
+    }
+}
+
+impl kahvi_core::gc::Trace for ConcatIterable {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        t.value(self.open_method);
+        t.value(self.iterable);
+    }
+}
+
+impl kahvi_core::gc::Trace for ConcatClosure {
+    fn trace(&self, t: &mut kahvi_core::gc::Tracer) {
+        self.iterables.trace(t);
+        self.current.trace(t);
+    }
+}

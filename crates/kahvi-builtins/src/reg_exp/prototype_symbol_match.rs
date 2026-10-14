@@ -1,0 +1,77 @@
+//! RegExp.prototype [ %Symbol.match% ] ( _string_ )
+//!
+//! Spec: https://tc39.es/ecma262/#sec-regexp.prototype-%symbol.match%
+
+use kahvi_core::object::array::array_create;
+use kahvi_core::prelude::*;
+
+use crate::support::regexp::{advance_string_index, regexp_exec};
+
+/// RegExp.prototype[Symbol.match]
+pub(crate) fn prototype_symbol_match(
+    agent: &mut Agent,
+    this: Value,
+    args: &[Value],
+    _new_target: Option<Object>,
+) -> JsResult<Value> {
+    // 1. Let _regexp_ be the *this* value.
+    // 2. If _regexp_ is not an Object, throw a *TypeError* exception.
+    let Value::Object(regexp) = this else {
+        return Err(agent.throw_type_error("RegExp.prototype[Symbol.match] called on a non-object"));
+    };
+    // 3. Set _string_ to ? ToString(_string_).
+    let string = ops::to_string(agent, args.get_or_undefined(0))?;
+    // 4. Let _flags_ be ? ToString(? Get(_regexp_, *"flags"*)).
+    let key = agent.key("flags");
+    let flags_value = ops::get(agent, regexp, key)?;
+    let flags = ops::to_string(agent, flags_value)?;
+    let flags_str = agent.str_lossy(flags).to_string();
+    // 5. If _flags_ does not contain *"g"*, return ? RegExpExec(_regexp_, _string_).
+    if !flags_str.contains('g') {
+        return regexp_exec(agent, regexp, string);
+    }
+    // 6. If _flags_ contains *"u"* or _flags_ contains *"v"*, let _fullUnicode_ be *true*; else let _fullUnicode_ be *false*.
+    let full_unicode = flags_str.contains('u') || flags_str.contains('v');
+    // 7. Perform ? Set(_regexp_, *"lastIndex"*, *+0*_𝔽, *true*).
+    let key = agent.key("lastIndex");
+    ops::set(agent, regexp, key, Value::Number(0.0), true)?;
+    // 8. Let _array_ be ! ArrayCreate(0).
+    let array = array_create(agent, 0.0, None)?;
+    // 9. Let _matchCount_ be 0.
+    let mut match_count: f64 = 0.0;
+    // 10. Repeat,
+    loop {
+        // a. Let _result_ be ? RegExpExec(_regexp_, _string_).
+        let result = regexp_exec(agent, regexp, string)?;
+        // b. If _result_ is *null*, then
+        let Value::Object(result) = result else {
+            // i. If _matchCount_ = 0, return *null*.
+            if match_count == 0.0 {
+                return Ok(Value::Null);
+            }
+            // ii. Return _array_.
+            return Ok(Value::Object(array));
+        };
+        // c. Let _matchString_ be ? ToString(? Get(_result_, *"0"*)).
+        let key = agent.key_from_index(0.0);
+        let match_value = ops::get(agent, result, key)?;
+        let match_string = ops::to_string(agent, match_value)?;
+        // d. Perform ! CreateDataPropertyOrThrow(_array_, ! ToString(𝔽(_matchCount_)), _matchString_).
+        let key = agent.key_from_index(match_count);
+        ops::create_data_property_or_throw(agent, array, key, Value::String(match_string))?;
+        // e. If _matchString_ is the empty String, then
+        if agent.str_len(match_string) == 0 {
+            // i. Let _thisIndex_ be ℝ(? ToLength(? Get(_regexp_, *"lastIndex"*))).
+            let key = agent.key("lastIndex");
+            let last_index = ops::get(agent, regexp, key)?;
+            let this_index = ops::to_length(agent, last_index)?;
+            // ii. Let _nextIndex_ be AdvanceStringIndex(_string_, _thisIndex_, _fullUnicode_).
+            let next_index = advance_string_index(agent.str(string), this_index, full_unicode);
+            // iii. Perform ? Set(_regexp_, *"lastIndex"*, 𝔽(_nextIndex_), *true*).
+            let key = agent.key("lastIndex");
+            ops::set(agent, regexp, key, Value::Number(next_index), true)?;
+        }
+        // f. Set _matchCount_ to _matchCount_ + 1.
+        match_count += 1.0;
+    }
+}

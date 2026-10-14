@@ -1,0 +1,9 @@
+[package]
+name = "kahvi-parser"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+kahvi-regexp = { path = "../kahvi-regexp" }
+kahvi-unicode = { path = "../kahvi-unicode" }
