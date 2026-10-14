@@ -1,0 +1,32 @@
+{
+  "ticket": "B-reflect-get",
+  "base": "299a96cb513dd3848d6a335294907323443dff71",
+  "head": "2e75a1c54485016738fb5622742a1b2d08b1a9f7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reflect/get.rs",
+      "added": 13,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

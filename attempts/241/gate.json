@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-call",
+  "base": "7968c111594ddb21c5c50b974b5f0513c0c1d63a",
+  "head": "c5f623966627cbc8868877949a6b898c95ddf57b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/call.rs",
+      "added": 18,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 0,
+    "after": 28,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

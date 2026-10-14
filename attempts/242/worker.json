@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 11082,
+  "stop_reason": "end_turn",
+  "session_id": "7d2eae0c-5c00-4dea-8c2e-b36de3bf68bc",
+  "total_cost_usd": 0.00422502,
+  "usage": {
+    "input_tokens": 7,
+    "cache_creation_input_tokens": 12875,
+    "cache_read_input_tokens": 58452,
+    "output_tokens": 1729,
+    "output_tokens_details": {
+      "thinking_tokens": 318
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12875,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 141,
+        "cache_read_input_tokens": 20063,
+        "cache_creation_input_tokens": 455,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 455
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Reflect.get` in `crates/kahvi-builtins/src/reflect/get.rs`, following the spec steps with each step commented above its code. All 22 runs under `built-ins/Reflect/get/` pass (up from 8 on main), and `cargo clippy -p kahvi-builtins` is clean.\n\nNo helpers were missing, so nothing was written outside the file. No BLOCKED line applies.",
+  "ttft_ms": 1722,
+  "type": "result",
+  "duration_ms": 29507,
+  "uuid": "b788a9db-c9d6-4c81-a955-327303668368",
+  "ttft_stream_ms": 1496,
+  "time_to_request_ms": 545,
+  "time_to_request_phases_ms": {
+    "other": 45,
+    "system_prompt": 341,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 15,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 4,
+    "tool_schema_build": 36,
+    "message_normalization": 11,
+    "client_creation": 24,
+    "request_build": 25
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 195,
+  "time_to_request_cpu_ms": 281,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 2464,
+  "process_wall_ms_turn": 29506,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1498,
+  "time_to_request_from_spawn_ms": 21337038,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000797197.1653,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

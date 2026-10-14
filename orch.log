@@ -851,3 +851,7 @@ test262 at last merge: 72953/81183 runs passing
 [18:00:05] C-proxy-call: attempt 241 finished ($0.009, 14 turns)
 [18:00:18] B-typed-array-prototype-entries: verifier: accept The change implements %TypedArray%.prototype.entries in its one in-scope file, following the three spec steps with the step comments kept in place. St
 [18:00:19] B-weak-set-prototype-has: verifier: accept The change implements WeakSet.prototype.has in the order the spec gives. this_weak_set performs RequireInternalSlot (step 2) and propagates its TypeEr
+[18:00:23] B-data-view-prototype-get-byte-length: attempt on slot 0 with haiku
+[18:00:27] B-date-prototype-set-minutes: attempt on slot 2 with haiku
+[18:00:28] B-reflect-get: attempt 242 finished ($0.004, 10 turns)
+[18:00:53] C-proxy-call: verifier: accept The diff implements Proxy [[Call]] in call.rs and follows the spec steps in order. Step 1 uses `p.validate_non_revoked(agent)?`, which supplies target
