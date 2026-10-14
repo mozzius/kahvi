@@ -1,0 +1,32 @@
+{
+  "ticket": "B-uint8-array-from-hex",
+  "base": "e302b26d739edfd76b31240010240a1b2ddeaa60",
+  "head": "018fff676fbc13f75342b22484c8134a84063db7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/uint8_array/from_hex.rs",
+      "added": 73,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 8,
+    "after": 18,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8612,
+  "stop_reason": "tool_use",
+  "session_id": "a9c67a04-9e7a-4c7f-a795-ab7b0270a6ab",
+  "total_cost_usd": 0.03571440000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6256,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 977,
+    "output_tokens_details": {
+      "thinking_tokens": 497
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6256,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 977,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 6256,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6256
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements FromHex and Uint8Array.fromHex step by step as the spec describes. Gate: build and clippy pass, and the test262 target goes from 8 to 18 passing with no regressions. I found no defects.\\n\\n- **FromHex:** it is `pub(crate)` as the ticket asks. It checks odd length first, then validates each pair. `char::to_digit(16)` accepts only ASCII hex digits, and `char::from_u32` returns None for surrogate code units, so those fail correctly.\\n- **fromHex:** it throws a TypeError for a non-String, propagates the SyntaxError, allocates with `?`, and writes the bytes into the buffer. The spec's step 6 assertion is only a comment, which is fine.\\n- **Scope:** only the one in-scope file changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements FromHex and Uint8Array.fromHex step by step as the spec describes. Gate: build and clippy pass, and the test262 target goes from 8 to 18 passing with no regressions. I found no defects.\n\n- **FromHex:** it is `pub(crate)` as the ticket asks. It checks odd length first, then validates each pair. `char::to_digit(16)` accepts only ASCII hex digits, and `char::from_u32` returns None for surrogate code units, so those fail correctly.\n- **fromHex:** it throws a TypeError for a non-String, propagates the SyntaxError, allocates with `?`, and writes the bytes into the buffer. The spec's step 6 assertion is only a comment, which is fine.\n- **Scope:** only the one in-scope file changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5865,
+  "type": "result",
+  "duration_ms": 8574,
+  "uuid": "0837be92-ec71-41c4-a53c-fb67fe211572",
+  "ttft_stream_ms": 1660,
+  "time_to_request_ms": 587,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 356,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 155,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 14,
+  "time_to_request_cpu_ms": 369,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 672,
+  "process_wall_ms_turn": 8574,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1662,
+  "time_to_request_from_spawn_ms": 31705445,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792011165460.7583,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792020000,
+    "rateLimitType": "five_hour",
+    "utilization": 0.94,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.9,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.94,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.9,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
