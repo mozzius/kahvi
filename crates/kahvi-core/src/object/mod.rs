@@ -2,6 +2,7 @@
 //! (ECMA-262 §6.1.7, §10).
 
 pub mod array;
+pub mod host_object;
 pub mod internal;
 pub mod namespace;
 pub mod proxy;

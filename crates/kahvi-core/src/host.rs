@@ -8,6 +8,10 @@ use crate::error::JsResult;
 use crate::function::{builtin_slots, create_builtin_function};
 use crate::value::{Object, Value};
 
+/// Host data attached to an object (JSI's NativeState); dropped when the
+/// object is collected.
+pub type NativeState = Arc<dyn std::any::Any + Send + Sync>;
+
 /// A host function: called with the agent, the this value and the arguments.
 pub type HostFn = Arc<dyn Fn(&mut Agent, Value, &[Value]) -> JsResult<Value> + Send + Sync>;
 
@@ -99,6 +103,32 @@ impl Agent {
             None,
             false,
         )
+    }
+}
+
+impl Agent {
+    /// Attaches `state` to `o`, replacing any earlier state.
+    pub fn set_native_state(&mut self, o: Object, state: NativeState) {
+        self.native_states.insert(o, state);
+    }
+
+    /// The state attached to `o`.
+    pub fn native_state(&self, o: Object) -> Option<NativeState> {
+        self.native_states.get(&o).cloned()
+    }
+
+    /// The index of a `host_function` object's closure (in creation order),
+    /// or `None` for any other value.
+    pub fn host_function_index(&self, v: Value) -> Option<usize> {
+        let Value::Object(f) = v else { return None };
+        match &self.obj(f).kind {
+            crate::object::ObjectKind::Builtin(b)
+                if std::ptr::fn_addr_eq(b.behaviour, call_host_function as crate::function::NativeFn) =>
+            {
+                b.slots.first().and_then(|v| v.as_number()).map(|n| n as usize)
+            }
+            _ => None,
+        }
     }
 }
 
