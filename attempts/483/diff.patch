@@ -1,0 +1,62 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_set_constructor.rs b/crates/kahvi-builtins/src/iterator/prototype_set_constructor.rs
+index f454b5c..54727dc 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_set_constructor.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_set_constructor.rs
+@@ -9,12 +9,54 @@ pub(crate) fn prototype_set_constructor(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let v = args.get_or_undefined(0);
+     // The value of the [[Setter]] attribute is a built-in function that takes an argument _v_. It performs the following steps when called:
+     //
+     // 1. Perform ? SetterThatIgnoresPrototypeProperties(*this* value, %Iterator.prototype%, *"constructor"*, _v_).
++    let home = agent.intrinsic("%Iterator.prototype%");
++    let key = PropertyKey::String(agent.names.constructor);
++    setter_that_ignores_prototype_properties(agent, this, home, key, v)?;
+     // 2. Return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("set Iterator.prototype.constructor"))
++    Ok(Value::Undefined)
++}
++
++/// SetterThatIgnoresPrototypeProperties ( _thisValue_, _home_, _propertyKey_, _value_ )
++///
++/// Shared by the setters of Iterator.prototype's own data properties; it lives
++/// here until a second built-in needs it.
++fn setter_that_ignores_prototype_properties(
++    agent: &mut Agent,
++    this_value: Value,
++    home: Object,
++    property_key: PropertyKey,
++    value: Value,
++) -> JsResult<()> {
++    // 1. If _thisValue_ is not an Object, then
++    let Value::Object(this_obj) = this_value else {
++        // a. Throw a *TypeError* exception.
++        return Err(agent.throw_type_error("Iterator.prototype setter called on a non-object"));
++    };
++    // 2. If SameValue(_thisValue_, _home_) is *true*, then
++    if ops::same_value(agent, this_value, Value::Object(home)) {
++        // a. NOTE: Throwing here emulates assignment to a non-writable data property on the _home_ object in strict mode code.
++        // b. Throw a *TypeError* exception.
++        return Err(
++            agent.throw_type_error("Cannot assign to read only property of Iterator.prototype")
++        );
++    }
++    // 3. Let _propertyDesc_ be ? _thisValue_.[[GetOwnProperty]](_propertyKey_).
++    let property_desc = this_obj.internal_get_own_property(agent, property_key)?;
++    // 4. If _propertyDesc_ is *undefined*, then
++    if property_desc.is_none() {
++        // a. Perform ? CreateDataPropertyOrThrow(_thisValue_, _propertyKey_, _value_).
++        ops::create_data_property_or_throw(agent, this_obj, property_key, value)?;
++    } else {
++        // 5. Else,
++        // a. Perform ? Set(_thisValue_, _propertyKey_, _value_, *true*).
++        ops::set(agent, this_obj, property_key, value, true)?;
++    }
++    // 6. Return ~unused~.
++    Ok(())
+ }

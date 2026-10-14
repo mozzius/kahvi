@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 51349,
+  "stop_reason": "end_turn",
+  "session_id": "4107799b-1b2e-488d-807c-450682211988",
+  "total_cost_usd": 0.01591308,
+  "usage": {
+    "input_tokens": 36,
+    "cache_creation_input_tokens": 30959,
+    "cache_read_input_tokens": 487768,
+    "output_tokens": 9212,
+    "output_tokens_details": {
+      "thinking_tokens": 2823
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 30959,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 904,
+        "cache_read_input_tokens": 37738,
+        "cache_creation_input_tokens": 864,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 864
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 26,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "My implementation is in place and builds, but all 4 target tests still fail, and the cause is outside my file.\n\nThe setter is correct, but `Iterator.prototype.constructor` is overwritten after installation. The link loop in `crates/kahvi-builtins/src/table.rs:899-903` runs for every constructor, including `%Iterator%`, and defines `constructor` on the prototype as a plain data property. That replaces the accessor pair from `generated.rs`, so `desc.get` and `desc.set` are both undefined. Fixing this needs a change to `table.rs`, which is outside my scope. The same problem will likely affect the sibling `Symbol.toStringTag` accessor, but I have not checked that.\n\nWhat I did in `prototype_set_constructor.rs`:\n- Implemented the steps with spec comments. Step 1 calls a private helper `setter_that_ignores_prototype_properties`, and step 2 returns `undefined`.\n- I put the `SetterThatIgnoresPrototypeProperties` helper in this file because it does not exist anywhere in the engine yet. `prototype_set_symbol_to_string_tag.rs` needs the same helper, so it should move to `support/` once that ticket runs.\n- `cargo build` and `cargo clippy` are clean for this file, and rustfmt has run.\n\nBLOCKED: `table.rs` link loop (lines ~899-903) overwrites the `Iterator.prototype.constructor` accessor with a data property; it must skip that accessor or the helper must move into `support/`.",
+  "ttft_ms": 1630,
+  "type": "result",
+  "duration_ms": 70005,
+  "uuid": "26087038-5168-4b23-a551-225ebd015f77",
+  "ttft_stream_ms": 1398,
+  "time_to_request_ms": 657,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 436,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 17,
+    "input_hooks": 12,
+    "tool_pool_refresh": 6,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 5,
+    "model_config_wait": 68,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 8,
+    "client_creation": 10,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 120,
+  "time_to_request_cpu_ms": 362,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 271,
+  "process_anon_mib_result": 152,
+  "process_peak_rss_mib": 292,
+  "process_cpu_ms_turn": 5875,
+  "process_wall_ms_turn": 70004,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1399,
+  "time_to_request_from_spawn_ms": 27895767,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007356019.531,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.66,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
