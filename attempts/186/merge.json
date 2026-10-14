@@ -1,0 +1,41 @@
+{
+  "merged": true,
+  "commit": "22ae8fc3fca8d24a9a3fb24386de3e655dbc3d41",
+  "batch": [
+    "B-string-prototype-last-index-of",
+    "B-string-prototype-to-locale-lower-case",
+    "B-set-prototype-is-disjoint-from",
+    "B-set-prototype-is-superset-of",
+    "B-weak-map-prototype-get-or-insert-computed",
+    "B-array-prototype-find",
+    "B-array-prototype-find-last",
+    "B-array-prototype-flat-map",
+    "B-data-view-prototype-set-big-int64",
+    "B-array-prototype-find-last-index",
+    "B-date-prototype-set-hours",
+    "B-object-entries",
+    "B-reflect-set-prototype-of",
+    "B-reg-exp-prototype-compile",
+    "B-string-prototype-trim-end",
+    "B-string-prototype-trim-start"
+  ],
+  "new_passes": 26,
+  "total_pass": 75323,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Set/prototype/isDisjointFrom/compares-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-same-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/compares-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/set-like-class-mutation.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.delete",
+    "built-ins/Set/prototype/isDisjointFrom/set-like-class-mutation.js:strict  Uncaught InternalError: not implemented: Set.prototype.delete",
+    "built-ins/Set/prototype/isDisjointFrom/subclass-receiver-methods.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+    "built-ins/Set/prototype/isDisjointFrom/subclass-receiver-methods.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size"
+  ]
+}

@@ -2825,3 +2825,20 @@ test262 at last merge: 74823/81183 runs passing
 [19:06:39] B-date-prototype-get-date: verifier: accept The diff implements Date.prototype.getDate in its own file and follows the five spec steps in order. Step 2 (RequireInternalSlot) is delegated to `dat
 [19:06:41] B-reg-exp-prototype-get-unicode: verifier: accept The diff implements get RegExp.prototype.unicode per the spec: it takes the this value, uses code unit 0x0075, and calls a file-local regexp_has_flag 
 [19:06:42] B-date-prototype-get-hours: attempt on slot 2 with haiku
+[19:06:47] B-string-prototype-locale-compare: verifier: revise The implementation is sound. Steps 1-4 run in spec order with `?` on RequireObjectCoercible and both ToString calls. The comparison NFC-normalizes bot
+[19:06:47] stack: stack/0014 (#29) green: 75323/81183 passing, +500
+[19:06:47] B-string-prototype-last-index-of: merged (+32, 75323 total)
+[19:06:47] B-string-prototype-to-locale-lower-case: merged (+38, 75323 total)
+[19:06:47] B-set-prototype-is-disjoint-from: merged (+26, 75323 total)
+[19:06:47] B-set-prototype-is-superset-of: merged (+26, 75323 total)
+[19:06:47] B-weak-map-prototype-get-or-insert-computed: merged (+27, 75323 total)
+[19:06:47] B-array-prototype-find: merged (+30, 75323 total)
+[19:06:47] B-array-prototype-find-last: merged (+32, 75323 total)
+[19:06:47] B-array-prototype-flat-map: merged (+37, 75323 total)
+[19:06:47] B-data-view-prototype-set-big-int64: merged (+28, 75323 total)
+[19:06:47] B-array-prototype-find-last-index: merged (+32, 75323 total)
+[19:06:47] B-date-prototype-set-hours: merged (+34, 75323 total)
+[19:06:48] B-object-entries: merged (+34, 75323 total)
+[19:06:48] B-string-prototype-locale-compare: attempt on slot 1 with haiku
+[19:06:48] B-reflect-set-prototype-of: merged (+18, 75323 total)
+[19:06:48] B-reg-exp-prototype-compile: merged (+20, 75323 total)
