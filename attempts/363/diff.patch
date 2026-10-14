@@ -1,0 +1,21 @@
+diff --git a/crates/kahvi-builtins/src/object/prototype_get_proto.rs b/crates/kahvi-builtins/src/object/prototype_get_proto.rs
+index 5bd0d96..08f0b47 100644
+--- a/crates/kahvi-builtins/src/object/prototype_get_proto.rs
++++ b/crates/kahvi-builtins/src/object/prototype_get_proto.rs
+@@ -11,10 +11,14 @@ pub(crate) fn prototype_get_proto(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = (args, new_target);
+     // The value of the [[Getter]] attribute is a built-in function that requires no arguments. It performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Return ? _obj_.[[GetPrototypeOf]]().
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Object.prototype.__proto__"))
++    match obj.internal_get_prototype_of(agent)? {
++        Some(proto) => Ok(Value::Object(proto)),
++        None => Ok(Value::Null),
++    }
+ }

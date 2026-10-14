@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 15047,
+  "stop_reason": "end_turn",
+  "session_id": "6495fac5-a311-46e7-a9a7-4853f6909447",
+  "total_cost_usd": 0.006859250000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 21524,
+    "cache_read_input_tokens": 101835,
+    "output_tokens": 2381,
+    "output_tokens_details": {
+      "thinking_tokens": 217
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21524,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 200,
+        "cache_read_input_tokens": 28885,
+        "cache_creation_input_tokens": 282,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 282
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented the `get RegExp.prototype.sticky` getter in `crates/kahvi-builtins/src/reg_exp/prototype_get_sticky.rs`, following the same pattern as the sibling `global` getter. `./t262 built-ins/RegExp/prototype/sticky/` now passes 16/16 runs, `cargo clippy -p kahvi-builtins` is clean, and the file passes `cargo fmt --check`.\n\nThe `RegExpHasFlag` helper is a private copy in this file, as the sibling getters already do, so I did not touch any shared module. No blockers.",
+  "ttft_ms": 2299,
+  "type": "result",
+  "duration_ms": 43537,
+  "uuid": "7dba357a-f739-4ae1-b921-9c641ad06216",
+  "ttft_stream_ms": 2057,
+  "time_to_request_ms": 1202,
+  "time_to_request_phases_ms": {
+    "other": 56,
+    "system_prompt": 583,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 19,
+    "input_hooks": 15,
+    "tool_pool_refresh": 3,
+    "init_message": 194,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 245,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 41,
+    "message_normalization": 4,
+    "client_creation": 7,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 335,
+  "time_to_request_cpu_ms": 553,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 231,
+  "process_anon_mib_turn_start": 115,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2894,
+  "process_wall_ms_turn": 43534,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2058,
+  "time_to_request_from_spawn_ms": 24992446,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004450040.3623,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -2370,3 +2370,384 @@ test262 at last merge: 74349/81183 runs passing
 [18:59:39] B-math-tan: verifier: accept The diff implements Math.tan in its stub, following the four spec steps. Step 1 calls ops::to_number once with ? propagation. Step 2 returns n unchang
 [18:59:45] B-math-log: verifier: accept Math.log implementation matches the six spec steps. ToNumber is called once via ops::to_number with `?`. NaN and +∞ return n. 1 returns +0. ±0 returns
 [18:59:50] B-math-min: verifier: accept Math.min implementation in crates/kahvi-builtins/src/math/min.rs follows the spec. Step 1-2 coerce every argument with ops::to_number and propagate er
+[18:59:59] stopped on request
+tickets: blocked 1, done 59, open 92, partial 86, stacked 169
+  A-gc-collect-code open             tier=architect attempts=0 strikes=0
+  A-gc-collect-in-callbacks open             tier=architect attempts=0 strikes=0
+  A-gc-string-storage open             tier=architect attempts=0 strikes=0
+  B-aggregate-error-constructor stacked          tier=haiku   attempts=1 strikes=0
+  B-array-buffer-prototype-get-detached stacked          tier=sonnet  attempts=2 strikes=0
+  B-array-buffer-prototype-get-max-byte-length stacked          tier=haiku   attempts=3 strikes=0
+  B-array-buffer-prototype-get-resizable stacked          tier=haiku   attempts=1 strikes=0
+  B-array-buffer-prototype-transfer stacked          tier=haiku   attempts=1 strikes=0
+  B-array-buffer-prototype-transfer-to-fixed-length stacked          tier=haiku   attempts=1 strikes=0
+  B-array-from-async partial          tier=haiku   attempts=2 strikes=0  19 target runs still failing: Symbol.keyFor (16), Reflect.get (2), BigInt.prototype.valueO
+  B-array-of stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-at stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-copy-within partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (2), Proxy [[Delete]] (2)
+  B-array-prototype-every partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-fill partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-array-prototype-filter partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-find stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-find-index stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-find-last stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-find-last-index stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-flat stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-flat-map stacked          tier=haiku   attempts=2 strikes=1
+  B-array-prototype-for-each partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-includes partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-array-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-last-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-reduce partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-reduce-right partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (4), Array.prototype.reverse (2)
+  B-array-prototype-reverse stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-slice partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (6), Reflect.get (2)
+  B-array-prototype-some partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-array-prototype-sort partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (8)
+  B-array-prototype-splice partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Reflect.get (2)
+  B-array-prototype-symbol-iterator open             tier=haiku   attempts=0 strikes=0
+  B-array-prototype-to-locale-string stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-to-reversed stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-to-sorted stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-to-string partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Reflect.get (2)
+  B-array-prototype-unshift stacked          tier=haiku   attempts=1 strikes=0
+  B-array-prototype-with stacked          tier=haiku   attempts=1 strikes=0
+  B-async-disposable-stack-prototype-adopt stacked          tier=haiku   attempts=1 strikes=0
+  B-async-disposable-stack-prototype-defer stacked          tier=haiku   attempts=1 strikes=0
+  B-async-disposable-stack-prototype-get-disposed stacked          tier=haiku   attempts=1 strikes=0
+  B-async-disposable-stack-prototype-move stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-big-int64 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-big-uint64 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-buffer stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-byte-length stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-byte-offset stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-float16 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-float32 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-float64 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-int16 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-int32 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-int8 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-uint16 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-uint32 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-get-uint8 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-set-big-int64 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-set-big-uint64 open             tier=haiku   attempts=0 strikes=0
+  B-data-view-prototype-set-float16 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getFloat16 (12), DataView.prototype.getFl
+  B-data-view-prototype-set-float32 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getFloat32 (14)
+  B-data-view-prototype-set-float64 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getFloat64 (14)
+  B-data-view-prototype-set-int16 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getInt16 (14)
+  B-data-view-prototype-set-int32 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getInt32 (14)
+  B-data-view-prototype-set-int8 stacked          tier=haiku   attempts=1 strikes=0
+  B-data-view-prototype-set-uint16 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getUint16 (14)
+  B-data-view-prototype-set-uint32 partial          tier=haiku   attempts=1 strikes=0  14 target runs still failing: DataView.prototype.getUint32 (14)
+  B-date-parse open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-date open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-day open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-full-year stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-get-hours open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-milliseconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-minutes open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-month open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-seconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-timezone-offset stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-get-utc-date open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-day open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-full-year open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-hours open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-milliseconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-minutes open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-month open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-utc-seconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-get-year open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-date stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-full-year stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-hours stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-milliseconds stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-minutes stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-month stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-seconds stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-time stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-set-utc-date open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-full-year open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-hours open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-milliseconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-minutes open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-month open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-utc-seconds open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-set-year stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-symbol-to-primitive stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-to-date-string open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-to-json stacked          tier=haiku   attempts=1 strikes=0
+  B-date-prototype-to-locale-date-string open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-to-locale-string open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-to-locale-time-string open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-to-string stacked          tier=haiku   attempts=4 strikes=0
+  B-date-prototype-to-time-string open             tier=haiku   attempts=0 strikes=0
+  B-date-prototype-to-utc-string stacked          tier=haiku   attempts=1 strikes=0
+  B-disposable-stack-prototype-adopt stacked          tier=haiku   attempts=1 strikes=0
+  B-disposable-stack-prototype-defer stacked          tier=haiku   attempts=1 strikes=0
+  B-disposable-stack-prototype-get-disposed stacked          tier=haiku   attempts=1 strikes=0
+  B-disposable-stack-prototype-move stacked          tier=haiku   attempts=1 strikes=0
+  B-error-is-error stacked          tier=haiku   attempts=1 strikes=0
+  B-global-encode-uri stacked          tier=haiku   attempts=1 strikes=0
+  B-global-encode-uri-component stacked          tier=haiku   attempts=1 strikes=0
+  B-global-escape stacked          tier=haiku   attempts=1 strikes=0
+  B-global-parse-int partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: Math.max (4)
+  B-global-unescape stacked          tier=haiku   attempts=1 strikes=0
+  B-iterator-from partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: Symbol.keyFor (4), Iterator.prototype.toArray (2)
+  B-iterator-prototype-for-each stacked          tier=haiku   attempts=1 strikes=0
+  B-iterator-prototype-get-constructor open             tier=haiku   attempts=0 strikes=0
+  B-iterator-prototype-get-symbol-to-string-tag open             tier=sonnet  attempts=3 strikes=1
+  B-iterator-prototype-set-constructor open             tier=haiku   attempts=0 strikes=0
+  B-iterator-prototype-set-symbol-to-string-tag open             tier=haiku   attempts=0 strikes=0
+  B-iterator-prototype-symbol-dispose open             tier=haiku   attempts=0 strikes=0
+  B-iterator-prototype-to-array stacked          tier=haiku   attempts=1 strikes=0
+  B-iterator-zip partial          tier=haiku   attempts=1 strikes=0  12 target runs still failing: Math.min (6), Reflect.get (4), get RegExp.prototype.global (
+  B-iterator-zip-keyed partial          tier=haiku   attempts=1 strikes=0  22 target runs still failing: Object.values (8), Math.min (6), Reflect.getOwnPropertyDescr
+  B-json-is-raw-json open             tier=haiku   attempts=0 strikes=0
+  B-json-parse partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: Proxy [[Delete]] (4)
+  B-json-raw-json open             tier=haiku   attempts=0 strikes=0
+  B-json-stringify partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (2), BigInt.prototype.toString (2), Array.prototype.re
+  B-map-group-by stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-clear stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-delete stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-for-each stacked          tier=haiku   attempts=2 strikes=1
+  B-map-prototype-get-or-insert stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-get-or-insert-computed stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-get-size stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-keys stacked          tier=haiku   attempts=1 strikes=0
+  B-map-prototype-values stacked          tier=haiku   attempts=1 strikes=0
+  B-math-abs open             tier=haiku   attempts=0 strikes=0
+  B-math-acos open             tier=haiku   attempts=0 strikes=0
+  B-math-acosh open             tier=haiku   attempts=0 strikes=0
+  B-math-asin stacked          tier=haiku   attempts=1 strikes=0
+  B-math-asinh open             tier=haiku   attempts=0 strikes=0
+  B-math-atan open             tier=haiku   attempts=0 strikes=0
+  B-math-atan2 stacked          tier=haiku   attempts=1 strikes=0
+  B-math-atanh open             tier=haiku   attempts=0 strikes=0
+  B-math-cbrt open             tier=haiku   attempts=0 strikes=0
+  B-math-ceil stacked          tier=haiku   attempts=1 strikes=0
+  B-math-clz32 stacked          tier=haiku   attempts=1 strikes=0
+  B-math-cos stacked          tier=haiku   attempts=1 strikes=0
+  B-math-cosh open             tier=haiku   attempts=0 strikes=0
+  B-math-exp stacked          tier=haiku   attempts=1 strikes=0
+  B-math-expm1 open             tier=haiku   attempts=0 strikes=0
+  B-math-f16round open             tier=haiku   attempts=0 strikes=0
+  B-math-floor partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Math.ceil (2)
+  B-math-fround stacked          tier=haiku   attempts=1 strikes=0
+  B-math-hypot stacked          tier=haiku   attempts=1 strikes=0
+  B-math-imul open             tier=haiku   attempts=0 strikes=0
+  B-math-log stacked          tier=haiku   attempts=1 strikes=0
+  B-math-log10 open             tier=haiku   attempts=0 strikes=0
+  B-math-log1p open             tier=haiku   attempts=0 strikes=0
+  B-math-log2 open             tier=haiku   attempts=0 strikes=0
+  B-math-max stacked          tier=haiku   attempts=1 strikes=0
+  B-math-min stacked          tier=haiku   attempts=1 strikes=0
+  B-math-random open             tier=haiku   attempts=0 strikes=0
+  B-math-round stacked          tier=haiku   attempts=1 strikes=0
+  B-math-sign open             tier=haiku   attempts=0 strikes=0
+  B-math-sin stacked          tier=haiku   attempts=1 strikes=0
+  B-math-sinh open             tier=haiku   attempts=0 strikes=0
+  B-math-sqrt stacked          tier=haiku   attempts=1 strikes=0
+  B-math-sum-precise stacked          tier=haiku   attempts=1 strikes=0
+  B-math-tan stacked          tier=haiku   attempts=1 strikes=0
+  B-math-tanh open             tier=haiku   attempts=0 strikes=0
+  B-math-trunc stacked          tier=haiku   attempts=1 strikes=0
+  B-number-is-finite open             tier=haiku   attempts=0 strikes=0
+  B-number-is-integer stacked          tier=haiku   attempts=1 strikes=0
+  B-number-is-nan open             tier=haiku   attempts=0 strikes=0
+  B-number-is-safe-integer stacked          tier=haiku   attempts=1 strikes=0
+  B-number-parse-float open             tier=haiku   attempts=0 strikes=0
+  B-number-parse-int open             tier=haiku   attempts=0 strikes=0
+  B-number-prototype-to-exponential stacked          tier=haiku   attempts=1 strikes=0
+  B-number-prototype-to-fixed stacked          tier=haiku   attempts=1 strikes=0
+  B-number-prototype-to-locale-string open             tier=haiku   attempts=0 strikes=0
+  B-number-prototype-to-precision stacked          tier=haiku   attempts=1 strikes=0
+  B-object-define-properties partial          tier=haiku   attempts=2 strikes=0  2 target runs still failing: BigInt (2)
+  B-object-entries stacked          tier=haiku   attempts=1 strikes=0
+  B-object-freeze partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: Reflect.getOwnPropertyDescriptor (2), 2 other failures
+  B-object-get-own-property-descriptors stacked          tier=haiku   attempts=1 strikes=0
+  B-object-group-by stacked          tier=haiku   attempts=1 strikes=0
+  B-object-is stacked          tier=haiku   attempts=1 strikes=0
+  B-object-is-frozen partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Proxy [[IsExtensible]] (2)
+  B-object-is-sealed partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Proxy [[IsExtensible]] (2)
+  B-object-prototype-define-getter stacked          tier=haiku   attempts=1 strikes=0
+  B-object-prototype-define-setter stacked          tier=haiku   attempts=1 strikes=0
+  B-object-prototype-get-proto open             tier=haiku   attempts=0 strikes=0
+  B-object-prototype-lookup-getter stacked          tier=haiku   attempts=1 strikes=0
+  B-object-prototype-lookup-setter stacked          tier=haiku   attempts=1 strikes=0
+  B-object-prototype-set-proto stacked          tier=haiku   attempts=1 strikes=0
+  B-object-prototype-to-locale-string stacked          tier=haiku   attempts=1 strikes=0
+  B-object-seal partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: AggregateError (2)
+  B-object-set-prototype-of partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Proxy [[SetPrototypeOf]] (2)
+  B-object-values stacked          tier=haiku   attempts=1 strikes=0
+  B-promise-try stacked          tier=haiku   attempts=1 strikes=0
+  B-promise-with-resolvers stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-delete-property stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-get stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-get-own-property-descriptor stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-get-prototype-of stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-is-extensible open             tier=haiku   attempts=0 strikes=0
+  B-reflect-own-keys partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Symbol.for (2)
+  B-reflect-prevent-extensions stacked          tier=haiku   attempts=1 strikes=0
+  B-reflect-set-prototype-of stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-escape stacked          tier=haiku   attempts=2 strikes=1
+  B-reg-exp-prototype-compile stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-prototype-get-dot-all stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-prototype-get-flags partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: get RegExp.prototype.global (6)
+  B-reg-exp-prototype-get-global stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-prototype-get-ignore-case stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-prototype-get-multiline stacked          tier=haiku   attempts=1 strikes=0
+  B-reg-exp-prototype-get-sticky open             tier=haiku   attempts=0 strikes=0
+  B-reg-exp-prototype-get-unicode open             tier=haiku   attempts=0 strikes=0
+  B-reg-exp-prototype-get-unicode-sets open             tier=haiku   attempts=0 strikes=0
+  B-reg-exp-prototype-symbol-match partial          tier=haiku   attempts=2 strikes=0  84 target runs still failing: get RegExp.prototype.global (80), get RegExp.prototype.ignor
+  B-reg-exp-prototype-symbol-match-all partial          tier=haiku   attempts=2 strikes=0  24 target runs still failing: get RegExp.prototype.global (18), CreateRegExpStringIterator
+  B-reg-exp-prototype-symbol-replace partial          tier=haiku   attempts=1 strikes=0  116 target runs still failing: get RegExp.prototype.global (114), get RegExp.prototype.ign
+  B-reg-exp-prototype-symbol-split partial          tier=haiku   attempts=1 strikes=0  36 target runs still failing: get RegExp.prototype.global (36)
+  B-reg-exp-prototype-to-string open             tier=haiku   attempts=0 strikes=0
+  B-reg-exp-string-iterator-prototype-next open             tier=haiku   attempts=0 strikes=0
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-set-iterator-prototype-next stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-add partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: get Set.prototype.size (6)
+  B-set-prototype-clear stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-delete stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-difference partial          tier=haiku   attempts=1 strikes=0  32 target runs still failing: get Set.prototype.size (18), SetIteratorPrototype.next (10),
+  B-set-prototype-entries stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-for-each partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: Set.prototype.delete (6)
+  B-set-prototype-get-size stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-has partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: Set.prototype.delete (2)
+  B-set-prototype-intersection partial          tier=haiku   attempts=1 strikes=0  32 target runs still failing: get Set.prototype.size (18), SetIteratorPrototype.next (10),
+  B-set-prototype-is-disjoint-from stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-is-subset-of stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-is-superset-of stacked          tier=haiku   attempts=1 strikes=0
+  B-set-prototype-symmetric-difference partial          tier=haiku   attempts=1 strikes=0  32 target runs still failing: get Set.prototype.size (18), SetIteratorPrototype.next (10),
+  B-set-prototype-union partial          tier=haiku   attempts=2 strikes=0  34 target runs still failing: get Set.prototype.size (20), SetIteratorPrototype.next (10),
+  B-set-prototype-values partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: SetIteratorPrototype.next (6)
+  B-string-prototype-anchor open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-at stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-big open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-blink open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-bold open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-code-point-at stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-concat stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-fixed open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-fontcolor open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-fontsize open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-includes stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: Symbol.prototype[Symbol.toPrimitive] (4), BigInt.prototype.va
+  B-string-prototype-is-well-formed open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-italics open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-last-index-of stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-link open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-locale-compare open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-match partial          tier=haiku   attempts=1 strikes=0  78 target runs still failing: get RegExp.prototype.global (70), String.prototype.lastIndex
+  B-string-prototype-match-all stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-pad-end stacked          tier=haiku   attempts=2 strikes=1
+  B-string-prototype-pad-start stacked          tier=haiku   attempts=2 strikes=1
+  B-string-prototype-repeat stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-replace partial          tier=haiku   attempts=1 strikes=0  50 target runs still failing: get RegExp.prototype.global (48), RegExp.prototype.toString 
+  B-string-prototype-replace-all partial          tier=haiku   attempts=1 strikes=0  18 target runs still failing: get RegExp.prototype.global (18)
+  B-string-prototype-search partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: get RegExp.prototype.global (4)
+  B-string-prototype-small open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-split partial          tier=haiku   attempts=1 strikes=0  62 target runs still failing: get RegExp.prototype.global (62)
+  B-string-prototype-starts-with stacked          tier=haiku   attempts=2 strikes=0
+  B-string-prototype-strike open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-sub open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-substr stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-sup open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-to-locale-lower-case stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-to-locale-upper-case stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-to-lower-case partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: RegExp.prototype.toString (2)
+  B-string-prototype-to-upper-case stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-to-well-formed open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-trim partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: RegExp.prototype.toString (2)
+  B-string-prototype-trim-end stacked          tier=haiku   attempts=1 strikes=0
+  B-string-prototype-trim-left open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-trim-right open             tier=haiku   attempts=0 strikes=0
+  B-string-prototype-trim-start stacked          tier=haiku   attempts=1 strikes=0
+  B-suppressed-error-constructor stacked          tier=haiku   attempts=1 strikes=0
+  B-symbol-for stacked          tier=haiku   attempts=1 strikes=0
+  B-symbol-key-for stacked          tier=haiku   attempts=1 strikes=0
+  B-symbol-prototype-symbol-to-primitive stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-at stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-copy-within partial          tier=sonnet  attempts=3 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-entries stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-every partial          tier=haiku   attempts=2 strikes=0  10 target runs still failing: BigInt (6), Array.prototype.unshift (4)
+  B-typed-array-prototype-fill partial          tier=haiku   attempts=2 strikes=0  4 target runs still failing: BigInt (4)
+  B-typed-array-prototype-filter partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-index partial          tier=sonnet  attempts=3 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-last partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-find-last-index partial          tier=haiku   attempts=2 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-for-each partial          tier=haiku   attempts=2 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-includes partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: BigInt (4)
+  B-typed-array-prototype-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-join partial          tier=haiku   attempts=1 strikes=0  2 target runs still failing: BigInt (2)
+  B-typed-array-prototype-keys stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-last-index-of partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-map partial          tier=haiku   attempts=1 strikes=0  10 target runs still failing: BigInt (10)
+  B-typed-array-prototype-reduce stacked          tier=sonnet  attempts=5 strikes=0
+  B-typed-array-prototype-reduce-right stacked          tier=sonnet  attempts=5 strikes=0
+  B-typed-array-prototype-reverse stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-set partial          tier=haiku   attempts=2 strikes=0  12 target runs still failing: BigInt (12)
+  B-typed-array-prototype-slice partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: BigInt (6), get ArrayBuffer.prototype.resizable (2)
+  B-typed-array-prototype-some partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-typed-array-prototype-sort partial          tier=haiku   attempts=1 strikes=0  10 target runs still failing: BigInt (8), Array.prototype.reverse (2)
+  B-typed-array-prototype-subarray partial          tier=haiku   attempts=1 strikes=0  10 target runs still failing: BigInt (6), get ArrayBuffer.prototype.resizable (4)
+  B-typed-array-prototype-symbol-iterator open             tier=haiku   attempts=0 strikes=0
+  B-typed-array-prototype-to-locale-string partial          tier=haiku   attempts=1 strikes=0  30 target runs still failing: Array.prototype.toLocaleString (16), Number.prototype.toLoca
+  B-typed-array-prototype-to-reversed open             tier=haiku   attempts=0 strikes=0
+  B-typed-array-prototype-to-sorted stacked          tier=haiku   attempts=1 strikes=0
+  B-typed-array-prototype-to-string open             tier=haiku   attempts=0 strikes=0
+  B-typed-array-prototype-values partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: BigInt (6)
+  B-weak-map-constructor partial          tier=haiku   attempts=1 strikes=0  161 target runs still failing: WeakMap.prototype.getOrInsertComputed (39), WeakMap.prototy
+  B-weak-map-prototype-delete stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-map-prototype-get stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-map-prototype-get-or-insert stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-map-prototype-get-or-insert-computed stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-map-prototype-has stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-map-prototype-set partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: WeakMap.prototype.has (4), Symbol.for (2)
+  B-weak-set-constructor partial          tier=haiku   attempts=1 strikes=0  70 target runs still failing: WeakSet.prototype.has (36), WeakSet.prototype.delete (32), S
+  B-weak-set-prototype-add partial          tier=haiku   attempts=1 strikes=0  6 target runs still failing: WeakSet.prototype.has (4), Symbol.for (2)
+  B-weak-set-prototype-delete stacked          tier=haiku   attempts=1 strikes=0
+  B-weak-set-prototype-has stacked          tier=haiku   attempts=1 strikes=0
+  C-proxy-call stacked          tier=haiku   attempts=1 strikes=0
+  C-proxy-delete stacked          tier=haiku   attempts=1 strikes=0
+  C-proxy-get-own-property partial          tier=haiku   attempts=1 strikes=0  8 target runs still failing: Proxy [[Delete]] (8)
+  C-proxy-get-prototype-of stacked          tier=haiku   attempts=1 strikes=0
+  C-proxy-is-extensible stacked          tier=haiku   attempts=1 strikes=0
+  C-proxy-prevent-extensions partial          tier=haiku   attempts=1 strikes=0  7 target runs still failing: Reflect.preventExtensions (7)
+  C-proxy-set partial          tier=haiku   attempts=1 strikes=0  4 target runs still failing: Reflect.getOwnPropertyDescriptor (4)
+  C-proxy-set-prototype-of stacked          tier=haiku   attempts=1 strikes=0
+attempts: 361  merged: 146  spend: $16.99 (workers $5.08, verifier $11.91)  new test262 passes: 15209  ($0.001 per pass)
+  haiku   accept       314
+  haiku   blocked      4
+  haiku   gate-reject  21
+  haiku   reject       1
+  haiku   revise       11
+  sonnet  accept       5
+  sonnet  gate-reject  5
+plan usage at last run: allowed_warning; five_hour 29% (resets Wed 23:20), seven_day 81% (resets Thu 09:00)
+test262 at last merge: 74823/81183 runs passing
+[19:00:05] building trusted runner; integration branch stack, 4 slots
+[19:00:49] B-iterator-prototype-get-symbol-to-string-tag: attempt on slot 3 with sonnet
+[19:00:49] B-object-prototype-get-proto: attempt on slot 2 with haiku
+[19:00:49] B-reflect-is-extensible: attempt on slot 1 with haiku
+[19:00:49] B-reg-exp-prototype-get-sticky: attempt on slot 0 with haiku
+[19:00:52] stack: stack/0011 (#25) green: 74605/81183 passing, +809
+[19:00:52] B-reg-exp-prototype-get-multiline: merged (+10, 74605 total)
+[19:00:52] B-string-prototype-includes: merged (+44, 74605 total)
+[19:00:52] C-proxy-get-prototype-of: merged (+38, 74605 total)
+[19:00:52] B-global-encode-uri: merged (+30, 74605 total)
+[19:00:52] B-object-is: merged (+34, 74605 total)
+[19:00:53] B-global-encode-uri-component: merged (+30, 74605 total)
+[19:00:53] B-iterator-prototype-for-each: merged (+42, 74605 total)
+[19:00:53] B-string-prototype-match-all: merged (+10, 74605 total)
+[19:00:55] stack: partial tickets after stack/0011: {'open': 8}
+[19:00:57] stack: stack/0011 (#25) merged into main
+[19:01:30] B-iterator-prototype-get-symbol-to-string-tag: attempt 362 finished ($0.058, 9 turns)
+[19:01:33] B-object-prototype-get-proto: attempt 363 finished ($0.005, 11 turns)
+[19:01:38] B-reg-exp-prototype-get-sticky: attempt 365 finished ($0.007, 10 turns)
+[19:01:39] B-reflect-is-extensible: attempt 364 finished ($0.005, 14 turns)
+[19:02:08] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 362: no new test262 passes in target

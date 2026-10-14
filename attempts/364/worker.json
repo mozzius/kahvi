@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17796,
+  "stop_reason": "end_turn",
+  "session_id": "cde470e2-58c6-40e9-89f2-b1c5aa2a1f27",
+  "total_cost_usd": 0.005397310000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 13928,
+    "cache_read_input_tokens": 117451,
+    "output_tokens": 2334,
+    "output_tokens_details": {
+      "thinking_tokens": 363
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13928,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 171,
+        "cache_read_input_tokens": 21162,
+        "cache_creation_input_tokens": 409,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 409
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Reflect.isExtensible` in `crates/kahvi-builtins/src/reflect/is_extensible.rs`: it throws a TypeError for a non-object target, otherwise returns `ops::is_extensible(agent, target)` as a boolean. All 16 runs under `built-ins/Reflect/isExtensible/` pass (up from 8), clippy is clean, and the file passes `cargo fmt --check`. No other files were changed, and no helpers were added.\n\nBLOCKED: none",
+  "ttft_ms": 2348,
+  "type": "result",
+  "duration_ms": 43798,
+  "uuid": "071844c5-03d9-44f6-979d-f1c6b3b4fec6",
+  "ttft_stream_ms": 2114,
+  "time_to_request_ms": 1075,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 480,
+    "resume_other": 0,
+    "process_user_input": 14,
+    "input_attachments": 39,
+    "input_hooks": 174,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 1,
+    "message_prep": 5,
+    "model_config_wait": 256,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 18,
+    "message_normalization": 2,
+    "client_creation": 24,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 343,
+  "time_to_request_cpu_ms": 448,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 3397,
+  "process_wall_ms_turn": 43793,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2115,
+  "time_to_request_from_spawn_ms": 24992731,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004449977.1694,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

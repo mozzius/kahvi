@@ -1,0 +1,21 @@
+diff --git a/crates/kahvi-builtins/src/reflect/is_extensible.rs b/crates/kahvi-builtins/src/reflect/is_extensible.rs
+index fa14d88..be964d5 100644
+--- a/crates/kahvi-builtins/src/reflect/is_extensible.rs
++++ b/crates/kahvi-builtins/src/reflect/is_extensible.rs
+@@ -11,10 +11,14 @@ pub(crate) fn is_extensible(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = (this, new_target);
+     // This function performs the following steps when called:
+     //
+     // 1. If _target_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(target) = args.get_or_undefined(0) else {
++        return Err(agent.throw_type_error("Reflect.isExtensible called on non-object"));
++    };
+     // 2. Return ? _target_.[[IsExtensible]]().
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Reflect.isExtensible"))
++    let extensible = ops::is_extensible(agent, target)?;
++    Ok(Value::Boolean(extensible))
+ }
