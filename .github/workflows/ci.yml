@@ -18,11 +18,11 @@ jobs:
     name: fmt, clippy, test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@1.97.0
         with:
           components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       - run: cargo fmt --all --check
       # Same flags as the orchestrator's clippy gate (harness/orch/gates.py).
       - run: cargo clippy --workspace --all-targets -- -D warnings
@@ -36,18 +36,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # vendor/ecma262 is only needed by ./spec, so skip it.
       - run: git submodule update --init --depth 1 vendor/test262
       - uses: dtolnay/rust-toolchain@1.97.0
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       # Full suite against the ratchet: exit 1 on any regression, 3 if the
       # canaries say the run is invalid. Hosted runners are slower than the
       # machine that writes the baseline: the exhaustive decodeURI tests take
       # ~10s each there and would time out at the default 10s.
       - run: ./t262 --timeout 30 --quiet --show 20 --baseline conformance/expected-pass.txt --summary-json t262-summary.json
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: t262-summary
           path: t262-summary.json
@@ -59,10 +59,10 @@ jobs:
       - name: Update README pass rate
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('t262-summary.json') != ''
         run: |
-          python3 .github/scripts/readme_pass_rate.py t262-summary.json README.md "$GITHUB_SHA"
+          python3 .github/scripts/readme_pass_rate.py t262-summary.json README.md
           git diff --quiet README.md && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git commit -m "README: update test262 pass rate [skip ci]" README.md
+          git commit -m "README: update test262 results [skip ci]" README.md
           git pull --rebase origin main
           git push origin HEAD:main
