@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 10221,
+  "stop_reason": "tool_use",
+  "session_id": "566173b1-3ef0-47fa-920f-e1070eb01d9f",
+  "total_cost_usd": 0.0028467599999999994,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6173,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 2070,
+    "output_tokens_details": {
+      "thinking_tokens": 1473
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6173,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2070,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6173,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6173
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Proxy [[HasProperty]] steps 1-9 in order. It calls ValidateNonRevokedProxy via validate_non_revoked with ?, GetMethod(handler, \\\"has\\\") with ?, and delegates to target.[[HasProperty]] with ? when the trap is undefined. Otherwise it calls the trap with (target, key as value), applies ToBoolean, and on a false result runs GetOwnProperty (?), checks Configurable === false to throw a TypeError, then IsExtensible (?) and throws a TypeError when the target is non-extensible. It returns the boolean. The remaining 6 failures are from Reflect.has being unimplemented, which is honest not-implemented behaviour, not a defect. No special-casing, swallowed errors, or made-up values were found. The only oddity is a `let _ = o;` silencer for the now-unused parameter, which is harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in this diff. The spec steps are implemented in order with correct abrupt-completion handling. The `let _ = o;` line is only a lint silencer for the unused object parameter and could be dropped or replaced with `_o` in the signature if desired.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Proxy [[HasProperty]] steps 1-9 in order. It calls ValidateNonRevokedProxy via validate_non_revoked with ?, GetMethod(handler, \"has\") with ?, and delegates to target.[[HasProperty]] with ? when the trap is undefined. Otherwise it calls the trap with (target, key as value), applies ToBoolean, and on a false result runs GetOwnProperty (?), checks Configurable === false to throw a TypeError, then IsExtensible (?) and throws a TypeError when the target is non-extensible. It returns the boolean. The remaining 6 failures are from Reflect.has being unimplemented, which is honest not-implemented behaviour, not a defect. No special-casing, swallowed errors, or made-up values were found. The only oddity is a `let _ = o;` silencer for the now-unused parameter, which is harmless.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in this diff. The spec steps are implemented in order with correct abrupt-completion handling. The `let _ = o;` line is only a lint silencer for the unused object parameter and could be dropped or replaced with `_o` in the signature if desired."
+  },
+  "ttft_ms": 7230,
+  "type": "result",
+  "duration_ms": 9560,
+  "uuid": "35b36e5d-7b72-4ae9-be4c-aff0aaaf12ad",
+  "ttft_stream_ms": 854,
+  "time_to_request_ms": 147,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 17,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 76,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 5,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 34,
+  "time_to_request_cpu_ms": 141,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 491,
+  "process_wall_ms_turn": 9559,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 854,
+  "time_to_request_from_spawn_ms": 25480913,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791973357981.383,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791990600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.1,
+        "resetsAt": 1791990600
+      },
+      "seven_day": {
+        "utilization": 0.71,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

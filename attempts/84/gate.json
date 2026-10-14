@@ -1,0 +1,39 @@
+{
+  "ticket": "C-proxy-has-property",
+  "base": "56a5bdf2f4eb143ba91127440b9760123ec816d4",
+  "head": "cf110fb22ef31539e20972d1230b20edf359e6ff",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/has_property.rs",
+      "added": 39,
+      "removed": 18
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 43,
+    "before": 1,
+    "after": 37,
+    "new_passes": 36,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/has/trap-is-missing-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.has",
+      "built-ins/Proxy/has/trap-is-missing-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.has",
+      "built-ins/Proxy/has/trap-is-null-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.has",
+      "built-ins/Proxy/has/trap-is-null-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.has",
+      "built-ins/Proxy/has/trap-is-undefined-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.has",
+      "built-ins/Proxy/has/trap-is-undefined-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.has"
+    ]
+  },
+  "decision": "pass"
+}
