@@ -28,6 +28,37 @@ pub(crate) fn max(
     // NOTE:
     // The comparison of values to determine the largest value is done using the IsLessThan algorithm except that *+0*_𝔽 is considered to be larger than *-0*_𝔽.
     // The *"length"* property of this function is *2*_𝔽.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.max"))
+    let _ = (this, new_target);
+    // 1. Let _coerced_ be a new empty List.
+    let mut coerced = Vec::with_capacity(args.len());
+    // 2. For each element _arg_ of _args_, do
+    for arg in args {
+        // a. Let _n_ be ? ToNumber(_arg_).
+        let n = ops::to_number(agent, *arg)?;
+        // b. Append _n_ to _coerced_.
+        coerced.push(n);
+    }
+    // 3. Let _highest_ be *-∞*_𝔽.
+    let mut highest = f64::NEG_INFINITY;
+    // 4. For each element _number_ of _coerced_, do
+    for number in coerced {
+        // a. If _number_ is *NaN*, return *NaN*.
+        if number.is_nan() {
+            return Ok(Value::Number(f64::NAN));
+        }
+        // b. If _number_ is *+0*_𝔽 and _highest_ is *-0*_𝔽, set _highest_ to *+0*_𝔽.
+        if number == 0.0
+            && number.is_sign_positive()
+            && highest == 0.0
+            && highest.is_sign_negative()
+        {
+            highest = 0.0;
+        }
+        // c. If _number_ > _highest_, set _highest_ to _number_.
+        if number > highest {
+            highest = number;
+        }
+    }
+    // 5. Return _highest_.
+    Ok(Value::Number(highest))
 }
