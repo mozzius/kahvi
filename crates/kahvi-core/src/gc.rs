@@ -411,9 +411,38 @@ impl Agent {
         self.gc.roots.len() - 1
     }
 
+    /// A mark for `pop_roots` that pushes nothing.
+    pub fn gc_roots_len(&self) -> usize {
+        self.gc.roots.len()
+    }
+
     /// Drops the roots pushed since `mark` (a value returned by `push_root`).
     pub fn pop_roots(&mut self, mark: usize) {
         self.gc.roots.truncate(mark);
+    }
+
+    /// Roots a String or Symbol property key like `push_root` (an array
+    /// index holds no handle and pushes nothing). Returns a mark for
+    /// `pop_roots`.
+    pub fn push_root_key(&mut self, key: PropertyKey) -> usize {
+        match key {
+            PropertyKey::Index(_) => self.gc.roots.len(),
+            PropertyKey::String(s) => self.push_root(Value::String(s)),
+            PropertyKey::Symbol(s) => self.push_root(Value::Symbol(s)),
+        }
+    }
+
+    /// Runs `f` with `roots` rooted, and drops them (and anything `f`
+    /// pushed and left behind, e.g. on an early `?` return) afterwards.
+    /// For a built-in that calls JavaScript with `ops::call_rooted` so the
+    /// callback can collect garbage: everything it uses after the call must
+    /// be rooted (docs/GC.md).
+    pub fn with_roots<T>(&mut self, roots: &[Value], f: impl FnOnce(&mut Agent) -> T) -> T {
+        let mark = self.gc.roots.len();
+        self.gc.roots.extend_from_slice(roots);
+        let r = f(self);
+        self.gc.roots.truncate(mark);
+        r
     }
 
     /// Runs `f` with collection disabled (Rust code holding unrooted handles

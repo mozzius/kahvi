@@ -147,8 +147,22 @@ pub(crate) fn stringify(
         gap,
         property_list,
     };
+    // The callbacks may collect garbage: the wrapper, the replacer and the
+    // property list stay rooted.
+    let mut roots = vec![Value::Object(wrapper), Value::String(empty)];
+    roots.extend(state.replacer_function.map(Value::Object));
+    roots.extend(
+        state
+            .property_list
+            .iter()
+            .flatten()
+            .map(|&k| Value::String(k)),
+    );
+    let result = agent.with_roots(&roots, |agent| {
+        serialize_json_property(agent, &mut state, empty, wrapper)
+    });
     // 13. Return ? SerializeJSONProperty(_state_, the empty String, _wrapper_).
-    match serialize_json_property(agent, &mut state, empty, wrapper)? {
+    match result? {
         Some(units) => Ok(Value::String(agent.intern(&units))),
         None => Ok(Value::Undefined),
     }
@@ -161,9 +175,24 @@ fn serialize_json_property(
     key: JsString,
     holder: Object,
 ) -> JsResult<Option<Vec<u16>>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_property_steps(agent, state, key, holder);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_property_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    key: JsString,
+    holder: Object,
+) -> JsResult<Option<Vec<u16>>> {
     // 1. Let _value_ be ? Get(_holder_, _key_).
     let property_key = agent.key_from_string(key);
     let mut value = ops::get(agent, holder, property_key)?;
+    agent.push_root(value);
     // 2. If _value_ is an Object or _value_ is a BigInt, then
     if matches!(value, Value::Object(_) | Value::BigInt(_)) {
         // a. Let _toJSON_ be ? GetV(_value_, *"toJSON"*).
@@ -172,13 +201,14 @@ fn serialize_json_property(
         // b. If IsCallable(_toJSON_) is *true*, then
         if ops::is_callable(agent, to_json) {
             // i. Set _value_ to ? Call(_toJSON_, _value_, « _key_ »).
-            value = ops::call(agent, to_json, value, &[Value::String(key)])?;
+            value = ops::call_rooted(agent, to_json, value, &[Value::String(key)])?;
+            agent.push_root(value);
         }
     }
     // 3. If _state_.[[ReplacerFunction]] is not *undefined*, then
     if let Some(replacer_function) = state.replacer_function {
         // a. Set _value_ to ? Call(_state_.[[ReplacerFunction]], _holder_, « _key_, _value_ »).
-        value = ops::call(
+        value = ops::call_rooted(
             agent,
             Value::Object(replacer_function),
             Value::Object(holder),
@@ -250,11 +280,25 @@ fn serialize_json_object(
     state: &mut JsonSerializationRecord,
     value: Object,
 ) -> JsResult<Vec<u16>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_object_steps(agent, state, value);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_object_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
     // 1. If _state_.[[Stack]] contains _value_, throw a *TypeError* exception because the structure is cyclical.
     if state.stack.contains(&value) {
         return Err(agent.throw_type_error("Converting circular structure to JSON"));
     }
     // 2. Append _value_ to _state_.[[Stack]].
+    agent.push_root(Value::Object(value));
     state.stack.push(value);
     // 3. Let _stepBack_ be _state_.[[Indent]].
     let step_back = state.indent.clone();
@@ -274,6 +318,9 @@ fn serialize_json_object(
         }
         keys
     };
+    for &k in &keys {
+        agent.push_root(Value::String(k));
+    }
     // 7. Let _partial_ be a new empty List.
     let mut partial: Vec<Vec<u16>> = Vec::new();
     // 8. For each element _propertyKey_ of _keys_, do
@@ -338,11 +385,25 @@ fn serialize_json_array(
     state: &mut JsonSerializationRecord,
     value: Object,
 ) -> JsResult<Vec<u16>> {
+    // Callbacks (toJSON, the replacer, getters) may collect garbage; the
+    // steps root what they use after one, and the roots go when they return.
+    let mark = agent.gc_roots_len();
+    let r = serialize_json_array_steps(agent, state, value);
+    agent.pop_roots(mark);
+    r
+}
+
+fn serialize_json_array_steps(
+    agent: &mut Agent,
+    state: &mut JsonSerializationRecord,
+    value: Object,
+) -> JsResult<Vec<u16>> {
     // 1. If _state_.[[Stack]] contains _value_, throw a *TypeError* exception because the structure is cyclical.
     if state.stack.contains(&value) {
         return Err(agent.throw_type_error("Converting circular structure to JSON"));
     }
     // 2. Append _value_ to _state_.[[Stack]].
+    agent.push_root(Value::Object(value));
     state.stack.push(value);
     // 3. Let _stepBack_ be _state_.[[Indent]].
     let step_back = state.indent.clone();

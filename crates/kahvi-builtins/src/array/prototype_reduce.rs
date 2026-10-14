@@ -66,27 +66,33 @@ pub(crate) fn prototype_reduce(
                 .throw_type_error("Array.prototype.reduce of empty array with no initial value"));
         }
     }
-    // 9. Repeat, while _k_ < _length_,
-    while k < length {
-        // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
-        let property_key = agent.key_from_index(k);
-        // b. Let _kPresent_ be ? HasProperty(_obj_, _propertyKey_).
-        let k_present = ops::has_property(agent, obj, property_key)?;
-        // c. If _kPresent_ is *true*, then
-        if k_present {
-            // i. Let _kValue_ be ? Get(_obj_, _propertyKey_).
-            let k_value = ops::get(agent, obj, property_key)?;
-            // ii. Set _accumulator_ to ? Call(_callback_, *undefined*, « _accumulator_, _kValue_, 𝔽(_k_), _obj_ »).
-            accumulator = ops::call(
-                agent,
-                callback,
-                Value::Undefined,
-                &[accumulator, k_value, Value::Number(k), Value::Object(obj)],
-            )?;
+    // The callback may collect garbage: what is used after it stays rooted.
+    agent.with_roots(&[Value::Object(obj), callback], |agent| {
+        // 9. Repeat, while _k_ < _length_,
+        while k < length {
+            // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
+            let property_key = agent.key_from_index(k);
+            // b. Let _kPresent_ be ? HasProperty(_obj_, _propertyKey_).
+            let k_present = ops::has_property(agent, obj, property_key)?;
+            // c. If _kPresent_ is *true*, then
+            if k_present {
+                // i. Let _kValue_ be ? Get(_obj_, _propertyKey_).
+                let k_value = ops::get(agent, obj, property_key)?;
+                // ii. Set _accumulator_ to ? Call(_callback_, *undefined*, « _accumulator_, _kValue_, 𝔽(_k_), _obj_ »).
+                let mark = agent.push_root(accumulator);
+                agent.push_root(k_value);
+                accumulator = ops::call_rooted(
+                    agent,
+                    callback,
+                    Value::Undefined,
+                    &[accumulator, k_value, Value::Number(k), Value::Object(obj)],
+                )?;
+                agent.pop_roots(mark);
+            }
+            // d. Set _k_ to _k_ + 1.
+            k += 1.0;
         }
-        // d. Set _k_ to _k_ + 1.
-        k += 1.0;
-    }
-    // 10. Return _accumulator_.
-    Ok(accumulator)
+        // 10. Return _accumulator_.
+        Ok(accumulator)
+    })
 }

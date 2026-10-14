@@ -64,10 +64,24 @@ Who holds:
 Built-ins that call back into JavaScript therefore do not need rooting
 discipline: while their callback runs, no collection can free their
 locals. The cost is that garbage made inside such a callback waits until
-the built-in returns. A built-in can opt out of holding by rooting its
-locals explicitly (`agent.push_root` / `agent.pop_roots`) and calling with
-`ops::call_rooted`, which matters for long-running callbacks; that is
-follow-up work, done built-in by built-in. Code that resumes a suspended
+the built-in returns. A built-in opts out of holding by rooting everything
+it uses after a callback and calling with `ops::call_rooted`:
+
+- `agent.with_roots(&[...], |agent| ...)` roots values for the duration of
+  the closure, and drops anything pushed inside it too (an early `?`
+  return cannot leak roots);
+- `agent.push_root(v)` / `agent.push_root_key(k)` / `agent.pop_roots(mark)`
+  for per-iteration values (the element passed to the callback, a String
+  property key used after it).
+
+Root the callback's arguments as well: a native callee does not root its
+own arguments. The callback-heavy built-ins do this (Array forEach, map,
+filter, some, every, reduce, reduceRight, sort, Array.from, Set forEach,
+String replace and replaceAll, JSON.parse with a reviver, JSON.stringify),
+and the interpreter's `for-of` / destructuring steps call `next()` with
+`ops::iterator_step_value_rooted` (the record is on the frame's iterator
+stack), so a generator driven by `for-of` collects as it runs. Other
+built-ins still hold. Code that resumes a suspended
 frame from Rust (generators, async functions) roots the object that owns
 the frame for the duration.
 

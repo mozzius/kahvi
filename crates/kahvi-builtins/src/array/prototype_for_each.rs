@@ -44,28 +44,33 @@ pub(crate) fn prototype_for_each(
         return Err(agent.throw_type_error("Array.prototype.forEach callback is not a function"));
     }
     let this_arg = args.get_or_undefined(1);
-    // 4. Let k be 0.
-    let mut k = 0.0;
-    // 5. Repeat, while k < len,
-    while k < len {
-        // a. Let Pk be ! ToString(𝔽(k)).
-        let pk = agent.key_from_index(k);
-        // b. Let kPresent be ? HasProperty(O, Pk).
-        // c. If kPresent is true, then
-        if ops::has_property(agent, o, pk)? {
-            // i. Let kValue be ? Get(O, Pk).
-            let k_value = ops::get(agent, o, pk)?;
-            // ii. Perform ? Call(callbackfn, thisArg, « kValue, 𝔽(k), O »).
-            ops::call(
-                agent,
-                callback,
-                this_arg,
-                &[k_value, Value::Number(k), Value::Object(o)],
-            )?;
+    // The callback may collect garbage: O, callbackfn and thisArg stay rooted.
+    agent.with_roots(&[Value::Object(o), callback, this_arg], |agent| {
+        // 4. Let k be 0.
+        let mut k = 0.0;
+        // 5. Repeat, while k < len,
+        while k < len {
+            // a. Let Pk be ! ToString(𝔽(k)).
+            let pk = agent.key_from_index(k);
+            // b. Let kPresent be ? HasProperty(O, Pk).
+            // c. If kPresent is true, then
+            if ops::has_property(agent, o, pk)? {
+                // i. Let kValue be ? Get(O, Pk).
+                let k_value = ops::get(agent, o, pk)?;
+                // ii. Perform ? Call(callbackfn, thisArg, « kValue, 𝔽(k), O »).
+                let mark = agent.push_root(k_value);
+                ops::call_rooted(
+                    agent,
+                    callback,
+                    this_arg,
+                    &[k_value, Value::Number(k), Value::Object(o)],
+                )?;
+                agent.pop_roots(mark);
+            }
+            // d. Set k to k + 1.
+            k += 1.0;
         }
-        // d. Set k to k + 1.
-        k += 1.0;
-    }
-    // 6. Return undefined.
-    Ok(Value::Undefined)
+        // 6. Return undefined.
+        Ok(Value::Undefined)
+    })
 }

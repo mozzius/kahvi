@@ -111,7 +111,12 @@ impl Default for StringTable {
     fn default() -> Self {
         use std::hash::BuildHasher;
         let seed = SeededFxBuilder::default().build_hasher().hash;
-        StringTable { slots: Vec::new(), live: 0, tombstones: 0, seed }
+        StringTable {
+            slots: Vec::new(),
+            live: 0,
+            tombstones: 0,
+            seed,
+        }
     }
 }
 
