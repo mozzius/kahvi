@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10167,
+  "stop_reason": "tool_use",
+  "session_id": "9be35762-95f8-4bf0-a276-8b5ea6bace74",
+  "total_cost_usd": 0.0025039800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5284,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1904,
+    "output_tokens_details": {
+      "thinking_tokens": 1334
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5284,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1904,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5284,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5284
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Proxy [[IsExtensible]] following all ten spec steps in order: ValidateNonRevokedProxy via `?`, GetMethod(handler, \\\"isExtensible\\\") with `?`, the undefined-trap shortcut returning `?` IsExtensible(target), Call with handler as this and target as the sole argument before ToBoolean, then IsExtensible(target) with `?`, the TypeError on mismatch, and returning the boolean. Every step is commented directly above its code. No special-casing, hardcoded values, swallowed errors, or missing observable operations are visible. The only non-algorithmic change is the parameter rename `o` to `_o` and removal of the spec NOTE comment, both inside the in-scope file and not behavioural.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Optional: the NOTE block with the invariant text was dropped from the comments; restoring it would match the stub more closely, but it is not an algorithm step. ops::get_method is assumed to return undefined for a null trap, as GetMethod step 2 requires; that was not verified because the ops source was not in the review.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Proxy [[IsExtensible]] following all ten spec steps in order: ValidateNonRevokedProxy via `?`, GetMethod(handler, \"isExtensible\") with `?`, the undefined-trap shortcut returning `?` IsExtensible(target), Call with handler as this and target as the sole argument before ToBoolean, then IsExtensible(target) with `?`, the TypeError on mismatch, and returning the boolean. Every step is commented directly above its code. No special-casing, hardcoded values, swallowed errors, or missing observable operations are visible. The only non-algorithmic change is the parameter rename `o` to `_o` and removal of the spec NOTE comment, both inside the in-scope file and not behavioural.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Optional: the NOTE block with the invariant text was dropped from the comments; restoring it would match the stub more closely, but it is not an algorithm step. ops::get_method is assumed to return undefined for a null trap, as GetMethod step 2 requires; that was not verified because the ops source was not in the review."
+  },
+  "ttft_ms": 8408,
+  "type": "result",
+  "duration_ms": 10717,
+  "uuid": "2ed01334-272c-40df-98ff-ee05b13652a1",
+  "ttft_stream_ms": 2238,
+  "time_to_request_ms": 1232,
+  "time_to_request_phases_ms": {
+    "other": 101,
+    "system_prompt": 518,
+    "resume_other": 0,
+    "process_user_input": 24,
+    "input_attachments": 116,
+    "input_hooks": 20,
+    "tool_pool_refresh": 22,
+    "init_message": 48,
+    "engine_pickup": 1,
+    "message_prep": 7,
+    "model_config_wait": 262,
+    "autocompact": 12,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 24,
+    "message_normalization": 2,
+    "client_creation": 17,
+    "request_build": 57
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 298,
+  "time_to_request_cpu_ms": 296,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 99,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 806,
+  "process_wall_ms_turn": 10716,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 85,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2241,
+  "time_to_request_from_spawn_ms": 21548909,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001006330.8408,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -874,3 +874,6 @@ test262 at last merge: 72953/81183 runs passing
 [18:02:43] C-proxy-is-extensible: attempt 248 finished ($0.005, 9 turns)
 [18:03:13] B-array-prototype-to-reversed: attempt 250 finished ($0.006, 10 turns)
 [18:03:36] B-set-prototype-entries: verifier: accept The change replaces the not-implemented stub in prototype_entries.rs with a delegation: it calls this_set(agent, this)? (which should perform RequireI
+[18:03:39] B-date-prototype-set-seconds: attempt on slot 2 with haiku
+[18:03:41] B-reg-exp-escape: attempt 247 finished ($0.017, 28 turns)
+[18:03:48] C-proxy-is-extensible: verifier: accept The diff implements Proxy [[IsExtensible]] following all ten spec steps in order: ValidateNonRevokedProxy via `?`, GetMethod(handler, "isExtensible") 

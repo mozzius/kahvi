@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5166,
+  "stop_reason": "tool_use",
+  "session_id": "a0e1e965-4a83-4e31-904c-071e2523dd94",
+  "total_cost_usd": 0.026799499999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5286,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 483,
+    "output_tokens_details": {
+      "thinking_tokens": 129
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5286,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 483,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5286,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5286
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Proxy [[IsExtensible]] follows spec steps 1-10 in order. All `?` propagation is correct: get_method, call, and both is_extensible calls. The trap is called with handler as this and target as the only argument. ToBoolean is applied before the second IsExtensible, and the TypeError is thrown on mismatch. The diff touches only the in-scope file, and all 24 target tests pass with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Proxy [[IsExtensible]] follows spec steps 1-10 in order. All `?` propagation is correct: get_method, call, and both is_extensible calls. The trap is called with handler as this and target as the only argument. ToBoolean is applied before the second IsExtensible, and the TypeError is thrown on mismatch. The diff touches only the in-scope file, and all 24 target tests pass with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3473,
+  "type": "result",
+  "duration_ms": 5200,
+  "uuid": "a2f0326f-b715-45af-829a-9458000d41f2",
+  "ttft_stream_ms": 1970,
+  "time_to_request_ms": 695,
+  "time_to_request_phases_ms": {
+    "other": 62,
+    "system_prompt": 402,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 19,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 126,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 13,
+    "client_creation": 10,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 146,
+  "time_to_request_cpu_ms": 433,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 225,
+  "process_cpu_ms_turn": 682,
+  "process_wall_ms_turn": 5199,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1976,
+  "time_to_request_from_spawn_ms": 21561644,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001020927.1333,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
