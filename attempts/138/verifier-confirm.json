@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9071,
+  "stop_reason": "tool_use",
+  "session_id": "807f123c-0658-41d4-9934-3e66c9f81a96",
+  "total_cost_usd": 0.0338291,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5627,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1046,
+    "output_tokens_details": {
+      "thinking_tokens": 582
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1046,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5627,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5627
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements TypedArray.prototype.findLast as the spec describes. It validates the receiver, takes the length, and calls a local FindViaPredicate that is hardwired to the descending direction. That helper does the callable check, then loops from length-1 down to 0 doing Get, Call and ToBoolean in spec order. It propagates every `?` error and returns the {-1, undefined} record when nothing matches. The 6 remaining failures throw the engine's not-implemented error for BigInt, which is honest partial work. I found no special-casing, swallowed errors or unrelated edits. I did not see the support helpers `validate_typed_array` and `length`, so I'm trusting that they do ValidateTypedArray and TypedArrayLength as the spec says.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements TypedArray.prototype.findLast as the spec describes. It validates the receiver, takes the length, and calls a local FindViaPredicate that is hardwired to the descending direction. That helper does the callable check, then loops from length-1 down to 0 doing Get, Call and ToBoolean in spec order. It propagates every `?` error and returns the {-1, undefined} record when nothing matches. The 6 remaining failures throw the engine's not-implemented error for BigInt, which is honest partial work. I found no special-casing, swallowed errors or unrelated edits. I did not see the support helpers `validate_typed_array` and `length`, so I'm trusting that they do ValidateTypedArray and TypedArrayLength as the spec says.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6569,
+  "type": "result",
+  "duration_ms": 9191,
+  "uuid": "08efd1f2-c3b9-4769-a13e-94a8672933df",
+  "ttft_stream_ms": 1842,
+  "time_to_request_ms": 611,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 379,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 24,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 114,
+    "autocompact": 6,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 75,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 734,
+  "process_wall_ms_turn": 9191,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1843,
+  "time_to_request_from_spawn_ms": 18644210,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998104266.6316,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

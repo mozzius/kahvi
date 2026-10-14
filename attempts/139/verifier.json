@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 19108,
+  "stop_reason": "tool_use",
+  "session_id": "08d9bd0f-5aac-40a9-8323-dd721a1e51cf",
+  "total_cost_usd": 0.0037339800000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5613,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4163,
+    "output_tokens_details": {
+      "thinking_tokens": 3700
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5613,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4163,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5613,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5613
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements %TypedArray%.prototype.findLastIndex per the spec steps. ValidateTypedArray (with ?) runs first, then TypedArrayLength, then FindViaPredicate in descending order. Inside the helper the order is IsCallable check, then per index: ToString key, Get with ?, Call with ? and args [kValue, k, obj], ToBoolean, early return of k, and finally -1. No test-shaped branches, no swallowed errors, no fabricated values. The remaining test262 failures are BigInt not-implemented paths and are honest. Only nits: the helper sits in this file (the ticket allows this and the report should say so), and the spec's trailing \\\"not generic\\\" sentence comment was dropped. Neither is a defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements %TypedArray%.prototype.findLastIndex per the spec steps. ValidateTypedArray (with ?) runs first, then TypedArrayLength, then FindViaPredicate in descending order. Inside the helper the order is IsCallable check, then per index: ToString key, Get with ?, Call with ? and args [kValue, k, obj], ToBoolean, early return of k, and finally -1. No test-shaped branches, no swallowed errors, no fabricated values. The remaining test262 failures are BigInt not-implemented paths and are honest. Only nits: the helper sits in this file (the ticket allows this and the report should say so), and the spec's trailing \"not generic\" sentence comment was dropped. Neither is a defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 16924,
+  "type": "result",
+  "duration_ms": 18670,
+  "uuid": "bfb1d54b-f04c-475f-94da-3355e8dcd8fb",
+  "ttft_stream_ms": 1391,
+  "time_to_request_ms": 562,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 394,
+    "resume_other": 1,
+    "process_user_input": 20,
+    "input_attachments": 34,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 63,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 64,
+  "time_to_request_cpu_ms": 351,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 1036,
+  "process_wall_ms_turn": 18670,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 21,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1404,
+  "time_to_request_from_spawn_ms": 18626046,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998085319.4395,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
