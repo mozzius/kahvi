@@ -333,3 +333,6 @@
 {"ticket": "C-proxy-is-extensible", "attempt": 248, "ts": 1792000963.200635, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-array-prototype-to-reversed", "attempt": 250, "ts": 1792000993.1356626, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-reg-exp-escape", "attempt": 247, "ts": 1792001021.817105, "text": "worker reported BLOCKED but changed files: String.prototype.codePointAt is not implemented, and escaped-otherpunctuators.js needs it"}
+{"ticket": "B-date-prototype-set-seconds", "attempt": 251, "ts": 1792001055.5419965, "text": "worker reported BLOCKED but changed files: `Date.prototype.setTime` (needed by `date-value-read-before-tonumber-when-date-is-{valid,invalid}.js`, 4 runs) is not implemented."}
+{"ticket": "B-map-prototype-for-each", "attempt": 252, "ts": 1792001064.4600608, "text": "worker reported BLOCKED but changed files: Bash is denied in this session, so I could not run the build, clippy or the target tests; the diff has not been compiled or checked against test262."}
+{"ticket": "B-map-prototype-for-each", "attempt": 252, "ts": 1792001078.0900812, "text": "rejected by gates: clippy failed"}

@@ -1,0 +1,35 @@
+{
+  "ticket": "B-reg-exp-escape",
+  "base": "71c6d5729315373a371c66fb85428168ebbf8eb4",
+  "head": "4c832adb22acd639c14dceb293a596b803d1c163",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/escape.rs",
+      "added": 160,
+      "removed": 16
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 10,
+    "after": 38,
+    "new_passes": 28,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/escape/escaped-otherpunctuators.js:sloppy  Uncaught InternalError: not implemented: String.prototype.codePointAt",
+      "built-ins/RegExp/escape/escaped-otherpunctuators.js:strict  Uncaught InternalError: not implemented: String.prototype.codePointAt"
+    ]
+  },
+  "decision": "pass"
+}

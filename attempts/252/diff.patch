@@ -1,0 +1,56 @@
+diff --git a/crates/kahvi-builtins/src/map/prototype_for_each.rs b/crates/kahvi-builtins/src/map/prototype_for_each.rs
+index 7a249fb..2943077 100644
+--- a/crates/kahvi-builtins/src/map/prototype_for_each.rs
++++ b/crates/kahvi-builtins/src/map/prototype_for_each.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-map.prototype.foreach
+ 
++use crate::support::collections::{map_table, this_map};
+ use kahvi_core::prelude::*;
+ 
+ /// Map.prototype.forEach
+@@ -33,6 +34,41 @@ pub(crate) fn prototype_for_each(
+     // If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callback_. If it is not provided, *undefined* is used instead.
+     // _callback_ is called with three arguments: the value of the item, the key of the item, and the Map being traversed.
+     // `forEach` does not directly mutate the object on which it is called but the object may be mutated by the calls to _callback_. Each entry of a map's [[MapData]] is only visited once. New keys added after the call to `forEach` begins are visited. A key will be revisited if it is deleted after it has been visited and then re-added before the `forEach` call completes. Keys that are deleted after the call to `forEach` begins and before being visited are not visited unless the key is added again before the `forEach` call completes.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Map.prototype.forEach"))
++    // 1. Let map be the this value.
++    // 2. Perform ? RequireInternalSlot(map, [[MapData]]).
++    let map = this_map(agent, this)?;
++    // 3. If IsCallable(callback) is false, throw a TypeError exception.
++    let callback = args.get_or_undefined(0);
++    if !ops::is_callable(agent, callback) {
++        return Err(agent.throw_type_error("Map.prototype.forEach callback is not a function"));
++    }
++    let this_arg = args.get_or_undefined(1);
++    // The callback may collect garbage: map, callback and thisArg stay rooted.
++    agent.with_roots(&[Value::Object(map), callback, this_arg], |agent| {
++        // 4. Let entries be map.[[MapData]].
++        // 5. Let entriesCount be the number of elements in entries.
++        let mut entries_count = map_table(agent, map).slots();
++        // 6. Let index be 0.
++        let mut index = 0;
++        // 7. Repeat, while index < entriesCount,
++        while index < entries_count {
++            // a. Let entry be entries[index].
++            let entry = map_table(agent, map).entry(index);
++            // b. Set index to index + 1.
++            index += 1;
++            // c. If entry.[[Key]] is not empty, then
++            if let Some((key, value)) = entry {
++                // i. Perform ? Call(callback, thisArg, « entry.[[Value]], entry.[[Key]], map »).
++                let mark = agent.push_root(value);
++                agent.push_root(key);
++                ops::call_rooted(agent, callback, this_arg, &[value, key, Value::Object(map)])?;
++                agent.pop_roots(mark);
++                // ii. NOTE: The number of elements in entries may have increased during execution of callback.
++                // iii. Set entriesCount to the number of elements in entries.
++                entries_count = map_table(agent, map).slots();
++            }
++        }
++        // 8. Return undefined.
++        Ok(Value::Undefined)
++    })
+ }

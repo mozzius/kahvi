@@ -1,0 +1,37 @@
+{
+  "ticket": "B-date-prototype-set-seconds",
+  "base": "46999d8a498ef16e88f45aee38604c466bd3af04",
+  "head": "91a9a27af48e1abd3258e3dfd6434191dac14721",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_set_seconds.rs",
+      "added": 30,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 8,
+    "after": 30,
+    "new_passes": 22,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-invalid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-invalid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-valid.js:sloppy  Uncaught InternalError: not implemented: Date.prototype.setTime",
+      "built-ins/Date/prototype/setSeconds/date-value-read-before-tonumber-when-date-is-valid.js:strict  Uncaught InternalError: not implemented: Date.prototype.setTime"
+    ]
+  },
+  "decision": "pass"
+}

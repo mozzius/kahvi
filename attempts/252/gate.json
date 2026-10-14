@@ -1,0 +1,21 @@
+{
+  "ticket": "B-map-prototype-for-each",
+  "base": "de67ff34c0d5ae78b649146b4790e743c1bfdb7c",
+  "head": "c74a7810879c53ee9d6e1fc6ea7616134d896eee",
+  "reject": [
+    "clippy failed"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/map/prototype_for_each.rs",
+      "added": 38,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "error: unused variable: `new_target`\n  --> crates/kahvi-builtins/src/map/prototype_for_each.rs:13:5\n   |\n13 |     new_target: Option<Object>,\n   |     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_new_target`\n   |\n   = note: `-D unused-variables` implied by `-D warnings`\n   = help: to override `-D warnings` add `#[allow(unused_variables)]`\n\nerror: could not compile `kahvi-builtins` (lib test) due to 1 previous error\nerror: could not compile `kahvi-builtins` (lib) due to 1 previous error\n",
+  "decision": "reject"
+}

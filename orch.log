@@ -879,3 +879,7 @@ test262 at last merge: 72953/81183 runs passing
 [18:03:48] C-proxy-is-extensible: verifier: accept The diff implements Proxy [[IsExtensible]] following all ten spec steps in order: ValidateNonRevokedProxy via `?`, GetMethod(handler, "isExtensible") 
 [18:03:53] B-map-prototype-for-each: attempt on slot 1 with haiku
 [18:04:01] B-array-prototype-to-reversed: verifier: accept The diff implements Array.prototype.toReversed in its own file, following the spec steps 1 to 6 in order. ToObject and LengthOfArrayLike are called wi
+[18:04:05] B-number-prototype-to-fixed: attempt on slot 3 with haiku
+[18:04:15] B-date-prototype-set-seconds: attempt 251 finished ($0.006, 8 turns)
+[18:04:24] B-map-prototype-for-each: attempt 252 finished ($0.008, 10 turns)
+[18:04:38] B-map-prototype-for-each: gate rejected attempt 252: clippy failed

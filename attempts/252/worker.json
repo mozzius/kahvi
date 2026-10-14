@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 25786,
+  "stop_reason": "end_turn",
+  "session_id": "843f09e8-1d27-487c-bc47-f49b53669dfa",
+  "total_cost_usd": 0.00792302,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 22047,
+    "cache_read_input_tokens": 124242,
+    "output_tokens": 3907,
+    "output_tokens_details": {
+      "thinking_tokens": 1525
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22047,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 703,
+        "cache_read_input_tokens": 29277,
+        "cache_creation_input_tokens": 413,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 413
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01XokTxhc4XQEUsL5kzvJtzu",
+      "tool_input": {
+        "command": "sed -i 's/^use kahvi_core::prelude::\\*;$/use crate::support::collections::{map_table, this_map};\\nuse kahvi_core::prelude::*;/' crates/kahvi-builtins/src/map/prototype_for_each.rs && cargo fmt -- crates/kahvi-builtins/src/map/prototype_for_each.rs && cargo build 2>&1 | tail -30",
+        "description": "Add imports, format, and build"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Map.prototype.forEach` in `crates/kahvi-builtins/src/map/prototype_for_each.rs`, but I could not build it or run the test262 target. The Bash tool was denied in this session, so `cargo build`, `cargo clippy`, `cargo fmt` and `./t262 built-ins/Map/prototype/forEach/` have not been run.\n\nThe implementation follows the spec steps, with each step's text as a comment above its code. It checks the receiver with `this_map`, checks callability with `ops::is_callable`, and re-reads the entry count after each callback so entries added during iteration are visited. Entry key and value are rooted across the callback, mirroring `Array.prototype.map`. It uses no new helpers and touches no other files.\n\nBLOCKED: Bash is denied in this session, so I could not run the build, clippy or the target tests; the diff has not been compiled or checked against test262.",
+  "ttft_ms": 2370,
+  "type": "result",
+  "duration_ms": 25850,
+  "uuid": "d78f78da-c39f-47cf-b24c-851bd220091d",
+  "ttft_stream_ms": 2042,
+  "time_to_request_ms": 970,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 527,
+    "resume_other": 1,
+    "process_user_input": 92,
+    "input_attachments": 17,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 229,
+    "autocompact": 2,
+    "query_setup": 3,
+    "model_gates": 1,
+    "tool_schema_build": 16,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 164,
+  "time_to_request_cpu_ms": 461,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2742,
+  "process_wall_ms_turn": 25846,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2043,
+  "time_to_request_from_spawn_ms": 21576864,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001034388.1543,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
