@@ -1,0 +1,38 @@
+diff --git a/crates/kahvi-builtins/src/map/prototype_delete.rs b/crates/kahvi-builtins/src/map/prototype_delete.rs
+index b4ecd91..94c3ead 100644
+--- a/crates/kahvi-builtins/src/map/prototype_delete.rs
++++ b/crates/kahvi-builtins/src/map/prototype_delete.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-map.prototype.delete
+ 
++use crate::support::collections::{collection_key, map_table, this_map};
+ use kahvi_core::prelude::*;
+ 
+ /// Map.prototype.delete
+@@ -9,13 +10,15 @@ pub(crate) fn prototype_delete(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _map_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_map_, [[MapData]]).
++    let map = this_map(agent, this)?;
+     // 3. Set _key_ to CanonicalizeKeyedCollectionKey(_key_).
++    let key = collection_key(agent, args.get_or_undefined(0));
+     // 4. For each Record { [[Key]], [[Value]] } _entry_ of _map_.[[MapData]], do
+     //    a. If _entry_.[[Key]] is not ~empty~ and SameValue(_entry_.[[Key]], _key_) is *true*, then
+     //       i. Set _entry_.[[Key]] to ~empty~.
+@@ -25,6 +28,6 @@ pub(crate) fn prototype_delete(
+     //
+     // NOTE:
+     // The value ~empty~ is used as a specification device to indicate that an entry has been deleted. Actual implementations may take other actions such as physically removing the entry from internal data structures.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Map.prototype.delete"))
++    let removed = map_table(agent, map).delete(&key);
++    Ok(Value::Boolean(removed))
+ }

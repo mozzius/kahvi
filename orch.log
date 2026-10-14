@@ -946,3 +946,6 @@ test262 at last merge: 72953/81183 runs passing
 [18:10:51] B-date-prototype-set-month: verifier: accept The diff implements Date.prototype.setMonth in the same order as the spec. this_time_value performs the RequireInternalSlot check and reads [[DateValu
 [18:10:56] B-map-prototype-delete: attempt on slot 0 with haiku
 [18:11:30] B-global-escape: verifier: accept The escape implementation in crates/kahvi-builtins/src/global/escape.rs follows the spec steps in order. ToString is applied with `?`, and the unescap
+[18:11:34] B-object-group-by: attempt on slot 1 with haiku
+[18:11:35] B-iterator-prototype-to-array: verifier: accept The diff implements Iterator.prototype.toArray in its single in-scope file and follows the spec steps in order. Step 2 throws a TypeError for non-obje
+[18:11:40] B-map-prototype-delete: attempt 268 finished ($0.005, 9 turns)
