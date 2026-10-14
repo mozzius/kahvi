@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9422,
+  "stop_reason": "tool_use",
+  "session_id": "0f89016e-3777-4b18-8390-367745517ee7",
+  "total_cost_usd": 0.0449532,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8426,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1011,
+    "output_tokens_details": {
+      "thinking_tokens": 611
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8426,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1011,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8426,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8426
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"contradicts_spec\":false,\"made_up_results\":false,\"skips_observable_steps\":false,\"special_cases_inputs\":false,\"swallows_errors\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all 12 spec steps in order, with each step as a comment above its code. It uses the shared typed-array helpers, and `?` propagates the abrupt completions from validate, call and species create. Step 11a uses `?` where the spec writes `!`. That propagates an error instead of hiding one, so I don't count it as a defect. The `unreachable!` is sound because ValidateTypedArray already requires an object, so a non-object `this` can't get past it. The 132 remaining failures are all unimplemented `Math.floor`, which is outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "contradicts_spec": false,
+      "made_up_results": false,
+      "skips_observable_steps": false,
+      "special_cases_inputs": false,
+      "swallows_errors": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all 12 spec steps in order, with each step as a comment above its code. It uses the shared typed-array helpers, and `?` propagates the abrupt completions from validate, call and species create. Step 11a uses `?` where the spec writes `!`. That propagates an error instead of hiding one, so I don't count it as a defect. The `unreachable!` is sound because ValidateTypedArray already requires an object, so a non-object `this` can't get past it. The 132 remaining failures are all unimplemented `Math.floor`, which is outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7606,
+  "type": "result",
+  "duration_ms": 9856,
+  "uuid": "13a821de-444a-4465-a739-c634d3dc2f56",
+  "ttft_stream_ms": 2844,
+  "time_to_request_ms": 1487,
+  "time_to_request_phases_ms": {
+    "other": 142,
+    "system_prompt": 945,
+    "resume_other": 5,
+    "process_user_input": 34,
+    "input_attachments": 114,
+    "input_hooks": 28,
+    "tool_pool_refresh": 17,
+    "init_message": 51,
+    "engine_pickup": 15,
+    "message_prep": 13,
+    "model_config_wait": 12,
+    "autocompact": 12,
+    "query_setup": 1,
+    "model_gates": 6,
+    "tool_schema_build": 24,
+    "message_normalization": 9,
+    "client_creation": 23,
+    "request_build": 36
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 391,
+  "time_to_request_cpu_ms": 504,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 1034,
+  "process_wall_ms_turn": 9842,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 67,
+    "cpu_ms": 53,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2845,
+  "time_to_request_from_spawn_ms": 14425181,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791993880676.6208,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792011600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
