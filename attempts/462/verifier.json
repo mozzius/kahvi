@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7243,
+  "stop_reason": "tool_use",
+  "session_id": "6e39f6ab-df87-4ee9-aeb9-b911c62459af",
+  "total_cost_usd": 0.0017341799999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3731,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1301,
+    "output_tokens_details": {
+      "thinking_tokens": 809
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3731,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1301,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3731,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3731
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Math.log2 in crates/kahvi-builtins/src/math/log2.rs and follows the spec steps in order. Step 1 calls ops::to_number and propagates with ?. Step 2 returns NaN and +\u221e unchanged. Step 3 returns +0 for 1. Step 4 returns -\u221e for both +0 and -0, since n == 0.0 matches both. Step 5 returns NaN for n < 0 (this covers -\u221e, and -0 was already handled). Step 6 returns n.log2(). Each step has its spec comment directly above its code. No branch is keyed on test-specific inputs, no error is swallowed, and no value is made up. The diff touches only the in-scope file. The gate report shows build and clippy OK, 0 regressions, and +2 passing tests, which is plausible for this change.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Math.log2 in crates/kahvi-builtins/src/math/log2.rs and follows the spec steps in order. Step 1 calls ops::to_number and propagates with ?. Step 2 returns NaN and +\u221e unchanged. Step 3 returns +0 for 1. Step 4 returns -\u221e for both +0 and -0, since n == 0.0 matches both. Step 5 returns NaN for n < 0 (this covers -\u221e, and -0 was already handled). Step 6 returns n.log2(). Each step has its spec comment directly above its code. No branch is keyed on test-specific inputs, no error is swallowed, and no value is made up. The diff touches only the in-scope file. The gate report shows build and clippy OK, 0 regressions, and +2 passing tests, which is plausible for this change.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5152,
+  "type": "result",
+  "duration_ms": 7288,
+  "uuid": "04bf711d-8f2a-48d7-883e-a16664542a11",
+  "ttft_stream_ms": 1395,
+  "time_to_request_ms": 652,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 422,
+    "resume_other": 1,
+    "process_user_input": 26,
+    "input_attachments": 52,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 62,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 3,
+    "client_creation": 19,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 51,
+  "time_to_request_cpu_ms": 369,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 237,
+  "process_cpu_ms_turn": 806,
+  "process_wall_ms_turn": 7286,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 43,
+    "cpu_ms": 52,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1396,
+  "time_to_request_from_spawn_ms": 27629118,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007087283.505,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

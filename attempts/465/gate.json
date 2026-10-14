@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-random",
+  "base": "d0cc1e3c9ef8e6da430117ba6a4a063de5311697",
+  "head": "3024352959878ce3e90f744098f19c1e4e6c708d",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/random.rs",
+      "added": 31,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

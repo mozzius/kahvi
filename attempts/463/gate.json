@@ -1,0 +1,32 @@
+{
+  "ticket": "B-math-sinh",
+  "base": "d0cc1e3c9ef8e6da430117ba6a4a063de5311697",
+  "head": "8a49652c6cab4690b4a51e633272b452a40db9c7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/math/sinh.rs",
+      "added": 10,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

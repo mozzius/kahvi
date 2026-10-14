@@ -4124,3 +4124,11 @@ test262 at last merge: 76432/81183 runs passing
 [19:43:12] stack: pushed stack/0019 as #35 with B-array-prototype-to-locale-string, B-object-prototype-lookup-setter, B-symbol-for, B-typed-array-prototype-entries
 [19:43:35] B-math-log1p: verifier: accept The change implements Math.log1p in its own file and follows the spec steps in order. Step 1 calls ops::to_number with `?`, so abrupt completions prop
 [19:44:02] B-math-log2: attempt on slot 0 with haiku
+[19:44:05] B-math-random: attempt on slot 2 with haiku
+[19:44:05] B-math-sign: attempt on slot 1 with haiku
+[19:44:05] B-math-sinh: attempt on slot 3 with haiku
+[19:44:31] B-math-log2: attempt 462 finished ($0.003, 6 turns)
+[19:44:38] B-math-sign: attempt 464 finished ($0.004, 10 turns)
+[19:44:38] B-math-sinh: attempt 463 finished ($0.004, 8 turns)
+[19:44:43] B-math-random: attempt 465 finished ($0.005, 11 turns)
+[19:45:05] B-math-log2: verifier: accept The diff implements Math.log2 in crates/kahvi-builtins/src/math/log2.rs and follows the spec steps in order. Step 1 calls ops::to_number and propagate

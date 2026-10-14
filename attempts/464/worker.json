@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 9479,
+  "stop_reason": "end_turn",
+  "session_id": "37db2675-a693-473f-a4cd-db7fc07af55a",
+  "total_cost_usd": 0.0036988700000000004,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 10059,
+    "cache_read_input_tokens": 67497,
+    "output_tokens": 1580,
+    "output_tokens_details": {
+      "thinking_tokens": 147
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10059,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 168,
+        "cache_read_input_tokens": 17046,
+        "cache_creation_input_tokens": 656,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 656
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 10,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Math.sign` is implemented in `crates/kahvi-builtins/src/math/sign.rs`, following the four spec steps with each step's text as a comment. It uses `ops::to_number`, returns `NaN` and \u00b10 unchanged, and returns -1 or 1 by sign. `./t262 built-ins/Math/sign/` passes 10 of 10 runs (up from 8), `cargo build` and `cargo clippy` are clean, and no other files were touched.\n\nBLOCKED: none",
+  "ttft_ms": 1519,
+  "type": "result",
+  "duration_ms": 29789,
+  "uuid": "082e0878-b8d1-46e6-a66e-8f1092702230",
+  "ttft_stream_ms": 1291,
+  "time_to_request_ms": 505,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 412,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 13,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 73,
+  "time_to_request_cpu_ms": 286,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2437,
+  "process_wall_ms_turn": 29789,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1292,
+  "time_to_request_from_spawn_ms": 27586244,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007046094.6853,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

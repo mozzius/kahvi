@@ -1,0 +1,21 @@
+diff --git a/crates/kahvi-builtins/src/math/sinh.rs b/crates/kahvi-builtins/src/math/sinh.rs
+index a378b75..71a767a 100644
+--- a/crates/kahvi-builtins/src/math/sinh.rs
++++ b/crates/kahvi-builtins/src/math/sinh.rs
+@@ -20,6 +20,14 @@ pub(crate) fn sinh(
+     //
+     // NOTE:
+     // The value of `Math.sinh(x)` is the same as the value of `(Math.exp(x) - Math.exp(-x)) / 2`.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Math.sinh"))
++    let _ = (this, new_target);
++    let x = args.get_or_undefined(0);
++    // 1. Let _n_ be ? ToNumber(_x_).
++    let n = ops::to_number(agent, x)?;
++    // 2. If _n_ is not a finite Number or _n_ is either *+0*_𝔽 or *-0*_𝔽, return _n_.
++    if !n.is_finite() || n == 0.0 {
++        return Ok(Value::Number(n));
++    }
++    // 3. Return an implementation-approximated Number value representing the hyperbolic sine of ℝ(_n_).
++    Ok(Value::Number(n.sinh()))
+ }

@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 18279,
+  "stop_reason": "end_turn",
+  "session_id": "43ea94f0-fe69-44a2-b4b9-2664e7fb0536",
+  "total_cost_usd": 0.00545642,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 13500,
+    "cache_read_input_tokens": 95522,
+    "output_tokens": 3240,
+    "output_tokens_details": {
+      "thinking_tokens": 845
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13500,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 239,
+        "cache_read_input_tokens": 20778,
+        "cache_creation_input_tokens": 365,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 365
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Math.random` is implemented in `crates/kahvi-builtins/src/math/random.rs`, and `./t262 built-ins/Math/random/` now passes 10 of 10 (up from 8 on main). Clippy is clean and the file passes `cargo fmt --check`.\n\nThe engine had no RNG and no `rand` dependency, so I used a SplitMix64 stream seeded from std's `RandomState`. All realms draw from that one stream, so their sequences differ. The result is the top 53 bits scaled by 2^-53, which lies in [0, 1). Making each realm hold its own generator would need a field on the realm in `kahvi-core`, which is outside this ticket's scope.\n\nBLOCKED: none",
+  "ttft_ms": 1426,
+  "type": "result",
+  "duration_ms": 34191,
+  "uuid": "9d3b31d7-a502-46af-a074-e46a7efa5ab7",
+  "ttft_stream_ms": 1196,
+  "time_to_request_ms": 430,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 333,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 9,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 52,
+  "time_to_request_cpu_ms": 275,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2889,
+  "process_wall_ms_turn": 34190,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1199,
+  "time_to_request_from_spawn_ms": 27586502,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007046134.669,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

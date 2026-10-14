@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 10162,
+  "stop_reason": "end_turn",
+  "session_id": "de4a1327-330b-45ef-9795-8af9b6317f33",
+  "total_cost_usd": 0.004439210000000001,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 13454,
+    "cache_read_input_tokens": 78881,
+    "output_tokens": 1465,
+    "output_tokens_details": {
+      "thinking_tokens": 107
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13454,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 161,
+        "cache_read_input_tokens": 20750,
+        "cache_creation_input_tokens": 347,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 347
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Math.sinh` in `crates/kahvi-builtins/src/math/sinh.rs`, following the spec steps with each step kept as a comment above its code. All 10 runs under `built-ins/Math/sinh/` pass (the ticket said 8 on main; this run covers 5 files and 10 runs). Clippy is clean and the file is formatted. It's the only file changed, and no helpers were needed beyond `ops::to_number`.\n\nBLOCKED: none",
+  "ttft_ms": 1996,
+  "type": "result",
+  "duration_ms": 29949,
+  "uuid": "176d8ccb-1404-4ee0-8efb-b66bbdc50e15",
+  "ttft_stream_ms": 1797,
+  "time_to_request_ms": 529,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 356,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 9,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 79,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 73,
+  "time_to_request_cpu_ms": 326,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 236,
+  "process_anon_mib_turn_start": 120,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2421,
+  "process_wall_ms_turn": 29949,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1798,
+  "time_to_request_from_spawn_ms": 27586360,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007046120.8694,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.6,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
