@@ -1851,3 +1851,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:35:54] B-weak-map-prototype-get: verifier: accept The diff implements WeakMap.prototype.get in its own file, in spec order. Step 2 uses this_weak_map(...)? for RequireInternalSlot, and the error propa
 [18:35:58] B-map-prototype-clear: attempt on slot 0 with haiku
 [18:35:59] B-async-disposable-stack-prototype-adopt: verifier: accept The diff implements AsyncDisposableStack.prototype.adopt in its own file, following spec steps 1 to 8 in order. RequireInternalSlot runs first, then t
+[18:36:04] B-math-ceil: attempt on slot 3 with haiku
+[18:36:27] B-string-prototype-pad-end: verifier: accept The diff implements String.prototype.padEnd in its own file, following the spec steps in order. RequireObjectCoercible runs first, then ToString(this)

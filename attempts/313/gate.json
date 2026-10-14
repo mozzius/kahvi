@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-pad-start",
+  "base": "030201df1fc1e7a65e01442f507725f51272d530",
+  "head": "0cff94822497387bb480a42fe205c085b1b674bf",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_pad_start.rs",
+      "added": 86,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 26,
+    "before": 8,
+    "after": 26,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
