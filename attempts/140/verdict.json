@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements %TypedArray%.prototype.findIndex following the stub's steps. It calls validate_typed_array (step 2) and length (step 3) from the support module, then runs a FindViaPredicate-style loop. The loop checks IsCallable first, then for each k does ToString via key_from_index, Get, Call with (kValue, k, obj), and ToBoolean, returning k on the first truthy result and -1 otherwise. Errors propagate with `?`, and the roots for obj, predicate, thisArg and kValue are handled around the callback. The 58 newly passing test262 runs with 0 regressions fit the size of the change. The 6 remaining failures are honest not-implemented BigInt errors. Minor points: the trailing spec NOTE sentence (\"This method is not generic...\") was dropped, the unused parameter was renamed to _new_target, and a helper named find_via_predicate was written in-file. The ticket asks that such helpers be reported in the final report, which I cannot see.",
+  "problems": [],
+  "notes_for_next_attempt": "Not blocking. Optionally restore the stub's trailing comment line \"This method is not generic. The *this* value must be an object with a [[TypedArrayName]] internal slot.\" above the code, to match the stub. If other built-ins need FindViaPredicate (Array.prototype.find/findIndex, etc.), the helper should be reported so it can move to a shared module. The `length` import is shadowed by the `length` parameter inside find_via_predicate; this compiles but is worth renaming for clarity. The 6 BigInt failures need BigInt support elsewhere and are not part of this ticket.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
