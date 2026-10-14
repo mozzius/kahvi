@@ -4108,3 +4108,5 @@ test262 at last merge: 76432/81183 runs passing
 [19:41:46] B-json-is-raw-json: attempt on slot 1 with sonnet
 [19:41:57] B-math-f16round: attempt 457 finished ($0.008, 11 turns)
 [19:42:01] B-math-cosh: verifier: accept The diff implements Math.cosh in cosh.rs step by step. Step 1 calls ops::to_number(agent, x) with `?`, so abrupt completions propagate. Step 2 returns
+[19:42:03] B-math-expm1: verifier: accept The diff implements Math.expm1 in crates/kahvi-builtins/src/math/expm1.rs and follows the spec steps in order. Step 1 uses ops::to_number with `?`. St
+[19:42:04] B-math-imul: attempt on slot 2 with haiku
