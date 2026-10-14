@@ -38,6 +38,11 @@ def cmd_run(args):
     log(f"building trusted runner; integration branch {cfg.branch}, {cfg.slots} slots")
     pipeline.build_tools(cfg)
     db = DB()
+    # Accepted attempts that were waiting for the merge bot when the last run
+    # stopped go back in the merge queue instead of starting over.
+    unmerged = db.q(
+        "SELECT t.id AS ticket, MAX(a.id) AS aid FROM tickets t JOIN attempts a ON a.ticket = t.id "
+        "WHERE t.status = 'merging' AND a.outcome = 'accept' AND a.merged = 0 GROUP BY t.id")
     db.release_stale_claims()
     limits = Limits(cfg, db)
     llm.LIMITS = limits
@@ -45,6 +50,16 @@ def cmd_run(args):
     tickets_dir = Path(args.tickets) if args.tickets else ticket_files.TICKETS
     pool = ticket_files.load_all(tickets_dir)
     db.sync_tickets(pool)
+    merges = pipeline.MergeQueue(cfg, db)
+    pipeline.MERGES = merges
+    for row in unmerged:
+        a = db.one("SELECT * FROM attempts WHERE id = ?", row["aid"])
+        if row["ticket"] in pool and a["head"]:
+            log(f"{row['ticket']}: back in the merge queue (attempt {a['id']})")
+            db.set_ticket(row["ticket"], status="merging")
+            merges.put(pool[row["ticket"]], pipeline.worker.Attempt(
+                a["id"], "", a["base"], a["head"], 0.0, 0, None, None, str(pipeline.worker.ATTEMPTS / str(a["id"]))),
+                "accept")
     started = 0
     STOP_FILE.unlink(missing_ok=True)
     with cf.ThreadPoolExecutor(cfg.slots) as ex:
@@ -68,6 +83,11 @@ def cmd_run(args):
                 slot = free.pop()
                 running[ex.submit(pipeline.process, cfg, db, t, slot)] = (slot, t.id)
                 started += 1
+            if not running and merges.pending():
+                # Only the merge bot is busy: wait for it (it may free tickets
+                # that unblock others).
+                time.sleep(10)
+                continue
             if not running:
                 if limits.fatal or stopping:
                     break
