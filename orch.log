@@ -4144,3 +4144,9 @@ test262 at last merge: 76432/81183 runs passing
 [19:45:55] B-math-tanh: verifier: accept Implements Math.tanh in crates/kahvi-builtins/src/math/tanh.rs, following the five spec steps in order. Step 1 calls ops::to_number(agent, x)? and pro
 [19:45:55] B-date-prototype-to-locale-date-string: attempt on slot 1 with haiku
 [19:46:03] B-date-prototype-to-locale-string: attempt on slot 3 with haiku
+[19:46:05] B-date-prototype-to-locale-time-string: attempt on slot 0 with haiku
+[19:46:05] B-iterator-prototype-get-constructor: attempt on slot 2 with haiku
+[19:46:25] B-iterator-prototype-get-constructor: attempt 471 finished ($0.005, 7 turns)
+[19:46:35] B-date-prototype-to-locale-string: attempt 469 finished ($0.005, 11 turns)
+[19:46:39] B-date-prototype-to-locale-time-string: attempt 470 finished ($0.006, 8 turns)
+[19:46:43] B-iterator-prototype-get-constructor: gate rejected attempt 471: no new test262 passes in target

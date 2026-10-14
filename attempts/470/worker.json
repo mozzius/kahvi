@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 13314,
+  "stop_reason": "end_turn",
+  "session_id": "c0e3730d-4a55-47d9-86cb-2eaa93a90589",
+  "total_cost_usd": 0.00585945,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 18434,
+    "cache_read_input_tokens": 91275,
+    "output_tokens": 2105,
+    "output_tokens_details": {
+      "thinking_tokens": 211
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18434,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 172,
+        "cache_read_input_tokens": 25693,
+        "cache_creation_input_tokens": 384,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 384
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.toLocaleTimeString` in its file, and all 8 test262 tests under `built-ins/Date/prototype/toLocaleTimeString/` now pass. `cargo clippy` is clean and the file is formatted.\n\nThe output is the same `HH:mm:ss GMT` form as `toTimeString`, which the spec allows since the non-ECMA-402 behaviour is implementation-defined. I did not add or change any helpers, and only the one file changed.\n\nBLOCKED: none",
+  "ttft_ms": 1705,
+  "type": "result",
+  "duration_ms": 31499,
+  "uuid": "7b7eb903-2cf2-4e41-94b9-85434b782df1",
+  "ttft_stream_ms": 1458,
+  "time_to_request_ms": 674,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 396,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 16,
+    "input_hooks": 7,
+    "tool_pool_refresh": 7,
+    "init_message": 15,
+    "engine_pickup": 3,
+    "message_prep": 10,
+    "model_config_wait": 94,
+    "autocompact": 8,
+    "query_setup": 2,
+    "model_gates": 0,
+    "tool_schema_build": 24,
+    "message_normalization": 4,
+    "client_creation": 21,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 134,
+  "time_to_request_cpu_ms": 402,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 227,
+  "process_anon_mib_turn_start": 113,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2503,
+  "process_wall_ms_turn": 31497,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1468,
+  "time_to_request_from_spawn_ms": 27706064,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007166030.8394,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.63,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

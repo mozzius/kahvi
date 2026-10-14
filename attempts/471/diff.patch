@@ -1,0 +1,14 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs b/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
+index 5a271e9..4ffda16 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
+@@ -13,7 +13,7 @@ pub(crate) fn prototype_get_constructor(
+ ) -> JsResult<Value> {
+     // The value of the [[Getter]] attribute is a built-in function that requires no arguments. It performs the following steps when called:
+     //
+-    // 1. Return %Iterator%.
+     let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Iterator.prototype.constructor"))
++    // 1. Return %Iterator%.
++    Ok(Value::Object(agent.intrinsic("%Iterator%")))
+ }
