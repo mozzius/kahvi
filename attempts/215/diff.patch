@@ -1,0 +1,29 @@
+diff --git a/crates/kahvi-builtins/src/symbol/prototype_symbol_to_primitive.rs b/crates/kahvi-builtins/src/symbol/prototype_symbol_to_primitive.rs
+index c229ac6..d64f064 100644
+--- a/crates/kahvi-builtins/src/symbol/prototype_symbol_to_primitive.rs
++++ b/crates/kahvi-builtins/src/symbol/prototype_symbol_to_primitive.rs
+@@ -4,12 +4,14 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::this_value::this_symbol_value;
++
+ /// Symbol.prototype[Symbol.toPrimitive]
+ pub(crate) fn prototype_symbol_to_primitive(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method is called by ECMAScript language operators to convert a Symbol object to a primitive value.
+     // It performs the following steps when called:
+@@ -20,6 +22,5 @@ pub(crate) fn prototype_symbol_to_primitive(
+     // The argument is ignored.
+     // This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+     // The value of the *"name"* property of this method is *"[Symbol.toPrimitive]"*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Symbol.prototype[Symbol.toPrimitive]"))
++    Ok(Value::Symbol(this_symbol_value(agent, this)?))
+ }

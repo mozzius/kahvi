@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 23070,
+  "stop_reason": "end_turn",
+  "session_id": "765399a3-f22d-4067-8d38-6427635d141b",
+  "total_cost_usd": 0.007129210000000001,
+  "usage": {
+    "input_tokens": 15,
+    "cache_creation_input_tokens": 16085,
+    "cache_read_input_tokens": 146351,
+    "output_tokens": 4154,
+    "output_tokens_details": {
+      "thinking_tokens": 1370
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16085,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 305,
+        "cache_read_input_tokens": 23258,
+        "cache_creation_input_tokens": 470,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 470
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I fixed the GC rooting in `prototype_starts_with.rs` and all 42 `built-ins/String/prototype/startsWith/` tests pass, with clippy and fmt clean. `string` is now rooted from step 4 onward, and `search_string` is rooted in a nested `with_roots` from step 6. I also confirmed that `agent.str` returns `&[u16]`, so the slice indexing is in UTF-16 units. The GC-stress run used `--engine \"/usr/bin/env KAHVI_GC_STRESS=1 ...\"`, but the output is identical to the plain run, so I can't confirm from it that stress was actually enabled.",
+  "ttft_ms": 1940,
+  "type": "result",
+  "duration_ms": 45431,
+  "uuid": "203b73e4-1d59-41d3-b9fe-5866305a8f92",
+  "ttft_stream_ms": 1822,
+  "time_to_request_ms": 1008,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 725,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 28,
+    "input_hooks": 10,
+    "tool_pool_refresh": 3,
+    "init_message": 10,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 138,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 117,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 3558,
+  "process_wall_ms_turn": 45419,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1823,
+  "time_to_request_from_spawn_ms": 20527111,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999984895.4521,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
