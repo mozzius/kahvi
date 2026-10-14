@@ -24,6 +24,7 @@ MERGE_LOCK = threading.Lock()
 MAX_ERRORS = 3
 # The merge queue `orch run` starts; None means merge inline (one at a time).
 MERGES = None
+STACKER = None  # stack.Stacker when landing through stacked PRs
 
 
 def next_tier(cfg, tier):
@@ -141,6 +142,10 @@ def judge(cfg, db, ticket, att, rep):
         db.set_ticket(ticket.id, resume_attempt=att.id)
         return
     if decision == "accept":
+        if STACKER is not None:
+            STACKER.accept(ticket, att, decision)
+            db.set_attempt(att.id, finished=time.time())
+            return
         db.set_ticket(ticket.id, status="merging")
         if MERGES is not None:
             MERGES.put(ticket, att, decision)

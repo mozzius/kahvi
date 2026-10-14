@@ -52,7 +52,7 @@ def _export_db(dest):
     if "tickets" in tables:
         rows = [dict(r) for r in dst.execute("SELECT * FROM tickets ORDER BY id")]
         (dest / "tickets.json").write_text(json.dumps(rows, indent=1, default=str) + "\n")
-    for table in ("attempts", "notes"):
+    for table in ("attempts", "notes", "layers", "stack_queue"):
         if table in tables:
             with open(dest / f"{table}.jsonl", "w") as f:
                 for r in dst.execute(f"SELECT * FROM {table} ORDER BY rowid"):

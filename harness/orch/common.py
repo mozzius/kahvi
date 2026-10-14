@@ -27,6 +27,7 @@ class Config:
     verifier: dict = field(default_factory=dict)
     escalation: dict = field(default_factory=dict)
     t262: dict = field(default_factory=dict)
+    stack: dict = field(default_factory=dict)  # set repo to land through stacked PRs (docs/STACKS.md)
 
     def model(self, tier):
         return self.models[tier]
