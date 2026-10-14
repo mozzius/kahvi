@@ -1,0 +1,47 @@
+{
+  "ticket": "B-iterator-zip",
+  "base": "1828e26681c24d7fde28b8be6192e6ec4ab97401",
+  "head": "c3731f1609e1c519ab6c6dfb632d18caa08049c7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/zip.rs",
+      "added": 375,
+      "removed": 32
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 76,
+    "before": 12,
+    "after": 62,
+    "new_passes": 50,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/zip/basic-longest.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/basic-longest.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/basic-shortest.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/basic-shortest.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/basic-strict.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/basic-strict.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zip/iterables-containing-string-objects.js:sloppy  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/zip/iterables-containing-string-objects.js:strict  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/zip/iterables-iteration.js:sloppy  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Iterator/zip/iterables-iteration.js:strict  Uncaught InternalError: not implemented: Reflect.get",
+      "built-ins/Iterator/zip/padding-iteration.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/Iterator/zip/padding-iteration.js:strict  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/Iterator/zip/result-is-iterator.js:sloppy  Uncaught InternalError: not implemented: Iterator.from",
+      "built-ins/Iterator/zip/result-is-iterator.js:strict  Uncaught InternalError: not implemented: Iterator.from"
+    ]
+  },
+  "decision": "pass"
+}
