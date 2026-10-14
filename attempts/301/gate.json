@@ -1,0 +1,39 @@
+{
+  "ticket": "B-object-prototype-set-proto",
+  "base": "840f6f61f9cdfa083eb46736f2005c71efb01d03",
+  "head": "592c7e0f3eee7c22a4fba05e85dd11eb56550c1c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_set_proto.rs",
+      "added": 23,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 6,
+    "after": 24,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/prototype/__proto__/get-abrupt.js:sloppy  Uncaught InternalError: not implemented: get Object.prototype.__proto__",
+      "built-ins/Object/prototype/__proto__/get-abrupt.js:strict  Uncaught InternalError: not implemented: get Object.prototype.__proto__",
+      "built-ins/Object/prototype/__proto__/get-ordinary-obj.js:sloppy  Uncaught InternalError: not implemented: get Object.prototype.__proto__",
+      "built-ins/Object/prototype/__proto__/get-ordinary-obj.js:strict  Uncaught InternalError: not implemented: get Object.prototype.__proto__",
+      "built-ins/Object/prototype/__proto__/get-to-obj-abrupt.js:sloppy  Uncaught InternalError: not implemented: get Object.prototype.__proto__",
+      "built-ins/Object/prototype/__proto__/get-to-obj-abrupt.js:strict  Uncaught InternalError: not implemented: get Object.prototype.__proto__"
+    ]
+  },
+  "decision": "pass"
+}

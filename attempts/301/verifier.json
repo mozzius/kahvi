@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9316,
+  "stop_reason": "tool_use",
+  "session_id": "23340e0b-cad7-420f-943c-91fe96c459f3",
+  "total_cost_usd": 0.00206038,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4090,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1732,
+    "output_tokens_details": {
+      "thinking_tokens": 1219
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4090,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1732,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4090,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4090
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements all seven steps of the set Object.prototype.__proto__ setter in order. Step 2 calls ops::require_object_coercible with `?`. Step 3 returns undefined unless the argument is an Object or null, and null maps to None. Step 4 returns undefined when this is not an Object. Step 5 calls internal_set_prototype_of with `?`. Step 6 throws a TypeError when the status is false. Step 7 returns undefined. No test-shaped branches, no swallowed errors, no placeholder values. The only change outside the logic is renaming the unused `new_target` parameter to `_new_target`, which is needed because the parameter is no longer read. The six remaining not-implemented failures are the getter, which is out of scope for this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the setter. The getter `get Object.prototype.__proto__` is still a not-implemented stub, which is expected for this ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements all seven steps of the set Object.prototype.__proto__ setter in order. Step 2 calls ops::require_object_coercible with `?`. Step 3 returns undefined unless the argument is an Object or null, and null maps to None. Step 4 returns undefined when this is not an Object. Step 5 calls internal_set_prototype_of with `?`. Step 6 throws a TypeError when the status is false. Step 7 returns undefined. No test-shaped branches, no swallowed errors, no placeholder values. The only change outside the logic is renaming the unused `new_target` parameter to `_new_target`, which is needed because the parameter is no longer read. The six remaining not-implemented failures are the getter, which is out of scope for this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the setter. The getter `get Object.prototype.__proto__` is still a not-implemented stub, which is expected for this ticket."
+  },
+  "ttft_ms": 7273,
+  "type": "result",
+  "duration_ms": 9369,
+  "uuid": "c2dc0879-1548-4159-b7ee-847b2a94e8e7",
+  "ttft_stream_ms": 1728,
+  "time_to_request_ms": 530,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 378,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 26,
+    "input_hooks": 5,
+    "tool_pool_refresh": 8,
+    "init_message": 17,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 21,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 109,
+  "time_to_request_cpu_ms": 303,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 784,
+  "process_wall_ms_turn": 9368,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1728,
+  "time_to_request_from_spawn_ms": 23105552,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002565163.541,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.13,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

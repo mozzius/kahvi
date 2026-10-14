@@ -1,0 +1,34 @@
+diff --git a/crates/kahvi-builtins/src/data_view/prototype_get_byte_offset.rs b/crates/kahvi-builtins/src/data_view/prototype_get_byte_offset.rs
+index 0f43a4f..78228e2 100644
+--- a/crates/kahvi-builtins/src/data_view/prototype_get_byte_offset.rs
++++ b/crates/kahvi-builtins/src/data_view/prototype_get_byte_offset.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{is_view_out_of_bounds, require_data_view};
++
+ /// get DataView.prototype.byteOffset
+ pub(crate) fn prototype_get_byte_offset(
+     agent: &mut Agent,
+@@ -20,6 +22,18 @@ pub(crate) fn prototype_get_byte_offset(
+     // 5. If IsViewOutOfBounds(_viewRecord_) is *true*, throw a *TypeError* exception.
+     // 6. Let _offset_ be _obj_.[[ByteOffset]].
+     // 7. Return 𝔽(_offset_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get DataView.prototype.byteOffset"))
++    let _ = (args, new_target);
++    // 1. Let _obj_ be the *this* value.
++    // 2. Perform ? RequireInternalSlot(_obj_, [[DataView]]).
++    // 3. Assert: _obj_ has a [[ViewedArrayBuffer]] internal slot.
++    // 4. Let _viewRecord_ be MakeDataViewWithBufferWitnessRecord(_obj_, ~seq-cst~).
++    let (_obj, d) = require_data_view(agent, this)?;
++    // 5. If IsViewOutOfBounds(_viewRecord_) is *true*, throw a *TypeError* exception.
++    if is_view_out_of_bounds(agent, d) {
++        return Err(agent.throw_type_error("DataView is out of bounds or detached"));
++    }
++    // 6. Let _offset_ be _obj_.[[ByteOffset]].
++    let offset = d.byte_offset;
++    // 7. Return 𝔽(_offset_).
++    Ok(Value::Number(offset as f64))
+ }
