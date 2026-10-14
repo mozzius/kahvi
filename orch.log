@@ -5144,3 +5144,26 @@ test262 at last merge: 81183/81183 runs passing
 [22:45:24] building trusted runner; integration branch stack, 4 slots
 [22:45:28] stack: pushed stack/0042 as #63 with arch-runtime-globals
 [22:48:38] stack: stack/0042 (#63) green: 81183/81183 passing, +12
+[22:48:49] nothing left to do
+tickets: blocked 2, done 412
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+attempts: 516  merged: 395  spend: $24.27 (workers $10.11, verifier $14.16)  new test262 passes: 19472  ($0.001 per pass)
+  haiku   accept       387
+  haiku   blocked      6
+  haiku   gate-reject  41
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       16
+  sonnet  accept       12
+  sonnet  blocked      1
+  sonnet  gate-reject  27
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+plan usage at last run: allowed; five_hour 6% (resets Thu 02:20), seven_day 1% (resets Thu 09:00)
+test262 at last merge: 81183/81183 runs passing
+[23:00:27] building trusted runner; integration branch stack, 4 slots
+[23:00:28] stack: stack/0042 (#63) merged into main
+[23:00:33] stack: pushed stack/0043 as #69 with arch-perf-1
+[23:04:45] stack: stack/0043 (#69) green: 81183/81183 passing, +12
+[23:04:46] stack: stack/0043 (#69) merged into main
