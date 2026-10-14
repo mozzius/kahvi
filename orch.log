@@ -1879,3 +1879,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:41:03] B-string-prototype-at: verifier: accept The diff implements String.prototype.at faithfully. Steps 1-7 appear in order with the spec text as comments: RequireObjectCoercible runs before ToStr
 [18:41:05] B-promise-with-resolvers: verifier: accept The diff implements Promise.withResolvers in its own file, following the spec steps in order. Step 1 binds `this` to ctor. Step 2 calls NewPromiseCapa
 [18:41:07] B-date-prototype-set-time: attempt on slot 3 with haiku
+[18:41:07] B-object-prototype-define-getter: verifier: accept The change implements Object.prototype.__defineGetter__ in the order the spec gives: ToObject(this) with ?, then IsCallable(getter) throwing a TypeErr
+[18:41:10] B-math-atan2: attempt on slot 1 with haiku

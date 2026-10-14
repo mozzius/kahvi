@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements Object.prototype.__defineGetter__ in the order the spec gives: ToObject(this) with ?, then IsCallable(getter) throwing a TypeError, then the PropertyDescriptor {get, enumerable: true, configurable: true}, then ToPropertyKey(key) with ?, then DefinePropertyOrThrow with ?, then return undefined. Each step keeps its spec comment above the code. Errors propagate with ?. There are no test-specific branches, no fallback values, and no swallowed errors. The only other edit is renaming the now-unused new_target parameter to _new_target, which is needed to avoid an unused-variable warning. The gate reports build and clippy ok, 16 new passing test262 tests and 0 regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "No defects found. Nothing needs fixing for this ticket. I could not verify that the with_roots, is_callable, define_property_or_throw and to_property_key helpers exist with these exact signatures beyond the successful build. The gate's build result covers that.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
