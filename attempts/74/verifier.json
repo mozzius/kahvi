@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 17336,
+  "stop_reason": "tool_use",
+  "session_id": "9083e06d-cbb4-4b79-9d99-98b5371ebb21",
+  "total_cost_usd": 0.00391676,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7390,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3471,
+    "output_tokens_details": {
+      "thinking_tokens": 2846
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7390,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3471,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 7390,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7390
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements spec steps 1-12 of RegExp.prototype[Symbol.matchAll] in order, using the spec's abstract operations (ToString, SpeciesConstructor, Get, Construct, ToLength, Set) with `?` propagation. Step 13 (CreateRegExpStringIterator) is not implemented and returns agent.not_implemented naming the missing piece, which the ticket allows. No special-casing, no made-up values, no swallowed errors. Only the target file is touched.\",\"problems\":[],\"notes_for_next_attempt\":\"The remaining work is step 13: CreateRegExpStringIterator. It needs an object with [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]] and [[Done]] slots whose prototype is %RegExpStringIteratorPrototype%, and that iterator's next() must also exist. The ticket allows writing the helper in this file and reporting it, since other built-ins need it. Keep the existing steps 1-12 as they are. Minor points: the diff drops the spec's \\\"performs the following steps when called\\\" and \\\"name\\\" note comments, which is cosmetic. The flags check uses agent.str_lossy, which is fine for the ASCII checks on g/u/v, but checking code units directly would be more faithful.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements spec steps 1-12 of RegExp.prototype[Symbol.matchAll] in order, using the spec's abstract operations (ToString, SpeciesConstructor, Get, Construct, ToLength, Set) with `?` propagation. Step 13 (CreateRegExpStringIterator) is not implemented and returns agent.not_implemented naming the missing piece, which the ticket allows. No special-casing, no made-up values, no swallowed errors. Only the target file is touched.",
+    "problems": [],
+    "notes_for_next_attempt": "The remaining work is step 13: CreateRegExpStringIterator. It needs an object with [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]] and [[Done]] slots whose prototype is %RegExpStringIteratorPrototype%, and that iterator's next() must also exist. The ticket allows writing the helper in this file and reporting it, since other built-ins need it. Keep the existing steps 1-12 as they are. Minor points: the diff drops the spec's \"performs the following steps when called\" and \"name\" note comments, which is cosmetic. The flags check uses agent.str_lossy, which is fine for the ASCII checks on g/u/v, but checking code units directly would be more faithful."
+  },
+  "ttft_ms": 14498,
+  "type": "result",
+  "duration_ms": 16726,
+  "uuid": "80dc1bf9-a5d7-4510-a5f0-f20a8f251d45",
+  "ttft_stream_ms": 1497,
+  "time_to_request_ms": 254,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 18,
+    "input_hooks": 5,
+    "tool_pool_refresh": 1,
+    "init_message": 13,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 142,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 6,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 37,
+  "time_to_request_cpu_ms": 130,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 647,
+  "process_wall_ms_turn": 16720,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1498,
+  "time_to_request_from_spawn_ms": 17756686,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791965633477.693,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.78,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-match-all",
+  "base": "4367c0289c7725b3dc0aff9811236f17114bad80",
+  "head": "9974762a485466ad92f14d0015e4847664920d85",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_match_all.rs",
+      "added": 32,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 52,
+    "before": 8,
+    "after": 28,
+    "new_passes": 20,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 24,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/prototype/Symbol.matchAll/isregexp-called-once.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExp/prototype/Symbol.matchAll/isregexp-called-once.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-is-undefined.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-is-undefined.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-species-is-null-or-undefined.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-species-is-null-or-undefined.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-species-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor-species-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-constructor.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-regexp-get-global-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-regexp-get-global-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-regexp-get-unicode-throws.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/species-regexp-get-unicode-throws.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/Symbol.matchAll/string-tostring.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices"
+    ]
+  },
+  "decision": "pass"
+}

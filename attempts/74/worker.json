@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 42106,
+  "stop_reason": "end_turn",
+  "session_id": "0854080d-58bb-4fe2-a0ea-4fc0bb9976d6",
+  "total_cost_usd": 0.013350329999999999,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 31923,
+    "cache_read_input_tokens": 306463,
+    "output_tokens": 6915,
+    "output_tokens_details": {
+      "thinking_tokens": 3150
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 31923,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 446,
+        "cache_read_input_tokens": 38205,
+        "cache_creation_input_tokens": 1198,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1198
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented steps 1\u201312 of `RegExp.prototype[Symbol.matchAll]` in its file, with each step's spec text as a comment. Step 13 (CreateRegExpStringIterator) still returns `not_implemented`, so the ticket's \"Done when\" is not met: 28 of 52 runs pass under `built-ins/RegExp/prototype/Symbol.matchAll/`, up from the 8 reported on main. `cargo build`, `cargo fmt` and `cargo clippy -p kahvi-builtins` are clean.\n\nThe remaining failures come from two things outside my file:\n- The `flags` getter reads `hasIndices`, whose getter (`reg_exp/prototype_get_has_indices.rs`) is still a stub, so 18 runs fail there.\n- CreateRegExpStringIterator needs a slot type for the iterator object, and `%RegExpStringIteratorPrototype%.next` is also a stub. Six runs fail on that.\n\nBLOCKED: `get RegExp.prototype.hasIndices` (reg_exp/prototype_get_has_indices.rs, needed by the `flags` getter that matchAll reads) and the RegExp String Iterator slot type plus `%RegExpStringIteratorPrototype%.next` (needed for CreateRegExpStringIterator, step 13)",
+  "ttft_ms": 1532,
+  "type": "result",
+  "duration_ms": 57691,
+  "uuid": "6d481f6f-8c62-4fa1-ab20-84af5a20e3d7",
+  "ttft_stream_ms": 1287,
+  "time_to_request_ms": 131,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 17,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 9,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 39,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 81,
+  "time_to_request_cpu_ms": 148,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3296,
+  "process_wall_ms_turn": 57690,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1287,
+  "time_to_request_from_spawn_ms": 17690369,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791965567585.3164,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.78,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
