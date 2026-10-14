@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13054,
+  "stop_reason": "tool_use",
+  "session_id": "f6308e81-c353-4d3a-bcab-92082bf17292",
+  "total_cost_usd": 0.00256178,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4426,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2527,
+    "output_tokens_details": {
+      "thinking_tokens": 1919
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4426,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2527,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4426,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4426
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Object.prototype.__lookupSetter__ as the spec describes. ToObject(this) runs first, then ToPropertyKey(key), both with `?`. The loop calls [[GetOwnProperty]] each iteration. An accessor descriptor returns its setter, or undefined if the setter is absent. A data descriptor returns undefined. Otherwise it calls [[GetPrototypeOf]] with `?` and returns undefined on null. Each step has its spec comment directly above the code. No abrupt completion is swallowed, and no input is special-cased. The only `Undefined` returns are the ones the spec mandates. The rename of `new_target` to `_new_target` follows from the parameter no longer being used. I could not see the signatures of the ops helpers or the PropertyDescriptor type, so the field and method usage (`set`, `is_accessor_descriptor`, `internal_get_own_property`) is judged from the passing build and the gate report, not from the source.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes needed for this ticket. The implementation matches the spec steps 1 to 3 and the ordering of observable operations. The 26 new passing test262 runs with 0 regressions are consistent with a change of this size.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Object.prototype.__lookupSetter__ as the spec describes. ToObject(this) runs first, then ToPropertyKey(key), both with `?`. The loop calls [[GetOwnProperty]] each iteration. An accessor descriptor returns its setter, or undefined if the setter is absent. A data descriptor returns undefined. Otherwise it calls [[GetPrototypeOf]] with `?` and returns undefined on null. Each step has its spec comment directly above the code. No abrupt completion is swallowed, and no input is special-cased. The only `Undefined` returns are the ones the spec mandates. The rename of `new_target` to `_new_target` follows from the parameter no longer being used. I could not see the signatures of the ops helpers or the PropertyDescriptor type, so the field and method usage (`set`, `is_accessor_descriptor`, `internal_get_own_property`) is judged from the passing build and the gate report, not from the source.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes needed for this ticket. The implementation matches the spec steps 1 to 3 and the ordering of observable operations. The 26 new passing test262 runs with 0 regressions are consistent with a change of this size."
+  },
+  "ttft_ms": 10548,
+  "type": "result",
+  "duration_ms": 12873,
+  "uuid": "59ccf0a9-0755-4c97-805d-ec98cda2bf25",
+  "ttft_stream_ms": 1675,
+  "time_to_request_ms": 706,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 303,
+    "resume_other": 2,
+    "process_user_input": 21,
+    "input_attachments": 58,
+    "input_hooks": 11,
+    "tool_pool_refresh": 3,
+    "init_message": 42,
+    "engine_pickup": 1,
+    "message_prep": 7,
+    "model_config_wait": 160,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 27,
+    "request_build": 16
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 216,
+  "time_to_request_cpu_ms": 358,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 865,
+  "process_wall_ms_turn": 12872,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 51,
+    "cpu_ms": 53,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1676,
+  "time_to_request_from_spawn_ms": 21281950,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000741751.931,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-prototype-lookup-setter",
+  "base": "61b805897dca20704572c16462b3c1ba0c99c529",
+  "head": "65056109983bb04a30d54f4e91a421eb19bb2dba",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_lookup_setter.rs",
+      "added": 25,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 6,
+    "after": 32,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
