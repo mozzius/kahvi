@@ -1,0 +1,63 @@
+{
+  "ticket": "B-promise-prototype-finally",
+  "base": "6083b141ba4b22cce58f95e29c3a9b9fca33eb5f",
+  "head": "2e2a0474a79fe09cbffad5dbd35c22c37aa1a23e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "added": 174,
+      "removed": 22
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "line": 81,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"a built-in runs with an active function\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "line": 98,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"thenFinally closure slots\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "line": 141,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"catchFinally closure slots\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "line": 177,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"returnValue closure slots\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/promise/prototype_finally.rs",
+      "line": 192,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"throwReason closure slots\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 58,
+    "before": 12,
+    "after": 58,
+    "new_passes": 46,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

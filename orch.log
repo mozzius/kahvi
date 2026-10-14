@@ -163,3 +163,8 @@
 [17:20:09] B-iterator-prototype-find: verifier: accept The diff implements Iterator.prototype.find in its own file, following the spec steps in order. Checked against the spec: TypeError on a non-object `t
 [17:20:11] B-iterator-prototype-reduce: attempt on slot 1 with haiku
 [17:20:25] B-typed-array-prototype-to-locale-string: verifier: accept The diff implements TypedArray.prototype.toLocaleString following the stub's spec steps in order. ValidateTypedArray (seq-cst) runs first. len comes f
+[17:20:29] B-set-prototype-union: attempt on slot 0 with haiku
+[17:20:37] B-weak-set-prototype-add: attempt 153 finished ($0.007, 10 turns)
+[17:20:39] B-promise-prototype-finally: attempt 152 finished ($0.017, 20 turns)
+[17:21:14] B-iterator-prototype-reduce: attempt 154 finished ($0.015, 19 turns)
+[17:21:14] B-weak-set-prototype-add: verifier: accept The diff implements WeakSet.prototype.add in its own file, in spec order: RequireInternalSlot via this_weak_set (?), the CanBeHeldWeakly TypeError, a 

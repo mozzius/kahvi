@@ -1,0 +1,39 @@
+{
+  "ticket": "B-weak-set-prototype-add",
+  "base": "02e55c9ad77f3cf065d99b433df52eaa122356cc",
+  "head": "c568cd71dccdd612a2b9e2a56badbd5937f22255",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/weak_set/prototype_add.rs",
+      "added": 23,
+      "removed": 13
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 44,
+    "before": 8,
+    "after": 38,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/WeakSet/prototype/add/adds-object-element.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.has",
+      "built-ins/WeakSet/prototype/add/adds-object-element.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.has",
+      "built-ins/WeakSet/prototype/add/adds-symbol-element.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.has",
+      "built-ins/WeakSet/prototype/add/adds-symbol-element.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.has",
+      "built-ins/WeakSet/prototype/add/throw-when-value-cannot-be-held-weakly.js:sloppy  Uncaught InternalError: not implemented: Symbol.for",
+      "built-ins/WeakSet/prototype/add/throw-when-value-cannot-be-held-weakly.js:strict  Uncaught InternalError: not implemented: Symbol.for"
+    ]
+  },
+  "decision": "pass"
+}

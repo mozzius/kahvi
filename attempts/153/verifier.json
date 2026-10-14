@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9519,
+  "stop_reason": "tool_use",
+  "session_id": "030ef03e-7282-40c0-b113-3f7b5a717002",
+  "total_cost_usd": 0.0024521799999999996,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5019,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1959,
+    "output_tokens_details": {
+      "thinking_tokens": 1293
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5019,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1959,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5019,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5019
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements WeakSet.prototype.add in its own file, in spec order: RequireInternalSlot via this_weak_set (?), the CanBeHeldWeakly TypeError, a duplicate check that returns this without inserting, an append, and a return of the set. Each step is kept as a comment. No test-shaped branches, no swallowed errors, no made-up values. The only non-spec path is the not-implemented error, and it is not used here. The helpers it calls (this_weak_set, can_be_held_weakly, collection_key, weak_set_table) live in crate::support::collections, which is outside this diff, so I could not inspect them. The gate's remaining failures (WeakSet.prototype.has, Symbol.for) come from the test harness, not from this code.\",\"problems\":[],\"notes_for_next_attempt\":\"Helpers in crate::support::collections were not part of the diff, so they were not reviewed. Before merging, confirm that this_weak_set performs RequireInternalSlot (TypeError for non-objects and for objects without [[WeakSetData]]), that can_be_held_weakly returns false for symbols registered via Symbol.for (KeyForSymbol not undefined) and true for other symbols, and that collection_key gives SameValue-compatible identity for objects and symbols. The remaining add/ test failures depend on WeakSet.prototype.has and Symbol.for being implemented; they are not defects in this file.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements WeakSet.prototype.add in its own file, in spec order: RequireInternalSlot via this_weak_set (?), the CanBeHeldWeakly TypeError, a duplicate check that returns this without inserting, an append, and a return of the set. Each step is kept as a comment. No test-shaped branches, no swallowed errors, no made-up values. The only non-spec path is the not-implemented error, and it is not used here. The helpers it calls (this_weak_set, can_be_held_weakly, collection_key, weak_set_table) live in crate::support::collections, which is outside this diff, so I could not inspect them. The gate's remaining failures (WeakSet.prototype.has, Symbol.for) come from the test harness, not from this code.",
+    "problems": [],
+    "notes_for_next_attempt": "Helpers in crate::support::collections were not part of the diff, so they were not reviewed. Before merging, confirm that this_weak_set performs RequireInternalSlot (TypeError for non-objects and for objects without [[WeakSetData]]), that can_be_held_weakly returns false for symbols registered via Symbol.for (KeyForSymbol not undefined) and true for other symbols, and that collection_key gives SameValue-compatible identity for objects and symbols. The remaining add/ test failures depend on WeakSet.prototype.has and Symbol.for being implemented; they are not defects in this file."
+  },
+  "ttft_ms": 7232,
+  "type": "result",
+  "duration_ms": 9866,
+  "uuid": "7c52796b-6aaf-4537-99f7-fe5356afded5",
+  "ttft_stream_ms": 1491,
+  "time_to_request_ms": 771,
+  "time_to_request_phases_ms": {
+    "other": 80,
+    "system_prompt": 441,
+    "resume_other": 0,
+    "process_user_input": 33,
+    "input_attachments": 47,
+    "input_hooks": 11,
+    "tool_pool_refresh": 3,
+    "init_message": 24,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 92,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 142,
+  "time_to_request_cpu_ms": 466,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 133,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 940,
+  "process_wall_ms_turn": 9865,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1492,
+  "time_to_request_from_spawn_ms": 18994824,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998453966.421,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
