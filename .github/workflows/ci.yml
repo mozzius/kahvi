@@ -18,11 +18,11 @@ jobs:
     name: fmt, clippy, test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       - run: cargo fmt --all --check
       # Same flags as the orchestrator's clippy gate (harness/orch/gates.py).
       - run: cargo clippy --workspace --all-targets -- -D warnings
@@ -36,18 +36,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # vendor/ecma262 is only needed by ./spec, so skip it.
       - run: git submodule update --init --depth 1 vendor/test262
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       # Full suite against the ratchet: exit 1 on any regression, 3 if the
       # canaries say the run is invalid. Hosted runners are slower than the
       # machine that writes the baseline: the exhaustive decodeURI tests take
       # ~10s each there and would time out at the default 10s.
       - run: ./t262 --timeout 30 --quiet --show 20 --baseline conformance/expected-pass.txt --summary-json t262-summary.json
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: t262-summary
           path: t262-summary.json
