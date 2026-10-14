@@ -899,6 +899,11 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         let pk = PropertyKey::String(agent.names.prototype);
         define(agent, ctor, pk, Value::Object(proto), false, false, false);
         let ck = PropertyKey::String(agent.names.constructor);
+        // A prototype whose constructor is its own entry (Iterator.prototype's
+        // accessor, §27.1.4.1) keeps it.
+        if agent.obj(proto).properties.contains(&ck) {
+            continue;
+        }
         define(agent, proto, ck, Value::Object(ctor), true, false, true);
     }
 

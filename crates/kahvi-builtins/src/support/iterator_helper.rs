@@ -256,3 +256,42 @@ impl kahvi_core::gc::Trace for WrapForValidIterator {
         self.iterated.trace(t);
     }
 }
+
+/// SetterThatIgnoresPrototypeProperties ( _thisValue_, _home_, _propertyKey_, _value_ )
+///
+/// Spec: https://tc39.es/ecma262/#sec-SetterThatIgnoresPrototypeProperties
+pub(crate) fn setter_that_ignores_prototype_properties(
+    agent: &mut Agent,
+    this_value: Value,
+    home: Object,
+    property_key: PropertyKey,
+    value: Value,
+) -> JsResult<()> {
+    // 1. If thisValue is not an Object, then
+    let Value::Object(this_obj) = this_value else {
+        // a. Throw a TypeError exception.
+        return Err(agent.throw_type_error("setter called on a non-object"));
+    };
+    // 2. If SameValue(thisValue, home) is true, then
+    if this_obj == home {
+        // a. NOTE: Throwing here emulates assignment to a non-writable data property on the home object in strict mode code.
+        // b. Throw a TypeError exception.
+        return Err(agent.throw_type_error("cannot set this property on its home object"));
+    }
+    // 3. Let propertyDesc be ? thisValue.[[GetOwnProperty]](propertyKey).
+    let property_desc = this_obj.internal_get_own_property(agent, property_key)?;
+    match property_desc {
+        // 4. If propertyDesc is undefined, then
+        None => {
+            // a. Perform ? CreateDataPropertyOrThrow(thisValue, propertyKey, value).
+            ops::create_data_property_or_throw(agent, this_obj, property_key, value)?;
+        }
+        // 5. Else,
+        Some(_) => {
+            // a. Perform ? Set(thisValue, propertyKey, value, true).
+            ops::set(agent, this_obj, property_key, value, true)?;
+        }
+    }
+    // 6. Return unused.
+    Ok(())
+}
