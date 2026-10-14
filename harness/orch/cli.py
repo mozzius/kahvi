@@ -5,6 +5,7 @@
   ./orch usage                                                    the plan's usage windows right now
   ./orch show ATTEMPT                                             one attempt's artifacts
   ./orch reset TICKET [--tier haiku]                              put a ticket back in the pool
+  ./orch partials [--results F]                                   re-judge partial tickets
   ./orch triage [--fresh] [--top N]                               cluster test262 failures
   ./orch calibrate [--model M] [--only CASE]                      run the verifier red-team set
 """
@@ -204,6 +205,18 @@ def cmd_reset(args):
     print(f"{args.ticket} reopened")
 
 
+def cmd_partials(args):
+    """Re-judges the partial tickets against a full run (default: the merge
+    bot's last one)."""
+    from gates import read_results
+    results = read_results(Path(args.results) if args.results else WORK / "last-full.jsonl")
+    if not results:
+        sys.exit("no results to judge against")
+    db = DB()
+    changed = pipeline.refresh_partials(db, ticket_files.load_all(ticket_files.TICKETS), results)
+    print(f"partial tickets: {dict(changed) or 'no status changes'}")
+
+
 def cmd_triage(args):
     import triage
     triage.main(args)
@@ -235,6 +248,9 @@ def main():
     rs.add_argument("ticket")
     rs.add_argument("--tier")
     rs.set_defaults(fn=cmd_reset)
+    pt = sub.add_parser("partials", help="re-judge partial tickets against a full run")
+    pt.add_argument("--results", help="a full run's --json output (default: work/last-full.jsonl)")
+    pt.set_defaults(fn=cmd_partials)
     t = sub.add_parser("triage")
     t.add_argument("--fresh", action="store_true", help="run the full suite on the branch first")
     t.add_argument("--top", type=int, default=25)

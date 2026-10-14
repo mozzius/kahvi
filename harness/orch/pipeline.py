@@ -192,6 +192,43 @@ def after_merge(cfg, db, ticket, att, m):
                       reason=f"{len(m['remaining'])} target runs still failing, none in its own code path")
 
 
+def refresh_partials(db, pool, results):
+    """Re-judges every `partial` ticket against a full run's results: done
+    when its whole target passes now, back in the pool when its own function
+    reports not implemented again, otherwise still partial with a fresh
+    reason naming what blocks it. Returns {status: count} for what changed."""
+    from collections import Counter
+    by_id = {}
+    for r in results:
+        by_id[r["id"]] = r
+    changed = Counter()
+    for row in db.q("SELECT id FROM tickets WHERE status = 'partial'"):
+        t = pool.get(row["id"])
+        if t is None or not t.target:
+            continue
+        failing = [r for rid, r in by_id.items() if r["status"] != "pass" and any(rid.startswith(p) for p in t.target)]
+        if not failing:
+            db.set_ticket(t.id, status="done", reason="")
+            db.note(t.id, None, "every target run passes after later merges")
+            changed["done"] += 1
+            continue
+        own = re.compile(rf"not implemented: {re.escape(t.title)}(?![\w.\[])")
+        if any(own.search(r.get("reason", "")) for r in failing):
+            db.set_ticket(t.id, status="open", strikes=0, salvage_attempt=None, reason="")
+            db.note(t.id, None, "its own function reports not implemented again")
+            changed["open"] += 1
+            continue
+        blockers = Counter(r["not_implemented"] for r in failing if r.get("not_implemented"))
+        other = sum(1 for r in failing if not r.get("not_implemented"))
+        parts = [f"{name} ({n})" for name, n in blockers.most_common(4)]
+        if other:
+            parts.append(f"{other} other failures")
+        reason = f"{len(failing)} target runs still failing: " + ", ".join(parts)
+        if reason != db.ticket(t.id)["reason"]:
+            db.set_ticket(t.id, reason=reason)
+    return changed
+
+
 class MergeQueue:
     """Accepted attempts wait here for the merge bot, so slots go back to work
     at once. One thread merges whatever has queued up as one batch (one full
@@ -229,6 +266,13 @@ class MergeQueue:
                 for t, a, _ in batch:
                     after_merge(self.cfg, self.db, t, a, results.get(a.id) or
                                 {"merged": False, "reason": "the merge bot returned no result"})
+                if any(r.get("merged") for r in results.values()):
+                    import tickets as ticket_files
+                    from gates import read_results
+                    changed = refresh_partials(self.db, ticket_files.load_all(ticket_files.TICKETS),
+                                               read_results(WORK / "last-full.jsonl"))
+                    if changed:
+                        log(f"partial tickets after the merge: {dict(changed)}")
             except Exception as e:  # keep the merge bot alive; the attempts stay salvageable
                 log(f"merge bot error: {e!r}")
                 for t, a, _ in batch:
