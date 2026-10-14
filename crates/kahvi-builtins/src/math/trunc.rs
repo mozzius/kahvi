@@ -15,10 +15,21 @@ pub(crate) fn trunc(
     // It performs the following steps when called:
     //
     // 1. Let _n_ be ? ToNumber(_x_).
+    let _ = (this, new_target);
+    let x = args.get_or_undefined(0);
+    let n = ops::to_number(agent, x)?;
     // 2. If _n_ is not a finite Number or _n_ is either *+0*_𝔽 or *-0*_𝔽, return _n_.
+    if !n.is_finite() || n == 0.0 {
+        return Ok(Value::Number(n));
+    }
     // 3. If _n_ < *1*_𝔽 and _n_ > *+0*_𝔽, return *+0*_𝔽.
+    if n < 1.0 && n > 0.0 {
+        return Ok(Value::Number(0.0));
+    }
     // 4. If _n_ < *-0*_𝔽 and _n_ > *-1*_𝔽, return *-0*_𝔽.
+    if n < -0.0 && n > -1.0 {
+        return Ok(Value::Number(-0.0));
+    }
     // 5. Return the integral Number nearest _n_ in the direction of *+0*_𝔽.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.trunc"))
+    Ok(Value::Number(n.trunc()))
 }
