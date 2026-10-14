@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9791,
+  "stop_reason": "tool_use",
+  "session_id": "f35368b6-4d21-4862-aef9-f654692f1751",
+  "total_cost_usd": 0.0024126800000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4972,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1904,
+    "output_tokens_details": {
+      "thinking_tokens": 1394
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4972,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1904,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4972,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4972
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements DataView.prototype.setUint32 in its own file. Step 1 binds the this value to view. Step 2 uses args.len() > 2 as the presence check and falls back to Boolean(false). Step 3 calls the existing support helper set_view_value with ElementType::Uint32 and propagates its error with `?`. Step 4 returns Undefined. The spec step comments are kept in place. No other files are touched, and there are no special-cased inputs, swallowed errors or made-up values. The gate shows 26 new passes and 0 regressions. The 14 remaining failures come from DataView.prototype.getUint32, which is not implemented yet and is used by the tests for verification, so they are not defects in this change. The SetViewValue steps (ToIndex, bounds checks, SetValueInBuffer) live in the pre-existing helper, which this diff does not touch and which I did not review.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements DataView.prototype.setUint32 in its own file. Step 1 binds the this value to view. Step 2 uses args.len() > 2 as the presence check and falls back to Boolean(false). Step 3 calls the existing support helper set_view_value with ElementType::Uint32 and propagates its error with `?`. Step 4 returns Undefined. The spec step comments are kept in place. No other files are touched, and there are no special-cased inputs, swallowed errors or made-up values. The gate shows 26 new passes and 0 regressions. The 14 remaining failures come from DataView.prototype.getUint32, which is not implemented yet and is used by the tests for verification, so they are not defects in this change. The SetViewValue steps (ToIndex, bounds checks, SetValueInBuffer) live in the pre-existing helper, which this diff does not touch and which I did not review.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7542,
+  "type": "result",
+  "duration_ms": 9501,
+  "uuid": "127288b0-725b-4da6-a80d-89e4bb0bdf72",
+  "ttft_stream_ms": 1475,
+  "time_to_request_ms": 605,
+  "time_to_request_phases_ms": {
+    "other": 57,
+    "system_prompt": 309,
+    "resume_other": 4,
+    "process_user_input": 11,
+    "input_attachments": 38,
+    "input_hooks": 13,
+    "tool_pool_refresh": 7,
+    "init_message": 22,
+    "engine_pickup": 2,
+    "message_prep": 7,
+    "model_config_wait": 103,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 14,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 109,
+  "time_to_request_cpu_ms": 241,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 226,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 687,
+  "process_wall_ms_turn": 9501,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1477,
+  "time_to_request_from_spawn_ms": 19873875,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999334026.686,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

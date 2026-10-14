@@ -1,0 +1,47 @@
+{
+  "ticket": "B-data-view-prototype-set-uint32",
+  "base": "16c969169844e8ba0ece371e433c70e4e6884d7e",
+  "head": "1bf3216dfd1446e7a844cb1ef18d024b9d054c18",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/data_view/prototype_set_uint32.rs",
+      "added": 19,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 6,
+    "after": 32,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/DataView/prototype/setUint32/index-is-out-of-range.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/index-is-out-of-range.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/negative-byteoffset-throws.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/negative-byteoffset-throws.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/no-value-arg.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/no-value-arg.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/set-values-little-endian-order.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/set-values-little-endian-order.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/set-values-return-undefined.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/set-values-return-undefined.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/to-boolean-littleendian.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/to-boolean-littleendian.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/toindex-byteoffset.js:sloppy  Uncaught InternalError: not implemented: DataView.prototype.getUint32",
+      "built-ins/DataView/prototype/setUint32/toindex-byteoffset.js:strict  Uncaught InternalError: not implemented: DataView.prototype.getUint32"
+    ]
+  },
+  "decision": "pass"
+}

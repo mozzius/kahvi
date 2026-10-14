@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 19072,
+  "stop_reason": "end_turn",
+  "session_id": "10d352e5-e88f-4963-ba32-6338ab076eb2",
+  "total_cost_usd": 0.0063662,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 15742,
+    "cache_read_input_tokens": 151660,
+    "output_tokens": 2850,
+    "output_tokens_details": {
+      "thinking_tokens": 216
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15742,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 230,
+        "cache_read_input_tokens": 22774,
+        "cache_creation_input_tokens": 611,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 611
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DataView.prototype.setUint32` in its file by calling the existing `set_view_value` helper with `ElementType::Uint32`, and only that file changed. Clippy and fmt are clean. The 14 test262 runs under `built-ins/DataView/prototype/setUint32/` still fail, but every failure is `not implemented: DataView.prototype.getUint32`: the tests call the getter to check the stored bytes, and that getter is still a stub. Those tests will pass once `getUint32` is implemented.\n\nBLOCKED: DataView.prototype.getUint32 is not implemented (its stub returns not_implemented), and the setUint32 tests use it to verify the written values.",
+  "ttft_ms": 2892,
+  "type": "result",
+  "duration_ms": 40811,
+  "uuid": "17f7496f-5b40-418d-a24a-e58e20b7d671",
+  "ttft_stream_ms": 2546,
+  "time_to_request_ms": 1680,
+  "time_to_request_phases_ms": {
+    "other": 186,
+    "system_prompt": 826,
+    "resume_other": 15,
+    "process_user_input": 25,
+    "input_attachments": 80,
+    "input_hooks": 27,
+    "tool_pool_refresh": 3,
+    "init_message": 93,
+    "engine_pickup": 2,
+    "message_prep": 21,
+    "model_config_wait": 209,
+    "autocompact": 19,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 84,
+    "message_normalization": 19,
+    "client_creation": 43,
+    "request_build": 27
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 630,
+  "time_to_request_cpu_ms": 359,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 3471,
+  "process_wall_ms_turn": 40798,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 49,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2547,
+  "time_to_request_from_spawn_ms": 19815351,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999271343.5615,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
