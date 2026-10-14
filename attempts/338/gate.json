@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-full-year",
+  "base": "f07de90434cb2a6ea4642da73228dad9898df771",
+  "head": "11d455ec0622d268232c91beb15e721190486870",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_full_year.rs",
+      "added": 15,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
