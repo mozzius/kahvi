@@ -26,6 +26,37 @@ pub(crate) fn prototype_symbol_to_primitive(
     //
     // This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
     // The value of the *"name"* property of this method is *"[Symbol.toPrimitive]"*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Date.prototype[Symbol.toPrimitive]"))
+    let _ = new_target;
+    // 1. Let _obj_ be the *this* value.
+    // 2. If _obj_ is not an Object, throw a *TypeError* exception.
+    let Some(obj) = this.as_object() else {
+        return Err(
+            agent.throw_type_error("Date.prototype[Symbol.toPrimitive] called on non-object")
+        );
+    };
+    let hint = args.get_or_undefined(0);
+    // 3. If _hint_ is either *"string"* or *"default"*, then
+    //    a. Let _tryFirst_ be ~string~.
+    // 4. Else if _hint_ is *"number"*, then
+    //    a. Let _tryFirst_ be ~number~.
+    let try_first = match hint.as_string() {
+        Some(s)
+            if agent.str(s).iter().copied().eq("string".encode_utf16())
+                || agent.str(s).iter().copied().eq("default".encode_utf16()) =>
+        {
+            ops::PreferredType::String
+        }
+        Some(s) if agent.str(s).iter().copied().eq("number".encode_utf16()) => {
+            ops::PreferredType::Number
+        }
+        // 5. Else,
+        //    a. Throw a *TypeError* exception.
+        _ => {
+            return Err(agent.throw_type_error(
+                "Date.prototype[Symbol.toPrimitive] hint must be \"string\", \"default\", or \"number\"",
+            ));
+        }
+    };
+    // 6. Return ? OrdinaryToPrimitive(_obj_, _tryFirst_).
+    ops::ordinary_to_primitive(agent, obj, try_first)
 }
