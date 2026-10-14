@@ -352,3 +352,5 @@
 [17:44:17] B-object-values: attempt on slot 3 with haiku
 [17:44:18] B-data-view-prototype-set-int8: verifier: accept The diff replaces the not-implemented stub in prototype_set_int8.rs with a body that follows the three spec steps. Step 1 binds this to view. Step 2 c
 [17:44:26] B-set-prototype-is-subset-of: attempt on slot 1 with haiku
+[17:44:29] B-string-prototype-concat: attempt on slot 0 with haiku
+[17:44:46] B-date-prototype-get-timezone-offset: verifier: accept The diff implements Date.prototype.getTimezoneOffset in its single file. It gets the time value via `date::this_time_value(agent, this)?`, which shoul
