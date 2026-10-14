@@ -7,30 +7,42 @@
 use super::ProxyData;
 use crate::agent::Agent;
 use crate::error::JsResult;
+use crate::ops;
 use crate::value::{Object, Value};
 
 /// The [[IsExtensible]] internal method of the Proxy exotic object `o` with slots `p`.
-pub(crate) fn is_extensible(agent: &mut Agent, o: Object, p: &ProxyData) -> JsResult<bool> {
+pub(crate) fn is_extensible(agent: &mut Agent, _o: Object, p: &ProxyData) -> JsResult<bool> {
     // for: a Proxy exotic object _obj_
     //
     // 1. Perform ? ValidateNonRevokedProxy(_obj_).
+    let (target, handler) = p.validate_non_revoked(agent)?;
     // 2. Let _target_ be _obj_.[[ProxyTarget]].
     // 3. Let _handler_ be _obj_.[[ProxyHandler]].
     // 4. Assert: _handler_ is an Object.
     // 5. Let _trap_ be ? GetMethod(_handler_, *"isExtensible"*).
+    let trap_key = agent.key("isExtensible");
+    let trap = ops::get_method(agent, Value::Object(handler), trap_key)?;
     // 6. If _trap_ is *undefined*, then
-    //    a. Return ? IsExtensible(_target_).
+    if matches!(trap, Value::Undefined) {
+        // a. Return ? IsExtensible(_target_).
+        return ops::is_extensible(agent, target);
+    }
     // 7. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, « _target_ »)).
+    let trap_result = ops::call(
+        agent,
+        trap,
+        Value::Object(handler),
+        &[Value::Object(target)],
+    )?;
+    let bool_trap_result = ops::to_boolean(agent, trap_result);
     // 8. Let _targetResult_ be ? IsExtensible(_target_).
+    let target_result = ops::is_extensible(agent, target)?;
     // 9. If _boolTrapResult_ is not _targetResult_, throw a *TypeError* exception.
+    if bool_trap_result != target_result {
+        return Err(agent.throw_type_error(
+            "Proxy isExtensible trap result does not match the target's extensibility",
+        ));
+    }
     // 10. Return _boolTrapResult_.
-    //
-    // NOTE:
-    // [[IsExtensible]] for Proxy objects enforces the following invariants:
-    // -
-    // The result of [[IsExtensible]] is a Boolean value.
-    // -
-    // [[IsExtensible]] applied to the Proxy object must return the same value as [[IsExtensible]] applied to the Proxy object's target object with the same argument.
-    let _ = (o, p);
-    Err(agent.not_implemented("Proxy [[IsExtensible]]"))
+    Ok(bool_trap_result)
 }
