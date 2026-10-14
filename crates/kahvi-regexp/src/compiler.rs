@@ -107,6 +107,69 @@ pub(crate) struct Program {
     pub registers: usize,
     /// HasEitherUnicodeFlag: the input is read as code points.
     pub unicode: bool,
+    /// What a match must begin with, when that is known: one of these
+    /// steps succeeds at the start position of every match. Lets the
+    /// matcher reject a start position without running the program.
+    pub firsts: Option<Vec<First>>,
+}
+
+/// A step every match takes before consuming anything else.
+#[derive(Clone, Debug)]
+pub(crate) enum First {
+    /// One character matched forward by this item.
+    Item(Item),
+    /// `^` without the multiline flag: only position 0.
+    InputStart,
+}
+
+/// The first steps of `insts` from instruction 0, following only the
+/// instructions that neither consume input nor test it; `None` when some
+/// path tests anything else first (lookarounds, `\b`, `$`, back
+/// references, a loop body that can match empty, ...).
+fn first_steps(insts: &[Inst]) -> Option<Vec<First>> {
+    let mut firsts = Vec::new();
+    let mut seen = vec![false; insts.len()];
+    let mut todo = vec![0];
+    while let Some(pc) = todo.pop() {
+        if std::mem::replace(&mut seen[pc], true) {
+            continue;
+        }
+        match &insts[pc] {
+            Inst::One { item, back: false } => firsts.push(First::Item(item.clone())),
+            Inst::Start { multiline: false } => firsts.push(First::InputStart),
+            Inst::Split { x, y } => todo.extend([*x, *y]),
+            Inst::Jump(t) => todo.push(*t),
+            Inst::GroupStart(_)
+            | Inst::GroupEnd { back: false, .. }
+            | Inst::ClearGroups { .. }
+            | Inst::RepeatStart { .. } => todo.push(pc + 1),
+            // Reached through RepeatStart, so the iteration count is 0.
+            Inst::RepeatHead { min, max, exit, .. } => {
+                if *max != Some(0) {
+                    todo.push(pc + 1);
+                }
+                if *min == 0 {
+                    todo.push(*exit);
+                }
+            }
+            Inst::SimpleRepeat {
+                item,
+                back: false,
+                min,
+                max,
+                ..
+            } => {
+                if *max != Some(0) {
+                    firsts.push(First::Item(item.clone()));
+                }
+                if *min == 0 {
+                    todo.push(pc + 1);
+                }
+            }
+            _ => return None,
+        }
+    }
+    Some(firsts)
 }
 
 struct Compiler {
@@ -131,6 +194,7 @@ pub(crate) fn compile(node: &Node, rer: Rer, group_count: usize) -> Program {
     });
     c.insts.push(Inst::Match);
     Program {
+        firsts: first_steps(&c.insts),
         insts: c.insts,
         sets: c.sets,
         groups: group_count + 1,
