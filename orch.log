@@ -51,3 +51,7 @@
 [17:04:00] B-typed-array-prototype-join: attempt 118 finished ($0.012, 12 turns)
 [17:04:01] B-typed-array-prototype-reduce: attempt on slot 3 with sonnet
 [17:04:23] B-typed-array-prototype-copy-within: verifier: accept The diff implements %TypedArray%.prototype.copyWithin in its own file, step by step, with the spec text kept as comments. I walked every step and foun
+[17:04:29] B-typed-array-prototype-includes: attempt on slot 0 with haiku
+[17:04:32] B-typed-array-prototype-reduce-right: attempt 117 finished ($0.017, 16 turns)
+[17:04:32] B-typed-array-prototype-reduce-right: gate rejected attempt 117: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 
+[17:04:32] B-typed-array-prototype-reduce-right: escalating haiku -> sonnet

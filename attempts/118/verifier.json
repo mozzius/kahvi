@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 17702,
+  "stop_reason": "tool_use",
+  "session_id": "b7999613-1ff3-4ce7-87e5-e5fb1baab906",
+  "total_cost_usd": 0.00358898,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5756,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3789,
+    "output_tokens_details": {
+      "thinking_tokens": 3217
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5756,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3789,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5756,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5756
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.join in the spec's order: ValidateTypedArray (with ?), TypedArrayLength computed once before the separator conversion, the separator defaulting to \\\",\\\" or ToString(separator) with ?, then the k-loop with TypedArrayGetElement and ToString on non-undefined elements, returning the concatenated string. No test-shaped branches, no swallowed errors, no made-up values. The only gap is that ToString on a BigInt element throws the engine's not-implemented error through ?, which is the honest partial-work path. The gate shows 0 regressions and 54 new passes; the two remaining failures are the BigInt not-implemented error.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes required. The two remaining resizable-buffer.js failures come from ops::to_string on a BigInt element throwing not-implemented, which is an honest limit. They should pass automatically once BigInt ToString lands. Minor, non-blocking: the step 1 comment sits above the validate call rather than above a `let obj = this` line, and the trailing \\\"This method is not generic\\\" note was dropped from the file.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.join in the spec's order: ValidateTypedArray (with ?), TypedArrayLength computed once before the separator conversion, the separator defaulting to \",\" or ToString(separator) with ?, then the k-loop with TypedArrayGetElement and ToString on non-undefined elements, returning the concatenated string. No test-shaped branches, no swallowed errors, no made-up values. The only gap is that ToString on a BigInt element throws the engine's not-implemented error through ?, which is the honest partial-work path. The gate shows 0 regressions and 54 new passes; the two remaining failures are the BigInt not-implemented error.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes required. The two remaining resizable-buffer.js failures come from ops::to_string on a BigInt element throwing not-implemented, which is an honest limit. They should pass automatically once BigInt ToString lands. Minor, non-blocking: the step 1 comment sits above the validate call rather than above a `let obj = this` line, and the trailing \"This method is not generic\" note was dropped from the file."
+  },
+  "ttft_ms": 15274,
+  "type": "result",
+  "duration_ms": 17532,
+  "uuid": "e1143fe2-0240-4459-95fb-2ba926f28dd6",
+  "ttft_stream_ms": 1508,
+  "time_to_request_ms": 593,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 352,
+    "resume_other": 0,
+    "process_user_input": 7,
+    "input_attachments": 33,
+    "input_hooks": 5,
+    "tool_pool_refresh": 4,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 101,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 4,
+    "client_creation": 7,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 63,
+  "time_to_request_cpu_ms": 285,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 225,
+  "process_anon_mib_turn_start": 109,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 1053,
+  "process_wall_ms_turn": 17531,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1509,
+  "time_to_request_from_spawn_ms": 17993396,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997453638.382,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
