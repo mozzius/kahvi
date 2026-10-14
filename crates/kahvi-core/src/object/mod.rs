@@ -6,6 +6,7 @@ pub mod internal;
 pub mod namespace;
 pub mod proxy;
 pub mod typed_array;
+pub mod weak;
 
 use std::any::Any;
 

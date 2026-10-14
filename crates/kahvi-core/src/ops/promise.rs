@@ -7,7 +7,7 @@ use crate::agent::{Agent, ExecutionContext, Job};
 use crate::error::{JsError, JsResult};
 use crate::function::{builtin_slots, create_builtin_function, get_function_realm};
 use crate::object::{ObjectKind, PropertyKey};
-use crate::ops::{call, construct, get, is_callable};
+use crate::ops::{call, call_rooted, construct, get, is_callable};
 use crate::value::{Args, Object, Value};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -310,7 +310,9 @@ fn new_promise_reaction_job(agent: &mut Agent, reaction: PromiseReaction, argume
 /// Runs a job (HostEnqueuePromiseJob: in an execution context for its realm).
 pub(crate) fn run_job(agent: &mut Agent, job: Job) -> JsResult<()> {
     let realm = match job {
-        Job::PromiseReaction { realm, .. } | Job::PromiseResolveThenable { realm, .. } => realm,
+        Job::PromiseReaction { realm, .. }
+        | Job::PromiseResolveThenable { realm, .. }
+        | Job::FinalizationRegistryCleanup { realm, .. } => realm,
     };
     agent.contexts.push(ExecutionContext {
         function: None,
@@ -327,6 +329,10 @@ pub(crate) fn run_job(agent: &mut Agent, job: Job) -> JsResult<()> {
             then,
             ..
         } => promise_resolve_thenable_job(agent, promise, thenable, then),
+        Job::FinalizationRegistryCleanup { registry, .. } => {
+            // 1-2. Errors from the callback are reported to the host.
+            crate::object::weak::cleanup_finalization_registry(agent, registry)
+        }
     };
     agent.contexts.pop();
     r
@@ -344,7 +350,8 @@ fn promise_reaction_job(
             ReactionType::Fulfill => Ok(argument),
             ReactionType::Reject => Err(JsError::Throw(argument)),
         },
-        Some(h) => call(agent, h, Value::Undefined, &[argument]),
+        // The job's data is a root while it runs (docs/GC.md).
+        Some(h) => call_rooted(agent, h, Value::Undefined, &[argument]),
     };
     // 1.f If promiseCapability is undefined, return empty.
     let Some(capability) = reaction.capability else {
@@ -355,10 +362,10 @@ fn promise_reaction_job(
     };
     match handler_result {
         // 1.h Else, return ? Call(promiseCapability.[[Resolve]], undefined, « handlerResult.[[Value]] »).
-        Ok(v) => call(agent, capability.resolve, Value::Undefined, &[v]).map(|_| ()),
+        Ok(v) => call_rooted(agent, capability.resolve, Value::Undefined, &[v]).map(|_| ()),
         // 1.g If handlerResult is an abrupt completion, return ? Call(promiseCapability.[[Reject]], ...).
         Err(JsError::Throw(e)) => {
-            call(agent, capability.reject, Value::Undefined, &[e]).map(|_| ())
+            call_rooted(agent, capability.reject, Value::Undefined, &[e]).map(|_| ())
         }
         Err(e) => Err(e),
     }
@@ -374,16 +381,20 @@ fn promise_resolve_thenable_job(
     // a. Let resolvingFunctions be CreateResolvingFunctions(promiseToResolve).
     let (resolve, reject) = create_resolving_functions(agent, promise);
     // b. Let thenCallResult be Completion(HostCallJobCallback(then, thenable, « resolve, reject »)).
-    match call(
+    // (reject is used again if the call throws: keep it rooted.)
+    let roots = agent.push_root(Value::Object(reject));
+    let r = call_rooted(
         agent,
         then,
         thenable,
         &[Value::Object(resolve), Value::Object(reject)],
-    ) {
+    );
+    agent.pop_roots(roots);
+    match r {
         Ok(_) => Ok(()),
         // c. If thenCallResult is an abrupt completion, then return ? Call(reject, undefined, « thenCallResult.[[Value]] »).
         Err(JsError::Throw(e)) => {
-            call(agent, Value::Object(reject), Value::Undefined, &[e]).map(|_| ())
+            call_rooted(agent, Value::Object(reject), Value::Undefined, &[e]).map(|_| ())
         }
         Err(e) => Err(e),
     }

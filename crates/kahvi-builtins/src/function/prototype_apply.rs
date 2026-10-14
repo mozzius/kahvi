@@ -22,10 +22,11 @@ pub(crate) fn prototype_apply(
     // 3. If argArray is either undefined or null, then
     if arg_array.is_nullish() {
         // b. Return ? Call(func, thisArg).
-        return ops::call(agent, func, this_arg, &[]);
+        return ops::call_rooted(agent, func, this_arg, &[]);
     }
     // 4. Let argList be ? CreateListFromArrayLike(argArray).
     let arg_list = ops::create_list_from_array_like(agent, arg_array, false)?;
     // 6. Return ? Call(func, thisArg, argList).
-    ops::call(agent, func, this_arg, &arg_list)
+    // A tail call: nothing here is used after it (docs/GC.md).
+    ops::call_rooted(agent, func, this_arg, &arg_list)
 }

@@ -18,12 +18,6 @@ pub(crate) struct BitSet {
 }
 
 impl BitSet {
-    pub(crate) fn with_len(n: usize) -> BitSet {
-        BitSet {
-            words: vec![0; n.div_ceil(64)],
-        }
-    }
-
     pub(crate) fn get(&self, i: u32) -> bool {
         let (w, b) = (i as usize / 64, i % 64);
         self.words.get(w).is_some_and(|x| x & (1 << b) != 0)
@@ -316,5 +310,269 @@ impl<K: Trace, S> Trace for std::collections::HashSet<K, S> {
 impl<T: Trace> Trace for std::cell::RefCell<T> {
     fn trace(&self, t: &mut Tracer) {
         self.borrow().trace(t);
+    }
+}
+
+// ---- the collector ---------------------------------------------------------
+
+use crate::agent::Agent;
+use crate::env::Environment;
+use crate::object::{ObjectData, ObjectKind};
+use crate::vm::Frame;
+
+/// A running frame, registered for the duration of `run_frame` (docs/GC.md).
+#[derive(Clone, Copy)]
+pub(crate) struct FramePtr(pub(crate) *const Frame);
+
+// SAFETY: frames are only read through these pointers by the collector,
+// on the thread that runs the agent, while the frames are alive (each is
+// unregistered before its `run_frame` returns).
+unsafe impl Send for FramePtr {}
+
+/// Collector state kept on the agent.
+pub(crate) struct GcState {
+    pub(crate) free_objects: Vec<u32>,
+    pub(crate) free_strings: Vec<u32>,
+    pub(crate) free_symbols: Vec<u32>,
+    pub(crate) free_bigints: Vec<u32>,
+    pub(crate) free_envs: Vec<u32>,
+    /// Slots currently on a free list.
+    pub(crate) is_free_object: BitSet,
+    pub(crate) is_free_string: BitSet,
+    pub(crate) is_free_symbol: BitSet,
+    pub(crate) is_free_bigint: BitSet,
+    pub(crate) is_free_env: BitSet,
+    /// Strings and BigInts in compiled code (and the agent's common names):
+    /// compiled code is never collected yet, so neither are they.
+    pub(crate) pinned_strings: BitSet,
+    pub(crate) pinned_bigints: BitSet,
+    /// Symbols below this index (the well-known symbols) are never collected.
+    pub(crate) pinned_symbols: u32,
+    /// While set, new and looked-up strings and BigInts are pinned (compiling).
+    pub(crate) pinning: bool,
+    /// Allocations since the last collection, and the count that triggers one.
+    pub(crate) allocated: usize,
+    pub(crate) threshold: usize,
+    /// Rust code above holds unrooted handles: no collection (docs/GC.md).
+    pub(crate) holds: u32,
+    pub(crate) frames: Vec<FramePtr>,
+    /// Explicit roots (`Agent::push_root`).
+    pub(crate) roots: Vec<Value>,
+    pub(crate) collections: u64,
+}
+
+const MIN_THRESHOLD: usize = 200_000;
+
+impl Default for GcState {
+    fn default() -> GcState {
+        GcState {
+            free_objects: Vec::new(),
+            free_strings: Vec::new(),
+            free_symbols: Vec::new(),
+            free_bigints: Vec::new(),
+            free_envs: Vec::new(),
+            is_free_object: BitSet::default(),
+            is_free_string: BitSet::default(),
+            is_free_symbol: BitSet::default(),
+            is_free_bigint: BitSet::default(),
+            is_free_env: BitSet::default(),
+            pinned_strings: BitSet::default(),
+            pinned_bigints: BitSet::default(),
+            pinned_symbols: 0,
+            pinning: false,
+            allocated: 0,
+            threshold: MIN_THRESHOLD,
+            holds: 0,
+            frames: Vec::new(),
+            roots: Vec::new(),
+            collections: 0,
+        }
+    }
+}
+
+impl Agent {
+    /// Whether a safe point should collect now.
+    #[inline]
+    pub(crate) fn gc_wanted(&self) -> bool {
+        self.gc.holds == 0 && (self.gc_stress || self.gc.allocated >= self.gc.threshold)
+    }
+
+    /// A safe point: collects if the heap has grown enough and nothing holds.
+    #[inline]
+    pub fn gc_safe_point(&mut self) {
+        if self.gc_wanted() {
+            self.collect_garbage();
+        }
+    }
+
+    /// Roots `v` until `pop_roots` is called with the returned mark.
+    pub fn push_root(&mut self, v: Value) -> usize {
+        self.gc.roots.push(v);
+        self.gc.roots.len() - 1
+    }
+
+    /// Drops the roots pushed since `mark` (a value returned by `push_root`).
+    pub fn pop_roots(&mut self, mark: usize) {
+        self.gc.roots.truncate(mark);
+    }
+
+    /// Runs `f` with collection disabled (Rust code holding unrooted handles
+    /// while JavaScript may run).
+    #[inline]
+    pub fn holding<T>(&mut self, f: impl FnOnce(&mut Agent) -> T) -> T {
+        self.gc.holds += 1;
+        let r = f(self);
+        self.gc.holds -= 1;
+        r
+    }
+
+    /// Collects now unless Rust code on the stack holds unrooted handles
+    /// (a host's explicit request, e.g. `$262.gc()`).
+    pub fn collect_garbage_if_safe(&mut self) {
+        if self.gc.holds == 0 {
+            self.collect_garbage();
+        }
+    }
+
+    /// How many collections have run.
+    pub fn gc_collections(&self) -> u64 {
+        self.gc.collections
+    }
+
+    /// Collects garbage now. Only call this where nothing outside the roots
+    /// holds handles (a safe point; see docs/GC.md).
+    pub fn collect_garbage(&mut self) {
+        let mut t = Tracer::default();
+        self.trace_roots(&mut t);
+        self.mark(&mut t);
+        let live = self.sweep(&t);
+        crate::object::weak::schedule_cleanups(self, &Liveness { tracer: &t });
+        self.gc.collections += 1;
+        self.gc.allocated = 0;
+        self.gc.threshold = MIN_THRESHOLD.max(live);
+    }
+
+    fn trace_roots(&self, t: &mut Tracer) {
+        for r in &self.realms {
+            for &o in r.intrinsics.values() {
+                t.object(o);
+            }
+            t.object(r.global_object);
+            t.env(r.global_env);
+            for &o in r.template_map.values() {
+                t.object(o);
+            }
+        }
+        for c in &self.contexts {
+            c.function.trace(t);
+        }
+        self.jobs.trace(t);
+        self.running_jobs.trace(t);
+        for &(s, sym) in &self.symbol_registry {
+            t.string(s);
+            t.symbol(sym);
+        }
+        for &(o, _) in &self.rejection_tracker {
+            t.object(o);
+        }
+        for m in &self.modules {
+            m.trace(t);
+        }
+        for f in &self.gc.frames {
+            // SAFETY: see FramePtr.
+            unsafe { (*f.0).trace(t) };
+        }
+        self.gc.roots.trace(t);
+        self.kept_objects.trace(t);
+        self.kept_symbols.trace(t);
+    }
+
+    fn mark(&self, t: &mut Tracer) {
+        loop {
+            while let Some(i) = t.object_work.pop() {
+                self.objects[i as usize].trace(t);
+            }
+            while let Some(i) = t.env_work.pop() {
+                self.envs[i as usize].trace(t);
+            }
+            while let Some(i) = t.symbol_work.pop() {
+                if let Some(d) = self.symbols[i as usize].description {
+                    t.string(d);
+                }
+            }
+            if !t.object_work.is_empty() || !t.env_work.is_empty() {
+                continue;
+            }
+            // Ephemerons: a value is live once its key is (fixed point).
+            let mut pending = std::mem::take(&mut t.ephemerons);
+            let before = pending.len();
+            pending.retain(|&(k, v)| {
+                if t.is_live(k) {
+                    t.value(v);
+                    false
+                } else {
+                    true
+                }
+            });
+            let progressed = pending.len() != before;
+            t.ephemerons.append(&mut pending);
+            if !progressed && t.object_work.is_empty() && t.env_work.is_empty() {
+                break;
+            }
+        }
+    }
+
+    /// Frees everything unmarked; returns how many slots are live.
+    fn sweep(&mut self, t: &Tracer) -> usize {
+        let live = Liveness { tracer: t };
+        let mut live_count = 0;
+        for i in 0..self.objects.len() as u32 {
+            if t.objects.get(i) {
+                live_count += 1;
+                self.objects[i as usize].sweep_weak(&live);
+            } else if !self.gc.is_free_object.get(i) {
+                self.objects[i as usize] = ObjectData::new(None, ObjectKind::Ordinary);
+                self.gc.is_free_object.insert(i);
+                self.gc.free_objects.push(i);
+            }
+        }
+        for i in 0..self.envs.len() as u32 {
+            if t.envs.get(i) {
+                live_count += 1;
+            } else if !self.gc.is_free_env.get(i) {
+                self.envs[i as usize] = Environment::dead();
+                self.gc.is_free_env.insert(i);
+                self.gc.free_envs.push(i);
+            }
+        }
+        for i in 0..self.strings.len() as u32 {
+            if t.strings.get(i) || self.gc.pinned_strings.get(i) {
+                live_count += 1;
+            } else if !self.gc.is_free_string.get(i) {
+                let units = std::mem::take(&mut self.strings[i as usize]);
+                self.string_index.remove(&units[..]);
+                self.gc.is_free_string.insert(i);
+                self.gc.free_strings.push(i);
+            }
+        }
+        for i in self.gc.pinned_symbols..self.symbols.len() as u32 {
+            if t.symbols.get(i) {
+                live_count += 1;
+            } else if !self.gc.is_free_symbol.get(i) {
+                self.symbols[i as usize].description = None;
+                self.gc.is_free_symbol.insert(i);
+                self.gc.free_symbols.push(i);
+            }
+        }
+        for i in 0..self.bigints.len() as u32 {
+            if t.bigints.get(i) || self.gc.pinned_bigints.get(i) {
+                live_count += 1;
+            } else if !self.gc.is_free_bigint.get(i) {
+                self.bigints[i as usize] = crate::ops::bigint::BigIntValue::zero();
+                self.gc.is_free_bigint.insert(i);
+                self.gc.free_bigints.push(i);
+            }
+        }
+        live_count
     }
 }

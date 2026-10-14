@@ -403,8 +403,22 @@ fn enter_call(agent: &mut Agent) -> JsResult<()> {
 }
 
 impl Object {
-    /// F.[[Call]](thisArgument, argumentsList)
+    /// F.[[Call]](thisArgument, argumentsList). Rust code calling into
+    /// JavaScript holds its unrooted handles: nothing is collected until the
+    /// call returns (docs/GC.md).
     pub fn internal_call(self, agent: &mut Agent, this: Value, args: &[Value]) -> JsResult<Value> {
+        agent.holding(|agent| self.internal_call_rooted(agent, this, args))
+    }
+
+    /// F.[[Call]] for a caller that keeps `this`, `args` and anything it uses
+    /// afterwards rooted (the interpreter's calls, jobs, tail calls): the
+    /// JavaScript it runs may collect garbage.
+    pub fn internal_call_rooted(
+        self,
+        agent: &mut Agent,
+        this: Value,
+        args: &[Value],
+    ) -> JsResult<Value> {
         enter_call(agent)?;
         let result = self.call_inner(agent, this, args);
         agent.call_depth -= 1;
@@ -431,7 +445,8 @@ impl Object {
                 let (target, bound_this) = (b.target, b.bound_this);
                 let mut all = b.bound_args.clone();
                 all.extend_from_slice(args);
-                target.internal_call(agent, bound_this, &all)
+                // A tail call: the arguments are copied into the target's frame.
+                target.internal_call_rooted(agent, bound_this, &all)
             }
             _ => {
                 if let Some(r) = crate::object::proxy::call(agent, self, this, args) {
@@ -444,6 +459,17 @@ impl Object {
 
     /// F.[[Construct]](argumentsList, newTarget)
     pub fn internal_construct(
+        self,
+        agent: &mut Agent,
+        args: &[Value],
+        new_target: Object,
+    ) -> JsResult<Object> {
+        agent.holding(|agent| self.internal_construct_rooted(agent, args, new_target))
+    }
+
+    /// F.[[Construct]] for a caller that keeps its handles rooted (see
+    /// `internal_call_rooted`).
+    pub fn internal_construct_rooted(
         self,
         agent: &mut Agent,
         args: &[Value],
@@ -492,7 +518,7 @@ impl Object {
                 } else {
                     new_target
                 };
-                target.internal_construct(agent, &all, new_target)
+                target.internal_construct_rooted(agent, &all, new_target)
             }
             _ => {
                 if let Some(r) = crate::object::proxy::construct(agent, self, args, new_target) {

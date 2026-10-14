@@ -27,8 +27,9 @@ pub(crate) fn construct(
     };
     // 4. Let args be ? CreateListFromArrayLike(argumentsList).
     let list = ops::create_list_from_array_like(agent, args.get_or_undefined(1), false)?;
-    // 5. Return ? Construct(target, args, newTarget).
-    Ok(Value::Object(ops::construct(
+    // 5. Return ? Construct(target, args, newTarget). (A tail call: nothing
+    //    here is used after it; docs/GC.md.)
+    Ok(Value::Object(ops::construct_rooted(
         agent,
         target,
         &list,

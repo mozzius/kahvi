@@ -146,6 +146,18 @@ enum Kind {
 }
 
 impl Environment {
+    /// What a collected environment's slot holds until it is reused.
+    pub(crate) fn dead() -> Environment {
+        Environment::Declarative {
+            bindings: Default::default(),
+            outer: None,
+            function: None,
+            imports: Default::default(),
+            is_module: false,
+            disposable_resource_stack: Vec::new(),
+        }
+    }
+
     pub fn new_declarative(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
         agent.alloc_env(Environment::Declarative {
             bindings: Default::default(),

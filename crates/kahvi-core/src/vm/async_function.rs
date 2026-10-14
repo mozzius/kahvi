@@ -94,7 +94,15 @@ pub(super) fn start_async_module(
 }
 
 /// Runs the async context until it awaits, returns or throws (AsyncBlockStart).
-fn resume(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
+fn resume(agent: &mut Agent, ctx: Object, how: Resumption) -> JsResult<()> {
+    // The context object holds the frame's home while it runs: keep it rooted.
+    let roots = agent.push_root(Value::Object(ctx));
+    let r = resume_rooted(agent, ctx, how);
+    agent.pop_roots(roots);
+    r
+}
+
+fn resume_rooted(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResult<()> {
     loop {
         let (mut frame, capability, function, realm, script_or_module) = {
             let c = agent

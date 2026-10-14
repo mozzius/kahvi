@@ -111,8 +111,22 @@ impl BigIntValue {
 
 impl Agent {
     pub fn new_bigint(&mut self, v: BigIntValue) -> BigInt {
-        self.bigints.push(v);
-        BigInt((self.bigints.len() - 1) as u32)
+        self.gc.allocated += 1;
+        let id = match self.gc.free_bigints.pop() {
+            Some(i) => {
+                self.gc.is_free_bigint.remove(i);
+                self.bigints[i as usize] = v;
+                i
+            }
+            None => {
+                self.bigints.push(v);
+                (self.bigints.len() - 1) as u32
+            }
+        };
+        if self.gc.pinning {
+            self.gc.pinned_bigints.insert(id);
+        }
+        BigInt(id)
     }
 
     pub fn bigint(&self, b: BigInt) -> &BigIntValue {

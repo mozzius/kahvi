@@ -51,9 +51,10 @@ Who holds:
   caller's frame roots them; the callee's frame roots its own state.
 - **Tail calls do not hold.** A built-in whose last action is a call whose
   result it returns (Function.prototype.call/apply, Reflect.apply/construct,
-  bound functions) uses `ops::call_tail`, which does not hold: nothing of
-  the built-in's is used after it. (Its `this` and arguments are rooted by
-  the caller's operand stack, as above.)
+  bound functions) uses `ops::call_rooted` / `ops::construct_rooted`, which do
+  not hold: nothing of the built-in's is used after it. (Its `this` and
+  arguments are rooted by the caller's operand stack, as above.) Jobs call
+  their handlers the same way; the running job's data is a root.
 - **Resuming suspended code** (generators, async functions, async
   generators, module evaluation) runs `run_frame` from Rust without holding:
   the code that resumes keeps the generator or context object rooted (it is
@@ -64,8 +65,11 @@ Built-ins that call back into JavaScript therefore do not need rooting
 discipline: while their callback runs, no collection can free their
 locals. The cost is that garbage made inside such a callback waits until
 the built-in returns. A built-in can opt out of holding by rooting its
-locals explicitly (`agent.root_scope()`), which matters for long-running
-callbacks; that is follow-up work, done built-in by built-in.
+locals explicitly (`agent.push_root` / `agent.pop_roots`) and calling with
+`ops::call_rooted`, which matters for long-running callbacks; that is
+follow-up work, done built-in by built-in. Code that resumes a suspended
+frame from Rust (generators, async functions) roots the object that owns
+the frame for the duration.
 
 ## Roots
 
@@ -76,11 +80,10 @@ callbacks; that is follow-up work, done built-in by built-in.
   global environment, template registry), modules (environments,
   namespaces, cycle roots, async capabilities), the job queue, the job
   being run, the symbol registry, well-known symbols and common names, the
-  rejection tracker, explicit roots (`root_scope`).
-- Compiled code is reached through the functions, scripts and modules that
-  own it: each `FunctionCode` lists the string, symbol and BigInt handles in
-  its constants (`FunctionCode::handles`, filled when compiling) and its
-  nested functions.
+  rejection tracker, explicit roots (`push_root`), the [[KeptAlive]] list.
+- Compiled code is not collected yet, so the strings and BigInts it refers
+  to are **pinned**: everything the compiler interns is marked pinned and
+  never swept (as are the agent's common names and the well-known symbols).
 
 ## Tracing
 
@@ -101,8 +104,11 @@ Jobs are data, not closures: a `Job` is an enum (`PromiseReaction`,
 - **WeakRef**: `[[WeakRefTarget]]` is a weak edge, cleared when the target
   dies. ClearKeptObjects / AddToKeptObjects keep targets alive until the end
   of the current job (the kept list is a root).
-- **FinalizationRegistry**: cells whose target dies are removed and the
-  registry is scheduled with HostEnqueueFinalizationRegistryCleanupJob.
+- **FinalizationRegistry**: cell targets and unregister tokens are weak,
+  held values strong. After a collection, every live registry with a cell
+  whose target died gets a cleanup job (`Job::FinalizationRegistryCleanup`,
+  HostEnqueueFinalizationRegistryCleanupJob). Dead unregister tokens are
+  cleared so a reused handle cannot match them.
 - **Strings** are interned: the intern table is weak, and sweeping a string
   removes its entry.
 

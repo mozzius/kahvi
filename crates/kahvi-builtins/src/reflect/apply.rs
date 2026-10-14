@@ -19,5 +19,6 @@ pub(crate) fn apply(
     // 2. Let args be ? CreateListFromArrayLike(argumentsList).
     let list = ops::create_list_from_array_like(agent, args.get_or_undefined(2), false)?;
     // 4. Return ? Call(target, thisArgument, args).
-    ops::call(agent, target, args.get_or_undefined(1), &list)
+    // A tail call: nothing here is used after it (docs/GC.md).
+    ops::call_rooted(agent, target, args.get_or_undefined(1), &list)
 }

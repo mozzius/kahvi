@@ -321,12 +321,38 @@ enum Flow {
 /// Runs a frame until it returns, yields, or throws an exception it does
 /// not handle.
 pub fn run_frame(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
+    // The frame is a root while it runs (docs/GC.md).
+    agent.gc.frames.push(crate::gc::FramePtr(&*frame));
+    let r = run_frame_loop(agent, frame);
+    agent.gc.frames.pop();
+    r
+}
+
+/// A safe point in `frame` (function entry, loop back-edges): collects if
+/// the heap has grown and no Rust code above holds unrooted handles.
+#[inline]
+fn safe_point(agent: &mut Agent, frame: &Frame) {
+    if agent.gc_wanted() {
+        if let Some(top) = agent.gc.frames.last_mut() {
+            *top = crate::gc::FramePtr(frame);
+        }
+        agent.collect_garbage();
+    }
+}
+
+fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
+    safe_point(agent, frame);
     loop {
         let pc = frame.pc;
         let op = frame.code.ops[pc];
         match execute(agent, frame, op) {
             Ok(Flow::Next) => frame.pc = pc + 1,
-            Ok(Flow::Jump(target)) => frame.pc = target,
+            Ok(Flow::Jump(target)) => {
+                frame.pc = target;
+                if target <= pc {
+                    safe_point(agent, frame);
+                }
+            }
             Ok(Flow::Done(result)) => {
                 frame.pc = frame.resume_pc.take().unwrap_or(pc + 1);
                 return Ok(result);
@@ -1137,47 +1163,61 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 .unwrap_or(Value::String(agent.names.empty));
             frame.push(name);
         }
+        // The call instructions leave the callee, this and the arguments on
+        // the operand stack until the callee returns: the frame roots them
+        // (docs/GC.md).
         Op::Call(argc) => {
-            let args = frame.pop_n(argc as usize);
-            let this = frame.pop();
-            let f = frame.pop();
-            let r = call_value(agent, f, this, &args)?;
+            let base = frame.stack.len() - argc as usize - 2;
+            let (f, this) = (frame.stack[base], frame.stack[base + 1]);
+            let r = call_value(agent, f, this, &frame.stack[base + 2..])?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::CallSpread => {
-            let array = frame.pop();
-            let this = frame.pop();
-            let f = frame.pop();
+            let base = frame.stack.len() - 3;
+            let (f, this, array) = (
+                frame.stack[base],
+                frame.stack[base + 1],
+                frame.stack[base + 2],
+            );
             let args = array_elements(agent, array)?;
             let r = call_value(agent, f, this, &args)?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::CallEval(argc) => {
-            let args = frame.pop_n(argc as usize);
-            let this = frame.pop();
-            let f = frame.pop();
+            let base = frame.stack.len() - argc as usize - 2;
+            let (f, this) = (frame.stack[base], frame.stack[base + 1]);
+            let args = frame.stack[base + 2..].to_vec();
             let r = call_maybe_eval(agent, frame, f, this, &args)?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::CallEvalSpread => {
-            let array = frame.pop();
-            let this = frame.pop();
-            let f = frame.pop();
+            let base = frame.stack.len() - 3;
+            let (f, this, array) = (
+                frame.stack[base],
+                frame.stack[base + 1],
+                frame.stack[base + 2],
+            );
             let args = array_elements(agent, array)?;
             let r = call_maybe_eval(agent, frame, f, this, &args)?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::New(argc) => {
-            let args = frame.pop_n(argc as usize);
-            let c = frame.pop();
-            let r = construct_value(agent, c, &args)?;
+            let base = frame.stack.len() - argc as usize - 1;
+            let c = frame.stack[base];
+            let r = construct_value(agent, c, &frame.stack[base + 1..])?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::NewSpread => {
-            let array = frame.pop();
-            let c = frame.pop();
+            let base = frame.stack.len() - 2;
+            let (c, array) = (frame.stack[base], frame.stack[base + 1]);
             let args = array_elements(agent, array)?;
             let r = construct_value(agent, c, &args)?;
+            frame.stack.truncate(base);
             frame.push(r);
         }
         Op::GetSuperConstructor => {
@@ -1193,16 +1233,18 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(func);
         }
         Op::SuperCall(argc) => {
-            let args = frame.pop_n(argc as usize);
-            let func = frame.pop();
-            let this = call::super_call(agent, frame.env, func, &args)?;
+            let base = frame.stack.len() - argc as usize - 1;
+            let func = frame.stack[base];
+            let this = call::super_call(agent, frame.env, func, &frame.stack[base + 1..])?;
+            frame.stack.truncate(base);
             frame.push(this);
         }
         Op::SuperCallSpread => {
-            let array = frame.pop();
-            let func = frame.pop();
+            let base = frame.stack.len() - 2;
+            let (func, array) = (frame.stack[base], frame.stack[base + 1]);
             let args = array_elements(agent, array)?;
             let this = call::super_call(agent, frame.env, func, &args)?;
+            frame.stack.truncate(base);
             frame.push(this);
         }
         Op::SuperCallForward => {
@@ -1788,9 +1830,10 @@ fn yield_delegate(agent: &mut Agent, frame: &mut Frame, ret: usize) -> JsResult<
 }
 
 /// Call(func, this, args) with a TypeError naming non-callables.
+/// Call from an instruction whose operands stay on the frame's stack (rooted).
 fn call_value(agent: &mut Agent, f: Value, this: Value, args: &[Value]) -> JsResult<Value> {
     match f {
-        Value::Object(o) if o.is_callable(agent) => o.internal_call(agent, this, args),
+        Value::Object(o) if o.is_callable(agent) => o.internal_call_rooted(agent, this, args),
         _ => Err(callable_error(agent, &describe(agent, f))),
     }
 }
@@ -1798,7 +1841,7 @@ fn call_value(agent: &mut Agent, f: Value, this: Value, args: &[Value]) -> JsRes
 fn construct_value(agent: &mut Agent, c: Value, args: &[Value]) -> JsResult<Value> {
     match c {
         Value::Object(o) if o.is_constructor(agent) => {
-            Ok(Value::Object(o.internal_construct(agent, args, o)?))
+            Ok(Value::Object(o.internal_construct_rooted(agent, args, o)?))
         }
         _ => {
             let msg = format!("{} is not a constructor", describe(agent, c));
