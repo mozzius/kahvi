@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15354,
+  "stop_reason": "tool_use",
+  "session_id": "d01ade8d-c09e-4dd0-a0b4-56c179f09087",
+  "total_cost_usd": 0.0033290800000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6223,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2992,
+    "output_tokens_details": {
+      "thinking_tokens": 2380
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6223,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2992,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6223,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6223
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Object.fromEntries in from_entries.rs. Steps 1 to 6 follow the spec in order: RequireObjectCoercible(iterable) with `?`, OrdinaryObjectCreate(%Object.prototype%), a native adder with length 2 and empty name whose captured obj lives in its [[Slots]], then delegation to AddEntriesFromIterable. The adder does ToPropertyKey(key) with `?` before CreateDataPropertyOrThrow, then returns undefined. The `?` on CreateDataPropertyOrThrow differs from the spec's `!` only in form, since an ordinary extensible object only ever gets configurable data properties, so the two are observably equivalent. There are no test-shaped branches, no swallowed errors and no made-up values. The two gate lint flags (expect on active_function, unreachable! on the slot lookup) are invariant assertions that hold whenever a built-in is invoked and the adder is created with obj in its slots. They are not reachable failures, though a reviewer may still want them removed. The renamed unused parameters and removed placeholder `let _ =` are needed by the change. The +44 test262 flips are plausible for a real implementation.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Object.fromEntries in from_entries.rs. Steps 1 to 6 follow the spec in order: RequireObjectCoercible(iterable) with `?`, OrdinaryObjectCreate(%Object.prototype%), a native adder with length 2 and empty name whose captured obj lives in its [[Slots]], then delegation to AddEntriesFromIterable. The adder does ToPropertyKey(key) with `?` before CreateDataPropertyOrThrow, then returns undefined. The `?` on CreateDataPropertyOrThrow differs from the spec's `!` only in form, since an ordinary extensible object only ever gets configurable data properties, so the two are observably equivalent. There are no test-shaped branches, no swallowed errors and no made-up values. The two gate lint flags (expect on active_function, unreachable! on the slot lookup) are invariant assertions that hold whenever a built-in is invoked and the adder is created with obj in its slots. They are not reachable failures, though a reviewer may still want them removed. The renamed unused parameters and removed placeholder `let _ =` are needed by the change. The +44 test262 flips are plausible for a real implementation.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 12236,
+  "type": "result",
+  "duration_ms": 14631,
+  "uuid": "5145db65-6136-4772-9e9b-38b25c1a7963",
+  "ttft_stream_ms": 1572,
+  "time_to_request_ms": 445,
+  "time_to_request_phases_ms": {
+    "other": 47,
+    "system_prompt": 328,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 10,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 5,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 4,
+    "client_creation": 5,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 88,
+  "time_to_request_cpu_ms": 239,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 1017,
+  "process_wall_ms_turn": 14626,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1574,
+  "time_to_request_from_spawn_ms": 19197827,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998657984.189,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
