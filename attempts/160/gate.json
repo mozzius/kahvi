@@ -1,0 +1,39 @@
+{
+  "ticket": "B-iterator-from",
+  "base": "8c197cfc6801e72fbcc682cfe8475fa9b817ec0e",
+  "head": "4a9ba14fee54e9279d46d08971845be56a70cc55",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/from.rs",
+      "added": 52,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 38,
+    "before": 12,
+    "after": 32,
+    "new_passes": 20,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/from/get-next-method-only-once.js:sloppy  Uncaught InternalError: not implemented: Iterator.prototype.toArray",
+      "built-ins/Iterator/from/get-next-method-only-once.js:strict  Uncaught InternalError: not implemented: Iterator.prototype.toArray",
+      "built-ins/Iterator/from/get-return-method-when-call-return.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Iterator/from/get-return-method-when-call-return.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Iterator/from/return-method-calls-base-return-method.js:sloppy  Uncaught InternalError: not implemented: Symbol.keyFor",
+      "built-ins/Iterator/from/return-method-calls-base-return-method.js:strict  Uncaught InternalError: not implemented: Symbol.keyFor"
+    ]
+  },
+  "decision": "pass"
+}

@@ -1,0 +1,48 @@
+{
+  "ticket": "B-set-prototype-union",
+  "base": "e3f7ccf7c1eeccfd614f0df741f2a9c6784fa1a0",
+  "head": "9c22f77c116fc259f83e260265497c47e7c3b17c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_union.rs",
+      "added": 104,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 58,
+    "before": 10,
+    "after": 24,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 34,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/union/add-not-called.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/add-not-called.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/allows-set-like-class.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/union/allows-set-like-class.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/union/allows-set-like-object.js:sloppy  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/union/allows-set-like-object.js:strict  Uncaught InternalError: not implemented: SetIteratorPrototype.next",
+      "built-ins/Set/prototype/union/appends-new-values.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/appends-new-values.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/combines-Map.js:sloppy  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/union/combines-Map.js:strict  Uncaught InternalError: not implemented: get Map.prototype.size",
+      "built-ins/Set/prototype/union/combines-empty-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/combines-empty-sets.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/combines-itself.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/combines-itself.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/union/combines-same-sets.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}

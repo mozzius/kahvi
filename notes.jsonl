@@ -239,3 +239,4 @@
 {"ticket": "B-set-prototype-union", "attempt": 155, "ts": 1791998505.1347303, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/set/prototype_union.rs:12: #[allow(dead_code)]"}
 {"ticket": "B-date-utc", "attempt": 159, "ts": 1791998577.1650794, "text": "worker reported BLOCKED but changed files: none"}
 {"ticket": "B-iterator-from", "attempt": 160, "ts": 1791998593.3981698, "text": "worker reported BLOCKED but changed files: `Symbol.keyFor` and `Iterator.prototype.toArray` are not implemented (needed by 6 runs under built-ins/Iterator/from/)."}
+{"ticket": "B-set-prototype-union", "attempt": 158, "ts": 1791998615.3940516, "text": "worker reported BLOCKED but changed files: `Set.prototype.size` getter, `SetIteratorPrototype.next`, `Set.prototype.delete` and `Map.prototype.size` getter are not implemented (needed by the union tests' setup and iteration)."}

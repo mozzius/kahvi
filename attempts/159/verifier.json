@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10921,
+  "stop_reason": "tool_use",
+  "session_id": "5506ab80-f5b5-4ba0-a733-e0a7bb38ceb3",
+  "total_cost_usd": 0.00296248,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6339,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2193,
+    "output_tokens_details": {
+      "thinking_tokens": 1607
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6339,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2193,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6339,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6339
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Date.UTC in crates/kahvi-builtins/src/date/utc.rs. Step 1 is ToNumber(year). Steps 2-7 use ToNumber on each optional argument in order, and \\\"present\\\" is decided by the args slice length, which matches the spec (an explicit undefined gives NaN). Step 8 calls date::make_full_year, and step 9 composes make_day, make_time, make_date and time_clip. No test-shaped branches, no swallowed errors, no fabricated values. The only deviation is that the stub's \\\"length\\\" and NOTE comment lines were dropped, which is cosmetic. The helpers in crate::support::date are not in the diff, so their correctness is not verified here; the test262 gate (26 new passes, 0 regressions) is consistent with them being correct.\",\"problems\":[],\"notes_for_next_attempt\":\"The implementation matches the spec steps. Minor: the stub's trailing \\\"The length property...\\\" and NOTE comment lines were removed; restoring them as comments would keep the file closer to the stub. The support::date helpers (make_full_year, make_day, make_time, make_date, time_clip) were not part of this diff and were not reviewed here.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Date.UTC in crates/kahvi-builtins/src/date/utc.rs. Step 1 is ToNumber(year). Steps 2-7 use ToNumber on each optional argument in order, and \"present\" is decided by the args slice length, which matches the spec (an explicit undefined gives NaN). Step 8 calls date::make_full_year, and step 9 composes make_day, make_time, make_date and time_clip. No test-shaped branches, no swallowed errors, no fabricated values. The only deviation is that the stub's \"length\" and NOTE comment lines were dropped, which is cosmetic. The helpers in crate::support::date are not in the diff, so their correctness is not verified here; the test262 gate (26 new passes, 0 regressions) is consistent with them being correct.",
+    "problems": [],
+    "notes_for_next_attempt": "The implementation matches the spec steps. Minor: the stub's trailing \"The length property...\" and NOTE comment lines were removed; restoring them as comments would keep the file closer to the stub. The support::date helpers (make_full_year, make_day, make_time, make_date, time_clip) were not part of this diff and were not reviewed here."
+  },
+  "ttft_ms": 8866,
+  "type": "result",
+  "duration_ms": 11138,
+  "uuid": "c8c13603-c2ba-4263-ada2-4470b60b2ae7",
+  "ttft_stream_ms": 1655,
+  "time_to_request_ms": 763,
+  "time_to_request_phases_ms": {
+    "other": 50,
+    "system_prompt": 443,
+    "resume_other": 0,
+    "process_user_input": 21,
+    "input_attachments": 75,
+    "input_hooks": 12,
+    "tool_pool_refresh": 2,
+    "init_message": 48,
+    "engine_pickup": 5,
+    "message_prep": 4,
+    "model_config_wait": 60,
+    "autocompact": 2,
+    "query_setup": 2,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 21,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 258,
+  "time_to_request_cpu_ms": 299,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 955,
+  "process_wall_ms_turn": 11137,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 46,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1666,
+  "time_to_request_from_spawn_ms": 19136017,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998594733.7502,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
