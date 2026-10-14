@@ -663,3 +663,5 @@
 {"ticket": "B-iterator-prototype-set-symbol-to-string-tag", "attempt": 489, "ts": 1792007477.4749136, "text": "worker reported BLOCKED but changed files: `get Iterator.prototype[Symbol.toStringTag]` getter (in `crates/kahvi-builtins/src/iterator/`) is not implemented, so `built-ins/Iterator/prototype/Symbol.toStringTag/weird-setter.js` cannot pass."}
 {"ticket": "B-iterator-prototype-set-symbol-to-string-tag", "attempt": 489, "ts": 1792007482.9500844, "text": "rejected by gates: no new test262 passes in target"}
 {"ticket": "B-iterator-prototype-set-symbol-to-string-tag", "attempt": 489, "ts": 1792007482.9515564, "text": "escalated from haiku to sonnet"}
+{"ticket": "B-iterator-prototype-set-constructor", "attempt": 490, "ts": 1792007524.8570569, "text": "worker reported BLOCKED but changed files: `table.rs` link loop (lines 901-902) overwrites the Iterator.prototype.constructor accessor with a data property; it must skip the Iterator constructor link so the accessor from `generated.rs` survives."}
+{"ticket": "B-number-prototype-to-locale-string", "attempt": 491, "ts": 1792007529.8445036, "text": "rejected by gates: no new test262 passes in target"}
