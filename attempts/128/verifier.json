@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 19263,
+  "stop_reason": "tool_use",
+  "session_id": "a0a9b9d6-6955-4acb-9bcf-38f28120ef83",
+  "total_cost_usd": 0.00418008,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7148,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4134,
+    "output_tokens_details": {
+      "thinking_tokens": 3668
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7148,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4134,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7148,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7148
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.indexOf in its own file, one spec step per comment. Steps 1 to 7 run in spec order. ValidateTypedArray and ToIntegerOrInfinity propagate errors with `?`. Length is captured once and the loop re-checks k < length. The -1 returns for length 0 and not-found are correct. The local to_clamped_index follows ToAbsoluteIndex and then clamps. No test-shaped branches, hardcoded values, or swallowed errors appear in the diff. The one lint flag, an unreachable! after ValidateTypedArray, is truly unreachable because RequireInternalSlot already rejects non-objects. The ticket permits the local helper, and the gate reports no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.indexOf in its own file, one spec step per comment. Steps 1 to 7 run in spec order. ValidateTypedArray and ToIntegerOrInfinity propagate errors with `?`. Length is captured once and the loop re-checks k < length. The -1 returns for length 0 and not-found are correct. The local to_clamped_index follows ToAbsoluteIndex and then clamps. No test-shaped branches, hardcoded values, or swallowed errors appear in the diff. The one lint flag, an unreachable! after ValidateTypedArray, is truly unreachable because RequireInternalSlot already rejects non-objects. The ticket permits the local helper, and the gate reports no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 17733,
+  "type": "result",
+  "duration_ms": 19683,
+  "uuid": "7b795c55-7b20-4140-8f97-050443c83a37",
+  "ttft_stream_ms": 2011,
+  "time_to_request_ms": 995,
+  "time_to_request_phases_ms": {
+    "other": 294,
+    "system_prompt": 432,
+    "resume_other": 0,
+    "process_user_input": 39,
+    "input_attachments": 53,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 77,
+    "engine_pickup": 8,
+    "message_prep": 7,
+    "model_config_wait": 23,
+    "autocompact": 9,
+    "query_setup": 1,
+    "model_gates": 3,
+    "tool_schema_build": 11,
+    "message_normalization": 8,
+    "client_creation": 16,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 360,
+  "time_to_request_cpu_ms": 337,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 227,
+  "process_anon_mib_turn_start": 110,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 1086,
+  "process_wall_ms_turn": 19657,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2012,
+  "time_to_request_from_spawn_ms": 18313264,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997770376.8542,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
