@@ -1,0 +1,203 @@
+{
+  "ticket": "B-typed-array-prototype-for-each",
+  "base": "1c86ddabf3561ce4fa01276c84552e94187475ad",
+  "head": "6bc3faa56ccfbed9e5c88445f158f3be750fe655",
+  "reject": [
+    "files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe fn enter_callback<T>(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:281: String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:299: unsafe {",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:372: pub unsafe extern \"C\" fn kahvi_strict_equals(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:386: pub unsafe extern \"C\" fn kahvi_string_new(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:403: pub unsafe extern \"C\" fn kahvi_string_utf8(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:431: pub unsafe extern \"C\" fn kahvi_to_string(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:446: pub unsafe extern \"C\" fn kahvi_symbol_to_string(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:515: pub unsafe extern \"C\" fn kahvi_bigint_to_string(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:545: pub unsafe extern \"C\" fn kahvi_array_new(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:559: pub unsafe extern \"C\" fn kahvi_get(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:577: pub unsafe extern \"C\" fn kahvi_set(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:596: pub unsafe extern \"C\" fn kahvi_has(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:624: pub unsafe extern \"C\" fn kahvi_property_names(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:718: pub unsafe extern \"C\" fn kahvi_instance_of(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:770: pub unsafe extern \"C\" fn kahvi_length(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:794: pub unsafe extern \"C\" fn kahvi_array_buffer_new(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:811: pub unsafe extern \"C\" fn kahvi_array_buffer_data(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:837: pub unsafe extern \"C\" fn kahvi_weak_new(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:853: pub unsafe extern \"C\" fn kahvi_weak_lock(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:1075: pub unsafe extern \"C\" fn kahvi_host_object_context(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:1098: pub unsafe extern \"C\" fn kahvi_host_function_context(",
+    "lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:1140: pub unsafe extern \"C\" fn kahvi_get_native_state("
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_for_each.rs",
+      "added": 36,
+      "removed": 11
+    },
+    {
+      "path": "crates/kahvi-core/src/host.rs",
+      "added": 8,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-core/src/object/host_object.rs",
+      "added": 15,
+      "removed": 3
+    },
+    {
+      "path": "crates/kahvi-ffi/src/lib.rs",
+      "added": 168,
+      "removed": 47
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 227,
+      "rule": "unsafe is architect-only",
+      "text": "unsafe fn enter_callback<T>("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 281,
+      "rule": "unsafe is architect-only",
+      "text": "String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();"
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 299,
+      "rule": "unsafe is architect-only",
+      "text": "unsafe {"
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 372,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_strict_equals("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 386,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_string_new("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 403,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_string_utf8("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 431,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_to_string("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 446,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_symbol_to_string("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 515,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_bigint_to_string("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 545,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_array_new("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 559,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_get("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 577,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_set("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 596,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_has("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 624,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_property_names("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 718,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_instance_of("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 770,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_length("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 794,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_array_buffer_new("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 811,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_array_buffer_data("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 837,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_weak_new("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 853,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_weak_lock("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 1075,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_host_object_context("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 1098,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_host_function_context("
+    },
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 1140,
+      "rule": "unsafe is architect-only",
+      "text": "pub unsafe extern \"C\" fn kahvi_get_native_state("
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-ffi/src/lib.rs",
+      "line": 697,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!()"
+    }
+  ],
+  "decision": "reject"
+}
