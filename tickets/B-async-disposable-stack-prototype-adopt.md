@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/async_disposable_stack/prototype_adopt.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/disposable_stack.rs", "crates/kahvi-core/src/ops/dispose.rs", "crates/kahvi-builtins/src/disposable_stack/prototype_use.rs"]
 spec = ["sec-asyncdisposablestack.prototype.adopt"]
 target = ["built-ins/AsyncDisposableStack/prototype/adopt/"]
-priority = 16
+priority = 22
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.
