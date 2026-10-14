@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 20447,
+  "stop_reason": "end_turn",
+  "session_id": "0bfbd88b-fd5d-44de-a659-af38648309f1",
+  "total_cost_usd": 0.007114380000000001,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 17523,
+    "cache_read_input_tokens": 168748,
+    "output_tokens": 2965,
+    "output_tokens_details": {
+      "thinking_tokens": 1050
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17523,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 261,
+        "cache_read_input_tokens": 24881,
+        "cache_creation_input_tokens": 285,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 285
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01HqD6YnQrsehvNDaZFSEReN",
+      "tool_input": {
+        "command": "git log --oneline -3 -- crates/kahvi-builtins/src/string/prototype_locale_compare.rs && git show $(git log --format=%H -1 -- crates/kahvi-builtins/src/string/prototype_locale_compare.rs)~0 --stat | head -20 && git diff HEAD~3 -- crates/kahvi-builtins/src/string/prototype_locale_compare.rs | head -5; git log --all --oneline -- crates/kahvi-builtins/src/string/prototype_locale_compare.rs | head; cat crates/kahvi-builtins/src/string/mod.rs | head -40",
+        "description": "Inspect file history and string module"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.localeCompare` is implemented in `crates/kahvi-builtins/src/string/prototype_locale_compare.rs`, and all 26 test262 runs under `built-ins/String/prototype/localeCompare/` pass. `cargo build`, `cargo clippy` and `cargo fmt --check` are clean.\n\nThe file already matched the committed attempt, so I made no edits. The spec-quoted NOTE lines are byte-identical to the stub. `kahvi_core::ops` has no code-point or UTF-16 helper, so the local `to_code_points` and `from_code_points` stay, and the comparison uses `kahvi_unicode::normalize_code_points` for NFC. Those two helpers are not shared with other built-ins.\n\nBLOCKED: none",
+  "ttft_ms": 1907,
+  "type": "result",
+  "duration_ms": 38122,
+  "uuid": "8347b325-bd8e-4f2c-9608-e548d29626cb",
+  "ttft_stream_ms": 1802,
+  "time_to_request_ms": 411,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 297,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 10,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 38,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 40,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 3159,
+  "process_wall_ms_turn": 38122,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1803,
+  "time_to_request_from_spawn_ms": 27909724,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007370359.1006,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.66,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
