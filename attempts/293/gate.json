@@ -1,0 +1,39 @@
+{
+  "ticket": "B-typed-array-prototype-reduce-right",
+  "base": "58bbb0b2001e6723b93d7f4be82d4a39963a31b1",
+  "head": "379f63849cb39f656025788c7d63703dbf77ad51",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_reduce_right.rs",
+      "added": 58,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 100,
+    "before": 8,
+    "after": 94,
+    "new_passes": 86,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer-grow-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer-grow-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer-shrink-mid-iteration.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer-shrink-mid-iteration.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/reduceRight/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

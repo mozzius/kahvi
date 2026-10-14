@@ -1420,3 +1420,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:25:06] B-typed-array-prototype-reduce: attempt 292 finished ($0.140, 12 turns)
 [18:25:08] B-typed-array-prototype-reduce-right: attempt 293 finished ($0.175, 15 turns)
 [18:25:10] B-number-prototype-to-exponential: verifier: accept The diff implements Number.prototype.toExponential in its file, following the spec steps 1 to 16 in order. ThisNumberValue and ToIntegerOrInfinity run
+[18:25:16] B-array-prototype-at: attempt on slot 3 with haiku
+[18:25:56] C-proxy-set-prototype-of: verifier: accept The diff implements Proxy [[SetPrototypeOf]] steps 1-13 in order. ValidateNonRevokedProxy, GetMethod for "setPrototypeOf", the undefined-trap forward 

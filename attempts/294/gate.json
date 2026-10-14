@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-set-prototype-of",
+  "base": "536ccf59ade9de76849032823e1f3111157bd086",
+  "head": "046ff72358d2a84fd5fe4dd8f0c650f1514aa36b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/set_prototype_of.rs",
+      "added": 38,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 34,
+    "before": 0,
+    "after": 34,
+    "new_passes": 34,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
