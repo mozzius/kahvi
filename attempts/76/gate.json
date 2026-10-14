@@ -1,0 +1,48 @@
+{
+  "ticket": "B-iterator-zip-keyed",
+  "base": "e9f5933b18d2c1e6eb7bb8880b26b66c2985048c",
+  "head": "e383349f3f29a3b18cc0272d7f4b99720403033f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/zip_keyed.rs",
+      "added": 385,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 88,
+    "before": 12,
+    "after": 58,
+    "new_passes": 46,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 30,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Iterator/zipKeyed/basic-longest.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/basic-longest.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/basic-shortest.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/basic-shortest.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/basic-strict.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/basic-strict.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/iterables-containing-string-objects.js:sloppy  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/zipKeyed/iterables-containing-string-objects.js:strict  Uncaught InternalError: not implemented: StringIteratorPrototype.next",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-after-reading-options.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-after-reading-options.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-enumerable.js:sloppy  Uncaught InternalError: not implemented: Object.values",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-enumerable.js:strict  Uncaught InternalError: not implemented: Object.values",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-get-own-property-abrupt-completion.js:sloppy  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-get-own-property-abrupt-completion.js:strict  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Iterator/zipKeyed/iterables-iteration-inherited.js:sloppy  Uncaught InternalError: not implemented: Object.values"
+    ]
+  },
+  "decision": "pass"
+}

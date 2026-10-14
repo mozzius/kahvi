@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 146923,
+  "stop_reason": "end_turn",
+  "session_id": "8f0f7b22-21f7-46b3-976d-4d8a6746cd0c",
+  "total_cost_usd": 0.03744509,
+  "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 68210,
+    "cache_read_input_tokens": 550039,
+    "output_tokens": 35698,
+    "output_tokens_details": {
+      "thinking_tokens": 25591
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 68210,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 652,
+        "cache_read_input_tokens": 75494,
+        "cache_creation_input_tokens": 196,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 196
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_011T5gctd3N4TPQWVfv3SGCF",
+      "tool_input": {
+        "command": "ls /home/user/kahvi/work/slots/slot-0/crates/kahvi-builtins/src/iterator/ /home/user/kahvi/work/slots/slot-0/crates/kahvi-core/src/ops/ && git -C /home/user/kahvi/work/slots/slot-0 log --oneline -3",
+        "description": "List iterator builtins and core ops, recent commits"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 19,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Iterator.zipKeyed` in `zip_keyed.rs`, with each spec step as a comment above its code. The zipKeyed suite is at 58 of 88 runs passing, up from 12 on main, and clippy is clean. Core lacked `GetOptionsObject`, `GetIteratorFlattenable` (reject-primitives), `IteratorZip` and `IfAbruptCloseIterators`, so I wrote them as private helpers in this file (`IteratorZip` as a zip closure over `create_iterator_helper`); `Iterator.zip` would need the same `IteratorZip`, so it should be moved to a shared place.\n\nBLOCKED: the remaining 30 zipKeyed runs fail with \"not implemented\" from other built-ins: `Reflect.ownKeys` (18), `Object.values` (4), `Iterator.from` (2), `Object.fromEntries` (2), `Proxy [[GetOwnProperty]]` (2), and `StringIteratorPrototype.next` (2).",
+  "ttft_ms": 1360,
+  "type": "result",
+  "duration_ms": 160555,
+  "uuid": "c3283197-b12f-435e-9655-df45c680bb48",
+  "ttft_stream_ms": 1184,
+  "time_to_request_ms": 150,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 12,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 1,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 70,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 49,
+  "time_to_request_cpu_ms": 135,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 270,
+  "process_anon_mib_result": 151,
+  "process_peak_rss_mib": 270,
+  "process_cpu_ms_turn": 3832,
+  "process_wall_ms_turn": 160554,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1184,
+  "time_to_request_from_spawn_ms": 19243189,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791967120375.683,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.79,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.69,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
