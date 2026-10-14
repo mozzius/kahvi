@@ -1,0 +1,35 @@
+{
+  "ticket": "B-object-is-frozen",
+  "base": "1634c555fb2bd64e9de2238b87818183d76c0d52",
+  "head": "68244e24b44ec2cfa4ce04beaf0bd32599bc8f29",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/is_frozen.rs",
+      "added": 7,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 118,
+    "before": 8,
+    "after": 116,
+    "new_passes": 108,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Object/isFrozen/proxy-no-ownkeys-returned-keys-order.js:sloppy  Uncaught InternalError: not implemented: Proxy [[IsExtensible]]",
+      "built-ins/Object/isFrozen/proxy-no-ownkeys-returned-keys-order.js:strict  Uncaught InternalError: not implemented: Proxy [[IsExtensible]]"
+    ]
+  },
+  "decision": "pass"
+}

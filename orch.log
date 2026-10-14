@@ -10,3 +10,8 @@
 [02:19:05] B-array-from-async: attempt 45 finished ($0.008, 10 turns)
 [02:21:12] B-array-from-async: verifier: accept Reviewed the Array.fromAsync implementation in from_async.rs against the pinned spec steps 1-9 and the AsyncIteratorClose, Await, and IsConstructor/Ge
 [02:26:53] B-object-seal: merged (+110, 65210 total)
+[02:26:55] B-object-is-frozen: attempt on slot 0 with haiku
+[02:26:56] B-array-from-async: full test262 run for merge
+[02:27:18] B-object-is-frozen: attempt 46 finished ($0.005, 12 turns)
+[02:27:39] B-object-is-frozen: verifier: accept The change implements Object.isFrozen as the spec describes. Step 1 returns true for non-objects. Step 2 calls the existing ops::test_integrity_level 
+[02:38:43] B-array-from-async: merged (+149, 65359 total)
