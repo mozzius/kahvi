@@ -1,0 +1,50 @@
+{
+  "ticket": "B-reg-exp-string-iterator-prototype-next",
+  "base": "07401ebacfe662ebda1489bff9e94e068a6bc77d",
+  "head": "38f6cc020b58e3bc3ba3e005076d628dec9ff720",
+  "reject": [
+    "no new test262 passes in target"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp_string_iterator_prototype/next.rs",
+      "added": 33,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 0,
+    "after": 0,
+    "new_passes": 0,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 30,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-call-throws.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-call-throws.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-get-throws.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-get-throws.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-throws.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-throws.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-tostring-throws.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-tostring-throws.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-tostring.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-match-get-0-tostring.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-not-callable.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec-not-callable.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/custom-regexpexec.js:strict  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)",
+      "built-ins/RegExpStringIteratorPrototype/next/length.js:sloppy  Uncaught InternalError: not implemented: CreateRegExpStringIterator (RegExp String Iterator slots)"
+    ]
+  },
+  "decision": "reject"
+}

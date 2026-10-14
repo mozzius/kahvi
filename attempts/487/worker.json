@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 25255,
+  "stop_reason": "end_turn",
+  "session_id": "cf2d6e93-6da1-4eec-a479-e335f2dedfa7",
+  "total_cost_usd": 0.00863807,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 21637,
+    "cache_read_input_tokens": 175187,
+    "output_tokens": 4266,
+    "output_tokens_details": {
+      "thinking_tokens": 1103
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21637,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 289,
+        "cache_read_input_tokens": 28769,
+        "cache_creation_input_tokens": 511,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 511
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented steps 1\u20132 of `%RegExpStringIteratorPrototype%.next` in `next.rs`. The target tests still pass 0 of 30. Step 3 is blocked: the RegExp String Iterator internal-slot type doesn't exist in the crate, so the brand check and the rest of the algorithm return `not_implemented`. Clippy is clean and the build passes.\n\nBLOCKED: a RegExp String Iterator internal-slot type (with [[IteratingRegExp]], [[IteratedString]], [[Global]], [[Unicode]], [[Done]]) that `CreateRegExpStringIterator` / `String.prototype.matchAll` must create, in `support/regexp.rs` or the match-all ticket's files; the iterator tests fail because `RegExp.prototype[@@matchAll]` still returns `not_implemented`.",
+  "ttft_ms": 2957,
+  "type": "result",
+  "duration_ms": 48505,
+  "uuid": "4dbae5d6-b216-462a-b065-245210dd7c00",
+  "ttft_stream_ms": 2449,
+  "time_to_request_ms": 819,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 364,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 3,
+    "message_prep": 4,
+    "model_config_wait": 338,
+    "autocompact": 3,
+    "query_setup": 2,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 5,
+    "client_creation": 6,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 110,
+  "time_to_request_cpu_ms": 535,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 3877,
+  "process_wall_ms_turn": 48505,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2451,
+  "time_to_request_from_spawn_ms": 27953302,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007413227.6667,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.67,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

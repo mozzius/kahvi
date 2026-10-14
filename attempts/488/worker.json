@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17006,
+  "stop_reason": "end_turn",
+  "session_id": "ed07e545-e9a3-4b33-b957-ee766c590cd8",
+  "total_cost_usd": 0.00444327,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 10122,
+    "cache_read_input_tokens": 66377,
+    "output_tokens": 3099,
+    "output_tokens_details": {
+      "thinking_tokens": 1099
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10122,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 387,
+        "cache_read_input_tokens": 17198,
+        "cache_creation_input_tokens": 567,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 567
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Number.prototype.toLocaleString` in its file as the spec's implementation-defined path: it runs `ThisNumberValue(this)` and returns the same string as `toString()` with no radix. `cargo build`, `cargo clippy -p kahvi-builtins` and `cargo fmt --check` are clean, and `./t262 built-ins/Number/prototype/toLocaleString/` gives 8/8.\n\nThe ticket's premise doesn't hold. Those 8 tests (`length`, `name`, `prop-desc`, `not-a-constructor`) never call the method, so they already passed with the stub. That is why the previous attempt got \"no new passes\", and this change won't add any either. I did not check the return value against a test because none exists in the vendored suite.\n\nBLOCKED: none",
+  "ttft_ms": 2135,
+  "type": "result",
+  "duration_ms": 36851,
+  "uuid": "607a4601-0a1f-41e4-9e75-5c5d7d89d60a",
+  "ttft_stream_ms": 1902,
+  "time_to_request_ms": 1160,
+  "time_to_request_phases_ms": {
+    "other": 175,
+    "system_prompt": 566,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 259,
+    "autocompact": 14,
+    "query_setup": 1,
+    "model_gates": 16,
+    "tool_schema_build": 42,
+    "message_normalization": 13,
+    "client_creation": 17,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 315,
+  "time_to_request_cpu_ms": 365,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 229,
+  "process_anon_mib_turn_start": 113,
+  "process_rss_mib_result": 254,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 2713,
+  "process_wall_ms_turn": 36850,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1903,
+  "time_to_request_from_spawn_ms": 27971267,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007429603.423,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.66,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
