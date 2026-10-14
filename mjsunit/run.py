@@ -44,6 +44,7 @@ import fnmatch
 import json
 import os
 import re
+import resource
 import shutil
 import subprocess
 import sys
@@ -58,6 +59,8 @@ CACHE = ROOT / "target" / "mjsunit"
 EXPECTED = HERE / "expected-pass.txt"
 SKIP_FILE = HERE / "skip.txt"
 SHIM = HERE / "shim.js"
+# Bump when rewrite_natives or rewrite_specifiers changes, to re-prepare the copy.
+PREPARE_VERSION = 2
 
 # Directories that test V8 itself rather than JavaScript.
 SKIP_DIRS = {
@@ -116,7 +119,6 @@ FILES_LINE = re.compile(r"//\s+Files:(.*)")
 ENV_LINE = re.compile(r"//\s+Environment Variables:(.*)")
 NO_HARNESS = re.compile(r"^// NO HARNESS$", re.M)
 NATIVE_CALL = re.compile(r"%([A-Z][A-Za-z0-9_]*)\s*\(")
-KEYWORDS_BEFORE_EXPR = ("return", "typeof", "void", "await", "yield", "throw", "case", "in", "of", "new", "delete")
 
 
 def lock():
@@ -146,29 +148,29 @@ def fetch():
 
 
 def rewrite_natives(text):
-    """Turn `%Name(` into `__v8_natives.Name(`, leaving `a % Name(b)` alone."""
-    out, last = [], 0
-    for m in NATIVE_CALL.finditer(text):
-        i = m.start() - 1
-        while i >= 0 and text[i] in " \t":
-            i -= 1
-        prev = text[i] if i >= 0 else "\n"
-        if prev.isalnum() or prev in "_$)]":
-            j = i
-            while j >= 0 and (text[j].isalnum() or text[j] in "_$"):
-                j -= 1
-            if text[j + 1:i + 1] not in KEYWORDS_BEFORE_EXPR:
-                continue  # `x % Foo(...)`: the modulo operator
-        out.append(text[last:m.start()])
-        out.append(f"__v8_natives.{m.group(1)}(")
-        last = m.end()
-    out.append(text[last:])
-    return "".join(out)
+    """Turn `%Name(` into `__v8_natives.Name(` for the natives shim.js defines.
+
+    Only those names are rewritten: tests calling any other runtime function
+    are skipped, and no test takes the modulo of a call to a function named
+    like an optimization hint, so `%PrepareFunctionForOptimization(` is never
+    the modulo operator.
+    """
+    return NATIVE_CALL.sub(
+        lambda m: f"__v8_natives.{m.group(1)}(" if m.group(1) in HINT_NATIVES | SPEC_NATIVES else m.group(0), text)
+
+
+IMPORT_SPEC = re.compile(r"""((?:\bfrom|\bimport)\s*\(?\s*)(['"])(?![./])([^'"\n]+\.m?js)\2""")
+
+
+def rewrite_specifiers(text):
+    """d8 resolves `import 'x.mjs'` against the importing file; kahvi's CLI does
+    that for `./x.mjs`. Spell such specifiers the way the CLI resolves them."""
+    return IMPORT_SPEC.sub(lambda m: f"{m.group(1)}{m.group(2)}./{m.group(3)}{m.group(2)}", text)
 
 
 def prepare(src, commit):
     """Copy test/mjsunit to target/mjsunit/prepared-COMMIT with natives rewritten."""
-    dst = CACHE / f"prepared-{commit[:12]}"
+    dst = CACHE / f"prepared-{commit[:12]}-v{PREPARE_VERSION}"
     if (dst / ".done").exists():
         return dst
     if dst.exists():
@@ -180,7 +182,10 @@ def prepare(src, commit):
         q = dst / p.relative_to(base)
         q.parent.mkdir(parents=True, exist_ok=True)
         if p.suffix in (".js", ".mjs") and p.name != "mjsunit.js":
-            q.write_text(rewrite_natives(p.read_text(errors="surrogateescape")), errors="surrogateescape")
+            text = rewrite_natives(p.read_text(errors="surrogateescape"))
+            if p.suffix == ".mjs" or "import" in text:
+                text = rewrite_specifiers(text)
+            q.write_text(text, errors="surrogateescape")
         else:
             shutil.copyfile(p, q)
     (dst / ".done").write_text(commit + "\n")
@@ -244,6 +249,8 @@ def classify(name, path, original, status, manual):
     top = name.split("/")[0] if "/" in name else None
     if top in SKIP_DIRS:
         return {"skip": f"directory: {SKIP_DIRS[top]}"}
+    if name.startswith("regress/wasm/"):
+        return {"skip": "directory: WebAssembly"}
     for glob, why in status:
         if fnmatch.fnmatchcase(stem, glob):
             return {"skip": why}
@@ -258,6 +265,8 @@ def classify(name, path, original, status, manual):
         return {"skip": f"V8 internal %{sorted(natives)[0]}"}
     if TIERING_HELPERS.search(source):
         return {"skip": "asserts V8 tiering state"}
+    if re.search(r"\bWebAssembly\b|wasm-module-builder", source):
+        return {"skip": "uses WebAssembly"}
     m = D8_API.search(re.sub(r"//.*", "", source))
     if m:
         return {"skip": f"d8 host API: {m.group(0).strip()}"}
@@ -278,6 +287,15 @@ def classify(name, path, original, status, manual):
     }
 
 
+# Address-space cap per test, so a runaway allocation fails that test instead of
+# getting the whole run killed by the OOM killer.
+MEMORY_LIMIT = 3 << 30
+
+
+def limit_memory():
+    resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT, MEMORY_LIMIT))
+
+
 def run_test(engine, prepared, name, path, spec, gc_stress, timeout):
     cmd = [engine, "--prelude", str(SHIM)]
     if spec["expose_gc"]:
@@ -294,7 +312,8 @@ def run_test(engine, prepared, name, path, spec, gc_stress, timeout):
         env["KAHVI_GC_STRESS"] = "1"
     start = time.monotonic()
     try:
-        p = subprocess.run(cmd, cwd=path.parent, env=env, capture_output=True, timeout=timeout)
+        p = subprocess.run(cmd, cwd=path.parent, env=env, capture_output=True, timeout=timeout,
+                           preexec_fn=limit_memory)
         err, status = p.stderr.decode(errors="replace"), p.returncode
     except subprocess.TimeoutExpired:
         err, status = f"timeout after {timeout}s", None
@@ -319,6 +338,8 @@ def run_test(engine, prepared, name, path, spec, gc_stress, timeout):
 
 def cause(reason):
     """Group failures: assertion text varies per test, the error kind does not."""
+    if reason.startswith("Uncaught MjsUnitAssertionError: Failure (Error message)"):
+        return "error message text differs from V8's (not a spec requirement)"
     if reason.startswith("Uncaught MjsUnitAssertionError"):
         return "Uncaught MjsUnitAssertionError (an assertion failed)"
     if "not implemented:" in reason:

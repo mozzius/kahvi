@@ -18,3 +18,13 @@ var __v8_natives = (function () {
   natives.ArrayBufferDetach = function (buffer) { $262.detachArrayBuffer(buffer); };
   return Object.freeze(natives);
 })();
+
+// d8's console: console.log and friends write their arguments to stdout.
+var console = (function () {
+  function log() {
+    var parts = [];
+    for (var i = 0; i < arguments.length; i++) parts.push(String(arguments[i]));
+    print(parts.join(" "));
+  }
+  return { log: log, info: log, warn: log, error: log, debug: log };
+})();
