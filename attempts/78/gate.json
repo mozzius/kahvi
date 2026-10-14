@@ -1,0 +1,39 @@
+{
+  "ticket": "B-object-assign",
+  "base": "7e6192b919b693002528fb2812becb263c5a2bc9",
+  "head": "e38d3e4a298b1c2b2ac0d4f38d1d204fb46fcfc3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/assign.rs",
+      "added": 30,
+      "removed": 14
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/object/assign.rs",
+      "line": 24,
+      "rule": "skipping something: check what and why",
+      "text": "for next_source in args.iter().skip(1) {"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 76,
+    "before": 10,
+    "after": 76,
+    "new_passes": 66,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
