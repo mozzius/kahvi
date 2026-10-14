@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-reduce",
+  "base": "43ed6f6cc216bd58f21b2adc478931f3c206b992",
+  "head": "c7e780d123fd4f598584ccc08554a0933a24e8a0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_reduce.rs",
+      "added": 76,
+      "removed": 27
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 60,
+    "before": 12,
+    "after": 60,
+    "new_passes": 48,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
