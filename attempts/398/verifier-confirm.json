@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5864,
+  "stop_reason": "tool_use",
+  "session_id": "914e20e3-524b-4ba4-a940-9eb52417a4c8",
+  "total_cost_usd": 0.0214775,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3512,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 678,
+    "output_tokens_details": {
+      "thinking_tokens": 278
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3512,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 678,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3512,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3512
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Date.prototype.getMinutes with the existing support::date helpers. It calls this_time_value, which covers RequireInternalSlot and reading [[DateValue]], and propagates its error with `?`. It returns NaN when tv is NaN. Otherwise it returns min_from_time(local_time(tv)). This matches spec steps 1-5, and the diff stays inside the one in-scope file. The gate shows 8 new passes, 0 regressions and 0 not-implemented results. I did not read the helper bodies, which sit outside the diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Date.prototype.getMinutes with the existing support::date helpers. It calls this_time_value, which covers RequireInternalSlot and reading [[DateValue]], and propagates its error with `?`. It returns NaN when tv is NaN. Otherwise it returns min_from_time(local_time(tv)). This matches spec steps 1-5, and the diff stays inside the one in-scope file. The gate shows 8 new passes, 0 regressions and 0 not-implemented results. I did not read the helper bodies, which sit outside the diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3508,
+  "type": "result",
+  "duration_ms": 5772,
+  "uuid": "231e85ae-7691-4607-adf3-683e72d42a76",
+  "ttft_stream_ms": 1161,
+  "time_to_request_ms": 516,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 336,
+    "resume_other": 0,
+    "process_user_input": 57,
+    "input_attachments": 37,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 13,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 9,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 163,
+  "time_to_request_cpu_ms": 425,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 737,
+  "process_wall_ms_turn": 5772,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 30,
+    "cpu_ms": 54,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1162,
+  "time_to_request_from_spawn_ms": 25454573,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004914590.5225,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.36,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
