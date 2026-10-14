@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-trim-end",
+  "base": "b42b52d60261fd95fa098f1c4b1bb0a9c92b0603",
+  "head": "e0f0c28151db03f5dee7c0b003c06325db6f0a9e",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_trim_end.rs",
+      "added": 8,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 46,
+    "before": 8,
+    "after": 46,
+    "new_passes": 38,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

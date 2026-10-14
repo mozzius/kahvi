@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6360,
+  "stop_reason": "tool_use",
+  "session_id": "9eea1049-d016-4633-89df-d534ad3fef45",
+  "total_cost_usd": 0.026542800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4967,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 588,
+    "output_tokens_details": {
+      "thinking_tokens": 181
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4967,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 588,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4967,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4967
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"contradicts_spec\":false,\"made_up_results\":false,\"skips_observable_steps\":false,\"special_cases_inputs\":false,\"swallows_errors\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the four spec steps in order, with each step as a comment above its code. It uses the existing shared helpers `require_regexp`, `has_regexp_matcher` and `regexp_initialize`. Errors propagate with `?`, and the TypeError for `flags` being defined when `pattern` is a RegExp is thrown. The remaining test262 failures come from other built-ins that are not yet implemented (`RegExp.prototype.toString` and the `global` getter). Nothing in the diff is unrelated, and the only other edit is renaming `new_target` to `_new_target`.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "contradicts_spec": false,
+      "made_up_results": false,
+      "skips_observable_steps": false,
+      "special_cases_inputs": false,
+      "swallows_errors": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the four spec steps in order, with each step as a comment above its code. It uses the existing shared helpers `require_regexp`, `has_regexp_matcher` and `regexp_initialize`. Errors propagate with `?`, and the TypeError for `flags` being defined when `pattern` is a RegExp is thrown. The remaining test262 failures come from other built-ins that are not yet implemented (`RegExp.prototype.toString` and the `global` getter). Nothing in the diff is unrelated, and the only other edit is renaming `new_target` to `_new_target`.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3570,
+  "type": "result",
+  "duration_ms": 5523,
+  "uuid": "9ef6a183-1fee-4895-a6e2-a409b9f4bc1e",
+  "ttft_stream_ms": 1770,
+  "time_to_request_ms": 479,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 325,
+    "resume_other": 1,
+    "process_user_input": 3,
+    "input_attachments": 11,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 88,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 27,
+  "time_to_request_cpu_ms": 241,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 631,
+  "process_wall_ms_turn": 5523,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1772,
+  "time_to_request_from_spawn_ms": 20249178,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999709690.4468,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

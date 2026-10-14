@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12568,
+  "stop_reason": "tool_use",
+  "session_id": "f3b55f00-95ac-458f-8967-9d89a80a7aec",
+  "total_cost_usd": 0.00260638,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4967,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2300,
+    "output_tokens_details": {
+      "thinking_tokens": 1701
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4967,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2300,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4967,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4967
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements RegExp.prototype.compile in the assigned file, following the four spec steps. Step 2 uses require_regexp (RequireInternalSlot) with `?`. Step 3 checks that pattern is an Object with a RegExpMatcher slot. Its 3a throws a TypeError when flags is not undefined. Its 3b/3c copy OriginalFlags and OriginalSource. Step 4 returns `?` regexp_initialize(...) as the object. No Get/Set calls are added where the spec has none. The only extra branch is a defensive TypeError when agent.native::<RegExpData> fails after has_regexp_matcher returned true. That path is unreachable and not observable. The remaining test262 failures come from unimplemented RegExp.prototype.toString and the global getter, which the gate reports as honest not-implemented errors. The renamed `_new_target` parameter is a trivial, related change. I could not verify the support::regexp helpers, but the build passes.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Remaining test262 failures depend on RegExp.prototype.toString and the RegExp.prototype.global getter, which are other tickets and already throw not-implemented.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements RegExp.prototype.compile in the assigned file, following the four spec steps. Step 2 uses require_regexp (RequireInternalSlot) with `?`. Step 3 checks that pattern is an Object with a RegExpMatcher slot. Its 3a throws a TypeError when flags is not undefined. Its 3b/3c copy OriginalFlags and OriginalSource. Step 4 returns `?` regexp_initialize(...) as the object. No Get/Set calls are added where the spec has none. The only extra branch is a defensive TypeError when agent.native::<RegExpData> fails after has_regexp_matcher returned true. That path is unreachable and not observable. The remaining test262 failures come from unimplemented RegExp.prototype.toString and the global getter, which the gate reports as honest not-implemented errors. The renamed `_new_target` parameter is a trivial, related change. I could not verify the support::regexp helpers, but the build passes.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Remaining test262 failures depend on RegExp.prototype.toString and the RegExp.prototype.global getter, which are other tickets and already throw not-implemented."
+  },
+  "ttft_ms": 8998,
+  "type": "result",
+  "duration_ms": 11133,
+  "uuid": "0157c21a-d5e3-4940-9b37-7a6d4174b6d0",
+  "ttft_stream_ms": 1557,
+  "time_to_request_ms": 705,
+  "time_to_request_phases_ms": {
+    "other": 54,
+    "system_prompt": 427,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 54,
+    "input_hooks": 11,
+    "tool_pool_refresh": 7,
+    "init_message": 21,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 65,
+    "autocompact": 7,
+    "query_setup": 5,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 4,
+    "client_creation": 11,
+    "request_build": 19
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 161,
+  "time_to_request_cpu_ms": 268,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 236,
+  "process_cpu_ms_turn": 929,
+  "process_wall_ms_turn": 11132,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 37,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1559,
+  "time_to_request_from_spawn_ms": 20236834,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999695570.304,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

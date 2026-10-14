@@ -320,3 +320,17 @@
 [17:41:02] B-reg-exp-prototype-compile: attempt 200 finished ($0.007, 11 turns)
 [17:41:15] B-string-prototype-trim-end: attempt 201 finished ($0.005, 9 turns)
 [17:41:36] B-object-entries: verifier: accept The diff implements Object.entries in the stub's three spec steps. ToObject(obj) is called with `?`, then EnumerableOwnProperties(coerced, key+value) 
+[17:41:40] B-string-prototype-trim-start: attempt on slot 0 with haiku
+[17:41:45] stack: stack/0005 (#18) green: 72759/81183 passing, +585
+[17:41:45] B-typed-array-prototype-join: merged (+54, 72759 total)
+[17:41:45] B-typed-array-prototype-includes: merged (+78, 72759 total)
+[17:41:45] B-typed-array-prototype-some: merged (+74, 72759 total)
+[17:41:45] B-typed-array-prototype-every: merged (+70, 72759 total)
+[17:41:45] B-iterator-prototype-flat-map: merged (+74, 72759 total)
+[17:41:45] B-reflect-own-keys: merged (+16, 72759 total)
+[17:41:45] B-typed-array-prototype-index-of: merged (+72, 72759 total)
+[17:41:45] B-typed-array-prototype-last-index-of: merged (+70, 72759 total)
+[17:41:48] B-reflect-set-prototype-of: verifier: accept The diff implements Reflect.setPrototypeOf in the stub, following the three spec steps. Step 1 throws a TypeError when target is not an Object. Step 2
+[17:41:52] stack: pushed stack/0006 as #19 with B-typed-array-prototype-for-each, B-typed-array-prototype-find, B-array-buffer-prototype-slice
+[17:41:56] B-reg-exp-prototype-compile: verifier: accept The diff implements RegExp.prototype.compile in the assigned file, following the four spec steps. Step 2 uses require_regexp (RequireInternalSlot) wit
+[17:42:00] B-string-prototype-trim-end: verifier: accept The diff wires String.prototype.trimEnd to the shared TrimString helper with TrimWhere::End. Step 1 (this value) and step 2 (return ? TrimString(strin

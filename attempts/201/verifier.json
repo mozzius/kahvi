@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9340,
+  "stop_reason": "tool_use",
+  "session_id": "7f8bbf71-dcf5-4016-9f66-88cb7f2a651a",
+  "total_cost_usd": 0.00186718,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3591,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1646,
+    "output_tokens_details": {
+      "thinking_tokens": 1065
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3591,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1646,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3591,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3591
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff wires String.prototype.trimEnd to the shared TrimString helper with TrimWhere::End. Step 1 (this value) and step 2 (return ? TrimString(string, end)) are kept as spec comments above the code, errors propagate with `?`, and the unused `args`/`new_target` are discarded explicitly. Nothing is special-cased, hardcoded or swallowed, and the only file touched is the in-scope one. The gate shows 38 new passing test262 runs with 0 regressions. The helper body (RequireObjectCoercible, ToString order, the Zs/LineTerminator whitespace set) lives in prototype_trim.rs, which is outside this diff, so I did not inspect it. The test results are the evidence that it is correct for trimEnd.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in the visible diff. Not verified: the body of trim_string and TrimWhere in crates/kahvi-builtins/src/string/prototype_trim.rs, which the diff relies on for RequireObjectCoercible, ToString and the whitespace definition. Check that file against the TrimString steps if this is reviewed again.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff wires String.prototype.trimEnd to the shared TrimString helper with TrimWhere::End. Step 1 (this value) and step 2 (return ? TrimString(string, end)) are kept as spec comments above the code, errors propagate with `?`, and the unused `args`/`new_target` are discarded explicitly. Nothing is special-cased, hardcoded or swallowed, and the only file touched is the in-scope one. The gate shows 38 new passing test262 runs with 0 regressions. The helper body (RequireObjectCoercible, ToString order, the Zs/LineTerminator whitespace set) lives in prototype_trim.rs, which is outside this diff, so I did not inspect it. The test results are the evidence that it is correct for trimEnd.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in the visible diff. Not verified: the body of trim_string and TrimWhere in crates/kahvi-builtins/src/string/prototype_trim.rs, which the diff relies on for RequireObjectCoercible, ToString and the whitespace definition. Check that file against the TrimString steps if this is reviewed again."
+  },
+  "ttft_ms": 7191,
+  "type": "result",
+  "duration_ms": 9425,
+  "uuid": "5411c5a5-b624-470b-8b6f-91a6286d7033",
+  "ttft_stream_ms": 2021,
+  "time_to_request_ms": 900,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 651,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 134,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 180,
+  "time_to_request_cpu_ms": 410,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 771,
+  "process_wall_ms_turn": 9425,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2022,
+  "time_to_request_from_spawn_ms": 20240758,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999700060.858,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
