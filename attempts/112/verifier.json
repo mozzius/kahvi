@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 17515,
+  "stop_reason": "tool_use",
+  "session_id": "a48e288e-e8e6-4352-8d31-5594e33cf0ce",
+  "total_cost_usd": 0.00406088,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7619,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3614,
+    "output_tokens_details": {
+      "thinking_tokens": 3096
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7619,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3614,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7619,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7619
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements %TypedArray%.prototype.fill in order: ValidateTypedArray, TypedArrayLength, ToBigInt/ToNumber on value, ToClampedIndex for start then end (with undefined end defaulting to length), ValidateTypedArrayBounds, length refresh, min clamp, and the TypedArraySetElement loop, returning obj. Each step is kept as a comment. The BigInt path throws the engine's not-implemented error via ops, which is honest. The two lint flags (unreachable! after validate_typed_array, expect on typed_array_data) are provably unreachable because validation has already established that obj is a TypedArray object. Step 8 calls validate_typed_array rather than validate_typed_array_bounds, but the extra RequireInternalSlot check is unobservable and redundant, so it is not a defect. No special-casing, no hardcoded results, no swallowed errors.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements %TypedArray%.prototype.fill in order: ValidateTypedArray, TypedArrayLength, ToBigInt/ToNumber on value, ToClampedIndex for start then end (with undefined end defaulting to length), ValidateTypedArrayBounds, length refresh, min clamp, and the TypedArraySetElement loop, returning obj. Each step is kept as a comment. The BigInt path throws the engine's not-implemented error via ops, which is honest. The two lint flags (unreachable! after validate_typed_array, expect on typed_array_data) are provably unreachable because validation has already established that obj is a TypedArray object. Step 8 calls validate_typed_array rather than validate_typed_array_bounds, but the extra RequireInternalSlot check is unobservable and redundant, so it is not a defect. No special-casing, no hardcoded results, no swallowed errors.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 15484,
+  "type": "result",
+  "duration_ms": 17317,
+  "uuid": "0703cc85-8c58-4d82-9865-47b70b760890",
+  "ttft_stream_ms": 1789,
+  "time_to_request_ms": 714,
+  "time_to_request_phases_ms": {
+    "other": 44,
+    "system_prompt": 355,
+    "resume_other": 13,
+    "process_user_input": 21,
+    "input_attachments": 85,
+    "input_hooks": 5,
+    "tool_pool_refresh": 6,
+    "init_message": 17,
+    "engine_pickup": 6,
+    "message_prep": 10,
+    "model_config_wait": 98,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 7,
+    "client_creation": 32,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 132,
+  "time_to_request_cpu_ms": 386,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 991,
+  "process_wall_ms_turn": 17315,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 40,
+    "cpu_ms": 104,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1790,
+  "time_to_request_from_spawn_ms": 17906595,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997366514.6685,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

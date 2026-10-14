@@ -1,0 +1,97 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_fill.rs b/crates/kahvi-builtins/src/typed_array/prototype_fill.rs
+index d7a6ce3..f780563 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_fill.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_fill.rs
+@@ -2,33 +2,84 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-%typedarray%.prototype.fill
+ 
++use kahvi_core::object::typed_array::{typed_array_data, typed_array_length};
+ use kahvi_core::prelude::*;
+ 
++use crate::support::typed_array::{typed_array_set_element, validate_typed_array};
++
++/// ToClampedIndex(_value_, _length_)
++///
++/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
++///
++/// Not yet in `ops`; only the TypedArray and Array built-ins need it so far.
++fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
++    //    ToAbsoluteIndex ( _start_, _length_ ):
++    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
++    let relative_index = ops::to_integer_or_infinity(agent, value)?;
++    //    2. If _relativeIndex_ is -∞, return +0𝔽.
++    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
++    //    4. Else, return min(_relativeIndex_, _length_).
++    let index = if relative_index == f64::NEG_INFINITY {
++        0.0
++    } else if relative_index < 0.0 {
++        (length + relative_index).max(0.0)
++    } else {
++        relative_index.min(length)
++    };
++    // 2. Return the result of clamping _index_ between 0 and _length_.
++    Ok(index.clamp(0.0, length))
++}
++
+ /// TypedArray.prototype.fill
+ pub(crate) fn prototype_fill(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // The interpretation and use of the arguments of this method are the same as for `Array.prototype.fill` as defined in [sec-array.prototype.fill].
+-    // This method performs the following steps when called:
+-    //
+     // 1. Let _obj_ be the *this* value.
++    let obj = this;
+     // 2. Let _taRecord_ be ? ValidateTypedArray(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, obj)?;
++    let Value::Object(obj) = obj else {
++        unreachable!("ValidateTypedArray accepted a non-object")
++    };
+     // 3. Let _length_ be TypedArrayLength(_taRecord_).
++    let mut length = typed_array_length(agent, ta_record) as f64;
+     // 4. If _obj_.[[ContentType]] is ~bigint~, set _value_ to ? ToBigInt(_value_).
+     // 5. Else, set _value_ to ? ToNumber(_value_).
++    let kind = typed_array_data(agent, obj).expect("a TypedArray").kind;
++    let value = args.get_or_undefined(0);
++    let value = if kind.is_bigint() {
++        Value::BigInt(ops::bigint::to_bigint(agent, value)?)
++    } else {
++        Value::Number(ops::to_number(agent, value)?)
++    };
+     // 6. Let _startIndex_ be ? ToClampedIndex(_start_, _length_).
++    let start_index = to_clamped_index(agent, args.get_or_undefined(1), length)?;
+     // 7. If _end_ is *undefined*, let _endIndex_ be _length_; else let _endIndex_ be ? ToClampedIndex(_end_, _length_).
++    let end = args.get_or_undefined(2);
++    let mut end_index = if end.is_undefined() {
++        length
++    } else {
++        to_clamped_index(agent, end, length)?
++    };
+     // 8. Set _taRecord_ to ? ValidateTypedArrayBounds(_obj_, ~seq-cst~).
++    let ta_record = validate_typed_array(agent, Value::Object(obj))?;
+     // 9. Set _length_ to TypedArrayLength(_taRecord_).
++    length = typed_array_length(agent, ta_record) as f64;
+     // 10. Set _endIndex_ to min(_endIndex_, _length_).
++    end_index = end_index.min(length);
+     // 11. Let _k_ be _startIndex_.
++    let mut k = start_index;
+     // 12. Repeat, while _k_ < _endIndex_,
+-    //    a. Perform ! TypedArraySetElement(_obj_, 𝔽(_k_), _value_).
+-    //    b. Set _k_ to _k_ + 1.
++    while k < end_index {
++        // a. Perform ! TypedArraySetElement(_obj_, 𝔽(_k_), _value_).
++        typed_array_set_element(agent, obj, k, value)?;
++        // b. Set _k_ to _k_ + 1.
++        k += 1.0;
++    }
+     // 13. Return _obj_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype.fill"))
++    Ok(Value::Object(obj))
+ }

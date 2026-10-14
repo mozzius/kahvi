@@ -1,0 +1,50 @@
+{
+  "ticket": "B-typed-array-prototype-fill",
+  "base": "80a74d93cf4805de4cc2a990feafc485dae4ca4b",
+  "head": "53ba1d4e6e243c2f6c66029f89a8865c253c27ef",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_fill.rs",
+      "added": 59,
+      "removed": 8
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_fill.rs",
+      "line": 46,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_fill.rs",
+      "line": 52,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let kind = typed_array_data(agent, obj).expect(\"a TypedArray\").kind;"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 102,
+    "before": 8,
+    "after": 98,
+    "new_passes": 90,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/fill/coerced-value-start-end-resize.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/fill/coerced-value-start-end-resize.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/fill/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/fill/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

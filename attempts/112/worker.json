@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 26579,
+  "stop_reason": "end_turn",
+  "session_id": "95cea97f-5173-4921-934c-26f8fa33af95",
+  "total_cost_usd": 0.01374667,
+  "usage": {
+    "input_tokens": 13,
+    "cache_creation_input_tokens": 40898,
+    "cache_read_input_tokens": 233067,
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "thinking_tokens": 1892
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 40898,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 315,
+        "cache_read_input_tokens": 48028,
+        "cache_creation_input_tokens": 513,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 513
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.fill` in `crates/kahvi-builtins/src/typed_array/prototype_fill.rs`, with each spec step kept as a comment above its code. `./t262 built-ins/TypedArray/prototype/fill/` now gives 98 of 102 runs passing, and clippy is clean. The four failures are the `coerced-value-start-end-resize` and `resizable-buffer` tests, which hit \"not implemented: BigInt\" because the engine's BigInt conversion is not built yet, so they are outside this ticket's scope.\n\nI added a private `to_clamped_index` in my file because the only existing copies are private to other built-ins' files, and the ticket limits me to this file. Nothing outside the scope was changed.\n\nBLOCKED: BigInt conversion (`ops::bigint::to_bigint`) is not implemented in the engine, so the BigInt-content fill tests cannot pass yet.",
+  "ttft_ms": 1843,
+  "type": "result",
+  "duration_ms": 56609,
+  "uuid": "8f85370f-5942-4f56-8e98-1b9733d4c518",
+  "ttft_stream_ms": 1588,
+  "time_to_request_ms": 781,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 559,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 12,
+    "input_hooks": 13,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 58,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 34,
+    "message_normalization": 2,
+    "client_creation": 15,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 150,
+  "time_to_request_cpu_ms": 474,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 235,
+  "process_anon_mib_turn_start": 119,
+  "process_rss_mib_result": 253,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 3777,
+  "process_wall_ms_turn": 56609,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1589,
+  "time_to_request_from_spawn_ms": 17827254,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997287028.2947,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
