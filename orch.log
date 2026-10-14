@@ -944,3 +944,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:10:50] B-global-escape: attempt 265 finished ($0.008, 13 turns)
 [18:10:50] B-iterator-prototype-to-array: attempt 266 finished ($0.008, 8 turns)
 [18:10:51] B-date-prototype-set-month: verifier: accept The diff implements Date.prototype.setMonth in the same order as the spec. this_time_value performs the RequireInternalSlot check and reads [[DateValu
+[18:10:56] B-map-prototype-delete: attempt on slot 0 with haiku
+[18:11:30] B-global-escape: verifier: accept The escape implementation in crates/kahvi-builtins/src/global/escape.rs follows the spec steps in order. ToString is applied with `?`, and the unescap

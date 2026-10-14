@@ -1,0 +1,32 @@
+{
+  "ticket": "B-global-escape",
+  "base": "95ef66fa786f591ed6a569b58a94183078a5a8ec",
+  "head": "3700d4c6fe35bb6568bae9945c9c0a65591e8662",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/global/escape.rs",
+      "added": 49,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 8,
+    "after": 32,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

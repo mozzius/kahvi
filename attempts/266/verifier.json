@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11335,
+  "stop_reason": "tool_use",
+  "session_id": "fa079df4-f776-49fc-a77c-9a7412acb86d",
+  "total_cost_usd": 0.00225798,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4285,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2009,
+    "output_tokens_details": {
+      "thinking_tokens": 1435
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4285,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2009,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4285,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4285
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Iterator.prototype.toArray in its single in-scope file and follows the spec steps in order. Step 2 throws a TypeError for non-objects. Step 3 propagates GetIteratorDirect errors with `?`. Step 5 loops over ops::iterator_step_value_rooted with `?`, returns CreateArrayFromList on done, and appends each value to the list. Items and the iterator's next method are rooted with with_roots and push_root. No test-shaped branches, hardcoded values, swallowed errors, or out-of-scope edits appear in the diff. The gate report is clean and shows 24 new passing test262 tests with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found. Minor, non-blocking notes: the spec header line \\\"This method performs the following steps when called:\\\" was dropped from the comment block. The `this` value is only rooted from inside with_roots, after get_iterator_direct has already run its Get(obj, \\\"next\\\") call. That is probably fine because arguments are normally rooted by the caller, but a GC-stress run (KAHVI_GC_STRESS=1) would confirm it.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Iterator.prototype.toArray in its single in-scope file and follows the spec steps in order. Step 2 throws a TypeError for non-objects. Step 3 propagates GetIteratorDirect errors with `?`. Step 5 loops over ops::iterator_step_value_rooted with `?`, returns CreateArrayFromList on done, and appends each value to the list. Items and the iterator's next method are rooted with with_roots and push_root. No test-shaped branches, hardcoded values, swallowed errors, or out-of-scope edits appear in the diff. The gate report is clean and shows 24 new passing test262 tests with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found. Minor, non-blocking notes: the spec header line \"This method performs the following steps when called:\" was dropped from the comment block. The `this` value is only rooted from inside with_roots, after get_iterator_direct has already run its Get(obj, \"next\") call. That is probably fine because arguments are normally rooted by the caller, but a GC-stress run (KAHVI_GC_STRESS=1) would confirm it."
+  },
+  "ttft_ms": 8911,
+  "type": "result",
+  "duration_ms": 11127,
+  "uuid": "8da7c20d-3900-4fa7-9e8b-d87aebf00480",
+  "ttft_stream_ms": 1615,
+  "time_to_request_ms": 597,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 473,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 23,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 5,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 114,
+  "time_to_request_cpu_ms": 389,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 229,
+  "process_cpu_ms_turn": 855,
+  "process_wall_ms_turn": 11126,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1616,
+  "time_to_request_from_spawn_ms": 22014224,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001473725.0813,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

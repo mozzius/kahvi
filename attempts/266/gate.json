@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-to-array",
+  "base": "f77ee1c80cbe39a80a08a488855f622ae416cac3",
+  "head": "bf26bc681b850f620c0565572ed1d0fff258d36a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_to_array.rs",
+      "added": 23,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 12,
+    "after": 36,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
