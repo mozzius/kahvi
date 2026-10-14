@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10205,
+  "stop_reason": "tool_use",
+  "session_id": "28c4cc71-ae54-459e-9ed2-e68f45f1c376",
+  "total_cost_usd": 0.0488024,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9067,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1133,
+    "output_tokens_details": {
+      "thinking_tokens": 592
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9067,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1133,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 9067,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9067
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1-15 in order. It checks the receiver with RequireInternalSlot and takes the witness record. It computes sourceLength, then converts start with ToClampedIndex. It reads [[ByteOffset]] and [[ArrayLength]] after the start conversion, as the spec does. It takes the auto-length early return when end is undefined. Otherwise it converts end, computes newLength, and calls TypedArraySpeciesCreate. Errors propagate with `?`. The local to_clamped_index helper matches ToAbsoluteIndex and ToClampedIndex, and the ticket allows a local helper. The one lint flag is an `expect` on `typed_array_data`. Step 2 already checked that the receiver is a TypedArray, so that `expect` is the spec's step 3 assertion and cannot fire. The 14 remaining test failures come from other unimplemented built-ins (BigInt, join, ArrayBuffer resizable), not from this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1-15 in order. It checks the receiver with RequireInternalSlot and takes the witness record. It computes sourceLength, then converts start with ToClampedIndex. It reads [[ByteOffset]] and [[ArrayLength]] after the start conversion, as the spec does. It takes the auto-length early return when end is undefined. Otherwise it converts end, computes newLength, and calls TypedArraySpeciesCreate. Errors propagate with `?`. The local to_clamped_index helper matches ToAbsoluteIndex and ToClampedIndex, and the ticket allows a local helper. The one lint flag is an `expect` on `typed_array_data`. Step 2 already checked that the receiver is a TypedArray, so that `expect` is the spec's step 3 assertion and cannot fire. The 14 remaining test failures come from other unimplemented built-ins (BigInt, join, ArrayBuffer resizable), not from this diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7715,
+  "type": "result",
+  "duration_ms": 10757,
+  "uuid": "46d27fa7-54fe-4351-9749-b6d7d1bb611c",
+  "ttft_stream_ms": 2588,
+  "time_to_request_ms": 1331,
+  "time_to_request_phases_ms": {
+    "other": 89,
+    "system_prompt": 860,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 19,
+    "input_hooks": 6,
+    "tool_pool_refresh": 7,
+    "init_message": 20,
+    "engine_pickup": 8,
+    "message_prep": 19,
+    "model_config_wait": 257,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 9,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 325,
+  "time_to_request_cpu_ms": 564,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 228,
+  "process_anon_mib_turn_start": 111,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 113,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 919,
+  "process_wall_ms_turn": 10757,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2589,
+  "time_to_request_from_spawn_ms": 17732948,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997191404.1868,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792014600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

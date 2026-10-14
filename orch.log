@@ -11,3 +11,5 @@
 [16:59:14] B-reflect-define-property: verifier: accept The change implements Reflect.defineProperty in its file and follows the four spec steps in order. Step 1 throws a TypeError when the target is not an
 [16:59:19] B-typed-array-prototype-copy-within: attempt on slot 0 with haiku
 [16:59:35] B-data-view-prototype-set-uint8: verifier: accept The diff implements DataView.prototype.setUint8 in its one in-scope file. Step 1 binds the this value to `view`. Step 2 calls `set_view_value(agent, v
+[16:59:39] B-typed-array-prototype-values: attempt on slot 2 with haiku
+[17:00:05] B-typed-array-prototype-subarray: verifier: accept The diff implements %TypedArray%.prototype.subarray steps 1-15 in order, in the single in-scope file. RequireInternalSlot throws a TypeError for non-T
