@@ -237,3 +237,5 @@
 [17:29:39] B-reg-exp-prototype-get-multiline: verifier: accept The diff implements the get RegExp.prototype.multiline accessor (code unit 0x6D) and a local RegExpHasFlag helper in the one in-scope file. The helper
 [17:29:43] B-global-encode-uri-component: attempt on slot 2 with haiku
 [17:29:50] B-string-prototype-includes: verifier: accept The diff implements String.prototype.includes steps 1-12 in order. RequireObjectCoercible, ToString(this), IsRegExp(searchString), the TypeError on a 
+[17:29:53] B-iterator-prototype-for-each: attempt on slot 0 with haiku
+[17:30:05] C-proxy-get-prototype-of: verifier: accept The diff implements Proxy [[GetPrototypeOf]] (spec steps 1-13) in get_prototype_of.rs, in order, with each step's spec text kept as a comment above it
