@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Iterator.prototype.find in its own file, following the spec steps in order. Checked against the spec: TypeError on a non-object `this` (step 2); the IsCallable check with IteratorClose on the TypeError (step 4); GetIteratorDirect after that check (step 5); the loop with IteratorStepValue, Call(predicate, undefined, [value, counter]), IfAbruptCloseIterator, ToBoolean and IteratorClose(NormalCompletion(value)) (steps 7a-7e); and the counter increment, which is guarded by the 2^53 NOTE (steps 7f-7g). Errors propagate with `?` or through iterator_close. There are no test-shaped branches and no made-up values. The only unverified item is the behaviour of the ops helpers (iterator_close, get_iterator_direct, iterator_step_value), which live outside this diff. The gate's 52 new passes are plausible for a diff of this size.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
