@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8746,
+  "stop_reason": "tool_use",
+  "session_id": "42d5dc17-88c2-4925-b45f-569ad3a79a29",
+  "total_cost_usd": 0.0259422,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3974,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 935,
+    "output_tokens_details": {
+      "thinking_tokens": 520
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3974,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 935,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3974,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3974
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The getter follows spec steps 1\u20135 in order, with the spec text as comments. It uses the existing core helpers `array_buffer_data` and `is_fixed_length_array_buffer`. Step 2 throws a TypeError for non-objects and for objects without [[ArrayBufferData]]. Step 3 (IsSharedArrayBuffer) is not coded, and a comment says the engine has no Shared Data Block representation. I could not check that claim, but it fits the passing results. The target went from 6 to 18 passing with no regressions, which matches a small, general change. Only the one in-scope file changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The getter follows spec steps 1\u20135 in order, with the spec text as comments. It uses the existing core helpers `array_buffer_data` and `is_fixed_length_array_buffer`. Step 2 throws a TypeError for non-objects and for objects without [[ArrayBufferData]]. Step 3 (IsSharedArrayBuffer) is not coded, and a comment says the engine has no Shared Data Block representation. I could not check that claim, but it fits the passing results. The target went from 6 to 18 passing with no regressions, which matches a small, general change. Only the one in-scope file changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 6219,
+  "type": "result",
+  "duration_ms": 8696,
+  "uuid": "a45d60d1-efaa-485d-b06b-6bcf9eba1e2d",
+  "ttft_stream_ms": 1807,
+  "time_to_request_ms": 535,
+  "time_to_request_phases_ms": {
+    "other": 42,
+    "system_prompt": 367,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 27,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 3,
+    "message_prep": 9,
+    "model_config_wait": 32,
+    "autocompact": 4,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 5,
+    "client_creation": 4,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 115,
+  "time_to_request_cpu_ms": 394,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 237,
+  "process_cpu_ms_turn": 726,
+  "process_wall_ms_turn": 8695,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1809,
+  "time_to_request_from_spawn_ms": 23193115,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002652963.3086,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.14,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
