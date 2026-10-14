@@ -5,22 +5,32 @@ when handing off.
 
 ## As of 2026-10-14
 
-- **test262:** 69,294 passing runs (86.7% of those in scope;
-  `conformance/skip.txt` excludes intl402, staging and proposals not in
-  the pinned spec; Annex B is in scope). The ratchet (`conformance/expected-pass.txt`)
-  has never regressed.
-- **Branches:** `m1-spine` is the integration branch (the swarm's merge bot
-  lands on it; architect work lands with `harness/land.sh`). `arch` is the
-  architect branch (worktree `../kahvi-arch`). `orch-runs` holds the run
-  state. `main` gets `m1-spine` by PR (#3 is the first); keep it current
-  after each landing.
-- **Swarm:** ~330 open built-in tickets (Haiku), ~60 partial. Stopped at
-  handoff; restart it in the new session (below).
+- **test262:** 71,374 passing runs at the switch to stacked PRs (87.9% of
+  those in scope; `conformance/skip.txt` excludes intl402, staging and
+  proposals not in the pinned spec; Annex B is in scope). The ratchet has
+  never regressed.
+- **Landing:** through stacked PRs (docs/STACKS.md). Accepted work is pushed
+  as layers `stack/NNNN`, each a PR on the layer below; sharded PR CI runs
+  the full suite (and GC stress for the `gc-stress` label) against the
+  layer below's results; Samuel merges from the bottom. The stack sat on
+  `m1-spine` (PR #3) at the switch; once #3 merges it sits on `main`.
+  `m1-spine` and `harness/land.sh` are retired.
+- **Branches:** `stack` is local (the stack top workers start from; the
+  main checkout stays on it). `arch` is the architect branch (worktree
+  `../kahvi-arch`); start it from `stack` and land with `./orch land arch`.
+  `orch-runs` holds the run state, including the stack's layers.
+- **GC stress:** until 2026-10-14 the runner cleared the engine's
+  environment, so `KAHVI_GC_STRESS=1 ./t262` never stressed anything. Fixed
+  (the runner passes that variable through); the first real stress runs
+  found nothing.
+- **Actions minutes:** the repo is private; Samuel makes it public when the
+  minutes run out. A layer whose CI cannot start shows as `stuck` in
+  `./orch stack`: tell him.
 
 ## Resuming on a fresh machine
 
 ```
-git clone <repo> kahvi && cd kahvi && git checkout m1-spine
+git clone <repo> kahvi && cd kahvi
 git submodule update --init --depth 1
 # Restore the run state (ticket statuses, attempt history) before `orch run`,
 # or every finished ticket starts over as open:
@@ -31,36 +41,35 @@ cp work/runs-repo/state.db work/state.db
 git fetch origin arch:arch && git worktree add ../kahvi-arch arch
 # Per-machine orchestrator settings (work/ is not committed):
 cat > work/orch.local.toml <<'TOML'
-branch = "m1-spine"   # the integration branch (main gets it by PR)
-push = true           # containers are ephemeral: keep every merge on origin
-# slots = 4           # more concurrent workers on a bigger box
+branch = "stack"      # local: the stack top
+push = true
+slots = 4             # no local full-suite runs any more
 
 [escalation]
 tiers = ["haiku", "sonnet"]   # Opus-tier work comes to the architect instead
 max_attempts = 4
+
+[stack]
+repo = "mozzius/kahvi"
+trunk = "main"
+required_checks = ["test262", "fmt, clippy, test"]
 TOML
+# The stacker rebuilds `stack` from the newest open layer. Attempts that
+# were queued but not yet in a layer were local commits: they are lost and
+# their tickets start over.
+git checkout -B stack origin/main
 nohup ./orch run > work/orch.log 2>&1 & echo $! > work/orch.pid
 ```
 
-At handoff one ticket (`B-array-prototype-to-spliced`) was killed mid-merge;
-`orch run` reopens it on start.
-
 ## Landing architect work
 
-From `../kahvi-arch`, after a clean full run against
-`conformance/expected-pass.txt`:
-
-```
-KAHVI_ROOT=<main checkout> setsid nohup bash harness/land.sh arch > land.log 2>&1 < /dev/null &
-```
-
-It stops the swarm (draining in-flight attempts), merges, runs the full suite
-on the release build, refuses on any regression, pushes and restarts the
-swarm. It takes 20-40 minutes: run it detached and watch `land.log` for the
-`land:` line (or "regressions; undoing"). Then merge `m1-spine` back into
-`arch`, and regenerate tickets there (`python3 harness/gen/tickets.py
---counts counts.json`, counts from the latest `work/attempts/*/full.jsonl`)
-so stubs and priorities reflect the swarm's merges.
+In `../kahvi-arch`, on `arch` started from `stack`: run the affected
+test262 directories (and `KAHVI_GC_STRESS=1` for GC changes) locally, then
+`./orch land arch` from the main checkout. The running orchestrator merges
+it onto the stack as its own layer; CI runs the full suite on it. See it
+with `./orch stack`. Then regenerate tickets on the next `arch`
+(`python3 harness/gen/tickets.py --counts counts.json`, counts from the
+newest `work/layers/*/results.jsonl`).
 
 ## Pacing
 

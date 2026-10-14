@@ -19,10 +19,11 @@ gate report and verdicts, the logs) is versioned on its own branch,
 `orch-runs`: the orchestrator commits and pushes a snapshot after every
 attempt. The code branch stays free of these commits.
 
-The merge bot fast-forwards the integration branch in the main checkout, so
-architect work happens in a separate worktree. To land it: `./orch stop`,
-wait for `orch run` to exit (Ctrl-C also drains in-flight work), merge into
-the integration branch, re-baseline, push, start `./orch run` again.
+Accepted work lands through stacked PRs whose CI runs the full suite
+(docs/STACKS.md). The stacker moves the local `stack` branch in the main
+checkout, so architect work happens in a separate worktree and lands with
+`./orch land BRANCH`, as its own layer. Without `[stack] repo` the old local
+merge bot advances `branch` after a local full run instead.
 
 ## test262 runner (`./t262`, `harness/t262`)
 
@@ -42,8 +43,8 @@ The runner is built so that faking a pass is hard:
 
 `conformance/skip.txt` lists the features and paths that are out of scope.
 `conformance/expected-pass.txt` is the ratchet: every run that passes on the
-integration branch. Only the merge bot writes it, and a merge that removes a
-line is refused.
+integration branch. Each stack layer carries the pass set CI measured on the
+layer below, and CI refuses a layer that loses any of it.
 
 To check the runner itself against a mature engine:
 
@@ -142,7 +143,7 @@ Configuration is in `harness/orch.toml`. Per-machine overrides go in
   only.
 - **Verifier** (Sonnet by default). Blind, structured output, calibrated
   against the red-team set.
-- **Merge bot.** Plain code, no model.
+- **Stacker** (or the local merge bot). Plain code, no model.
 
 ## Calibration log
 
