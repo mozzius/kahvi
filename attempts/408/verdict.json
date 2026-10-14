@@ -1,0 +1,27 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": true
+  },
+  "worth_keeping": true,
+  "summary": "The code path is a genuine implementation of the non-ECMA-402 localeCompare. Steps 1-4 run in spec order: RequireObjectCoercible(this), ToString(this), ToString(that), with ? propagation. Both strings are NFC-normalized and compared by code units, returning -1/0/1. That gives a total preorder and +0 for canonically equivalent strings, as the spec requires. The spec allows an implementation-defined comparator when no host locale is used, so this is not a made-up result. The one defect is in the comments: the NOTE's canonical-equivalence examples were rewritten from the spec's \\u escape sequences into literal characters. Each example now compares a string with an identical-looking copy of itself, so the spec quotation is corrupted. That is an unrequested change to spec text.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/string/prototype_locale_compare.rs",
+      "question": "unrelated_changes",
+      "issue": "The NOTE's example comments were altered. The spec's escaped examples such as \"\u212b\".localeCompare(\"A\u030a\") and \"\u2126\".localeCompare(\"\u03a9\") were replaced with literal characters like \"\u00c5\".localeCompare(\"\u00c5\"), so each example now compares identical-looking strings and no longer shows the spec's canonical-equivalence pairs. The ticket asked for spec steps to be kept as comments, not rewritten. Restore the original escaped example lines verbatim.",
+      "line": 37
+    }
+  ],
+  "notes_for_next_attempt": "The implementation logic is sound and can be kept. Before merging, restore the spec NOTE example comments (around lines 37-47) to the original text, with the \\u escapes: \"\u212b\".localeCompare(\"A\u030a\"), \"\u2126\".localeCompare(\"\u03a9\"), \"\u1e69\".localeCompare(\"s\u0307\u0323\"), \"\u1e0b\u0323\".localeCompare(\"\u1e0d\u0307\"), \"\u1100\u1161\".localeCompare(\"\uac00\"). Do not modify spec quotation text. The helper functions nfc_code_units, to_code_points and from_code_points are local to the file and fine. Renaming new_target to _new_target is harmless. Nothing else needs to change.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "unrelated_changes"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

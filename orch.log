@@ -2916,3 +2916,8 @@ test262 at last merge: 74823/81183 runs passing
 [19:12:19] B-date-prototype-get-utc-seconds: verifier: accept The change implements Date.prototype.getUTCSeconds in its own file. It gets the time value through the shared date helper `date::this_time_value(agent
 [19:12:23] B-math-acos: attempt on slot 0 with haiku
 [19:12:29] B-math-abs: verifier: accept The change implements Math.abs following the spec steps in order. Step 1 calls ops::to_number(agent, x)? so ToNumber's observable behaviour and abrupt
+[19:12:32] B-number-is-finite: attempt on slot 2 with haiku
+[19:12:43] B-math-acos: attempt 413 finished ($0.004, 8 turns)
+[19:12:45] B-json-raw-json: attempt 411 finished ($0.014, 11 turns)
+[19:12:56] B-number-is-finite: attempt 414 finished ($0.004, 10 turns)
+[19:12:56] B-string-prototype-locale-compare: verifier: revise The code path is a genuine implementation of the non-ECMA-402 localeCompare. Steps 1-4 run in spec order: RequireObjectCoercible(this), ToString(this)

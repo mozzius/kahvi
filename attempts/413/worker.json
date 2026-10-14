@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 8580,
+  "stop_reason": "end_turn",
+  "session_id": "b161572d-364b-46aa-a3d7-58fef94f2595",
+  "total_cost_usd": 0.0036261699999999997,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 11239,
+    "cache_read_input_tokens": 55817,
+    "output_tokens": 1183,
+    "output_tokens_details": {
+      "thinking_tokens": 62
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11239,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 138,
+        "cache_read_input_tokens": 18430,
+        "cache_creation_input_tokens": 452,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 452
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Math.acos` in `crates/kahvi-builtins/src/math/acos.rs`, following the spec steps with each step's text as a comment above its code. All 16 runs under `built-ins/Math/acos/` pass (8 files), and `cargo clippy -p kahvi-builtins` is clean. I made no changes outside the ticket's file and wrote no new tests.\n\nBLOCKED: none",
+  "ttft_ms": 2042,
+  "type": "result",
+  "duration_ms": 17118,
+  "uuid": "e2488f31-2f99-4dfe-b413-82ff76c0d788",
+  "ttft_stream_ms": 1813,
+  "time_to_request_ms": 976,
+  "time_to_request_phases_ms": {
+    "other": 92,
+    "system_prompt": 485,
+    "resume_other": 0,
+    "process_user_input": 14,
+    "input_attachments": 37,
+    "input_hooks": 19,
+    "tool_pool_refresh": 15,
+    "init_message": 62,
+    "engine_pickup": 10,
+    "message_prep": 18,
+    "model_config_wait": 114,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 49,
+    "message_normalization": 12,
+    "client_creation": 10,
+    "request_build": 35
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 341,
+  "time_to_request_cpu_ms": 483,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 2003,
+  "process_wall_ms_turn": 17117,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 20,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1814,
+  "time_to_request_from_spawn_ms": 25685064,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005144304.4885,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.39,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

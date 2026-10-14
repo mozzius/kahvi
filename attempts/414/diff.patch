@@ -1,0 +1,29 @@
+diff --git a/crates/kahvi-builtins/src/number/is_finite.rs b/crates/kahvi-builtins/src/number/is_finite.rs
+index ad807d1..fcbc290 100644
+--- a/crates/kahvi-builtins/src/number/is_finite.rs
++++ b/crates/kahvi-builtins/src/number/is_finite.rs
+@@ -6,15 +6,19 @@ use kahvi_core::prelude::*;
+ 
+ /// Number.isFinite
+ pub(crate) fn is_finite(
+-    agent: &mut Agent,
+-    this: Value,
++    _agent: &mut Agent,
++    _this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This function performs the following steps when called:
+     //
+     // 1. If _number_ is a finite Number, return *true*.
++    if let Value::Number(number) = args.get_or_undefined(0) {
++        if number.is_finite() {
++            return Ok(Value::Boolean(true));
++        }
++    }
+     // 2. Return *false*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Number.isFinite"))
++    Ok(Value::Boolean(false))
+ }

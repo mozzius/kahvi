@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 47653,
+  "stop_reason": "end_turn",
+  "session_id": "790f8917-b807-4e50-bfc6-b5c357e4daab",
+  "total_cost_usd": 0.014161640000000001,
+  "usage": {
+    "input_tokens": 11,
+    "cache_creation_input_tokens": 35292,
+    "cache_read_input_tokens": 148554,
+    "output_tokens": 10428,
+    "output_tokens_details": {
+      "thinking_tokens": 6253
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 35292,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 555,
+        "cache_read_input_tokens": 41953,
+        "cache_creation_input_tokens": 982,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 982
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `JSON.rawJSON` in `crates/kahvi-builtins/src/json/raw_json.rs`, and the `rawJSON` suite went from 10 passing to 12. The ticket's \"every test passes\" condition is not met: 6 runs fail because `ParseJSON` isn't reachable, and 2 fail on BigInt, which is outside this file. Steps 1\u20134 and 6\u201311 are implemented; step 5 throws not-implemented rather than inventing a result. clippy and fmt are clean for the file.\n\nChoices I made:\n- The `[[IsRawJSON]]` slot is a marker struct, `RawJsonData`, stored in `ObjectKind::Native`. `JSON.isRawJSON` and `stringify` will need to check for it, so they should use the same type.\n\nBLOCKED: `ParseJSON` (`parse_json` in `crates/kahvi-builtins/src/json/parse.rs`) is private to its module; it needs to be exposed as `pub(crate)` before step 5 can run.",
+  "ttft_ms": 2248,
+  "type": "result",
+  "duration_ms": 75231,
+  "uuid": "cbbfce15-e8e5-4429-9aa4-a775732e7e65",
+  "ttft_stream_ms": 1582,
+  "time_to_request_ms": 520,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 350,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 13,
+    "init_message": 21,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 47,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 100,
+  "time_to_request_cpu_ms": 440,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 237,
+  "process_anon_mib_turn_start": 121,
+  "process_rss_mib_result": 277,
+  "process_anon_mib_result": 157,
+  "process_peak_rss_mib": 279,
+  "process_cpu_ms_turn": 4608,
+  "process_wall_ms_turn": 75228,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1583,
+  "time_to_request_from_spawn_ms": 25628589,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005088903.9104,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.39,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
