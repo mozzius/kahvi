@@ -1,0 +1,48 @@
+{
+  "ticket": "B-typed-array-prototype-to-locale-string",
+  "base": "4694e35794090b6f57a17507ccd256d66ecc2e56",
+  "head": "9bb31dafd1c6d63a9aeddbd39ca1a01a2a59b061",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_to_locale_string.rs",
+      "added": 43,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 78,
+    "before": 8,
+    "after": 48,
+    "new_passes": 40,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 30,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-tolocalestring-from-each-value.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-tolocalestring-from-each-value.js:strict  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-tostring-from-each-value.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-tostring-from-each-value.js:strict  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-valueof-from-each-value.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/calls-valueof-from-each-value.js:strict  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/get-length-uses-internal-arraylength.js:sloppy  Uncaught InternalError: not implemented: BigInt.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/get-length-uses-internal-arraylength.js:strict  Uncaught InternalError: not implemented: BigInt.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/return-abrupt-from-this-out-of-bounds.js:sloppy  Uncaught InternalError: not implemented: BigInt.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/return-abrupt-from-this-out-of-bounds.js:strict  Uncaught InternalError: not implemented: BigInt.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/return-result.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/BigInt/return-result.js:strict  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/calls-tolocalestring-from-each-value.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/calls-tolocalestring-from-each-value.js:strict  Uncaught InternalError: not implemented: Array.prototype.toLocaleString",
+      "built-ins/TypedArray/prototype/toLocaleString/calls-tostring-from-each-value.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.toLocaleString"
+    ]
+  },
+  "decision": "pass"
+}
