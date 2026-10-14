@@ -477,6 +477,8 @@ class Stacker:
                 self.db.q("UPDATE layers SET status = 'closed', updated = ? WHERE id = ?", time.time(), layer["id"])
                 log(f"stack: {layer['branch']} (#{layer['pr']}) was closed on GitHub; dropped from the stack")
                 changed = True
+        if self._restack():
+            changed = True
         if changed:
             self.compose()
         # The lowest open layer targets whatever its merged layers merged into.
@@ -502,6 +504,49 @@ class Stacker:
             if target != lowest["base"]:
                 self.db.q("UPDATE layers SET base = ? WHERE id = ?", target, lowest["id"])
         return changed
+
+    def _restack(self):
+        """After a squash merge into the trunk, the live layers' history is
+        no longer under the trunk (GitHub then reports the lowest PR as
+        conflicting). Replays every live layer onto the trunk, bottom first,
+        and force-pushes the bot-owned branches; CI runs again on each."""
+        live = self.db.q(f"SELECT * FROM layers WHERE status IN {LIVE} AND pr IS NOT NULL ORDER BY id")
+        if not live:
+            return False
+        below = self.db.one("SELECT * FROM layers WHERE status = 'merged' AND id < ? ORDER BY id DESC LIMIT 1",
+                            live[0]["id"])
+        if not below:
+            return False
+        trunk = self.trunk_branch()
+        run(["git", "fetch", "-q", self.cfg.remote, trunk], check=False)
+        onto = git("rev-parse", f"{self.cfg.remote}/{trunk}")
+
+        def contains(ancestor, commit):
+            return run(["git", "merge-base", "--is-ancestor", ancestor, commit], check=False).returncode == 0
+
+        if contains(below["head"], onto) or contains(onto, live[0]["head"]):
+            return False  # merged with a merge commit, or already replayed
+        log(f"stack: {below['branch']} was squashed into {trunk}; replaying {len(live)} live layer(s) onto it")
+        upstream = below["head"]
+        for layer in live:
+            self._prepare(layer["head"])
+            r = run(["git", "-c", "user.name=kahvi-stacker", "-c", "user.email=stacker@kahvi.invalid",
+                     "rebase", "-q", "--rebase-merges", "--onto", onto, upstream], cwd=TREE, check=False)
+            if r.returncode != 0:
+                git("rebase", "--abort", cwd=TREE, check=False)
+                self.db.q("UPDATE layers SET status = 'stuck', note = ?, updated = ? WHERE id = ?",
+                          f"replay onto {trunk} after a squash conflicted; needs-architect", time.time(), layer["id"])
+                log(f"stack: needs-architect: replaying {layer['branch']} onto {trunk[:10]} conflicted")
+                return True
+            head = git("rev-parse", "HEAD", cwd=TREE)
+            run(["git", "push", "-q", f"--force-with-lease=refs/heads/{layer['branch']}:{layer['head']}",
+                 self.cfg.remote, f"{head}:refs/heads/{layer['branch']}"])
+            # A green layer is green again only once CI says so on the new head.
+            self.db.q("UPDATE layers SET head = ?, status = 'pending', reruns = 0, updated = ? WHERE id = ?",
+                      head, time.time(), layer["id"])
+            log(f"stack: replayed {layer['branch']} (#{layer['pr']}) onto {onto[:10]} as {head[:10]}")
+            upstream, onto = layer["head"], head
+        return True
 
     # The loop
 
