@@ -10,7 +10,7 @@ pub mod lexer;
 pub mod number;
 mod parser;
 
-pub use parser::{ParseOptions, parse_module, parse_script};
+pub use parser::{ParseOptions, parse_dynamic_function, parse_module, parse_script};
 
 /// An early (parse-time) error. `pos` is a byte offset into the source.
 #[derive(Debug, Clone, PartialEq)]

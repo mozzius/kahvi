@@ -60,6 +60,19 @@ pub fn parse_script(src: &str, opts: &ParseOptions) -> PResult<Script> {
     })
 }
 
+/// The parsing of CreateDynamicFunction (§20.2.1.1.1 steps 17-24): `params`
+/// and `body` must each parse alone before `source`, the whole function
+/// expression, is parsed.
+pub fn parse_dynamic_function(
+    params: &str,
+    body: &str,
+    source: &str,
+    is_async: bool,
+    is_generator: bool,
+) -> PResult<Function> {
+    Parser::parse_dynamic_function_parts(params, body, source, is_async, is_generator)
+}
+
 pub fn parse_module(src: &str) -> PResult<Module> {
     let opts = ParseOptions {
         strict: true,
