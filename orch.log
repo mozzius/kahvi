@@ -3355,3 +3355,4 @@ test262 at last merge: 76432/81183 runs passing
 [19:20:23] stack: arch-fixes conflicts with the stack; land it again after merging the stack top into it
 [19:20:33] B-reg-exp-prototype-to-string: verifier: accept The change implements RegExp.prototype.toString as specified. Step 2 throws a TypeError for non-objects. Step 3 does Get(source) then ToString, and st
 [19:20:33] B-date-prototype-to-date-string: verifier: accept Implements Date.prototype.toDateString in its own file. The NaN check, LocalTime, and DateString are present and in spec order. Errors from the this-v
+[19:20:43] B-string-prototype-anchor: verifier: accept The diff implements String.prototype.anchor as a call to a file-local create_html helper that follows CreateHTML steps 1-8 in order. RequireObjectCoer

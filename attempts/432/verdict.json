@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements String.prototype.anchor as a call to a file-local create_html helper that follows CreateHTML steps 1-8 in order. RequireObjectCoercible and the first ToString on contents come before the attr-value ToString, and the quotation-mark escaping to &quot; is done as the spec requires. Abrupt completions propagate with ?, there are no catch-all fallbacks, no test-specific branches, and no made-up values. The gate report shows build and clippy ok, 0 lint flags, and 6 new passing test262 tests with 0 regressions. The only thing I could not verify from the diff is whether ops already exports a create_html, which the doc comment says it does not.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
