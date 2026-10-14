@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-group-by",
+  "base": "91297e9934a16daa6a0c6ba417baaeff5144f987",
+  "head": "95abd824f6b9780ccb4cdcbee23169bacaf9c158",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/group_by.rs",
+      "added": 95,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 4,
+    "after": 28,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

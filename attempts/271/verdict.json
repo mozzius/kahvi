@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "Implements String.prototype.codePointAt in its own file. The steps run in spec order: RequireObjectCoercible, ToString, ToIntegerOrInfinity, length check returning undefined, then CodePointAt and returning the code point as a Number. The local code_point_at helper follows the CodePointAt algorithm: the BMP fast path, the trailing-surrogate and end-of-string unpaired cases, the second-unit check, and the surrogate-pair formula. No test-specific branches, no swallowed abrupt completions, no made-up values. The only fallbacks are unwrap_or(0) on indexes the caller has already bounds-checked, so they are unreachable. The removed spec NOTE comment is cosmetic.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}
