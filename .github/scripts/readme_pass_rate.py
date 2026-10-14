@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Rewrite the test262 pass-rate line in README.md from a t262 summary.
+"""Rewrite the test262 results table in README.md from a t262 summary.
 
-Usage: readme_pass_rate.py SUMMARY_JSON README_MD COMMIT_SHA
+Usage: readme_pass_rate.py SUMMARY_JSON README_MD
 
-The line lives between the <!-- test262:start --> and <!-- test262:end -->
+The table lives between the <!-- test262:start --> and <!-- test262:end -->
 markers. Exits 2 without touching the README if the run was invalid
 (canaries failed), so a broken runner never publishes a number.
 """
-import datetime
 import json
 import re
 import sys
@@ -16,7 +15,7 @@ START, END = "<!-- test262:start -->", "<!-- test262:end -->"
 
 
 def main() -> int:
-    summary_path, readme_path, sha = sys.argv[1:4]
+    summary_path, readme_path = sys.argv[1:3]
     with open(summary_path) as f:
         s = json.load(f)
     if not s["canaries_ok"]:
@@ -25,12 +24,14 @@ def main() -> int:
 
     runs, passed = s["runs"], s["pass"]
     pct = 100.0 * passed / runs if runs else 0.0
-    date = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
-    line = (
-        f"**test262: {pct:.2f}% passing** ({passed:,} of {runs:,} runs across "
-        f"{s['files']:,} test files; {s['not_implemented']:,} hit not-implemented). "
-        f"Measured by CI on `main` at {sha[:7]}, {date}."
-    )
+    table = "\n".join([
+        "| test262 | |",
+        "|---|--:|",
+        f"| **Pass rate** | **{pct:.2f}%** |",
+        f"| Passing runs | {passed:,} / {runs:,} |",
+        f"| Not implemented | {s['not_implemented']:,} |",
+        f"| Test files | {s['files']:,} |",
+    ])
 
     with open(readme_path) as f:
         text = f.read()
@@ -38,10 +39,10 @@ def main() -> int:
     if not pattern.search(text):
         print(f"{readme_path}: markers not found", file=sys.stderr)
         return 1
-    new = pattern.sub(lambda _: f"{START}\n{line}\n{END}", text, count=1)
+    new = pattern.sub(lambda _: f"{START}\n\n{table}\n\n{END}", text, count=1)
     with open(readme_path, "w") as f:
         f.write(new)
-    print(line)
+    print(table)
     return 0
 
 
