@@ -10,7 +10,7 @@ from common import WORK
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS tickets (
     id TEXT PRIMARY KEY,
-    status TEXT NOT NULL DEFAULT 'open',  -- open | claimed | merging | done | partial | blocked | needs-architect
+    status TEXT NOT NULL DEFAULT 'open',  -- open | claimed | merging | stacked | done | partial | blocked | needs-architect
     tier TEXT NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
     strikes INTEGER NOT NULL DEFAULT 0,
@@ -100,7 +100,7 @@ class DB:
                 if status.get(t.id) == "open"
                 and t.tier != "architect"
                 and (only is None or t.id in only)
-                and all(status.get(n) == "done" for n in t.needs)
+                and all(status.get(n) in ("done", "stacked") for n in t.needs)
             ]
             if not ready:
                 return None

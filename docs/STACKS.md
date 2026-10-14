@@ -91,3 +91,30 @@ Owned by the CI workflow (`.github/workflows/`):
 No local full-suite runs remain, so all cores go to worker slots. The
 stacker's state (layers, PR numbers, pending CI) lives in `work/state.db`
 and is snapshotted to `orch-runs` like everything else.
+
+## Running it
+
+`work/orch.local.toml`:
+
+```toml
+branch = "stack"                 # local only: the stack top, which workers start from
+[stack]
+repo = "mozzius/kahvi"
+trunk = "main"                   # or the branch of an open PR the stack sits on
+# trunk_pr = 3                   # that PR, put at the bottom of the GitHub stack
+check = "test262"                # the aggregate check whose artifact decides
+required_checks = ["test262", "fmt, clippy, test"]
+artifact = "t262-results"        # results.jsonl, summary.json, expected-pass.txt
+max_layer = 8
+```
+
+The main checkout stays on `branch`; the stacker moves it as the stack
+changes. `./orch stack` shows the layers, `./orch stack retry` re-stacks a
+layer stuck on broken CI once CI is fixed, `./orch land BRANCH` queues an
+architect branch (merge the stack top into it first if it conflicts).
+
+From this container: PRs, labels, comments, the stacks API, check runs,
+artifact downloads and workflow re-runs work over REST. Deleting branches
+does not, so closed layers' branches stay until someone deletes them (turn on
+"Automatically delete head branches" for merged ones). A PR in a GitHub stack
+cannot be retargeted by hand; GitHub retargets it when the PR below merges.
