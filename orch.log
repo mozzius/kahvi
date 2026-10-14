@@ -97,3 +97,5 @@
 [17:10:13] B-typed-array-prototype-index-of: verifier: accept The diff implements %TypedArray%.prototype.indexOf in its own file, one spec step per comment. Steps 1 to 7 run in spec order. ValidateTypedArray and 
 [17:10:15] B-typed-array-prototype-last-index-of: verifier: accept The diff implements %TypedArray%.prototype.lastIndexOf in its file, following the spec steps in order. ValidateTypedArray (step 2) and TypedArrayLengt
 [17:10:16] B-typed-array-prototype-find: attempt on slot 2 with haiku
+[17:10:20] B-typed-array-prototype-find-index: attempt on slot 0 with haiku
+[17:10:36] B-typed-array-prototype-for-each: verifier: accept The diff implements TypedArray.prototype.forEach in the spec's order: ValidateTypedArray (with ?), TypedArrayLength once, IsCallable check that throws

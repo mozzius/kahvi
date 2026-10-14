@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7224,
+  "stop_reason": "tool_use",
+  "session_id": "e0a758ee-084c-4403-9cae-a3015a015a15",
+  "total_cost_usd": 0.0316335,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5845,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 737,
+    "output_tokens_details": {
+      "thinking_tokens": 361
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5845,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 737,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5845,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5845
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements TypedArray.prototype.forEach step by step in spec order. It validates the receiver, takes the length once, checks the callback is callable, then loops. Each iteration reads the element with the shared helper and calls the callback with (value, index, obj) via `?`, propagating errors. It returns undefined. It touches only the in-scope file. The gate report shows +70 passing with 0 regressions. The 6 remaining failures are the test's own \\\"not implemented: BigInt\\\", not this code.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements TypedArray.prototype.forEach step by step in spec order. It validates the receiver, takes the length once, checks the callback is callable, then loops. Each iteration reads the element with the shared helper and calls the callback with (value, index, obj) via `?`, propagating errors. It returns undefined. It touches only the in-scope file. The gate report shows +70 passing with 0 regressions. The 6 remaining failures are the test's own \"not implemented: BigInt\", not this code.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5056,
+  "type": "result",
+  "duration_ms": 7045,
+  "uuid": "1f0fea74-705f-41f3-81f0-dd7b7749423e",
+  "ttft_stream_ms": 2005,
+  "time_to_request_ms": 667,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 377,
+    "resume_other": 1,
+    "process_user_input": 21,
+    "input_attachments": 144,
+    "input_hooks": 6,
+    "tool_pool_refresh": 4,
+    "init_message": 9,
+    "engine_pickup": 5,
+    "message_prep": 4,
+    "model_config_wait": 23,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 21,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 105,
+  "time_to_request_cpu_ms": 454,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 726,
+  "process_wall_ms_turn": 7045,
+  "input_attachments_detail": {
+    "slowest_producer": "skill_mentions",
+    "slowest_producer_ms": 96,
+    "cpu_ms": 103,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2006,
+  "time_to_request_from_spawn_ms": 18367956,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997827746.2605,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
