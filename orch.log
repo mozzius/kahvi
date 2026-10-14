@@ -1970,3 +1970,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:55:23] B-iterator-prototype-get-symbol-to-string-tag: gate rejected attempt 353: no new test262 passes in target
 [18:55:26] B-date-prototype-to-utc-string: verifier: accept The change implements Date.prototype.toUTCString by calling existing helpers in crate::support::date (this_time_value, week_day, month_from_time, date
 [18:55:26] B-iterator-prototype-get-symbol-to-string-tag: attempt on slot 2 with haiku
+[18:55:28] B-math-asin: verifier: accept Math.asin implementation in crates/kahvi-builtins/src/math/asin.rs follows the four spec steps in order. Step 1 calls ops::to_number with the ? operat
+[18:55:29] B-math-cos: attempt on slot 3 with haiku

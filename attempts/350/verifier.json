@@ -1,0 +1,142 @@
+{
+  "duration_api_ms": 10844,
+  "stop_reason": "tool_use",
+  "session_id": "c04fb7c0-2431-4edc-a8c4-ed6141d39d67",
+  "total_cost_usd": 0.00189078,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3019,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2033,
+    "output_tokens_details": {
+      "thinking_tokens": 1376
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3019,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2033,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3019,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3019
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Reflect.getPrototypeOf per spec. Step 1 checks that args[0] is an Object and throws a TypeError otherwise, with no observable side effects before the check. Step 2 calls target.internal_get_prototype_of(agent)? and propagates abrupt completions with `?`. The Option result maps to Object or null. No special-casing, no fallback values, no swallowed errors. Gate: build and clippy OK, 0 regressions, +12 test262 passes. The only blemish is cosmetic: the original stub step comments were left above the `let _ = ...` line and the step comments were added again directly above the code, so each step appears twice.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/reflect/get_prototype_of.rs\",\"question\":\"contradicts_spec\",\"issue\":\"Not a spec contradiction. Cosmetic only: the original stub comments for steps 1 and 2 remain above `let _ = (this, new_target);`, and the same steps are commented again directly above their code. Ticket asks for each step's comment directly above its code, so the stale duplicate block should be removed.\"}],\"notes_for_next_attempt\":\"Non-blocking: delete the original duplicated step-comment block above `let _ = (this, new_target);` so each spec step appears once, directly above its code. Otherwise the implementation matches spec steps 1 and 2 and can be kept as is.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Reflect.getPrototypeOf per spec. Step 1 checks that args[0] is an Object and throws a TypeError otherwise, with no observable side effects before the check. Step 2 calls target.internal_get_prototype_of(agent)? and propagates abrupt completions with `?`. The Option result maps to Object or null. No special-casing, no fallback values, no swallowed errors. Gate: build and clippy OK, 0 regressions, +12 test262 passes. The only blemish is cosmetic: the original stub step comments were left above the `let _ = ...` line and the step comments were added again directly above the code, so each step appears twice.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/reflect/get_prototype_of.rs",
+        "question": "contradicts_spec",
+        "issue": "Not a spec contradiction. Cosmetic only: the original stub comments for steps 1 and 2 remain above `let _ = (this, new_target);`, and the same steps are commented again directly above their code. Ticket asks for each step's comment directly above its code, so the stale duplicate block should be removed."
+      }
+    ],
+    "notes_for_next_attempt": "Non-blocking: delete the original duplicated step-comment block above `let _ = (this, new_target);` so each spec step appears once, directly above its code. Otherwise the implementation matches spec steps 1 and 2 and can be kept as is."
+  },
+  "ttft_ms": 7968,
+  "type": "result",
+  "duration_ms": 10549,
+  "uuid": "0185509f-7774-46b1-a7fc-007168fd02c1",
+  "ttft_stream_ms": 1552,
+  "time_to_request_ms": 956,
+  "time_to_request_phases_ms": {
+    "other": 63,
+    "system_prompt": 352,
+    "resume_other": 16,
+    "process_user_input": 95,
+    "input_attachments": 31,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 19,
+    "engine_pickup": 4,
+    "message_prep": 3,
+    "model_config_wait": 322,
+    "autocompact": 8,
+    "query_setup": 1,
+    "model_gates": 10,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 13,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 393,
+  "time_to_request_cpu_ms": 373,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 240,
+  "process_anon_mib_result": 121,
+  "process_peak_rss_mib": 240,
+  "process_cpu_ms_turn": 846,
+  "process_wall_ms_turn": 10549,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1553,
+  "time_to_request_from_spawn_ms": 24655804,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004115106.8083,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.25,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
