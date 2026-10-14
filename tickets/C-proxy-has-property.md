@@ -7,7 +7,7 @@ scope = ["crates/kahvi-core/src/object/proxy/has_property.rs"]
 read = ["docs/API.md", "crates/kahvi-core/src/object/proxy/mod.rs", "crates/kahvi-core/src/object/internal.rs"]
 spec = ["sec-proxy-object-internal-methods-and-internal-slots-hasproperty-p"]
 target = ["built-ins/Proxy/has/"]
-priority = 54
+priority = 58
 +++
 Implement this Proxy internal method in its file, following the spec steps
 already in the stub: keep each step as a comment directly above the code.
