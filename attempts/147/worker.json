@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 23294,
+  "stop_reason": "end_turn",
+  "session_id": "8e9df6a8-4e5b-45e1-aa82-34dc8b037e98",
+  "total_cost_usd": 0.00942168,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 24226,
+    "cache_read_input_tokens": 194738,
+    "output_tokens": 4423,
+    "output_tokens_details": {
+      "thinking_tokens": 1214
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24226,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 156,
+        "cache_read_input_tokens": 31692,
+        "cache_creation_input_tokens": 177,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 177
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Iterator.prototype.some` in `crates/kahvi-builtins/src/iterator/prototype_some.rs`, following the spec steps with each one kept as a comment above its code. All 66 runs under `built-ins/Iterator/prototype/some/` pass (the ticket said 12; the runner reports 66 runs across 33 files), and clippy and fmt are clean. I changed no other files and wrote no new helpers.\n\nBLOCKED: none",
+  "ttft_ms": 2091,
+  "type": "result",
+  "duration_ms": 38139,
+  "uuid": "2e10148f-2778-411b-9d9f-94945027ad53",
+  "ttft_stream_ms": 1849,
+  "time_to_request_ms": 654,
+  "time_to_request_phases_ms": {
+    "other": 56,
+    "system_prompt": 353,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 26,
+    "input_hooks": 10,
+    "tool_pool_refresh": 4,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 110,
+    "autocompact": 7,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 19,
+    "message_normalization": 3,
+    "client_creation": 22,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 178,
+  "time_to_request_cpu_ms": 525,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 246,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3424,
+  "process_wall_ms_turn": 38138,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 18,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1850,
+  "time_to_request_from_spawn_ms": 18778450,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998238650.3525,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

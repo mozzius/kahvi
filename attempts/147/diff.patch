@@ -1,0 +1,90 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_some.rs b/crates/kahvi-builtins/src/iterator/prototype_some.rs
+index 0948cb3..487c952 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_some.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_some.rs
+@@ -2,33 +2,65 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-iterator.prototype.some
+ 
++use kahvi_core::ops::IteratorRecord;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::iterator_helper::if_abrupt_close_iterator;
++
+ /// Iterator.prototype.some
+ pub(crate) fn prototype_some(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
+-    // 1. Let _obj_ be the *this* value.
+-    // 2. If _obj_ is not an Object, throw a *TypeError* exception.
+-    // 3. Let _iterated_ be the Iterator Record { [[Iterator]]: _obj_, [[NextMethod]]: *undefined*, [[Done]]: *false* }.
+-    // 4. If IsCallable(_predicate_) is *false*, then
+-    //    a. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
+-    //    b. Return ? IteratorClose(_iterated_, _error_).
+-    // 5. Set _iterated_ to ? GetIteratorDirect(_obj_).
+-    // 6. Let _counter_ be *+0*_𝔽.
++    let predicate = args.get_or_undefined(0);
++    // 1. Let obj be the this value.
++    // 2. If obj is not an Object, throw a TypeError exception.
++    let Value::Object(obj) = this else {
++        return Err(agent.throw_type_error("Iterator.prototype.some called on a non-object"));
++    };
++    // 3. Let iterated be the Iterator Record { [[Iterator]]: obj, [[NextMethod]]: undefined, [[Done]]: false }.
++    let mut iterated = IteratorRecord {
++        iterator: obj,
++        next_method: Value::Undefined,
++        done: false,
++    };
++    // 4. If IsCallable(predicate) is false, then
++    if !ops::is_callable(agent, predicate) {
++        // a. Let error be ThrowCompletion(a newly created TypeError object).
++        let error = agent.throw_type_error("Iterator.prototype.some: predicate is not callable");
++        // b. Return ? IteratorClose(iterated, error).
++        return ops::iterator_close(agent, &iterated, Err(error));
++    }
++    // 5. Set iterated to ? GetIteratorDirect(obj).
++    iterated = ops::get_iterator_direct(agent, obj)?;
++    // 6. Let counter be +0𝔽.
++    let mut counter: f64 = 0.0;
+     // 7. Repeat,
+-    //    a. Let _value_ be ? IteratorStepValue(_iterated_).
+-    //    b. If _value_ is ~done~, return *false*.
+-    //    c. Let _result_ be Completion(Call(_predicate_, *undefined*, « _value_, _counter_ »)).
+-    //    d. IfAbruptCloseIterator(_result_, _iterated_).
+-    //    e. If ToBoolean(_result_) is *true*, return ? IteratorClose(_iterated_, NormalCompletion(*true*)).
+-    //    f. NOTE: The following step will not change _counter_ once it reaches *2^53*_𝔽.
+-    //    g. Set _counter_ to _counter_ + *1*_𝔽.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Iterator.prototype.some"))
++    loop {
++        // a. Let value be ? IteratorStepValue(iterated).
++        let Some(value) = ops::iterator_step_value(agent, &mut iterated)? else {
++            // b. If value is done, return false.
++            return Ok(Value::Boolean(false));
++        };
++        // c. Let result be Completion(Call(predicate, undefined, « value, counter »)).
++        let result = ops::call(
++            agent,
++            predicate,
++            Value::Undefined,
++            &[value, Value::Number(counter)],
++        );
++        // d. IfAbruptCloseIterator(result, iterated).
++        let result = if_abrupt_close_iterator(agent, result, &iterated)?;
++        // e. If ToBoolean(result) is true, return ? IteratorClose(iterated, NormalCompletion(true)).
++        if ops::to_boolean(agent, result) {
++            return ops::iterator_close(agent, &iterated, Ok(Value::Boolean(true)));
++        }
++        // f. NOTE: The following step will not change counter once it reaches 2^53𝔽.
++        // g. Set counter to counter + 1𝔽.
++        if counter < 9007199254740992.0 {
++            counter += 1.0;
++        }
++    }
+ }

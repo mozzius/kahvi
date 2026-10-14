@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 12890,
+  "stop_reason": "tool_use",
+  "session_id": "da2e7d43-093b-475a-9462-0cb02c4d285e",
+  "total_cost_usd": 0.00325938,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6545,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 2659,
+    "output_tokens_details": {
+      "thinking_tokens": 2174
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6545,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2659,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6545,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6545
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Implements Iterator.prototype.every in prototype_every.rs, covering every spec step in order. Step 2 throws a TypeError for non-objects. Step 4 checks IsCallable before GetIteratorDirect and closes the iterator via ops::iterator_close with a TypeError completion. Step 5 calls GetIteratorDirect. Steps 7a-7e use IteratorStepValue, Call with (value, counter), IfAbruptCloseIterator and ToBoolean, and return true or IteratorClose(false) as the spec does. Step 7g's 2^53 guard matches the spec's NOTE. The only signature change is renaming the unused new_target to _new_target. No special-casing, no fake values, no swallowed errors. Build, clippy and test262 are reported clean with 0 regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Implements Iterator.prototype.every in prototype_every.rs, covering every spec step in order. Step 2 throws a TypeError for non-objects. Step 4 checks IsCallable before GetIteratorDirect and closes the iterator via ops::iterator_close with a TypeError completion. Step 5 calls GetIteratorDirect. Steps 7a-7e use IteratorStepValue, Call with (value, counter), IfAbruptCloseIterator and ToBoolean, and return true or IteratorClose(false) as the spec does. Step 7g's 2^53 guard matches the spec's NOTE. The only signature change is renaming the unused new_target to _new_target. No special-casing, no fake values, no swallowed errors. Build, clippy and test262 are reported clean with 0 regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11194,
+  "type": "result",
+  "duration_ms": 13072,
+  "uuid": "8c7100d7-e2bf-46c9-a554-0e36a77e7166",
+  "ttft_stream_ms": 2205,
+  "time_to_request_ms": 1128,
+  "time_to_request_phases_ms": {
+    "other": 100,
+    "system_prompt": 597,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 164,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 40,
+    "engine_pickup": 14,
+    "message_prep": 11,
+    "model_config_wait": 109,
+    "autocompact": 3,
+    "query_setup": 9,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 3,
+    "client_creation": 20,
+    "request_build": 27
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 208,
+  "time_to_request_cpu_ms": 525,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 1056,
+  "process_wall_ms_turn": 13071,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 151,
+    "cpu_ms": 51,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2206,
+  "time_to_request_from_spawn_ms": 18820223,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998279136.4797,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

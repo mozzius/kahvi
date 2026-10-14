@@ -1,0 +1,37 @@
+{
+  "ticket": "B-array-prototype-includes",
+  "base": "b5f09b345cf2a9b151752d5d6ad552f821288c84",
+  "head": "58e9c41668aa4a7c2d320eb416f633a85979d118",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_includes.rs",
+      "added": 39,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 60,
+    "before": 8,
+    "after": 56,
+    "new_passes": 48,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/includes/coerced-searchelement-fromindex-resize.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/includes/coerced-searchelement-fromindex-resize.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/includes/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/includes/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

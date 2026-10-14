@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 17543,
+  "stop_reason": "tool_use",
+  "session_id": "dd4dd955-163d-4a0c-bc38-e297f91d57b1",
+  "total_cost_usd": 0.0038448799999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6516,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3848,
+    "output_tokens_details": {
+      "thinking_tokens": 3305
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6516,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3848,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6516,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6516
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.includes in its stub file, following the spec steps in order. ToObject(this) and LengthOfArrayLike use `?`, and length 0 returns false before the fromIndex coercion, as the spec requires. ToClampedIndex is implemented as a local helper that inlines ToAbsoluteIndex: ToIntegerOrInfinity(fromIndex) is called with `?`, then the spec's clamping rules are applied. The loop does Get(obj, ToString(k)) with `?` and SameValueZero against searchElement, and increments k. Nothing is keyed on test inputs, no errors are swallowed, and no value is made up. Unfinished work is not present; the BigInt not-implemented failures are the engine's honest not-implemented path. The only drawbacks are cosmetic: the spec NOTE comments were dropped from the file, and the ToClampedIndex helper lives in the file rather than in ops, which the ticket permits as long as the report says so.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.includes in its stub file, following the spec steps in order. ToObject(this) and LengthOfArrayLike use `?`, and length 0 returns false before the fromIndex coercion, as the spec requires. ToClampedIndex is implemented as a local helper that inlines ToAbsoluteIndex: ToIntegerOrInfinity(fromIndex) is called with `?`, then the spec's clamping rules are applied. The loop does Get(obj, ToString(k)) with `?` and SameValueZero against searchElement, and increments k. Nothing is keyed on test inputs, no errors are swallowed, and no value is made up. Unfinished work is not present; the BigInt not-implemented failures are the engine's honest not-implemented path. The only drawbacks are cosmetic: the spec NOTE comments were dropped from the file, and the ToClampedIndex helper lives in the file rather than in ops, which the ticket permits as long as the report says so.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 16021,
+  "type": "result",
+  "duration_ms": 17927,
+  "uuid": "5a3d9fbe-afad-4240-aa7e-b50db173e690",
+  "ttft_stream_ms": 2163,
+  "time_to_request_ms": 1078,
+  "time_to_request_phases_ms": {
+    "other": 114,
+    "system_prompt": 446,
+    "resume_other": 6,
+    "process_user_input": 14,
+    "input_attachments": 86,
+    "input_hooks": 20,
+    "tool_pool_refresh": 10,
+    "init_message": 46,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 235,
+    "autocompact": 12,
+    "query_setup": 4,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 12,
+    "client_creation": 26,
+    "request_build": 17
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 274,
+  "time_to_request_cpu_ms": 307,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 223,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 110,
+  "process_peak_rss_mib": 235,
+  "process_cpu_ms_turn": 1027,
+  "process_wall_ms_turn": 17921,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 58,
+    "cpu_ms": 36,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2164,
+  "time_to_request_from_spawn_ms": 18822005,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998280598.7195,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
