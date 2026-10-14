@@ -770,3 +770,87 @@ pub fn binary(agent: &mut Agent, op: &str, a: BigInt, b: BigInt) -> JsResult<Big
     };
     Ok(agent.new_bigint(r))
 }
+
+// ---- The BigInt built-ins' abstract operations (§21.2) ---------------------------------------
+
+impl BigIntValue {
+    /// ℝ(number) for an integral, finite f64.
+    fn from_integral_f64(number: f64) -> Self {
+        let bits = number.to_bits();
+        let exponent = ((bits >> 52) & 0x7ff) as i64;
+        let fraction = bits & ((1u64 << 52) - 1);
+        // number = significand × 2^(exponent - 1075); subnormals have exponent 1.
+        let (significand, exponent) = if exponent == 0 {
+            (fraction, 1)
+        } else {
+            (fraction | (1u64 << 52), exponent)
+        };
+        let limbs = mag_trim(vec![significand as u32, (significand >> 32) as u32]);
+        let shift = exponent - 1075;
+        let magnitude = if shift >= 0 {
+            mag_shl(&limbs, shift as u64)
+        } else {
+            // Exact: the number is integral, so no set bit is shifted out.
+            mag_shr(&limbs, (-shift) as u64).0
+        };
+        BigIntValue::signed(number < 0.0, magnitude)
+    }
+
+    /// The value modulo 2^bits as `bits.div_ceil(32)` limbs of two's complement,
+    /// bits above `bits` cleared.
+    fn modulo_pow2_limbs(&self, bits: u64) -> Vec<u32> {
+        let n = bits.div_ceil(32) as usize;
+        let mut limbs = to_twos(self, n);
+        if !bits.is_multiple_of(32) {
+            limbs[n - 1] &= (1u32 << (bits % 32)) - 1;
+        }
+        limbs
+    }
+}
+
+/// NumberToBigInt(number) (§21.2.1.1.1)
+pub fn number_to_bigint(agent: &mut Agent, number: f64) -> JsResult<BigInt> {
+    // 1. If number is not an integral Number, throw a RangeError exception.
+    if !number.is_finite() || number.trunc() != number {
+        return Err(agent.throw_range_error("cannot convert a non-integral Number to a BigInt"));
+    }
+    // 2. Return ℤ(ℝ(number)).
+    Ok(agent.new_bigint(BigIntValue::from_integral_f64(number)))
+}
+
+/// ℤ(ℝ(bigint) modulo 2^bits), BigInt.asUintN's step 3 (§21.2.2.2).
+///
+/// A negative BigInt modulo 2^bits has about `bits` bits; beyond MAX_BITS that
+/// is a RangeError, as for every other BigInt result too large to represent.
+pub fn as_uint_n(agent: &mut Agent, bits: u64, bigint: BigInt) -> JsResult<BigInt> {
+    let v = agent.bigint(bigint);
+    if !v.negative && v.bit_length() <= bits {
+        return Ok(bigint);
+    }
+    if bits > MAX_BITS {
+        return Err(agent.throw_range_error("BigInt is too large"));
+    }
+    let limbs = v.modulo_pow2_limbs(bits);
+    Ok(agent.new_bigint(BigIntValue::signed(false, limbs)))
+}
+
+/// BigInt.asIntN's steps 3-5 (§21.2.2.1): ℝ(bigint) modulo 2^bits, less 2^bits
+/// when that remainder is at least 2^(bits - 1).
+pub fn as_int_n(agent: &mut Agent, bits: u64, bigint: BigInt) -> JsResult<BigInt> {
+    let v = agent.bigint(bigint);
+    if bits == 0 {
+        return Ok(agent.new_bigint(BigIntValue::zero()));
+    }
+    // A value of fewer than bits bits is its own remainder's signed reading.
+    if v.bit_length() < bits {
+        return Ok(bigint);
+    }
+    let mut limbs = v.modulo_pow2_limbs(bits);
+    let n = limbs.len();
+    let top_bit = (bits - 1) % 32;
+    if limbs[n - 1] & (1u32 << top_bit) != 0 && top_bit != 31 {
+        // remainder ≥ 2^(bits-1): sign-extend so the limbs read as remainder - 2^bits.
+        limbs[n - 1] |= !((1u32 << (top_bit + 1)) - 1);
+    }
+    Ok(agent.new_bigint(from_twos(limbs)))
+}

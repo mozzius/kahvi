@@ -73,3 +73,22 @@ pub(crate) fn symbol_descriptive_string(agent: &mut Agent, sym: Symbol) -> JsStr
     units.push(u16::from(b')'));
     agent.intern(&units)
 }
+
+/// ThisBigIntValue(arg) (§21.2.3.4.1)
+pub(crate) fn this_big_int_value(agent: &mut Agent, arg: Value) -> JsResult<BigInt> {
+    match arg {
+        // 1. If arg is a BigInt, return arg.
+        Value::BigInt(b) => Ok(b),
+        // 2. If arg is an Object and arg has a [[BigIntData]] internal slot, then
+        //    a. Assert: arg.[[BigIntData]] is a BigInt.
+        //    b. Return arg.[[BigIntData]].
+        Value::Object(o) if matches!(agent.obj(o).kind, ObjectKind::BigIntObject(_)) => {
+            let ObjectKind::BigIntObject(b) = agent.obj(o).kind else {
+                unreachable!()
+            };
+            Ok(b)
+        }
+        // 3. Throw a TypeError exception.
+        _ => Err(agent.throw_type_error("not a BigInt")),
+    }
+}

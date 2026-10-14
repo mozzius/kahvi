@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-number.prototype.toexponential
 
+use crate::support::this_value::this_number_value;
 use kahvi_core::prelude::*;
 
 /// Number.prototype.toExponential
@@ -9,54 +10,149 @@ pub(crate) fn prototype_to_exponential(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method returns a String containing this Number value represented in decimal exponential notation with one digit before the significand's decimal point and _fractionDigits_ digits after the significand's decimal point. If _fractionDigits_ is *undefined*, it includes as many significand digits as necessary to uniquely specify the Number (just like in ToString except that in this case the Number is always output in exponential notation).
     // It performs the following steps when called:
     //
     // 1. Let _number_ be ? ThisNumberValue(*this* value).
+    let mut number = this_number_value(agent, this)?;
     // 2. Let _fractionCount_ be ? ToIntegerOrInfinity(_fractionDigits_).
+    let fraction_digits = args.get_or_undefined(0);
+    let fraction_count = ops::to_integer_or_infinity(agent, fraction_digits)?;
     // 3. Assert: If _fractionDigits_ is *undefined*, then _fractionCount_ is 0.
+    debug_assert!(!matches!(fraction_digits, Value::Undefined) || fraction_count == 0.0);
     // 4. If _number_ is not a finite Number, return Number::toString(_number_, 10).
+    if !number.is_finite() {
+        return Ok(Value::String(ops::number_to_js_string(agent, number)));
+    }
     // 5. If _fractionCount_ is not an integer, throw a *RangeError* exception.
+    //    (ToIntegerOrInfinity yields an integer or ±∞; ±∞ is not an integer.)
+    if fraction_count.is_infinite() {
+        return Err(agent.throw_range_error("toExponential() argument must be between 0 and 100"));
+    }
     // 6. If _fractionCount_ < 0 or _fractionCount_ > 100, throw a *RangeError* exception.
+    if !(0.0..=100.0).contains(&fraction_count) {
+        return Err(agent.throw_range_error("toExponential() argument must be between 0 and 100"));
+    }
+    // The count is now an integer in 0..=100. It is replaced in step 11.b.ii when _fractionDigits_ is *undefined*.
+    let mut fraction_count = fraction_count as usize;
     // 7. Set _number_ to ℝ(_number_).
+    // (A Number is already an exact value here; the digits are taken from its exact decimal expansion below.)
     // 8. Let _sign_ be the empty String.
+    let mut sign = String::new();
     // 9. If _number_ < 0, then
-    //    a. Set _sign_ to *"-"*.
-    //    b. Set _number_ to -_number_.
+    if number < 0.0 {
+        // a. Set _sign_ to *"-"*.
+        sign.push('-');
+        // b. Set _number_ to -_number_.
+        number = -number;
+    }
+    // The significand digits (ASCII) and the decimal exponent of _number_, set by steps 10 and 11.
+    let (exponent, significand): (i32, Vec<u8>);
     // 10. If _number_ = 0, then
-    //    a. Let _significand_ be the String value consisting of _fractionCount_ + 1 occurrences of the code unit 0x0030 (DIGIT ZERO).
-    //    b. Let _exponent_ be 0.
+    if number == 0.0 {
+        // a. Let _significand_ be the String value consisting of _fractionCount_ + 1 occurrences of the code unit 0x0030 (DIGIT ZERO).
+        significand = vec![b'0'; fraction_count + 1];
+        // b. Let _exponent_ be 0.
+        exponent = 0;
     // 11. Else,
-    //    a. If _fractionDigits_ is not *undefined*, then
-    //       i. Let _exponent_ and _intSignificand_ be integers such that 10^_fractionCount_ ≤ _intSignificand_ < 10^_fractionCount_ + 1 and for which _intSignificand_ × 10^_exponent_ - _fractionCount_ - _number_ is as close to zero as possible. If there are two such sets of _exponent_ and _intSignificand_, pick the _exponent_ and _intSignificand_ for which _intSignificand_ × 10^_exponent_ - _fractionCount_ is larger.
-    //    b. Else,
-    //       i. Let _exponent_, _intSignificand_, and _ff_ be integers such that _ff_ ≥ 0, 10^_ff_ ≤ _intSignificand_ < 10^_ff_ + 1, 𝔽(_intSignificand_ × 10^_exponent_ - _ff_) is 𝔽(_number_), and _ff_ is as small as possible. Note that the decimal representation of _intSignificand_ has _ff_ + 1 digits, _intSignificand_ is not divisible by 10, and the least significant digit of _intSignificand_ is not necessarily uniquely determined by these criteria.
-    //       ii. Set _fractionCount_ to _ff_.
-    //    c. Let _significand_ be the String value consisting of the digits of the decimal representation of _intSignificand_ (in order, with no leading zeroes).
+    } else {
+        // a. If _fractionDigits_ is not *undefined*, then
+        if !matches!(fraction_digits, Value::Undefined) {
+            // i. Let _exponent_ and _intSignificand_ be integers such that 10^_fractionCount_ ≤ _intSignificand_ < 10^_fractionCount_ + 1 and for which _intSignificand_ × 10^_exponent_ - _fractionCount_ - _number_ is as close to zero as possible. If there are two such sets of _exponent_ and _intSignificand_, pick the _exponent_ and _intSignificand_ for which _intSignificand_ × 10^_exponent_ - _fractionCount_ is larger.
+            (exponent, significand) = round_to_significant_digits(number, fraction_count + 1);
+        // b. Else,
+        } else {
+            // i. Let _exponent_, _intSignificand_, and _ff_ be integers such that _ff_ ≥ 0, 10^_ff_ ≤ _intSignificand_ < 10^_ff_ + 1, 𝔽(_intSignificand_ × 10^_exponent_ - _ff_) is 𝔽(_number_), and _ff_ is as small as possible. Note that the decimal representation of _intSignificand_ has _ff_ + 1 digits, _intSignificand_ is not divisible by 10, and the least significant digit of _intSignificand_ is not necessarily uniquely determined by these criteria.
+            (exponent, significand) = shortest_significant_digits(number);
+            // ii. Set _fractionCount_ to _ff_.
+            fraction_count = significand.len() - 1;
+        }
+        // c. Let _significand_ be the String value consisting of the digits of the decimal representation of _intSignificand_ (in order, with no leading zeroes).
+    }
+    // The digits of _significand_ are collected in a String from here on.
+    let mut significand: String = significand.iter().map(|&d| char::from(d)).collect();
     // 12. If _fractionCount_ ≠ 0, then
-    //    a. Let _intPart_ be the first code unit of _significand_.
-    //    b. Let _fractionalPart_ be the other _fractionCount_ code units of _significand_.
-    //    c. Set _significand_ to the string-concatenation of _intPart_, *"."*, and _fractionalPart_.
+    if fraction_count != 0 {
+        // a. Let _intPart_ be the first code unit of _significand_.
+        // b. Let _fractionalPart_ be the other _fractionCount_ code units of _significand_.
+        // c. Set _significand_ to the string-concatenation of _intPart_, *"."*, and _fractionalPart_.
+        significand.insert(1, '.');
+    }
     // 13. If _exponent_ = 0, then
-    //    a. Let _exponentSign_ be *"+"*.
-    //    b. Let _exponentDigits_ be *"0"*.
+    let (exponent_sign, exponent_digits) = if exponent == 0 {
+        // a. Let _exponentSign_ be *"+"*.
+        // b. Let _exponentDigits_ be *"0"*.
+        ('+', String::from("0"))
     // 14. Else,
-    //    a. If _exponent_ > 0, then
-    //       i. Let _exponentSign_ be *"+"*.
-    //    b. Else,
-    //       i. Assert: _exponent_ < 0.
-    //       ii. Let _exponentSign_ be *"-"*.
-    //       iii. Set _exponent_ to -_exponent_.
-    //    c. Let _exponentDigits_ be the String value consisting of the digits of the decimal representation of _exponent_ (in order, with no leading zeroes).
+    } else {
+        // a. If _exponent_ > 0, then
+        //    i. Let _exponentSign_ be *"+"*.
+        // b. Else,
+        //    i. Assert: _exponent_ < 0.
+        //    ii. Let _exponentSign_ be *"-"*.
+        //    iii. Set _exponent_ to -_exponent_.
+        let exponent_sign = if exponent > 0 { '+' } else { '-' };
+        // c. Let _exponentDigits_ be the String value consisting of the digits of the decimal representation of _exponent_ (in order, with no leading zeroes).
+        (exponent_sign, exponent.unsigned_abs().to_string())
+    };
     // 15. Set _significand_ to the string-concatenation of _significand_, *"e"*, _exponentSign_, and _exponentDigits_.
+    significand.push('e');
+    significand.push(exponent_sign);
+    significand.push_str(&exponent_digits);
     // 16. Return the string-concatenation of _sign_ and _significand_.
-    //
-    // NOTE:
-    // For implementations that provide more accurate conversions than required by the rules above, it is recommended that the following alternative version of step [step-number-proto-toexponential-intermediate-values] be used as a guideline:
-    //
-    // 1. Let _exponent_, _intSignificand_, and _ff_ be integers such that _ff_ ≥ 0, 10^_ff_ ≤ _intSignificand_ < 10^_ff_ + 1, 𝔽(_intSignificand_ × 10^_exponent_ - _ff_) is 𝔽(_number_), and _ff_ is as small as possible. If there are multiple possibilities for _intSignificand_, choose _intSignificand_ such that 𝔽(_intSignificand_ × 10^_exponent_ - _ff_) is closest to 𝔽(_number_). If there are two such possible values of _intSignificand_, choose the one that is even.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.prototype.toExponential"))
+    sign.push_str(&significand);
+    let units: Vec<u16> = sign.encode_utf16().collect();
+    Ok(Value::String(agent.intern(&units)))
+}
+
+/// Splits the output of Rust's exponential float formatting (`1.25e6`, `5e-324`) into
+/// the decimal exponent and the ASCII digits of the significand (without the point).
+fn split_exponential(formatted: &str) -> (i32, Vec<u8>) {
+    let Some((mantissa, exponent)) = formatted.split_once('e') else {
+        unreachable!("exponential float formatting always contains an 'e'")
+    };
+    let Ok(exponent) = exponent.parse::<i32>() else {
+        unreachable!("exponential float formatting always has an integer exponent")
+    };
+    let digits = mantissa.bytes().filter(u8::is_ascii_digit).collect();
+    (exponent, digits)
+}
+
+/// The exponent and digits of the shortest decimal that rounds to the finite, positive `number`
+/// (the `ff` search of step 11.b). Rust's `{:e}` output is the shortest round-tripping form.
+fn shortest_significant_digits(number: f64) -> (i32, Vec<u8>) {
+    split_exponential(&format!("{number:e}"))
+}
+
+/// The exponent and the first `count` significant digits of the finite, positive `number`,
+/// rounded half up (step 11.a.i: a tie picks the larger _intSignificand_).
+fn round_to_significant_digits(number: f64, count: usize) -> (i32, Vec<u8>) {
+    // 1100 fractional digits in exponential form cover the exact decimal expansion of any double,
+    // so the digits after `count` are exact and the first of them decides the rounding.
+    let (mut exponent, mut digits) = split_exponential(&format!("{number:.1100e}"));
+    let round_up = digits.get(count).is_some_and(|&d| d >= b'5');
+    digits.truncate(count);
+    if round_up {
+        let mut carry = true;
+        for d in digits.iter_mut().rev() {
+            if !carry {
+                break;
+            }
+            if *d == b'9' {
+                *d = b'0';
+            } else {
+                *d += 1;
+                carry = false;
+            }
+        }
+        // All digits were 9: the significand becomes 10^count, one exponent higher.
+        if carry {
+            digits.insert(0, b'1');
+            digits.truncate(count);
+            exponent += 1;
+        }
+    }
+    (exponent, digits)
 }

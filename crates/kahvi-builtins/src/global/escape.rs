@@ -7,9 +7,9 @@ use kahvi_core::prelude::*;
 /// escape
 pub(crate) fn escape(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This function is a property of the global object. It computes a new version of a String value in which certain code units have been replaced by a hexadecimal escape sequence.
     // When replacing a code unit of numeric value less than or equal to 0x00FF, a two-digit escape sequence of the form %xx is used. When replacing a code unit of numeric value strictly greater than 0x00FF, a four-digit escape sequence of the form %uxxxx is used.
@@ -39,6 +39,51 @@ pub(crate) fn escape(
     //
     // NOTE:
     // The encoding is partly based on the encoding described in RFC 1738, but the entire encoding specified in this standard is described above without regard to the contents of RFC 1738. This encoding does not reflect changes to RFC 1738 made by RFC 3986.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("escape"))
+    // 1. Set _string_ to ? ToString(_string_).
+    let string = ops::to_string(agent, args.get_or_undefined(0))?;
+    // 2. Let _length_ be the length of _string_.
+    let units = agent.str(string).to_vec();
+    let length = units.len();
+    // 3. Let _result_ be the empty String.
+    let mut result: Vec<u16> = Vec::with_capacity(length);
+    // 4. Let _unescapedSet_ be the string-concatenation of the ASCII word characters and *"@\*+-./"*.
+    // 5. Let _k_ be 0.
+    let mut k = 0;
+    // 6. Repeat, while _k_ < _length_,
+    while k < length {
+        // a. Let _codeUnit_ be the code unit at index _k_ within _string_.
+        let code_unit = units[k];
+        // b. If _unescapedSet_ contains _codeUnit_, then
+        if is_unescaped(code_unit) {
+            // i. Let _nextPart_ be _codeUnit_.
+            // d. Set _result_ to the string-concatenation of _result_ and _nextPart_.
+            result.push(code_unit);
+        } else {
+            // c. Else,
+            // i. Let _codeUnitNumber_ be the numeric value of _codeUnit_.
+            let code_unit_number = u32::from(code_unit);
+            // ii. If _codeUnitNumber_ < 256, then
+            if code_unit_number < 256 {
+                // 1. Let _hex_ be the String representation of _codeUnitNumber_, formatted as an uppercase hexadecimal number.
+                // 2. Let _nextPart_ be the string-concatenation of *"%"* and StringPad(_hex_, 2, *"0"*, ~start~).
+                // d. Set _result_ to the string-concatenation of _result_ and _nextPart_.
+                result.extend(format!("%{code_unit_number:02X}").encode_utf16());
+            } else {
+                // iii. Else,
+                // 1. Let _hex_ be the String representation of _codeUnitNumber_, formatted as an uppercase hexadecimal number.
+                // 2. Let _nextPart_ be the string-concatenation of *"%u"* and StringPad(_hex_, 4, *"0"*, ~start~).
+                // d. Set _result_ to the string-concatenation of _result_ and _nextPart_.
+                result.extend(format!("%u{code_unit_number:04X}").encode_utf16());
+            }
+        }
+        // e. Set _k_ to _k_ + 1.
+        k += 1;
+    }
+    // 7. Return _result_.
+    Ok(Value::String(agent.intern(&result)))
+}
+
+/// The ASCII word characters (`[A-Za-z0-9_]`) and `@*+-./`, the unescapedSet of escape.
+fn is_unescaped(code_unit: u16) -> bool {
+    matches!(code_unit, 0x30..=0x39 | 0x41..=0x5A | 0x61..=0x7A | 0x5F | 0x40 | 0x2A | 0x2B | 0x2D | 0x2E | 0x2F)
 }

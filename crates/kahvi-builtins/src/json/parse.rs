@@ -72,11 +72,11 @@ pub(crate) fn parse(
 ///
 /// [[ParseNode]] is represented by `source` (the source text of a primitive),
 /// [[Elements]] by `elements` and [[Entries]] by `entries`.
-struct JsonParseRecord {
-    source: Vec<u16>,
-    value: Value,
-    elements: Vec<JsonParseRecord>,
-    entries: Vec<(Vec<u16>, JsonParseRecord)>,
+pub(crate) struct JsonParseRecord {
+    pub(crate) source: Vec<u16>,
+    pub(crate) value: Value,
+    pub(crate) elements: Vec<JsonParseRecord>,
+    pub(crate) entries: Vec<(Vec<u16>, JsonParseRecord)>,
 }
 
 impl JsonParseRecord {
@@ -96,7 +96,7 @@ impl JsonParseRecord {
 ///
 /// Parses `text` as a JSON text and returns its JSON Parse Record. Malformed
 /// input throws a SyntaxError.
-fn parse_json(agent: &mut Agent, text: &[u16]) -> JsResult<JsonParseRecord> {
+pub(crate) fn parse_json(agent: &mut Agent, text: &[u16]) -> JsResult<JsonParseRecord> {
     // 1. Let parseResult be ParseText(text, JSONText).
     // 2. If parseResult is a non-empty List of errors, throw a SyntaxError exception.
     // 3. Return the Record { [[ParseNode]]: parseResult, [[Value]]: the JSON value }.

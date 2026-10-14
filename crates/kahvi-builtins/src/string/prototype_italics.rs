@@ -4,17 +4,21 @@
 
 use kahvi_core::prelude::*;
 
+use super::prototype_anchor::create_html;
+
 /// String.prototype.italics
 pub(crate) fn prototype_italics(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let _ = args;
     // This method performs the following steps when called:
     //
     // 1. Let _string_ be the *this* value.
+    let string = this;
     // 2. Return ? CreateHTML(_string_, *"i"*, *""*, *""*).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.italics"))
+    let empty = Value::String(agent.intern(&[]));
+    create_html(agent, string, "i", "", empty)
 }

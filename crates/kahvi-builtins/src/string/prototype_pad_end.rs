@@ -4,18 +4,80 @@
 
 use kahvi_core::prelude::*;
 
+/// The longest String this engine will build, in code units. The spec leaves
+/// the limit to the implementation; a longer result throws a RangeError
+/// instead of exhausting memory.
+const MAX_STRING_LENGTH: f64 = ((1u64 << 29) - 24) as f64;
+
 /// String.prototype.padEnd
 pub(crate) fn prototype_pad_end(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method performs the following steps when called:
     //
     // 1. Let _thisValue_ be the *this* value.
+    let this_value = this;
     // 2. Perform ? RequireObjectCoercible(_thisValue_).
+    ops::require_object_coercible(agent, this_value)?;
     // 3. Return ? StringPaddingBuiltinsImpl(_thisValue_, _maxLength_, _fillString_, ~end~).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.padEnd"))
+    let max_length = args.get_or_undefined(0);
+    let fill_string = args.get_or_undefined(1);
+    string_padding_builtins_impl(agent, this_value, max_length, fill_string)
+}
+
+/// StringPaddingBuiltinsImpl ( _thisValue_, _maxLength_, _fillString_, _placement_ )
+///
+/// Only the ~end~ placement is used by this built-in, so the placement is fixed here.
+fn string_padding_builtins_impl(
+    agent: &mut Agent,
+    this_value: Value,
+    max_length: Value,
+    fill_string: Value,
+) -> JsResult<Value> {
+    // 1. Let _string_ be ? ToString(_thisValue_).
+    let string = ops::to_string(agent, this_value)?;
+    // The conversions below may collect garbage: _string_ stays rooted.
+    agent.with_roots(&[Value::String(string)], |agent| {
+        // 2. Let _intMaxLength_ be ℝ(? ToLength(_maxLength_)).
+        let int_max_length = ops::to_length(agent, max_length)?;
+        // 3. Let _stringLength_ be the length of _string_.
+        let string_length = agent.str_len(string) as f64;
+        // 4. If _intMaxLength_ ≤ _stringLength_, return _string_.
+        if int_max_length <= string_length {
+            return Ok(Value::String(string));
+        }
+        // 5. If _fillString_ is *undefined*, set _fillString_ to the String value consisting solely of the code unit 0x0020 (SPACE).
+        // 6. Else, set _fillString_ to ? ToString(_fillString_).
+        let fill_units: Vec<u16> = if matches!(fill_string, Value::Undefined) {
+            vec![0x0020]
+        } else {
+            let fill = ops::to_string(agent, fill_string)?;
+            agent.str(fill).to_vec()
+        };
+        // 7. Return StringPad(_string_, _intMaxLength_, _fillString_, ~end~).
+        // StringPad ( _string_, _maxLength_, _fillString_, ~end~ )
+        // 1. Let _stringLength_ be the length of _string_.
+        // (Already computed above; _string_ is longer than 0 units only if it was not returned.)
+        // 2. If _maxLength_ ≤ _stringLength_, return _string_.
+        // (Already handled by step 4 above.)
+        // 3. If _fillString_ is the empty String, return _string_.
+        if fill_units.is_empty() {
+            return Ok(Value::String(string));
+        }
+        // 4. Let _fillLength_ be _maxLength_ - _stringLength_.
+        let fill_length = int_max_length - string_length;
+        // Engine limit: refuse results too long to represent, rather than abort.
+        if int_max_length > MAX_STRING_LENGTH {
+            return Err(agent.throw_range_error("Invalid string length"));
+        }
+        let fill_length = fill_length as usize;
+        // 5. Let _truncatedStringFiller_ be the String value consisting of repeated concatenations of _fillString_ truncated to length _fillLength_.
+        // 7. Return the string-concatenation of _string_ and _truncatedStringFiller_.
+        let mut result = agent.str(string).to_vec();
+        result.extend(fill_units.iter().cycle().take(fill_length));
+        Ok(Value::String(agent.intern(&result)))
+    })
 }

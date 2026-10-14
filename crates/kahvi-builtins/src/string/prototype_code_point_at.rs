@@ -9,23 +9,87 @@ pub(crate) fn prototype_code_point_at(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // NOTE:
     // This method returns a non-negative integral Number less than or equal to *0x10FFFF*_𝔽 that is the numeric value of the UTF-16 encoded code point ([sec-ecmascript-language-types-string-type]) starting at the string element at index _position_ within the String resulting from converting this object to a String. If there is no element at that index, the result is *undefined*. If a valid UTF-16 surrogate pair does not begin at _position_, the result is the code unit at _position_.
     // This method performs the following steps when called:
     //
     // 1. Let _thisValue_ be the *this* value.
+    let this_value = this;
     // 2. Perform ? RequireObjectCoercible(_thisValue_).
+    ops::require_object_coercible(agent, this_value)?;
     // 3. Let _string_ be ? ToString(_thisValue_).
+    let string = ops::to_string(agent, this_value)?;
     // 4. Set _position_ to ? ToIntegerOrInfinity(_position_).
+    let position = ops::to_integer_or_infinity(agent, args.get_or_undefined(0).clone())?;
     // 5. Let _size_ be the length of _string_.
+    let size = agent.str_len(string) as f64;
     // 6. If _position_ < 0 or _position_ ≥ _size_, return *undefined*.
+    if position < 0.0 || position >= size {
+        return Ok(Value::Undefined);
+    }
     // 7. Let _codePoint_ be CodePointAt(_string_, _position_).
+    let code_point = code_point_at(agent.str(string), position as usize);
     // 8. Return 𝔽(_codePoint_.[[CodePoint]]).
-    //
-    // NOTE:
-    // This method is intentionally generic; it does not require that its *this* value be a String object. Therefore it can be transferred to other kinds of objects for use as a method.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("String.prototype.codePointAt"))
+    Ok(Value::Number(f64::from(code_point.code_point)))
+}
+
+/// The Record returned by CodePointAt ( _string_, _position_ ).
+struct CodePointRecord {
+    /// [[CodePoint]]
+    code_point: u32,
+    /// [[CodeUnitCount]]
+    _code_unit_count: usize,
+    /// [[IsUnpairedSurrogate]]
+    _is_unpaired_surrogate: bool,
+}
+
+/// CodePointAt ( _string_, _position_ )
+///
+/// Local to this file: no shared CodePointAt helper exists yet.
+fn code_point_at(units: &[u16], position: usize) -> CodePointRecord {
+    // 1. Let _size_ be the length of _string_.
+    let size = units.len();
+    // 2. Assert: 0 ≤ _position_ < _size_.
+    // 3. Let _first_ be the code unit at index _position_ within _string_.
+    let first = units.get(position).copied().unwrap_or(0);
+    // 4. Let _cp_ be CodePoint(_first_).
+    // 5. If _cp_ is not a leading surrogate and not a trailing surrogate, then
+    if !(0xD800..=0xDFFF).contains(&first) {
+        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *false* }.
+        return CodePointRecord {
+            code_point: u32::from(first),
+            _code_unit_count: 1,
+            _is_unpaired_surrogate: false,
+        };
+    }
+    // 6. If _cp_ is a trailing surrogate, or _position_ + 1 = _size_, then
+    if first >= 0xDC00 || position + 1 == size {
+        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *true* }.
+        return CodePointRecord {
+            code_point: u32::from(first),
+            _code_unit_count: 1,
+            _is_unpaired_surrogate: true,
+        };
+    }
+    // 7. Let _second_ be the code unit at index _position_ + 1 within _string_.
+    let second = units.get(position + 1).copied().unwrap_or(0);
+    // 8. If _second_ is not a trailing surrogate, then
+    if !(0xDC00..=0xDFFF).contains(&second) {
+        // a. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 1, [[IsUnpairedSurrogate]]: *true* }.
+        return CodePointRecord {
+            code_point: u32::from(first),
+            _code_unit_count: 1,
+            _is_unpaired_surrogate: true,
+        };
+    }
+    // 9. Set _cp_ to UTF16SurrogatePairToCodePoint(_first_, _second_).
+    // 10. Return the Record { [[CodePoint]]: _cp_, [[CodeUnitCount]]: 2, [[IsUnpairedSurrogate]]: *false* }.
+    let code_point = 0x10000 + ((u32::from(first) - 0xD800) << 10) + (u32::from(second) - 0xDC00);
+    CodePointRecord {
+        code_point,
+        _code_unit_count: 2,
+        _is_unpaired_surrogate: false,
+    }
 }

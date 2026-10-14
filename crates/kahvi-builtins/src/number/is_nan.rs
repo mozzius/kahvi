@@ -6,7 +6,7 @@ use kahvi_core::prelude::*;
 
 /// Number.isNaN
 pub(crate) fn is_nan(
-    agent: &mut Agent,
+    _agent: &mut Agent,
     this: Value,
     args: &[Value],
     new_target: Option<Object>,
@@ -19,6 +19,16 @@ pub(crate) fn is_nan(
     //
     // NOTE:
     // This function differs from the global isNaN function ([sec-isnan-number]) in that it does not convert its argument to a Number before determining whether it is *NaN*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.isNaN"))
+    let _ = (this, new_target);
+    // 1. If _number_ is not a Number, return *false*.
+    let number = args.get_or_undefined(0);
+    let Value::Number(n) = number else {
+        return Ok(Value::Boolean(false));
+    };
+    // 2. If _number_ is *NaN*, return *true*.
+    if n.is_nan() {
+        return Ok(Value::Boolean(true));
+    }
+    // 3. Return *false*.
+    Ok(Value::Boolean(false))
 }

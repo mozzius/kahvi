@@ -13,7 +13,7 @@ pub(crate) fn prototype_get_symbol_to_string_tag(
 ) -> JsResult<Value> {
     // The value of the [[Getter]] attribute is a built-in function that requires no arguments. It performs the following steps when called:
     //
-    // 1. Return *"Iterator"*.
     let _ = (this, args, new_target);
-    Err(agent.not_implemented("get Iterator.prototype[Symbol.toStringTag]"))
+    // 1. Return *"Iterator"*.
+    Ok(Value::String(agent.string("Iterator")))
 }

@@ -14,6 +14,8 @@ pub(crate) fn prototype_to_locale_string(
     // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
     // This method produces a String value that represents this Number value formatted according to the conventions of the host environment's current locale. This method is implementation-defined, and it is permissible, but not encouraged, for it to return the same thing as `toString`.
     // The meanings of the optional parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Number.prototype.toLocaleString"))
+    // kahvi has no ECMA-402 and no host locale: it returns what `toString` returns.
+    // The optional parameters are ECMA-402's, so none is passed on.
+    let _ = args;
+    super::prototype_to_string::prototype_to_string(agent, this, &[], new_target)
 }
