@@ -790,3 +790,6 @@ test262 at last merge: 72953/81183 runs passing
 [17:51:28] B-array-buffer-prototype-transfer-to-fixed-length: verifier: accept The diff implements ArrayBuffer.prototype.transferToFixedLength through a local ArrayBufferCopyAndDetach helper, with spec steps kept as comments in o
 [17:51:31] B-reflect-delete-property: attempt on slot 2 with haiku
 [17:51:41] B-array-buffer-prototype-transfer: verifier: accept The diff implements ArrayBuffer.prototype.transfer and a local ArrayBufferCopyAndDetach helper in the one in-scope file. I walked the spec steps in or
+[17:51:46] B-typed-array-prototype-reverse: attempt on slot 3 with haiku
+[17:52:03] B-array-prototype-with: verifier: accept The change implements Array.prototype.with in prototype_with.rs in spec order: ToObject, LengthOfArrayLike, ToAbsoluteIndex, the RangeError check, Arr
+[17:52:03] B-reflect-delete-property: attempt 223 finished ($0.004, 11 turns)
