@@ -3,7 +3,7 @@
 //! points and undo records, so input length never turns into Rust stack depth.
 
 use crate::charset::{Fold, is_line_terminator};
-use crate::compiler::{Inst, Item, Program};
+use crate::compiler::{First, Inst, Item, Program};
 
 const NONE: usize = usize::MAX;
 
@@ -53,6 +53,16 @@ enum Bt {
     },
 }
 
+/// A matcher's buffers, kept between matches.
+#[derive(Default)]
+pub(crate) struct Scratch {
+    caps: Vec<usize>,
+    group_starts: Vec<usize>,
+    counters: Vec<u64>,
+    iter_starts: Vec<usize>,
+    stack: Vec<Bt>,
+}
+
 pub(crate) struct Matcher<'a> {
     prog: &'a Program,
     input: &'a [u16],
@@ -73,20 +83,57 @@ fn is_trail(u: u16) -> bool {
 }
 
 impl<'a> Matcher<'a> {
-    pub fn new(prog: &'a Program, input: &'a [u16]) -> Matcher<'a> {
+    /// A matcher that reuses the buffers of an earlier one (matching runs
+    /// once per start position, so allocating them each time dominates).
+    pub fn with_scratch(prog: &'a Program, input: &'a [u16], scratch: Scratch) -> Matcher<'a> {
+        let Scratch {
+            mut caps,
+            mut group_starts,
+            mut counters,
+            mut iter_starts,
+            mut stack,
+        } = scratch;
+        caps.clear();
+        caps.resize(prog.groups * 2, NONE);
+        group_starts.clear();
+        group_starts.resize(prog.groups, NONE);
+        counters.clear();
+        counters.resize(prog.registers, 0);
+        iter_starts.clear();
+        iter_starts.resize(prog.registers, NONE);
+        stack.clear();
         Matcher {
             prog,
             input,
-            caps: vec![NONE; prog.groups * 2],
-            group_starts: vec![NONE; prog.groups],
-            counters: vec![0; prog.registers],
-            iter_starts: vec![NONE; prog.registers],
-            stack: Vec::new(),
+            caps,
+            group_starts,
+            counters,
+            iter_starts,
+            stack,
+        }
+    }
+
+    /// The buffers, for the next `with_scratch`.
+    pub fn into_scratch(self) -> Scratch {
+        Scratch {
+            caps: self.caps,
+            group_starts: self.group_starts,
+            counters: self.counters,
+            iter_starts: self.iter_starts,
+            stack: self.stack,
         }
     }
 
     /// Runs the pattern at `start`; on success the captures are in `caps`.
     pub fn match_at(&mut self, start: usize) -> bool {
+        if let Some(firsts) = &self.prog.firsts
+            && !firsts.iter().any(|f| match f {
+                First::Item(item) => self.step(item, false, start).is_some(),
+                First::InputStart => start == 0,
+            })
+        {
+            return false;
+        }
         self.caps.iter_mut().for_each(|c| *c = NONE);
         self.stack.clear();
         self.run(0, start).is_some()
