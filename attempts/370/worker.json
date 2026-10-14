@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 13269,
+  "stop_reason": "end_turn",
+  "session_id": "ba64a615-9e5a-462f-906c-698d594191f3",
+  "total_cost_usd": 0.00715394,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 24379,
+    "cache_read_input_tokens": 101914,
+    "output_tokens": 1548,
+    "output_tokens_details": {
+      "thinking_tokens": 571
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24379,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 179,
+        "cache_read_input_tokens": 31602,
+        "cache_creation_input_tokens": 420,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 420
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`DataView.prototype.setFloat64` was already implemented in `crates/kahvi-builtins/src/data_view/prototype_set_float64.rs`, and I made no changes. All 46 runs under `built-ins/DataView/prototype/setFloat64/` pass, and `cargo clippy -p kahvi-builtins` is clean.\n\nThe \"not implemented\" failures in the previous attempts came from `DataView.prototype.getFloat64`, which is now implemented in its own file and returns the right values. The earlier failure list is stale.",
+  "ttft_ms": 1714,
+  "type": "result",
+  "duration_ms": 33121,
+  "uuid": "58814673-cec0-4973-8cdd-0d0807dfc80b",
+  "ttft_stream_ms": 1464,
+  "time_to_request_ms": 567,
+  "time_to_request_phases_ms": {
+    "other": 76,
+    "system_prompt": 348,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 18,
+    "input_hooks": 8,
+    "tool_pool_refresh": 10,
+    "init_message": 13,
+    "engine_pickup": 4,
+    "message_prep": 5,
+    "model_config_wait": 20,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 20,
+    "message_normalization": 3,
+    "client_creation": 12,
+    "request_build": 18
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 151,
+  "time_to_request_cpu_ms": 307,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 2570,
+  "process_wall_ms_turn": 33120,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1465,
+  "time_to_request_from_spawn_ms": 25106691,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004566680.5322,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
