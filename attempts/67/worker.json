@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 42669,
+  "stop_reason": "end_turn",
+  "session_id": "8227f485-c3d3-48c6-8cec-27988d6b8b7c",
+  "total_cost_usd": 0.01221318,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 24540,
+    "cache_read_input_tokens": 293718,
+    "output_tokens": 7924,
+    "output_tokens_details": {
+      "thinking_tokens": 3772
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24540,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 560,
+        "cache_read_input_tokens": 31675,
+        "cache_creation_input_tokens": 345,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 345
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01PH5fq6ZPimpTWnJwzJc2pY",
+      "tool_input": {
+        "command": "rustfmt --edition 2021 crates/kahvi-builtins/src/typed_array/prototype_set.rs",
+        "description": "Format the set file with rustfmt"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `sameSharedArrayBuffer` step is in place and the file builds, is clippy-clean and is formatted. The set tests are still at 42 pass / 162 fail, because the remaining failures come from `Math.floor`, `TypedArray.prototype.join` and `ArrayBuffer.prototype.resize`, which are stubs outside this ticket's file.\n\nI implemented step 16 as a `same_shared_array_buffer = false` binding with a note explaining why, rather than returning `not_implemented`. The `SharedArrayBuffer` constructor is itself `not_implemented`, so no shared buffer can exist and the case cannot arise. The aliasing check at step 17 now reads `src_buffer == target_buffer || same_shared_array_buffer`. I also renumbered the tail of the function (steps 18\u201323) to match the `./spec` output. I did not change anything else.\n\n`rustfmt` was denied, so I applied its one-line reformat by hand; `cargo fmt --check` on the file now passes.\n\nBLOCKED: `Math.floor`, `TypedArray.prototype.join` and `ArrayBuffer.prototype.resize` are unimplemented, so the built-ins/TypedArray/prototype/set/ tests cannot pass yet.",
+  "ttft_ms": 1755,
+  "type": "result",
+  "duration_ms": 69880,
+  "uuid": "c210704d-a5aa-4c39-905f-ad7c4602e5d9",
+  "ttft_stream_ms": 1641,
+  "time_to_request_ms": 777,
+  "time_to_request_phases_ms": {
+    "other": 145,
+    "system_prompt": 255,
+    "resume_other": 0,
+    "process_user_input": 18,
+    "input_attachments": 144,
+    "input_hooks": 16,
+    "tool_pool_refresh": 19,
+    "init_message": 41,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 1,
+    "autocompact": 11,
+    "query_setup": 1,
+    "model_gates": 5,
+    "tool_schema_build": 28,
+    "message_normalization": 15,
+    "client_creation": 11,
+    "request_build": 57
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 612,
+  "time_to_request_cpu_ms": 250,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 100,
+  "process_rss_mib_result": 264,
+  "process_anon_mib_result": 144,
+  "process_peak_rss_mib": 284,
+  "process_cpu_ms_turn": 3615,
+  "process_wall_ms_turn": 69871,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 107,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1641,
+  "time_to_request_from_spawn_ms": 11284331,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791959158061.6567,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.67,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

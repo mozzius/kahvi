@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 42905,
+  "stop_reason": "tool_use",
+  "session_id": "a3576dde-51c2-4cd0-9f69-b0b48df52eab",
+  "total_cost_usd": 0.00811726,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10737,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 9873,
+    "output_tokens_details": {
+      "thinking_tokens": 9290
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10737,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 9873,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10737,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10737
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"I walked the diff against the pinned spec text for %TypedArray%.prototype.set, SetTypedArrayFromTypedArray and SetTypedArrayFromArrayLike. Steps are implemented in spec order, and each abrupt completion is propagated with `?`. The RequireInternalSlot, ToIntegerOrInfinity, negative-offset RangeError, content-type check (which runs before the offset RangeErrors, as in the spec), the +\u221e and length RangeErrors, the clone-on-same-buffer path, the element-wise copy loop, and the ArrayLike Get/TypedArraySetElement loop all match the spec. I found no test-shaped branches and no made-up return values. The one hardcoded constant, sameSharedArrayBuffer = false, follows from the diff's own note that no SharedArrayBuffer exists, so it is not a defect. The four lint flags are `expect` calls on invariants: the first two follow the earlier typed-array check, and the buffer `expect` calls are not proven unreachable. Those are worth a look but are not spec or error-handling defects in this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "I walked the diff against the pinned spec text for %TypedArray%.prototype.set, SetTypedArrayFromTypedArray and SetTypedArrayFromArrayLike. Steps are implemented in spec order, and each abrupt completion is propagated with `?`. The RequireInternalSlot, ToIntegerOrInfinity, negative-offset RangeError, content-type check (which runs before the offset RangeErrors, as in the spec), the +\u221e and length RangeErrors, the clone-on-same-buffer path, the element-wise copy loop, and the ArrayLike Get/TypedArraySetElement loop all match the spec. I found no test-shaped branches and no made-up return values. The one hardcoded constant, sameSharedArrayBuffer = false, follows from the diff's own note that no SharedArrayBuffer exists, so it is not a defect. The four lint flags are `expect` calls on invariants: the first two follow the earlier typed-array check, and the buffer `expect` calls are not proven unreachable. Those are worth a look but are not spec or error-handling defects in this diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 39934,
+  "type": "result",
+  "duration_ms": 42282,
+  "uuid": "d08f6fd3-77d9-48a1-a165-879cb18fad0f",
+  "ttft_stream_ms": 1124,
+  "time_to_request_ms": 224,
+  "time_to_request_phases_ms": {
+    "other": 39,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 12,
+    "input_attachments": 37,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 5,
+    "message_prep": 2,
+    "model_config_wait": 76,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 10,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 113,
+  "time_to_request_cpu_ms": 134,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 224,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 241,
+  "process_anon_mib_result": 123,
+  "process_peak_rss_mib": 247,
+  "process_cpu_ms_turn": 827,
+  "process_wall_ms_turn": 42282,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 21,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1124,
+  "time_to_request_from_spawn_ms": 11375015,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791959249739.55,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.67,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

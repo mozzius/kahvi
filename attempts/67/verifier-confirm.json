@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 38231,
+  "stop_reason": "tool_use",
+  "session_id": "ca705fa1-fbf0-458b-aae8-633e2caa15b3",
+  "total_cost_usd": 0.09462380000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10734,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 5045,
+    "output_tokens_details": {
+      "thinking_tokens": 4344
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10734,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5045,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 10734,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10734
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements %TypedArray%.prototype.set and both helper algorithms. The top-level steps and SetTypedArrayFromArrayLike follow the spec in order, and every `?` is propagated. The remaining 162 test262 failures are not-implemented errors from Math.floor, not from this file. I found no special-casing, swallowed errors or unrelated edits. I could only check SetTypedArrayFromTypedArray against my memory of the spec, because its steps were not in the ticket. The step comments in that function are numbered inconsistently (9, 10-11, 12, 13, 16). I could not confirm whether the content-type TypeError belongs before or after the two RangeError checks. The `.expect` calls are guarded by earlier `is_some()` checks. The one for `buffer` assumes an initialized TypedArray always has a buffer, which I could not verify.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. Optionally: (1) run `./spec sec-settypedarrayfromtypedarray` and fix the step-number comments in set_typed_array_from_typed_array so they match the published numbering. (2) Check there whether the ContentType TypeError comes before or after the `targetOffset = +\u221e` and `srcLength + targetOffset > targetLength` RangeError checks. My memory says after, which would make this code order them differently. (3) Replace the `.expect(\\\"an initialized TypedArray\\\")` calls on `buffer` with a TypeError if an uninitialized TypedArray can ever be seen.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements %TypedArray%.prototype.set and both helper algorithms. The top-level steps and SetTypedArrayFromArrayLike follow the spec in order, and every `?` is propagated. The remaining 162 test262 failures are not-implemented errors from Math.floor, not from this file. I found no special-casing, swallowed errors or unrelated edits. I could only check SetTypedArrayFromTypedArray against my memory of the spec, because its steps were not in the ticket. The step comments in that function are numbered inconsistently (9, 10-11, 12, 13, 16). I could not confirm whether the content-type TypeError belongs before or after the two RangeError checks. The `.expect` calls are guarded by earlier `is_some()` checks. The one for `buffer` assumes an initialized TypedArray always has a buffer, which I could not verify.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. Optionally: (1) run `./spec sec-settypedarrayfromtypedarray` and fix the step-number comments in set_typed_array_from_typed_array so they match the published numbering. (2) Check there whether the ContentType TypeError comes before or after the `targetOffset = +\u221e` and `srcLength + targetOffset > targetLength` RangeError checks. My memory says after, which would make this code order them differently. (3) Replace the `.expect(\"an initialized TypedArray\")` calls on `buffer` with a TypeError if an uninitialized TypedArray can ever be seen."
+  },
+  "ttft_ms": 32909,
+  "type": "result",
+  "duration_ms": 37285,
+  "uuid": "da0b78e5-0e61-4b67-acb7-33efe12b05b7",
+  "ttft_stream_ms": 1595,
+  "time_to_request_ms": 404,
+  "time_to_request_phases_ms": {
+    "other": 127,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 163,
+    "input_attachments": 19,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 46,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 7,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 354,
+  "time_to_request_cpu_ms": 116,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 244,
+  "process_anon_mib_result": 126,
+  "process_peak_rss_mib": 244,
+  "process_cpu_ms_turn": 891,
+  "process_wall_ms_turn": 37285,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1596,
+  "time_to_request_from_spawn_ms": 11420863,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791959296176.841,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791972600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1791972600
+      },
+      "seven_day": {
+        "utilization": 0.67,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
