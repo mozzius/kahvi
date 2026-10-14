@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 11201,
+  "stop_reason": "tool_use",
+  "session_id": "b94cf492-469f-4ac0-b208-f60c27cee8dd",
+  "total_cost_usd": 0.0021304799999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4146,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1839,
+    "output_tokens_details": {
+      "thinking_tokens": 1293
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4146,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1839,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4146,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4146
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff is a small, spec-shaped implementation of %TypedArray%.prototype.values. It keeps the three spec steps as comments, calls the ValidateTypedArray helper with `?`, and then returns CreateArrayIterator(obj, value) using the original `this` object, as step 3 requires. The helper's returned witness record is discarded, which is fine because the spec step 3 uses `obj`, not the witness. The let-else on a non-object value is unreachable if validate_typed_array rejects non-objects as RequireInternalSlot does. It throws a TypeError either way, so it is not a made-up value. Renaming the unused params to `_args` and `_new_target` is cosmetic. The gate shows 28 new passes with 0 regressions, and the 6 remaining failures are honest not-implemented BigInt throws. I could not see the support modules, so I did not verify that validate_typed_array is seq-cst or that create_array_iterator matches the spec. Those depend on helpers outside this diff.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff is a small, spec-shaped implementation of %TypedArray%.prototype.values. It keeps the three spec steps as comments, calls the ValidateTypedArray helper with `?`, and then returns CreateArrayIterator(obj, value) using the original `this` object, as step 3 requires. The helper's returned witness record is discarded, which is fine because the spec step 3 uses `obj`, not the witness. The let-else on a non-object value is unreachable if validate_typed_array rejects non-objects as RequireInternalSlot does. It throws a TypeError either way, so it is not a made-up value. Renaming the unused params to `_args` and `_new_target` is cosmetic. The gate shows 28 new passes with 0 regressions, and the 6 remaining failures are honest not-implemented BigInt throws. I could not see the support modules, so I did not verify that validate_typed_array is seq-cst or that create_array_iterator matches the spec. Those depend on helpers outside this diff.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9270,
+  "type": "result",
+  "duration_ms": 11453,
+  "uuid": "1e0b28ea-684f-40ba-9efb-1e55aa881dd5",
+  "ttft_stream_ms": 2993,
+  "time_to_request_ms": 749,
+  "time_to_request_phases_ms": {
+    "other": 40,
+    "system_prompt": 475,
+    "resume_other": 0,
+    "process_user_input": 9,
+    "input_attachments": 46,
+    "input_hooks": 6,
+    "tool_pool_refresh": 6,
+    "init_message": 19,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 111,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 7,
+    "message_normalization": 3,
+    "client_creation": 6,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 83,
+  "time_to_request_cpu_ms": 442,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 824,
+  "process_wall_ms_turn": 11452,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 33,
+    "cpu_ms": 43,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2994,
+  "time_to_request_from_spawn_ms": 17772997,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997232633.3552,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

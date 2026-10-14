@@ -16,3 +16,6 @@
 [17:00:09] B-typed-array-prototype-fill: attempt on slot 1 with haiku
 [17:00:20] B-typed-array-prototype-values: attempt 107 finished ($0.008, 13 turns)
 [17:00:42] B-typed-array-prototype-map: verifier: accept The diff implements %TypedArray%.prototype.map in spec order. It runs ValidateTypedArray (step 2) with `?`, then TypedArrayLength (step 3), the IsCall
+[17:00:45] B-reg-exp-prototype-symbol-search: attempt on slot 3 with haiku
+[17:00:46] B-typed-array-prototype-copy-within: attempt 106 finished ($0.018, 18 turns)
+[17:00:47] B-typed-array-prototype-copy-within: gate rejected attempt 106: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 

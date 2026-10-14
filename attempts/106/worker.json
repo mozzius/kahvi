@@ -1,0 +1,131 @@
+{
+  "duration_api_ms": 43158,
+  "stop_reason": "end_turn",
+  "session_id": "c7312455-7127-45af-9d84-eccc6a16ee6b",
+  "total_cost_usd": 0.018236920000000004,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 45617,
+    "cache_read_input_tokens": 391732,
+    "output_tokens": 9250,
+    "output_tokens_details": {
+      "thinking_tokens": 3738
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 45617,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 494,
+        "cache_read_input_tokens": 52967,
+        "cache_creation_input_tokens": 293,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 293
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01DGWLR87NqnbT7g8sZBr1iB",
+      "tool_input": {
+        "command": "git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs && git status --short",
+        "description": "Revert out-of-scope formatting changes"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`TypedArray.prototype.copyWithin` is implemented in its file, but the diff is not clean: `cargo fmt` also reformatted three files outside the ticket's scope, and I could not revert them because the `git checkout` was denied.\n\nThe copyWithin test run gives 116 passing and 12 failing across the 65 files. Every failure is a \"not implemented\" error from another built-in: 6 from `Array.prototype.fill` and 6 from BigInt. The 8 `copyWithin` tests that pass on main still pass, and the canaries are green.\n\nThe stub's private `to_clamped_index` is copied into my file, following the same pattern as `prototype_slice.rs`. It is not in `ops`, and other built-ins would need it too.\n\nThe three out-of-scope files that need reverting, all formatting-only changes from `cargo fmt`:\n- `crates/kahvi-core/src/host.rs`\n- `crates/kahvi-core/src/object/host_object.rs`\n- `crates/kahvi-ffi/src/lib.rs`\n\nRun `git checkout -- crates/kahvi-core/src/host.rs crates/kahvi-core/src/object/host_object.rs crates/kahvi-ffi/src/lib.rs` before this is merged. I did not get to the final clippy run for the same reason.\n\nBLOCKED: BigInt support and `Array.prototype.fill` are not implemented, so the remaining 12 copyWithin test262 runs cannot pass in this ticket.",
+  "ttft_ms": 2397,
+  "type": "result",
+  "duration_ms": 82334,
+  "uuid": "b22efd75-c833-49da-b205-f7e2949d9795",
+  "ttft_stream_ms": 2164,
+  "time_to_request_ms": 1301,
+  "time_to_request_phases_ms": {
+    "other": 132,
+    "system_prompt": 624,
+    "resume_other": 1,
+    "process_user_input": 41,
+    "input_attachments": 63,
+    "input_hooks": 13,
+    "tool_pool_refresh": 12,
+    "init_message": 31,
+    "engine_pickup": 2,
+    "message_prep": 22,
+    "model_config_wait": 183,
+    "autocompact": 15,
+    "query_setup": 10,
+    "model_gates": 0,
+    "tool_schema_build": 65,
+    "message_normalization": 26,
+    "client_creation": 23,
+    "request_build": 38
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 492,
+  "time_to_request_cpu_ms": 402,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 215,
+  "process_anon_mib_turn_start": 99,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 135,
+  "process_peak_rss_mib": 281,
+  "process_cpu_ms_turn": 5107,
+  "process_wall_ms_turn": 82325,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2180,
+  "time_to_request_from_spawn_ms": 17703104,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997159692.9238,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
