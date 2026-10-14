@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff is a thin wrapper. It maps this to view, maps an absent or undefined littleEndian to false, and delegates to crate::support::typed_array::get_view_value with ElementType::Int32. Steps 1 to 3 of the spec are covered. The ToBoolean and ToIndex conversions happen inside the helper, which is the spec's GetViewValue order, and an explicit undefined is equivalent to false because ToBoolean(undefined) is false. Renaming new_target to _new_target is needed because the parameter is now unused. No special-casing, no swallowed errors, no made-up values. The helper itself is not in the diff, so I could not inspect whether it fully implements GetViewValue steps 1 to 13. The gate shows 0 not-implemented and 30 new passes, which is consistent with a complete helper.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

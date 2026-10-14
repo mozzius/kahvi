@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5356,
+  "stop_reason": "tool_use",
+  "session_id": "acceda1e-edba-4f6a-a4cc-9db28e6cc254",
+  "total_cost_usd": 0.0215563,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3936,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 512,
+    "output_tokens_details": {
+      "thinking_tokens": 126
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3936,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 512,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3936,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3936
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements getInt32 as three spec steps. It delegates to the existing shared `get_view_value` helper with `ElementType::Int32`, and propagates the result with no error handling. The step 2 default (undefined becomes false) is unobservable, because GetViewValue applies ToBoolean to it anyway. The argument order is correct (byteOffset, then littleEndian). Only the one in-scope file changed. The gate shows 30 new passes and 0 regressions, which fits a small diff that wires up a working helper.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements getInt32 as three spec steps. It delegates to the existing shared `get_view_value` helper with `ElementType::Int32`, and propagates the result with no error handling. The step 2 default (undefined becomes false) is unobservable, because GetViewValue applies ToBoolean to it anyway. The argument order is correct (byteOffset, then littleEndian). Only the one in-scope file changed. The gate shows 30 new passes and 0 regressions, which fits a small diff that wires up a working helper.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3099,
+  "type": "result",
+  "duration_ms": 5031,
+  "uuid": "38cb12fa-8f9d-42a4-9bc3-3b1c07bf5654",
+  "ttft_stream_ms": 1608,
+  "time_to_request_ms": 479,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 294,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 25,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 100,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 14,
+  "time_to_request_cpu_ms": 212,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 627,
+  "process_wall_ms_turn": 5031,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1609,
+  "time_to_request_from_spawn_ms": 22501388,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001961635.2183,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

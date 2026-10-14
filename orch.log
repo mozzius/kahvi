@@ -1018,3 +1018,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:18:30] B-data-view-prototype-get-int32: attempt 282 finished ($0.006, 11 turns)
 [18:18:34] B-data-view-prototype-get-int16: attempt 280 finished ($0.006, 11 turns)
 [18:19:17] B-data-view-prototype-get-float32: verifier: accept The change is a minimal, spec-faithful implementation of DataView.prototype.getFloat32. Step 1 binds this to view, and step 2 defaults littleEndian to
+[18:19:20] B-data-view-prototype-get-int8: attempt on slot 2 with haiku
+[18:19:28] B-data-view-prototype-get-int32: verifier: accept The diff is a thin wrapper. It maps this to view, maps an absent or undefined littleEndian to false, and delegates to crate::support::typed_array::get

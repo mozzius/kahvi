@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 10175,
+  "stop_reason": "tool_use",
+  "session_id": "2b93a7c9-d493-4fc6-8edd-9d101f5409e9",
+  "total_cost_usd": 0.00206708,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3928,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1840,
+    "output_tokens_details": {
+      "thinking_tokens": 1202
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3928,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1840,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3928,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3928
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change replaces the not-implemented stub for DataView.prototype.getFloat64 with a direct call to the shared helper get_view_value(agent, this, byteOffset, littleEndian, ElementType::Float64). It maps spec step 1 (view = this), step 2 (absent littleEndian passed as undefined, which GetViewValue's ToBoolean turns into false, the same result as the spec's explicit false), and step 3 (return ? GetViewValue(...) with float64). No branches key on test inputs, no errors are swallowed, and no values are invented. The only other edit is renaming the unused new_target parameter to _new_target, which is needed to avoid an unused-variable warning. The 36 new passing tests fit a change that delegates to a shared helper. I could not read get_view_value itself, so I am relying on the build and test results for its correctness; the diff does not show it being changed.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found in this diff. Its correctness depends on crate::support::typed_array::get_view_value implementing GetViewValue fully (RequireInternalSlot, ToIndex, ToBoolean, IsViewOutOfBounds, RangeError check, GetValueFromBuffer). That helper was not part of this diff and I could not inspect it. Worth a check if other DataView getters rely on it.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change replaces the not-implemented stub for DataView.prototype.getFloat64 with a direct call to the shared helper get_view_value(agent, this, byteOffset, littleEndian, ElementType::Float64). It maps spec step 1 (view = this), step 2 (absent littleEndian passed as undefined, which GetViewValue's ToBoolean turns into false, the same result as the spec's explicit false), and step 3 (return ? GetViewValue(...) with float64). No branches key on test inputs, no errors are swallowed, and no values are invented. The only other edit is renaming the unused new_target parameter to _new_target, which is needed to avoid an unused-variable warning. The 36 new passing tests fit a change that delegates to a shared helper. I could not read get_view_value itself, so I am relying on the build and test results for its correctness; the diff does not show it being changed.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found in this diff. Its correctness depends on crate::support::typed_array::get_view_value implementing GetViewValue fully (RequireInternalSlot, ToIndex, ToBoolean, IsViewOutOfBounds, RangeError check, GetValueFromBuffer). That helper was not part of this diff and I could not inspect it. Worth a check if other DataView getters rely on it."
+  },
+  "ttft_ms": 7676,
+  "type": "result",
+  "duration_ms": 10117,
+  "uuid": "62f5402a-f05d-434f-92e8-33f5d1aff41d",
+  "ttft_stream_ms": 1895,
+  "time_to_request_ms": 789,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 457,
+    "resume_other": 0,
+    "process_user_input": 24,
+    "input_attachments": 40,
+    "input_hooks": 9,
+    "tool_pool_refresh": 3,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 187,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 127,
+  "time_to_request_cpu_ms": 306,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 233,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 233,
+  "process_cpu_ms_turn": 838,
+  "process_wall_ms_turn": 10116,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 25,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1896,
+  "time_to_request_from_spawn_ms": 22491646,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792001950142.9216,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792019400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
