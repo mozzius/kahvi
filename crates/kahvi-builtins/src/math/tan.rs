@@ -15,9 +15,17 @@ pub(crate) fn tan(
     // It performs the following steps when called:
     //
     // 1. Let _n_ be ? ToNumber(_x_).
+    let _ = (this, new_target);
+    let x = args.get_or_undefined(0);
+    let n = ops::to_number(agent, x)?;
     // 2. If _n_ is one of *NaN*, *+0*_𝔽, or *-0*_𝔽, return _n_.
+    if n.is_nan() || n == 0.0 {
+        return Ok(Value::Number(n));
+    }
     // 3. If _n_ is either *+∞*_𝔽 or *-∞*_𝔽, return *NaN*.
+    if n.is_infinite() {
+        return Ok(Value::Number(f64::NAN));
+    }
     // 4. Return an implementation-approximated Number value representing the tangent of ℝ(_n_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Math.tan"))
+    Ok(Value::Number(n.tan()))
 }
