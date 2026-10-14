@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements all 22 steps of RegExp.prototype[Symbol.split] in the spec's order, each with its spec comment above it. Abstract operations are used throughout (to_string, species_constructor, get, construct, to_uint32, set, to_length, length_of_array_like, create_data_property_or_throw, regexp_exec, advance_string_index). Observable operations (Get \"flags\", Set \"lastIndex\", Get \"lastIndex\", ToLength, LengthOfArrayLike, capture Gets) happen in spec order and count. Abrupt completions propagate with `?`. Nothing is special-cased, hardcoded or swallowed. The only out-of-scope item is a local `substring_units` helper in the same file, which the ticket permits. The unimplemented `RegExp.prototype.flags` getter surfaces as the engine's not-implemented error, which is an honest partial. The lint on `unreachable!` relies on regexp_exec enforcing the RegExpExec step 2.b TypeError check. I could not see that helper, so this depends on it being correct.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

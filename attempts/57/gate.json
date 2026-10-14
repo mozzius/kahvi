@@ -1,0 +1,55 @@
+{
+  "ticket": "B-reg-exp-prototype-symbol-split",
+  "base": "3bab7873127cdc40b194c9a9279779387838c21a",
+  "head": "bc0ae6c79f8c93031b446675debe680a04bc3bc2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_split.rs",
+      "added": 141,
+      "removed": 36
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/reg_exp/prototype_symbol_split.rs",
+      "line": 169,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "_ => unreachable!(\"RegExpExec returns an Object or null\"),"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 88,
+    "before": 8,
+    "after": 52,
+    "new_passes": 44,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 36,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/prototype/Symbol.split/coerce-limit-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/coerce-limit-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/coerce-limit.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/coerce-limit.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/coerce-string.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/coerce-string.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/last-index-exceeds-str-size.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/last-index-exceeds-str-size.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-ctor-undef.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-ctor-undef.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-err.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-err.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-species-non-ctor.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-species-non-ctor.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.flags",
+      "built-ins/RegExp/prototype/Symbol.split/species-ctor-species-undef.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.flags"
+    ]
+  },
+  "decision": "pass"
+}

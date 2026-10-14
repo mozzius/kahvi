@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 11255,
+  "stop_reason": "tool_use",
+  "session_id": "ec632684-024c-435b-a93e-4d3a40661799",
+  "total_cost_usd": 0.06718110000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 13787,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1049,
+    "output_tokens_details": {
+      "thinking_tokens": 706
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13787,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1049,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 13787,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 13787
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1\u201322 in order, with `?` propagation and observable operations in the right order and number. The remaining 36 test262 failures come from the unimplemented `get RegExp.prototype.flags`, which is outside this ticket's file. They surface as the engine's not-implemented error, not as made-up values. I found no special-casing, swallowed errors or unrelated edits.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1\u201322 in order, with `?` propagation and observable operations in the right order and number. The remaining 36 test262 failures come from the unimplemented `get RegExp.prototype.flags`, which is outside this ticket's file. They surface as the engine's not-implemented error, not as made-up values. I found no special-casing, swallowed errors or unrelated edits.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9152,
+  "type": "result",
+  "duration_ms": 11027,
+  "uuid": "a397018f-a774-4465-a1e2-c84968b3f4f2",
+  "ttft_stream_ms": 4007,
+  "time_to_request_ms": 241,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 45,
+    "input_hooks": 5,
+    "tool_pool_refresh": 7,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 98,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 5,
+    "tool_schema_build": 9,
+    "message_normalization": 1,
+    "client_creation": 9,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 188,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 224,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 476,
+  "process_wall_ms_turn": 11026,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 22,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4007,
+  "time_to_request_from_spawn_ms": 3068021,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791950944927.8438,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.8,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

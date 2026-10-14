@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 48196,
+  "stop_reason": "end_turn",
+  "session_id": "42565b00-2727-47bf-bb25-c0a6f2771dbe",
+  "total_cost_usd": 0.01941619,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 48886,
+    "cache_read_input_tokens": 291719,
+    "output_tokens": 11777,
+    "output_tokens_details": {
+      "thinking_tokens": 4280
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 48886,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 272,
+        "cache_read_input_tokens": 55680,
+        "cache_creation_input_tokens": 686,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 686
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `RegExp.prototype[Symbol.split]` in its file, following the spec steps, and it builds and passes clippy. The target directory has 52 passing runs and 36 failing, and every failure is `not implemented: get RegExp.prototype.flags`, which step 5 requires. The \"done when\" condition is not met until the `RegExp.prototype.flags` getter exists.\n\nOnly `crates/kahvi-builtins/src/reg_exp/prototype_symbol_split.rs` changed. I added one local helper, `substring_units`, which only this file uses.\n\nBLOCKED: `RegExp.prototype.flags` getter (`get RegExp.prototype.flags`, spec \u00a722.2.6.4) is not implemented, and Symbol.split step 5 needs `Get(regexp, \"flags\")`.",
+  "ttft_ms": 1183,
+  "type": "result",
+  "duration_ms": 51823,
+  "uuid": "b051b669-8723-4dc2-b8d5-9ae1c4c7225d",
+  "ttft_stream_ms": 940,
+  "time_to_request_ms": 147,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 10,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 9,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 58,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 21,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 52,
+  "time_to_request_cpu_ms": 155,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 2956,
+  "process_wall_ms_turn": 51823,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 949,
+  "time_to_request_from_spawn_ms": 2973649,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791950850553.314,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.8,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.58,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
