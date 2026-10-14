@@ -7,39 +7,154 @@ use kahvi_core::prelude::*;
 /// parseInt
 pub(crate) fn parse_int(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This function produces an integral Number dictated by interpretation of the contents of _string_ according to the specified _radix_. Leading white space in _string_ is ignored. If _radix_ coerces to 0 (such as when it is *undefined*), it is assumed to be 10 except when the number representation begins with *"0x"* or *"0X"*, in which case it is assumed to be 16. If _radix_ is 16, the number representation may optionally begin with *"0x"* or *"0X"*.
+    // This function produces an integral Number dictated by interpretation of the contents of _string_. Leading white space in _string_ is ignored. If _radix_ coerces to 0 (such as when it is *undefined*), it is assumed to be 10 except when the number representation begins with *"0x"* or *"0X"*, in which case it is assumed to be 16. If _radix_ is 16, the number representation may optionally begin with *"0x"* or *"0X"*.
     // It is the %parseInt% intrinsic object.
     // It performs the following steps when called:
     //
     // 1. Let _inputString_ be ? ToString(_string_).
+    let input_string = ops::to_string(agent, args.get_or_undefined(0).clone())?;
     // 2. Let _radixMV_ be ℝ(? ToInt32(_radix_)).
+    let mut radix_mv = ops::to_int32(agent, args.get_or_undefined(1).clone())?;
     // 3. If _radixMV_ ≠ 0 and _radixMV_ is not in the inclusive interval from 2 to 36, return *NaN*.
+    if radix_mv != 0 && !(2..=36).contains(&radix_mv) {
+        return Ok(Value::Number(f64::NAN));
+    }
     // 4. Let _trimmedString_ be ! TrimString(_inputString_, ~start~).
+    let units: Vec<u16> = agent.str(input_string).to_vec();
+    let mut s: &[u16] = &units;
+    // TrimString (sec-trimstring) with ~start~: white space is the union of
+    // |WhiteSpace| and |LineTerminator|.
+    while let Some((&first, rest)) = s.split_first() {
+        if !is_trim_white_space(first) {
+            break;
+        }
+        s = rest;
+    }
     // 5. If _trimmedString_ is the empty String, return *NaN*.
+    if s.is_empty() {
+        return Ok(Value::Number(f64::NAN));
+    }
     // 6. Let _sign_ be 1.
+    let mut sign = 1.0;
     // 7. If the first code unit of _trimmedString_ is the code unit 0x002D (HYPHEN-MINUS), then
-    //    a. Set _sign_ to -1.
-    //    b. Set _trimmedString_ to the substring of _trimmedString_ from 1.
+    if s[0] == 0x002D {
+        // a. Set _sign_ to -1.
+        sign = -1.0;
+        // b. Set _trimmedString_ to the substring of _trimmedString_ from 1.
+        s = &s[1..];
+    }
     // 8. Else if the first code unit of _trimmedString_ is the code unit 0x002B (PLUS SIGN), then
-    //    a. Set _trimmedString_ to the substring of _trimmedString_ from 1.
+    else if s[0] == 0x002B {
+        // a. Set _trimmedString_ to the substring of _trimmedString_ from 1.
+        s = &s[1..];
+    }
     // 9. If _radixMV_ = 0 or _radixMV_ = 16, then
-    //    a. If the length of _trimmedString_ ≥ 2 and the substring of _trimmedString_ from 0 to 2 is either *"0x"* or *"0X"*, then
-    //       i. Set _trimmedString_ to the substring of _trimmedString_ from 2.
-    //       ii. Set _radixMV_ to 16.
+    if radix_mv == 0 || radix_mv == 16 {
+        // a. If the length of _trimmedString_ ≥ 2 and the substring of _trimmedString_ from 0 to 2 is either *"0x"* or *"0X"*, then
+        if s.starts_with(&[0x0030, 0x0078]) || s.starts_with(&[0x0030, 0x0058]) {
+            // i. Set _trimmedString_ to the substring of _trimmedString_ from 2.
+            s = &s[2..];
+            // ii. Set _radixMV_ to 16.
+            radix_mv = 16;
+        }
+    }
     // 10. If _radixMV_ = 0, set _radixMV_ to 10.
+    if radix_mv == 0 {
+        radix_mv = 10;
+    }
+    let radix = radix_mv as u32;
     // 11. If _trimmedString_ contains a code unit that is not a radix-_radixMV_ digit, let _end_ be the index within _trimmedString_ of the first such code unit; else let _end_ be the length of _trimmedString_.
+    let end = s
+        .iter()
+        .position(|&unit| !digit_value(unit).is_some_and(|d| d < radix))
+        .unwrap_or(s.len());
     // 12. Let _numberString_ be the substring of _trimmedString_ from 0 to _end_.
+    let number_string = &s[..end];
     // 13. If _numberString_ is empty, return *NaN*.
+    if number_string.is_empty() {
+        return Ok(Value::Number(f64::NAN));
+    }
     // 14. Let _mathInt_ be the integer value that is represented by _numberString_ in radix-_radixMV_ notation, using the letters A through Z and a through z for digits with values 10 through 35. (However, if _radixMV_ = 10 and _numberString_ contains more than 20 significant digits, every significant digit after the 20th may be replaced by a 0 digit, at the option of the implementation; and if _radixMV_ is not one of 2, 4, 8, 10, 16, or 32, then _mathInt_ may be an implementation-approximated integer representing the integer value denoted by _numberString_ in radix-_radixMV_ notation.)
+    let math_int = if radix == 10 {
+        // The digits are ASCII, so std's correctly rounded parse gives the exact value.
+        let digits: String = number_string
+            .iter()
+            .map(|&unit| char::from(unit as u8))
+            .collect();
+        digits.parse::<f64>().unwrap_or(f64::NAN)
+    } else if radix.is_power_of_two() {
+        power_of_two_digits_to_f64(number_string, radix)
+    } else {
+        // Implementation-approximated integer, as step 14 allows.
+        number_string.iter().fold(0.0, |acc, &unit| {
+            acc * f64::from(radix) + f64::from(digit_value(unit).unwrap_or(0))
+        })
+    };
     // 15. If _sign_ = -1 and _mathInt_ = 0, return *-0*_𝔽.
+    if sign < 0.0 && math_int == 0.0 {
+        return Ok(Value::Number(-0.0));
+    }
     // 16. Return 𝔽(_sign_ × _mathInt_).
-    //
-    // NOTE:
-    // This function may interpret only a leading portion of _string_ as an integer value; it ignores any code units that cannot be interpreted as part of the notation of an integer, and no indication is given that any such code units were ignored.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("parseInt"))
+    Ok(Value::Number(sign * math_int))
+}
+
+/// The radix-36 digit value of a code unit (0-9, A-Z, a-z), if it has one.
+fn digit_value(unit: u16) -> Option<u32> {
+    match unit {
+        0x0030..=0x0039 => Some(u32::from(unit - 0x0030)),
+        0x0041..=0x005A => Some(u32::from(unit - 0x0041) + 10),
+        0x0061..=0x007A => Some(u32::from(unit - 0x0061) + 10),
+        _ => None,
+    }
+}
+
+/// The definition of white space used by TrimString: the union of |WhiteSpace|
+/// and |LineTerminator|. Every member is in the BMP, so one UTF-16 code unit
+/// is always enough to decide it. "Zs" is the Space_Separator general category.
+fn is_trim_white_space(unit: u16) -> bool {
+    matches!(
+        unit,
+        // |WhiteSpace|: TAB, VT, FF, ZWNBSP, and the Zs code points.
+        0x0009 | 0x000B | 0x000C | 0x0020 | 0x00A0 | 0xFEFF | 0x1680 | 0x2000
+            ..=0x200A
+            | 0x202F | 0x205F | 0x3000
+            // |LineTerminator|: LF, CR, LS, PS.
+            | 0x000A | 0x000D | 0x2028 | 0x2029
+    )
+}
+
+/// Converts digits in a power-of-two `radix` to the nearest f64, rounding
+/// ties to even. Every digit is valid for `radix`.
+fn power_of_two_digits_to_f64(digits: &[u16], radix: u32) -> f64 {
+    let bits_per_digit = radix.trailing_zeros();
+    let mut bits: Vec<bool> = Vec::new();
+    for &unit in digits {
+        let d = digit_value(unit).unwrap_or(0);
+        for i in (0..bits_per_digit).rev() {
+            bits.push((d >> i) & 1 == 1);
+        }
+    }
+    // Leading zero bits do not change the value.
+    let Some(first_one) = bits.iter().position(|&b| b) else {
+        return 0.0;
+    };
+    let bits = &bits[first_one..];
+    if bits.len() <= 53 {
+        return bits.iter().fold(0u64, |acc, &b| acc << 1 | u64::from(b)) as f64;
+    }
+    // Keep 53 significant bits and round the rest half-to-even.
+    let mut mantissa = bits[..53]
+        .iter()
+        .fold(0u64, |acc, &b| acc << 1 | u64::from(b));
+    let round = bits[53];
+    let sticky = bits[54..].iter().any(|&b| b);
+    if round && (sticky || mantissa & 1 == 1) {
+        mantissa += 1;
+    }
+    let exponent = i32::try_from(bits.len() - 53).unwrap_or(i32::MAX);
+    (mantissa as f64) * 2f64.powi(exponent)
 }
