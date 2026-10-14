@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 28815,
+  "stop_reason": "end_turn",
+  "session_id": "98dbf369-03c3-4928-87a7-b9c1f61a5159",
+  "total_cost_usd": 0.00898436,
+  "usage": {
+    "input_tokens": 21,
+    "cache_creation_input_tokens": 19912,
+    "cache_read_input_tokens": 238086,
+    "output_tokens": 4819,
+    "output_tokens_details": {
+      "thinking_tokens": 2082
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19912,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 337,
+        "cache_read_input_tokens": 27168,
+        "cache_creation_input_tokens": 387,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 387
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.toLocaleString` in its file. It reads the `[[DateValue]]` with `this_time_value` (TypeError on non-Dates) and returns the same layout as `toString` via `support::date::to_date_string` (\"Invalid Date\" for NaN). `cargo build`, `cargo clippy` and `cargo fmt --check` are clean, and the only changed file is the target.\n\nThe 8 tests under `built-ins/Date/prototype/toLocaleString/` still pass, but they were already passing on main. Those files only check length, name, prop-desc and not-a-constructor, so none of them call the function. The one other test that calls it (`built-ins/Date/prototype/S15.9.5_A05_T1`) also passes. That means the gate's \"new passes in target\" check cannot move from this change, even though the behaviour is now real.\n\nBLOCKED: no test262 test under `built-ins/Date/prototype/toLocaleString/` exercises the function body, so the target cannot show a new pass.",
+  "ttft_ms": 1637,
+  "type": "result",
+  "duration_ms": 37982,
+  "uuid": "149de7be-a260-4a10-b709-daa7f994b4f7",
+  "ttft_stream_ms": 1411,
+  "time_to_request_ms": 605,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 420,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 79,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 93,
+  "time_to_request_cpu_ms": 394,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 3800,
+  "process_wall_ms_turn": 37981,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1412,
+  "time_to_request_from_spawn_ms": 27755128,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007215412.1492,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.63,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

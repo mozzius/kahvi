@@ -1,0 +1,30 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs b/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
+index 7243a67..8bb48d9 100644
+--- a/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
++++ b/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.tolocalestring
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.toLocaleString
+@@ -14,6 +15,15 @@ pub(crate) fn prototype_to_locale_string(
+     // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
+     // This method returns a String value. The contents of the String are implementation-defined, but are intended to represent the Date in the current time zone in a convenient, human-readable form that corresponds to the conventions of the host environment's current locale.
+     // The meaning of the optional parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.toLocaleString"))
++    let _ = (args, new_target);
++    // 1. Let dateObj be the this value.
++    // 2. Perform ? RequireInternalSlot(dateObj, [[DateValue]]).
++    // 3. Let tv be dateObj.[[DateValue]].
++    let tv = date::this_time_value(agent, this)?;
++    // 4. If tv is NaN, return "Invalid Date".
++    // 5. Let t be LocalTime(tv).
++    // 6. Return the implementation-defined locale string of t and tv, using the same
++    //    DateString, TimeString and TimeZoneString layout as ToDateString(tv).
++    let s = date::to_date_string(agent, tv);
++    Ok(Value::String(agent.string(&s)))
+ }

@@ -1,0 +1,12 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs b/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
+index 5a271e9..13f3e61 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_get_constructor.rs
+@@ -15,5 +15,6 @@ pub(crate) fn prototype_get_constructor(
+     //
+     // 1. Return %Iterator%.
+     let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Iterator.prototype.constructor"))
++    // 1. Return %Iterator%.
++    Ok(Value::Object(agent.intrinsic("%Iterator%")))
+ }

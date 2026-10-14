@@ -626,3 +626,7 @@
 {"ticket": "B-date-prototype-to-locale-date-string", "attempt": 468, "ts": 1792007230.930902, "text": "escalated from haiku to sonnet"}
 {"ticket": "B-date-prototype-to-locale-time-string", "attempt": 474, "ts": 1792007250.4987392, "text": "rejected by gates: no new test262 passes in target"}
 {"ticket": "B-date-prototype-to-locale-time-string", "attempt": 474, "ts": 1792007250.502343, "text": "escalated from haiku to sonnet"}
+{"ticket": "B-date-prototype-to-locale-string", "attempt": 473, "ts": 1792007254.9015684, "text": "worker reported BLOCKED but changed files: no test262 test under `built-ins/Date/prototype/toLocaleString/` exercises the function body, so the target cannot show a new pass."}
+{"ticket": "B-iterator-prototype-get-constructor", "attempt": 472, "ts": 1792007258.8699727, "text": "worker reported BLOCKED but changed files: `table.rs` (lines 893\u2013903) defines a data `constructor` property on `%Iterator.prototype%`, overwriting the `constructor` accessor; that file must skip the link for Iterator (or the accessor must be installed after the link pass)."}
+{"ticket": "B-date-prototype-to-locale-string", "attempt": 473, "ts": 1792007261.0019991, "text": "rejected by gates: no new test262 passes in target"}
+{"ticket": "B-date-prototype-to-locale-string", "attempt": 473, "ts": 1792007261.0218816, "text": "escalated from haiku to sonnet"}
