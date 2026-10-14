@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5187,
+  "stop_reason": "tool_use",
+  "session_id": "98a031dd-fbc7-40f7-b663-baccd10ef038",
+  "total_cost_usd": 0.024216,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4661,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 481,
+    "output_tokens_details": {
+      "thinking_tokens": 108
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4661,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 481,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 4661,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4661
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.fontcolor and a local CreateHTML that follow the spec steps in order. RequireObjectCoercible runs first, then ToString(contents). ToString(attrValue) comes next, and only when attr is non-empty. Every `?` propagates, and quotation marks are escaped as `&quot;` over UTF-16 code units. The diff only touches the one file in scope. The gate report shows the target going from 8 to 14 passing, with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.fontcolor and a local CreateHTML that follow the spec steps in order. RequireObjectCoercible runs first, then ToString(contents). ToString(attrValue) comes next, and only when attr is non-empty. Every `?` propagates, and quotation marks are escaped as `&quot;` over UTF-16 code units. The diff only touches the one file in scope. The gate report shows the target going from 8 to 14 passing, with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3004,
+  "type": "result",
+  "duration_ms": 5012,
+  "uuid": "39ad6ced-7edf-42b5-9462-2b27f5d0082f",
+  "ttft_stream_ms": 1749,
+  "time_to_request_ms": 547,
+  "time_to_request_phases_ms": {
+    "other": 29,
+    "system_prompt": 282,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 17,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 138,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 20,
+    "client_creation": 20,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 95,
+  "time_to_request_cpu_ms": 269,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 635,
+  "process_wall_ms_turn": 5012,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1750,
+  "time_to_request_from_spawn_ms": 26178790,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005639008.8694,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.5,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
