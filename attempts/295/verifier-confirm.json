@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6454,
+  "stop_reason": "tool_use",
+  "session_id": "bf03fb35-9b92-4d8b-843c-db5947422252",
+  "total_cost_usd": 0.0288325,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5170,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 734,
+    "output_tokens_details": {
+      "thinking_tokens": 291
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5170,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 734,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5170,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5170
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements all five spec steps in order, and each step has its comment above its code. ToObject, LengthOfArrayLike, ToAbsoluteIndex and Get all propagate errors with `?`. The local `to_absolute_index` helper matches the spec exactly. The ticket allows adding a missing helper to the file. Infinite `k` values fall into the `k < 0 || k >= length` check and return undefined, as the spec requires. The only remaining test262 failures are the two typed-array-resizable-buffer runs, which hit the engine's not-implemented error for BigInt. That is an honest not-implemented throw, not a defect. The `_new_target` rename and the root handling are harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements all five spec steps in order, and each step has its comment above its code. ToObject, LengthOfArrayLike, ToAbsoluteIndex and Get all propagate errors with `?`. The local `to_absolute_index` helper matches the spec exactly. The ticket allows adding a missing helper to the file. Infinite `k` values fall into the `k < 0 || k >= length` check and return undefined, as the spec requires. The only remaining test262 failures are the two typed-array-resizable-buffer runs, which hit the engine's not-implemented error for BigInt. That is an honest not-implemented throw, not a defect. The `_new_target` rename and the root handling are harmless.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3846,
+  "type": "result",
+  "duration_ms": 6630,
+  "uuid": "d1d92a50-0c3c-4e45-b35e-8e43eb9246a3",
+  "ttft_stream_ms": 1438,
+  "time_to_request_ms": 716,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 492,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 17,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 4,
+    "message_prep": 2,
+    "model_config_wait": 104,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 10,
+    "client_creation": 8,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 152,
+  "time_to_request_cpu_ms": 383,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 226,
+  "process_cpu_ms_turn": 735,
+  "process_wall_ms_turn": 6630,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1439,
+  "time_to_request_from_spawn_ms": 22952920,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002411859.3225,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.79,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.11,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.79,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1427,3 +1427,6 @@ test262 at last merge: 74349/81183 runs passing
 [18:26:18] B-typed-array-prototype-reduce-right: verifier: accept The diff implements %TypedArray%.prototype.reduceRight in its own file, following the spec steps 1-11 in order. Step 2 uses ValidateTypedArray with `?
 [18:26:22] B-typed-array-prototype-reduce: verifier: accept The diff implements %TypedArray%.prototype.reduce in the stub's file, following the spec steps in order. ValidateTypedArray (step 2) runs before the c
 [18:26:22] B-date-prototype-set-milliseconds: attempt on slot 1 with haiku
+[18:26:28] B-date-prototype-set-year: attempt on slot 0 with haiku
+[18:26:39] B-data-view-prototype-get-buffer: attempt 296 finished ($0.007, 10 turns)
+[18:27:01] B-array-prototype-at: verifier: accept The change implements Array.prototype.at against the five spec steps, in order. ToObject(this) and LengthOfArrayLike run before the index is converted

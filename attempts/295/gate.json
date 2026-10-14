@@ -1,0 +1,35 @@
+{
+  "ticket": "B-array-prototype-at",
+  "base": "b577d862b70250a5f360aceac2b6ab1d2dd677c5",
+  "head": "74d17735f3bf1c8afe30c5ba678360f54d10a134",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_at.rs",
+      "added": 31,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 26,
+    "before": 6,
+    "after": 24,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/at/typed-array-resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/Array/prototype/at/typed-array-resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}
