@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements get RegExp.prototype.flags in its own file, following the spec steps. Step 2 throws a TypeError for non-object receivers. Steps 4-18 perform the eight Get calls in spec order on the receiver, each propagated with `?`, and apply ToBoolean to each result. Each true flag appends its code unit in the spec's order (d, g, i, m, s, u, v, y). Step 20 returns the string built from the collected code units, which is the empty string when none are set. There are no test-specific branches, no swallowed errors, and no placeholder values. The 6 remaining test262 failures come from the unimplemented hasIndices getter in another file, which is outside this ticket's scope and correctly throws not-implemented. The removal of the RegExpHasFlag subclause comment block is cosmetic and does not change behaviour.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

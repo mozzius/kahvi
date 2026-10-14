@@ -1,61 +1,9 @@
-[03:18:47] building trusted runner; integration branch m1-spine, 2 slots
-[03:18:49] B-reg-exp-prototype-symbol-match: attempt on slot 1 with haiku
-[03:18:49] B-global-decode-uri-component: attempt on slot 0 with haiku
-[03:19:57] B-reg-exp-prototype-symbol-match: attempt 53 finished ($0.010, 13 turns)
-[03:20:10] B-global-decode-uri-component: attempt 52 finished ($0.004, 9 turns)
-[03:20:55] B-reg-exp-prototype-symbol-match: verifier: accept The change implements RegExp.prototype[Symbol.match] in its own file, following the spec steps in order. Step 2 throws a TypeError for a non-object th
-[03:21:10] B-reg-exp-prototype-symbol-match: full test262 run for merge
-[03:21:30] B-global-decode-uri-component: verifier: accept The diff implements decodeURIComponent per the pinned spec. It does ToString on the argument, then Decode with an empty preserveEscapeSet, and follows
-[03:32:26] B-reg-exp-prototype-symbol-match: merged (+12, 65635 total)
-[03:32:30] B-global-decode-uri-component: full test262 run for merge
-[03:32:31] B-global-decode-uri: attempt on slot 1 with haiku
-[03:34:29] B-global-decode-uri: attempt 54 finished ($0.016, 22 turns)
-[03:35:41] B-global-decode-uri: verifier: accept The diff implements decodeURI in crates/kahvi-builtins/src/global/decode_uri.rs and follows the spec closely. decodeURI does ToString(encodedURI) firs
-[03:44:17] B-global-decode-uri-component: merged (+90, 65725 total)
-[03:44:19] B-string-prototype-slice: attempt on slot 0 with haiku
-[03:44:19] B-global-decode-uri: full test262 run for merge
-[03:44:50] B-string-prototype-slice: attempt 55 finished ($0.007, 12 turns)
-[03:45:19] B-string-prototype-slice: verifier: accept The change implements String.prototype.slice in its own file. Steps 1-8 are present in order: RequireObjectCoercible and ToString use `?`, ToClampedIn
-[03:55:55] B-global-decode-uri: merged (+88, 65813 total)
-[03:55:57] C-proxy-own-property-keys: attempt on slot 1 with haiku
-[03:55:57] B-string-prototype-slice: full test262 run for merge
-[03:57:34] C-proxy-own-property-keys: attempt 56 finished ($0.016, 17 turns)
-[03:58:16] C-proxy-own-property-keys: verifier: accept The diff implements Proxy [[OwnPropertyKeys]] steps 1-23 in order, each with its spec comment above the code. ValidateNonRevokedProxy, GetMethod, Call
-[04:07:27] B-string-prototype-slice: merged (+94, 65907 total)
-[04:07:30] B-reg-exp-prototype-symbol-split: attempt on slot 0 with haiku
-[04:07:35] C-proxy-own-property-keys: full test262 run for merge
-[04:08:24] B-reg-exp-prototype-symbol-split: attempt 57 finished ($0.019, 16 turns)
-[04:09:17] B-reg-exp-prototype-symbol-split: verifier: accept The diff implements all 22 steps of RegExp.prototype[Symbol.split] in the spec's order, each with its spec comment above it. Abstract operations are u
-[04:19:12] C-proxy-own-property-keys: merged (+60, 65967 total)
-[04:19:14] B-reg-exp-prototype-symbol-split: full test262 run for merge
-[04:19:15] B-string-prototype-substring: attempt on slot 1 with haiku
-[04:19:34] B-string-prototype-substring: attempt 58 finished ($0.006, 9 turns)
-[04:19:57] B-string-prototype-substring: verifier: accept The diff implements String.prototype.substring in the stub's file and follows the spec steps in order. RequireObjectCoercible and ToString run before 
-[04:30:45] B-reg-exp-prototype-symbol-split: merged (+44, 66011 total)
-[04:30:47] B-array-prototype-to-string: attempt on slot 0 with haiku
-[04:30:47] B-string-prototype-substring: full test262 run for merge
-[04:31:25] B-array-prototype-to-string: attempt 59 finished ($0.008, 16 turns)
-[04:31:51] B-array-prototype-to-string: verifier: accept The diff implements all four steps of Array.prototype.toString in order: ToObject(this) with `?`, Get(array, "join") with `?`, the IsCallable fallback
-[04:42:34] B-string-prototype-substring: merged (+70, 66081 total)
-[04:42:36] B-string-prototype-symbol-iterator: attempt on slot 1 with haiku
-[04:42:36] B-array-prototype-to-string: full test262 run for merge
-[04:43:20] B-string-prototype-symbol-iterator: attempt 60 finished ($0.008, 11 turns)
-[04:43:50] B-string-prototype-symbol-iterator: verifier: accept The diff implements String.prototype[Symbol.iterator] in the stub. Steps 1-3 are done in spec order: this is kept as `string`, RequireObjectCoercible 
-[04:54:11] B-array-prototype-to-string: merged (+94, 66175 total)
-[04:54:12] B-string-prototype-symbol-iterator: full test262 run for merge
-[04:54:13] B-array-prototype-copy-within: attempt on slot 0 with haiku
-[04:54:38] B-array-prototype-copy-within: attempt 61 finished ($0.008, 7 turns)
-[04:55:08] B-array-prototype-copy-within: verifier: accept The diff implements Array.prototype.copyWithin following all ten spec steps in order, with the step comments kept above the code. ToObject, LengthOfAr
-[05:05:51] B-string-prototype-symbol-iterator: merged (+20, 66195 total)
-[05:05:53] B-array-prototype-copy-within: full test262 run for merge
-[05:05:53] B-string-prototype-replace-all: attempt on slot 1 with haiku
-[05:06:53] B-string-prototype-replace-all: attempt 62 finished ($0.016, 15 turns)
-[05:07:47] B-string-prototype-replace-all: verifier: accept The diff implements String.prototype.replaceAll step by step, with the spec step comments kept above their code. Steps 1-17 run in spec order with cor
-[05:17:44] B-array-prototype-copy-within: merged (+64, 66259 total)
-[05:17:46] B-weak-map-prototype-set: attempt on slot 0 with haiku
-[05:17:46] B-string-prototype-replace-all: full test262 run for merge
-[05:18:07] B-weak-map-prototype-set: attempt 63 finished ($0.007, 12 turns)
-[05:18:34] B-weak-map-prototype-set: verifier: accept The diff implements WeakMap.prototype.set in its file by delegating to support helpers (this_weak_map, can_be_held_weakly, collection_key, weak_map_ta
-[05:31:04] B-string-prototype-replace-all: merged (+64, 66323 total)
-[05:31:06] B-weak-map-prototype-set: full test262 run for merge
-[05:44:21] B-weak-map-prototype-set: merged (+30, 66353 total)
+[05:57:37] building trusted runner; integration branch m1-spine, 2 slots
+[05:57:37] B-reg-exp-prototype-get-flags: attempt on slot 1 with haiku
+[05:57:37] B-array-buffer-prototype-resize: attempt on slot 0 with haiku
+[05:58:00] B-reg-exp-prototype-get-flags: attempt 64 finished ($0.009, 8 turns)
+[05:58:31] B-array-buffer-prototype-resize: attempt 65 finished ($0.014, 12 turns)
+[05:58:38] B-reg-exp-prototype-get-flags: verifier: accept The change implements get RegExp.prototype.flags in its own file, following the spec steps. Step 2 throws a TypeError for non-object receivers. Steps 
+[05:59:06] B-reg-exp-prototype-get-flags: full test262 run for merge
+[05:59:55] B-array-buffer-prototype-resize: verifier: accept The diff implements ArrayBuffer.prototype.resize in order: RequireInternalSlot (TypeError for non-objects and non-resizable buffers), ToIndex, the det
+[06:22:09] B-reg-exp-prototype-get-flags: merged (+20, 67608 total)

@@ -1,0 +1,39 @@
+{
+  "ticket": "B-reg-exp-prototype-get-flags",
+  "base": "5afe3cb36995a94cf6376c3fb2eeb4836d2a2b3b",
+  "head": "60eb4f582615da42bab7222179f88300a209fbc0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/reg_exp/prototype_get_flags.rs",
+      "added": 55,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 6,
+    "after": 26,
+    "new_passes": 20,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/RegExp/prototype/flags/return-order.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/flags/return-order.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/flags/this-val-regexp-prototype.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/flags/this-val-regexp-prototype.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/flags/this-val-regexp.js:sloppy  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices",
+      "built-ins/RegExp/prototype/flags/this-val-regexp.js:strict  Uncaught InternalError: not implemented: get RegExp.prototype.hasIndices"
+    ]
+  },
+  "decision": "pass"
+}

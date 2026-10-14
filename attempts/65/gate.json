@@ -1,0 +1,60 @@
+{
+  "ticket": "B-array-buffer-prototype-resize",
+  "base": "5afe3cb36995a94cf6376c3fb2eeb4836d2a2b3b",
+  "head": "bcba51ea2c0867256591ca23938a2f995c34d292",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array_buffer/prototype_resize.rs",
+      "added": 53,
+      "removed": 21
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_resize.rs",
+      "line": 56,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"not detached: checked in step 5\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_resize.rs",
+      "line": 62,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let data = array_buffer_data_mut(agent, o).expect(\"an ArrayBuffer\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 40,
+    "before": 10,
+    "after": 26,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 14,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/ArrayBuffer/prototype/resize/resize-grow.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-grow.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size-zero-explicit.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size-zero-explicit.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size-zero-implicit.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size-zero-implicit.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-same-size.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink-zero-explicit.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink-zero-explicit.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink-zero-implicit.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink-zero-implicit.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice",
+      "built-ins/ArrayBuffer/prototype/resize/resize-shrink.js:strict  Uncaught InternalError: not implemented: ArrayBuffer.prototype.slice"
+    ]
+  },
+  "decision": "pass"
+}
