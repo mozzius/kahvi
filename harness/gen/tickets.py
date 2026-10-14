@@ -40,10 +40,12 @@ WORKER_GROUPS = {
     "map", "set", "weak_map", "weak_set", "map_iterator_prototype", "set_iterator_prototype",
     "string_iterator_prototype", "date", "reg_exp", "reg_exp_string_iterator_prototype",
     "array_buffer", "typed_array", "data_view",
+    "iterator", "iterator_helper_prototype", "wrap_for_valid_iterator_prototype",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
     "RegExp.prototype.compile": "Annex B, out of scope until annexB/ is enabled",
+    "Iterator.prototype.join": "not in the pinned spec's test scope (skipped feature)",
     "String.prototype.normalize": "needs Unicode normalization tables",
     "Promise.try": "needs the Promise.try proposal semantics reviewed first",
 }
@@ -82,6 +84,11 @@ EXTRA_READ["string"] = [
     "crates/kahvi-builtins/src/support/string_iterator.rs",
     "crates/kahvi-builtins/src/support/regexp.rs",
 ]
+for _g in ("iterator", "iterator_helper_prototype", "wrap_for_valid_iterator_prototype"):
+    EXTRA_READ[_g] = [
+        "crates/kahvi-builtins/src/support/iterator_helper.rs",
+        "crates/kahvi-builtins/src/iterator/prototype_map.rs",
+    ]
 for _g in ("array_buffer", "typed_array", "data_view"):
     EXTRA_READ[_g] = [
         "crates/kahvi-builtins/src/support/typed_array.rs",

@@ -122,7 +122,8 @@ TypedArraySpeciesCreate, TypedArrayCreateSameType, AllocateArrayBuffer,
 GetViewValue/SetViewValue and friends). TypedArray and ArrayBuffer internal
 slots and buffer operations (GetValueFromBuffer, IsValidIntegerIndex,
 TypedArrayLength, DetachArrayBuffer, ...) are in
-`kahvi_core::object::typed_array`.
+`kahvi_core::object::typed_array`. `iterator_helper.rs` is CreateIteratorFromClosure for the
+Iterator helpers: implement `HelperClosure` (see Iterator.prototype.map).
 
 ## Checking your work
 
