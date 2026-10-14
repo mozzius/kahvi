@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements Date.prototype.setUTCFullYear steps 1\u201311 in spec order. It checks the this value and reads the [[DateValue]] slot through the date helpers. It maps NaN to +0 (step 4). It runs ToNumber on year, month and day in order with `?` propagation (steps 5\u20137). Presence of month and day is detected with args.len() >= 2 and >= 3, so explicitly passed undefined still counts as present. It defaults month and day from MonthFromTime and DateFromTime of tv. It then applies MakeDate, MakeDay, TimeWithinDay, TimeClip, sets the slot and returns the value. There are no test-shaped branches, no swallowed errors and no made-up values. The helpers in crate::support::date are not part of this diff, so their internal correctness is inferred from the gate's +4 passing / 0 regressions result rather than verified here.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

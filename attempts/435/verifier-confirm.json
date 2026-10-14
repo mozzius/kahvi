@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 7116,
+  "stop_reason": "tool_use",
+  "session_id": "8bfc63a0-99e4-4a1b-8046-c22a4b8317c7",
+  "total_cost_usd": 0.0368188,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7093,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 744,
+    "output_tokens_details": {
+      "thinking_tokens": 374
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7093,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 744,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 7093,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7093
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows the spec steps 1\u201311 in order. tv is read before any ToNumber call, so a valueOf side effect can't change it. Every `?` propagates. \\\"Present\\\" is checked with args.len() >= 2 and >= 3, so an explicit undefined is treated as present, as the spec requires. The shared helpers in support::date do the date maths, and the diff touches only the in-scope file. The gate reports 4 new passes, 0 regressions and no lint flags.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows the spec steps 1\u201311 in order. tv is read before any ToNumber call, so a valueOf side effect can't change it. Every `?` propagates. \"Present\" is checked with args.len() >= 2 and >= 3, so an explicit undefined is treated as present, as the spec requires. The shared helpers in support::date do the date maths, and the diff touches only the in-scope file. The gate reports 4 new passes, 0 regressions and no lint flags.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5177,
+  "type": "result",
+  "duration_ms": 6918,
+  "uuid": "abe4fa10-14a9-40c7-bfb8-bbb95da996c9",
+  "ttft_stream_ms": 1833,
+  "time_to_request_ms": 450,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 325,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 17,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 27,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 17,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 96,
+  "time_to_request_cpu_ms": 259,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 651,
+  "process_wall_ms_turn": 6918,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1834,
+  "time_to_request_from_spawn_ms": 26950702,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006410995.385,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.84,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.84,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

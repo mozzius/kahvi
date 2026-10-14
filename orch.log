@@ -3704,3 +3704,4 @@ test262 at last merge: 76432/81183 runs passing
 [19:33:21] B-string-prototype-link: verifier: accept The diff replaces the not-implemented stub in prototype_link.rs with a direct call to `create_html(agent, this, "a", "href", url)` imported from `supe
 [19:33:23] B-date-parse: attempt 436 finished ($0.012, 16 turns)
 [19:33:33] B-string-prototype-fontsize: verifier: accept The diff implements String.prototype.fontsize by reading the size argument with get_or_undefined(0), keeping the spec step comments, setting string to
+[19:33:39] B-date-prototype-set-utc-full-year: verifier: accept The change implements Date.prototype.setUTCFullYear steps 1–11 in spec order. It checks the this value and reads the [[DateValue]] slot through the da

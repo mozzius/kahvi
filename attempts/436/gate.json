@@ -1,0 +1,39 @@
+{
+  "ticket": "B-date-parse",
+  "base": "dbe6b1d8297fd9afe849c14af56adc8cddbb0625",
+  "head": "51b0a6ebe7de598be6243629e44c138eacac57d3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/parse.rs",
+      "added": 111,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/date/parse.rs",
+      "line": 55,
+      "rule": "skipping something: check what and why",
+      "text": "// The weekday is informative only; skip it when present."
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
