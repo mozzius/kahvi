@@ -1,0 +1,19 @@
+{
+  "merged": true,
+  "commit": "4fad9a2b2fe8fc0b5e7a1098ea1b7b3a065da88e",
+  "batch": [
+    "B-weak-set-prototype-has",
+    "C-proxy-call",
+    "B-reflect-get",
+    "B-data-view-prototype-get-byte-length"
+  ],
+  "new_passes": 28,
+  "total_pass": 76645,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/WeakSet/prototype/has/returns-false-when-object-value-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+    "built-ins/WeakSet/prototype/has/returns-false-when-object-value-not-present.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+    "built-ins/WeakSet/prototype/has/returns-false-when-symbol-value-not-present.js:sloppy  Uncaught InternalError: not implemented: WeakSet.prototype.delete",
+    "built-ins/WeakSet/prototype/has/returns-false-when-symbol-value-not-present.js:strict  Uncaught InternalError: not implemented: WeakSet.prototype.delete"
+  ]
+}

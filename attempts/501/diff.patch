@@ -1,0 +1,21 @@
+diff --git a/crates/kahvi-builtins/src/typed_array/prototype_symbol_iterator.rs b/crates/kahvi-builtins/src/typed_array/prototype_symbol_iterator.rs
+index f6c10a9..e0111ed 100644
+--- a/crates/kahvi-builtins/src/typed_array/prototype_symbol_iterator.rs
++++ b/crates/kahvi-builtins/src/typed_array/prototype_symbol_iterator.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use super::prototype_values::prototype_values;
++
+ /// TypedArray.prototype[Symbol.iterator]
+ pub(crate) fn prototype_symbol_iterator(
+     agent: &mut Agent,
+@@ -12,6 +14,5 @@ pub(crate) fn prototype_symbol_iterator(
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // The initial value of the %Symbol.iterator% property is %TypedArray.prototype.values%, defined in [sec-%typedarray%.prototype.values].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("TypedArray.prototype[Symbol.iterator]"))
++    prototype_values(agent, this, args, new_target)
+ }

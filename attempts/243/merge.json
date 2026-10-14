@@ -1,0 +1,17 @@
+{
+  "merged": true,
+  "commit": "4fad9a2b2fe8fc0b5e7a1098ea1b7b3a065da88e",
+  "batch": [
+    "B-weak-set-prototype-has",
+    "C-proxy-call",
+    "B-reflect-get",
+    "B-data-view-prototype-get-byte-length"
+  ],
+  "new_passes": 16,
+  "total_pass": 76645,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/DataView/prototype/byteLength/instance-has-detached-buffer.js:sloppy  Uncaught InternalError: not implemented: get DataView.prototype.buffer",
+    "built-ins/DataView/prototype/byteLength/instance-has-detached-buffer.js:strict  Uncaught InternalError: not implemented: get DataView.prototype.buffer"
+  ]
+}
