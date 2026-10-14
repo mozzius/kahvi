@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 17597,
+  "stop_reason": "end_turn",
+  "session_id": "0f850343-7685-4515-a6f2-283062b2c073",
+  "total_cost_usd": 0.008122550000000001,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 22299,
+    "cache_read_input_tokens": 179685,
+    "output_tokens": 3169,
+    "output_tokens_details": {
+      "thinking_tokens": 363
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22299,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 139,
+        "cache_read_input_tokens": 29450,
+        "cache_creation_input_tokens": 492,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 492
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 15,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `DisposableStack.prototype.defer` in `crates/kahvi-builtins/src/disposable_stack/prototype_defer.rs`, following the spec steps with each step as a comment. All 22 test262 runs under `built-ins/DisposableStack/prototype/defer/` pass, and clippy is clean for `kahvi-builtins`. It's the only file changed.\n\nBLOCKED: none",
+  "ttft_ms": 1627,
+  "type": "result",
+  "duration_ms": 30620,
+  "uuid": "a75522d5-88bf-43c3-a904-13e6044c0f9d",
+  "ttft_stream_ms": 1378,
+  "time_to_request_ms": 601,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 405,
+    "resume_other": 1,
+    "process_user_input": 16,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 7,
+    "model_config_wait": 69,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 12,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 81,
+  "time_to_request_cpu_ms": 436,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 238,
+  "process_anon_mib_turn_start": 121,
+  "process_rss_mib_result": 254,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 3119,
+  "process_wall_ms_turn": 30620,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1379,
+  "time_to_request_from_spawn_ms": 22576469,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002036051.1929,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

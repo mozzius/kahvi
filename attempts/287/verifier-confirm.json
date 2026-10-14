@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6204,
+  "stop_reason": "tool_use",
+  "session_id": "dc8f0d56-7797-4960-bd7c-02bfcc2a8b20",
+  "total_cost_usd": 0.0232479,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4349,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 512,
+    "output_tokens_details": {
+      "thinking_tokens": 166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4349,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 512,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4349,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4349
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1-6 in order. RequireInternalSlot, the disposed check (ReferenceError), the IsCallable check (TypeError) and AddDisposableResource all propagate errors with `?`. It returns undefined. It only changes the one in-scope file and reuses existing shared helpers. The gate report shows 14 new passes with no regressions and no not-implemented results.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1-6 in order. RequireInternalSlot, the disposed check (ReferenceError), the IsCallable check (TypeError) and AddDisposableResource all propagate errors with `?`. It returns undefined. It only changes the one in-scope file and reuses existing shared helpers. The gate report shows 14 new passes with no regressions and no not-implemented results.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3974,
+  "type": "result",
+  "duration_ms": 5470,
+  "uuid": "1d0bc4d1-469c-451c-95eb-c9c0e5274096",
+  "ttft_stream_ms": 2226,
+  "time_to_request_ms": 628,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 375,
+    "resume_other": 0,
+    "process_user_input": 11,
+    "input_attachments": 24,
+    "input_hooks": 14,
+    "tool_pool_refresh": 4,
+    "init_message": 13,
+    "engine_pickup": 3,
+    "message_prep": 3,
+    "model_config_wait": 117,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 108,
+  "time_to_request_cpu_ms": 377,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 225,
+  "process_cpu_ms_turn": 640,
+  "process_wall_ms_turn": 5469,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2227,
+  "time_to_request_from_spawn_ms": 22634851,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792002094748.7793,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

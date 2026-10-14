@@ -1034,3 +1034,5 @@ test262 at last merge: 72953/81183 runs passing
 [18:20:41] B-data-view-prototype-get-uint16: verifier: accept The diff implements DataView.prototype.getUint16 in its single in-scope file. Step 1 binds `this` to view. Step 2 maps an absent or undefined littleEn
 [18:20:56] B-data-view-prototype-get-uint32: verifier: accept The diff wires DataView.prototype.getUint32 to the existing support helper get_view_value with ElementType::Uint32. Step 1 (this as view) and step 2 (
 [18:21:00] B-date-prototype-set-date: verifier: accept The diff implements Date.prototype.setDate in its own file, with each spec step as a comment above its code. Steps run in spec order: this-check via d
+[18:21:09] B-disposable-stack-prototype-defer: attempt 287 finished ($0.008, 15 turns)
+[18:21:42] B-disposable-stack-prototype-defer: verifier: accept The change implements DisposableStack.prototype.defer in the single in-scope file, following the six spec steps in order. Step 2 uses require_disposab

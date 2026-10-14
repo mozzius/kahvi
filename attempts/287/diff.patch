@@ -1,0 +1,52 @@
+diff --git a/crates/kahvi-builtins/src/disposable_stack/prototype_defer.rs b/crates/kahvi-builtins/src/disposable_stack/prototype_defer.rs
+index 510b7f2..7da988b 100644
+--- a/crates/kahvi-builtins/src/disposable_stack/prototype_defer.rs
++++ b/crates/kahvi-builtins/src/disposable_stack/prototype_defer.rs
+@@ -2,23 +2,42 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-disposablestack.prototype.defer
+ 
++use kahvi_core::ops::dispose::DisposeKind;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::disposable_stack::{
++    add_disposable_resource, disposable_stack, require_disposable_stack,
++};
++
+ /// DisposableStack.prototype.defer
+ pub(crate) fn prototype_defer(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This method performs the following steps when called:
+-    //
++    let on_dispose = args.get_or_undefined(0);
+     // 1. Let _disposableStack_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_disposableStack_, [[DisposableState]]).
++    let o = require_disposable_stack(agent, this)?;
+     // 3. If _disposableStack_.[[DisposableState]] is ~disposed~, throw a *ReferenceError* exception.
++    if disposable_stack(agent, o).disposed {
++        return Err(agent.throw_reference_error("the DisposableStack is already disposed"));
++    }
+     // 4. If IsCallable(_onDispose_) is *false*, throw a *TypeError* exception.
++    if !ops::is_callable(agent, on_dispose) {
++        return Err(
++            agent.throw_type_error("DisposableStack.prototype.defer argument is not a function")
++        );
++    }
+     // 5. Perform ? AddDisposableResource(_disposableStack_.[[DisposableResourceStack]], *undefined*, ~sync-dispose~, _onDispose_).
++    add_disposable_resource(
++        agent,
++        o,
++        Value::Undefined,
++        DisposeKind::Sync,
++        Some(on_dispose),
++    )?;
+     // 6. Return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("DisposableStack.prototype.defer"))
++    Ok(Value::Undefined)
+ }
