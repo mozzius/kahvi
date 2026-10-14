@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9550,
+  "stop_reason": "tool_use",
+  "session_id": "44e04cdb-a9b6-4930-8d2b-87949b6b7c09",
+  "total_cost_usd": 0.00185638,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3515,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1674,
+    "output_tokens_details": {
+      "thinking_tokens": 922
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3515,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1674,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3515,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3515
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff replaces the not-implemented stub for String.prototype.strike. It keeps the step comments, stores `this` as the string, and delegates to `super::prototype_anchor::create_html(agent, string, \\\"strike\\\", \\\"\\\", Value::Undefined)`. That matches spec steps 1 and 2 in order, and the call passes the right tag and empty attribute. Renaming the unused `args` and `new_target` to underscore-prefixed names is a harmless lint fix. I found no special-casing, made-up values, or swallowed errors in the diff. The one thing I could not check is the body of `create_html` in prototype_anchor.rs, which is outside the diff. Its correctness determines whether CreateHTML steps 1-8 (RequireObjectCoercible, then ToString on contents, then the tag concatenation) are actually performed. The gate's +4 passing tests are consistent with that helper being correct.\",\"problems\":[],\"notes_for_next_attempt\":\"The change is likely fine, but it depends on `create_html` in crates/kahvi-builtins/src/string/prototype_anchor.rs, which is not part of this diff. Before landing, confirm that helper: (a) performs RequireObjectCoercible(contents) and then ToString(contents) in that order (CreateHTML steps 1-2); (b) takes the tag as a parameter and does not hardcode \\\"a\\\"; (c) only performs the attribute escape and ToString(attrValue) when attr is non-empty (step 4); (d) builds `<tag>contents</tag>` as in steps 3-7. If the helper is missing any of these, fix it in its own file's ticket or write a local CreateHTML in this file, and keep the step comments.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff replaces the not-implemented stub for String.prototype.strike. It keeps the step comments, stores `this` as the string, and delegates to `super::prototype_anchor::create_html(agent, string, \"strike\", \"\", Value::Undefined)`. That matches spec steps 1 and 2 in order, and the call passes the right tag and empty attribute. Renaming the unused `args` and `new_target` to underscore-prefixed names is a harmless lint fix. I found no special-casing, made-up values, or swallowed errors in the diff. The one thing I could not check is the body of `create_html` in prototype_anchor.rs, which is outside the diff. Its correctness determines whether CreateHTML steps 1-8 (RequireObjectCoercible, then ToString on contents, then the tag concatenation) are actually performed. The gate's +4 passing tests are consistent with that helper being correct.",
+    "problems": [],
+    "notes_for_next_attempt": "The change is likely fine, but it depends on `create_html` in crates/kahvi-builtins/src/string/prototype_anchor.rs, which is not part of this diff. Before landing, confirm that helper: (a) performs RequireObjectCoercible(contents) and then ToString(contents) in that order (CreateHTML steps 1-2); (b) takes the tag as a parameter and does not hardcode \"a\"; (c) only performs the attribute escape and ToString(attrValue) when attr is non-empty (step 4); (d) builds `<tag>contents</tag>` as in steps 3-7. If the helper is missing any of these, fix it in its own file's ticket or write a local CreateHTML in this file, and keep the step comments."
+  },
+  "ttft_ms": 6475,
+  "type": "result",
+  "duration_ms": 9535,
+  "uuid": "c63ae76e-9f7f-4225-9b41-c44b6ecf050c",
+  "ttft_stream_ms": 1975,
+  "time_to_request_ms": 573,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 375,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 11,
+    "input_hooks": 2,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 111,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 7,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 58,
+  "time_to_request_cpu_ms": 264,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 897,
+  "process_wall_ms_turn": 9532,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1977,
+  "time_to_request_from_spawn_ms": 27252394,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006712575.1223,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

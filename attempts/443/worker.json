@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 10575,
+  "stop_reason": "end_turn",
+  "session_id": "63cab5f3-97e4-4d09-b48e-f1141460ad99",
+  "total_cost_usd": 0.0047538400000000005,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 14286,
+    "cache_read_input_tokens": 80934,
+    "output_tokens": 1513,
+    "output_tokens_details": {
+      "thinking_tokens": 150
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14286,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 140,
+        "cache_read_input_tokens": 21677,
+        "cache_creation_input_tokens": 252,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 252
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`String.prototype.strike` now delegates to the existing `create_html` helper in `prototype_anchor.rs`, with the spec steps kept as comments. All 12 runs under `annexB/built-ins/String/prototype/strike/` pass (the ticket said 8 on main; this run reports 12), and `cargo clippy -p kahvi-builtins` is clean. I only edited `prototype_strike.rs`.",
+  "ttft_ms": 1697,
+  "type": "result",
+  "duration_ms": 30830,
+  "uuid": "0a346cce-8e04-47ba-ab10-323bc2532ee5",
+  "ttft_stream_ms": 1417,
+  "time_to_request_ms": 557,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 323,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 107,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 4,
+    "client_creation": 6,
+    "request_build": 39
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 120,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 237,
+  "process_anon_mib_turn_start": 122,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 2486,
+  "process_wall_ms_turn": 30829,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1421,
+  "time_to_request_from_spawn_ms": 27202570,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006662279.2139,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

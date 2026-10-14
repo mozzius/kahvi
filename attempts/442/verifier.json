@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8434,
+  "stop_reason": "tool_use",
+  "session_id": "f80e75f2-0a9c-445f-bf7b-858ce7509803",
+  "total_cost_usd": 0.00180928,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3526,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1571,
+    "output_tokens_details": {
+      "thinking_tokens": 840
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3526,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1571,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3526,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3526
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.fixed as spec steps 1-2: it binds `this` to `string` (step 1) and returns `create_html(agent, string, \\\"tt\\\", \\\"\\\", Value::Undefined)` (step 2, with `?` propagated via the return). It reuses a `create_html` helper from the sibling module `super::prototype_anchor` rather than re-implementing CreateHTML, which the ticket permits when the helper already exists. The gate report says the build passes, so the import resolves. The unused `args` and `new_target` parameters are renamed with underscores, which is needed for the unused-parameter lint and is not an unrelated change. There are no special-cased inputs, hardcoded values, or swallowed errors in the diff. The gate shows 4 new passing test262 tests with no regressions. The one thing I could not verify from the diff is the body of `create_html` in prototype_anchor.rs; I am assuming it implements CreateHTML faithfully (RequireObjectCoercible, ToString ordering, quote escaping, which is skipped here because attr is empty).\",\"problems\":[],\"notes_for_next_attempt\":\"The change is small and looks correct as far as the diff shows. Before relying on it, confirm that `create_html` in crates/kahvi-builtins/src/string/prototype_anchor.rs follows CreateHTML steps 1-8 in order (RequireObjectCoercible on contents, then ToString, with attr-value conversion only when attr is non-empty). Also confirm that the helper is pub(crate) and that the anchor/big/blink-style built-ins use the same helper, so nothing is duplicated.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.fixed as spec steps 1-2: it binds `this` to `string` (step 1) and returns `create_html(agent, string, \"tt\", \"\", Value::Undefined)` (step 2, with `?` propagated via the return). It reuses a `create_html` helper from the sibling module `super::prototype_anchor` rather than re-implementing CreateHTML, which the ticket permits when the helper already exists. The gate report says the build passes, so the import resolves. The unused `args` and `new_target` parameters are renamed with underscores, which is needed for the unused-parameter lint and is not an unrelated change. There are no special-cased inputs, hardcoded values, or swallowed errors in the diff. The gate shows 4 new passing test262 tests with no regressions. The one thing I could not verify from the diff is the body of `create_html` in prototype_anchor.rs; I am assuming it implements CreateHTML faithfully (RequireObjectCoercible, ToString ordering, quote escaping, which is skipped here because attr is empty).",
+    "problems": [],
+    "notes_for_next_attempt": "The change is small and looks correct as far as the diff shows. Before relying on it, confirm that `create_html` in crates/kahvi-builtins/src/string/prototype_anchor.rs follows CreateHTML steps 1-8 in order (RequireObjectCoercible on contents, then ToString, with attr-value conversion only when attr is non-empty). Also confirm that the helper is pub(crate) and that the anchor/big/blink-style built-ins use the same helper, so nothing is duplicated."
+  },
+  "ttft_ms": 5720,
+  "type": "result",
+  "duration_ms": 8573,
+  "uuid": "d125efe8-567a-4320-bc06-99c2690068f8",
+  "ttft_stream_ms": 1758,
+  "time_to_request_ms": 829,
+  "time_to_request_phases_ms": {
+    "other": 93,
+    "system_prompt": 417,
+    "resume_other": 10,
+    "process_user_input": 24,
+    "input_attachments": 108,
+    "input_hooks": 21,
+    "tool_pool_refresh": 6,
+    "init_message": 23,
+    "engine_pickup": 1,
+    "message_prep": 9,
+    "model_config_wait": 35,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 9,
+    "tool_schema_build": 16,
+    "message_normalization": 2,
+    "client_creation": 13,
+    "request_build": 40
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 359,
+  "time_to_request_cpu_ms": 291,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 217,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 242,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 247,
+  "process_cpu_ms_turn": 954,
+  "process_wall_ms_turn": 8569,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 68,
+    "cpu_ms": 33,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1759,
+  "time_to_request_from_spawn_ms": 27249656,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792006707946.1448,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.55,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
