@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5175,
+  "stop_reason": "tool_use",
+  "session_id": "5412ff50-461a-4de0-b515-2f1c7dd9217e",
+  "total_cost_usd": 0.0195807,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3419,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 527,
+    "output_tokens_details": {
+      "thinking_tokens": 147
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3419,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 527,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3419,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3419
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.sign follows the spec's four steps in order. ToNumber is called with `?` on the first argument. NaN, +0 and -0 are returned as `n`, so the sign of zero is preserved. Negative numbers return -1 and everything else returns 1. The gate report shows 10 of 10 target tests passing, with no regressions. The change touches only the in-scope file. The one blemish is that the stub's `let _ = (this, args, new_target);` and the old comment block are still there. That is harmless.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.sign follows the spec's four steps in order. ToNumber is called with `?` on the first argument. NaN, +0 and -0 are returned as `n`, so the sign of zero is preserved. Negative numbers return -1 and everything else returns 1. The gate report shows 10 of 10 target tests passing, with no regressions. The change touches only the in-scope file. The one blemish is that the stub's `let _ = (this, args, new_target);` and the old comment block are still there. That is harmless.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3115,
+  "type": "result",
+  "duration_ms": 4901,
+  "uuid": "27e01be6-b12e-461a-a03f-0836752c41de",
+  "ttft_stream_ms": 1612,
+  "time_to_request_ms": 512,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 329,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 17,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 100,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 50,
+  "time_to_request_cpu_ms": 282,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 648,
+  "process_wall_ms_turn": 4900,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1614,
+  "time_to_request_from_spawn_ms": 27644293,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007104696.619,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

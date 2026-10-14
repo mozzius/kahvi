@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 6927,
+  "stop_reason": "tool_use",
+  "session_id": "06ef4b76-7049-45e0-9c16-5b82bcaba972",
+  "total_cost_usd": 0.00156128,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3459,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 1117,
+    "output_tokens_details": {
+      "thinking_tokens": 662
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3459,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1117,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3459,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3459
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Math.sinh in its own file, following the three spec steps. Step 1 calls ops::to_number(agent, x) and propagates the error with ?. Step 2 returns n unchanged when it is not finite or is +0/-0; the `n == 0.0` test covers both zeros and NaN and infinities are caught by is_finite. Step 3 returns Rust's f64::sinh, which is an allowed approximation. The step comments are kept above their code. Only the one file changed, with no test-shaped branches, no fallback values and no swallowed errors. I could not check outside the diff that ops::to_number and args.get_or_undefined exist with these signatures; the gate reports build and clippy as ok, which suggests they do.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Math.sinh in its own file, following the three spec steps. Step 1 calls ops::to_number(agent, x) and propagates the error with ?. Step 2 returns n unchanged when it is not finite or is +0/-0; the `n == 0.0` test covers both zeros and NaN and infinities are caught by is_finite. Step 3 returns Rust's f64::sinh, which is an allowed approximation. The step comments are kept above their code. Only the one file changed, with no test-shaped branches, no fallback values and no swallowed errors. I could not check outside the diff that ops::to_number and args.get_or_undefined exist with these signatures; the gate reports build and clippy as ok, which suggests they do.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5050,
+  "type": "result",
+  "duration_ms": 6690,
+  "uuid": "d47b137d-9f74-4997-ab7d-754e41fd3aa7",
+  "ttft_stream_ms": 1916,
+  "time_to_request_ms": 568,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 343,
+    "resume_other": 31,
+    "process_user_input": 10,
+    "input_attachments": 41,
+    "input_hooks": 6,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 65,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 18,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 58,
+  "time_to_request_cpu_ms": 416,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 107,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 778,
+  "process_wall_ms_turn": 6689,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1917,
+  "time_to_request_from_spawn_ms": 27638246,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007098186.1921,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.85,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.85,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
