@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Iterator.prototype.filter in its own file and follows the spec steps in order. Step 2 throws a TypeError for a non-object this. Step 4 checks IsCallable before GetIteratorDirect and closes the iterator through ops::iterator_close with a TypeError completion. Step 5 calls GetIteratorDirect with ?. Step 6 is a FilterClosure whose resume loop does IteratorStepValue (?), Call(predicate, undefined, value, counter) with IfAbruptCloseIterator, increments the counter with the 2^53 cap, applies ToBoolean and yields the value. Steps 7 to 9 build the helper with the iterated record. The predicate is traced for GC. No test-shaped branches, no swallowed errors, no made-up values. The new \"Yield\" path depends on HelperClosure's default on_return performing IteratorClose on return(); I could not see that trait default, so this is unverified rather than a defect.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

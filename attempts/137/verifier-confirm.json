@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 13545,
+  "stop_reason": "tool_use",
+  "session_id": "e3385877-119e-423c-8cb3-d3f24f523473",
+  "total_cost_usd": 0.0434915,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7884,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1087,
+    "output_tokens_details": {
+      "thinking_tokens": 624
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7884,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1087,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 7884,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7884
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Iterator.prototype.filter follows the spec steps 1\u20139 in order, with each step as a comment. The this-check, IsCallable check with IteratorClose on a TypeError, GetIteratorDirect, IteratorStepValue, Call with (value, counter), IfAbruptCloseIterator, ToBoolean and the yield are all present, and errors propagate with `?`. The counter is incremented before the yield instead of after, which the code comments explain. This can't be observed, because the counter is only passed to the predicate and a return while suspended closes the iterator. The 2^53 saturation is handled correctly. The closure's predicate is traced for the GC. The gate shows 74 of 74 test262 tests passing, with no regressions and no lint flags.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Iterator.prototype.filter follows the spec steps 1\u20139 in order, with each step as a comment. The this-check, IsCallable check with IteratorClose on a TypeError, GetIteratorDirect, IteratorStepValue, Call with (value, counter), IfAbruptCloseIterator, ToBoolean and the yield are all present, and errors propagate with `?`. The counter is incremented before the yield instead of after, which the code comments explain. This can't be observed, because the counter is only passed to the predicate and a return while suspended closes the iterator. The 2^53 saturation is handled correctly. The closure's predicate is traced for the GC. The gate shows 74 of 74 test262 tests passing, with no regressions and no lint flags.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 12070,
+  "type": "result",
+  "duration_ms": 14408,
+  "uuid": "11eb76ea-2860-42e2-8359-d5310bb8617c",
+  "ttft_stream_ms": 6533,
+  "time_to_request_ms": 1542,
+  "time_to_request_phases_ms": {
+    "other": 146,
+    "system_prompt": 544,
+    "resume_other": 1,
+    "process_user_input": 40,
+    "input_attachments": 99,
+    "input_hooks": 20,
+    "tool_pool_refresh": 60,
+    "init_message": 55,
+    "engine_pickup": 23,
+    "message_prep": 23,
+    "model_config_wait": 404,
+    "autocompact": 26,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 23,
+    "message_normalization": 15,
+    "client_creation": 32,
+    "request_build": 30
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 463,
+  "time_to_request_cpu_ms": 311,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 106,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 928,
+  "process_wall_ms_turn": 14407,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 61,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 6544,
+  "time_to_request_from_spawn_ms": 18601558,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998054250.6328,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

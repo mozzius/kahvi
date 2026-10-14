@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 23719,
+  "stop_reason": "end_turn",
+  "session_id": "46082838-f2d8-4678-8c0c-5eb571c2f699",
+  "total_cost_usd": 0.00731067,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 17651,
+    "cache_read_input_tokens": 151917,
+    "output_tokens": 3980,
+    "output_tokens_details": {
+      "thinking_tokens": 430
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17651,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 260,
+        "cache_read_input_tokens": 24945,
+        "cache_creation_input_tokens": 349,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 349
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 13,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `%TypedArray%.prototype.findLast` in `prototype_find_last.rs`, but the test262 directory does not fully pass: 66 of 72 runs pass and 6 fail. The 6 failures are the resizable-buffer tests, which throw \"not implemented: BigInt\" because the engine has no BigInt support yet. Clippy is clean and the file is formatted.\n\nI wrote a descending-only `find_via_predicate` in the same file, since the ticket limits edits to that file. It is a copy of the ascending helper in `prototype_find.rs`, so the two can be merged into a shared `support` helper later.\n\nBLOCKED: BigInt support in the engine (needed by built-ins/TypedArray/prototype/findLast/resizable-buffer*.js)",
+  "ttft_ms": 2195,
+  "type": "result",
+  "duration_ms": 80567,
+  "uuid": "96a91511-26d2-47a1-984f-c4ab73949505",
+  "ttft_stream_ms": 1949,
+  "time_to_request_ms": 640,
+  "time_to_request_phases_ms": {
+    "other": 59,
+    "system_prompt": 415,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 22,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 66,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 16,
+    "message_normalization": 7,
+    "client_creation": 7,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 101,
+  "time_to_request_cpu_ms": 401,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 101,
+  "process_rss_mib_result": 256,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 268,
+  "process_cpu_ms_turn": 3848,
+  "process_wall_ms_turn": 80546,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 13,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1952,
+  "time_to_request_from_spawn_ms": 18475503,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997934594.9993,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
