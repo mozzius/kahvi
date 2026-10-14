@@ -80,3 +80,5 @@
 [17:07:29] B-typed-array-prototype-every: attempt 125 finished ($0.017, 16 turns)
 [17:07:44] B-typed-array-prototype-reduce-right: attempt 126 finished ($0.313, 27 turns)
 [17:07:45] B-typed-array-prototype-reduce-right: gate rejected attempt 126: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 
+[17:07:48] B-typed-array-prototype-index-of: attempt on slot 2 with haiku
+[17:08:10] B-typed-array-prototype-every: verifier: accept The change implements %TypedArray%.prototype.every in the order the spec gives. It validates the typed array (ValidateTypedArray with `?`), computes T
