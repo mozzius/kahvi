@@ -7,7 +7,7 @@ scope = ["crates/kahvi-builtins/src/string/prototype_includes.rs"]
 read = ["docs/API.md", "crates/kahvi-builtins/src/support/mod.rs", "crates/kahvi-builtins/src/array/prototype_map.rs", "crates/kahvi-builtins/src/object/define_property.rs", "crates/kahvi-builtins/src/support/string_iterator.rs", "crates/kahvi-builtins/src/support/regexp.rs"]
 spec = ["sec-string.prototype.includes"]
 target = ["built-ins/String/prototype/includes/"]
-priority = 42
+priority = 44
 +++
 Implement this built-in in its file, following the spec steps already in
 the stub: keep each step as a comment directly above the code for it.

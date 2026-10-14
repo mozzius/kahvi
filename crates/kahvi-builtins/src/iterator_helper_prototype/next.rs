@@ -4,14 +4,15 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::iterator_helper::helper_resume;
+
 /// IteratorHelperPrototype.next
 pub(crate) fn next(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // 1. Return ? GeneratorResume(*this* value, *undefined*, *"Iterator Helper"*).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("IteratorHelperPrototype.next"))
+    // 1. Return ? GeneratorResume(this value, undefined, "Iterator Helper").
+    helper_resume(agent, this)
 }

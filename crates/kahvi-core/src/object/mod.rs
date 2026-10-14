@@ -5,6 +5,7 @@ pub mod array;
 pub mod internal;
 pub mod namespace;
 pub mod proxy;
+pub mod typed_array;
 
 use std::any::Any;
 
@@ -359,6 +360,12 @@ pub enum ObjectKind {
     Arguments(Option<Box<crate::function::MappedArguments>>),
     /// Module namespace exotic object (§10.4.6).
     ModuleNamespace(Box<namespace::NamespaceData>),
+    /// Has [[ArrayBufferData]] (§25.1).
+    ArrayBuffer(Box<typed_array::ArrayBufferData>),
+    /// TypedArray exotic object (§10.4.5).
+    TypedArray(Box<typed_array::TypedArrayData>),
+    /// Has [[DataView]] (§25.3).
+    DataView(Box<typed_array::DataViewData>),
     /// Has an [[ErrorData]] slot.
     Error,
     /// [[BooleanData]], [[NumberData]], [[StringData]] (String exotic, §10.4.3),

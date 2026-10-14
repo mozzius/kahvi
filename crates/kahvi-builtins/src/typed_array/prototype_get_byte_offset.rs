@@ -4,22 +4,32 @@
 
 use kahvi_core::prelude::*;
 
+use kahvi_core::object::typed_array::{
+    is_typed_array_out_of_bounds, make_ta_record, typed_array_data,
+};
+
 /// get TypedArray.prototype.byteOffset
 pub(crate) fn prototype_get_byte_offset(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // %TypedArray%`.prototype.byteOffset` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
-    //
-    // 1. Let _obj_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_obj_, [[TypedArrayName]]).
-    // 3. Assert: _obj_ has a [[ViewedArrayBuffer]] internal slot.
-    // 4. Let _taRecord_ be MakeTypedArrayWithBufferWitnessRecord(_obj_, ~seq-cst~).
-    // 5. If IsTypedArrayOutOfBounds(_taRecord_) is *true*, return *+0*_𝔽.
-    // 6. Let _offset_ be _obj_.[[ByteOffset]].
-    // 7. Return 𝔽(_offset_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get TypedArray.prototype.byteOffset"))
+    // 1. Let obj be the this value.
+    // 2. Perform ? RequireInternalSlot(obj, [[TypedArrayName]]).
+    let obj = match this {
+        Value::Object(o) if typed_array_data(agent, o).is_some() => o,
+        _ => return Err(agent.throw_type_error("not a TypedArray")),
+    };
+    // 4. Let taRecord be MakeTypedArrayWithBufferWitnessRecord(obj, seq-cst).
+    let rec = make_ta_record(agent, obj);
+    // 5. If IsTypedArrayOutOfBounds(taRecord) is true, return +0𝔽.
+    if is_typed_array_out_of_bounds(agent, rec) {
+        return Ok(Value::Number(0.0));
+    }
+    // 6-7. Return 𝔽(obj.[[ByteOffset]]).
+    let offset = typed_array_data(agent, obj)
+        .expect("a TypedArray")
+        .byte_offset;
+    Ok(Value::Number(offset as f64))
 }

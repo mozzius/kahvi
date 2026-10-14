@@ -4,17 +4,24 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::iterator_helper::wrapped_iterated;
+
 /// WrapForValidIteratorPrototype.next
 pub(crate) fn next(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // 1. Let _obj_ be *this* value.
-    // 2. Perform ? RequireInternalSlot(_obj_, [[Iterated]]).
-    // 3. Let _iteratorRecord_ be _obj_.[[Iterated]].
-    // 4. Return ? Call(_iteratorRecord_.[[NextMethod]], _iteratorRecord_.[[Iterator]]).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("WrapForValidIteratorPrototype.next"))
+    // 1. Let O be this value.
+    // 2. Perform ? RequireInternalSlot(O, [[Iterated]]).
+    // 3. Let iteratorRecord be O.[[Iterated]].
+    let record = wrapped_iterated(agent, this)?;
+    // 4. Return ? Call(iteratorRecord.[[NextMethod]], iteratorRecord.[[Iterator]]).
+    ops::call(
+        agent,
+        record.next_method,
+        Value::Object(record.iterator),
+        &[],
+    )
 }

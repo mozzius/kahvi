@@ -74,6 +74,9 @@ impl Object {
         if let Some(r) = super::namespace::get_own_property(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::typed_array::get_own_property(agent, self, key) {
+            return r;
+        }
         match &agent.obj(self).kind {
             ObjectKind::StringObject(s) => {
                 let s = *s;
@@ -100,6 +103,9 @@ impl Object {
             return r;
         }
         if let Some(r) = super::namespace::define_own_property(agent, self, key, desc) {
+            return r;
+        }
+        if let Some(r) = super::typed_array::define_own_property(agent, self, key, desc) {
             return r;
         }
         match &agent.obj(self).kind {
@@ -139,6 +145,9 @@ impl Object {
         if let Some(r) = super::namespace::has_property(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::typed_array::has_property(agent, self, key) {
+            return r;
+        }
         ordinary_has_property(agent, self, key)
     }
 
@@ -153,6 +162,9 @@ impl Object {
             return r;
         }
         if let Some(r) = super::namespace::get(agent, self, key, receiver) {
+            return r;
+        }
+        if let Some(r) = super::typed_array::get(agent, self, key) {
             return r;
         }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_)))
@@ -177,6 +189,9 @@ impl Object {
         if let Some(r) = super::namespace::set(agent, self) {
             return r;
         }
+        if let Some(r) = super::typed_array::set(agent, self, key, value, receiver) {
+            return r;
+        }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_))) {
             return crate::function::arguments_set(agent, self, key, value, receiver);
         }
@@ -191,6 +206,9 @@ impl Object {
         if let Some(r) = super::namespace::delete(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::typed_array::delete(agent, self, key) {
+            return r;
+        }
         if matches!(agent.obj(self).kind, ObjectKind::Arguments(Some(_))) {
             return crate::function::arguments_delete(agent, self, key);
         }
@@ -203,6 +221,9 @@ impl Object {
             return r;
         }
         if let Some(r) = super::namespace::own_property_keys(agent, self) {
+            return r;
+        }
+        if let Some(r) = super::typed_array::own_property_keys(agent, self) {
             return r;
         }
         if let ObjectKind::StringObject(s) = &agent.obj(self).kind {

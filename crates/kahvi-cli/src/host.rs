@@ -59,10 +59,20 @@ fn gc(_: &mut Agent, _: Value, _: &[Value], _: Option<Object>) -> JsResult<Value
 fn detach_array_buffer(
     agent: &mut Agent,
     _: Value,
-    _: &[Value],
+    args: &[Value],
     _: Option<Object>,
 ) -> JsResult<Value> {
-    Err(agent.not_implemented("$262.detachArrayBuffer"))
+    // DetachArrayBuffer(buffer) with the default (undefined) key.
+    let buffer = match args.get_or_undefined(0) {
+        Value::Object(o)
+            if kahvi_core::object::typed_array::array_buffer_data(agent, o).is_some() =>
+        {
+            o
+        }
+        _ => return Err(agent.throw_type_error("detachArrayBuffer needs an ArrayBuffer")),
+    };
+    kahvi_core::object::typed_array::detach_array_buffer(agent, buffer, Value::Undefined)?;
+    Ok(Value::Null)
 }
 
 /// The host clock for Date.now and new Date().

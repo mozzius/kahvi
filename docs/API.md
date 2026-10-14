@@ -117,7 +117,13 @@ Helpers shared between built-ins live in `crates/kahvi-builtins/src/support/`
 (`this_value.rs` has ThisNumberValue and friends, `error.rs` the error
 constructors, `array_iterator.rs` CreateArrayIterator, `regexp.rs` the RegExp
 internal slots (`RegExpData`, `require_regexp`) and RegExpCreate, RegExpExec,
-RegExpBuiltinExec and AdvanceStringIndex).
+RegExpBuiltinExec and AdvanceStringIndex, `typed_array.rs` ValidateTypedArray,
+TypedArraySpeciesCreate, TypedArrayCreateSameType, AllocateArrayBuffer,
+GetViewValue/SetViewValue and friends). TypedArray and ArrayBuffer internal
+slots and buffer operations (GetValueFromBuffer, IsValidIntegerIndex,
+TypedArrayLength, DetachArrayBuffer, ...) are in
+`kahvi_core::object::typed_array`. `iterator_helper.rs` is CreateIteratorFromClosure for the
+Iterator helpers: implement `HelperClosure` (see Iterator.prototype.map).
 
 ## Checking your work
 

@@ -352,6 +352,97 @@ pub fn number_to_js_string(agent: &mut Agent, n: f64) -> JsString {
     agent.string(&s)
 }
 
+/// Number::toString(x, radix) (§6.1.6.1.20) for a radix other than 10.
+/// The digits are implementation-defined; this is V8's DoubleToRadixCString:
+/// fraction digits only up to the precision of x, rounded half to even.
+pub fn number_to_js_string_radix(agent: &mut Agent, x: f64, radix: u32) -> JsString {
+    let s = number_to_string_radix(x, radix);
+    agent.string(&s)
+}
+
+fn number_to_string_radix(x: f64, radix: u32) -> String {
+    if x.is_nan() {
+        return "NaN".into();
+    }
+    if x == 0.0 {
+        return "0".into();
+    }
+    if x.is_infinite() {
+        return if x < 0.0 {
+            "-Infinity".into()
+        } else {
+            "Infinity".into()
+        };
+    }
+    const CHARS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
+    let next_double = |v: f64| f64::from_bits(v.to_bits() + 1);
+    // The binary exponent of v = significand × 2^exponent, with a 53-bit integer significand.
+    let exponent = |v: f64| {
+        let e = ((v.to_bits() >> 52) & 0x7ff) as i32;
+        if e == 0 { -1074 } else { e - 1075 }
+    };
+    let negative = x < 0.0;
+    let value = x.abs();
+    let mut integer = value.floor();
+    let mut fraction = value - integer;
+    // Fraction digits only up to the input's precision.
+    let mut delta = (0.5 * (next_double(value) - value)).max(next_double(0.0));
+    let r = radix as f64;
+    let mut frac_digits: Vec<u8> = Vec::new();
+    if fraction >= delta {
+        loop {
+            fraction *= r;
+            delta *= r;
+            let digit = fraction as usize;
+            frac_digits.push(CHARS[digit]);
+            fraction -= digit as f64;
+            // Round to even.
+            if (fraction > 0.5 || (fraction == 0.5 && digit & 1 == 1)) && fraction + delta > 1.0 {
+                // Propagate the carry back through the digits written so far.
+                loop {
+                    let Some(c) = frac_digits.pop() else {
+                        integer += 1.0;
+                        break;
+                    };
+                    let d = (c as char).to_digit(36).expect("a digit") + 1;
+                    if d < radix {
+                        frac_digits.push(CHARS[d as usize]);
+                        break;
+                    }
+                }
+                break;
+            }
+            if fraction < delta {
+                break;
+            }
+        }
+    }
+    // Integer digits; digits beyond the double's precision are zeros.
+    let mut int_digits: Vec<u8> = Vec::new();
+    while exponent(integer / r) > 0 {
+        integer /= r;
+        int_digits.push(b'0');
+    }
+    loop {
+        let remainder = integer % r;
+        int_digits.push(CHARS[remainder as usize]);
+        integer = (integer - remainder) / r;
+        if integer <= 0.0 {
+            break;
+        }
+    }
+    let mut out = String::new();
+    if negative {
+        out.push('-');
+    }
+    out.extend(int_digits.iter().rev().map(|&b| b as char));
+    if !frac_digits.is_empty() {
+        out.push('.');
+        out.extend(frac_digits.iter().map(|&b| b as char));
+    }
+    out
+}
+
 /// ToObject(argument) (§7.1.18)
 pub fn to_object(agent: &mut Agent, v: Value) -> JsResult<Object> {
     let (proto, kind) = match v {

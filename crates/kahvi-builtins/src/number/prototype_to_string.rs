@@ -28,5 +28,9 @@ pub(crate) fn prototype_to_string(
     if radix == 10.0 {
         return Ok(Value::String(ops::number_to_js_string(agent, x)));
     }
-    Err(agent.not_implemented("Number::toString with a radix other than 10"))
+    Ok(Value::String(ops::number_to_js_string_radix(
+        agent,
+        x,
+        radix as u32,
+    )))
 }

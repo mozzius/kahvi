@@ -4,22 +4,23 @@
 
 use kahvi_core::prelude::*;
 
+use kahvi_core::object::typed_array::{make_ta_record, typed_array_byte_length, typed_array_data};
+
 /// get TypedArray.prototype.byteLength
 pub(crate) fn prototype_get_byte_length(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // %TypedArray%`.prototype.byteLength` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
-    //
-    // 1. Let _obj_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_obj_, [[TypedArrayName]]).
-    // 3. Assert: _obj_ has a [[ViewedArrayBuffer]] internal slot.
-    // 4. Let _taRecord_ be MakeTypedArrayWithBufferWitnessRecord(_obj_, ~seq-cst~).
-    // 5. If IsTypedArrayOutOfBounds(_taRecord_) is *true*, return *+0*_𝔽.
-    // 6. Let _size_ be TypedArrayByteLength(_taRecord_).
-    // 7. Return 𝔽(_size_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get TypedArray.prototype.byteLength"))
+    // 1. Let obj be the this value.
+    // 2. Perform ? RequireInternalSlot(obj, [[TypedArrayName]]).
+    let obj = match this {
+        Value::Object(o) if typed_array_data(agent, o).is_some() => o,
+        _ => return Err(agent.throw_type_error("not a TypedArray")),
+    };
+    // 4. Let taRecord be MakeTypedArrayWithBufferWitnessRecord(obj, seq-cst).
+    let rec = make_ta_record(agent, obj);
+    // 5-7. Return 𝔽(TypedArrayByteLength(taRecord)), which is 0 when out of bounds.
+    Ok(Value::Number(typed_array_byte_length(agent, rec) as f64))
 }

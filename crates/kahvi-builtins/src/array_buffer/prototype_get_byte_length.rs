@@ -4,21 +4,22 @@
 
 use kahvi_core::prelude::*;
 
+use kahvi_core::object::typed_array::{array_buffer_byte_length, array_buffer_data};
+
 /// get ArrayBuffer.prototype.byteLength
 pub(crate) fn prototype_get_byte_length(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // `ArrayBuffer.prototype.byteLength` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
-    //
-    // 1. Let _obj_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferData]]).
-    // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
-    // 4. If IsDetachedBuffer(_obj_) is *true*, return *+0*_𝔽.
-    // 5. Let _length_ be _obj_.[[ArrayBufferByteLength]].
-    // 6. Return 𝔽(_length_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get ArrayBuffer.prototype.byteLength"))
+    // 1. Let O be the this value.
+    // 2. Perform ? RequireInternalSlot(O, [[ArrayBufferData]]).
+    // 3. If IsSharedArrayBuffer(O) is true, throw a TypeError exception.
+    let o = match this {
+        Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
+        _ => return Err(agent.throw_type_error("not an ArrayBuffer")),
+    };
+    // 4-6. Return 𝔽(O.[[ArrayBufferByteLength]]), which is 0 once detached.
+    Ok(Value::Number(array_buffer_byte_length(agent, o) as f64))
 }

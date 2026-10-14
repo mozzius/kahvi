@@ -3,6 +3,9 @@
 //! Spec: https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
 
 use crate::support::array_iterator::{ArrayIterator, IterationKind};
+use kahvi_core::object::typed_array::{
+    is_typed_array_out_of_bounds, make_ta_record, typed_array_data, typed_array_length,
+};
 use kahvi_core::prelude::*;
 
 /// ArrayIteratorPrototype.next
@@ -29,9 +32,20 @@ pub(crate) fn next(
             true,
         )));
     };
-    // b. Let len be ? LengthOfArrayLike(array) (TypedArrays use TypedArrayLength;
-    //    they are not supported yet).
-    let len = ops::length_of_array_like(agent, array)?;
+    // a. If array has a [[TypedArrayName]] internal slot, then
+    let len = if typed_array_data(agent, array).is_some() {
+        // i. Let taRecord be MakeTypedArrayWithBufferWitnessRecord(array, seq-cst).
+        let rec = make_ta_record(agent, array);
+        // ii. If IsTypedArrayOutOfBounds(taRecord) is true, throw a TypeError exception.
+        if is_typed_array_out_of_bounds(agent, rec) {
+            return Err(agent.throw_type_error("TypedArray is out of bounds or detached"));
+        }
+        // iii. Let len be TypedArrayLength(taRecord).
+        typed_array_length(agent, rec) as f64
+    } else {
+        // b. Else, let len be ? LengthOfArrayLike(array).
+        ops::length_of_array_like(agent, array)?
+    };
     // c. If index ≥ len, return NormalCompletion(undefined).
     if index >= len {
         if let Some(state) = agent.native_mut::<ArrayIterator>(it) {

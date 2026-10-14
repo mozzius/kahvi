@@ -16,7 +16,7 @@ pub(crate) fn constructor(
     let n = match args.first() {
         Some(&value) => match ops::to_numeric(agent, value)? {
             // b. If prim is a BigInt, let n be 𝔽(ℝ(prim)).
-            ops::Numeric::BigInt(b) => agent.bigint(b).to_f64_approx(),
+            ops::Numeric::BigInt(b) => agent.bigint(b).to_f64(),
             // c. Otherwise, let n be prim.
             ops::Numeric::Number(n) => n,
         },
