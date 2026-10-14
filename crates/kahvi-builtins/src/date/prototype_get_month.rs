@@ -2,22 +2,26 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-date.prototype.getmonth
 
+use crate::support::date;
 use kahvi_core::prelude::*;
 
 /// Date.prototype.getMonth
 pub(crate) fn prototype_get_month(
     agent: &mut Agent,
     this: Value,
-    args: &[Value],
-    new_target: Option<Object>,
+    _args: &[Value],
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
-    // 1. Let _dateObj_ be the *this* value.
-    // 2. Perform ? RequireInternalSlot(_dateObj_, [[DateValue]]).
-    // 3. Let _tv_ be _dateObj_.[[DateValue]].
-    // 4. If _tv_ is *NaN*, return *NaN*.
-    // 5. Return 𝔽(MonthFromTime(LocalTime(_tv_))).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Date.prototype.getMonth"))
+    // 1. Let dateObj be the this value.
+    // 2. Perform ? RequireInternalSlot(dateObj, [[DateValue]]).
+    // 3. Let tv be dateObj.[[DateValue]].
+    let tv = date::this_time_value(agent, this)?;
+    // 4. If tv is NaN, return NaN.
+    if tv.is_nan() {
+        return Ok(Value::Number(f64::NAN));
+    }
+    // 5. Return 𝔽(MonthFromTime(LocalTime(tv))).
+    Ok(Value::Number(date::month_from_time(date::local_time(
+        agent, tv,
+    ))))
 }
