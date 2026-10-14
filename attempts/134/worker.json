@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 36070,
+  "stop_reason": "end_turn",
+  "session_id": "992b3dbf-6c82-4541-938a-5bae7aed5f3c",
+  "total_cost_usd": 0.01366551,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 36857,
+    "cache_read_input_tokens": 297301,
+    "output_tokens": 6097,
+    "output_tokens_details": {
+      "thinking_tokens": 1339
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 36857,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 315,
+        "cache_read_input_tokens": 44050,
+        "cache_creation_input_tokens": 450,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 450
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`%TypedArray%.prototype.findIndex` is implemented in `crates/kahvi-builtins/src/typed_array/prototype_find_index.rs`, the only file changed. Under `./t262 built-ins/TypedArray/prototype/findIndex/` it passes 66 of 72 runs, up from 8 passing on main. The other 6 runs fail with `not implemented: BigInt`, because those tests use BigInt, which the engine does not support yet. Clippy is clean.\n\nThe engine had no `FindViaPredicate` helper, so I wrote it as a private function in that file, as the ticket allowed. It is shaped for the findLast and find tickets to reuse, and it needs to move to shared support if they need it. The ticket's \"ValidateTypedArray\" and \"TypedArrayLength\" steps use the existing helpers.\n\nBLOCKED: none for findIndex itself. The 6 remaining failures need BigInt support in the engine.",
+  "ttft_ms": 1761,
+  "type": "result",
+  "duration_ms": 55152,
+  "uuid": "9f295d23-53b4-4b7c-a6fa-0abe91fec0fb",
+  "ttft_stream_ms": 1542,
+  "time_to_request_ms": 487,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 339,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 16,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 25,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 82,
+  "time_to_request_cpu_ms": 398,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 256,
+  "process_anon_mib_result": 136,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 4363,
+  "process_wall_ms_turn": 55152,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1543,
+  "time_to_request_from_spawn_ms": 18361046,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997821035.5798,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

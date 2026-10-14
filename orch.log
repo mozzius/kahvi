@@ -99,3 +99,7 @@
 [17:10:16] B-typed-array-prototype-find: attempt on slot 2 with haiku
 [17:10:20] B-typed-array-prototype-find-index: attempt on slot 0 with haiku
 [17:10:36] B-typed-array-prototype-for-each: verifier: accept The diff implements TypedArray.prototype.forEach in the spec's order: ValidateTypedArray (with ?), TypedArrayLength once, IsCallable check that throws
+[17:10:40] B-typed-array-prototype-find-last-index: attempt on slot 3 with haiku
+[17:11:03] B-array-buffer-prototype-slice: attempt 132 finished ($0.023, 22 turns)
+[17:11:18] B-typed-array-prototype-find-index: attempt 134 finished ($0.014, 17 turns)
+[17:11:18] B-typed-array-prototype-find-index: gate rejected attempt 134: lint: lint suppression is architect-only at crates/kahvi-builtins/src/typed_array/prototype_find_index.rs:46: #[allow(dead_code)] // for the findLast and findLastIndex tickets; lint: lint suppression 

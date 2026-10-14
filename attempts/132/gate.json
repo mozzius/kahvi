@@ -1,0 +1,45 @@
+{
+  "ticket": "B-array-buffer-prototype-slice",
+  "base": "2f471fd80308897c7458f3f49cd75faa0d70aa15",
+  "head": "7da949337793b9649a0a37c35b447aeb435b4c4f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array_buffer/prototype_slice.rs",
+      "added": 102,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_slice.rs",
+      "line": 51,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"source buffer is not detached\")[from_index..from_index + count]"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_slice.rs",
+      "line": 55,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"target buffer is not detached\")[to_index..to_index + count]"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 62,
+    "before": 12,
+    "after": 62,
+    "new_passes": 50,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

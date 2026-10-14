@@ -1,0 +1,40 @@
+{
+  "ticket": "B-typed-array-prototype-find-index",
+  "base": "f36c90dbbd6f61c1a6a56ce892394eb2b3f48ce5",
+  "head": "0ac5ec4fe053e0a35e28a16ef86a18b1bb99362a",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/typed_array/prototype_find_index.rs:46: #[allow(dead_code)] // for the findLast and findLastIndex tickets",
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/typed_array/prototype_find_index.rs:53: #[allow(dead_code)] // read by the find and findLast tickets"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_find_index.rs",
+      "added": 96,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_find_index.rs",
+      "line": 46,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // for the findLast and findLastIndex tickets"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_find_index.rs",
+      "line": 53,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(dead_code)] // read by the find and findLast tickets"
+    }
+  ],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/typed_array/prototype_find_index.rs",
+      "line": 25,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"ValidateTypedArray accepted a non-object\")"
+    }
+  ],
+  "decision": "reject"
+}

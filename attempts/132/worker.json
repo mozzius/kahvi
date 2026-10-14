@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 44422,
+  "stop_reason": "end_turn",
+  "session_id": "a613af64-a716-4885-80f5-cdb2fb018815",
+  "total_cost_usd": 0.02306924,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 62427,
+    "cache_read_input_tokens": 522414,
+    "output_tokens": 9867,
+    "output_tokens_details": {
+      "thinking_tokens": 3801
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 62427,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 314,
+        "cache_read_input_tokens": 69860,
+        "cache_creation_input_tokens": 210,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 210
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `ArrayBuffer.prototype.slice` in `crates/kahvi-builtins/src/array_buffer/prototype_slice.rs`, and all 62 `built-ins/ArrayBuffer/prototype/slice/` runs pass (2 files skipped by the runner), with clippy clean and no other files touched. The spec steps are kept as comments above their code.\n\nChoices to check:\n- **Local helpers:** `ops` has no `ToClampedIndex` or `CopyDataBlockBytes`, so I wrote both in this file as the ticket allows. Other built-ins (TypedArray, Array, String) also keep their own `to_clamped_index`, so the helper is a candidate to move into `ops` later.\n- **Shared buffers:** The engine has no Shared Data Blocks, so steps 3 and 12 (`IsSharedArrayBuffer`) are comments only, with no check.\n\nBLOCKED: none",
+  "ttft_ms": 1909,
+  "type": "result",
+  "duration_ms": 63475,
+  "uuid": "b94fc1dc-c2a9-4d99-90d2-a2a64641d153",
+  "ttft_stream_ms": 1716,
+  "time_to_request_ms": 890,
+  "time_to_request_phases_ms": {
+    "other": 46,
+    "system_prompt": 586,
+    "resume_other": 1,
+    "process_user_input": 17,
+    "input_attachments": 76,
+    "input_hooks": 8,
+    "tool_pool_refresh": 3,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 44,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 67,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 235,
+  "time_to_request_cpu_ms": 387,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 271,
+  "process_anon_mib_result": 151,
+  "process_peak_rss_mib": 271,
+  "process_cpu_ms_turn": 4648,
+  "process_wall_ms_turn": 63474,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 44,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1717,
+  "time_to_request_from_spawn_ms": 18338286,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997797791.3806,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
