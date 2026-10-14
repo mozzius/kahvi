@@ -1,36 +1,9 @@
-[00:37:08] building trusted runner; integration branch m1-spine, 2 slots
-[00:37:08] B-global-parse-float: attempt on slot 1 with haiku
-[00:37:08] B-array-prototype-sort: attempt on slot 0 with haiku
-[00:38:23] B-array-prototype-sort: attempt 34 finished ($0.016, 14 turns)
-[00:38:36] B-global-parse-float: attempt 35 finished ($0.018, 24 turns)
-[00:39:22] B-global-parse-float: verifier: accept The diff implements parseFloat steps 1-7 in order. ToString and TrimString(start) are called on the argument, and the prefix scan follows the StrDecim
-[00:39:29] B-global-parse-float: full test262 run for merge
-[00:40:50] B-array-prototype-sort: verifier: accept The diff implements Array.prototype.sort in prototype_sort.rs, with helpers sort_indexed_properties, compare_array_elements and a stable merge_sort. I
-[00:44:13] B-global-parse-float: merged (+98, 59675 total)
-[00:44:15] B-weak-set-constructor: attempt on slot 1 with haiku
-[00:44:16] B-array-prototype-sort: full test262 run for merge
-[00:44:45] B-weak-set-constructor: attempt 36 finished ($0.007, 11 turns)
-[00:45:14] B-weak-set-constructor: verifier: accept The diff implements the WeakSet constructor steps 1-8 in order, one step per comment, in crate::weak_set::constructor. Step 1 throws a TypeError when 
-[00:50:33] B-array-prototype-sort: merged (+83, 59758 total)
-[00:50:35] B-object-prototype-is-prototype-of: attempt on slot 0 with haiku
-[00:50:37] B-weak-set-constructor: full test262 run for merge
-[00:51:02] B-object-prototype-is-prototype-of: attempt 37 finished ($0.005, 14 turns)
-[00:51:26] B-object-prototype-is-prototype-of: verifier: accept The change implements Object.prototype.isPrototypeOf faithfully. Step 1 returns false for non-object arguments via a let-else. Step 2 calls ops::to_ob
-[00:56:52] B-weak-set-constructor: merged (+36, 59794 total)
-[00:56:54] B-array-from: attempt on slot 1 with haiku
-[00:56:56] B-object-prototype-is-prototype-of: full test262 run for merge
-[00:58:04] B-array-from: attempt 38 finished ($0.017, 17 turns)
-[00:58:45] B-array-from: verifier: accept The Array.from implementation in from.rs follows the pinned spec steps 1 to 14 in order. The mapper IsCallable check comes before GetMethod. The itera
-[01:03:44] B-object-prototype-is-prototype-of: merged (+106, 59900 total)
-[01:03:46] B-string-prototype-index-of: attempt on slot 0 with haiku
-[01:03:48] B-array-from: full test262 run for merge
-[01:04:17] B-string-prototype-index-of: attempt 39 finished ($0.007, 14 turns)
-[01:04:51] B-string-prototype-index-of: verifier: accept The diff implements String.prototype.indexOf step by step. this is passed through RequireObjectCoercible, then ToString(this), then ToString(searchStr
-[01:10:02] B-array-from: merged (+78, 59978 total)
-[01:10:04] B-object-set-prototype-of: attempt on slot 1 with haiku
-[01:10:04] B-string-prototype-index-of: full test262 run for merge
-[01:10:23] B-object-set-prototype-of: attempt 40 finished ($0.004, 12 turns)
-[01:10:41] B-object-set-prototype-of: verifier: accept The change implements Object.setPrototypeOf in the order of the spec's six steps. Step 1 calls ops::require_object_coercible with ?. Step 2 throws a T
-[01:14:27] B-string-prototype-index-of: merged (+90, 60068 total)
-[01:14:30] B-object-set-prototype-of: full test262 run for merge
-[01:19:25] B-object-set-prototype-of: merged (+66, 60134 total)
+[01:31:43] building trusted runner; integration branch m1-spine, 2 slots
+[01:31:44] B-set-prototype-add: attempt on slot 1 with haiku
+[01:31:44] C-proxy-get: attempt on slot 0 with haiku
+[01:32:26] B-set-prototype-add: attempt 42 finished ($0.007, 10 turns)
+[01:32:44] C-proxy-get: attempt 41 finished ($0.012, 19 turns)
+[01:33:12] B-set-prototype-add: verifier: accept The diff in prototype_add.rs follows the spec steps in order. It calls this_set (RequireInternalSlot, step 2), collection_key (CanonicalizeKeyedCollec
+[01:33:26] B-set-prototype-add: full test262 run for merge
+[01:33:32] C-proxy-get: verifier: accept The diff implements Proxy [[Get]] steps 1-10 in order, in get.rs. ValidateNonRevokedProxy uses `?`, GetMethod(handler, "get") uses `?`, and the undefi
+[01:44:53] B-set-prototype-add: merged (+30, 63624 total)

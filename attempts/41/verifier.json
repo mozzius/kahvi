@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 14875,
+  "stop_reason": "tool_use",
+  "session_id": "00ff7b3a-8639-4d53-a560-42a0f14160c5",
+  "total_cost_usd": 0.00340896,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6337,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 3096,
+    "output_tokens_details": {
+      "thinking_tokens": 2466
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6337,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3096,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 6337,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6337
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Proxy [[Get]] steps 1-10 in order, in get.rs. ValidateNonRevokedProxy uses `?`, GetMethod(handler, \\\"get\\\") uses `?`, and the undefined-trap path returns `?` target.[[Get]](key, receiver). Otherwise it calls the trap with (target, key-as-value, receiver) via `?`, calls [[GetOwnProperty]] unconditionally via `?` (matching the spec's observable order), and applies the step 9 invariant checks: SameValue for non-writable non-configurable data properties, and undefined-result for non-configurable accessors without a getter. Both invariant failures throw TypeError. Returns the trap result. No test-shaped special cases, no swallowed errors, and no fake return values. The only other change is the import cleanup (PropertyDescriptor removed, ops added) and renaming the unused `o` to `_o`, which is consistent with the new code. The `unwrap_or(Value::Undefined)` on descriptor fields only applies where a complete descriptor is guaranteed to have the field, so it does not change behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"No defects found; the change matches the spec steps for Proxy [[Get]] and can be merged as is. Nothing needs fixing.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Proxy [[Get]] steps 1-10 in order, in get.rs. ValidateNonRevokedProxy uses `?`, GetMethod(handler, \"get\") uses `?`, and the undefined-trap path returns `?` target.[[Get]](key, receiver). Otherwise it calls the trap with (target, key-as-value, receiver) via `?`, calls [[GetOwnProperty]] unconditionally via `?` (matching the spec's observable order), and applies the step 9 invariant checks: SameValue for non-writable non-configurable data properties, and undefined-result for non-configurable accessors without a getter. Both invariant failures throw TypeError. Returns the trap result. No test-shaped special cases, no swallowed errors, and no fake return values. The only other change is the import cleanup (PropertyDescriptor removed, ops added) and renaming the unused `o` to `_o`, which is consistent with the new code. The `unwrap_or(Value::Undefined)` on descriptor fields only applies where a complete descriptor is guaranteed to have the field, so it does not change behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": "No defects found; the change matches the spec steps for Proxy [[Get]] and can be merged as is. Nothing needs fixing."
+  },
+  "ttft_ms": 11948,
+  "type": "result",
+  "duration_ms": 14366,
+  "uuid": "6cbf3c5f-11a9-4c92-bc5c-4590f1efb8c9",
+  "ttft_stream_ms": 1186,
+  "time_to_request_ms": 226,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 16,
+    "input_attachments": 16,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 1,
+    "model_config_wait": 141,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 25,
+  "time_to_request_cpu_ms": 194,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 29,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1187,
+  "time_to_request_from_spawn_ms": 22613295,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791941588103.8152,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.69,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.57,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

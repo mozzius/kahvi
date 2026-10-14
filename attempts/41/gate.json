@@ -1,0 +1,32 @@
+{
+  "ticket": "C-proxy-get",
+  "base": "30fffc0705103e196ac2345b3d04ed91e2d72e22",
+  "head": "0217db20f4e87ef02899073f1ac2af7331b4eb9f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/get.rs",
+      "added": 45,
+      "removed": 17
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 38,
+    "before": 0,
+    "after": 38,
+    "new_passes": 38,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

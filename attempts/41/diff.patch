@@ -1,0 +1,92 @@
+diff --git a/crates/kahvi-core/src/object/proxy/get.rs b/crates/kahvi-core/src/object/proxy/get.rs
+index ec4e89e..85ba8da 100644
+--- a/crates/kahvi-core/src/object/proxy/get.rs
++++ b/crates/kahvi-core/src/object/proxy/get.rs
+@@ -7,13 +7,14 @@
+ use super::ProxyData;
+ use crate::agent::Agent;
+ use crate::error::JsResult;
+-use crate::object::{PropertyDescriptor, PropertyKey};
++use crate::object::PropertyKey;
++use crate::ops;
+ use crate::value::{Object, Value};
+ 
+ /// The [[Get]] internal method of the Proxy exotic object `o` with slots `p`.
+ pub(crate) fn get(
+     agent: &mut Agent,
+-    o: Object,
++    _o: Object,
+     p: &ProxyData,
+     key: PropertyKey,
+     receiver: Value,
+@@ -21,28 +22,55 @@ pub(crate) fn get(
+     // for: a Proxy exotic object _obj_
+     //
+     // 1. Perform ? ValidateNonRevokedProxy(_obj_).
++    let (target, handler) = p.validate_non_revoked(agent)?;
+     // 2. Let _target_ be _obj_.[[ProxyTarget]].
+     // 3. Let _handler_ be _obj_.[[ProxyHandler]].
+     // 4. Assert: _handler_ is an Object.
+     // 5. Let _trap_ be ? GetMethod(_handler_, *"get"*).
++    let key_name = agent.names.get;
++    let trap = ops::get_method(agent, Value::Object(handler), PropertyKey::String(key_name))?;
+     // 6. If _trap_ is *undefined*, then
+-    //    a. Return ? _target_.[[Get]](_propertyKey_, _receiver_).
++    if matches!(trap, Value::Undefined) {
++        // a. Return ? _target_.[[Get]](_propertyKey_, _receiver_).
++        return target.internal_get(agent, key, receiver);
++    }
+     // 7. Let _trapResult_ be ? Call(_trap_, _handler_, « _target_, _propertyKey_, _receiver_ »).
++    let key_value = agent.key_to_value(key);
++    let trap_result = ops::call(
++        agent,
++        trap,
++        Value::Object(handler),
++        &[Value::Object(target), key_value, receiver],
++    )?;
+     // 8. Let _targetDesc_ be ? _target_.[[GetOwnProperty]](_propertyKey_).
++    let target_desc = target.internal_get_own_property(agent, key)?;
+     // 9. If _targetDesc_ is not *undefined* and _targetDesc_.[[Configurable]] is *false*, then
+-    //    a. If IsDataDescriptor(_targetDesc_) is *true* and _targetDesc_.[[Writable]] is *false*, then
+-    //       i. If SameValue(_trapResult_, _targetDesc_.[[Value]]) is *false*, throw a *TypeError* exception.
+-    //    b. If IsAccessorDescriptor(_targetDesc_) is *true* and _targetDesc_.[[Getter]] is *undefined*, then
+-    //       i. If _trapResult_ is not *undefined*, throw a *TypeError* exception.
++    if let Some(target_desc) = target_desc.filter(|d| d.configurable == Some(false)) {
++        // a. If IsDataDescriptor(_targetDesc_) is *true* and _targetDesc_.[[Writable]] is *false*, then
++        if target_desc.is_data_descriptor() && target_desc.writable == Some(false) {
++            // i. If SameValue(_trapResult_, _targetDesc_.[[Value]]) is *false*, throw a *TypeError* exception.
++            let target_value = target_desc.value.unwrap_or(Value::Undefined);
++            if !ops::same_value(agent, trap_result, target_value) {
++                return Err(agent.throw_type_error(
++                    "Proxy get trap result differs from non-writable, non-configurable target property",
++                ));
++            }
++        }
++        // b. If IsAccessorDescriptor(_targetDesc_) is *true* and _targetDesc_.[[Getter]] is *undefined*, then
++        if target_desc.is_accessor_descriptor()
++            && matches!(
++                target_desc.get.unwrap_or(Value::Undefined),
++                Value::Undefined
++            )
++        {
++            // i. If _trapResult_ is not *undefined*, throw a *TypeError* exception.
++            if !matches!(trap_result, Value::Undefined) {
++                return Err(agent.throw_type_error(
++                    "Proxy get trap must return undefined for non-configurable accessor property without getter",
++                ));
++            }
++        }
++    }
+     // 10. Return _trapResult_.
+-    //
+-    // NOTE:
+-    // [[Get]] for Proxy objects enforces the following invariants:
+-    // -
+-    // The value reported for a property must be the same as the value of the corresponding target object property if the target object property is a non-writable, non-configurable own data property.
+-    // -
+-    // The value reported for a property must be *undefined* if the corresponding target object property is a non-configurable own accessor property that has *undefined* as its [[Getter]] attribute.
+-    let _ = (o, p);
+-    let _ = (key, receiver);
+-    Err(agent.not_implemented("Proxy [[Get]]"))
++    Ok(trap_result)
+ }

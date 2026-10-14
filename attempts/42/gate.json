@@ -1,0 +1,41 @@
+{
+  "ticket": "B-set-prototype-add",
+  "base": "30fffc0705103e196ac2345b3d04ed91e2d72e22",
+  "head": "5ed473a108bb1f0bf413f0c7560deaea429fa930",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_add.rs",
+      "added": 17,
+      "removed": 13
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 42,
+    "before": 8,
+    "after": 34,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/add/preserves-insertion-order.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.forEach",
+      "built-ins/Set/prototype/add/preserves-insertion-order.js:strict  Uncaught InternalError: not implemented: Set.prototype.forEach",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry-initial-iterable.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry-initial-iterable.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry-normalizes-zero.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry-normalizes-zero.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry.js:sloppy  Uncaught InternalError: not implemented: get Set.prototype.size",
+      "built-ins/Set/prototype/add/will-not-add-duplicate-entry.js:strict  Uncaught InternalError: not implemented: get Set.prototype.size"
+    ]
+  },
+  "decision": "pass"
+}
