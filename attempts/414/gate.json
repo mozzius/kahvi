@@ -1,0 +1,32 @@
+{
+  "ticket": "B-number-is-finite",
+  "base": "ecce4d2bad29ff8ba8a1eea54d8d548fb359d657",
+  "head": "a0ef261d658fef3e25ee9f583482b9f08853d66a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/number/is_finite.rs",
+      "added": 9,
+      "removed": 5
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

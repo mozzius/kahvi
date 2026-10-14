@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 4468,
+  "stop_reason": "tool_use",
+  "session_id": "23251f43-c15c-42c4-8238-50ebd1f2132f",
+  "total_cost_usd": 0.019277700000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3618,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 415,
+    "output_tokens_details": {
+      "thinking_tokens": 108
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3618,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 415,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3618,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3618
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Straightforward, spec-faithful Math.acos: ToNumber with ? propagation, NaN/range check, 1 \u2192 +0, otherwise f64::acos. Each step is commented. Only the in-scope file changed. The gate report shows 8 new passes with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Straightforward, spec-faithful Math.acos: ToNumber with ? propagation, NaN/range check, 1 \u2192 +0, otherwise f64::acos. Each step is commented. Only the in-scope file changed. The gate report shows 8 new passes with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3161,
+  "type": "result",
+  "duration_ms": 4476,
+  "uuid": "55709a77-bfbc-4fe3-9881-6b4099e43d67",
+  "ttft_stream_ms": 1861,
+  "time_to_request_ms": 525,
+  "time_to_request_phases_ms": {
+    "other": 35,
+    "system_prompt": 312,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 22,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 102,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 332,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 239,
+  "process_cpu_ms_turn": 640,
+  "process_wall_ms_turn": 4476,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 16,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1862,
+  "time_to_request_from_spawn_ms": 25723804,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005183920.0508,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.39,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

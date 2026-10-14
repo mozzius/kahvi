@@ -2921,3 +2921,5 @@ test262 at last merge: 74823/81183 runs passing
 [19:12:45] B-json-raw-json: attempt 411 finished ($0.014, 11 turns)
 [19:12:56] B-number-is-finite: attempt 414 finished ($0.004, 10 turns)
 [19:12:56] B-string-prototype-locale-compare: verifier: revise The code path is a genuine implementation of the non-ECMA-402 localeCompare. Steps 1-4 run in spec order: RequireObjectCoercible(this), ToString(this)
+[19:12:59] B-number-is-nan: attempt on slot 1 with haiku
+[19:13:10] B-math-acos: verifier: accept The diff implements Math.acos in crates/kahvi-builtins/src/math/acos.rs. It follows the four spec steps in order, with each step's comment directly ab

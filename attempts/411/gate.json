@@ -1,0 +1,41 @@
+{
+  "ticket": "B-json-raw-json",
+  "base": "fc34eb44999e40f55ecfb039154394853ba4e572",
+  "head": "340467bfea75265dcaa8696980f5f28bca87472a",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/json/raw_json.rs",
+      "added": 37,
+      "removed": 7
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 20,
+    "before": 10,
+    "after": 12,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/JSON/rawJSON/basic.js:sloppy  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/rawJSON/basic.js:strict  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/JSON/rawJSON/invalid-JSON-text.js:sloppy  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/rawJSON/invalid-JSON-text.js:strict  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/rawJSON/returns-expected-object.js:sloppy  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))",
+      "built-ins/JSON/rawJSON/returns-expected-object.js:strict  Uncaught InternalError: not implemented: ParseJSON for JSON.rawJSON (json/parse.rs parse_json is not pub(crate))"
+    ]
+  },
+  "decision": "pass"
+}
