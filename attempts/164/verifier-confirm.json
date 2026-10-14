@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 14211,
+  "stop_reason": "tool_use",
+  "session_id": "d67e1e06-61f7-4937-9c8c-5d1eed104b1d",
+  "total_cost_usd": 0.0541671,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9480,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1500,
+    "output_tokens_details": {
+      "thinking_tokens": 1032
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9480,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1500,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 9480,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9480
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec for Set.prototype.symmetricDifference. GetSetRecord runs in spec order with all the throws. The keys iterator comes from GetIteratorFromMethod, and each step is commented. Elements are canonicalized and checked against the live `set` data. Removal and append act on the result copy. Errors from the iterator propagate with `?`. The only deviation is that the result object is created before the copy (steps 8 and 5). That order is not observable, and the code comments explain it is done for GC rooting. The `get_set_record` helper is duplicated from prototype_union.rs, which the ticket allows. The 32 test262 failures that remain are all not-implemented errors in other files (the Set and Map `size` getters, SetIteratorPrototype.next).\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec for Set.prototype.symmetricDifference. GetSetRecord runs in spec order with all the throws. The keys iterator comes from GetIteratorFromMethod, and each step is commented. Elements are canonicalized and checked against the live `set` data. Removal and append act on the result copy. Errors from the iterator propagate with `?`. The only deviation is that the result object is created before the copy (steps 8 and 5). That order is not observable, and the code comments explain it is done for GC rooting. The `get_set_record` helper is duplicated from prototype_union.rs, which the ticket allows. The 32 test262 failures that remain are all not-implemented errors in other files (the Set and Map `size` getters, SetIteratorPrototype.next).",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 11411,
+  "type": "result",
+  "duration_ms": 13834,
+  "uuid": "f3af0540-1a39-4495-b69c-05a093aaf9ea",
+  "ttft_stream_ms": 2302,
+  "time_to_request_ms": 565,
+  "time_to_request_phases_ms": {
+    "other": 36,
+    "system_prompt": 393,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 19,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 4,
+    "message_prep": 4,
+    "model_config_wait": 69,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 52,
+  "time_to_request_cpu_ms": 363,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 232,
+  "process_anon_mib_result": 114,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 871,
+  "process_wall_ms_turn": 13834,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2303,
+  "time_to_request_from_spawn_ms": 19334723,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998794486.7856,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792016400
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
