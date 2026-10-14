@@ -1,0 +1,17 @@
+{
+  "merged": true,
+  "commit": "36bdc4ce53c7f6438abd7205f6081267635e70e6",
+  "batch": [
+    "C-proxy-set",
+    "B-string-raw"
+  ],
+  "new_passes": 50,
+  "total_pass": 69685,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls-index.js:sloppy  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+    "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls-index.js:strict  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+    "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls.js:sloppy  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor",
+    "built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls.js:strict  Uncaught InternalError: not implemented: Reflect.getOwnPropertyDescriptor"
+  ]
+}
