@@ -159,9 +159,6 @@ jobs:
     needs: [build, test262-shard, test262-gc-shard]
     if: always()
     runs-on: ubuntu-latest
-    # Write access only so a push to main can update the README pass rate.
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -196,17 +193,3 @@ jobs:
           path: t262-results/
           if-no-files-found: ignore
           retention-days: 14
-      # Keep the README's pass-rate line current. Runs even when the ratchet
-      # step failed on a regression (the number is still real), but the
-      # script refuses to publish when canaries say the run was invalid.
-      # Pushes made with GITHUB_TOKEN do not trigger another workflow run.
-      - name: Update README pass rate
-        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('t262-results/summary.json') != ''
-        run: |
-          python3 .github/scripts/readme_pass_rate.py t262-results/summary.json README.md
-          git diff --quiet README.md && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git commit -m "README: update test262 results [skip ci]" README.md
-          git pull --rebase origin main
-          git push origin HEAD:main
