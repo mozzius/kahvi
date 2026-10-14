@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 18132,
+  "stop_reason": "tool_use",
+  "session_id": "2371d3b9-bba1-4c8c-b8ac-4bdeffd56df5",
+  "total_cost_usd": 0.00345658,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5836,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3479,
+    "output_tokens_details": {
+      "thinking_tokens": 2846
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5836,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3479,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5836,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5836
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements String.prototype.startsWith in the stub file, following the spec's 16 steps in order. RequireObjectCoercible, ToString(this), IsRegExp (with TypeError), ToString(searchString), and ToIntegerOrInfinity(position) are each called with ? and in the spec's order, so the observable operations match. The clamp to [0, length], the empty-search and end > length early returns, and the substring comparison all follow the spec. The string and search string are rooted across the user-observable conversions. No test-shaped branches, no swallowed errors, no made-up values. The gate reports build and clippy ok, and 34 new test262 passes with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"Nothing blocking. Minor points for the architect: (1) the NOTE comments and the header line from the stub were dropped; the ticket asks for steps as comments, so restoring them would be tidier. (2) The substring is taken as `agent.str(string)[start as usize..end as usize]`, which assumes the string storage is indexed in UTF-16 code units, matching str_len. The passing test262 runs suggest this is correct, but it is worth confirming that str() yields UTF-16 units and not a UTF-8 &str, since a byte-indexed &str would panic or misbehave on non-ASCII input.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements String.prototype.startsWith in the stub file, following the spec's 16 steps in order. RequireObjectCoercible, ToString(this), IsRegExp (with TypeError), ToString(searchString), and ToIntegerOrInfinity(position) are each called with ? and in the spec's order, so the observable operations match. The clamp to [0, length], the empty-search and end > length early returns, and the substring comparison all follow the spec. The string and search string are rooted across the user-observable conversions. No test-shaped branches, no swallowed errors, no made-up values. The gate reports build and clippy ok, and 34 new test262 passes with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": "Nothing blocking. Minor points for the architect: (1) the NOTE comments and the header line from the stub were dropped; the ticket asks for steps as comments, so restoring them would be tidier. (2) The substring is taken as `agent.str(string)[start as usize..end as usize]`, which assumes the string storage is indexed in UTF-16 code units, matching str_len. The passing test262 runs suggest this is correct, but it is worth confirming that str() yields UTF-16 units and not a UTF-8 &str, since a byte-indexed &str would panic or misbehave on non-ASCII input."
+  },
+  "ttft_ms": 15507,
+  "type": "result",
+  "duration_ms": 18071,
+  "uuid": "da08ad5c-07a4-4ca7-83bd-f989e9948e67",
+  "ttft_stream_ms": 2709,
+  "time_to_request_ms": 1085,
+  "time_to_request_phases_ms": {
+    "other": 69,
+    "system_prompt": 516,
+    "resume_other": 8,
+    "process_user_input": 36,
+    "input_attachments": 136,
+    "input_hooks": 36,
+    "tool_pool_refresh": 23,
+    "init_message": 44,
+    "engine_pickup": 9,
+    "message_prep": 7,
+    "model_config_wait": 172,
+    "autocompact": 5,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 6,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 252,
+  "time_to_request_cpu_ms": 431,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 1135,
+  "process_wall_ms_turn": 18071,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 97,
+    "cpu_ms": 36,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2710,
+  "time_to_request_from_spawn_ms": 20606681,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000063640.742,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
