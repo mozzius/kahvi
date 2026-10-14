@@ -1,0 +1,45 @@
+{
+  "ticket": "B-set-prototype-for-each",
+  "base": "ed0f0bab372a525fec0695f104cdf30118803e59",
+  "head": "10ab705d49410cd1a5d817ff0130f80c075da3b3",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/set/prototype_for_each.rs",
+      "added": 29,
+      "removed": 19
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 64,
+    "before": 8,
+    "after": 52,
+    "new_passes": 44,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 12,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Set/prototype/forEach/iterates-in-insertion-order.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-in-insertion-order.js:strict  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-in-iterable-entry-order.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-in-iterable-entry-order.js:strict  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-added-after-foreach-begins.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-added-after-foreach-begins.js:strict  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-deleted-then-readded.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-deleted-then-readded.js:strict  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-not-deleted.js:sloppy  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/forEach/iterates-values-not-deleted.js:strict  Uncaught InternalError: not implemented: Set.prototype.delete",
+      "built-ins/Set/prototype/forEach/iterates-values-revisits-after-delete-re-add.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.shift",
+      "built-ins/Set/prototype/forEach/iterates-values-revisits-after-delete-re-add.js:strict  Uncaught InternalError: not implemented: Array.prototype.shift"
+    ]
+  },
+  "decision": "pass"
+}
