@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff makes String.prototype.toLocaleLowerCase delegate to the existing prototype_to_lower_case with the same this, args and new_target. The pinned spec text for the non-ECMA-402 variant says the method \"works exactly the same as toLowerCase\", so the delegation matches the spec. The reserved parameters are ignored, as toLowerCase ignores its arguments. The spec-step comments are kept, and no other files are touched. The gate shows 38 new passes with 0 regressions. The two remaining failures are RegExp.prototype.toString not-implemented errors, which is an honest not-implemented path and not in this ticket's scope. I did not inspect prototype_to_lower_case itself, so its correctness rests on the gate's test262 results.",
+  "problems": [],
+  "notes_for_next_attempt": "No changes needed for this ticket. The two remaining test262 failures (S15.5.4.17_A1_T14) are blocked on RegExp.prototype.toString, which belongs to another ticket.",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8387,
+  "stop_reason": "tool_use",
+  "session_id": "bf10e931-0fa9-413c-84bd-2f573f725518",
+  "total_cost_usd": 0.0018501799999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3551,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 1630,
+    "output_tokens_details": {
+      "thinking_tokens": 1101
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3551,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1630,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3551,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3551
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff makes String.prototype.toLocaleLowerCase delegate to the existing prototype_to_lower_case with the same this, args and new_target. The pinned spec text for the non-ECMA-402 variant says the method \\\"works exactly the same as toLowerCase\\\", so the delegation matches the spec. The reserved parameters are ignored, as toLowerCase ignores its arguments. The spec-step comments are kept, and no other files are touched. The gate shows 38 new passes with 0 regressions. The two remaining failures are RegExp.prototype.toString not-implemented errors, which is an honest not-implemented path and not in this ticket's scope. I did not inspect prototype_to_lower_case itself, so its correctness rests on the gate's test262 results.\",\"problems\":[],\"notes_for_next_attempt\":\"No changes needed for this ticket. The two remaining test262 failures (S15.5.4.17_A1_T14) are blocked on RegExp.prototype.toString, which belongs to another ticket.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff makes String.prototype.toLocaleLowerCase delegate to the existing prototype_to_lower_case with the same this, args and new_target. The pinned spec text for the non-ECMA-402 variant says the method \"works exactly the same as toLowerCase\", so the delegation matches the spec. The reserved parameters are ignored, as toLowerCase ignores its arguments. The spec-step comments are kept, and no other files are touched. The gate shows 38 new passes with 0 regressions. The two remaining failures are RegExp.prototype.toString not-implemented errors, which is an honest not-implemented path and not in this ticket's scope. I did not inspect prototype_to_lower_case itself, so its correctness rests on the gate's test262 results.",
+    "problems": [],
+    "notes_for_next_attempt": "No changes needed for this ticket. The two remaining test262 failures (S15.5.4.17_A1_T14) are blocked on RegExp.prototype.toString, which belongs to another ticket."
+  },
+  "ttft_ms": 6606,
+  "type": "result",
+  "duration_ms": 8518,
+  "uuid": "a25686c1-7ccc-4e2f-955c-8bc10b8ec921",
+  "ttft_stream_ms": 1456,
+  "time_to_request_ms": 680,
+  "time_to_request_phases_ms": {
+    "other": 33,
+    "system_prompt": 385,
+    "resume_other": 1,
+    "process_user_input": 7,
+    "input_attachments": 23,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 182,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 8,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 44,
+  "time_to_request_cpu_ms": 394,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 228,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 228,
+  "process_cpu_ms_turn": 761,
+  "process_wall_ms_turn": 8517,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 14,
+    "cpu_ms": 30,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1457,
+  "time_to_request_from_spawn_ms": 19948775,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999408779.2314,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

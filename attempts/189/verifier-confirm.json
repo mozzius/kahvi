@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 4741,
+  "stop_reason": "tool_use",
+  "session_id": "cbee89fe-5011-4052-b600-cd3d1c1f37bc",
+  "total_cost_usd": 0.0199633,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3557,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 508,
+    "output_tokens_details": {
+      "thinking_tokens": 156
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3557,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 508,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3557,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3557
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"toLocaleLowerCase delegates to the existing toLowerCase implementation. The spec fallback says it works exactly the same as toLowerCase when ECMA-402 is absent, and the reserved parameters are ignored. The change touches only the in-scope file. Errors propagate unchanged. The 2 remaining test failures come from an unimplemented RegExp.prototype.toString, which is outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "toLocaleLowerCase delegates to the existing toLowerCase implementation. The spec fallback says it works exactly the same as toLowerCase when ECMA-402 is absent, and the reserved parameters are ignored. The change touches only the in-scope file. Errors propagate unchanged. The 2 remaining test failures come from an unimplemented RegExp.prototype.toString, which is outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3097,
+  "type": "result",
+  "duration_ms": 4630,
+  "uuid": "ad670377-a5e4-4f77-a41c-86b505d589e1",
+  "ttft_stream_ms": 1534,
+  "time_to_request_ms": 443,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 302,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 12,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 43,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 78,
+  "time_to_request_cpu_ms": 258,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 546,
+  "process_wall_ms_turn": 4629,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1535,
+  "time_to_request_from_spawn_ms": 19958770,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999419042.3457,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017000
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

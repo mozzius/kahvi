@@ -1,0 +1,35 @@
+{
+  "ticket": "B-string-prototype-to-locale-lower-case",
+  "base": "0ac9d9c42e0e63989aa7a10a00d6d11e0caafddf",
+  "head": "857ba404f02215c06d1cc89bd13499c0ed60d3c8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_to_locale_lower_case.rs",
+      "added": 6,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 56,
+    "before": 16,
+    "after": 54,
+    "new_passes": 38,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/String/prototype/toLocaleLowerCase/S15.5.4.17_A1_T14.js:sloppy  Uncaught InternalError: not implemented: RegExp.prototype.toString",
+      "built-ins/String/prototype/toLocaleLowerCase/S15.5.4.17_A1_T14.js:strict  Uncaught InternalError: not implemented: RegExp.prototype.toString"
+    ]
+  },
+  "decision": "pass"
+}
