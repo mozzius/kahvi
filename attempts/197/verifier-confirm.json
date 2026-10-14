@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8230,
+  "stop_reason": "tool_use",
+  "session_id": "d8f6e98c-43dd-4887-84aa-ecaacfa218d8",
+  "total_cost_usd": 0.0373174,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6993,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 835,
+    "output_tokens_details": {
+      "thinking_tokens": 429
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6993,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 835,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6993,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6993
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows spec steps 1-16 in order. The tv read (step 3) happens before the ToNumber calls. Presence of minute, second and millisecond is tested with args.get(i), so an explicit undefined counts as present. Every ToNumber and helper error is propagated with `?`. The NaN check at step 8 comes after all conversions, and LocalTime, MakeTime, MakeDate, UTC and TimeClip are called in spec order. The four remaining test failures come from the unimplemented Date.prototype.setTime, which is another ticket's work. There were no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows spec steps 1-16 in order. The tv read (step 3) happens before the ToNumber calls. Presence of minute, second and millisecond is tested with args.get(i), so an explicit undefined counts as present. Every ToNumber and helper error is propagated with `?`. The NaN check at step 8 comes after all conversions, and LocalTime, MakeTime, MakeDate, UTC and TimeClip are called in spec order. The four remaining test failures come from the unimplemented Date.prototype.setTime, which is another ticket's work. There were no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5994,
+  "type": "result",
+  "duration_ms": 8294,
+  "uuid": "20e4a044-116d-4020-82ea-a5871ec24edd",
+  "ttft_stream_ms": 2244,
+  "time_to_request_ms": 825,
+  "time_to_request_phases_ms": {
+    "other": 78,
+    "system_prompt": 563,
+    "resume_other": 0,
+    "process_user_input": 26,
+    "input_attachments": 42,
+    "input_hooks": 5,
+    "tool_pool_refresh": 7,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 28,
+    "autocompact": 6,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 5,
+    "message_normalization": 5,
+    "client_creation": 20,
+    "request_build": 20
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 189,
+  "time_to_request_cpu_ms": 421,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 222,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 696,
+  "process_wall_ms_turn": 8293,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 27,
+    "cpu_ms": 35,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2247,
+  "time_to_request_from_spawn_ms": 20166381,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999625946.506,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

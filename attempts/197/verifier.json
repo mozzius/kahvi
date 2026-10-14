@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 15823,
+  "stop_reason": "tool_use",
+  "session_id": "15a237ca-1dff-4470-a466-21b162023e6f",
+  "total_cost_usd": 0.0036385799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 6985,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3153,
+    "output_tokens_details": {
+      "thinking_tokens": 2611
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6985,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3153,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 6985,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6985
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Date.prototype.setHours following the 16 spec steps in order. The brand check, the [[DateValue]] read before the ToNumber calls, the ToNumber calls for hour, minute, second and millisecond when present, and the early NaN return after the conversions all match the spec. Defaults for absent minute, second and millisecond are taken from LocalTime(tv), and the date is built with MakeDate, UTC and TimeClip before being stored and returned. Presence is tested with args.get(i), so an explicit undefined counts as present. No branches key on test inputs, no errors are swallowed, and no values are invented. The only reachable not-implemented path is the one the gate report shows, which comes from the test's dependence on setTime and not from this code. The helpers in crate::support::date (MakeTime, UTC, TimeClip and the rest) are outside this diff, so I could not check their internals. The removed trailing comments on the length property and the NOTE are documentation only and do not change behaviour.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Date.prototype.setHours following the 16 spec steps in order. The brand check, the [[DateValue]] read before the ToNumber calls, the ToNumber calls for hour, minute, second and millisecond when present, and the early NaN return after the conversions all match the spec. Defaults for absent minute, second and millisecond are taken from LocalTime(tv), and the date is built with MakeDate, UTC and TimeClip before being stored and returned. Presence is tested with args.get(i), so an explicit undefined counts as present. No branches key on test inputs, no errors are swallowed, and no values are invented. The only reachable not-implemented path is the one the gate report shows, which comes from the test's dependence on setTime and not from this code. The helpers in crate::support::date (MakeTime, UTC, TimeClip and the rest) are outside this diff, so I could not check their internals. The removed trailing comments on the length property and the NOTE are documentation only and do not change behaviour.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 13518,
+  "type": "result",
+  "duration_ms": 15782,
+  "uuid": "fbbb05fd-a52b-4380-b4ee-94e6f5008654",
+  "ttft_stream_ms": 2044,
+  "time_to_request_ms": 529,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 325,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 11,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 121,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 73,
+  "time_to_request_cpu_ms": 259,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 234,
+  "process_anon_mib_result": 115,
+  "process_peak_rss_mib": 243,
+  "process_cpu_ms_turn": 1058,
+  "process_wall_ms_turn": 15782,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2046,
+  "time_to_request_from_spawn_ms": 20148315,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791999608464.4756,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792017600
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

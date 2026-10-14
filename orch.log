@@ -312,3 +312,5 @@
 [17:40:11] B-data-view-prototype-set-big-int64: verifier: accept The change replaces the not-implemented stub for DataView.prototype.setBigInt64 with a direct delegation to the shared set_view_value helper, using El
 [17:40:14] B-reflect-set-prototype-of: attempt on slot 2 with haiku
 [17:40:21] B-array-prototype-find-last-index: verifier: accept The diff implements Array.prototype.findLastIndex and a FindViaPredicate helper (descending only) in the ticket's file. Steps 1-4 of findLastIndex run
+[17:40:24] B-reg-exp-prototype-compile: attempt on slot 3 with haiku
+[17:40:36] B-date-prototype-set-hours: verifier: accept The diff implements Date.prototype.setHours following the 16 spec steps in order. The brand check, the [[DateValue]] read before the ToNumber calls, t
