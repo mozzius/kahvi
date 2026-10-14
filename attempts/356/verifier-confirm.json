@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5807,
+  "stop_reason": "tool_use",
+  "session_id": "17db3e6d-5aa2-4850-bf53-31aeccfeb1e2",
+  "total_cost_usd": 0.0196902,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3562,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 479,
+    "output_tokens_details": {
+      "thinking_tokens": 150
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3562,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 479,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 3562,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3562
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.exp follows spec steps 1-5 in order. ToNumber is called with `?`, and the NaN/+\u221e, \u00b10 and -\u221e cases return the spec values. Step 5 uses f64::exp, which is a valid implementation approximation. The change touches only the in-scope file. The gate shows 10 new passes and no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.exp follows spec steps 1-5 in order. ToNumber is called with `?`, and the NaN/+\u221e, \u00b10 and -\u221e cases return the spec values. Step 5 uses f64::exp, which is a valid implementation approximation. The change touches only the in-scope file. The gate shows 10 new passes and no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3713,
+  "type": "result",
+  "duration_ms": 5265,
+  "uuid": "3b2c6031-135d-4c59-9e67-3d7294dfd32f",
+  "ttft_stream_ms": 2163,
+  "time_to_request_ms": 747,
+  "time_to_request_phases_ms": {
+    "other": 63,
+    "system_prompt": 391,
+    "resume_other": 0,
+    "process_user_input": 70,
+    "input_attachments": 69,
+    "input_hooks": 7,
+    "tool_pool_refresh": 15,
+    "init_message": 15,
+    "engine_pickup": 2,
+    "message_prep": 8,
+    "model_config_wait": 81,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 104,
+  "time_to_request_cpu_ms": 382,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 227,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 227,
+  "process_cpu_ms_turn": 685,
+  "process_wall_ms_turn": 5265,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 51,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2164,
+  "time_to_request_from_spawn_ms": 24759208,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792004218953.8003,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.81,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.27,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.81,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
