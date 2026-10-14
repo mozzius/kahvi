@@ -1,0 +1,18 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "Implements Math.tanh in crates/kahvi-builtins/src/math/tanh.rs, following the five spec steps in order. Step 1 calls ops::to_number(agent, x)? and propagates abrupt completions. Step 2 returns n for NaN and for \u00b10 (n == 0.0 is true for -0.0, and n is returned unchanged, so the sign is preserved). Steps 3 and 4 return \u00b11 for \u00b1Infinity. Step 5 returns n.tanh(), which the spec allows as an implementation approximation. The only file touched is the in-scope one. The step comments sit directly above their code. No test-shaped branches, no swallowed errors, no placeholder values. The gate report shows build and clippy passing and 2 new test262 passes with no regressions.",
+  "problems": [],
+  "notes_for_next_attempt": "",
+  "model": "claude-haiku-5-5",
+  "defects": [],
+  "fakery": false,
+  "decision": "accept"
+}

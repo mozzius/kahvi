@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 5781,
+  "stop_reason": "tool_use",
+  "session_id": "192b7e19-917b-42c4-a06c-1bced7c2757e",
+  "total_cost_usd": 0.0200593,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3699,
+    "cache_read_input_tokens": 3608,
+    "output_tokens": 460,
+    "output_tokens_details": {
+      "thinking_tokens": 100
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3699,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 460,
+        "cache_read_input_tokens": 3608,
+        "cache_creation_input_tokens": 3699,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3699
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Math.tanh follows the spec steps in order. ToNumber is called with `?`, and NaN, \u00b10, +\u221e and -\u221e are handled as the spec says. Step 5 uses `f64::tanh`, which is an acceptable implementation approximation. `n == 0.0` matches -0 and returns `n`, so the sign is kept. Only the one in-scope file changed, and the gate shows 2 new passes with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Math.tanh follows the spec steps in order. ToNumber is called with `?`, and NaN, \u00b10, +\u221e and -\u221e are handled as the spec says. Step 5 uses `f64::tanh`, which is an acceptable implementation approximation. `n == 0.0` matches -0 and returns `n`, so the sign is kept. Only the one in-scope file changed, and the gate shows 2 new passes with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3373,
+  "type": "result",
+  "duration_ms": 5133,
+  "uuid": "88e77d09-351f-47c1-8fb3-edc83d049ab4",
+  "ttft_stream_ms": 1972,
+  "time_to_request_ms": 641,
+  "time_to_request_phases_ms": {
+    "other": 43,
+    "system_prompt": 382,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 69,
+    "input_hooks": 8,
+    "tool_pool_refresh": 7,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 67,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 11,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 176,
+  "time_to_request_cpu_ms": 403,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 225,
+  "process_anon_mib_result": 107,
+  "process_peak_rss_mib": 225,
+  "process_cpu_ms_turn": 688,
+  "process_wall_ms_turn": 5131,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 24,
+    "cpu_ms": 99,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1973,
+  "time_to_request_from_spawn_ms": 27688530,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007148340.874,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.62,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
