@@ -602,6 +602,8 @@ impl Agent {
                 self.gc.free_objects.push(i);
             }
         }
+        // A collected object's native state goes with it.
+        self.native_states.retain(|o, _| t.objects.get(o.0));
         for i in 0..self.envs.len() as u32 {
             if t.envs.get(i) {
                 live_count += 1;

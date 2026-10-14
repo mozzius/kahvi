@@ -186,6 +186,8 @@ pub struct Agent {
     pub(crate) persistent: crate::host::PersistentTable,
     /// The closures behind `Agent::host_function` objects.
     pub(crate) host_functions: Vec<crate::host::HostFn>,
+    /// Data the host attached to objects (`Agent::set_native_state`).
+    pub(crate) native_states: crate::hash::FxHashMap<Object, crate::host::NativeState>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -273,6 +275,7 @@ impl Agent {
             host_import_meta: None,
             persistent: Default::default(),
             host_functions: Vec::new(),
+            native_states: Default::default(),
             host_now: None,
             host_local_tza: None,
         };

@@ -71,6 +71,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::get_own_property(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::host_object::get_own_property(agent, self, key) {
+            return r;
+        }
         if let Some(r) = super::namespace::get_own_property(agent, self, key) {
             return r;
         }
@@ -100,6 +103,9 @@ impl Object {
         desc: PropertyDescriptor,
     ) -> JsResult<bool> {
         if let Some(r) = crate::object::proxy::define_own_property(agent, self, key, desc) {
+            return r;
+        }
+        if let Some(r) = super::host_object::define_own_property(agent, self, key, desc) {
             return r;
         }
         if let Some(r) = super::namespace::define_own_property(agent, self, key, desc) {
@@ -142,6 +148,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::has_property(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::host_object::has_property(agent, self, key) {
+            return r;
+        }
         if let Some(r) = super::namespace::has_property(agent, self, key) {
             return r;
         }
@@ -159,6 +168,9 @@ impl Object {
         receiver: Value,
     ) -> JsResult<Value> {
         if let Some(r) = crate::object::proxy::get(agent, self, key, receiver) {
+            return r;
+        }
+        if let Some(r) = super::host_object::get(agent, self, key) {
             return r;
         }
         if let Some(r) = super::namespace::get(agent, self, key, receiver) {
@@ -186,6 +198,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::set(agent, self, key, value, receiver) {
             return r;
         }
+        if let Some(r) = super::host_object::set(agent, self, key, value) {
+            return r;
+        }
         if let Some(r) = super::namespace::set(agent, self) {
             return r;
         }
@@ -203,6 +218,9 @@ impl Object {
         if let Some(r) = crate::object::proxy::delete(agent, self, key) {
             return r;
         }
+        if let Some(r) = super::host_object::delete(agent, self) {
+            return r;
+        }
         if let Some(r) = super::namespace::delete(agent, self, key) {
             return r;
         }
@@ -218,6 +236,9 @@ impl Object {
     /// O.[[OwnPropertyKeys]]()
     pub fn internal_own_property_keys(self, agent: &mut Agent) -> JsResult<Vec<PropertyKey>> {
         if let Some(r) = crate::object::proxy::own_property_keys(agent, self) {
+            return r;
+        }
+        if let Some(r) = super::host_object::own_property_keys(agent, self) {
             return r;
         }
         if let Some(r) = super::namespace::own_property_keys(agent, self) {
