@@ -78,10 +78,12 @@ pauses itself at the limit; architect sessions should stop well before it
   built-ins (escape, substr, the HTML methods, getYear/setYear,
   RegExp.prototype.compile) are swarm tickets.
 - Scope still skipped: intl402.
+- M4 started: the `kahvi` embedding crate, `kahvi-run` (console, timers,
+  event loop, ES modules from files) and `./e2e`; see `docs/RUNTIME.md` for
+  what is next there.
 - Triage the `partial` tickets whose remaining failures are not in their own
   code (the failures name the missing piece).
-- Then M4 (runtime: event loop, console, timers, ESM loading) and M5 (React
-  Native via JSI), per `docs/PLAN.md`.
+- Then M5 (React Native via JSI), per `docs/PLAN.md`.
 
 ## Standing decisions from the user
 

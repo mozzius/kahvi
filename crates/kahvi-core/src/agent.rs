@@ -45,6 +45,9 @@ pub enum Job {
     },
     /// HostEnqueueFinalizationRegistryCleanupJob(finalizationRegistry)
     FinalizationRegistryCleanup { realm: RealmId, registry: Object },
+    /// A host's job (HostEnqueueGenericJob, e.g. `queueMicrotask`): calls
+    /// `callback` with no arguments; an exception is the job's result.
+    Callback { realm: RealmId, callback: Value },
 }
 
 impl crate::gc::Trace for Job {
@@ -67,6 +70,7 @@ impl crate::gc::Trace for Job {
                 t.value(*then);
             }
             Job::FinalizationRegistryCleanup { registry, .. } => t.object(*registry),
+            Job::Callback { callback, .. } => t.value(*callback),
         }
     }
 }
@@ -178,6 +182,10 @@ pub struct Agent {
     pub host_load_module: Option<crate::vm::HostLoadModule>,
     /// Host hook: HostGetImportMetaProperties, called with the new import.meta object.
     pub host_import_meta: Option<fn(&mut Agent, u32, Object)>,
+    /// Values the host holds across calls (`Agent::persist`).
+    pub(crate) persistent: crate::host::PersistentTable,
+    /// The closures behind `Agent::host_function` objects.
+    pub(crate) host_functions: Vec<crate::host::HostFn>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -263,6 +271,8 @@ impl Agent {
             module_async_evaluation_count: 0,
             host_load_module: None,
             host_import_meta: None,
+            persistent: Default::default(),
+            host_functions: Vec::new(),
             host_now: None,
             host_local_tza: None,
         };

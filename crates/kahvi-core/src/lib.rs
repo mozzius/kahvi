@@ -10,6 +10,7 @@ pub mod error;
 pub mod function;
 pub mod gc;
 pub mod hash;
+pub mod host;
 pub mod object;
 pub mod ops;
 pub mod realm;

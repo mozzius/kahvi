@@ -504,6 +504,7 @@ impl Agent {
     /// Collects garbage now. Only call this where nothing outside the roots
     /// holds handles (a safe point; see docs/GC.md).
     pub fn collect_garbage(&mut self) {
+        self.persistent.release_dropped();
         let mut t = Tracer::default();
         self.trace_roots(&mut t);
         self.mark(&mut t);
@@ -545,6 +546,9 @@ impl Agent {
             unsafe { (*f.0).trace(t) };
         }
         self.gc.roots.trace(t);
+        for v in self.persistent.values() {
+            t.value(v);
+        }
         self.kept_objects.trace(t);
         self.kept_symbols.trace(t);
     }
