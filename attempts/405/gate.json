@@ -1,0 +1,32 @@
+{
+  "ticket": "B-date-prototype-get-utc-hours",
+  "base": "4bda889df2184f11258bc47491cc8f04e344f535",
+  "head": "8e5e0f6d0cee3bddc5bc60c7ad5cc47a9cf4db47",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_get_utc_hours.rs",
+      "added": 13,
+      "removed": 11
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 16,
+    "before": 8,
+    "after": 16,
+    "new_passes": 8,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

@@ -2876,3 +2876,8 @@ test262 at last merge: 74823/81183 runs passing
 [19:09:48] B-date-prototype-get-utc-full-year: verifier: accept The diff implements Date.prototype.getUTCFullYear in its own file. It gets the time value through `date::this_time_value(agent, this)?`, which should 
 [19:09:50] B-date-prototype-get-utc-milliseconds: attempt on slot 0 with haiku
 [19:09:52] B-string-prototype-locale-compare: attempt 404 finished ($0.007, 8 turns)
+[19:09:56] B-date-prototype-get-utc-minutes: attempt on slot 3 with haiku
+[19:10:03] B-date-prototype-get-utc-hours: attempt 405 finished ($0.006, 10 turns)
+[19:10:16] B-date-prototype-get-utc-milliseconds: attempt 406 finished ($0.005, 8 turns)
+[19:10:28] B-date-prototype-get-utc-minutes: attempt 407 finished ($0.006, 11 turns)
+[19:10:29] B-string-prototype-locale-compare: verifier: revise The change implements String.prototype.localeCompare steps 1-4 in order (RequireObjectCoercible, ToString(this), ToString(that), with `?` propagation)

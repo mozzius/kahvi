@@ -1,0 +1,32 @@
+{
+  "ticket": "B-string-prototype-locale-compare",
+  "base": "5e254d3e99a66dc4c5974ec61f445859b1b6bb75",
+  "head": "16cd3bc0b84cab5307989395ef3ed9c77d5b93fa",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_locale_compare.rs",
+      "added": 60,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 26,
+    "before": 16,
+    "after": 26,
+    "new_passes": 10,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

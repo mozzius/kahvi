@@ -1,0 +1,142 @@
+{
+  "duration_api_ms": 22847,
+  "stop_reason": "tool_use",
+  "session_id": "5b032cd0-60b8-4f51-af96-dc3dc71b4512",
+  "total_cost_usd": 0.0031770900000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 752,
+    "cache_read_input_tokens": 10249,
+    "output_tokens": 4511,
+    "output_tokens_details": {
+      "thinking_tokens": 3537
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 752,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4511,
+        "cache_read_input_tokens": 10249,
+        "cache_creation_input_tokens": 752,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 752
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":true},\"worth_keeping\":true,\"summary\":\"The change implements String.prototype.localeCompare steps 1-4 in order (RequireObjectCoercible, ToString(this), ToString(that), with `?` propagation). The comparison is a real computation: both strings are NFC-normalised, converted to UTF-16 code units and compared lexicographically, giving -1/0/+1. That is a total order and returns +0 for canonically equivalent strings, so it meets the spec's stated requirements. It is not locale-sensitive, but the spec allows implementation-defined ordering, and the code makes no claim to be locale-aware. No special-casing, swallowed errors or unreachable panics were found. The one problem is unrelated churn: the spec-quoting comment lines for \u00c5, \u03a9, \u1e69, \u1e0d\u0307 and \uac00 were rewritten at the byte level, so they show as changed in the diff with no behavioural effect.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/string/prototype_locale_compare.rs\",\"question\":\"unrelated_changes\",\"issue\":\"Lines ~19-28 (the NOTE examples, e.g. '// // \u00c5 ANGSTROM SIGN vs.', '// // \u03a9 OHM SIGN vs.', '\u1e69 ... + COMBINING DOT ABOVE', '\u1e0d\u0307 ... vs.', '\uac00 HANGUL CHOSEONG KIYEOK ... vs.') show as removed and re-added with visually identical text, so the bytes (likely Unicode normalisation or whitespace) changed. These comment edits are unrelated to the ticket and should be reverted to the original bytes.\"}],\"notes_for_next_attempt\":\"The core logic is sound and can be kept. Before merging: (1) restore the original bytes of the spec-quoted NOTE comment lines so the diff only touches code and the new explanatory comment. (2) Check whether kahvi_core::ops already provides CodePointAt / UTF16EncodeCodePoint-style helpers (or a UTF-16 to code point conversion). The ticket says to use ops rather than re-implement, so to_code_points and from_code_points should be replaced with those if they exist. If they do not exist, keep them and say so in the report. (3) Optional: confirm kahvi_unicode::normalize_code_points NFC handles Hangul composition, since the \uac00 test depends on it.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": true
+    },
+    "worth_keeping": true,
+    "summary": "The change implements String.prototype.localeCompare steps 1-4 in order (RequireObjectCoercible, ToString(this), ToString(that), with `?` propagation). The comparison is a real computation: both strings are NFC-normalised, converted to UTF-16 code units and compared lexicographically, giving -1/0/+1. That is a total order and returns +0 for canonically equivalent strings, so it meets the spec's stated requirements. It is not locale-sensitive, but the spec allows implementation-defined ordering, and the code makes no claim to be locale-aware. No special-casing, swallowed errors or unreachable panics were found. The one problem is unrelated churn: the spec-quoting comment lines for \u00c5, \u03a9, \u1e69, \u1e0d\u0307 and \uac00 were rewritten at the byte level, so they show as changed in the diff with no behavioural effect.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/string/prototype_locale_compare.rs",
+        "question": "unrelated_changes",
+        "issue": "Lines ~19-28 (the NOTE examples, e.g. '// // \u00c5 ANGSTROM SIGN vs.', '// // \u03a9 OHM SIGN vs.', '\u1e69 ... + COMBINING DOT ABOVE', '\u1e0d\u0307 ... vs.', '\uac00 HANGUL CHOSEONG KIYEOK ... vs.') show as removed and re-added with visually identical text, so the bytes (likely Unicode normalisation or whitespace) changed. These comment edits are unrelated to the ticket and should be reverted to the original bytes."
+      }
+    ],
+    "notes_for_next_attempt": "The core logic is sound and can be kept. Before merging: (1) restore the original bytes of the spec-quoted NOTE comment lines so the diff only touches code and the new explanatory comment. (2) Check whether kahvi_core::ops already provides CodePointAt / UTF16EncodeCodePoint-style helpers (or a UTF-16 to code point conversion). The ticket says to use ops rather than re-implement, so to_code_points and from_code_points should be replaced with those if they exist. If they do not exist, keep them and say so in the report. (3) Optional: confirm kahvi_unicode::normalize_code_points NFC handles Hangul composition, since the \uac00 test depends on it."
+  },
+  "ttft_ms": 18310,
+  "type": "result",
+  "duration_ms": 22298,
+  "uuid": "4640694d-0948-46be-bfcd-18e25f32dfb6",
+  "ttft_stream_ms": 1953,
+  "time_to_request_ms": 534,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 398,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 18,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 23,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 9,
+    "request_build": 34
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 84,
+  "time_to_request_cpu_ms": 356,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 119,
+  "process_peak_rss_mib": 247,
+  "process_cpu_ms_turn": 1369,
+  "process_wall_ms_turn": 22298,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1955,
+  "time_to_request_from_spawn_ms": 25545248,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792005004713.117,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.82,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.37,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.82,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
