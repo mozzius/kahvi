@@ -7,10 +7,11 @@
 use super::ProxyData;
 use crate::agent::Agent;
 use crate::error::JsResult;
+use crate::ops;
 use crate::value::{Object, Value};
 
 /// The [[PreventExtensions]] internal method of the Proxy exotic object `o` with slots `p`.
-pub(crate) fn prevent_extensions(agent: &mut Agent, o: Object, p: &ProxyData) -> JsResult<bool> {
+pub(crate) fn prevent_extensions(agent: &mut Agent, _o: Object, p: &ProxyData) -> JsResult<bool> {
     // for: a Proxy exotic object _obj_
     //
     // 1. Perform ? ValidateNonRevokedProxy(_obj_).
@@ -32,6 +33,38 @@ pub(crate) fn prevent_extensions(agent: &mut Agent, o: Object, p: &ProxyData) ->
     // The result of [[PreventExtensions]] is a Boolean value.
     // -
     // [[PreventExtensions]] applied to the Proxy object only returns *true* if [[IsExtensible]] applied to the Proxy object's target object is *false*.
-    let _ = (o, p);
-    Err(agent.not_implemented("Proxy [[PreventExtensions]]"))
+    // 1. Perform ? ValidateNonRevokedProxy(_obj_).
+    let (target, handler) = p.validate_non_revoked(agent)?;
+    // 2. Let _target_ be _obj_.[[ProxyTarget]].
+    // 3. Let _handler_ be _obj_.[[ProxyHandler]].
+    // 4. Assert: _handler_ is an Object.
+    // 5. Let _trap_ be ? GetMethod(_handler_, *"preventExtensions"*).
+    let trap_key = agent.key("preventExtensions");
+    let trap = ops::get_method(agent, Value::Object(handler), trap_key)?;
+    // 6. If _trap_ is *undefined*, then
+    if matches!(trap, Value::Undefined) {
+        // a. Return ? _target_.[[PreventExtensions]]().
+        return target.internal_prevent_extensions(agent);
+    }
+    // 7. Let _boolTrapResult_ be ToBoolean(? Call(_trap_, _handler_, « _target_ »)).
+    let trap_result = ops::call(
+        agent,
+        trap,
+        Value::Object(handler),
+        &[Value::Object(target)],
+    )?;
+    let bool_trap_result = ops::to_boolean(agent, trap_result);
+    // 8. If _boolTrapResult_ is *true*, then
+    if bool_trap_result {
+        // a. Let _extensibleTarget_ be ? IsExtensible(_target_).
+        let extensible_target = ops::is_extensible(agent, target)?;
+        // b. If _extensibleTarget_ is *true*, throw a *TypeError* exception.
+        if extensible_target {
+            return Err(agent.throw_type_error(
+                "Proxy preventExtensions trap returned true but the target is extensible",
+            ));
+        }
+    }
+    // 9. Return _boolTrapResult_.
+    Ok(bool_trap_result)
 }

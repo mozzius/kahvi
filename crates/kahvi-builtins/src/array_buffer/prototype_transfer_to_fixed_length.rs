@@ -2,19 +2,114 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-arraybuffer.prototype.transfertofixedlength
 
+use kahvi_core::object::typed_array::{
+    allocate_array_buffer, array_buffer_byte_length, array_buffer_data, array_buffer_data_mut,
+    detach_array_buffer, is_detached_buffer, is_fixed_length_array_buffer,
+};
 use kahvi_core::prelude::*;
+
+/// The _preserveResizability_ parameter of ArrayBufferCopyAndDetach.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum PreserveResizability {
+    PreserveResizability,
+    FixedLength,
+}
+
+/// ArrayBufferCopyAndDetach(_arrayBuffer_, _newLength_, _preserveResizability_)
+///
+/// Spec: https://tc39.es/ecma262/#sec-arraybuffercopyanddetach
+///
+/// Not yet in `ops`; only the ArrayBuffer.prototype.transfer built-ins need it so far.
+fn array_buffer_copy_and_detach(
+    agent: &mut Agent,
+    array_buffer: Value,
+    new_length: Value,
+    preserve_resizability: PreserveResizability,
+) -> JsResult<Value> {
+    // 1. Perform ? RequireInternalSlot(_arrayBuffer_, [[ArrayBufferData]]).
+    let obj = match array_buffer {
+        Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
+        _ => {
+            return Err(agent.throw_type_error(
+                "ArrayBuffer.prototype.transferToFixedLength called on a non-ArrayBuffer",
+            ));
+        }
+    };
+    // 2. If IsSharedArrayBuffer(_arrayBuffer_) is *true*, throw a *TypeError* exception.
+    //    The engine has no Shared Data Blocks, so no ArrayBuffer is ever shared.
+    // 3. If _newLength_ is *undefined*, then
+    let new_byte_length = if new_length.is_undefined() {
+        // a. Let _newByteLength_ be _arrayBuffer_.[[ArrayBufferByteLength]].
+        array_buffer_byte_length(agent, obj) as f64
+    } else {
+        // 4. Else,
+        //    a. Let _newByteLength_ be ? ToIndex(_newLength_).
+        ops::to_index(agent, new_length)?
+    };
+    // 5. If IsDetachedBuffer(_arrayBuffer_) is *true*, throw a *TypeError* exception.
+    if is_detached_buffer(agent, obj) {
+        return Err(agent.throw_type_error("ArrayBuffer is detached"));
+    }
+    // 6. If _preserveResizability_ is ~preserve-resizability~ and IsFixedLengthArrayBuffer(_arrayBuffer_) is *false*, then
+    let new_max_byte_length = if preserve_resizability == PreserveResizability::PreserveResizability
+        && !is_fixed_length_array_buffer(agent, obj)
+    {
+        // a. Let _newMaxByteLength_ be _arrayBuffer_.[[ArrayBufferMaxByteLength]].
+        array_buffer_data(agent, obj)
+            .and_then(|d| d.max_byte_length)
+            .map(|m| m as f64)
+    } else {
+        // 7. Else,
+        //    a. Let _newMaxByteLength_ be ~empty~.
+        None
+    };
+    // 8. If _arrayBuffer_.[[ArrayBufferDetachKey]] is not *undefined*, throw a *TypeError* exception.
+    let detach_key = array_buffer_data(agent, obj)
+        .map(|d| d.detach_key)
+        .unwrap_or(Value::Undefined);
+    if !detach_key.is_undefined() {
+        return Err(agent.throw_type_error("ArrayBuffer detach key is not undefined"));
+    }
+    // 9. Let _newBuffer_ be ? AllocateArrayBuffer(%ArrayBuffer%, _newByteLength_, _newMaxByteLength_).
+    let ctor = agent.intrinsic("%ArrayBuffer%");
+    let new_buffer = allocate_array_buffer(agent, ctor, new_byte_length, new_max_byte_length)?;
+    // 10. Let _copyLength_ be min(_newByteLength_, _arrayBuffer_.[[ArrayBufferByteLength]]).
+    let copy_length = new_byte_length.min(array_buffer_byte_length(agent, obj) as f64) as usize;
+    // 11. Let _fromBlock_ be _arrayBuffer_.[[ArrayBufferData]].
+    // 12. Let _toBlock_ be _newBuffer_.[[ArrayBufferData]].
+    // 13. Perform CopyDataBlockBytes(_toBlock_, 0, _fromBlock_, 0, _copyLength_).
+    //     The source is copied out first, so the two buffers are never borrowed at once.
+    let bytes = array_buffer_data(agent, obj)
+        .and_then(|d| d.data.as_ref())
+        .and_then(|block| block.get(..copy_length))
+        .map(<[u8]>::to_vec)
+        .unwrap_or_default();
+    if let Some(to_block) = array_buffer_data_mut(agent, new_buffer).and_then(|d| d.data.as_mut())
+        && let Some(dst) = to_block.get_mut(..bytes.len())
+    {
+        dst.copy_from_slice(&bytes);
+    }
+    // 14. NOTE: Neither creation of the new Data Block nor copying from the old Data Block are observable.
+    //     Implementations may implement this method as a zero-copy move or a `realloc`.
+    // 15. Perform ! DetachArrayBuffer(_arrayBuffer_).
+    detach_array_buffer(agent, obj, Value::Undefined)?;
+    // 16. Return _newBuffer_.
+    Ok(Value::Object(new_buffer))
+}
 
 /// ArrayBuffer.prototype.transferToFixedLength
 pub(crate) fn prototype_transfer_to_fixed_length(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
     // 1. Let _obj_ be the *this* value.
     // 2. Return ? ArrayBufferCopyAndDetach(_obj_, _newLength_, ~fixed-length~).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("ArrayBuffer.prototype.transferToFixedLength"))
+    array_buffer_copy_and_detach(
+        agent,
+        this,
+        args.get_or_undefined(0),
+        PreserveResizability::FixedLength,
+    )
 }

@@ -4,21 +4,141 @@
 
 use kahvi_core::prelude::*;
 
+const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
+
 /// Array.prototype.flatMap
 pub(crate) fn prototype_flat_map(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // This method performs the following steps when called:
-    //
     // 1. Let _obj_ be ? ToObject(*this* value).
+    let obj = ops::to_object(agent, this)?;
     // 2. Let _sourceLength_ be ? LengthOfArrayLike(_obj_).
+    let source_length = ops::length_of_array_like(agent, obj)?;
     // 3. If IsCallable(_mapperFunc_) is *false*, throw a *TypeError* exception.
+    let mapper_func = args.get_or_undefined(0);
+    if !ops::is_callable(agent, mapper_func) {
+        return Err(agent.throw_type_error("Array.prototype.flatMap mapper is not a function"));
+    }
+    let this_arg = args.get_or_undefined(1);
     // 4. Let _array_ be ? ArraySpeciesCreate(_obj_, 0).
+    let array = ops::array_species_create(agent, obj, 0.0)?;
     // 5. Perform ? FlattenIntoArray(_array_, _obj_, _sourceLength_, 0, 1, _mapperFunc_, _thisArg_).
+    flatten_into_array(
+        agent,
+        array,
+        obj,
+        source_length,
+        0.0,
+        1.0,
+        Some((mapper_func, this_arg)),
+    )?;
     // 6. Return _array_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Array.prototype.flatMap"))
+    Ok(Value::Object(array))
+}
+
+/// FlattenIntoArray ( _target_, _source_, _sourceLength_, _start_, _depth_ [ , _mapperFunc_ [ , _thisArg_ ] ] )
+///
+/// `mapper` is `Some((mapperFunc, thisArg))` when the optional arguments are present.
+fn flatten_into_array(
+    agent: &mut Agent,
+    target: Object,
+    source: Object,
+    source_length: f64,
+    start: f64,
+    depth: f64,
+    mapper: Option<(Value, Value)>,
+) -> JsResult<f64> {
+    // 1. Assert: If _mapperFunc_ is present, then IsCallable(_mapperFunc_) is *true*, _thisArg_ is present, and _depth_ is 1.
+    // The arguments (and anything derived from them) stay rooted while JavaScript runs.
+    let mut roots = vec![Value::Object(target), Value::Object(source)];
+    if let Some((mapper_func, this_arg)) = mapper {
+        roots.push(mapper_func);
+        roots.push(this_arg);
+    }
+    agent.with_roots(&roots, |agent| {
+        // 2. Let _targetIndex_ be _start_.
+        let mut target_index = start;
+        // 3. Let _sourceIndex_ be 0.
+        let mut source_index = 0.0;
+        // 4. Repeat, while _sourceIndex_ < _sourceLength_,
+        while source_index < source_length {
+            let mark = agent.gc_roots_len();
+            // a. Let _propertyKey_ be ! ToString(𝔽(_sourceIndex_)).
+            let property_key = agent.key_from_index(source_index);
+            // b. Let _exists_ be ? HasProperty(_source_, _propertyKey_).
+            let exists = ops::has_property(agent, source, property_key)?;
+            // c. If _exists_ is *true*, then
+            if exists {
+                // i. Let _element_ be ? Get(_source_, _propertyKey_).
+                let mut element = ops::get(agent, source, property_key)?;
+                agent.push_root(element);
+                agent.push_root_key(property_key);
+                // ii. If _mapperFunc_ is present, then
+                if let Some((mapper_func, this_arg)) = mapper {
+                    // 1. Set _element_ to ? Call(_mapperFunc_, _thisArg_, « _element_, 𝔽(_sourceIndex_), _source_ »).
+                    element = ops::call_rooted(
+                        agent,
+                        mapper_func,
+                        this_arg,
+                        &[element, Value::Number(source_index), Value::Object(source)],
+                    )?;
+                    agent.push_root(element);
+                }
+                // iii. Let _shouldFlatten_ be *false*.
+                let mut should_flatten = false;
+                // iv. If _depth_ > 0, then
+                if depth > 0.0 {
+                    // 1. Set _shouldFlatten_ to ? IsArray(_element_).
+                    should_flatten = ops::is_array(agent, element)?;
+                }
+                // v. If _shouldFlatten_ is *true*, then
+                if should_flatten {
+                    // 1. If _depth_ = +∞, let _newDepth_ be +∞.
+                    // 2. Else, let _newDepth_ be _depth_ - 1.
+                    let new_depth = if depth == f64::INFINITY {
+                        f64::INFINITY
+                    } else {
+                        depth - 1.0
+                    };
+                    // IsArray(_element_) is true only for Objects.
+                    let Value::Object(element_obj) = element else {
+                        unreachable!("IsArray returned true for a non-object");
+                    };
+                    // 3. Let _elementLength_ be ? LengthOfArrayLike(_element_).
+                    let element_length = ops::length_of_array_like(agent, element_obj)?;
+                    // 4. Set _targetIndex_ to ? FlattenIntoArray(_target_, _element_, _elementLength_, _targetIndex_, _newDepth_).
+                    target_index = flatten_into_array(
+                        agent,
+                        target,
+                        element_obj,
+                        element_length,
+                        target_index,
+                        new_depth,
+                        None,
+                    )?;
+                } else {
+                    // vi. Else,
+                    // 1. If _targetIndex_ ≥ 2^53 - 1, throw a *TypeError* exception.
+                    if target_index >= MAX_SAFE_INTEGER {
+                        return Err(agent.throw_type_error(
+                            "Array.prototype.flatMap result length exceeds 2^53 - 1",
+                        ));
+                    }
+                    // 2. Perform ? CreateDataPropertyOrThrow(_target_, ! ToString(𝔽(_targetIndex_)), _element_).
+                    let target_key = agent.key_from_index(target_index);
+                    ops::create_data_property_or_throw(agent, target, target_key, element)?;
+                    // 3. Set _targetIndex_ to _targetIndex_ + 1.
+                    target_index += 1.0;
+                }
+            }
+            agent.pop_roots(mark);
+            // d. Set _sourceIndex_ to _sourceIndex_ + 1.
+            source_index += 1.0;
+        }
+        // 5. Return _targetIndex_.
+        Ok(target_index)
+    })
 }
