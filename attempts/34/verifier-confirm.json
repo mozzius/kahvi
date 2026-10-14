@@ -1,0 +1,127 @@
+{
+  "duration_api_ms": 10718,
+  "stop_reason": "tool_use",
+  "session_id": "4fdd688a-6896-44ae-9776-b40e8ddcb4d4",
+  "total_cost_usd": 0.0577497,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 11034,
+    "cache_read_input_tokens": 2196,
+    "output_tokens": 1235,
+    "output_tokens_details": {
+      "thinking_tokens": 755
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11034,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1235,
+        "cache_read_input_tokens": 2196,
+        "cache_creation_input_tokens": 11034,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11034
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Array.prototype.sort, SortIndexedProperties and CompareArrayElements in step order. Every fallible operation propagates with `?`, and the observable operations (HasProperty, Get, Call, ToNumber, ToString, Set, DeletePropertyOrThrow) happen in the spec's order. The merge sort is stable and stops at the first abrupt completion. The 4 lint flags only match the words \\\"skip-holes\\\" and are fine. The 18 remaining failures come from unimplemented dependencies (ArrayBuffer, RegExp, Array.prototype.pop, String.prototype.slice), not from this change. I found no special-casing, made-up values or unrelated edits. The diff removes the spec NOTE comments and subclause stub text from the file, which is cosmetic.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Array.prototype.sort, SortIndexedProperties and CompareArrayElements in step order. Every fallible operation propagates with `?`, and the observable operations (HasProperty, Get, Call, ToNumber, ToString, Set, DeletePropertyOrThrow) happen in the spec's order. The merge sort is stable and stops at the first abrupt completion. The 4 lint flags only match the words \"skip-holes\" and are fine. The 18 remaining failures come from unimplemented dependencies (ArrayBuffer, RegExp, Array.prototype.pop, String.prototype.slice), not from this change. I found no special-casing, made-up values or unrelated edits. The diff removes the spec NOTE comments and subclause stub text from the file, which is cosmetic.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7352,
+  "type": "result",
+  "duration_ms": 10130,
+  "uuid": "683c83d6-043f-40d3-8403-cb653f86a606",
+  "ttft_stream_ms": 1241,
+  "time_to_request_ms": 180,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 1,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 4,
+    "init_message": 7,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 111,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 5,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 22,
+  "time_to_request_cpu_ms": 140,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1242,
+  "time_to_request_from_spawn_ms": 19464164,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791938438958.2075,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.51,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

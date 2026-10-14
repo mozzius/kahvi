@@ -1,0 +1,113 @@
+{
+  "duration_api_ms": 63807,
+  "stop_reason": "end_turn",
+  "session_id": "ccd4b315-dc78-422f-8e0e-ee6448b497a6",
+  "total_cost_usd": 0.01773154,
+  "usage": {
+    "input_tokens": 28,
+    "cache_creation_input_tokens": 33314,
+    "cache_read_input_tokens": 388354,
+    "output_tokens": 13775,
+    "output_tokens_details": {
+      "thinking_tokens": 7777
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 33314,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 213,
+        "cache_read_input_tokens": 40399,
+        "cache_creation_input_tokens": 395,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 395
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 24,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `parseFloat` in `crates/kahvi-builtins/src/global/parse_float.rs`, keeping each spec step as a comment above its code. All 108 test262 runs under `built-ins/parseFloat/` pass, and clippy and rustfmt are clean. The only file changed is that one.\n\nThe trimming reuses `trim_string` from `string/prototype_trim.rs`. The decimal-prefix scan is a private helper in my file, because no existing helper matches the StrDecimalLiteral grammar (`string_to_number` rejects trailing text and accepts hex). Nothing is blocked.\n\nBLOCKED:",
+  "ttft_ms": 1163,
+  "type": "result",
+  "duration_ms": 85845,
+  "uuid": "3b6bb5b8-bb81-45db-b590-8124f06d93c0",
+  "ttft_stream_ms": 962,
+  "time_to_request_ms": 129,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 10,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 8,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 55,
+    "autocompact": 1,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 27,
+  "time_to_request_cpu_ms": 142,
+  "time_to_request_major_faults": 0,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 962,
+  "time_to_request_from_spawn_ms": 19253931,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791938228871.7937,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1791954600,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.21,
+        "resetsAt": 1791954600
+      },
+      "seven_day": {
+        "utilization": 0.5,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1,86 +1,9 @@
-[20:49:58] building trusted runner; integration branch m1-spine, 2 slots
-[20:49:58] B-string-from-char-code: attempt on slot 1 with haiku
-[20:49:58] B-weak-map-constructor: attempt on slot 0 with haiku
-[20:50:26] B-string-from-char-code: attempt 20 finished ($0.004, 11 turns)
-[20:50:37] B-weak-map-constructor: attempt 19 finished ($0.007, 10 turns)
-[20:50:51] B-string-from-char-code: verifier: accept The diff implements String.fromCharCode in its own file. It iterates the arguments in order and calls ops::to_uint16 on each one with `?`, so the ToUi
-[20:51:00] B-string-from-char-code: full test262 run for merge
-[20:51:10] B-weak-map-constructor: verifier: accept The diff replaces the not-implemented stub in crates/kahvi-builtins/src/weak_map/constructor.rs with a implementation of WeakMap ( [ iterable ] ) that
-[20:55:20] B-string-from-char-code: merged (+36, 56911 total)
-[20:55:22] B-promise-all-settled: attempt on slot 1 with haiku
-[20:55:23] B-weak-map-constructor: full test262 run for merge
-[20:57:02] B-promise-all-settled: attempt 21 finished ($0.027, 16 turns)
-[20:58:17] B-promise-all-settled: verifier: accept The diff is a faithful implementation of Promise.allSettled and its helpers (PerformPromiseAllSettled, the Resolve/Reject Element Functions, and GetPr
-[20:59:51] B-weak-map-constructor: merged (+56, 56967 total)
-[20:59:53] B-string-prototype-split: attempt on slot 0 with haiku
-[20:59:55] B-promise-all-settled: full test262 run for merge
-[21:00:54] B-string-prototype-split: attempt 22 finished ($0.015, 19 turns)
-[21:01:28] B-string-prototype-split: verifier: accept The diff implements String.prototype.split in prototype_split.rs and follows the spec's 18 steps in order. Step 2 is RequireObjectCoercible, and step 
-[21:04:17] B-promise-all-settled: merged (+194, 57161 total)
-[21:04:19] B-promise-all: attempt on slot 1 with haiku
-[21:04:19] B-string-prototype-split: full test262 run for merge
-[21:05:26] B-promise-all: attempt 23 finished ($0.018, 16 turns)
-[21:06:24] B-promise-all: verifier: accept The diff implements Promise.all in its file only. I walked it against the spec and found no defect. Promise.all matches steps 1-9, including IfAbruptR
-[21:08:32] B-string-prototype-split: merged (+156, 57317 total)
-[21:08:34] B-array-prototype-splice: attempt on slot 0 with haiku
-[21:08:35] B-promise-all: full test262 run for merge
-[21:09:18] B-array-prototype-splice: attempt 24 finished ($0.011, 11 turns)
-[21:10:02] B-array-prototype-splice: verifier: accept The diff implements all 18 steps of Array.prototype.splice in order. Observable operations match the spec: ToObject, LengthOfArrayLike, ToClampedIndex
-[21:12:50] B-promise-all: merged (+474, 57791 total)
-[21:12:52] B-promise-any: attempt on slot 1 with haiku
-[21:12:52] B-array-prototype-splice: full test262 run for merge
-[21:13:45] B-promise-any: attempt 25 finished ($0.016, 13 turns)
-[21:14:55] B-promise-any: verifier: revise The change is a mostly faithful Promise.any implementation (GetPromiseResolve, GetIterator, the Some(next) branch order, IfAbruptRejectPromise, Iterat
-[21:14:59] B-promise-any: attempt on slot 1 with haiku
-[21:15:36] B-promise-any: attempt 26 finished ($0.009, 11 turns)
-[21:16:43] B-promise-any: verifier: accept The diff implements Promise.any in crates/kahvi-builtins/src/promise/any.rs and touches no other file. I walked each step of Promise.any, PerformPromi
-[21:17:17] B-array-prototype-splice: merged (+142, 57933 total)
-[21:17:19] B-json-stringify: attempt on slot 0 with haiku
-[21:17:20] B-promise-any: full test262 run for merge
-[21:19:18] B-json-stringify: attempt 27 finished ($0.032, 20 turns)
-[21:20:26] B-json-stringify: verifier: accept The diff implements JSON.stringify in crates/kahvi-builtins/src/json/stringify.rs as a close transcription of the spec. I walked the top-level steps 1
-[21:21:42] B-promise-any: merged (+172, 58105 total)
-[21:21:43] B-promise-race: attempt on slot 1 with haiku
-[21:21:45] B-json-stringify: full test262 run for merge
-[21:22:12] B-promise-race: attempt 28 finished ($0.010, 11 turns)
-[21:22:52] B-promise-race: verifier: accept The diff implements Promise.race in race.rs and follows the spec steps in order. Step 1-2 call NewPromiseCapability with `?`. Step 3-4 wrap GetPromise
-[21:26:04] B-json-stringify: merged (+106, 58211 total)
-[21:26:06] B-json-parse: attempt on slot 0 with haiku
-[21:26:07] B-promise-race: full test262 run for merge
-[21:28:22] pausing until 2026-10-14 00:11: five_hour window at 90% (swarm cap 90%)
-[21:28:23] B-json-parse: attempt 29 finished ($0.032, 18 turns)
-[21:28:30] paused for 162 more minutes: five_hour window at 90% (swarm cap 90%)
-[21:30:31] B-promise-race: merged (+174, 58385 total)
-[21:43:30] paused for 147 more minutes: five_hour window at 90% (swarm cap 90%)
-[21:58:30] paused for 132 more minutes: five_hour window at 90% (swarm cap 90%)
-[22:13:30] paused for 117 more minutes: five_hour window at 90% (swarm cap 90%)
-[22:28:30] paused for 102 more minutes: five_hour window at 90% (swarm cap 90%)
-[22:43:30] paused for 87 more minutes: five_hour window at 90% (swarm cap 90%)
-[22:58:30] paused for 72 more minutes: five_hour window at 90% (swarm cap 90%)
-[23:13:30] paused for 57 more minutes: five_hour window at 90% (swarm cap 90%)
-[23:28:30] paused for 42 more minutes: five_hour window at 90% (swarm cap 90%)
-[23:43:30] paused for 27 more minutes: five_hour window at 90% (swarm cap 90%)
-[23:58:30] paused for 12 more minutes: five_hour window at 90% (swarm cap 90%)
-[00:11:40] B-object-prevent-extensions: attempt on slot 1 with haiku
-[00:12:03] B-json-parse: verifier: accept The change implements JSON.parse in parse.rs: ToString on text, a hand-written UTF-16 recursive-descent ParseJSON that throws SyntaxError on malformed
-[00:12:07] B-json-parse: full test262 run for merge
-[00:12:14] B-object-prevent-extensions: attempt 30 finished ($0.006, 11 turns)
-[00:12:33] B-object-prevent-extensions: verifier: accept The diff implements Object.preventExtensions following the four spec steps in order. Step 1 returns non-objects unchanged. Step 2 propagates the abrup
-[00:16:04] B-json-parse: merged (+120, 58505 total)
-[00:16:06] B-array-prototype-slice: attempt on slot 0 with haiku
-[00:16:06] B-object-prevent-extensions: full test262 run for merge
-[00:16:55] B-array-prototype-slice: attempt 31 finished ($0.011, 14 turns)
-[00:17:28] B-array-prototype-slice: verifier: accept The diff implements Array.prototype.slice steps 1–10 in order, with `?` on every abrupt completion. Start is converted before end, and end is skipped 
-[00:20:13] B-object-prevent-extensions: merged (+128, 58633 total)
-[00:20:15] B-object-freeze: attempt on slot 1 with haiku
-[00:20:15] B-array-prototype-slice: full test262 run for merge
-[00:21:12] B-object-freeze: attempt 32 finished ($0.006, 12 turns)
-[00:21:36] B-object-freeze: verifier: accept The diff implements Object.freeze in freeze.rs by following the spec steps in order. Step 1 returns non-Object arguments unchanged. Step 2 calls ops::
-[00:25:21] B-array-prototype-slice: merged (+124, 58757 total)
-[00:25:23] B-global-parse-int: attempt on slot 0 with haiku
-[00:25:23] B-object-freeze: full test262 run for merge
-[00:26:33] B-global-parse-int: attempt 33 finished ($0.017, 17 turns)
-[00:27:27] B-global-parse-int: verifier: accept The diff implements parseInt steps 1–16 in order. ToString and ToInt32 are called first, with the spec's abrupt-completion handling via `?`. The radix
-[00:29:16] B-object-freeze: merged (+79, 58836 total)
-[00:29:19] B-global-parse-int: full test262 run for merge
-[00:33:09] B-global-parse-int: merged (+104, 58940 total)
+[00:37:08] building trusted runner; integration branch m1-spine, 2 slots
+[00:37:08] B-global-parse-float: attempt on slot 1 with haiku
+[00:37:08] B-array-prototype-sort: attempt on slot 0 with haiku
+[00:38:23] B-array-prototype-sort: attempt 34 finished ($0.016, 14 turns)
+[00:38:36] B-global-parse-float: attempt 35 finished ($0.018, 24 turns)
+[00:39:22] B-global-parse-float: verifier: accept The diff implements parseFloat steps 1-7 in order. ToString and TrimString(start) are called on the argument, and the prefix scan follows the StrDecim
+[00:39:29] B-global-parse-float: full test262 run for merge
+[00:40:50] B-array-prototype-sort: verifier: accept The diff implements Array.prototype.sort in prototype_sort.rs, with helpers sort_indexed_properties, compare_array_elements and a stable merge_sort. I
+[00:44:13] B-global-parse-float: merged (+98, 59675 total)

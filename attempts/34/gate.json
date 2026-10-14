@@ -1,0 +1,73 @@
+{
+  "ticket": "B-array-prototype-sort",
+  "base": "eb19242d7c75cac5b98dae2f11abb9d7e20095c1",
+  "head": "8f5d4f5a161fdb89ead4dc2f1876fa98e297aea0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_sort.rs",
+      "added": 168,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_sort.rs",
+      "line": 62,
+      "rule": "skipping something: check what and why",
+      "text": "/// `skip_holes` is `true` for ~skip-holes~ and `false` for ~read-through-holes~."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_sort.rs",
+      "line": 68,
+      "rule": "skipping something: check what and why",
+      "text": "skip_holes: bool,"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_sort.rs",
+      "line": 78,
+      "rule": "skipping something: check what and why",
+      "text": "// b. If _holes_ is ~skip-holes~, then"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/array/prototype_sort.rs",
+      "line": 83,
+      "rule": "skipping something: check what and why",
+      "text": "let k_read = if skip_holes {"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 107,
+    "before": 8,
+    "after": 89,
+    "new_passes": 81,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 18,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/sort/comparefn-grow.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/comparefn-grow.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/comparefn-nonfunction-call-throws.js:sloppy  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/sort/comparefn-nonfunction-call-throws.js:strict  Uncaught InternalError: not implemented: RegExp",
+      "built-ins/Array/prototype/sort/comparefn-resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/comparefn-resizable-buffer.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/comparefn-shrink.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/comparefn-shrink.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/precise-getter-pops-elements.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/prototype/sort/precise-getter-pops-elements.js:strict  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/prototype/sort/precise-setter-pops-elements.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/prototype/sort/precise-setter-pops-elements.js:strict  Uncaught InternalError: not implemented: Array.prototype.pop",
+      "built-ins/Array/prototype/sort/resizable-buffer-default-comparator.js:sloppy  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/resizable-buffer-default-comparator.js:strict  Uncaught InternalError: not implemented: ArrayBuffer",
+      "built-ins/Array/prototype/sort/stability-2048-elements.js:sloppy  Uncaught InternalError: not implemented: String.prototype.slice"
+    ]
+  },
+  "decision": "pass"
+}
