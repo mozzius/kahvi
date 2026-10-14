@@ -1,0 +1,45 @@
+{
+  "ticket": "B-typed-array-prototype-copy-within",
+  "base": "2090de58e11e935d202d1a12fc2b7b032a83ebc7",
+  "head": "40e5d9de1ac073238ff742823f93f5c40c6d5f9b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/typed_array/prototype_copy_within.rs",
+      "added": 114,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 128,
+    "before": 8,
+    "after": 116,
+    "new_passes": 108,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 12,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/TypedArray/prototype/copyWithin/coerced-target-start-end-shrink.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-target-start-end-shrink.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-target-start-grow.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-target-start-grow.js:strict  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached-prototype.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached-prototype.js:strict  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached.js:strict  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-start-detached.js:sloppy  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/coerced-values-start-detached.js:strict  Uncaught InternalError: not implemented: Array.prototype.fill",
+      "built-ins/TypedArray/prototype/copyWithin/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: BigInt",
+      "built-ins/TypedArray/prototype/copyWithin/resizable-buffer.js:strict  Uncaught InternalError: not implemented: BigInt"
+    ]
+  },
+  "decision": "pass"
+}

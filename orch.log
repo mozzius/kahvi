@@ -45,3 +45,6 @@
 [17:03:19] B-typed-array-prototype-fill: verifier: accept The diff implements %TypedArray%.prototype.fill in order: ValidateTypedArray, TypedArrayLength, ToBigInt/ToNumber on value, ToClampedIndex for start t
 [17:03:20] B-typed-array-prototype-copy-within: attempt 114 finished ($0.231, 13 turns)
 [17:03:21] B-typed-array-prototype-reduce-right: attempt on slot 2 with haiku
+[17:03:25] B-typed-array-prototype-join: attempt on slot 1 with haiku
+[17:03:58] B-typed-array-prototype-reduce: attempt 116 finished ($0.188, 17 turns)
+[17:03:58] B-typed-array-prototype-reduce: gate rejected attempt 116: files outside scope: crates/kahvi-core/src/host.rs, crates/kahvi-core/src/object/host_object.rs, crates/kahvi-ffi/src/lib.rs; lint: unsafe is architect-only at crates/kahvi-ffi/src/lib.rs:227: unsafe 

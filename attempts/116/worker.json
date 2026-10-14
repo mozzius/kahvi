@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 22892,
+  "stop_reason": "end_turn",
+  "session_id": "b757e7e7-a681-4a36-b675-9aeb9a6f49d6",
+  "total_cost_usd": 0.187542,
+  "usage": {
+    "input_tokens": 19,
+    "cache_creation_input_tokens": 32570,
+    "cache_read_input_tokens": 269678,
+    "output_tokens": 2977,
+    "output_tokens_details": {
+      "thinking_tokens": 165
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32570,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 178,
+        "cache_read_input_tokens": 38792,
+        "cache_creation_input_tokens": 641,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 641
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `TypedArray.prototype.reduce` in `prototype_reduce.rs`, and 94 of 100 runs under `built-ins/TypedArray/prototype/reduce/` now pass. Build and clippy are clean. The six failures are the `resizable-buffer*.js` tests, all with \"not implemented: BigInt\".\n\nBLOCKED: BigInt typed arrays (BigInt64Array/BigUint64Array) are not implemented in the engine, which the three `resizable-buffer*.js` tests need.",
+  "ttft_ms": 2037,
+  "type": "result",
+  "duration_ms": 38170,
+  "uuid": "530e1c46-cc4d-45ec-89d2-c71485cd9ba8",
+  "ttft_stream_ms": 1414,
+  "time_to_request_ms": 749,
+  "time_to_request_phases_ms": {
+    "other": 73,
+    "system_prompt": 396,
+    "resume_other": 0,
+    "process_user_input": 9,
+    "input_attachments": 12,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 176,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 27,
+    "message_normalization": 7,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 138,
+  "time_to_request_cpu_ms": 462,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 218,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 4029,
+  "process_wall_ms_turn": 38169,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1421,
+  "time_to_request_from_spawn_ms": 17938206,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791997397865.4863,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
