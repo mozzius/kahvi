@@ -1,0 +1,122 @@
+{
+  "duration_api_ms": 40316,
+  "stop_reason": "end_turn",
+  "session_id": "3bac3510-78e9-42c5-ac55-3297b70b4862",
+  "total_cost_usd": 0.017179450000000002,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 44843,
+    "cache_read_input_tokens": 349645,
+    "output_tokens": 8542,
+    "output_tokens_details": {
+      "thinking_tokens": 3669
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 44843,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 315,
+        "cache_read_input_tokens": 51929,
+        "cache_creation_input_tokens": 557,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 557
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`%TypedArray%.prototype.toSorted` is implemented in `crates/kahvi-builtins/src/typed_array/prototype_to_sorted.rs`, following the spec steps. The build, clippy and fmt are clean. `./t262 built-ins/TypedArray/prototype/toSorted/` gives 22 of 24 runs passing. The two failures are `comparefn-not-a-function.js` in sloppy and strict mode, and they fail in the test's own assertion-message argument, `String(/a/g)`, which calls `RegExp.prototype.toString`.\n\nI copied `compare_typed_array_elements` from `typed_array/prototype_sort.rs` into this file, because that copy is private and I was limited to this file. If other built-ins need it, it should be lifted into a shared helper.\n\nBLOCKED: RegExp.prototype.toString is not implemented, and the comparefn-not-a-function.js test needs it to pass.",
+  "ttft_ms": 2295,
+  "type": "result",
+  "duration_ms": 68318,
+  "uuid": "4aa2584c-60e0-4ab0-9b25-2dcd91370595",
+  "ttft_stream_ms": 2070,
+  "time_to_request_ms": 634,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 362,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 23,
+    "input_hooks": 4,
+    "tool_pool_refresh": 4,
+    "init_message": 17,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 127,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 20,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 152,
+  "time_to_request_cpu_ms": 334,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 233,
+  "process_anon_mib_turn_start": 116,
+  "process_rss_mib_result": 262,
+  "process_anon_mib_result": 142,
+  "process_peak_rss_mib": 273,
+  "process_cpu_ms_turn": 4316,
+  "process_wall_ms_turn": 68317,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2071,
+  "time_to_request_from_spawn_ms": 24007069,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003466180.0322,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.21,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -1905,3 +1905,10 @@ test262 at last merge: 74349/81183 runs passing
 [18:44:47] B-array-buffer-prototype-get-max-byte-length: verifier: revise The change implements steps 1, 2, 4, 5/6 and 7 faithfully. Step 2 uses the right TypeError on a non-ArrayBuffer. Step 4 returns +0 for detached buffer
 [18:44:50] B-array-buffer-prototype-get-max-byte-length: attempt on slot 2 with haiku
 [18:44:52] B-reg-exp-prototype-get-dot-all: verifier: accept The change implements `get RegExp.prototype.dotAll` per the spec. The getter passes `this` through, uses code unit 0x0073, and calls an in-file `regex
+[18:44:56] B-async-disposable-stack-prototype-get-disposed: attempt on slot 1 with haiku
+[18:45:05] B-array-buffer-prototype-get-detached: attempt 333 finished ($0.007, 12 turns)
+[18:45:37] B-typed-array-prototype-to-sorted: attempt 332 finished ($0.017, 17 turns)
+[18:45:44] B-async-disposable-stack-prototype-get-disposed: attempt 335 finished ($0.005, 12 turns)
+[18:45:45] B-array-buffer-prototype-get-max-byte-length: attempt 334 finished ($0.008, 14 turns)
+[18:45:48] B-array-buffer-prototype-get-detached: verifier: reject (fakery) The change is small and mostly faithful. Step 2 (RequireInternalSlot) throws a TypeError for non-objects and for objects without [[ArrayBufferData]], 
+[18:45:48] B-array-buffer-prototype-get-detached: escalating haiku -> sonnet

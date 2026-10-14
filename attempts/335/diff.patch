@@ -1,0 +1,32 @@
+diff --git a/crates/kahvi-builtins/src/async_disposable_stack/prototype_get_disposed.rs b/crates/kahvi-builtins/src/async_disposable_stack/prototype_get_disposed.rs
+index b61c7e6..352c7e3 100644
+--- a/crates/kahvi-builtins/src/async_disposable_stack/prototype_get_disposed.rs
++++ b/crates/kahvi-builtins/src/async_disposable_stack/prototype_get_disposed.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::disposable_stack::{async_disposable_stack, require_async_disposable_stack};
++
+ /// get AsyncDisposableStack.prototype.disposed
+ pub(crate) fn prototype_get_disposed(
+     agent: &mut Agent,
+@@ -11,12 +13,14 @@ pub(crate) fn prototype_get_disposed(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // `AsyncDisposableStack.prototype.disposed` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
+-    //
++    let _ = (args, new_target);
+     // 1. Let _asyncDisposableStack_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_asyncDisposableStack_, [[AsyncDisposableState]]).
++    let o = require_async_disposable_stack(agent, this)?;
+     // 3. If _asyncDisposableStack_.[[AsyncDisposableState]] is ~disposed~, return *true*.
++    if async_disposable_stack(agent, o).disposed {
++        return Ok(Value::Boolean(true));
++    }
+     // 4. Return *false*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get AsyncDisposableStack.prototype.disposed"))
++    Ok(Value::Boolean(false))
+ }
