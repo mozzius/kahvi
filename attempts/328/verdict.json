@@ -1,0 +1,26 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": true,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The change implements steps 1, 2, 4, 5/6 and 7 faithfully. Step 2 uses the right TypeError on a non-ArrayBuffer. Step 4 returns +0 for detached buffers. Steps 5 and 6 read [[ArrayBufferMaxByteLength]] when present and [[ArrayBufferByteLength]] otherwise. Step 3 (the IsSharedArrayBuffer TypeError) has no code at all. It is replaced by a comment saying the case cannot happen in this engine yet. That is a skipped spec step, even though it is unreachable today. The rest of the diff is clean: no special-casing, no swallowed errors, and the lint flag is a justification comment, not a shortcut.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/array_buffer/prototype_get_max_byte_length.rs",
+      "question": "skips_observable_steps",
+      "issue": "Step 3 (If IsSharedArrayBuffer(obj) is true, throw a TypeError) has no code. Only a comment at lines 25-29 says the case is unreachable because no shared data block exists yet. The spec step should be implemented. Either check the shared flag, or throw the engine's not-implemented error if no shared-buffer check exists, rather than assuming false. As written, if SharedArrayBuffer is added later this getter will silently return a length for a shared buffer instead of throwing."
+    }
+  ],
+  "notes_for_next_attempt": "Add the missing step 3 in order, between RequireInternalSlot and the detached check. Keep the spec step text as a comment directly above the code. If the engine has an IsSharedArrayBuffer-style helper, call it and throw a TypeError when it is true. If no such helper exists, do not assume false: return Err(agent.not_implemented(...)) for shared-buffer inputs, or add the check in this file. The rest of the diff (steps 1, 2, 4, 5/6, 7) matches the spec and can be kept. The `_ => array_buffer_byte_length` fallback in the length match is acceptable because step 2 has already established that the slot exists. The helpers come from kahvi_core::object::typed_array rather than kahvi_core::ops, which the ticket suggested; that is acceptable if no ops equivalent exists, but confirm it.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "skips_observable_steps"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

@@ -1901,3 +1901,5 @@ test262 at last merge: 74349/81183 runs passing
 [18:44:20] B-math-round: verifier: accept Implements Math.round step by step, matching the stub's spec comments. Step 1 uses ops::to_number with `?`, so ToNumber runs once and its errors propa
 [18:44:25] B-typed-array-prototype-to-sorted: attempt on slot 3 with haiku
 [18:44:31] B-math-sin: verifier: accept The diff implements Math.sin in crates/kahvi-builtins/src/math/sin.rs and matches the spec. Step 1 calls ops::to_number(agent, x) with `?`, so ToNumbe
+[18:44:34] B-array-buffer-prototype-get-detached: attempt on slot 0 with haiku
+[18:44:47] B-array-buffer-prototype-get-max-byte-length: verifier: revise The change implements steps 1, 2, 4, 5/6 and 7 faithfully. Step 2 uses the right TypeError on a non-ArrayBuffer. Step 4 returns +0 for detached buffer
