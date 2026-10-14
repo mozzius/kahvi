@@ -1,0 +1,48 @@
+{
+  "ticket": "B-array-prototype-slice",
+  "base": "47c429a117b979484d452516d554629bb033ce64",
+  "head": "bc11bcbc148b07839936690f9e7350ad05606800",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_slice.rs",
+      "added": 63,
+      "removed": 15
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 142,
+    "before": 8,
+    "after": 126,
+    "new_passes": 118,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 16,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/slice/coerced-start-end-grow.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/coerced-start-end-grow.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/coerced-start-end-shrink.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/coerced-start-end-shrink.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/create-proxied-array-invalid-len.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/create-proxied-array-invalid-len.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/create-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/create-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/create-revoked-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/slice/create-revoked-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[DefineOwnProperty]]",
+      "built-ins/Array/prototype/slice/length-exceeding-integer-limit-proxied-array.js:sloppy  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/length-exceeding-integer-limit-proxied-array.js:strict  Uncaught InternalError: not implemented: Proxy [[Get]]",
+      "built-ins/Array/prototype/slice/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/resizable-buffer.js:strict  Uncaught InternalError: not implemented: Function",
+      "built-ins/Array/prototype/slice/target-array-non-extensible.js:sloppy  Uncaught InternalError: not implemented: Object.preventExtensions"
+    ]
+  },
+  "decision": "pass"
+}

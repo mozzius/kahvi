@@ -1,0 +1,101 @@
+diff --git a/crates/kahvi-builtins/src/array/prototype_slice.rs b/crates/kahvi-builtins/src/array/prototype_slice.rs
+index 8238abc..0fb510b 100644
+--- a/crates/kahvi-builtins/src/array/prototype_slice.rs
++++ b/crates/kahvi-builtins/src/array/prototype_slice.rs
+@@ -9,33 +9,81 @@ pub(crate) fn prototype_slice(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method returns an array containing the elements of the array from element _start_ up to, but not including, element _end_ (or through the end of the array if _end_ is *undefined*). If _start_ is negative, it is treated as _length_ + _start_ where _length_ is the length of the array. If _end_ is negative, it is treated as _length_ + _end_ where _length_ is the length of the array.
+     // It performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Let _length_ be ? LengthOfArrayLike(_obj_).
++    let length = ops::length_of_array_like(agent, obj)?;
+     // 3. Let _k_ be ? ToClampedIndex(_start_, _length_).
++    let start = args.get_or_undefined(0);
++    let mut k = to_clamped_index(agent, start, length)?;
+     // 4. If _end_ is *undefined*, let _final_ be _length_; else let _final_ be ? ToClampedIndex(_end_, _length_).
++    let end = args.get_or_undefined(1);
++    let final_index = if matches!(end, Value::Undefined) {
++        length
++    } else {
++        to_clamped_index(agent, end, length)?
++    };
+     // 5. Let _count_ be max(_final_ - _k_, 0).
++    let count = (final_index - k).max(0.0);
+     // 6. Let _array_ be ? ArraySpeciesCreate(_obj_, _count_).
++    let array = ops::array_species_create(agent, obj, count)?;
+     // 7. Let _resultIndex_ be 0.
++    let mut result_index = 0.0;
+     // 8. Repeat, while _k_ < _final_,
+-    //    a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
+-    //    b. Let _kPresent_ be ? HasProperty(_obj_, _propertyKey_).
+-    //    c. If _kPresent_ is *true*, then
+-    //       i. Let _kValue_ be ? Get(_obj_, _propertyKey_).
+-    //       ii. Perform ? CreateDataPropertyOrThrow(_array_, ! ToString(𝔽(_resultIndex_)), _kValue_).
+-    //    d. Set _k_ to _k_ + 1.
+-    //    e. Set _resultIndex_ to _resultIndex_ + 1.
++    while k < final_index {
++        // a. Let _propertyKey_ be ! ToString(𝔽(_k_)).
++        let property_key = agent.key_from_index(k);
++        // b. Let _kPresent_ be ? HasProperty(_obj_, _propertyKey_).
++        // c. If _kPresent_ is *true*, then
++        if ops::has_property(agent, obj, property_key)? {
++            // i. Let _kValue_ be ? Get(_obj_, _propertyKey_).
++            let k_value = ops::get(agent, obj, property_key)?;
++            // ii. Perform ? CreateDataPropertyOrThrow(_array_, ! ToString(𝔽(_resultIndex_)), _kValue_).
++            let result_key = agent.key_from_index(result_index);
++            ops::create_data_property_or_throw(agent, array, result_key, k_value)?;
++        }
++        // d. Set _k_ to _k_ + 1.
++        k += 1.0;
++        // e. Set _resultIndex_ to _resultIndex_ + 1.
++        result_index += 1.0;
++    }
+     // 9. Perform ? Set(_array_, *"length"*, 𝔽(_resultIndex_), *true*).
++    ops::set(
++        agent,
++        array,
++        PropertyKey::String(agent.names.length),
++        Value::Number(result_index),
++        true,
++    )?;
+     // 10. Return _array_.
+-    //
+-    // NOTE:
+-    // The explicit setting of the *"length"* property in step [step-array-proto-slice-set-length] is intended to ensure the length is correct even when _array_ is not a built-in Array.
+-    // NOTE:
+-    // This method is intentionally generic; it does not require that its *this* value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Array.prototype.slice"))
++    Ok(Value::Object(array))
++}
++
++/// ToClampedIndex ( _value_, _length_ )
++///
++/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
++///
++/// Not yet in `ops`; only this built-in needs it so far.
++fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
++    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
++    //    ToAbsoluteIndex ( _start_, _length_ ):
++    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
++    let relative_index = ops::to_integer_or_infinity(agent, value)?;
++    //    2. If _relativeIndex_ is -∞, return +0𝔽.
++    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
++    //    4. Else, return min(_relativeIndex_, _length_).
++    let index = if relative_index == f64::NEG_INFINITY {
++        0.0
++    } else if relative_index < 0.0 {
++        (length + relative_index).max(0.0)
++    } else {
++        relative_index.min(length)
++    };
++    // 2. Return the result of clamping _index_ between 0 and _length_.
++    Ok(index.max(0.0).min(length))
+ }
