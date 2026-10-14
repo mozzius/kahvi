@@ -1,0 +1,43 @@
+diff --git a/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs b/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
+index 7243a67..c862f73 100644
+--- a/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
++++ b/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs
+@@ -2,18 +2,34 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-date.prototype.tolocalestring
+ 
++use crate::support::date;
+ use kahvi_core::prelude::*;
+ 
+ /// Date.prototype.toLocaleString
+ pub(crate) fn prototype_to_locale_string(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
+     // This method returns a String value. The contents of the String are implementation-defined, but are intended to represent the Date in the current time zone in a convenient, human-readable form that corresponds to the conventions of the host environment's current locale.
+     // The meaning of the optional parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Date.prototype.toLocaleString"))
++    // The reserved parameters are ignored. This implementation has no ECMA-402 support.
++    // Perform ? RequireInternalSlot(this, [[DateValue]]).
++    let tv = date::this_time_value(agent, this)?;
++    // If tv is NaN, return "Invalid Date".
++    if tv.is_nan() {
++        return Ok(Value::String(agent.string("Invalid Date")));
++    }
++    // Represent the date in the current time zone.
++    let t = date::local_time(agent, tv);
++    let s = format!(
++        "{} {:02}:{:02}:{:02}",
++        date::date_string(t),
++        date::hour_from_time(t) as i64,
++        date::min_from_time(t) as i64,
++        date::sec_from_time(t) as i64
++    );
++    Ok(Value::String(agent.string(&s)))
+ }

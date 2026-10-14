@@ -1,0 +1,130 @@
+{
+  "duration_api_ms": 26144,
+  "stop_reason": "end_turn",
+  "session_id": "29f27798-3bc9-4fb8-9078-a93f71d6c245",
+  "total_cost_usd": 0.0837912,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 11313,
+    "cache_read_input_tokens": 109488,
+    "output_tokens": 2734,
+    "output_tokens_details": {
+      "thinking_tokens": 174
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 196,
+        "cache_read_input_tokens": 17573,
+        "cache_creation_input_tokens": 603,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 603
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01APQeeuFybRy7UxfwAGhTAt",
+      "tool_input": {
+        "command": "cat > /home/user/kahvi/work/slots/slot-3/crates/kahvi-builtins/src/date/prototype_to_locale_string.rs <<'EOF'\n//! Date.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )\n//!\n//! Spec: https://tc39.es/ecma262/#sec-date.prototype.tolocalestring\n\nuse crate::support::date;\nuse kahvi_core::prelude::*;\n\n/// Date.prototype.toLocaleString\npub(crate) fn prototype_to_locale_string(\n    agent: &mut Agent,\n    this: Value,\n    _args: &[Value],\n    _new_target: Option<Object>,\n) -> JsResult<Value> {\n    // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:\n    // This method returns a String value. The contents of the String are implementation-defined, but are intended to represent the Date in the current time zone in a convenient, human-readable form that corresponds to the conventions of the host environment's current locale.\n    // The meaning of the optional parameters to this method are defined in ECMA-402; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.\n    // The reserved parameters are ignored. This implementation has no ECMA-402 support.\n    // Perform ? RequireInternalSlot(this, [[DateValue]]).\n    let tv = date::this_time_value(agent, this)?;\n    // If tv is NaN, return \"Invalid Date\".\n    if tv.is_nan() {\n        return Ok(Value::String(agent.string(\"Invalid Date\")));\n    }\n    // Represent the date in the current time zone.\n    let t = date::local_time(agent, tv);\n    let s = format!(\n        \"{} {:02}:{:02}:{:02}\",\n        date::date_string(t),\n        date::hour_from_time(t) as i64,\n        date::min_from_time(t) as i64,\n        date::sec_from_time(t) as i64\n    );\n    Ok(Value::String(agent.string(&s)))\n}\nEOF\ncargo clippy 2>&1 | tail -15"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Date.prototype.toLocaleString` in `prototype_to_locale_string.rs`. It throws a TypeError if `this` isn't a Date and returns `\"Invalid Date\"` for NaN. Otherwise it returns the local date and time as `Www Mmm DD YYYY HH:MM:SS`, ignoring the reserved arguments.\n\nClippy is clean and `./t262 built-ins/Date/prototype/toLocaleString/` passes 8/8. That is the same 8 as before, because no test there exercises the function body, so the run can't show any new passes.",
+  "ttft_ms": 2637,
+  "type": "result",
+  "duration_ms": 55184,
+  "uuid": "ccba6b14-b7b7-43ce-a66a-1644b4b16ddd",
+  "ttft_stream_ms": 1691,
+  "time_to_request_ms": 516,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 337,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 98,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 370,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 106,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 255,
+  "process_cpu_ms_turn": 3113,
+  "process_wall_ms_turn": 55183,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 13,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1692,
+  "time_to_request_from_spawn_ms": 27857587,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792007317914.741,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.86,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.65,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.86,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
