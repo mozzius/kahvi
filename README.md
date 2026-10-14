@@ -6,7 +6,14 @@ progress against the official [test262](https://github.com/tc39/test262)
 conformance suite.
 
 <!-- test262:start -->
-**test262: 0.00% passing** (0 of 80,172 runs across 47,665 test files; 80,172 hit not-implemented). Measured by CI on `main` at 29e63d6, 2026-10-14.
+
+| test262 | |
+|---|--:|
+| **Pass rate** | **0.00%** |
+| Passing runs | 0 / 80,172 |
+| Not implemented | 80,172 |
+| Test files | 47,665 |
+
 <!-- test262:end -->
 
 > **Status: early.** The harness (milestone M0) is in place. The engine itself
