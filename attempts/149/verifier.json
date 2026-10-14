@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 19257,
+  "stop_reason": "tool_use",
+  "session_id": "b8ba30fb-5114-434e-a0f7-143650a01bb3",
+  "total_cost_usd": 0.00362048,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5564,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 3964,
+    "output_tokens_details": {
+      "thinking_tokens": 3448
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5564,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3964,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 5564,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5564
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements TypedArray.prototype.toLocaleString following the stub's spec steps in order. ValidateTypedArray (seq-cst) runs first. len comes from TypedArrayLength, not a Get of \\\"length\\\". Each element is read with Get(array, k). Non-null/undefined elements are passed through Invoke(element, \\\"toLocaleString\\\") and then ToString, with the spec's ? handling. Separators are concatenated as the spec describes, and the result is returned. Errors propagate with ?. There are no test-shaped branches and no hardcoded results. The only non-spec-literal value is the \\\",\\\" list separator, which the spec leaves implementation-defined. The removed not-implemented paths are the only reachable behaviour change. The 30 remaining not-implemented failures come from Array.prototype.toLocaleString and BigInt.prototype.toLocaleString, which are outside this ticket and are reported honestly.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements TypedArray.prototype.toLocaleString following the stub's spec steps in order. ValidateTypedArray (seq-cst) runs first. len comes from TypedArrayLength, not a Get of \"length\". Each element is read with Get(array, k). Non-null/undefined elements are passed through Invoke(element, \"toLocaleString\") and then ToString, with the spec's ? handling. Separators are concatenated as the spec describes, and the result is returned. Errors propagate with ?. There are no test-shaped branches and no hardcoded results. The only non-spec-literal value is the \",\" list separator, which the spec leaves implementation-defined. The removed not-implemented paths are the only reachable behaviour change. The 30 remaining not-implemented failures come from Array.prototype.toLocaleString and BigInt.prototype.toLocaleString, which are outside this ticket and are reported honestly.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 17366,
+  "type": "result",
+  "duration_ms": 19548,
+  "uuid": "b2e7cbf7-e21c-40a8-8191-8a5c23ba39ba",
+  "ttft_stream_ms": 1603,
+  "time_to_request_ms": 755,
+  "time_to_request_phases_ms": {
+    "other": 37,
+    "system_prompt": 404,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 7,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 240,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 11
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 152,
+  "time_to_request_cpu_ms": 445,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 104,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 230,
+  "process_cpu_ms_turn": 1177,
+  "process_wall_ms_turn": 19547,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1604,
+  "time_to_request_from_spawn_ms": 18933752,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1791998393606.4265,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792015800
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

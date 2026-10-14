@@ -161,3 +161,5 @@
 [17:20:03] B-array-prototype-pop: verifier: accept The change implements Array.prototype.pop in prototype_pop.rs and follows the spec steps in order. ToObject and LengthOfArrayLike come first. The leng
 [17:20:06] B-weak-set-prototype-add: attempt on slot 3 with haiku
 [17:20:09] B-iterator-prototype-find: verifier: accept The diff implements Iterator.prototype.find in its own file, following the spec steps in order. Checked against the spec: TypeError on a non-object `t
+[17:20:11] B-iterator-prototype-reduce: attempt on slot 1 with haiku
+[17:20:25] B-typed-array-prototype-to-locale-string: verifier: accept The diff implements TypedArray.prototype.toLocaleString following the stub's spec steps in order. ValidateTypedArray (seq-cst) runs first. len comes f
