@@ -1,0 +1,43 @@
+{
+  "ticket": "C-proxy-own-property-keys",
+  "base": "0d65344360483ab4ee24d0f9f77964b7ea8c5660",
+  "head": "f00787856c946b1c98da2a0304a0dc26a1af42d6",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-core/src/object/proxy/own_property_keys.rs",
+      "added": 85,
+      "removed": 27
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 54,
+    "before": 0,
+    "after": 44,
+    "new_passes": 44,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 10,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Proxy/ownKeys/call-parameters-object-getownpropertysymbols.js:sloppy  Uncaught InternalError: not implemented: Object.getOwnPropertySymbols",
+      "built-ins/Proxy/ownKeys/call-parameters-object-getownpropertysymbols.js:strict  Uncaught InternalError: not implemented: Object.getOwnPropertySymbols",
+      "built-ins/Proxy/ownKeys/call-parameters-object-keys.js:sloppy  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Proxy/ownKeys/call-parameters-object-keys.js:strict  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Proxy/ownKeys/trap-is-missing-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Proxy/ownKeys/trap-is-missing-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Proxy/ownKeys/trap-is-null-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Proxy/ownKeys/trap-is-null-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Proxy [[GetOwnProperty]]",
+      "built-ins/Proxy/ownKeys/trap-is-undefined-target-is-proxy.js:sloppy  Uncaught InternalError: not implemented: Reflect.ownKeys",
+      "built-ins/Proxy/ownKeys/trap-is-undefined-target-is-proxy.js:strict  Uncaught InternalError: not implemented: Reflect.ownKeys"
+    ]
+  },
+  "decision": "pass"
+}
