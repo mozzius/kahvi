@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 8056,
+  "stop_reason": "tool_use",
+  "session_id": "78171bbd-5b1e-4d47-b69f-3aab5a1a6cd0",
+  "total_cost_usd": 0.029141100000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4832,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 903,
+    "output_tokens_details": {
+      "thinking_tokens": 442
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4832,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 903,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 4832,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4832
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The getter follows the spec steps in order. RequireInternalSlot is a TypeError for non-objects and objects without [[ArrayBufferData]]. A detached buffer returns +0. A buffer with a max length returns that max, and a fixed-length buffer returns its byte length. The target went from 6 to 20 passing with no regressions. The one flagged item is step 3 (IsSharedArrayBuffer), which has no code and only a comment saying no shared data block can exist yet. That is a legitimate invariant, because there is no SharedArrayBuffer constructor and the buffer allocator sets no shared flag. It has no observable effect now, so I accepted it. When SharedArrayBuffer lands, this getter will need a real step 3 check.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The getter follows the spec steps in order. RequireInternalSlot is a TypeError for non-objects and objects without [[ArrayBufferData]]. A detached buffer returns +0. A buffer with a max length returns that max, and a fixed-length buffer returns its byte length. The target went from 6 to 20 passing with no regressions. The one flagged item is step 3 (IsSharedArrayBuffer), which has no code and only a comment saying no shared data block can exist yet. That is a legitimate invariant, because there is no SharedArrayBuffer constructor and the buffer allocator sets no shared flag. It has no observable effect now, so I accepted it. When SharedArrayBuffer lands, this getter will need a real step 3 check.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5127,
+  "type": "result",
+  "duration_ms": 7839,
+  "uuid": "36b9f9c6-648b-4ec1-8ac0-23ca7c990bf8",
+  "ttft_stream_ms": 2008,
+  "time_to_request_ms": 619,
+  "time_to_request_phases_ms": {
+    "other": 51,
+    "system_prompt": 353,
+    "resume_other": 1,
+    "process_user_input": 15,
+    "input_attachments": 14,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 21,
+    "engine_pickup": 2,
+    "message_prep": 7,
+    "model_config_wait": 112,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 2,
+    "client_creation": 8,
+    "request_build": 15
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 131,
+  "time_to_request_cpu_ms": 302,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 230,
+  "process_anon_mib_result": 111,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 827,
+  "process_wall_ms_turn": 7839,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2009,
+  "time_to_request_from_spawn_ms": 24137126,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792003596427.796,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.8,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.22,
+        "resetsAt": 1792020000
+      },
+      "seven_day": {
+        "utilization": 0.8,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
