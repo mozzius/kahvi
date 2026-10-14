@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 21724,
+  "stop_reason": "tool_use",
+  "session_id": "6b1bfd86-52cf-478b-8bae-6d80eb07ff2d",
+  "total_cost_usd": 0.00478098,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8175,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 4726,
+    "output_tokens_details": {
+      "thinking_tokens": 4153
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8175,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4726,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8175,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8175
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Array.prototype.flat and a local flatten_into_array helper in prototype_flat.rs, following the spec steps in order. ToObject, LengthOfArrayLike, the depth conversion (undefined check, ToIntegerOrInfinity, clamp below 0), ArraySpeciesCreate(obj, 0), and FlattenIntoArray are all present. Inside FlattenIntoArray, HasProperty, Get, the depth > 0 guard before IsArray (short-circuited), the +\u221e depth handling, LengthOfArrayLike on the element, the 2^53-1 TypeError check, and CreateDataPropertyOrThrow all match the spec. The mapper and thisArg parameters are omitted, which is valid because flat never passes them. The unreachable! lint is truly unreachable, since IsArray is true only for objects. The two failing tests are honest not-implemented errors caused by Proxy Reflect.get, not made-up results. No test special-casing, no swallowed errors, and no unrelated edits beyond renaming an unused parameter.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Array.prototype.flat and a local flatten_into_array helper in prototype_flat.rs, following the spec steps in order. ToObject, LengthOfArrayLike, the depth conversion (undefined check, ToIntegerOrInfinity, clamp below 0), ArraySpeciesCreate(obj, 0), and FlattenIntoArray are all present. Inside FlattenIntoArray, HasProperty, Get, the depth > 0 guard before IsArray (short-circuited), the +\u221e depth handling, LengthOfArrayLike on the element, the 2^53-1 TypeError check, and CreateDataPropertyOrThrow all match the spec. The mapper and thisArg parameters are omitted, which is valid because flat never passes them. The unreachable! lint is truly unreachable, since IsArray is true only for objects. The two failing tests are honest not-implemented errors caused by Proxy Reflect.get, not made-up results. No test special-casing, no swallowed errors, and no unrelated edits beyond renaming an unused parameter.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 19702,
+  "type": "result",
+  "duration_ms": 21758,
+  "uuid": "710da7b6-b76d-44a9-9e57-d6c4551efb5b",
+  "ttft_stream_ms": 2223,
+  "time_to_request_ms": 1142,
+  "time_to_request_phases_ms": {
+    "other": 62,
+    "system_prompt": 576,
+    "resume_other": 1,
+    "process_user_input": 30,
+    "input_attachments": 64,
+    "input_hooks": 14,
+    "tool_pool_refresh": 15,
+    "init_message": 28,
+    "engine_pickup": 2,
+    "message_prep": 11,
+    "model_config_wait": 303,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 8,
+    "message_normalization": 6,
+    "client_creation": 9,
+    "request_build": 10
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 248,
+  "time_to_request_cpu_ms": 452,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 220,
+  "process_anon_mib_turn_start": 103,
+  "process_rss_mib_result": 231,
+  "process_anon_mib_result": 112,
+  "process_peak_rss_mib": 231,
+  "process_cpu_ms_turn": 1086,
+  "process_wall_ms_turn": 21758,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 45,
+    "cpu_ms": 28,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2224,
+  "time_to_request_from_spawn_ms": 21193475,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000652159.4797,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

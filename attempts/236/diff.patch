@@ -1,0 +1,52 @@
+diff --git a/crates/kahvi-builtins/src/object/prototype_lookup_getter.rs b/crates/kahvi-builtins/src/object/prototype_lookup_getter.rs
+index af13e4d..2a75a06 100644
+--- a/crates/kahvi-builtins/src/object/prototype_lookup_getter.rs
++++ b/crates/kahvi-builtins/src/object/prototype_lookup_getter.rs
+@@ -9,19 +9,37 @@ pub(crate) fn prototype_lookup_getter(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // This method performs the following steps when called:
+     //
+     // 1. Let _obj_ be ? ToObject(*this* value).
++    let obj = ops::to_object(agent, this)?;
+     // 2. Let _propertyKey_ be ? ToPropertyKey(_key_).
+-    // 3. Repeat,
+-    //    a. Let _propertyDesc_ be ? _obj_.[[GetOwnProperty]](_propertyKey_).
+-    //    b. If _propertyDesc_ is not *undefined*, then
+-    //       i. If IsAccessorDescriptor(_propertyDesc_) is *true*, return _propertyDesc_.[[Getter]].
+-    //       ii. Return *undefined*.
+-    //    c. Set _obj_ to ? _obj_.[[GetPrototypeOf]]().
+-    //    d. If _obj_ is *null*, return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Object.prototype.__lookupGetter__"))
++    let property_key = ops::to_property_key(agent, args.get_or_undefined(0))?;
++    // The lookup may run user code (proxy traps), so the object and key stay rooted.
++    let key_value = agent.key_to_value(property_key);
++    agent.with_roots(&[Value::Object(obj), key_value], |agent| {
++        // 3. Repeat,
++        let mut obj = obj;
++        loop {
++            // a. Let _propertyDesc_ be ? _obj_.[[GetOwnProperty]](_propertyKey_).
++            let property_desc = obj.internal_get_own_property(agent, property_key)?;
++            // b. If _propertyDesc_ is not *undefined*, then
++            if let Some(property_desc) = property_desc {
++                // i. If IsAccessorDescriptor(_propertyDesc_) is *true*, return _propertyDesc_.[[Getter]].
++                if property_desc.is_accessor_descriptor() {
++                    return Ok(property_desc.get.unwrap_or(Value::Undefined));
++                }
++                // ii. Return *undefined*.
++                return Ok(Value::Undefined);
++            }
++            // c. Set _obj_ to ? _obj_.[[GetPrototypeOf]]().
++            match obj.internal_get_prototype_of(agent)? {
++                // d. If _obj_ is *null*, return *undefined*.
++                None => return Ok(Value::Undefined),
++                Some(proto) => obj = proto,
++            }
++        }
++    })
+ }

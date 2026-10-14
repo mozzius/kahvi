@@ -827,3 +827,9 @@ test262 at last merge: 72953/81183 runs passing
 [17:56:39] B-typed-array-prototype-keys: verifier: accept The diff replaces the not-implemented stub in prototype_keys.rs with the spec's two steps: ValidateTypedArray(obj, seq-cst) via validate_typed_array w
 [17:56:41] B-array-prototype-to-locale-string: attempt on slot 2 with haiku
 [17:56:51] B-global-unescape: attempt on slot 3 with haiku
+[17:56:53] B-object-prototype-lookup-getter: attempt on slot 0 with haiku
+[17:57:11] B-array-prototype-flat: attempt 233 finished ($0.012, 16 turns)
+[17:57:30] B-object-prototype-lookup-getter: attempt 236 finished ($0.006, 12 turns)
+[17:57:34] B-global-unescape: attempt 235 finished ($0.007, 11 turns)
+[17:57:35] B-array-prototype-to-locale-string: attempt 234 finished ($0.009, 14 turns)
+[17:58:09] B-array-prototype-flat: verifier: accept The change implements Array.prototype.flat and a local flatten_into_array helper in prototype_flat.rs, following the spec steps in order. ToObject, Le

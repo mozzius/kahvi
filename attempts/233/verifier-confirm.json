@@ -1,0 +1,136 @@
+{
+  "duration_api_ms": 9622,
+  "stop_reason": "tool_use",
+  "session_id": "f1ed893e-66da-4026-b135-c8e1d15615a6",
+  "total_cost_usd": 0.0434693,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8174,
+    "cache_read_input_tokens": 3628,
+    "output_tokens": 966,
+    "output_tokens_details": {
+      "thinking_tokens": 550
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8174,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 966,
+        "cache_read_input_tokens": 3628,
+        "cache_creation_input_tokens": 8174,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8174
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Array.prototype.flat and FlattenIntoArray follow the spec steps in order. Every fallible operation is propagated with `?`. Observable operations (HasProperty, Get, IsArray, LengthOfArrayLike, CreateDataPropertyOrThrow) happen once each, in spec order. The unreachable! is sound because IsArray returning true means the value is an object. The two remaining failures are a Reflect.get not-implemented error, which is outside this file. The mapperFunc and thisArg parameters are omitted, which is fine since flat never passes them. The change touches only the one in-scope file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Array.prototype.flat and FlattenIntoArray follow the spec steps in order. Every fallible operation is propagated with `?`. Observable operations (HasProperty, Get, IsArray, LengthOfArrayLike, CreateDataPropertyOrThrow) happen once each, in spec order. The unreachable! is sound because IsArray returning true means the value is an object. The two remaining failures are a Reflect.get not-implemented error, which is outside this file. The mapperFunc and thisArg parameters are omitted, which is fine since flat never passes them. The change touches only the one in-scope file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7347,
+  "type": "result",
+  "duration_ms": 9293,
+  "uuid": "20771717-ca54-4ed1-b344-d8122144d883",
+  "ttft_stream_ms": 2484,
+  "time_to_request_ms": 873,
+  "time_to_request_phases_ms": {
+    "other": 74,
+    "system_prompt": 435,
+    "resume_other": 0,
+    "process_user_input": 34,
+    "input_attachments": 93,
+    "input_hooks": 14,
+    "tool_pool_refresh": 20,
+    "init_message": 24,
+    "engine_pickup": 1,
+    "message_prep": 15,
+    "model_config_wait": 69,
+    "autocompact": 2,
+    "query_setup": 9,
+    "model_gates": 13,
+    "tool_schema_build": 13,
+    "message_normalization": 18,
+    "client_creation": 17,
+    "request_build": 22
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 240,
+  "time_to_request_cpu_ms": 317,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 219,
+  "process_anon_mib_turn_start": 102,
+  "process_rss_mib_result": 226,
+  "process_anon_mib_result": 108,
+  "process_peak_rss_mib": 234,
+  "process_cpu_ms_turn": 722,
+  "process_wall_ms_turn": 9292,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 68,
+    "cpu_ms": 31,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2485,
+  "time_to_request_from_spawn_ms": 21218422,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792000676599.6616,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792054800,
+    "rateLimitType": "seven_day",
+    "utilization": 0.77,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "surpassedThreshold": 0.75,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0,
+        "resetsAt": 1792018200
+      },
+      "seven_day": {
+        "utilization": 0.77,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

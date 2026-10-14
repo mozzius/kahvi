@@ -1,0 +1,32 @@
+{
+  "ticket": "B-object-prototype-lookup-getter",
+  "base": "2c00182d1516a0d0fed2a949084dbf9b18b566c9",
+  "head": "d0e1e2dc2b6bbdf63b9ff412495f6f4b513a6009",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/object/prototype_lookup_getter.rs",
+      "added": 28,
+      "removed": 10
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 6,
+    "after": 32,
+    "new_passes": 26,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

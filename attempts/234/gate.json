@@ -1,0 +1,41 @@
+{
+  "ticket": "B-array-prototype-to-locale-string",
+  "base": "e5bbe375eeab225dd5976682ebc0410b3582ed4d",
+  "head": "48bb510e48bd86c6246d371ccfba1fb101b4d3d0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/array/prototype_to_locale_string.rs",
+      "added": 40,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 22,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Array/prototype/toLocaleString/primitive_this_value.js:strict  Uncaught InternalError: not implemented: Object.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/primitive_this_value_getter.js:strict  Uncaught InternalError: not implemented: Object.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/resizable-buffer.js:sloppy  Uncaught InternalError: not implemented: Number.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/resizable-buffer.js:strict  Uncaught InternalError: not implemented: Number.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/user-provided-tolocalestring-grow.js:sloppy  Uncaught InternalError: not implemented: Number.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/user-provided-tolocalestring-grow.js:strict  Uncaught InternalError: not implemented: Number.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/user-provided-tolocalestring-shrink.js:sloppy  Uncaught InternalError: not implemented: Number.prototype.toLocaleString",
+      "built-ins/Array/prototype/toLocaleString/user-provided-tolocalestring-shrink.js:strict  Uncaught InternalError: not implemented: Number.prototype.toLocaleString"
+    ]
+  },
+  "decision": "pass"
+}

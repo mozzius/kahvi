@@ -1,0 +1,32 @@
+{
+  "ticket": "B-global-unescape",
+  "base": "2c00182d1516a0d0fed2a949084dbf9b18b566c9",
+  "head": "a247b5caad4e1ff3551ba5f5c62cfb309e3d1670",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/global/unescape.rs",
+      "added": 60,
+      "removed": 21
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 38,
+    "before": 8,
+    "after": 38,
+    "new_passes": 30,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
