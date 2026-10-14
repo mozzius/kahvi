@@ -7,15 +7,19 @@ use kahvi_core::prelude::*;
 /// Object.values
 pub(crate) fn values(
     agent: &mut Agent,
-    this: Value,
+    _this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This function performs the following steps when called:
     //
     // 1. Let _coerced_ be ? ToObject(_obj_).
+    let coerced = ops::to_object(agent, args.get_or_undefined(0))?;
     // 2. Let _valueList_ be ? EnumerableOwnProperties(_coerced_, ~value~).
+    let value_list = ops::enumerable_own_properties(agent, coerced, ops::EnumerableKind::Value)?;
     // 3. Return CreateArrayFromList(_valueList_).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Object.values"))
+    Ok(Value::Object(ops::create_array_from_list(
+        agent,
+        &value_list,
+    )))
 }
