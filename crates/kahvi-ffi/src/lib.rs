@@ -253,6 +253,8 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
     let realm = runtime.realm();
     let agent: *mut Agent = runtime.agent();
     unsafe { (*agent).host_now = Some(now_ms) };
+    // KAHVI_GC_STRESS, as for the CLI and kahvi-run (harness/jsi/run.sh).
+    unsafe { (*agent).gc_stress = Agent::gc_stress_from_env() };
     Box::into_raw(Box::new(KahviRuntime {
         _runtime: runtime,
         realm,

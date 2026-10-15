@@ -95,11 +95,15 @@ pauses itself at the limit; architect sessions should stop well before it
 - M5 started: host objects and native state in kahvi-core, the C ABI
   (`crates/kahvi-ffi`, header `include/kahvi.h`) and a `jsi::Runtime` over it
   (`react-native/cpp/KahviJSI.cpp`). `harness/jsi/run.sh` builds it against
-  RN v0.76.0's JSI and runs `harness/jsi/test.cpp` (also run it with
+  RN v0.86.3's JSI and runs `harness/jsi/test.cpp` (also run it with
   `KAHVI_GC_STRESS=1` and under ASan after changes). ArrayBuffers over
   host memory (`createArrayBuffer`) use external data blocks
-  (`DataBlock::External`, `kahvi_array_buffer_new_external`). Missing: the
-  RN integration package, and running a real Metro bundle.
+  (`DataBlock::External`, `kahvi_array_buffer_new_external`). The RN
+  integration package is `react-native/` (README there): a JSRuntimeFactory
+  for Android and iOS that `harness/rn/check.sh` compiles against RN
+  0.86.3's headers. CI runs both harnesses. Missing: an app build that uses
+  it, a react-native-worklets patch (it calls `makeHermesRuntime`), and
+  running a real Metro bundle on a device.
 
 ## Standing decisions from the user
 
