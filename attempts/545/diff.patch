@@ -1,0 +1,880 @@
+diff --git a/crates/kahvi-builtins/src/intl_locale/constructor.rs b/crates/kahvi-builtins/src/intl_locale/constructor.rs
+index 8b9bd36..8d66eb1 100644
+--- a/crates/kahvi-builtins/src/intl_locale/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_locale/constructor.rs
+@@ -4,6 +4,9 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::IntlLocaleSlots;
++use crate::support::intl_locale::initialize_locale;
++
+ /// Intl.Locale
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -71,6 +74,18 @@ pub(crate) fn constructor(
+     //       i. Set _locale_.[[Numeric]] to *false*.
+     // 43. Set _locale_.[[NumberingSystem]] to _localeRecord_.[[nu]].
+     // 44. Return _locale_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Locale"))
++    let _ = this;
++    let Some(new_target) = new_target else {
++        return Err(agent.throw_type_error("Constructor Intl.Locale requires 'new'"));
++    };
++    let locale = ops::ordinary_create_from_constructor(
++        agent,
++        new_target,
++        "%Intl.Locale.prototype%",
++        ObjectKind::Native(Box::new(IntlLocaleSlots::default())),
++    )?;
++    let tag = args.first().copied().unwrap_or(Value::Undefined);
++    let options = args.get(1).copied().unwrap_or(Value::Undefined);
++    initialize_locale(agent, locale, tag, options)?;
++    Ok(Value::Object(locale))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_base_name.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_base_name.rs
+index af21e02..e7c0b9e 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_base_name.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_base_name.rs
+@@ -16,6 +16,8 @@ pub(crate) fn prototype_get_base_name(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return GetLocaleBaseName(_loc_.[[Locale]]).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.baseName"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let base_name = crate::support::intl_locale::get_locale_base_name(&loc.locale);
++    Ok(Value::String(agent.string(base_name)))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_calendar.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_calendar.rs
+index 6c3e1ee..9e1da8e 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_calendar.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_calendar.rs
+@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_calendar(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[Calendar]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.calendar"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.calendar.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_case_first.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_case_first.rs
+index c39fe21..b818f0f 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_case_first.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_case_first.rs
+@@ -17,6 +17,10 @@ pub(crate) fn prototype_get_case_first(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[CaseFirst]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.caseFirst"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.case_first.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_collation.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_collation.rs
+index b2a773a..9766435 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_collation.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_collation.rs
+@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_collation(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[Collation]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.collation"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.collation.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_first_day_of_week.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_first_day_of_week.rs
+index 44e8fd8..fefe7d0 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_first_day_of_week.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_first_day_of_week.rs
+@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_first_day_of_week(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[FirstDayOfWeek]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.firstDayOfWeek"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.first_day_of_week.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_hour_cycle.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_hour_cycle.rs
+index d584593..b19be93 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_hour_cycle.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_hour_cycle.rs
+@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_hour_cycle(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[HourCycle]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.hourCycle"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.hour_cycle.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_language.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_language.rs
+index 19b896f..92ce482 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_language.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_language.rs
+@@ -16,6 +16,8 @@ pub(crate) fn prototype_get_language(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return GetLocaleLanguage(_loc_.[[Locale]]).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.language"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let language = crate::support::intl_locale::get_locale_language(&loc.locale);
++    Ok(Value::String(agent.string(&language)))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_numbering_system.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_numbering_system.rs
+index 168cd4d..b73cd08 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_numbering_system.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_numbering_system.rs
+@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_numbering_system(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[NumberingSystem]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.numberingSystem"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        loc.numbering_system.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_numeric.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_numeric.rs
+index 26be398..70abeeb 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_numeric.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_numeric.rs
+@@ -17,6 +17,10 @@ pub(crate) fn prototype_get_numeric(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[Numeric]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.numeric"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(match loc.numeric {
++        Some(numeric) => Value::Boolean(numeric),
++        None => Value::Undefined,
++    })
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_region.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_region.rs
+index 3f2e62d..42496ff 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_region.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_region.rs
+@@ -16,6 +16,11 @@ pub(crate) fn prototype_get_region(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return GetLocaleRegion(_loc_.[[Locale]]).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.region"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let region = crate::support::intl_locale::get_locale_region(&loc.locale);
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        region.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_script.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_script.rs
+index 8f63f59..bd4cb33 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_script.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_script.rs
+@@ -16,6 +16,11 @@ pub(crate) fn prototype_get_script(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return GetLocaleScript(_loc_.[[Locale]]).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.script"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let script = crate::support::intl_locale::get_locale_script(&loc.locale);
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        script.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_get_variants.rs b/crates/kahvi-builtins/src/intl_locale/prototype_get_variants.rs
+index 8429e89..582a66c 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_get_variants.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_get_variants.rs
+@@ -16,6 +16,11 @@ pub(crate) fn prototype_get_variants(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return GetLocaleVariants(_loc_.[[Locale]]).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Locale.prototype.variants"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let variants = crate::support::intl_locale::get_locale_variants(&loc.locale);
++    Ok(crate::support::intl_locale::optional_string(
++        agent,
++        variants.as_deref(),
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_maximize.rs b/crates/kahvi-builtins/src/intl_locale/prototype_maximize.rs
+index 1d0fd73..a7bdb07 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_maximize.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_maximize.rs
+@@ -15,6 +15,9 @@ pub(crate) fn prototype_maximize(
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Let _maximal_ be the result of the Add Likely Subtags algorithm applied to _loc_.[[Locale]]. If an error is signaled, set _maximal_ to _loc_.[[Locale]].
+     // 4. Return ! Construct(%Intl.Locale%, « _maximal_ »).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Locale.prototype.maximize"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let maximal =
++        crate::support::intl_locale::add_likely_subtags(&loc.locale).unwrap_or(loc.locale);
++    crate::support::intl_locale::construct_locale(agent, &maximal)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_minimize.rs b/crates/kahvi-builtins/src/intl_locale/prototype_minimize.rs
+index 5d66af4..c588cf4 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_minimize.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_minimize.rs
+@@ -15,6 +15,9 @@ pub(crate) fn prototype_minimize(
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Let _minimal_ be the result of the Remove Likely Subtags algorithm applied to _loc_.[[Locale]]. If an error is signaled, set _minimal_ to _loc_.[[Locale]].
+     // 4. Return ! Construct(%Intl.Locale%, « _minimal_ »).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Locale.prototype.minimize"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    let minimal =
++        crate::support::intl_locale::remove_likely_subtags(&loc.locale).unwrap_or(loc.locale);
++    crate::support::intl_locale::construct_locale(agent, &minimal)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_locale/prototype_to_string.rs b/crates/kahvi-builtins/src/intl_locale/prototype_to_string.rs
+index b2db82c..bcb3da8 100644
+--- a/crates/kahvi-builtins/src/intl_locale/prototype_to_string.rs
++++ b/crates/kahvi-builtins/src/intl_locale/prototype_to_string.rs
+@@ -14,6 +14,7 @@ pub(crate) fn prototype_to_string(
+     // 1. Let _loc_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
+     // 3. Return _loc_.[[Locale]].
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Locale.prototype.toString"))
++    let _ = (args, new_target);
++    let loc = crate::support::intl_locale::require_initialized_locale(agent, this)?;
++    Ok(Value::String(agent.string(&loc.locale)))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_locale.rs b/crates/kahvi-builtins/src/support/intl_locale.rs
+index e5cf981..889151d 100644
+--- a/crates/kahvi-builtins/src/support/intl_locale.rs
++++ b/crates/kahvi-builtins/src/support/intl_locale.rs
+@@ -4,3 +4,577 @@
+ //! (CanonicalizeLocaleList reads them). The Intl.Locale ticket owns this
+ //! file. See docs/INTL.md.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use std::sync::OnceLock;
++
++use icu::locale::{Locale, LocaleExpander};
++use kahvi_core::prelude::*;
++
++use crate::support::intl::{
++    self, IntlLocaleSlots, Keyword, OptionType, canonicalize_u_value,
++    canonicalize_unicode_locale_id, get_option, get_string_option,
++    insert_unicode_extension_and_canonicalize, is_unicode_type, is_well_formed_language_tag,
++    remove_unicode_extension, unicode_extension_components, unicode_extension_of,
++};
++
++/// %Intl.Locale%.[[LocaleExtensionKeys]]
++const LOCALE_EXTENSION_KEYS: [&str; 7] = ["ca", "co", "fw", "hc", "kf", "kn", "nu"];
++
++// ---- subtag grammar ----------------------------------------------------------------
++
++fn is_alpha(s: &str) -> bool {
++    s.bytes().all(|b| b.is_ascii_alphabetic())
++}
++
++fn is_digit(s: &str) -> bool {
++    s.bytes().all(|b| b.is_ascii_digit())
++}
++
++/// unicode_language_subtag: alpha{2,3} | alpha{5,8}
++pub(crate) fn is_unicode_language_subtag(s: &str) -> bool {
++    matches!(s.len(), 2 | 3 | 5..=8) && is_alpha(s)
++}
++
++/// unicode_script_subtag: alpha{4}
++pub(crate) fn is_unicode_script_subtag(s: &str) -> bool {
++    s.len() == 4 && is_alpha(s)
++}
++
++/// unicode_region_subtag: alpha{2} | digit{3}
++pub(crate) fn is_unicode_region_subtag(s: &str) -> bool {
++    (s.len() == 2 && is_alpha(s)) || (s.len() == 3 && is_digit(s))
++}
++
++/// unicode_variant_subtag: alphanum{5,8} | digit alphanum{3}
++pub(crate) fn is_unicode_variant_subtag(s: &str) -> bool {
++    if !s.bytes().all(|b| b.is_ascii_alphanumeric()) {
++        return false;
++    }
++    (5..=8).contains(&s.len()) || (s.len() == 4 && s.as_bytes()[0].is_ascii_digit())
++}
++
++// ---- locale parts ------------------------------------------------------------------
++
++/// GetLocaleBaseName ( _locale_ )
++pub(crate) fn get_locale_base_name(locale: &str) -> &str {
++    // 1. Assert: _locale_ can be matched by the unicode_locale_id Unicode locale nonterminal.
++    // 2. Return the longest prefix of _locale_ matched by the unicode_language_id Unicode locale nonterminal.
++    // (The language id ends where the first singleton subtag, an extension or
++    // private use sequence, starts.)
++    let mut end = locale.len();
++    let mut offset = 0;
++    for subtag in locale.split('-') {
++        if subtag.len() == 1 && offset > 0 {
++            end = offset - 1;
++            break;
++        }
++        offset += subtag.len() + 1;
++    }
++    &locale[..end]
++}
++
++/// GetLocaleLanguage ( _locale_ )
++pub(crate) fn get_locale_language(locale: &str) -> String {
++    // 1. Let _baseName_ be GetLocaleBaseName(_locale_).
++    let base_name = get_locale_base_name(locale);
++    // 2. Let _subtags_ be StringSplitToList(_baseName_, *"-"*).
++    let mut subtags = base_name.split('-');
++    // 3. Assert: _subtags_[0] is matched by the unicode_language_subtag Unicode locale nonterminal.
++    // 4. Return _subtags_[0].
++    subtags.next().unwrap_or_default().to_string()
++}
++
++/// GetLocaleScript ( _locale_ )
++pub(crate) fn get_locale_script(locale: &str) -> Option<String> {
++    // 1. Let _baseName_ be GetLocaleBaseName(_locale_).
++    let base_name = get_locale_base_name(locale);
++    // 3. Let _subtags_ be StringSplitToList(_baseName_, *"-"*).
++    let subtags: Vec<&str> = base_name.split('-').collect();
++    // 5. If _subtags_ has at least 2 elements and _subtags_[1] is matched by the unicode_script_subtag Unicode locale nonterminal, return _subtags_[1].
++    if subtags.len() >= 2 && is_unicode_script_subtag(subtags[1]) {
++        return Some(subtags[1].to_string());
++    }
++    // 6. Return *undefined*.
++    None
++}
++
++/// GetLocaleRegion ( _locale_ )
++pub(crate) fn get_locale_region(locale: &str) -> Option<String> {
++    // 1. Let _baseName_ be GetLocaleBaseName(_locale_).
++    let base_name = get_locale_base_name(locale);
++    // 3. Let _subtags_ be StringSplitToList(_baseName_, *"-"*).
++    let subtags: Vec<&str> = base_name.split('-').collect();
++    // 5. If _subtags_ has at least 2 elements and _subtags_[1] is matched by the unicode_region_subtag Unicode locale nonterminal, return _subtags_[1].
++    if subtags.len() >= 2 && is_unicode_region_subtag(subtags[1]) {
++        return Some(subtags[1].to_string());
++    }
++    // 6. If _subtags_ has at least 3 elements and _subtags_[2] is matched by the unicode_region_subtag Unicode locale nonterminal, return _subtags_[2].
++    if subtags.len() >= 3 && is_unicode_region_subtag(subtags[2]) {
++        return Some(subtags[2].to_string());
++    }
++    // 7. Return *undefined*.
++    None
++}
++
++/// GetLocaleVariants ( _locale_ )
++pub(crate) fn get_locale_variants(locale: &str) -> Option<String> {
++    // 1. Let _baseName_ be GetLocaleBaseName(_locale_).
++    let base_name = get_locale_base_name(locale);
++    // 3. Let _subtags_ be StringSplitToList(_baseName_, *"-"*).
++    let mut subtags = base_name.split('-');
++    // 5. Let _dashIndex_ be the length of _subtags_[0].
++    let mut dash_index = subtags.next().unwrap_or_default().len();
++    // 6. Remove the first element from _subtags_.
++    // 7. For each String _subtag_ of _subtags_, do
++    for subtag in subtags {
++        // a. If _subtag_ is matched by the unicode_variant_subtag Unicode locale nonterminal, then
++        if is_unicode_variant_subtag(subtag) {
++            // i. Return the substring of _baseName_ from _dashIndex_ + 1.
++            return Some(base_name[dash_index + 1..].to_string());
++        }
++        // b. Let _subtagLength_ be the length of _subtag_.
++        // c. Set _dashIndex_ to _dashIndex_ + _subtagLength_ + 1.
++        dash_index += subtag.len() + 1;
++    }
++    // 8. Return *undefined*.
++    None
++}
++
++// ---- construction ------------------------------------------------------------------
++
++/// WeekdayToUValue ( _fw_ )
++fn weekday_to_u_value(fw: String) -> String {
++    // 1. For each row of [table-locale-weekday-string-value], except the header row, in table order, do
++    //   a. Let _weekday_ be the Weekday value of the current row.
++    //   b. Let _string_ be the String value of the current row.
++    //   c. If _fw_ is equal to _weekday_, return _string_.
++    const TABLE: [(&str, &str); 8] = [
++        ("0", "sun"),
++        ("1", "mon"),
++        ("2", "tue"),
++        ("3", "wed"),
++        ("4", "thu"),
++        ("5", "fri"),
++        ("6", "sat"),
++        ("7", "sun"),
++    ];
++    for (weekday, string) in TABLE {
++        if fw == weekday {
++            return string.to_string();
++        }
++    }
++    // 2. Return _fw_.
++    fw
++}
++
++/// WeekdayUValueToNumber ( _fw_ ): the ISO 8601 day of week for a `fw` value.
++pub(crate) fn weekday_u_value_to_number(fw: &str) -> Option<u8> {
++    match fw {
++        "mon" => Some(1),
++        "tue" => Some(2),
++        "wed" => Some(3),
++        "thu" => Some(4),
++        "fri" => Some(5),
++        "sat" => Some(6),
++        "sun" => Some(7),
++        _ => None,
++    }
++}
++
++/// UpdateLanguageId ( _tag_, _options_ )
++fn update_language_id(agent: &mut Agent, tag: &str, options: Object) -> JsResult<String> {
++    // 1. Let _baseName_ be GetLocaleBaseName(_tag_).
++    let base_name = get_locale_base_name(tag);
++    // 2. Let _language_ be ? GetOption(_options_, *"language"*, ~string~, ~empty~, GetLocaleLanguage(_baseName_)).
++    let default = get_locale_language(base_name);
++    let language =
++        get_string_option(agent, options, "language", &[], Some(&default))?.unwrap_or(default);
++    // 3. If _language_ cannot be matched by the unicode_language_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++    if !is_unicode_language_subtag(&language) {
++        return Err(agent.throw_range_error("invalid language subtag"));
++    }
++    // 4. Let _script_ be ? GetOption(_options_, *"script"*, ~string~, ~empty~, GetLocaleScript(_baseName_)).
++    let default = get_locale_script(base_name);
++    let script = get_string_option(agent, options, "script", &[], default.as_deref())?;
++    // 5. If _script_ is not *undefined*, then
++    if let Some(script) = &script {
++        // a. If _script_ cannot be matched by the unicode_script_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++        if !is_unicode_script_subtag(script) {
++            return Err(agent.throw_range_error("invalid script subtag"));
++        }
++    }
++    // 6. Let _region_ be ? GetOption(_options_, *"region"*, ~string~, ~empty~, GetLocaleRegion(_baseName_)).
++    let default = get_locale_region(base_name);
++    let region = get_string_option(agent, options, "region", &[], default.as_deref())?;
++    // 7. If _region_ is not *undefined*, then
++    if let Some(region) = &region {
++        // a. If _region_ cannot be matched by the unicode_region_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++        if !is_unicode_region_subtag(region) {
++            return Err(agent.throw_range_error("invalid region subtag"));
++        }
++    }
++    // 8. Let _variants_ be ? GetOption(_options_, *"variants"*, ~string~, ~empty~, GetLocaleVariants(_baseName_)).
++    let default = get_locale_variants(base_name);
++    let variants = get_string_option(agent, options, "variants", &[], default.as_deref())?;
++    // 9. If _variants_ is not *undefined*, then
++    if let Some(variants) = &variants {
++        // a. If _variants_ is the empty String, throw a *RangeError* exception.
++        if variants.is_empty() {
++            return Err(agent.throw_range_error("invalid variants"));
++        }
++        // b. Let _lowerVariants_ be the ASCII-lowercase of _variants_.
++        let lower_variants = variants.to_ascii_lowercase();
++        // c. Let _variantSubtags_ be StringSplitToList(_lowerVariants_, *"-"*).
++        let variant_subtags: Vec<&str> = lower_variants.split('-').collect();
++        // d. For each element _variant_ of _variantSubtags_, do
++        for variant in &variant_subtags {
++            // i. If _variant_ cannot be matched by the unicode_variant_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++            if !is_unicode_variant_subtag(variant) {
++                return Err(agent.throw_range_error("invalid variant subtag"));
++            }
++        }
++        // e. If _variantSubtags_ contains any duplicate elements, throw a *RangeError* exception.
++        for (i, variant) in variant_subtags.iter().enumerate() {
++            if variant_subtags[..i].contains(variant) {
++                return Err(agent.throw_range_error("duplicate variant subtag"));
++            }
++        }
++    }
++    // 10. Let _allExtensions_ be the suffix of _tag_ following _baseName_.
++    let all_extensions = &tag[base_name.len()..];
++    // 11. Let _newTag_ be _language_.
++    let mut new_tag = language;
++    // 12. If _script_ is not *undefined*, set _newTag_ to the string-concatenation of _newTag_, *"-"*, and _script_.
++    if let Some(script) = script {
++        new_tag = format!("{new_tag}-{script}");
++    }
++    // 13. If _region_ is not *undefined*, set _newTag_ to the string-concatenation of _newTag_, *"-"*, and _region_.
++    if let Some(region) = region {
++        new_tag = format!("{new_tag}-{region}");
++    }
++    // 14. If _variants_ is not *undefined*, set _newTag_ to the string-concatenation of _newTag_, *"-"*, and _variants_.
++    if let Some(variants) = variants {
++        new_tag = format!("{new_tag}-{variants}");
++    }
++    // 15. Set _newTag_ to the string-concatenation of _newTag_ and _allExtensions_.
++    new_tag.push_str(all_extensions);
++    // 16. Return _newTag_.
++    Ok(new_tag)
++}
++
++/// The result of MakeLocaleRecord: [[locale]] and the value for each key of
++/// _localeExtensionKeys_.
++struct LocaleRecord {
++    locale: String,
++    keys: Vec<(&'static str, Option<String>)>,
++}
++
++impl LocaleRecord {
++    fn get(&self, key: &str) -> Option<String> {
++        self.keys
++            .iter()
++            .find(|(k, _)| *k == key)
++            .and_then(|(_, v)| v.clone())
++    }
++}
++
++/// MakeLocaleRecord ( _tag_, _options_, _localeExtensionKeys_ )
++fn make_locale_record(
++    tag: &str,
++    options: &[(&'static str, Option<String>)],
++    locale_extension_keys: &[&'static str],
++) -> LocaleRecord {
++    // 1. If _tag_ contains a substring that is a Unicode locale extension sequence, then
++    let (attributes, mut keywords) = match unicode_extension_of(tag) {
++        Some(extension) => {
++            // a. Let _extension_ be the String value consisting of the substring of the Unicode locale extension sequence within _tag_.
++            // b. Let _components_ be UnicodeExtensionComponents(_extension_).
++            // c. Let _attributes_ be _components_.[[Attributes]].
++            // d. Let _keywords_ be _components_.[[Keywords]].
++            unicode_extension_components(extension)
++        }
++        // 2. Else,
++        // a. Let _attributes_ be a new empty List.
++        // b. Let _keywords_ be a new empty List.
++        None => (Vec::new(), Vec::new()),
++    };
++    // 3. Let _result_ be a new Record.
++    let mut result: Vec<(&'static str, Option<String>)> = Vec::new();
++    // 4. For each element _key_ of _localeExtensionKeys_, do
++    for &key in locale_extension_keys {
++        // a. If _keywords_ contains an element whose [[Key]] is _key_, then
++        //   i. Let _entry_ be the element of _keywords_ whose [[Key]] is _key_.
++        //   ii. Let _value_ be _entry_.[[Value]].
++        // b. Else,
++        //   i. Let _entry_ be ~empty~.
++        //   ii. Let _value_ be *undefined*.
++        let entry = keywords.iter().position(|k| k.key == key);
++        let mut value = entry.map(|i| keywords[i].value.clone());
++        // c. Assert: _options_ has a field [[<_key_>]].
++        // d. Let _overrideValue_ be _options_.[[<_key_>]].
++        let override_value = options
++            .iter()
++            .find(|(k, _)| *k == key)
++            .and_then(|(_, v)| v.as_ref());
++        // e. If _overrideValue_ is not *undefined*, then
++        if let Some(override_value) = override_value {
++            // i. Set _value_ to CanonicalizeUValue(_key_, _overrideValue_).
++            let mut canonical = canonicalize_u_value(key, override_value);
++            // A canonical Unicode locale extension sequence omits the value *"true"*.
++            if canonical == "true" {
++                canonical.clear();
++            }
++            value = Some(canonical.clone());
++            match entry {
++                // ii. If _entry_ is not ~empty~, then
++                //   1. Set _entry_.[[Value]] to _value_.
++                Some(i) => keywords[i].value = canonical,
++                // iii. Else,
++                //   1. Append the Record { [[Key]]: _key_, [[Value]]: _value_ } to _keywords_.
++                None => keywords.push(Keyword {
++                    key: key.to_string(),
++                    value: canonical,
++                }),
++            }
++        }
++        // f. Set _result_.[[<_key_>]] to _value_.
++        result.push((key, value));
++    }
++    // 5. Let _locale_ be the String value that is _tag_ with any Unicode locale extension sequences removed.
++    let locale = remove_unicode_extension(tag);
++    // 6. If _attributes_ is not empty or _keywords_ is not empty, then
++    let locale = if !attributes.is_empty() || !keywords.is_empty() {
++        // a. Set _result_.[[locale]] to InsertUnicodeExtensionAndCanonicalize(_locale_, _attributes_, _keywords_).
++        insert_unicode_extension_and_canonicalize(&locale, &attributes, &keywords)
++    } else {
++        // 7. Else,
++        // a. Set _result_.[[locale]] to CanonicalizeUnicodeLocaleId(_locale_).
++        canonicalize_unicode_locale_id(&locale)
++    };
++    // 8. Return _result_.
++    LocaleRecord {
++        locale,
++        keys: result,
++    }
++}
++
++/// A string option whose value must match the `type` Unicode locale nonterminal.
++fn get_type_option(
++    agent: &mut Agent,
++    options: Object,
++    property_key: &str,
++) -> JsResult<Option<String>> {
++    let value = get_string_option(agent, options, property_key, &[], None)?;
++    if let Some(value) = &value
++        && !is_unicode_type(value)
++    {
++        return Err(agent.throw_range_error(&format!("invalid {property_key}")));
++    }
++    Ok(value)
++}
++
++/// Intl.Locale ( _tag_ [ , _options_ ] ), steps 6 to 44, with _locale_ the
++/// object created in step 6.
++pub(crate) fn initialize_locale(
++    agent: &mut Agent,
++    locale: Object,
++    tag: Value,
++    options: Value,
++) -> JsResult<()> {
++    // 2. Let _localeExtensionKeys_ be %Intl.Locale%.[[LocaleExtensionKeys]].
++    let locale_extension_keys = LOCALE_EXTENSION_KEYS;
++    // 7. If _tag_ is not a String and _tag_ is not an Object, throw a *TypeError* exception.
++    if !matches!(tag, Value::String(_) | Value::Object(_)) {
++        return Err(agent.throw_type_error("Intl.Locale tag must be a string or an object"));
++    }
++    // 8. If _tag_ is an Object and _tag_ has an [[InitializedLocale]] internal slot, then
++    let tag = if let Some(locale) = intl::initialized_locale(agent, tag) {
++        // a. Set _tag_ to _tag_.[[Locale]].
++        locale
++    } else {
++        // 9. Else,
++        // a. Set _tag_ to ? ToString(_tag_).
++        let s = ops::to_string(agent, tag)?;
++        // A string with a non-ASCII code unit is not a well-formed tag (step 11).
++        match intl::ascii_string(agent, s) {
++            Some(s) => s,
++            None => {
++                // 10. Set _options_ to ? CoerceOptionsToObject(_options_).
++                intl::coerce_options_to_object(agent, options)?;
++                // 11. If IsWellFormedLanguageTag(_tag_) is *false*, throw a *RangeError* exception.
++                return Err(agent.throw_range_error("invalid language tag"));
++            }
++        }
++    };
++    // 10. Set _options_ to ? CoerceOptionsToObject(_options_).
++    let options = intl::coerce_options_to_object(agent, options)?;
++    // 11. If IsWellFormedLanguageTag(_tag_) is *false*, throw a *RangeError* exception.
++    if !is_well_formed_language_tag(&tag) {
++        return Err(agent.throw_range_error("invalid language tag"));
++    }
++    // 12. NOTE: Because LanguageId canonicalization can alter _tag_ in arbitrary ways according to Alias Rules from supplementalMetadata.xml, it is necessary to perform such canonicalization before applying overrides from _options_.
++    // 13. Set _tag_ to CanonicalizeUnicodeLocaleId(_tag_).
++    let tag = canonicalize_unicode_locale_id(&tag);
++    // 14. Set _tag_ to ? UpdateLanguageId(_tag_, _options_).
++    let tag = update_language_id(agent, &tag, options)?;
++    // 15. Let _opt_ be a new Record.
++    // 16. Let _calendar_ be ? GetOption(_options_, *"calendar"*, ~string~, ~empty~, *undefined*).
++    // 17. If _calendar_ is not *undefined*, then
++    //   a. If _calendar_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.
++    let calendar = get_type_option(agent, options, "calendar")?;
++    // 18. Set _opt_.[[ca]] to _calendar_.
++    // 19. Let _collation_ be ? GetOption(_options_, *"collation"*, ~string~, ~empty~, *undefined*).
++    // 20. If _collation_ is not *undefined*, then
++    //   a. If _collation_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.
++    let collation = get_type_option(agent, options, "collation")?;
++    // 21. Set _opt_.[[co]] to _collation_.
++    // 22. Let _fw_ be ? GetOption(_options_, *"firstDayOfWeek"*, ~string~, ~empty~, *undefined*).
++    let fw = get_string_option(agent, options, "firstDayOfWeek", &[], None)?;
++    // 23. If _fw_ is not *undefined*, then
++    let fw = match fw {
++        Some(fw) => {
++            // a. Set _fw_ to WeekdayToUValue(_fw_).
++            let fw = weekday_to_u_value(fw);
++            // b. If _fw_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.
++            if !is_unicode_type(&fw) {
++                return Err(agent.throw_range_error("invalid firstDayOfWeek"));
++            }
++            Some(fw)
++        }
++        None => None,
++    };
++    // 24. Set _opt_.[[fw]] to _fw_.
++    // 25. Let _hc_ be ? GetOption(_options_, *"hourCycle"*, ~string~, « *"h11"*, *"h12"*, *"h23"*, *"h24"* », *undefined*).
++    // 26. Set _opt_.[[hc]] to _hc_.
++    let hc = get_string_option(
++        agent,
++        options,
++        "hourCycle",
++        &["h11", "h12", "h23", "h24"],
++        None,
++    )?;
++    // 27. Let _kf_ be ? GetOption(_options_, *"caseFirst"*, ~string~, « *"upper"*, *"lower"*, *"false"* », *undefined*).
++    // 28. Set _opt_.[[kf]] to _kf_.
++    let kf = get_string_option(
++        agent,
++        options,
++        "caseFirst",
++        &["upper", "lower", "false"],
++        None,
++    )?;
++    // 29. Let _kn_ be ? GetOption(_options_, *"numeric"*, ~boolean~, ~empty~, *undefined*).
++    let kn = get_option(
++        agent,
++        options,
++        "numeric",
++        OptionType::Boolean,
++        None,
++        Some(Value::Undefined),
++    )?;
++    // 30. If _kn_ is not *undefined*, set _kn_ to ! ToString(_kn_).
++    // 31. Set _opt_.[[kn]] to _kn_.
++    let kn = match kn {
++        Value::Boolean(b) => Some(b.to_string()),
++        _ => None,
++    };
++    // 32. Let _numberingSystem_ be ? GetOption(_options_, *"numberingSystem"*, ~string~, ~empty~, *undefined*).
++    // 33. If _numberingSystem_ is not *undefined*, then
++    //   a. If _numberingSystem_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.
++    let numbering_system = get_type_option(agent, options, "numberingSystem")?;
++    // 34. Set _opt_.[[nu]] to _numberingSystem_.
++    let opt = [
++        ("ca", calendar),
++        ("co", collation),
++        ("fw", fw),
++        ("hc", hc),
++        ("kf", kf),
++        ("kn", kn),
++        ("nu", numbering_system),
++    ];
++    // 35. Let _localeRecord_ be MakeLocaleRecord(_tag_, _opt_, _localeExtensionKeys_).
++    let locale_record = make_locale_record(&tag, &opt, &locale_extension_keys);
++    // 36.-43. Set the internal slots of _locale_ from _localeRecord_.
++    let numeric = locale_extension_keys.contains(&"kn").then(|| {
++        // a. If _localeRecord_.[[kn]] is either *"true"* or the empty String, then
++        //   i. Set _locale_.[[Numeric]] to *true*.
++        // b. Else,
++        //   i. Set _locale_.[[Numeric]] to *false*.
++        matches!(locale_record.get("kn").as_deref(), Some("true" | ""))
++    });
++    let slots = IntlLocaleSlots {
++        locale: locale_record.locale.clone(),
++        calendar: locale_record.get("ca"),
++        collation: locale_record.get("co"),
++        first_day_of_week: locale_record.get("fw"),
++        hour_cycle: locale_record.get("hc"),
++        case_first: locale_record.get("kf"),
++        numeric,
++        numbering_system: locale_record.get("nu"),
++    };
++    match agent.native_mut::<IntlLocaleSlots>(locale) {
++        Some(target) => *target = slots,
++        None => return Err(agent.throw_type_error("object is not an Intl.Locale")),
++    }
++    Ok(())
++}
++
++// ---- brand check and accessors -----------------------------------------------------
++
++/// RequireInternalSlot(_loc_, [[InitializedLocale]]): a copy of the slots.
++pub(crate) fn require_initialized_locale(
++    agent: &mut Agent,
++    loc: Value,
++) -> JsResult<IntlLocaleSlots> {
++    if let Value::Object(o) = loc
++        && let Some(slots) = agent.native::<IntlLocaleSlots>(o)
++    {
++        return Ok(slots.clone());
++    }
++    Err(agent.throw_type_error("receiver is not an Intl.Locale"))
++}
++
++/// An optional string as a JS value (*undefined* for `None`).
++pub(crate) fn optional_string(agent: &mut Agent, s: Option<&str>) -> Value {
++    match s {
++        Some(s) => Value::String(agent.string(s)),
++        None => Value::Undefined,
++    }
++}
++
++/// Construct(%Intl.Locale%, « _tag_ »)
++pub(crate) fn construct_locale(agent: &mut Agent, tag: &str) -> JsResult<Value> {
++    if !agent.has_intrinsic("%Intl.Locale%") {
++        return Err(agent.not_implemented("%Intl.Locale% intrinsic"));
++    }
++    let constructor = agent.intrinsic("%Intl.Locale%");
++    let tag = Value::String(agent.string(tag));
++    Ok(Value::Object(ops::construct(
++        agent,
++        constructor,
++        &[tag],
++        None,
++    )?))
++}
++
++// ---- likely subtags ----------------------------------------------------------------
++
++fn expander() -> &'static LocaleExpander {
++    static E: OnceLock<LocaleExpander> = OnceLock::new();
++    E.get_or_init(LocaleExpander::new_extended)
++}
++
++/// The Add Likely Subtags algorithm applied to _locale_ (`None` when the
++/// locale cannot be parsed).
++pub(crate) fn add_likely_subtags(locale: &str) -> Option<String> {
++    let mut parsed = Locale::try_from_str(locale).ok()?;
++    expander().maximize(&mut parsed.id);
++    Some(parsed.to_string())
++}
++
++/// The Remove Likely Subtags algorithm applied to _locale_ (`None` when the
++/// locale cannot be parsed).
++pub(crate) fn remove_likely_subtags(locale: &str) -> Option<String> {
++    let mut parsed = Locale::try_from_str(locale).ok()?;
++    expander().minimize(&mut parsed.id);
++    Some(parsed.to_string())
++}
+diff --git a/crates/kahvi-cli/src/main.rs b/crates/kahvi-cli/src/main.rs
+index 1f6ccdc..77a95bd 100644
+--- a/crates/kahvi-cli/src/main.rs
++++ b/crates/kahvi-cli/src/main.rs
+@@ -40,7 +40,8 @@ fn parse_args() -> Result<Args, String> {
+             _ => return Err("only one script file may be given".into()),
+         }
+     }
+-    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
++    let file =
++        file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
+     Ok(Args {
+         preludes,
+         module,

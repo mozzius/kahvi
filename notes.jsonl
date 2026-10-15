@@ -911,3 +911,5 @@
 {"ticket": "I-date-time-format", "attempt": 543, "ts": 1792075670.3868158, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/support/intl_date_time_format.rs:154: #[allow(deprecated)]"}
 {"ticket": "I-collator", "attempt": 544, "ts": 1792075681.6644428, "text": "worker reported BLOCKED but changed files: ICU4X's compiled data has no search collations (`usage: \"search\"` for `de`), and `Intl.NumberFormat` is not implemented yet."}
 {"ticket": "I-collator", "attempt": 544, "ts": 1792075681.961871, "text": "rejected by gates: files outside scope: crates/kahvi-cli/src/main.rs"}
+{"ticket": "I-locale", "attempt": 545, "ts": 1792075700.533728, "text": "worker reported BLOCKED but changed files: the locale-data methods need CLDR region preference, calendar, collation, numbering system, time zone and week data that I did not wire up from ICU4X (`./spec` was also broken in this worktree)."}
+{"ticket": "I-locale", "attempt": 545, "ts": 1792075700.8247051, "text": "rejected by gates: files outside scope: crates/kahvi-cli/src/main.rs"}
