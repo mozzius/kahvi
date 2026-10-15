@@ -23,6 +23,10 @@ git -C "$work" checkout -q FETCH_HEAD
 cd "$work"
 
 pnpm install --frozen-lockfile
+# What docs/build.md asks for; postinstall skips the translations on CI.
+pnpm intl:compile
+cp google-services.json.example google-services.json
+cp .env.example .env
 pnpm add "react-native-kahvi@file:$pkg"
 
 # Patches for packages that embed Hermes themselves (react-native/patches).
