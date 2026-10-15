@@ -909,3 +909,5 @@
 {"ticket": "I-number-format", "attempt": 542, "ts": 1792075531.1027446, "text": "rejected by gates: files outside scope: crates/kahvi-cli/src/main.rs"}
 {"ticket": "I-date-time-format", "attempt": 543, "ts": 1792075669.9383245, "text": "worker reported BLOCKED but changed files: formatting needs a decision on ICU4X time zone and field-set mapping for PartitionDateTimePattern/FormatDateTimePattern, which I did not implement."}
 {"ticket": "I-date-time-format", "attempt": 543, "ts": 1792075670.3868158, "text": "rejected by gates: lint: lint suppression is architect-only at crates/kahvi-builtins/src/support/intl_date_time_format.rs:154: #[allow(deprecated)]"}
+{"ticket": "I-collator", "attempt": 544, "ts": 1792075681.6644428, "text": "worker reported BLOCKED but changed files: ICU4X's compiled data has no search collations (`usage: \"search\"` for `de`), and `Intl.NumberFormat` is not implemented yet."}
+{"ticket": "I-collator", "attempt": 544, "ts": 1792075681.961871, "text": "rejected by gates: files outside scope: crates/kahvi-cli/src/main.rs"}

@@ -1,0 +1,643 @@
+diff --git a/crates/kahvi-builtins/src/intl_collator/constructor.rs b/crates/kahvi-builtins/src/intl_collator/constructor.rs
+index 1858c58..463d56a 100644
+--- a/crates/kahvi-builtins/src/intl_collator/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_collator/constructor.rs
+@@ -4,6 +4,15 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::{
++    OptionType, SpecialBehaviour, canonicalize_locale_list, coerce_options_to_object, get_option,
++    get_string_option, resolve_options,
++};
++use crate::support::intl_collator::{
++    CollatorSlots, build_collator, default_sensitivity_and_ignore_punctuation, locale_data,
++    service_constructor,
++};
++
+ /// Intl.Collator
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -13,31 +22,116 @@ pub(crate) fn constructor(
+ ) -> JsResult<Value> {
+     // When the `Intl.Collator` function is called with optional arguments _locales_ and _options_, the following steps are taken:
+     //
++    let _ = this;
++    let locales = args.get_or_undefined(0);
++    let options = args.get_or_undefined(1);
+     // 1. If NewTarget is *undefined*, let _newTarget_ be the active function object, else let _newTarget_ be NewTarget.
++    let new_target = match new_target {
++        Some(new_target) => new_target,
++        None => match agent.active_function() {
++            Some(f) => f,
++            None => return Err(agent.throw_type_error("Intl.Collator has no active function")),
++        },
++    };
+     // 2. Let _internalSlotsList_ be « [[InitializedCollator]], [[Locale]], [[Usage]], [[Collation]], [[Numeric]], [[CaseFirst]], [[Sensitivity]], [[IgnorePunctuation]], [[BoundCompare]] ».
+     // 3. Let _collator_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.Collator.prototype%"*, _internalSlotsList_).
++    // The object is allocated with its slots once they are resolved; the
++    // prototype lookup is the observable part of this step.
++    let proto =
++        ops::get_prototype_from_constructor(agent, new_target, "%Intl.Collator.prototype%")?;
+     // 4. NOTE: The source of locale data for ResolveOptions depends upon the *"usage"* property of _options_, but the following two steps must observably precede that lookup (and must not observably repeat inside ResolveOptions).
+     // 5. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
++    let requested_locales = canonicalize_locale_list(agent, locales)?;
+     // 6. Set _options_ to ? CoerceOptionsToObject(_options_).
++    let options = coerce_options_to_object(agent, options)?;
+     // 7. Let _usage_ be ? GetOption(_options_, *"usage"*, ~string~, « *"sort"*, *"search"* », *"sort"*).
++    let usage = get_string_option(agent, options, "usage", &["sort", "search"], Some("sort"))?
++        .unwrap_or_default();
+     // 8. Set _collator_.[[Usage]] to _usage_.
+     // 9. If _usage_ is *"sort"*, then
+     //    a. Let _localeData_ be %Intl.Collator%.[[SortLocaleData]].
+     // 10. Else,
+     //    a. Let _localeData_ be %Intl.Collator%.[[SearchLocaleData]].
++    let search = usage != "sort";
++    let locale_data = |locale: &str, key: &str| locale_data(search, locale, key);
+     // 11. Let _optionsResolution_ be ? ResolveOptions(%Intl.Collator%, _localeData_, CreateArrayFromList(_requestedLocales_), _options_).
++    let requested: Vec<Value> = requested_locales
++        .iter()
++        .map(|l| Value::String(agent.string(l)))
++        .collect();
++    let requested = ops::create_array_from_list(agent, &requested);
++    let options_resolution = resolve_options(
++        agent,
++        &service_constructor(),
++        &locale_data,
++        Value::Object(requested),
++        Value::Object(options),
++        &[SpecialBehaviour::CoerceOptions],
++        None,
++    )?;
+     // 12. Let _resolvedLocale_ be _optionsResolution_.[[ResolvedLocale]].
++    let resolved_locale = options_resolution.resolved_locale;
+     // 13. Set _collator_.[[Locale]] to _resolvedLocale_.[[Locale]].
++    let locale = resolved_locale.locale.clone();
+     // 14. If _resolvedLocale_.[[co]] is *null*, let _collation_ be *"default"*. Otherwise, let _collation_ be _resolvedLocale_.[[co]].
+     // 15. Set _collator_.[[Collation]] to _collation_.
++    let collation = resolved_locale.get("co").unwrap_or("default").to_string();
+     // 16. Set _collator_.[[Numeric]] to SameValue(_resolvedLocale_.[[kn]], *"true"*).
++    let numeric = resolved_locale.get("kn") == Some("true");
+     // 17. Set _collator_.[[CaseFirst]] to _resolvedLocale_.[[kf]].
++    let case_first = resolved_locale.get("kf").unwrap_or("false").to_string();
+     // 18. Let _resolvedLocaleData_ be _resolvedLocale_.[[LocaleData]].
++    let (default_sensitivity_of_data, default_ignore_punctuation) =
++        default_sensitivity_and_ignore_punctuation(&resolved_locale.data_locale);
+     // 19. If _usage_ is *"sort"*, let _defaultSensitivity_ be *"variant"*. Otherwise, let _defaultSensitivity_ be _resolvedLocaleData_.[[sensitivity]].
++    let default_sensitivity = if usage == "sort" {
++        "variant"
++    } else {
++        default_sensitivity_of_data
++    };
+     // 20. Set _collator_.[[Sensitivity]] to ? GetOption(_options_, *"sensitivity"*, ~string~, « *"base"*, *"accent"*, *"case"*, *"variant"* », _defaultSensitivity_).
++    let sensitivity = get_string_option(
++        agent,
++        options,
++        "sensitivity",
++        &["base", "accent", "case", "variant"],
++        Some(default_sensitivity),
++    )?
++    .unwrap_or_default();
+     // 21. Let _defaultIgnorePunctuation_ be _resolvedLocaleData_.[[ignorePunctuation]].
+     // 22. Set _collator_.[[IgnorePunctuation]] to ? GetOption(_options_, *"ignorePunctuation"*, ~boolean~, ~empty~, _defaultIgnorePunctuation_).
++    let ignore_punctuation = get_option(
++        agent,
++        options,
++        "ignorePunctuation",
++        OptionType::Boolean,
++        None,
++        Some(Value::Boolean(default_ignore_punctuation)),
++    )?;
++    let ignore_punctuation = matches!(ignore_punctuation, Value::Boolean(true));
++    let collator = build_collator(
++        agent,
++        &resolved_locale.data_locale,
++        &collation,
++        numeric,
++        &case_first,
++        &sensitivity,
++        ignore_punctuation,
++    )?;
++    let collator = agent.object_with_kind(
++        Some(proto),
++        ObjectKind::Native(Box::new(CollatorSlots {
++            locale,
++            usage,
++            collation,
++            numeric,
++            case_first,
++            sensitivity,
++            ignore_punctuation,
++            bound_compare: None,
++            collator,
++        })),
++    );
+     // 23. Return _collator_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Collator"))
++    Ok(Value::Object(collator))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs b/crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs
+index d158f1a..be8b45e 100644
+--- a/crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs
++++ b/crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs
+@@ -2,8 +2,11 @@
+ //!
+ //! Spec: https://tc39.es/ecma402/#sec-intl.collator.prototype.compare
+ 
++use kahvi_core::function::{builtin_slots, create_builtin_function};
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_collator::{CollatorSlots, compare_strings, require_collator};
++
+ /// get Intl.Collator.prototype.compare
+ pub(crate) fn prototype_get_compare(
+     agent: &mut Agent,
+@@ -14,24 +17,63 @@ pub(crate) fn prototype_get_compare(
+     // This named accessor property returns a function that compares two strings according to the sort order of this Collator object.
+     // Intl.Collator.prototype.compare is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:
+     //
++    let _ = (args, new_target);
+     // 1. Let _collator_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_collator_, [[InitializedCollator]]).
++    let collator = require_collator(agent, this)?;
+     // 3. If _collator_.[[BoundCompare]] is *undefined*, then
+-    //    a. Let _closure_ be a new Abstract Closure with parameters (_x_, _y_) that captures _collator_ and performs the following steps when called:
+-    //       i. Let _xString_ be ? ToString(_x_).
+-    //       ii. Let _yString_ be ? ToString(_y_).
+-    //       iii. Return CompareStrings(_collator_, _xString_, _yString_).
+-    //    b. Set _collator_.[[BoundCompare]] to CreateBuiltinFunction(_closure_, 2, *""*, « »).
++    let bound_compare = agent
++        .native::<CollatorSlots>(collator)
++        .and_then(|slots| slots.bound_compare);
++    let bound_compare = match bound_compare {
++        Some(bound_compare) => bound_compare,
++        None => {
++            //    a. Let _closure_ be a new Abstract Closure with parameters (_x_, _y_) that captures _collator_ and performs the following steps when called:
++            //    b. Set _collator_.[[BoundCompare]] to CreateBuiltinFunction(_closure_, 2, *""*, « »).
++            let empty = PropertyKey::String(agent.string(""));
++            let f = create_builtin_function(
++                agent,
++                compare_closure,
++                2,
++                empty,
++                vec![Value::Object(collator)],
++                None,
++                None,
++                None,
++                false,
++            );
++            if let Some(slots) = agent.native_mut::<CollatorSlots>(collator) {
++                slots.bound_compare = Some(f);
++            }
++            f
++        }
++    };
+     // 4. Return _collator_.[[BoundCompare]].
+-    //
+-    // NOTE:
+-    // The returned function is bound to _collator_ so that it can be passed directly to `Array.prototype.sort` or other functions.
+-    // This is considered a historical artefact, as part of a convention which is no longer followed for new features, but is preserved to maintain compatibility with existing programs.
+-    // [subclause sec-collator-comparestrings: CompareStrings (
+-    // _collator_: an Intl.Collator,
+-    // _x_: a String,
+-    // _y_: a String,
+-    // ): a Number, but not *NaN*]
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.Collator.prototype.compare"))
++    Ok(Value::Object(bound_compare))
++}
++
++/// The Abstract Closure of step 3.a.
++fn compare_closure(
++    agent: &mut Agent,
++    _this: Value,
++    args: &[Value],
++    _new_target: Option<Object>,
++) -> JsResult<Value> {
++    let collator = match agent.active_function() {
++        Some(f) => builtin_slots(agent, f)[0],
++        None => Value::Undefined,
++    };
++    let Value::Object(collator) = collator else {
++        return Err(agent.throw_type_error("compare function without its collator"));
++    };
++    // i. Let _xString_ be ? ToString(_x_).
++    let x_string = ops::to_string(agent, args.get_or_undefined(0))?;
++    // ii. Let _yString_ be ? ToString(_y_).
++    let y_string = ops::to_string(agent, args.get_or_undefined(1))?;
++    // iii. Return CompareStrings(_collator_, _xString_, _yString_).
++    let Some(slots) = agent.native::<CollatorSlots>(collator) else {
++        return Err(agent.throw_type_error("not an Intl.Collator"));
++    };
++    let result = compare_strings(slots, agent.str(x_string), agent.str(y_string));
++    Ok(Value::Number(result))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs
+index 2070fe5..44cfb5e 100644
+--- a/crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_collator::{CollatorSlots, RELEVANT_EXTENSION_KEYS, require_collator};
++
+ /// Intl.Collator.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+@@ -13,45 +15,64 @@ pub(crate) fn prototype_resolved_options(
+ ) -> JsResult<Value> {
+     // This function provides access to the locale and options computed during initialization of the object.
+     //
++    let _ = (args, new_target);
+     // 1. Let _collator_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_collator_, [[InitializedCollator]]).
++    let collator = require_collator(agent, this)?;
+     // 3. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
++    let object_prototype = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(object_prototype));
+     // 4. For each row of [table-collator-resolvedoptions-properties], except the header row, in table order, do
+-    //    a. Let _propertyKey_ be the Property value of the current row.
+-    //    b. Let _value_ be the value of _collator_'s internal slot whose name is the Internal Slot value of the current row.
+-    //    c. If the current row has an Extension Key value, then
+-    //       i. Let _extensionKey_ be the Extension Key value of the current row.
+-    //       ii. If %Intl.Collator%.[[RelevantExtensionKeys]] does not contain _extensionKey_, then
+-    //          1. Set _value_ to *undefined*.
+-    //    d. If _value_ is not *undefined*, then
+-    //       i. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++    let Some(slots) = agent.native::<CollatorSlots>(collator) else {
++        return Err(agent.throw_type_error("not an Intl.Collator"));
++    };
++    let (locale, usage, sensitivity) = (
++        slots.locale.clone(),
++        slots.usage.clone(),
++        slots.sensitivity.clone(),
++    );
++    let (collation, case_first) = (slots.collation.clone(), slots.case_first.clone());
++    let (ignore_punctuation, numeric) = (slots.ignore_punctuation, slots.numeric);
++    let rows: Vec<(&str, Option<&str>, Value)> = vec![
++        ("locale", None, Value::String(agent.string(&locale))),
++        ("usage", None, Value::String(agent.string(&usage))),
++        (
++            "sensitivity",
++            None,
++            Value::String(agent.string(&sensitivity)),
++        ),
++        (
++            "ignorePunctuation",
++            None,
++            Value::Boolean(ignore_punctuation),
++        ),
++        ("collation", None, Value::String(agent.string(&collation))),
++        ("numeric", Some("kn"), Value::Boolean(numeric)),
++        (
++            "caseFirst",
++            Some("kf"),
++            Value::String(agent.string(&case_first)),
++        ),
++    ];
++    for (property, extension_key, mut value) in rows {
++        //    a. Let _propertyKey_ be the Property value of the current row.
++        let property_key = agent.key(property);
++        //    b. Let _value_ be the value of _collator_'s internal slot whose name is the Internal Slot value of the current row.
++        //    c. If the current row has an Extension Key value, then
++        if let Some(extension_key) = extension_key {
++            //       i. Let _extensionKey_ be the Extension Key value of the current row.
++            //       ii. If %Intl.Collator%.[[RelevantExtensionKeys]] does not contain _extensionKey_, then
++            if !RELEVANT_EXTENSION_KEYS.contains(&extension_key) {
++                //          1. Set _value_ to *undefined*.
++                value = Value::Undefined;
++            }
++        }
++        //    d. If _value_ is not *undefined*, then
++        if !matches!(value, Value::Undefined) {
++            //       i. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++            ops::create_data_property_or_throw(agent, options, property_key, value)?;
++        }
++    }
+     // 5. Return _options_.
+-    //
+-    // Resolved Options of Collator Instances
+-    // Internal Slot |
+-    // Property |
+-    // Extension Key |
+-    // [[Locale]] |
+-    // *"locale"* |
+-    // |
+-    // [[Usage]] |
+-    // *"usage"* |
+-    // |
+-    // [[Sensitivity]] |
+-    // *"sensitivity"* |
+-    // |
+-    // [[IgnorePunctuation]] |
+-    // *"ignorePunctuation"* |
+-    // |
+-    // [[Collation]] |
+-    // *"collation"* |
+-    // |
+-    // [[Numeric]] |
+-    // *"numeric"* |
+-    // *"kn"* |
+-    // [[CaseFirst]] |
+-    // *"caseFirst"* |
+-    // *"kf"* |
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Collator.prototype.resolvedOptions"))
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_collator.rs b/crates/kahvi-builtins/src/support/intl_collator.rs
+index ed4ec46..1bb8e4c 100644
+--- a/crates/kahvi-builtins/src/support/intl_collator.rs
++++ b/crates/kahvi-builtins/src/support/intl_collator.rs
+@@ -1,7 +1,271 @@
+ //! Intl.Collator: the [[InitializedCollator]] internal slots and the
+ //! abstract operations shared by its built-ins.
+-//!
+-//! The ticket for this service owns this file: define the internal-slot
+-//! struct here (`ObjectKind::Native`, see docs/INTL.md) and the abstract
+-//! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use std::cmp::Ordering;
++
++use icu::collator::options::{
++    AlternateHandling, CaseLevel, CollatorOptions, MaxVariable, Strength,
++};
++use icu::collator::preferences::{CollationCaseFirst, CollationNumericOrdering, CollationType};
++use icu::collator::provider::{Baked, CollationMetadataV1};
++use icu::collator::{CollatorBorrowed, CollatorPreferences};
++use icu::locale::Locale;
++use icu::locale::extensions::unicode::Value as UnicodeValue;
++use icu::locale::fallback::LocaleFallbacker;
++use icu_provider::{
++    DataIdentifierBorrowed, DataLocale, DataMarkerAttributes, DataProvider, DataRequest,
++};
++use kahvi_core::gc::{Trace, Tracer};
++use kahvi_core::prelude::*;
++
++use crate::support::intl::{
++    OptionType, ResolutionOptionDescriptor, ServiceConstructor, available_locales,
++};
++
++/// The internal slots of an Intl.Collator, plus the ICU4X collator built
++/// from them.
++#[derive(Debug)]
++pub(crate) struct CollatorSlots {
++    /// [[Locale]]
++    pub locale: String,
++    /// [[Usage]]
++    pub usage: String,
++    /// [[Collation]]
++    pub collation: String,
++    /// [[Numeric]]
++    pub numeric: bool,
++    /// [[CaseFirst]]
++    pub case_first: String,
++    /// [[Sensitivity]]
++    pub sensitivity: String,
++    /// [[IgnorePunctuation]]
++    pub ignore_punctuation: bool,
++    /// [[BoundCompare]]
++    pub bound_compare: Option<Object>,
++    /// The ICU4X collator CompareStrings uses.
++    pub collator: CollatorBorrowed<'static>,
++}
++
++impl Trace for CollatorSlots {
++    fn trace(&self, t: &mut Tracer) {
++        self.bound_compare.trace(t);
++    }
++}
++
++/// %Intl.Collator%.[[RelevantExtensionKeys]]
++pub(crate) const RELEVANT_EXTENSION_KEYS: &[&str] = &["co", "kf", "kn"];
++
++/// %Intl.Collator%.[[ResolutionOptionDescriptors]]
++pub(crate) const RESOLUTION_OPTION_DESCRIPTORS: &[ResolutionOptionDescriptor] = &[
++    ResolutionOptionDescriptor {
++        key: "co",
++        property: "collation",
++        r#type: OptionType::String,
++        values: None,
++    },
++    ResolutionOptionDescriptor {
++        key: "kf",
++        property: "caseFirst",
++        r#type: OptionType::String,
++        values: Some(&["upper", "lower", "false"]),
++    },
++    ResolutionOptionDescriptor {
++        key: "kn",
++        property: "numeric",
++        r#type: OptionType::Boolean,
++        values: None,
++    },
++];
++
++/// %Intl.Collator% as ResolveOptions reads it.
++pub(crate) fn service_constructor() -> ServiceConstructor<'static> {
++    ServiceConstructor {
++        available_locales: available_locales(),
++        relevant_extension_keys: RELEVANT_EXTENSION_KEYS,
++        resolution_option_descriptors: RESOLUTION_OPTION_DESCRIPTORS,
++    }
++}
++
++/// RequireInternalSlot(_collator_, [[InitializedCollator]])
++pub(crate) fn require_collator(agent: &mut Agent, v: Value) -> JsResult<Object> {
++    match v {
++        Value::Object(o) if agent.native::<CollatorSlots>(o).is_some() => Ok(o),
++        _ => Err(agent.throw_type_error("not an Intl.Collator")),
++    }
++}
++
++fn parse_locale(locale: &str) -> Locale {
++    locale.parse::<Locale>().unwrap_or(Locale::UNKNOWN)
++}
++
++fn collation_type(name: &str) -> Option<CollationType> {
++    let value = UnicodeValue::try_from_str(name).ok()?;
++    CollationType::try_from(&value).ok()
++}
++
++/// The collation types ICU4X can have data for, other than the ones
++/// ECMA-402 excludes from [[SortLocaleData]] (*"standard"* and *"search"*).
++const COLLATION_CANDIDATES: &[&str] = &[
++    "compat", "dict", "ducet", "emoji", "eor", "phonebk", "phonetic", "pinyin", "searchjl",
++    "stroke", "trad", "unihan", "zhuyin",
++];
++
++/// Whether ICU4X has collation data of `collation` for `locale` (or a locale
++/// it falls back to).
++fn has_collation_data(locale: &Locale, collation: &str) -> bool {
++    let Ok(attributes) = DataMarkerAttributes::try_from_str(collation) else {
++        return false;
++    };
++    let fallbacker = LocaleFallbacker::new();
++    let mut iterator = fallbacker
++        .for_config(Default::default())
++        .fallback_for(DataLocale::from(locale));
++    loop {
++        let request = DataRequest {
++            id: DataIdentifierBorrowed::for_marker_attributes_and_locale(
++                attributes,
++                iterator.get(),
++            ),
++            ..Default::default()
++        };
++        if DataProvider::<CollationMetadataV1>::load(&Baked, request).is_ok() {
++            return true;
++        }
++        if iterator.get().is_unknown() {
++            return false;
++        }
++        iterator.step();
++    }
++}
++
++/// [[SortLocaleData]] / [[SearchLocaleData]] (by `search`) for `locale` and
++/// `key`: the supported values, the default first.
++pub(crate) fn locale_data(search: bool, locale: &str, key: &str) -> Vec<Option<String>> {
++    let locale = parse_locale(locale);
++    match key {
++        "co" => {
++            let mut list = vec![None];
++            if !search {
++                list.extend(
++                    COLLATION_CANDIDATES
++                        .iter()
++                        .filter(|c| has_collation_data(&locale, c))
++                        .map(|c| Some(c.to_string())),
++                );
++            }
++            list
++        }
++        "kf" => {
++            let default = default_options(&locale).0;
++            let mut list = vec![Some(case_first_name(default).to_string())];
++            for other in [
++                CollationCaseFirst::False,
++                CollationCaseFirst::Lower,
++                CollationCaseFirst::Upper,
++            ] {
++                if other != default {
++                    list.push(Some(case_first_name(other).to_string()));
++                }
++            }
++            list
++        }
++        "kn" => vec![Some("false".to_string()), Some("true".to_string())],
++        _ => Vec::new(),
++    }
++}
++
++fn case_first_name(case_first: CollationCaseFirst) -> &'static str {
++    match case_first {
++        CollationCaseFirst::Upper => "upper",
++        CollationCaseFirst::Lower => "lower",
++        _ => "false",
++    }
++}
++
++fn parse_case_first(name: &str) -> CollationCaseFirst {
++    match name {
++        "upper" => CollationCaseFirst::Upper,
++        "lower" => CollationCaseFirst::Lower,
++        _ => CollationCaseFirst::False,
++    }
++}
++
++/// The locale's default [[CaseFirst]], [[sensitivity]] and
++/// [[ignorePunctuation]], as ICU4X resolves them for `locale`.
++pub(crate) fn default_options(locale: &Locale) -> (CollationCaseFirst, &'static str, bool) {
++    let prefs = CollatorPreferences::from(locale);
++    match CollatorBorrowed::try_new(prefs, CollatorOptions::default()) {
++        Ok(collator) => {
++            let resolved = collator.resolved_options();
++            let sensitivity = match (resolved.strength, resolved.case_level) {
++                (Strength::Primary, CaseLevel::On) => "case",
++                (Strength::Primary, _) => "base",
++                (Strength::Secondary, _) => "accent",
++                _ => "variant",
++            };
++            (
++                resolved.case_first,
++                sensitivity,
++                resolved.alternate_handling == AlternateHandling::Shifted,
++            )
++        }
++        Err(_) => (CollationCaseFirst::False, "variant", false),
++    }
++}
++
++/// The [[sensitivity]] and [[ignorePunctuation]] defaults of the data for
++/// `locale`.
++pub(crate) fn default_sensitivity_and_ignore_punctuation(locale: &str) -> (&'static str, bool) {
++    let (_, sensitivity, ignore) = default_options(&parse_locale(locale));
++    (sensitivity, ignore)
++}
++
++/// Builds the ICU4X collator for the resolved slots.
++pub(crate) fn build_collator(
++    agent: &mut Agent,
++    data_locale: &str,
++    collation: &str,
++    numeric: bool,
++    case_first: &str,
++    sensitivity: &str,
++    ignore_punctuation: bool,
++) -> JsResult<CollatorBorrowed<'static>> {
++    let locale = parse_locale(data_locale);
++    let mut prefs = CollatorPreferences::from(&locale);
++    prefs.collation_type = collation_type(collation);
++    prefs.case_first = Some(parse_case_first(case_first));
++    prefs.numeric_ordering = Some(if numeric {
++        CollationNumericOrdering::True
++    } else {
++        CollationNumericOrdering::False
++    });
++    let mut options = CollatorOptions::default();
++    let (strength, case_level) = match sensitivity {
++        "base" => (Strength::Primary, CaseLevel::Off),
++        "accent" => (Strength::Secondary, CaseLevel::Off),
++        "case" => (Strength::Primary, CaseLevel::On),
++        _ => (Strength::Tertiary, CaseLevel::Off),
++    };
++    options.strength = Some(strength);
++    options.case_level = Some(case_level);
++    if ignore_punctuation {
++        options.alternate_handling = Some(AlternateHandling::Shifted);
++        options.max_variable = Some(MaxVariable::Punctuation);
++    } else {
++        options.alternate_handling = Some(AlternateHandling::NonIgnorable);
++    }
++    match CollatorBorrowed::try_new(prefs, options) {
++        Ok(collator) => Ok(collator),
++        Err(_) => Err(agent.not_implemented("Intl.Collator data for the resolved locale")),
++    }
++}
++
++/// CompareStrings ( _collator_, _x_, _y_ )
++pub(crate) fn compare_strings(collator: &CollatorSlots, x: &[u16], y: &[u16]) -> f64 {
++    match collator.collator.compare_utf16(x, y) {
++        Ordering::Less => -1.0,
++        Ordering::Equal => 0.0,
++        Ordering::Greater => 1.0,
++    }
++}
+diff --git a/crates/kahvi-cli/src/main.rs b/crates/kahvi-cli/src/main.rs
+index 1f6ccdc..77a95bd 100644
+--- a/crates/kahvi-cli/src/main.rs
++++ b/crates/kahvi-cli/src/main.rs
+@@ -40,7 +40,8 @@ fn parse_args() -> Result<Args, String> {
+             _ => return Err("only one script file may be given".into()),
+         }
+     }
+-    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
++    let file =
++        file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
+     Ok(Args {
+         preludes,
+         module,

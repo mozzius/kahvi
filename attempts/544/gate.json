@@ -1,0 +1,39 @@
+{
+  "ticket": "I-collator",
+  "base": "f7ad37792420723006f41d8d233699a376a47616",
+  "head": "44ef29000a423f9e89a05384af2dd752f9e021af",
+  "reject": [
+    "files outside scope: crates/kahvi-cli/src/main.rs"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+      "added": 96,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs",
+      "added": 58,
+      "removed": 16
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs",
+      "added": 57,
+      "removed": 36
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_collator.rs",
+      "added": 268,
+      "removed": 4
+    },
+    {
+      "path": "crates/kahvi-cli/src/main.rs",
+      "added": 2,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "decision": "reject"
+}
