@@ -4,6 +4,9 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::intl::IntlLocaleSlots;
+use crate::support::intl_locale::initialize_locale;
+
 /// Intl.Locale
 pub(crate) fn constructor(
     agent: &mut Agent,
@@ -71,6 +74,23 @@ pub(crate) fn constructor(
     //       i. Set _locale_.[[Numeric]] to *false*.
     // 43. Set _locale_.[[NumberingSystem]] to _localeRecord_.[[nu]].
     // 44. Return _locale_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Intl.Locale"))
+    let _ = this;
+    // 1. If NewTarget is *undefined*, throw a *TypeError* exception.
+    let Some(new_target) = new_target else {
+        return Err(agent.throw_type_error("Constructor Intl.Locale requires 'new'"));
+    };
+    // 6. Let _locale_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Intl.Locale.prototype%"*, _internalSlotsList_).
+    let locale = ops::ordinary_create_from_constructor(
+        agent,
+        new_target,
+        "%Intl.Locale.prototype%",
+        ObjectKind::Native(Box::new(IntlLocaleSlots::default())),
+    )?;
+    // 7.-43. (the slots are computed from _tag_ and _options_)
+    let slots = initialize_locale(agent, args.get_or_undefined(0), args.get_or_undefined(1))?;
+    if let Some(s) = agent.native_mut::<IntlLocaleSlots>(locale) {
+        *s = slots;
+    }
+    // 44. Return _locale_.
+    Ok(Value::Object(locale))
 }

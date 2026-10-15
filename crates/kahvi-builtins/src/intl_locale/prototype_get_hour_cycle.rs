@@ -16,6 +16,6 @@ pub(crate) fn prototype_get_hour_cycle(
     // 1. Let _loc_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
     // 3. Return _loc_.[[HourCycle]].
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get Intl.Locale.prototype.hourCycle"))
+    let _ = (args, new_target);
+    crate::support::intl_locale::locale_string_getter(agent, this, |loc| loc.hour_cycle.clone())
 }
