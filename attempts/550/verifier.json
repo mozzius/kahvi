@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 56058,
+  "stop_reason": "tool_use",
+  "session_id": "fc75df35-1897-49d1-829c-9750512a3220",
+  "total_cost_usd": 0.01044963,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 14440,
+    "cache_read_input_tokens": 4693,
+    "output_tokens": 12295,
+    "output_tokens_details": {
+      "thinking_tokens": 11662
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14440,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 12295,
+        "cache_read_input_tokens": 4693,
+        "cache_creation_input_tokens": 14440,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14440
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements the Intl.ListFormat constructor, resolvedOptions, format, formatToParts and their shared helpers (StringListFromIterable, CreatePartsFromList, FormatList, FormatListToParts) in the five in-scope files. The constructor follows the spec order: NewTarget check, OrdinaryCreateFromConstructor, ResolveOptions, GetOption for type and style, then the templates. Locale data comes from ICU4X, and there are no output tables, no test-specific branches and no Rust tests. Unsupported paths return agent.not_implemented. CreatePartsFromList steps 3-8 are delegated to the ICU formatter, and the parts are recovered from its output using a private-use marker. That is a substitution for DeconstructPattern rather than a literal implementation, but it has no observable side effects, and a guard (rebuilt != plain) returns not_implemented when the reconstruction does not match. I found no spec deviation on the paths that succeed. Not verified: the GC rooting of Vec<JsString>/Vec<Value> held across user-visible calls and allocations (string_list_from_iterable, format_list_to_parts). The change adds no GC code, so this should be checked under KAHVI_GC_STRESS=1.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements the Intl.ListFormat constructor, resolvedOptions, format, formatToParts and their shared helpers (StringListFromIterable, CreatePartsFromList, FormatList, FormatListToParts) in the five in-scope files. The constructor follows the spec order: NewTarget check, OrdinaryCreateFromConstructor, ResolveOptions, GetOption for type and style, then the templates. Locale data comes from ICU4X, and there are no output tables, no test-specific branches and no Rust tests. Unsupported paths return agent.not_implemented. CreatePartsFromList steps 3-8 are delegated to the ICU formatter, and the parts are recovered from its output using a private-use marker. That is a substitution for DeconstructPattern rather than a literal implementation, but it has no observable side effects, and a guard (rebuilt != plain) returns not_implemented when the reconstruction does not match. I found no spec deviation on the paths that succeed. Not verified: the GC rooting of Vec<JsString>/Vec<Value> held across user-visible calls and allocations (string_list_from_iterable, format_list_to_parts). The change adds no GC code, so this should be checked under KAHVI_GC_STRESS=1.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 53216,
+  "type": "result",
+  "duration_ms": 55549,
+  "uuid": "db70c448-5f1e-4423-9497-0da8db71d77b",
+  "ttft_stream_ms": 1572,
+  "time_to_request_ms": 485,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 317,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 96,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 5,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 23,
+  "time_to_request_cpu_ms": 331,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 247,
+  "process_anon_mib_turn_start": 130,
+  "process_rss_mib_result": 248,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 259,
+  "process_cpu_ms_turn": 1463,
+  "process_wall_ms_turn": 55548,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1573,
+  "time_to_request_from_spawn_ms": 1112410,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089976412.766,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.42,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.2,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

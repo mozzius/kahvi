@@ -1,0 +1,149 @@
+{
+  "duration_api_ms": 134717,
+  "stop_reason": "end_turn",
+  "session_id": "aae6b531-2198-4460-8f5b-150c650c21bd",
+  "total_cost_usd": 0.5921392999999999,
+  "usage": {
+    "input_tokens": 55,
+    "cache_creation_input_tokens": 63247,
+    "cache_read_input_tokens": 1366804,
+    "output_tokens": 20181,
+    "output_tokens_details": {
+      "thinking_tokens": 2187
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 63247,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 744,
+        "cache_read_input_tokens": 69120,
+        "cache_creation_input_tokens": 1104,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1104
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_016ENHc2NVAhbf3dJKdSkTrJ",
+      "tool_input": {
+        "command": "cd /home/user/kahvi; grep -n \"icu\" Cargo.toml crates/kahvi-builtins/Cargo.toml; ls ~/.cargo/registry/src/*/ | grep -i \"icu_experimental\\|^icu-\"; grep -n \"create_data_property_or_throw\\|fn ordinary_object_create\\|fn string(\" docs/API.md | head"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01PVUD6ciUcuRgaYqMH4FXvy",
+      "tool_input": {
+        "command": "grep -n \"pub fn\\|pub struct\\|pub enum\\|^    [A-Z][a-z]*,$\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_experimental-0.6.0/src/displaynames/displaynames.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_experimental-0.6.0/src/displaynames/options.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01KgtZiUbhVsZcStQ9a7DRBF",
+      "tool_input": {
+        "command": "grep -rn \"DisplayNamesPreferences\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_experimental-0.6.0/src/displaynames/ --include=*.rs -h | head -12"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01RDYmqsYiEaNQVbYk9BFm3y",
+      "tool_input": {
+        "command": "cat >> /home/user/kahvi/work/slots/slot-2/crates/kahvi-builtins/src/support/intl_display_names.rs <<'EOF'\n\nuse icu::experimental::displaynames::{\n    DisplayNamesOptions, Fallback, LanguageDisplay, RegionDisplayNames, ScriptDisplayNames, Style,\n    multi::LocaleDisplayNamesFormatter,\n};\nuse icu::locale::subtags::{Region, Script};\nuse icu::locale::{Locale, LocaleCanonicalizer};\nuse kahvi_core::gc::{Trace, Tracer};\nuse kahvi_core::prelude::*;\n\nuse super::intl::{canonicalize_unicode_locale_id, is_unicode_type, is_well_formed_language_tag};\n\n/// The internal slots of an Intl.DisplayNames: [[InitializedDisplayNames]],\n/// [[Locale]], [[Style]], [[Type]], [[Fallback]], [[LanguageDisplay]].\n///\n/// [[Fields]] is not stored as a table: the names come from ICU4X data for\n/// [[Locale]] when `of` is called.\n#[derive(Debug, Clone, Default)]\npub(crate) struct DisplayNamesSlots {\n    /// [[Locale]]\n    pub locale: String,\n    /// [[Style]]: \"narrow\", \"short\" or \"long\".\n    pub style: String,\n    /// [[Type]]\n    pub r#type: String,\n    /// [[Fallback]]: \"code\" or \"none\".\n    pub fallback: String,\n    /// [[LanguageDisplay]]: \"dialect\" or \"standard\" (only for type \"language\").\n    pub language_display: Option<String>,\n}\n\nimpl Trace for DisplayNamesSlots {\n    fn trace(&self, _: &mut Tracer) {}\n}\n\n/// IsValidDateTimeFieldCode ( _field_ )\npub(crate) fn is_valid_date_time_field_code(field: &str) -> bool {\n    // 1. If _field_ is listed in the Code column of [table-validcodefordatetimefield], return *true*.\n    // 2. Return *false*.\n    matches!(\n        field,\n        \"era\"\n            | \"year\"\n            | \"quarter\"\n            | \"month\"\n            | \"weekOfYear\"\n            | \"weekday\"\n            | \"day\"\n            | \"dayPeriod\"\n            | \"hour\"\n            | \"minute\"\n            | \"second\"\n            | \"timeZoneName\"\n    )\n}\n\n/// IsWellFormedCurrencyCode ( _currency_ )\npub(crate) fn is_well_formed_currency_code(currency: &str) -> bool {\n    // 1. If the length of _currency_ is not 3, return *false*.\n    // 2. Let _normalized_ be the ASCII-uppercase of _currency_.\n    // 3. If _normalized_ contains any code unit outside of 0x0041 through 0x005A, return *false*.\n    // 4. Return *true*.\n    currency.len() == 3 && currency.bytes().all(|b| b.is_ascii_alphabetic())\n}\n\n/// CanonicalCodeForDisplayNames ( _type_, _code_ )\npub(crate) fn canonical_code_for_display_names(\n    agent: &mut Agent,\n    r#type: &str,\n    code: &str,\n) -> JsResult<String> {\n    match r#type {\n        // 1. If _type_ is *\"language\"*, then\n        \"language\" => {\n            // a. If _code_ cannot be matched by the unicode_language_id Unicode locale nonterminal, throw a *RangeError* exception.\n            // b. If IsWellFormedLanguageTag(_code_) is *false*, throw a *RangeError* exception.\n            if !is_well_formed_language_tag(code)\n                || code.contains('_')\n                || icu::locale::LanguageIdentifier::try_from_str(code).is_err()\n            {\n                return Err(agent.throw_range_error(\"invalid language code\"));\n            }\n            // c. Return CanonicalizeUnicodeLocaleId(_code_).\n            Ok(canonicalize_unicode_locale_id(code))\n        }\n        // 2. If _type_ is *\"region\"*, then\n        \"region\" => {\n            // a. If _code_ cannot be matched by the unicode_region_subtag Unicode locale nonterminal, throw a *RangeError* exception.\n            if Region::try_from_str(code).is_err() {\n                return Err(agent.throw_range_error(\"invalid region code\"));\n            }\n            // b. Return the ASCII-uppercase of _code_.\n            Ok(code.to_ascii_uppercase())\n        }\n        // 3. If _type_ is *\"script\"*, then\n        \"script\" => {\n            // a. If _code_ cannot be matched by the unicode_script_subtag Unicode locale nonterminal, throw a *RangeError* exception.\n            if Script::try_from_str(code).is_err() {\n                return Err(agent.throw_range_error(\"invalid script code\"));\n            }\n            // b. Assert: The length of _code_ is 4, and every code unit of _code_ represents an ASCII letter.\n            // c. Let _first_ be the ASCII-uppercase of the substring of _code_ from 0 to 1.\n            // d. Let _rest_ be the ASCII-lowercase of the substring of _code_ from 1.\n            let (first, rest) = code.split_at(1);\n            // e. Return the string-concatenation of _first_ and _rest_.\n            Ok(format!(\n                \"{}{}\",\n                first.to_ascii_uppercase(),\n                rest.to_ascii_lowercase()\n            ))\n        }\n        // 4. If _type_ is *\"calendar\"*, then\n        \"calendar\" => {\n            // a. If _code_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.\n            if !is_unicode_type(code) {\n                return Err(agent.throw_range_error(\"invalid calendar code\"));\n            }\n            // b. If _code_ uses any of the backwards compatibility syntax described in UTS #35, throw a *RangeError* exception.\n            // (not implemented: the backwards compatibility syntax of UTS #35 section 3.3 is not checked.)\n            // c. Return the ASCII-lowercase of _code_.\n            Ok(code.to_ascii_lowercase())\n        }\n        // 5. If _type_ is *\"dateTimeField\"*, then\n        \"dateTimeField\" => {\n            // a. If the result of IsValidDateTimeFieldCode(_code_) is *false*, throw a *RangeError* exception.\n            if !is_valid_date_time_field_code(code) {\n                return Err(agent.throw_range_error(\"invalid dateTimeField code\"));\n            }\n            // b. Return _code_.\n            Ok(code.to_string())\n        }\n        // 6. Assert: _type_ is *\"currency\"*.\n        // 7. If IsWellFormedCurrencyCode(_code_) is *false*, throw a *RangeError* exception.\n        _ => {\n            if !is_well_formed_currency_code(code) {\n                return Err(agent.throw_range_error(\"invalid currency code\"));\n            }\n            // 8. Return the ASCII-uppercase of _code_.\n            Ok(code.to_ascii_uppercase())\n        }\n    }\n}\n\n/// Looks up the name of the canonical _code_ in the ICU4X data for the\n/// [[Locale]] of _slots_ (the lookup of [[Fields]].[[<code>]]). `Ok(None)` is\n/// \"no such field\".\npub(crate) fn lookup_display_name(\n    agent: &mut Agent,\n    slots: &DisplayNamesSlots,\n    code: &str,\n) -> JsResult<Option<String>> {\n    let Ok(locale) = Locale::try_from_str(&slots.locale) else {\n        return Err(agent.throw_range_error(\"invalid locale\"));\n    };\n    let options = DisplayNamesOptions {\n        style: Some(match slots.style.as_str() {\n            \"narrow\" => Style::Narrow,\n            \"short\" => Style::Short,\n            _ => Style::Long,\n        }),\n        fallback: if slots.fallback == \"none\" {\n            Fallback::None\n        } else {\n            Fallback::Code\n        },\n        language_display: if slots.language_display.as_deref() == Some(\"standard\") {\n            LanguageDisplay::Standard\n        } else {\n            LanguageDisplay::Dialect\n        },\n    };\n    match slots.r#type.as_str() {\n        \"region\" => {\n            let Ok(region) = Region::try_from_str(code) else {\n                return Ok(None);\n            };\n            let Ok(names) = RegionDisplayNames::try_new(locale.into(), options) else {\n                return Ok(None);\n            };\n            Ok(names.of(region).map(str::to_string))\n        }\n        \"script\" => {\n            let Ok(script) = Script::try_from_str(code) else {\n                return Ok(None);\n            };\n            let Ok(names) = ScriptDisplayNames::try_new(locale.into(), options) else {\n                return Ok(None);\n            };\n            Ok(names.of(script).map(str::to_string))\n        }\n        \"language\" => {\n            let Ok(mut target) = Locale::try_from_str(code) else {\n                return Ok(None);\n            };\n            LocaleCanonicalizer::new_common().canonicalize(&mut target);\n            let Ok(formatter) = LocaleDisplayNamesFormatter::try_new(locale.into(), options)\n            else {\n                return Ok(None);\n            };\n            // The formatter has no \"none\" fallback: when it can name nothing it\n            // returns the code, which is the absence of a name.\n            let name = formatter.of(&target).into_owned();\n            if name == code {\n                Ok(None)\n            } else {\n                Ok(Some(name))\n            }\n        }\n        other => Err(agent.not_implemented(&format!(\n            \"Intl.DisplayNames names for type \\\"{other}\\\" (no ICU4X data wired up)\"\n        ))),\n    }\n}\nEOF"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 45,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Intl.DisplayNames` is implemented, but 8 of the 114 runs under `intl402/DisplayNames/` still fail, so the target isn't met. It now passes 106, up from 0, and `cargo clippy` is clean.\n\nThe constructor, `resolvedOptions`, `of` and `CanonicalCodeForDisplayNames` are done, with the slot struct in `support/intl_display_names.rs`. Language, region and script names come from ICU4X.\n\nThe 8 failures:\n- **Calendar and dateTimeField (4 runs):** `of` for those two types throws the engine's not-implemented error, because I found no ICU4X display-name data for them. The calendar check for UTS #35 backwards-compatibility syntax (step 4b) is also not implemented.\n- **`type-language-valid.js` (2 runs):** `is_well_formed_language_tag` and `canonicalize_unicode_locale_id` in `support/intl.rs` parse with ICU4X, which rejects language subtags of 5\u20138 letters such as `zzzzzzzz`. That file is outside my scope.\n- **`resolvedOptions/this-object-lacks-internal-throws.js` (2 runs):** it constructs `Intl.DateTimeFormat`, which is not implemented yet.\n\nBLOCKED: `support/intl.rs` must accept 5\u20138 letter language subtags in `is_well_formed_language_tag` and `canonicalize_unicode_locale_id`. Calendar and dateTimeField names also need a locale-data source, since ICU4X has none for them.",
+  "ttft_ms": 2366,
+  "type": "result",
+  "duration_ms": 180862,
+  "uuid": "48c8de98-2e8b-4bf8-a29b-8f985f24aab3",
+  "ttft_stream_ms": 1547,
+  "time_to_request_ms": 501,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 315,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 102,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 15,
+    "message_normalization": 3,
+    "client_creation": 5,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 73,
+  "time_to_request_cpu_ms": 344,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 123,
+  "process_rss_mib_result": 280,
+  "process_anon_mib_result": 158,
+  "process_peak_rss_mib": 289,
+  "process_cpu_ms_turn": 8433,
+  "process_wall_ms_turn": 180862,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1548,
+  "time_to_request_from_spawn_ms": 971894,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089835864.091,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.43,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.2,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

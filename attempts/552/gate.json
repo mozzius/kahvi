@@ -1,0 +1,63 @@
+{
+  "ticket": "I-display-names",
+  "base": "95cc16889acc73c03206ca10b2fa4cf12c6f797c",
+  "head": "a25c9a433659d8abc3aebf5afc3f825ec22b2512",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_display_names/constructor.rs",
+      "added": 102,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_display_names/prototype_of.rs",
+      "added": 30,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_display_names/prototype_resolved_options.rs",
+      "added": 32,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+      "added": 241,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+      "line": 156,
+      "rule": "admits missing functionality: fine if honest, check it",
+      "text": "// (not implemented: the backwards compatibility syntax of UTS #35 section 3.3 is not checked.)"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 114,
+    "before": 0,
+    "after": 106,
+    "new_passes": 106,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/DisplayNames/prototype/of/type-calendar-valid.js:sloppy  Uncaught InternalError: not implemented: Intl.DisplayNames names for type \"calendar\" (no ICU4X data wired up)",
+      "intl402/DisplayNames/prototype/of/type-calendar-valid.js:strict  Uncaught InternalError: not implemented: Intl.DisplayNames names for type \"calendar\" (no ICU4X data wired up)",
+      "intl402/DisplayNames/prototype/of/type-datetimefield-valid.js:sloppy  Uncaught InternalError: not implemented: Intl.DisplayNames names for type \"dateTimeField\" (no ICU4X data wired up)",
+      "intl402/DisplayNames/prototype/of/type-datetimefield-valid.js:strict  Uncaught InternalError: not implemented: Intl.DisplayNames names for type \"dateTimeField\" (no ICU4X data wired up)",
+      "intl402/DisplayNames/prototype/of/type-language-valid.js:sloppy  Uncaught RangeError: invalid language code",
+      "intl402/DisplayNames/prototype/of/type-language-valid.js:strict  Uncaught RangeError: invalid language code",
+      "intl402/DisplayNames/prototype/resolvedOptions/this-object-lacks-internal-throws.js:sloppy  Uncaught InternalError: not implemented: Intl.DateTimeFormat",
+      "intl402/DisplayNames/prototype/resolvedOptions/this-object-lacks-internal-throws.js:strict  Uncaught InternalError: not implemented: Intl.DateTimeFormat"
+    ]
+  },
+  "decision": "pass"
+}

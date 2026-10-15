@@ -1,0 +1,467 @@
+diff --git a/crates/kahvi-builtins/src/intl_display_names/constructor.rs b/crates/kahvi-builtins/src/intl_display_names/constructor.rs
+index 6925077..c928587 100644
+--- a/crates/kahvi-builtins/src/intl_display_names/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_display_names/constructor.rs
+@@ -4,6 +4,12 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::{
++    OptionType, ServiceConstructor, SpecialBehaviour, available_locales, get_option,
++    get_string_option, resolve_options,
++};
++use crate::support::intl_display_names::DisplayNamesSlots;
++
+ /// Intl.DisplayNames
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -39,6 +45,100 @@ pub(crate) fn constructor(
+     // 21. Assert: _styleFields_ is a Record (see [sec-Intl.DisplayNames-internal-slots]).
+     // 22. Set _displayNames_.[[Fields]] to _styleFields_.
+     // 23. Return _displayNames_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DisplayNames"))
++    let _ = this;
++    let locales = args.get_or_undefined(0);
++    let options = args.get_or_undefined(1);
++    // 1. If NewTarget is *undefined*, throw a *TypeError* exception.
++    let Some(new_target) = new_target else {
++        return Err(agent.throw_type_error("Constructor Intl.DisplayNames requires 'new'"));
++    };
++    // 2. Let _displayNames_ be ? OrdinaryCreateFromConstructor(...).
++    let display_names = ops::ordinary_create_from_constructor(
++        agent,
++        new_target,
++        "%Intl.DisplayNames.prototype%",
++        ObjectKind::Native(Box::new(DisplayNamesSlots::default())),
++    )?;
++    // 3. Let _optionsResolution_ be ? ResolveOptions(%Intl.DisplayNames%, %Intl.DisplayNames%.[[LocaleData]], _locales_, _options_, « ~require-options~ »).
++    let ctor = ServiceConstructor {
++        available_locales: available_locales(),
++        relevant_extension_keys: &[],
++        resolution_option_descriptors: &[],
++    };
++    let options_resolution = resolve_options(
++        agent,
++        &ctor,
++        &|_, _| Vec::new(),
++        locales,
++        options,
++        &[SpecialBehaviour::RequireOptions],
++        None,
++    )?;
++    // 4. Set _options_ to _optionsResolution_.[[Options]].
++    let options = options_resolution.options;
++    // 5. Let _resolvedLocale_ be _optionsResolution_.[[ResolvedLocale]].
++    let resolved_locale = options_resolution.resolved_locale;
++    // 6. Let _style_ be ? GetOption(_options_, *"style"*, ~string~, « *"narrow"*, *"short"*, *"long"* », *"long"*).
++    let style = get_string_option(
++        agent,
++        options,
++        "style",
++        &["narrow", "short", "long"],
++        Some("long"),
++    )?
++    .unwrap_or_default();
++    // 7. Set _displayNames_.[[Style]] to _style_.
++    // 8. Let _type_ be ? GetOption(_options_, *"type"*, ~string~, « ... », ~required~).
++    let r#type = match get_option(
++        agent,
++        options,
++        "type",
++        OptionType::String,
++        Some(&[
++            "language",
++            "region",
++            "script",
++            "currency",
++            "calendar",
++            "dateTimeField",
++        ]),
++        None,
++    )? {
++        Value::String(s) => agent.str_lossy(s),
++        _ => return Err(agent.throw_type_error("type is required")),
++    };
++    // 9. Set _displayNames_.[[Type]] to _type_.
++    // 10. Let _fallback_ be ? GetOption(_options_, *"fallback"*, ~string~, « *"code"*, *"none"* », *"code"*).
++    let fallback = get_string_option(agent, options, "fallback", &["code", "none"], Some("code"))?
++        .unwrap_or_default();
++    // 11. Set _displayNames_.[[Fallback]] to _fallback_.
++    // 12. Set _displayNames_.[[Locale]] to _resolvedLocale_.[[Locale]].
++    // 13-15. (The [[types]] locale data is looked up from ICU4X when `of` is called.)
++    // 16. Let _languageDisplay_ be ? GetOption(_options_, *"languageDisplay"*, ~string~, « *"dialect"*, *"standard"* », *"dialect"*).
++    let language_display = get_string_option(
++        agent,
++        options,
++        "languageDisplay",
++        &["dialect", "standard"],
++        Some("dialect"),
++    )?;
++    // 17-18. Let _typeFields_ be _types_.[[<_type_>]].
++    // 19. If _type_ is *"language"*, then
++    //    a. Set _displayNames_.[[LanguageDisplay]] to _languageDisplay_.
++    let language_display = if r#type == "language" {
++        language_display
++    } else {
++        None
++    };
++    // 20-22. Set _displayNames_.[[Fields]] to _styleFields_ (resolved from ICU4X on lookup).
++    let Some(slots) = agent.native_mut::<DisplayNamesSlots>(display_names) else {
++        return Err(agent.throw_type_error("not an Intl.DisplayNames"));
++    };
++    slots.locale = resolved_locale.locale;
++    slots.style = style;
++    slots.r#type = r#type;
++    slots.fallback = fallback;
++    slots.language_display = language_display;
++    // 23. Return _displayNames_.
++    Ok(Value::Object(display_names))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_display_names/prototype_of.rs b/crates/kahvi-builtins/src/intl_display_names/prototype_of.rs
+index e3478fb..6aa6311 100644
+--- a/crates/kahvi-builtins/src/intl_display_names/prototype_of.rs
++++ b/crates/kahvi-builtins/src/intl_display_names/prototype_of.rs
+@@ -4,6 +4,10 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_display_names::{
++    DisplayNamesSlots, canonical_code_for_display_names, lookup_display_name,
++};
++
+ /// Intl.DisplayNames.prototype.of
+ pub(crate) fn prototype_of(
+     agent: &mut Agent,
+@@ -21,6 +25,30 @@ pub(crate) fn prototype_of(
+     // 6. If _fields_ has a field [[<_code_>]], return _fields_.[[<_code_>]].
+     // 7. If _displayNames_.[[Fallback]] is *"code"*, return _code_.
+     // 8. Return *undefined*.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DisplayNames.prototype.of"))
++    let _ = new_target;
++    // 1. Let _displayNames_ be *this* value.
++    // 2. Perform ? RequireInternalSlot(_displayNames_, [[InitializedDisplayNames]]).
++    let slots = match this {
++        Value::Object(o) => agent.native::<DisplayNamesSlots>(o).cloned(),
++        _ => None,
++    };
++    let Some(slots) = slots else {
++        return Err(agent.throw_type_error("not an Intl.DisplayNames"));
++    };
++    // 3. Set _code_ to ? ToString(_code_).
++    let code = ops::to_string(agent, args.get_or_undefined(0))?;
++    let code = agent.str_lossy(code);
++    // 4. Set _code_ to ? CanonicalCodeForDisplayNames(_displayNames_.[[Type]], _code_).
++    let code = canonical_code_for_display_names(agent, &slots.r#type, &code)?;
++    // 5. Let _fields_ be _displayNames_.[[Fields]].
++    // 6. If _fields_ has a field [[<_code_>]], return _fields_.[[<_code_>]].
++    if let Some(name) = lookup_display_name(agent, &slots, &code)? {
++        return Ok(Value::String(agent.string(&name)));
++    }
++    // 7. If _displayNames_.[[Fallback]] is *"code"*, return _code_.
++    if slots.fallback == "code" {
++        return Ok(Value::String(agent.string(&code)));
++    }
++    // 8. Return *undefined*.
++    Ok(Value::Undefined)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_display_names/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_display_names/prototype_resolved_options.rs
+index 0d0127e..8402509 100644
+--- a/crates/kahvi-builtins/src/intl_display_names/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_display_names/prototype_resolved_options.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_display_names::DisplayNamesSlots;
++
+ /// Intl.DisplayNames.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+@@ -36,6 +38,34 @@ pub(crate) fn prototype_resolved_options(
+     // *"fallback"* |
+     // [[LanguageDisplay]] |
+     // *"languageDisplay"* |
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DisplayNames.prototype.resolvedOptions"))
++    let _ = (args, new_target);
++    let slots = match this {
++        Value::Object(o) => agent.native::<DisplayNamesSlots>(o).cloned(),
++        _ => None,
++    };
++    let Some(slots) = slots else {
++        return Err(agent.throw_type_error("not an Intl.DisplayNames"));
++    };
++    // 3. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
++    let proto = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(proto));
++    // 4. For each row of the table, in table order, do
++    let rows = [
++        ("locale", Some(slots.locale)),
++        ("style", Some(slots.style)),
++        ("type", Some(slots.r#type)),
++        ("fallback", Some(slots.fallback)),
++        ("languageDisplay", slots.language_display),
++    ];
++    for (name, value) in rows {
++        // c. If _value_ is not *undefined*, then
++        if let Some(value) = value {
++            // i. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++            let key = agent.key(name);
++            let value = Value::String(agent.string(&value));
++            ops::create_data_property_or_throw(agent, options, key, value)?;
++        }
++    }
++    // 5. Return _options_.
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_display_names.rs b/crates/kahvi-builtins/src/support/intl_display_names.rs
+index 24243c9..0d2d162 100644
+--- a/crates/kahvi-builtins/src/support/intl_display_names.rs
++++ b/crates/kahvi-builtins/src/support/intl_display_names.rs
+@@ -5,3 +5,244 @@
+ //! struct here (`ObjectKind::Native`, see docs/INTL.md) and the abstract
+ //! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use icu::experimental::displaynames::{
++    DisplayNamesOptions, Fallback, LanguageDisplay, Style,
++    multi::{LocaleDisplayNamesFormatter, RegionDisplayNames, ScriptDisplayNames},
++};
++use icu::locale::subtags::{Region, Script};
++use icu::locale::{Locale, LocaleCanonicalizer};
++use kahvi_core::gc::{Trace, Tracer};
++use kahvi_core::prelude::*;
++
++use super::intl::{canonicalize_unicode_locale_id, is_unicode_type, is_well_formed_language_tag};
++
++/// The internal slots of an Intl.DisplayNames: [[InitializedDisplayNames]],
++/// [[Locale]], [[Style]], [[Type]], [[Fallback]], [[LanguageDisplay]].
++///
++/// [[Fields]] is not stored as a table: the names come from ICU4X data for
++/// [[Locale]] when `of` is called.
++#[derive(Debug, Clone, Default)]
++pub(crate) struct DisplayNamesSlots {
++    /// [[Locale]]
++    pub locale: String,
++    /// [[Style]]: "narrow", "short" or "long".
++    pub style: String,
++    /// [[Type]]
++    pub r#type: String,
++    /// [[Fallback]]: "code" or "none".
++    pub fallback: String,
++    /// [[LanguageDisplay]]: "dialect" or "standard" (only for type "language").
++    pub language_display: Option<String>,
++}
++
++impl Trace for DisplayNamesSlots {
++    fn trace(&self, _: &mut Tracer) {}
++}
++
++/// IsValidDateTimeFieldCode ( _field_ )
++pub(crate) fn is_valid_date_time_field_code(field: &str) -> bool {
++    // 1. If _field_ is listed in the Code column of [table-validcodefordatetimefield], return *true*.
++    // 2. Return *false*.
++    matches!(
++        field,
++        "era"
++            | "year"
++            | "quarter"
++            | "month"
++            | "weekOfYear"
++            | "weekday"
++            | "day"
++            | "dayPeriod"
++            | "hour"
++            | "minute"
++            | "second"
++            | "timeZoneName"
++    )
++}
++
++/// IsWellFormedCurrencyCode ( _currency_ )
++pub(crate) fn is_well_formed_currency_code(currency: &str) -> bool {
++    // 1. If the length of _currency_ is not 3, return *false*.
++    // 2. Let _normalized_ be the ASCII-uppercase of _currency_.
++    // 3. If _normalized_ contains any code unit outside of 0x0041 through 0x005A, return *false*.
++    // 4. Return *true*.
++    currency.len() == 3 && currency.bytes().all(|b| b.is_ascii_alphabetic())
++}
++
++/// Whether _code_ is matched by the unicode_language_id nonterminal (UTS #35),
++/// excluding *"root"*:
++/// `(language (sep script)? | script) (sep region)? (sep variant)*`.
++fn is_unicode_language_id(code: &str) -> bool {
++    let alpha = |s: &str, lens: &[usize]| {
++        lens.contains(&s.len()) && s.bytes().all(|b| b.is_ascii_alphabetic())
++    };
++    let is_region =
++        |s: &str| alpha(s, &[2]) || (s.len() == 3 && s.bytes().all(|b| b.is_ascii_digit()));
++    let is_variant = |s: &str| {
++        let alnum = s.bytes().all(|b| b.is_ascii_alphanumeric());
++        alnum && ((5..=8).contains(&s.len()) || (s.len() == 4 && s.as_bytes()[0].is_ascii_digit()))
++    };
++    let mut parts = code.split('-').peekable();
++    let Some(first) = parts.next() else {
++        return false;
++    };
++    if first.eq_ignore_ascii_case("root") {
++        return false;
++    }
++    if alpha(first, &[2, 3, 5, 6, 7, 8]) {
++        if parts.peek().is_some_and(|s| alpha(s, &[4])) {
++            parts.next();
++        }
++    } else if !alpha(first, &[4]) {
++        return false;
++    }
++    if parts.peek().is_some_and(|s| is_region(s)) {
++        parts.next();
++    }
++    parts.all(is_variant)
++}
++
++/// CanonicalCodeForDisplayNames ( _type_, _code_ )
++pub(crate) fn canonical_code_for_display_names(
++    agent: &mut Agent,
++    r#type: &str,
++    code: &str,
++) -> JsResult<String> {
++    match r#type {
++        // 1. If _type_ is *"language"*, then
++        "language" => {
++            // a. If _code_ cannot be matched by the unicode_language_id Unicode locale nonterminal, throw a *RangeError* exception.
++            // b. If IsWellFormedLanguageTag(_code_) is *false*, throw a *RangeError* exception.
++            if !is_unicode_language_id(code) || !is_well_formed_language_tag(code) {
++                return Err(agent.throw_range_error("invalid language code"));
++            }
++            // c. Return CanonicalizeUnicodeLocaleId(_code_).
++            Ok(canonicalize_unicode_locale_id(code))
++        }
++        // 2. If _type_ is *"region"*, then
++        "region" => {
++            // a. If _code_ cannot be matched by the unicode_region_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++            if Region::try_from_str(code).is_err() {
++                return Err(agent.throw_range_error("invalid region code"));
++            }
++            // b. Return the ASCII-uppercase of _code_.
++            Ok(code.to_ascii_uppercase())
++        }
++        // 3. If _type_ is *"script"*, then
++        "script" => {
++            // a. If _code_ cannot be matched by the unicode_script_subtag Unicode locale nonterminal, throw a *RangeError* exception.
++            if Script::try_from_str(code).is_err() {
++                return Err(agent.throw_range_error("invalid script code"));
++            }
++            // b. Assert: The length of _code_ is 4, and every code unit of _code_ represents an ASCII letter.
++            // c. Let _first_ be the ASCII-uppercase of the substring of _code_ from 0 to 1.
++            // d. Let _rest_ be the ASCII-lowercase of the substring of _code_ from 1.
++            let (first, rest) = code.split_at(1);
++            // e. Return the string-concatenation of _first_ and _rest_.
++            Ok(format!(
++                "{}{}",
++                first.to_ascii_uppercase(),
++                rest.to_ascii_lowercase()
++            ))
++        }
++        // 4. If _type_ is *"calendar"*, then
++        "calendar" => {
++            // a. If _code_ cannot be matched by the type Unicode locale nonterminal, throw a *RangeError* exception.
++            if !is_unicode_type(code) {
++                return Err(agent.throw_range_error("invalid calendar code"));
++            }
++            // b. If _code_ uses any of the backwards compatibility syntax described in UTS #35, throw a *RangeError* exception.
++            // (not implemented: the backwards compatibility syntax of UTS #35 section 3.3 is not checked.)
++            // c. Return the ASCII-lowercase of _code_.
++            Ok(code.to_ascii_lowercase())
++        }
++        // 5. If _type_ is *"dateTimeField"*, then
++        "dateTimeField" => {
++            // a. If the result of IsValidDateTimeFieldCode(_code_) is *false*, throw a *RangeError* exception.
++            if !is_valid_date_time_field_code(code) {
++                return Err(agent.throw_range_error("invalid dateTimeField code"));
++            }
++            // b. Return _code_.
++            Ok(code.to_string())
++        }
++        // 6. Assert: _type_ is *"currency"*.
++        // 7. If IsWellFormedCurrencyCode(_code_) is *false*, throw a *RangeError* exception.
++        _ => {
++            if !is_well_formed_currency_code(code) {
++                return Err(agent.throw_range_error("invalid currency code"));
++            }
++            // 8. Return the ASCII-uppercase of _code_.
++            Ok(code.to_ascii_uppercase())
++        }
++    }
++}
++
++/// Looks up the name of the canonical _code_ in the ICU4X data for the
++/// [[Locale]] of _slots_ (the lookup of [[Fields]].[[<code>]]). `Ok(None)` is
++/// "no such field".
++pub(crate) fn lookup_display_name(
++    agent: &mut Agent,
++    slots: &DisplayNamesSlots,
++    code: &str,
++) -> JsResult<Option<String>> {
++    let Ok(locale) = Locale::try_from_str(&slots.locale) else {
++        return Err(agent.throw_range_error("invalid locale"));
++    };
++    let mut options = DisplayNamesOptions::default();
++    options.style = Some(match slots.style.as_str() {
++        "narrow" => Style::Narrow,
++        "short" => Style::Short,
++        _ => Style::Long,
++    });
++    options.fallback = if slots.fallback == "none" {
++        Fallback::None
++    } else {
++        Fallback::Code
++    };
++    options.language_display = if slots.language_display.as_deref() == Some("standard") {
++        LanguageDisplay::Standard
++    } else {
++        LanguageDisplay::Dialect
++    };
++    match slots.r#type.as_str() {
++        "region" => {
++            let Ok(region) = Region::try_from_str(code) else {
++                return Ok(None);
++            };
++            let Ok(names) = RegionDisplayNames::try_new(locale.into(), options) else {
++                return Ok(None);
++            };
++            Ok(names.of(region).map(str::to_string))
++        }
++        "script" => {
++            let Ok(script) = Script::try_from_str(code) else {
++                return Ok(None);
++            };
++            let Ok(names) = ScriptDisplayNames::try_new(locale.into(), options) else {
++                return Ok(None);
++            };
++            Ok(names.of(script).map(str::to_string))
++        }
++        "language" => {
++            let Ok(mut target) = Locale::try_from_str(code) else {
++                return Ok(None);
++            };
++            LocaleCanonicalizer::new_common().canonicalize(&mut target);
++            let Ok(formatter) = LocaleDisplayNamesFormatter::try_new(locale.into(), options) else {
++                return Ok(None);
++            };
++            // The formatter has no "none" fallback: when it can name nothing it
++            // returns the code, which is the absence of a name.
++            let name = formatter.of(&target).into_owned();
++            if name == code {
++                Ok(None)
++            } else {
++                Ok(Some(name))
++            }
++        }
++        other => Err(agent.not_implemented(&format!(
++            "Intl.DisplayNames names for type \"{other}\" (no ICU4X data wired up)"
++        ))),
++    }
++}

@@ -1,0 +1,52 @@
+{
+  "ticket": "I-list-format",
+  "base": "95cc16889acc73c03206ca10b2fa4cf12c6f797c",
+  "head": "b035e4c30ff3b3c3c749d932e11203380b87c613",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_list_format/constructor.rs",
+      "added": 58,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_list_format/prototype_format.rs",
+      "added": 9,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_list_format/prototype_format_to_parts.rs",
+      "added": 11,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_list_format/prototype_resolved_options.rs",
+      "added": 32,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_list_format.rs",
+      "added": 229,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 162,
+    "before": 0,
+    "after": 162,
+    "new_passes": 162,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
