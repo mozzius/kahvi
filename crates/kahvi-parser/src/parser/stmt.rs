@@ -584,11 +584,11 @@ impl Parser<'_> {
                 "const" => Some(VarKind::Const),
                 "let" => {
                     let next = self.peek()?;
+                    // `let of` too: `let` is never the LeftHandSideExpression of a
+                    // for-of, so `for (let of of x)` declares `of`.
                     let starts = next.is(P::LBracket)
                         || next.is(P::LBrace)
-                        || (next.kind == Tok::Ident
-                            && could_bind(&next.ident)
-                            && !(next.ident == "of" && !next.escaped));
+                        || (next.kind == Tok::Ident && could_bind(&next.ident));
                     starts.then_some(VarKind::Let)
                 }
                 "using" if self.using_in_for_head()? => Some(VarKind::Using),

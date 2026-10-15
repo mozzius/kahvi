@@ -306,7 +306,13 @@ impl Frame {
     }
 
     fn strict(&self) -> bool {
-        self.code.strict
+        self.code.strict || {
+            let pc = self.pc as u32;
+            self.code
+                .strict_ranges
+                .iter()
+                .any(|&(s, e)| s <= pc && pc < e)
+        }
     }
 }
 
@@ -1694,6 +1700,23 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 *top = record;
             }
             frame.push(r?.unwrap_or(Value::Undefined));
+        }
+        Op::IteratorSkip => {
+            let FrameIter::Iter(record) = frame.top_iter() else {
+                unreachable!("iterator expected")
+            };
+            let mut record = *record;
+            // Elision: if iteratorRecord.[[Done]] is false, then
+            //   Let next be ? IteratorStep(iteratorRecord) (done sets [[Done]]).
+            let r = if record.done {
+                Ok(None)
+            } else {
+                ops::iterator_step_rooted(agent, &mut record)
+            };
+            if let FrameIter::Iter(top) = frame.top_iter() {
+                *top = record;
+            }
+            r?;
         }
         Op::IteratorRest => {
             let FrameIter::Iter(record) = frame.top_iter() else {

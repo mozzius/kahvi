@@ -29,6 +29,9 @@ impl Rer {
 pub(crate) struct CharSet {
     pub ranges: Vec<(u32, u32)>,
     pub strings: BTreeSet<Vec<u32>>,
+    /// MayContainStrings of the syntax this set came from (a static property:
+    /// `[\q{ab}&&\q{cd}]` may contain strings although it has none).
+    pub may_contain_strings: bool,
 }
 
 impl CharSet {
@@ -40,6 +43,7 @@ impl CharSet {
         CharSet {
             ranges: uc::normalize(ranges),
             strings: BTreeSet::new(),
+            may_contain_strings: false,
         }
     }
 
@@ -54,6 +58,7 @@ impl CharSet {
         }
         let mut set = CharSet::empty();
         set.strings.insert(s);
+        set.may_contain_strings = true;
         set
     }
 
@@ -61,6 +66,7 @@ impl CharSet {
         self.ranges.extend_from_slice(&other.ranges);
         self.ranges = uc::normalize(std::mem::take(&mut self.ranges));
         self.strings.extend(other.strings.iter().cloned());
+        self.may_contain_strings |= other.may_contain_strings;
         self
     }
 
@@ -69,6 +75,7 @@ impl CharSet {
         CharSet {
             ranges: uc::subtract(&self.ranges, &not_other),
             strings: self.strings.intersection(&other.strings).cloned().collect(),
+            may_contain_strings: self.may_contain_strings && other.may_contain_strings,
         }
     }
 
@@ -76,12 +83,13 @@ impl CharSet {
         CharSet {
             ranges: uc::subtract(&self.ranges, &other.ranges),
             strings: self.strings.difference(&other.strings).cloned().collect(),
+            may_contain_strings: self.may_contain_strings,
         }
     }
 
-    /// MayContainStrings, for a computed set.
+    /// MayContainStrings
     pub fn has_strings(&self) -> bool {
-        !self.strings.is_empty()
+        self.may_contain_strings
     }
 }
 
@@ -128,7 +136,11 @@ pub(crate) fn maybe_simple_case_folding(rer: Rer, a: CharSet) -> CharSet {
         .iter()
         .map(|s| s.iter().map(|&c| uc::simple_case_fold(c)).collect())
         .collect();
-    CharSet { ranges, strings }
+    CharSet {
+        ranges,
+        strings,
+        may_contain_strings: a.may_contain_strings,
+    }
 }
 
 // ---- Canonicalize ----------------------------------------------------------
@@ -321,6 +333,8 @@ pub(crate) fn property_set(
                     return Err(PropertyError::StringsWithoutV);
                 }
                 let mut set = CharSet::from_ranges(cps.to_vec());
+                // MayContainStrings: a binary property of strings.
+                set.may_contain_strings = true;
                 for s in strings {
                     set.strings.insert(s.to_vec());
                 }
