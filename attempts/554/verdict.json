@@ -1,0 +1,36 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The diff implements Segments.prototype.containing, %IntlSegmentIteratorPrototype%.next, resolvedOptions, the constructor's granularity step, and the FindBoundary and CreateSegmentDataObject helpers. Control flow and observable-operation order match the spec steps I walked (containing: ToIntegerOrInfinity then range check then two FindBoundary calls; next: done check, FindBoundary(after), slot update, CreateSegmentDataObject). There are no test-keyed branches and no fabricated results. The main defect is that the resolved [[Locale]] is never used: every segmenter is built with root/invariant options, although FindBoundary step 5a/7 and CreateSegmentDataObject step 10a both say to segment \"using locale _locale_\". Two further concerns are not spec violations but should be fixed: each next() or containing() call re-segments the whole string, which makes full iteration O(n^2), and word-like is computed by segmenting twice.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_segmenter.rs",
+      "question": "contradicts_spec",
+      "issue": "boundaries() ignores the segmenter's locale. It always uses WordBreakInvariantOptions::default() and SentenceBreakInvariantOptions::default() with new_auto/new, and GraphemeClusterSegmenter::new() has no locale input. The spec requires segmentation 'using locale _locale_' (FindBoundary steps 3, 5a and 7) and word-likeness 'according to locale _segmenter_.[[Locale]]' (CreateSegmentDataObject step 10a). The resolved locale stored in slots.locale is therefore silently discarded, and the ticket asks for locale data to come from ICU4X. Locale-tailored results (for example word or sentence breaking in a non-root locale) will differ from the spec. Either pass the locale to the ICU4X constructors or throw not_implemented for locale-dependent granularity."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_segmenter.rs",
+      "question": "contradicts_spec",
+      "issue": "Around lines 111-143, find_boundary() re-segments the entire string on every call (boundaries() is called inside each FindBoundary call). Iterating a Segments object or a segment iterator therefore costs O(n) per segment and O(n^2) overall. This is a performance problem, not a wrong result, but it should be addressed by caching the boundary list on the segmenter, Segments or iterator slots."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_segmenter.rs",
+      "question": "contradicts_spec",
+      "issue": "Around lines 175-177, the isWordLike check calls boundaries() a second time for the same string and granularity that FindBoundary just segmented. It also relies on the convention that iter_with_word_type's flag at index i describes the segment ending at i. This convention is unverified; if ICU4X attaches the type to the segment starting at i, isWordLike will be off by one segment. Check the ICU4X semantics against test262 intl402/Segmenter isWordLike tests."
+    }
+  ],
+  "notes_for_next_attempt": "1) Use the resolved locale. Build the word, sentence and grapheme segmenters from segmenter.[[Locale]] (ICU4X locale-aware constructors), or throw agent.not_implemented naming locale-tailored segmentation. Do not silently use root data. 2) Compute the boundary list once per (segmenter, string) and cache it on the Segments and iterator slots, or otherwise avoid re-segmenting the whole string on every next()/containing() call. 3) Verify ICU4X iter_with_word_type semantics (does the flag belong to the segment ending or starting at index i?) and make isWordLike use the same boundary list. 4) The constructor's expect(\"a default\") was replaced with unwrap_or_else(|| \"grapheme\") and expect(\"created above\") with a not_implemented error. Both are harmless, but prefer keeping the spec-default path through GetOption rather than duplicating the default literal. 5) granularity_of() uses unwrap_or_default(), which silently maps a missing slot to grapheme. Prefer a clear error path. Segment() and the remaining methods are not in this diff; leaving them as not_implemented is fine.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

@@ -1,0 +1,156 @@
+{
+  "duration_api_ms": 105880,
+  "stop_reason": "end_turn",
+  "session_id": "76f556ef-3d50-4fd6-8b81-ef1889077d55",
+  "total_cost_usd": 0.5263846000000002,
+  "usage": {
+    "input_tokens": 45,
+    "cache_creation_input_tokens": 68106,
+    "cache_read_input_tokens": 1266850,
+    "output_tokens": 12633,
+    "output_tokens_details": {
+      "thinking_tokens": 2635
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 68106,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 578,
+        "cache_read_input_tokens": 74530,
+        "cache_creation_input_tokens": 553,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 553
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_013J1mC33o11mSsZuzP9akTy",
+      "tool_input": {
+        "command": "ls ~/.cargo/registry/src/*/ | grep -E \"^icu_(calendar|collator|decimal|time|experimental|datetime)-|^icu-\""
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01JiJQvnoYYBenYiMyKrAhzd",
+      "tool_input": {
+        "command": "grep -rnE \"pub fn (iter|iana_to_bcp47|normalize_iana|canonicalize_iana|iana_lower)|pub struct TimeZoneIdMapper\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_time-2.3.0/src/zone/iana.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01XPVDWjxBcDjVfk2LNpqeBv",
+      "tool_input": {
+        "command": "grep -rnE \"pub enum AnyCalendarKind|pub fn (all|iter)\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_calendar-2.3.0/src/any_calendar.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01WZHaehoPTEg1cxkSD2NXMJ",
+      "tool_input": {
+        "command": "head -c 1800 /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_decimal_data-2.3.0/data/decimal_digits_v1.rs.data"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01RHtqhFfmfuuS57opaz8kHC",
+      "tool_input": {
+        "command": "cd /home/user/kahvi/work/slots/slot-1/crates/kahvi-builtins/src/intl && python3 - <<'EOF'\np='supported_values_of.rs'\ns=open(p).read()\nhead=s[:s.index('use kahvi_core')]\nbody=s[s.index('/// Intl.supportedValuesOf'):]\nbody=body.replace(\"\"\"    let _ = (this, args, new_target);\n    Err(agent.not_implemented(\"Intl.supportedValuesOf\"))\n}\"\"\",\"\"\"    let _ = (this, new_target);\n    let key = args.get_or_undefined(0);\n    let key = ops::to_string(agent, key)?;\n    let key = agent.str_lossy(key);\n    let list: Vec<String> = match key.as_str() {\n        \"calendar\" => {\n            let mut list = Vec::new();\n            for identifier in available_calendars() {\n                let canonical = canonicalize_u_value(\"ca\", identifier);\n                if identifier == canonical {\n                    list.push(identifier.to_string());\n                }\n            }\n            list\n        }\n        \"collation\" => return Err(agent.not_implemented(\"AvailableCanonicalCollations\")),\n        \"currency\" => return Err(agent.not_implemented(\"AvailableCanonicalCurrencies\")),\n        \"numberingSystem\" => available_canonical_numbering_systems(),\n        \"timeZone\" => available_primary_time_zone_identifiers(),\n        \"unit\" => return Err(agent.not_implemented(\"AvailableCanonicalUnits\")),\n        _ => return Err(agent.throw_range_error(\"invalid key for Intl.supportedValuesOf\")),\n    };\n    let elements: Vec<Value> = list\n        .iter()\n        .map(|l| Value::String(agent.string(l)))\n        .collect();\n    Ok(Value::Object(ops::create_array_from_list(agent, &elements)))\n}\n\n/// AvailableCalendars ( ): the calendars of `icu::calendar` (one per\n/// `AnyCalendarKind` with a CLDR calendar type), with their aliases, sorted.\nfn available_calendars() -> Vec<&'static str> {\n    let mut list: Vec<&'static str> = Vec::new();\n    for kind in [\n        AnyCalendarKind::Buddhist,\n        AnyCalendarKind::Chinese,\n        AnyCalendarKind::Coptic,\n        AnyCalendarKind::Dangi,\n        AnyCalendarKind::Ethiopian,\n        AnyCalendarKind::EthiopianAmeteAlem,\n        AnyCalendarKind::Gregorian,\n        AnyCalendarKind::Hebrew,\n        AnyCalendarKind::Indian,\n        AnyCalendarKind::HijriTabularTypeIIFriday,\n        AnyCalendarKind::HijriTabularTypeIIThursday,\n        AnyCalendarKind::HijriUmmAlQura,\n        AnyCalendarKind::Iso,\n        AnyCalendarKind::Japanese,\n        AnyCalendarKind::Persian,\n        AnyCalendarKind::Roc,\n    ] {\n        let (type_, aliases): (&str, &[&str]) = match kind {\n            AnyCalendarKind::Buddhist => (\"buddhist\", &[]),\n            AnyCalendarKind::Chinese => (\"chinese\", &[]),\n            AnyCalendarKind::Coptic => (\"coptic\", &[]),\n            AnyCalendarKind::Dangi => (\"dangi\", &[]),\n            AnyCalendarKind::Ethiopian => (\"ethiopic\", &[]),\n            AnyCalendarKind::EthiopianAmeteAlem => (\"ethioaa\", &[\"ethiopic-amete-alem\"]),\n            AnyCalendarKind::Gregorian => (\"gregory\", &[]),\n            AnyCalendarKind::Hebrew => (\"hebrew\", &[]),\n            AnyCalendarKind::Indian => (\"indian\", &[]),\n            AnyCalendarKind::HijriTabularTypeIIFriday => (\"islamic-civil\", &[\"islamicc\"]),\n            AnyCalendarKind::HijriTabularTypeIIThursday => (\"islamic-tbla\", &[]),\n            AnyCalendarKind::HijriUmmAlQura => (\"islamic-umalqura\", &[]),\n            AnyCalendarKind::Iso => (\"iso8601\", &[]),\n            AnyCalendarKind::Japanese => (\"japanese\", &[]),\n            AnyCalendarKind::Persian => (\"persian\", &[]),\n            AnyCalendarKind::Roc => (\"roc\", &[]),\n            _ => continue,\n        };\n        list.push(type_);\n        list.extend_from_slice(aliases);\n    }\n    list.sort_unstable();\n    list\n}\n\n/// Lists the numbering systems of ICU4X's baked decimal digits data.\nstruct BakedDigits;\n\nconst _: () = {\n    use icu_decimal_data::{__impl_decimal_digits_v1, make_provider};\n    make_provider!(BakedDigits);\n    __impl_decimal_digits_v1!(BakedDigits, ITER);\n};\n\n/// AvailableCanonicalNumberingSystems ( ): the numbering systems with digits\n/// in ICU4X's decimal data, sorted.\nfn available_canonical_numbering_systems() -> Vec<String> {\n    let ids = IterableDataProvider::<icu::decimal::provider::DecimalDigitsV1>::iter_ids(\n        &BakedDigits,\n    );\n    let mut list: Vec<String> = ids\n        .into_iter()\n        .flatten()\n        .map(|id| id.marker_attributes.as_str().to_string())\n        .filter(|s| !s.is_empty())\n        .collect();\n    list.sort();\n    list.dedup();\n    list\n}\n\n/// AvailablePrimaryTimeZoneIdentifiers ( ): the canonical IANA identifiers of\n/// `icu::time`, sorted.\nfn available_primary_time_zone_identifiers() -> Vec<String> {\n    // 1. Let _records_ be AvailableNamedTimeZoneIdentifiers().\n    // 2. Let _result_ be a new empty List.\n    // 3. For each element _timeZoneIdentifierRecord_ of _records_, do\n    //    a. If [[Identifier]] is [[PrimaryIdentifier]], then append [[Identifier]].\n    // (ICU4X's canonical IANA identifiers are the primary ones.)\n    let parser = IanaParserExtended::new();\n    let mut result: Vec<String> = parser\n        .iter()\n        .map(|t| match t.canonical {\n            // c. If _primary_ is one of \"Etc/UTC\", \"Etc/GMT\", or \"GMT\", set _primary_ to \"UTC\".\n            \"Etc/UTC\" | \"Etc/GMT\" | \"GMT\" => \"UTC\".to_string(),\n            other => other.to_string(),\n        })\n        .collect();\n    // 4. Return _result_.\n    result.sort();\n    result.dedup();\n    result\n}\"\"\")\nopen(p,'w').write(head+\"\"\"use icu::calendar::AnyCalendarKind;\nuse icu::time::zone::iana::IanaParserExtended;\nuse icu_provider::IterableDataProvider;\nuse kahvi_core::prelude::*;\n\nuse crate::support::intl::canonicalize_u_value;\n\n\"\"\"+body)\nEOF\ncd /home/user/kahvi/work/slots/slot-1 && cargo build 2>&1 | tail -40"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 31,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Intl.supportedValuesOf` for the keys `calendar`, `numberingSystem` and `timeZone`, but only 16 of 48 runs under `./t262 intl402/Intl/supportedValuesOf/` pass. Clippy is clean.\n\n- **Calendars:** the list comes from `icu::calendar`'s `AnyCalendarKind`, with the `islamicc` and `ethiopic-amete-alem` aliases, filtered through `canonicalize_u_value`.\n- **Numbering systems:** the list comes from the baked `icu_decimal_data` digit data.\n- **Time zones:** the list comes from `icu::time`'s `IanaParserExtended` canonical IDs, with `Etc/UTC`, `Etc/GMT` and `GMT` mapped to `UTC`.\n- **Not implemented:** `collation`, `currency` and `unit` throw not-implemented errors naming `AvailableCanonicalCollations`, `AvailableCanonicalCurrencies` and `AvailableCanonicalUnits`. I found no list for them in the ICU4X crates this package already depends on.\n- **Other failures:** some tests also stop on services that aren't built yet (`Intl.DateTimeFormat`, `Intl.Locale`, `Intl.DisplayNames`, `Intl.NumberFormat`, `Intl.RelativeTimeFormat`). I didn't check the rest of the 32 failures.\n\nBLOCKED: the collation, currency and unit lists need an ICU4X data source I can't reach. For collations that is probably `icu_collator_data`, which isn't a dependency of `kahvi-builtins`, and Cargo manifests are outside my file scope.",
+  "ttft_ms": 3715,
+  "type": "result",
+  "duration_ms": 177199,
+  "uuid": "b036e608-199a-40e2-a0c9-ca66c3a87df7",
+  "ttft_stream_ms": 2633,
+  "time_to_request_ms": 843,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 560,
+    "resume_other": 1,
+    "process_user_input": 8,
+    "input_attachments": 14,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 11,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 134,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 24,
+    "message_normalization": 3,
+    "client_creation": 27,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 149,
+  "time_to_request_cpu_ms": 434,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 243,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 270,
+  "process_anon_mib_result": 149,
+  "process_peak_rss_mib": 283,
+  "process_cpu_ms_turn": 5721,
+  "process_wall_ms_turn": 177198,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2633,
+  "time_to_request_from_spawn_ms": 1209328,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090072767.5632,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.5,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.21,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

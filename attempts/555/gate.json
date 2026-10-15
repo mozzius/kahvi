@@ -1,0 +1,37 @@
+{
+  "ticket": "I-string-locale-case",
+  "base": "3da490d1ce62f217c37ba8c05b001f233ac2d165",
+  "head": "969dfb4c392f7a8eed2cf3bcbb5e6ade6980c3f0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_to_locale_lower_case.rs",
+      "added": 10,
+      "removed": 0
+    },
+    {
+      "path": "crates/kahvi-builtins/src/string/prototype_to_locale_upper_case.rs",
+      "added": 79,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 0,
+    "after": 18,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

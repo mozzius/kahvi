@@ -1,0 +1,52 @@
+{
+  "ticket": "I-segmenter",
+  "base": "7253ca712bf2be96e0de475c2bf81f51bec806ce",
+  "head": "ab3aeff594096a9c085c2d4aa4c744a4fe362b18",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs",
+      "added": 35,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segmenter/constructor.rs",
+      "added": 4,
+      "removed": 4
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segments_prototype/containing.rs",
+      "added": 28,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_segmenter.rs",
+      "added": 108,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 158,
+    "before": 0,
+    "after": 158,
+    "new_passes": 158,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

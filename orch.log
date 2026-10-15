@@ -5707,3 +5707,6 @@ test262 at last merge: 82439/82439 runs passing
 [18:48:49] I-segmenter: attempt 554 finished ($0.428, 46 turns)
 [18:49:11] I-locale-canonicalization: attempt 557 finished ($0.079, 9 turns)
 [18:49:12] I-locale-canonicalization: blocked: CLDR common/bcp47 alias data (`-u-` `tz` aliases and the `-t-` field value aliases such as `m0-names`) isn't available through ICU4X's `icu_locale`/`LocaleCanonicalizer`. It would need an architect-provided data source, such as generated tables from CLDR.
+[18:49:47] I-string-locale-case: attempt 555 finished ($0.251, 19 turns)
+[18:50:51] I-supported-values-of: attempt 556 finished ($0.526, 31 turns)
+[18:50:54] I-segmenter: verifier: revise The diff implements Segments.prototype.containing, %IntlSegmentIteratorPrototype%.next, resolvedOptions, the constructor's granularity step, and the F
