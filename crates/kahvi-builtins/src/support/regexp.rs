@@ -6,12 +6,18 @@
 use kahvi_core::object::array::array_create;
 use kahvi_core::prelude::*;
 
+use super::regexp_legacy;
+
 /// [[OriginalSource]], [[OriginalFlags]], [[RegExpRecord]] and [[RegExpMatcher]].
 pub(crate) struct RegExpData {
     pub original_source: JsString,
     pub original_flags: JsString,
     /// The compiled pattern; `None` between RegExpAlloc and RegExpInitialize.
     pub matcher: Option<kahvi_regexp::Regex>,
+    /// [[Realm]] (legacy RegExp features)
+    pub realm: RealmId,
+    /// [[LegacyFeaturesEnabled]] (legacy RegExp features)
+    pub legacy_features_enabled: bool,
 }
 
 impl std::fmt::Debug for RegExpData {
@@ -37,12 +43,21 @@ pub(crate) fn require_regexp(agent: &mut Agent, r: Value) -> JsResult<Object> {
 /// RegExpAlloc(newTarget) (§22.2.3.1)
 pub(crate) fn regexp_alloc(agent: &mut Agent, new_target: Object) -> JsResult<Object> {
     // 1. Let obj be ? OrdinaryCreateFromConstructor(newTarget, "%RegExp.prototype%",
-    //    « [[OriginalSource]], [[OriginalFlags]], [[RegExpRecord]], [[RegExpMatcher]] »).
+    //    « [[OriginalSource]], [[OriginalFlags]], [[RegExpRecord]], [[RegExpMatcher]],
+    //    [[Realm]], [[LegacyFeaturesEnabled]] »).
     let empty = agent.names.empty;
+    // (Legacy RegExp features) Let thisRealm be the current Realm Record.
+    let this_realm = agent.current_realm();
+    // (Legacy RegExp features) Set obj.[[Realm]] to thisRealm. If
+    // SameValue(newTarget, thisRealm.[[Intrinsics]].[[%RegExp%]]) is true, set
+    // obj.[[LegacyFeaturesEnabled]] to true; else set it to false.
+    let legacy_features_enabled = new_target == agent.intrinsic_in(this_realm, "%RegExp%");
     let data = RegExpData {
         original_source: empty,
         original_flags: empty,
         matcher: None,
+        realm: this_realm,
+        legacy_features_enabled,
     };
     let obj = ops::ordinary_create_from_constructor(
         agent,
@@ -316,6 +331,8 @@ pub(crate) fn regexp_builtin_exec(agent: &mut Agent, r: Object, s: JsString) -> 
     // 33-34. For each capture i, in ascending order:
     let mut group_name_list: Vec<Option<String>> = Vec::with_capacity(n);
     let mut matched_group_names: Vec<String> = Vec::new();
+    // (Legacy RegExp features) Let capturedValues be a new empty List.
+    let mut captured_values: Vec<Value> = Vec::with_capacity(n);
     for (i, capture) in captures.iter().enumerate().skip(1) {
         // a-c. The captured value (undefined if the group did not participate) and its indices.
         let captured = match *capture {
@@ -326,6 +343,8 @@ pub(crate) fn regexp_builtin_exec(agent: &mut Agent, r: Object, s: JsString) -> 
         // d. Perform ! CreateDataPropertyOrThrow(A, ! ToString(𝔽(i)), capturedValue).
         let key = agent.key_from_index(i as f64);
         ops::create_data_property_or_throw(agent, array, key, captured)?;
+        // (Legacy RegExp features) Append capturedValue to capturedValues.
+        captured_values.push(captured);
         // e. If the ith capture of R was defined with a GroupName, then
         match group_names.as_ref().and_then(|g| g[i - 1].clone()) {
             Some(name) => {
@@ -362,6 +381,31 @@ pub(crate) fn regexp_builtin_exec(agent: &mut Agent, r: Object, s: JsString) -> 
         // b. Perform ! CreateDataPropertyOrThrow(A, "indices", indicesArray).
         let key = agent.key("indices");
         ops::create_data_property_or_throw(agent, array, key, Value::Object(indices_array))?;
+    }
+    // (Legacy RegExp features) Let thisRealm be the current Realm Record.
+    let this_realm = agent.current_realm();
+    // Let rRealm be the value of R's [[Realm]] internal slot.
+    let data = agent
+        .native::<RegExpData>(r)
+        .expect("RegExpBuiltinExec on a RegExp");
+    let (r_realm, legacy) = (data.realm, data.legacy_features_enabled);
+    // If SameValue(thisRealm, rRealm) is true, then
+    if this_realm == r_realm {
+        if legacy {
+            // i. If R.[[LegacyFeaturesEnabled]] is true, perform
+            //    UpdateLegacyRegExpStaticProperties(%RegExp%, S, lastIndex, e, capturedValues).
+            regexp_legacy::update_legacy_regexp_static_properties(
+                agent,
+                this_realm,
+                s,
+                last_index as usize,
+                end_index,
+                &captured_values,
+            );
+        } else {
+            // ii. Else, perform InvalidateLegacyRegExpStaticProperties(%RegExp%).
+            regexp_legacy::invalidate_legacy_regexp_static_properties(agent, this_realm);
+        }
     }
     // 36. Return A.
     Ok(Value::Object(array))
