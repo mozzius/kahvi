@@ -22,10 +22,9 @@ pub(crate) fn prototype_get_max_byte_length(
         _ => return Err(agent.throw_type_error("not an ArrayBuffer")),
     };
     // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
-    // IsSharedArrayBuffer is always *false* here: the only [[ArrayBufferData]]
-    // constructor is `allocate_array_buffer` (kahvi-core object/typed_array.rs),
-    // which sets no shared flag, and the SharedArrayBuffer constructor is still a
-    // not-implemented stub, so no shared data block can reach this function.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4. If IsDetachedBuffer(_obj_) is *true*, return *+0*_𝔽.
     if is_detached_buffer(agent, obj) {
         return Ok(Value::Number(0.0));
