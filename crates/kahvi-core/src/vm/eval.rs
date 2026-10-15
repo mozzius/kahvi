@@ -75,7 +75,11 @@ pub fn parse_script(
     name: &str,
     realm: RealmId,
 ) -> JsResult<ParsedScript> {
-    let ast = match kahvi_parser::parse_script(source, &ParseOptions::default()) {
+    let opts = ParseOptions {
+        lazy: true,
+        ..ParseOptions::default()
+    };
+    let ast = match kahvi_parser::parse_script(source, &opts) {
         Ok(ast) => ast,
         Err(e) => {
             agent.contexts.push(ExecutionContext {
