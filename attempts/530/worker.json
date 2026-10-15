@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 55197,
+  "stop_reason": "end_turn",
+  "session_id": "8e432ffd-8d48-46d4-b49a-4643b9f4eed1",
+  "total_cost_usd": 0.017571739999999995,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 36572,
+    "cache_read_input_tokens": 376824,
+    "output_tokens": 11981,
+    "output_tokens_details": {
+      "thinking_tokens": 6852
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 36572,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 189,
+        "cache_read_input_tokens": 44149,
+        "cache_creation_input_tokens": 180,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 180
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 18,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Iterator.prototype.windows` is implemented in `crates/kahvi-builtins/src/iterator/prototype_windows.rs`, and all 80 runs under `built-ins/Iterator/prototype/windows/` pass. Clippy and `cargo fmt --check` are clean, and that file is the only one changed.\n\nThe closure overrides `on_return` so that a return resumed at the final partial window's Yield closes nothing, as step 9.b.ii.1.a requires. Closing still happens for full windows. No helpers were missing, so nothing was added to other files.",
+  "ttft_ms": 1653,
+  "type": "result",
+  "duration_ms": 79955,
+  "uuid": "7f9e336b-ec77-4253-b5c9-025203f019bc",
+  "ttft_stream_ms": 1562,
+  "time_to_request_ms": 667,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 351,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 10,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 241,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 45,
+  "time_to_request_cpu_ms": 448,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 242,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 261,
+  "process_anon_mib_result": 141,
+  "process_peak_rss_mib": 279,
+  "process_cpu_ms_turn": 4644,
+  "process_wall_ms_turn": 79954,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1564,
+  "time_to_request_from_spawn_ms": 1863783,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050934065.2048,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
