@@ -62,7 +62,8 @@ impl Host {
             }
         };
         let source = match std::fs::read(&key) {
-            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Ok(b) => String::from_utf8(b)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
             Err(e) => {
                 eprintln!("kahvi-run: cannot read {}: {e}", path.display());
                 return EXIT_USAGE;

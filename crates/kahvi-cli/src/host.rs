@@ -156,6 +156,7 @@ pub fn load_module(
         std::fs::read(&path).map_err(|e| format!("cannot read module '{specifier}': {e}"))?;
     Ok(vm::LoadedModuleSource {
         key: path.to_string_lossy().into_owned(),
-        source: String::from_utf8_lossy(&source).into_owned(),
+        source: String::from_utf8(source)
+            .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
     })
 }

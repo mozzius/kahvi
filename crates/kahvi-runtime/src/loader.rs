@@ -26,7 +26,8 @@ pub fn load_module(
         .map_err(|e| format!("cannot load module '{specifier}' ({}): {e}", path.display()))?;
     Ok(LoadedModuleSource {
         key: path.to_string_lossy().into_owned(),
-        source: String::from_utf8_lossy(&source).into_owned(),
+        source: String::from_utf8(source)
+            .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
     })
 }
 

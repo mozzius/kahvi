@@ -289,8 +289,11 @@ pub unsafe extern "C" fn kahvi_eval(
     name_len: usize,
     out: *mut KahviValue,
 ) -> bool {
-    let source =
-        String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();
+    let source = unsafe { std::slice::from_raw_parts(source, len) };
+    let source = match std::str::from_utf8(source) {
+        Ok(s) => s.to_owned(),
+        Err(_) => String::from_utf8_lossy(source).into_owned(),
+    };
     let name = if name.is_null() {
         String::from("<eval>")
     } else {
