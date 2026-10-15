@@ -45,6 +45,7 @@ impl Host {
         console::install(&mut rt);
         timers::install(&mut rt, &timers);
         clone::install(&mut rt);
+        kahvi::encoding::install(&mut rt);
         process::install(&mut rt);
         let global = rt.global();
         rt.set_global("globalThis", Value::Object(global));

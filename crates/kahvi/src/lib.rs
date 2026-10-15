@@ -12,6 +12,8 @@ pub use kahvi_core::host::Persistent;
 pub use kahvi_core::vm::{HostLoadModule, LoadedModuleSource};
 pub use kahvi_core::{JsError, JsResult, JsString, Object, RealmId, Value};
 
+pub mod encoding;
+
 use kahvi_core::agent::ExecutionContext;
 use kahvi_core::object::Property;
 use kahvi_core::{ops, vm};

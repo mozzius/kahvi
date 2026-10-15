@@ -241,6 +241,8 @@ unsafe fn enter_callback<T>(
 #[unsafe(no_mangle)]
 pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
     let mut runtime = Box::new(Runtime::new());
+    // Web APIs Hermes provides and React Native code expects.
+    kahvi::encoding::install(&mut runtime);
     let realm = runtime.realm();
     let agent: *mut Agent = runtime.agent();
     unsafe { (*agent).host_now = Some(now_ms) };

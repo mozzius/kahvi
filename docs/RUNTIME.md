@@ -26,8 +26,12 @@ The entry file is an ES module (ESM only: no CommonJS, no `require`).
   `trace` to stderr; `assert`), `setTimeout`, `setInterval`,
   `clearTimeout`, `clearInterval`, `queueMicrotask`, `globalThis`,
   `structuredClone` (no `transfer`; a DataCloneError is an `Error` named
-  `DataCloneError`, there being no DOMException), and `process.env` (the
-  environment variables; nothing else of Node's `process`).
+  `DataCloneError`, there being no DOMException), `TextEncoder`,
+  `TextDecoder` (UTF-8 only; other encodings throw not-implemented),
+  `atob` and `btoa` (an InvalidCharacterError is an `Error` with that name),
+  and `process.env` (the environment variables; nothing else of Node's
+  `process`). The encoding globals come from `kahvi::encoding`, which the
+  React Native host (`kahvi-ffi`) installs too, as Hermes has them.
 - **Modules:** `./` and `../` specifiers resolve against the importing
   file, `/...` and `file://` URLs are absolute; JSON modules with
   `with { type: 'json' }`. `import.meta.url`, `.filename`, `.dirname`.
