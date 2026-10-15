@@ -9,7 +9,9 @@ other environment beyond PATH.
 
 expected-pass.txt is the ratchet: a case listed there that fails is a
 regression, and the run exits 1. Other failures are reported, grouped by the
-first line of stderr, but do not fail the run.
+first line of stderr, but do not fail the run. Under --gc-stress a timeout is
+reported but is not a regression: collecting at every safe point makes the
+long cases many times slower.
 
   ./rw [NAME...]                  run cases (all by default)
   ./rw --engine PATH              use this kahvi-run (default: release build)
@@ -17,6 +19,7 @@ first line of stderr, but do not fail the run.
   ./rw --record [NAME...]         rewrite NAME.out from Node
   ./rw --update-expected          rewrite expected-pass.txt from this run
   ./rw --json FILE                also write per-case results as JSON
+  ./rw --markdown FILE            also write the summary table (for README.md)
 """
 
 import argparse
@@ -104,6 +107,7 @@ def main():
     ap.add_argument("--record", action="store_true", help="rewrite the .out files from Node")
     ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
     ap.add_argument("--json", metavar="FILE", help="write per-case results to FILE")
+    ap.add_argument("--markdown", metavar="FILE", help="write the summary table to FILE")
     ap.add_argument("names", nargs="*")
     args = ap.parse_args()
 
@@ -145,7 +149,8 @@ def main():
         print("\nfailures by cause:")
         for reason, names in sorted(groups.items(), key=lambda kv: (-len(kv[1]), kv[0])):
             print(f"  {len(names):3}  {reason}  [{', '.join(names)}]")
-    regressions = sorted(r["name"] for r in failed if r["name"] in expected)
+    regressions = sorted(r["name"] for r in failed if r["name"] in expected
+                         and not (args.gc_stress and r["status"] is None))
     new_passes = sorted(set(passed) - expected)
     print(f"\n{len(passed)}/{len(results)} passed")
     if new_passes:
@@ -156,6 +161,8 @@ def main():
     if args.json:
         Path(args.json).write_text(json.dumps({"engine": engine, "gc_stress": args.gc_stress,
                                                "results": results}, indent=1) + "\n")
+    if args.markdown:
+        Path(args.markdown).write_text(markdown_summary(results, passed, failed))
     if args.update_expected:
         if args.names:
             sys.exit("rw: --update-expected needs a run of every case")
@@ -163,6 +170,18 @@ def main():
         print(f"wrote {EXPECTED.relative_to(ROOT)}")
     elif regressions:
         sys.exit(1)
+
+
+def markdown_summary(results, passed, failed):
+    """The README table: how many cases pass, and which fail and why."""
+    rows = ["| Real-world packages | |", "|---|--:|",
+            f"| **Passing** | **{len(passed)} / {len(results)}** |",
+            f"| Cases | {', '.join(r['name'] for r in results)} |"]
+    for r in failed:
+        rows.append(f"| Failing: {r['name']} | {r['reason'].replace('|', '/')[:120]} |")
+    note = ("npm packages and programs run under `kahvi-run`, each checked byte for byte against Node "
+            "([realworld/](realworld/README.md), `./rw`).")
+    return note + "\n\n" + "\n".join(rows) + "\n"
 
 
 if __name__ == "__main__":

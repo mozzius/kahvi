@@ -16,6 +16,17 @@ conformance suite.
 
 <!-- test262:end -->
 
+<!-- realworld:start -->
+
+npm packages and programs run under `kahvi-run`, each checked byte for byte against Node ([realworld/](realworld/README.md), `./rw`).
+
+| Real-world packages | |
+|---|--:|
+| **Passing** | **17 / 17** |
+| Cases | acorn, data, date-fns, decimal, diff, immer, immutable, js-yaml, lisp, lodash, marked, meriyah, prettier, raytracer, terser, yaml, zod |
+
+<!-- realworld:end -->
+
 ## How it works
 
 - **test262 is the only judge.** It is pinned in `vendor/test262`, agents

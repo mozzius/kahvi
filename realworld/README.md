@@ -17,6 +17,7 @@ state) and catch what falls between the features.
   `npm ci` when `node_modules/` is missing. Packages load unbundled, through
   kahvi-run's `node_modules` resolver.
 - `cases/NAME.mjs` is an ES module that drives one package on fixed inputs
+  (or, for `raytracer`, `lisp` and `data`, is a self-contained program)
   and prints plain strings (never objects, so console formatting does not
   matter). `cases/lib/` holds shared helpers and inputs, not cases.
 - `cases/NAME.out` is Node's stdout for the case. A case passes when
@@ -32,3 +33,5 @@ special-cases a package. A failure is minimised to the smallest snippet that
 differs from Node and fixed in the engine or the runtime.
 
 CI: `.github/workflows/realworld.yml`, report-only (not a required check).
+PRs labelled `gc-stress` and manual runs also run every case with
+`--gc-stress`; there a timeout is reported but not counted as a regression.

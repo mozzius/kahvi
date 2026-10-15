@@ -1,0 +1,121 @@
+name: Bench
+
+# Kahvi against other engines (bench/run.py). Nightly on main, but only when
+# main has moved since the last benchmarked commit, and on demand;
+# a run on main adds its results to the bench-results branch, whose README.md
+# is the dashboard (bench/publish.py). PRs labelled `bench` run it too and get
+# the table in their job summary, without publishing.
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "Include the large Octane workloads"
+        type: boolean
+        default: false
+  pull_request:
+    types: [labeled, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # The nightly run skips itself unless something has landed on main since
+  # the commit bench-results last recorded.
+  changed:
+    name: anything new on main
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'bench')
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" != schedule ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          last=$(gh api "repos/$GITHUB_REPOSITORY/contents/results?ref=bench-results" \
+            --jq '[.[].name] | sort | last' 2>/dev/null || true)
+          echo "last result: ${last:-none}; main is ${GITHUB_SHA::10}"
+          if [[ "$last" == *"-${GITHUB_SHA::10}.json" ]]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  bench:
+    needs: changed
+    if: needs.changed.outputs.run == 'true'
+    name: benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo build --release -p kahvi-cli -p kahvi-runtime
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: bench
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: realworld
+      # Other engines. A failed install skips that engine rather than the run.
+      - name: install QuickJS and Hermes
+        continue-on-error: true
+        run: npx -y jsvu@3.0.6 --os=linux64 --engines=quickjs,hermes
+      - name: install Boa
+        continue-on-error: true
+        run: cargo install boa_cli --locked --root "$HOME/.boa" && echo "$HOME/.boa/bin" >> "$GITHUB_PATH"
+      - name: run
+        run: |
+          echo "$HOME/.jsvu/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.jsvu/bin:$HOME/.boa/bin:$PATH"
+          bench/run.py --list --kahvi-dir target/release
+          bench/run.py --kahvi-dir target/release --runs 3 ${{ inputs.all && '--all' || '' }} \
+            --json bench.json --markdown bench.md
+          cat bench.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bench-results
+          path: bench.json
+      - name: publish to bench-results
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch origin bench-results; then
+            git worktree add results-branch origin/bench-results
+            git -C results-branch checkout -B bench-results
+          else
+            git worktree add --detach results-branch
+            git -C results-branch checkout --orphan bench-results
+            git -C results-branch rm -rfq .
+          fi
+          bench/publish.py bench.json results-branch --sha "$GITHUB_SHA"
+          git -C results-branch add -A
+          git -C results-branch commit -qm "bench: results for ${GITHUB_SHA::10}"
+          git -C results-branch push origin bench-results
+      # The latest table also goes in the README, next to test262's.
+      - name: Update README
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          {
+            echo "Benchmarks from the last run on main ($(date -u +%F), Kahvi ${GITHUB_SHA::10}, a GitHub-hosted runner):"
+            echo "median wall time per workload, with each engine's ratio to the baseline in brackets; lower is faster."
+            echo "History and engine versions are on the [bench-results](https://github.com/${GITHUB_REPOSITORY}/tree/bench-results) branch; see [bench/](bench/README.md)."
+            echo
+            sed '$d' bench.md
+          } > bench-readme.md
+          python3 .github/scripts/readme_section.py benchmarks bench-readme.md README.md
+          git diff --quiet README.md && exit 0
+          git commit -m "README: update benchmark results [skip ci]" README.md
+          git pull --rebase origin main
+          git push origin HEAD:main

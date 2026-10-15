@@ -8,10 +8,12 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Per action, so labelling a PR does not cancel its run for the push.
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.action }}
   cancel-in-progress: true
 
 env:
@@ -21,7 +23,12 @@ env:
 jobs:
   realworld:
     name: real-world packages
+    # A label alone changes nothing this job checks.
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
+    # Write access only so a push to main can update the README table.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -38,10 +45,43 @@ jobs:
           node --version
           ./rw --record
           git diff --exit-code -- realworld/cases
-      - run: ./rw --engine target/release/kahvi-run --json rw-results.json
+      - run: ./rw --engine target/release/kahvi-run --json rw-results.json --markdown rw-results.md
+      # Keep the README's real-world table current, as ci.yml does for
+      # test262. Runs even when the ratchet step failed (the numbers are
+      # still real). Pushes made with GITHUB_TOKEN do not trigger workflows.
+      - name: Update README
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('rw-results.md') != ''
+        run: |
+          python3 .github/scripts/readme_section.py realworld rw-results.md README.md
+          git diff --quiet README.md && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -m "README: update real-world results [skip ci]" README.md
+          git pull --rebase origin main
+          git push origin HEAD:main
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: rw-results
           path: rw-results.json
           if-no-files-found: ignore
+
+  # The same cases with a collection at every safe point, on manual runs and
+  # PRs labelled gc-stress (as for test262 in ci.yml). Timeouts are reported
+  # but not counted.
+  gc-stress:
+    name: real-world packages (GC stress)
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'gc-stress'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.CHECKOUT_REF }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo build --release -p kahvi-runtime
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: realworld
+      - run: ./rw --engine target/release/kahvi-run --gc-stress --timeout 600
