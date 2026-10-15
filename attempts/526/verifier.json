@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 15138,
+  "stop_reason": "tool_use",
+  "session_id": "51d771fb-290d-48af-97ed-931b9696aabc",
+  "total_cost_usd": 0.0030603699999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4755,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 3342,
+    "output_tokens_details": {
+      "thinking_tokens": 2822
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4755,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3342,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 4755,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4755
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Atomics.wait as `Return ? DoWait(~sync~, ...)` and a DoWait sync path. The order matches the spec: ValidateIntegerTypedArray(ta, true), the IsSharedArrayBuffer TypeError check, ValidateAtomicAccess, then ToBigInt64 or ToInt32 on value, then ToNumber on timeout. The timeout clamping is computed. Then the unconditional TypeError for the case where AgentCanSuspend() is false. That is the spec outcome here because the host cannot suspend, as the ticket states. Steps 13-31 are unreachable and are documented as such, not faked. There are no test-specific branches, no swallowed errors, and no made-up values. The lint flag is an honest comment about unreachable steps. The two not-implemented failures come from the test harness's use of SharedArrayBuffer.prototype.grow, not from this file.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Atomics.wait as `Return ? DoWait(~sync~, ...)` and a DoWait sync path. The order matches the spec: ValidateIntegerTypedArray(ta, true), the IsSharedArrayBuffer TypeError check, ValidateAtomicAccess, then ToBigInt64 or ToInt32 on value, then ToNumber on timeout. The timeout clamping is computed. Then the unconditional TypeError for the case where AgentCanSuspend() is false. That is the spec outcome here because the host cannot suspend, as the ticket states. Steps 13-31 are unreachable and are documented as such, not faked. There are no test-specific branches, no swallowed errors, and no made-up values. The lint flag is an honest comment about unreachable steps. The two not-implemented failures come from the test harness's use of SharedArrayBuffer.prototype.grow, not from this file.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 12860,
+  "type": "result",
+  "duration_ms": 14613,
+  "uuid": "9842f460-9adf-4dc0-aa41-f3c0c105dc1f",
+  "ttft_stream_ms": 1644,
+  "time_to_request_ms": 602,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 396,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 133,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 56,
+  "time_to_request_cpu_ms": 389,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 246,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 118,
+  "process_peak_rss_mib": 250,
+  "process_cpu_ms_turn": 1155,
+  "process_wall_ms_turn": 14613,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1645,
+  "time_to_request_from_spawn_ms": 1842996,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050913309.271,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
