@@ -161,11 +161,17 @@ impl PropertyDescriptor {
 /// Array-index keys `0..elements.len()` live in a dense vector (holes are
 /// `None`); every other key, including larger indices, lives in the
 /// insertion-ordered map. The split is invisible to callers.
+///
+/// A map with at most [`SMALL_MAP`] entries has no hash index: lookups scan
+/// `entries`, which is faster at that size and saves an allocation per
+/// object.
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
     elements: Vec<Option<Property>>,
     /// How many of `elements` are present.
     element_count: usize,
+    /// Key to position in `entries`; empty while `entries` has at most
+    /// [`SMALL_MAP`] slots.
     index: crate::hash::FxHashMap<PropertyKey, usize>,
     entries: Vec<Option<(PropertyKey, Property)>>,
     removed: usize,
@@ -177,7 +183,21 @@ pub struct PropertyMap {
 /// still extend them (filling the gap with holes).
 const DENSE_GAP: usize = 64;
 
+/// The most entries a map keeps without a hash index.
+const SMALL_MAP: usize = 8;
+
 impl PropertyMap {
+    /// The position of a map key in `entries`.
+    fn find(&self, key: &PropertyKey) -> Option<usize> {
+        if self.entries.len() <= SMALL_MAP {
+            self.entries
+                .iter()
+                .position(|e| matches!(e, Some((k, _)) if k == key))
+        } else {
+            self.index.get(key).copied()
+        }
+    }
+
     fn dense_slot(&self, key: &PropertyKey) -> Option<usize> {
         match key {
             PropertyKey::Index(i) if (*i as usize) < self.elements.len() => Some(*i as usize),
@@ -189,16 +209,15 @@ impl PropertyMap {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].as_ref();
         }
-        self.index
-            .get(key)
-            .and_then(|&i| self.entries[i].as_ref().map(|(_, p)| p))
+        self.find(key)
+            .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
     }
 
     pub fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].as_mut();
         }
-        let i = *self.index.get(key)?;
+        let i = self.find(key)?;
         self.entries[i].as_mut().map(|(_, p)| p)
     }
 
@@ -206,7 +225,7 @@ impl PropertyMap {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].is_some();
         }
-        self.index.contains_key(key)
+        self.find(key).is_some()
     }
 
     /// Inserts or replaces, keeping the original position on replacement.
@@ -220,21 +239,29 @@ impl PropertyMap {
                 self.elements[i] = Some(prop);
                 return;
             }
-            if i <= self.elements.len() + DENSE_GAP && !self.index.contains_key(&key) {
+            if i <= self.elements.len() + DENSE_GAP && self.find(&key).is_none() {
                 self.grow_elements(i + 1);
                 self.elements[i] = Some(prop);
                 self.element_count += 1;
                 return;
             }
         }
-        match self.index.get(&key) {
-            Some(&i) => self.entries[i] = Some((key, prop)),
+        match self.find(&key) {
+            Some(i) => self.entries[i] = Some((key, prop)),
             None => {
                 if key.as_index().is_some() {
                     self.sparse_indices += 1;
                 }
-                self.index.insert(key, self.entries.len());
+                if self.entries.capacity() == 0 {
+                    self.entries.reserve_exact(2);
+                }
                 self.entries.push(Some((key, prop)));
+                let len = self.entries.len();
+                if len == SMALL_MAP + 1 {
+                    self.rebuild_index();
+                } else if len > SMALL_MAP + 1 {
+                    self.index.insert(key, len - 1);
+                }
             }
         }
     }
@@ -269,7 +296,10 @@ impl PropertyMap {
     }
 
     fn remove_from_map(&mut self, key: &PropertyKey) -> Option<Property> {
-        let i = self.index.remove(key)?;
+        let i = self.find(key)?;
+        if self.entries.len() > SMALL_MAP {
+            self.index.remove(key);
+        }
         if key.as_index().is_some() {
             self.sparse_indices -= 1;
         }
@@ -283,15 +313,26 @@ impl PropertyMap {
 
     fn compact(&mut self) {
         self.entries.retain(Option::is_some);
-        self.index.clear();
-        for (i, (k, _)) in self.entries.iter().flatten().enumerate() {
-            self.index.insert(*k, i);
-        }
         self.removed = 0;
+        self.rebuild_index();
+    }
+
+    /// Rebuilds `index` from `entries`, or drops it when the map is small.
+    fn rebuild_index(&mut self) {
+        self.index.clear();
+        if self.entries.len() <= SMALL_MAP {
+            self.index.shrink_to_fit();
+            return;
+        }
+        for (i, e) in self.entries.iter().enumerate() {
+            if let Some((k, _)) = e {
+                self.index.insert(*k, i);
+            }
+        }
     }
 
     pub fn len(&self) -> usize {
-        self.element_count + self.index.len()
+        self.element_count + self.entries.len() - self.removed
     }
 
     pub fn is_empty(&self) -> bool {
