@@ -33,7 +33,10 @@ pub(crate) fn prototype_to_string(
                 .initial_name
                 .map(|n| agent.str_lossy(n))
                 .unwrap_or_default();
-            format!("function {name}() {{ [native code] }}")
+            format!(
+                "function {}() {{ [native code] }}",
+                native_function_name(&name)
+            )
         }
         // 4. If func is an Object and IsCallable(func) is true, return a NativeFunction representation.
         _ if func.is_callable(agent) => "function () { [native code] }".to_string(),
@@ -45,4 +48,26 @@ pub(crate) fn prototype_to_string(
         }
     };
     Ok(Value::String(agent.string(&text)))
+}
+
+/// `name` as NativeFunctionAccessor_opt PropertyName: a name that is not an
+/// IdentifierName (such as `$&`) is written as a computed name, `["$&"]`.
+fn native_function_name(name: &str) -> String {
+    let (accessor, key) = match name.split_once(' ') {
+        Some((a @ ("get" | "set"), k)) => (Some(a), k),
+        _ => (None, name),
+    };
+    let identifier = key
+        .chars()
+        .enumerate()
+        .all(|(i, c)| c == '$' || c == '_' || c.is_alphabetic() || (i > 0 && c.is_alphanumeric()));
+    let key = if key.is_empty() || identifier || (key.starts_with('[') && key.ends_with(']')) {
+        key.to_string()
+    } else {
+        format!("[{key:?}]")
+    };
+    match accessor {
+        Some(a) => format!("{a} {key}"),
+        None => key,
+    }
 }

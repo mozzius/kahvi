@@ -26,9 +26,27 @@ ID_RE = re.compile(r'\bid="([^"]+)"')
 TYPE_RE = re.compile(r'\btype="([^"]+)"')
 H1_RE = re.compile(r"<h1>(.*?)</h1>", re.S)
 
+# Stage 3 proposals whose test262 features are scored (vendor/proposals/,
+# each proposal repository's spec.emu as of 2026-10-15), with the clauses
+# that define built-in functions. They are appended to the pinned spec, so a
+# clause id the spec also has resolves to the spec's version.
+PROPOSALS = {
+    "iterator-chunking.emu": ["sec-iterator.prototype.chunks", "sec-iterator.prototype.windows"],
+    "iterator-includes.emu": ["sec-iterator.prototype.includes"],
+    "error-stack-accessor.emu": ["sec-get-error.prototype.stack", "sec-set-error.prototype.stack"],
+}
+
 
 def load():
-    return SPEC.read_text(encoding="utf-8")
+    text = SPEC.read_text(encoding="utf-8")
+    for name, functions in PROPOSALS.items():
+        part = (SPEC.parent.parent / "proposals" / name).read_text(encoding="utf-8")
+        for cid in functions:
+            tag = f'<emu-clause id="{cid}">'
+            assert tag in part, f"{name}: no clause {cid}"
+            part = part.replace(tag, f'<emu-clause id="{cid}" type="built-in function">')
+        text += "\n" + part
+    return text
 
 
 def clause_spans(text):
