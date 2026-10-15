@@ -390,6 +390,11 @@ pub(crate) struct GcState {
     /// Explicit roots (`Agent::push_root`).
     pub(crate) roots: Vec<Value>,
     pub(crate) collections: u64,
+    /// Stressed safe points left before the next stress collection (0:
+    /// not drawn yet), and the generator that draws it (see
+    /// `Agent::gc_stress`).
+    pub(crate) stress_left: std::cell::Cell<u32>,
+    pub(crate) stress_rng: std::cell::Cell<u32>,
 }
 
 const MIN_THRESHOLD: usize = 200_000;
@@ -419,6 +424,8 @@ impl Default for GcState {
             frames: Vec::new(),
             roots: Vec::new(),
             collections: 0,
+            stress_left: std::cell::Cell::new(0),
+            stress_rng: std::cell::Cell::new(0x9e37_79b9),
         }
     }
 }
@@ -427,7 +434,46 @@ impl Agent {
     /// Whether a safe point should collect now.
     #[inline]
     pub(crate) fn gc_wanted(&self) -> bool {
-        self.gc.holds == 0 && (self.gc_stress || self.gc.allocated >= self.gc.threshold)
+        self.gc.holds == 0
+            && (self.gc.allocated >= self.gc.threshold
+                || (self.gc_stress != 0 && self.gc_stress_due()))
+    }
+
+    /// Counts down a stressed safe point; true when the countdown runs
+    /// out. With `gc_stress` N > 1 the next countdown is drawn from
+    /// 1..=2N-1 (mean N, fixed seed), so loops whose period divides N are
+    /// not always interrupted at the same instruction.
+    fn gc_stress_due(&self) -> bool {
+        let left = self.gc.stress_left.get();
+        if left > 1 {
+            self.gc.stress_left.set(left - 1);
+            return false;
+        }
+        let n = self.gc_stress;
+        let next = if n <= 1 {
+            1
+        } else {
+            // xorshift32
+            let mut x = self.gc.stress_rng.get();
+            x ^= x << 13;
+            x ^= x >> 17;
+            x ^= x << 5;
+            self.gc.stress_rng.set(x);
+            1 + x % (2 * n - 1)
+        };
+        self.gc.stress_left.set(next);
+        left == 1 || n <= 1
+    }
+
+    /// `KAHVI_GC_STRESS` as [`Agent::gc_stress`]: unset is off; a positive
+    /// number N collects at one safe point in N on average (1: every one);
+    /// any other value is 1.
+    pub fn gc_stress_from_env() -> u32 {
+        match std::env::var("KAHVI_GC_STRESS") {
+            Err(std::env::VarError::NotPresent) => 0,
+            Ok(v) => v.trim().parse::<u32>().ok().filter(|&n| n > 0).unwrap_or(1),
+            Err(_) => 1,
+        }
     }
 
     /// A safe point: collects if the heap has grown enough and nothing holds.

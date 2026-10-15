@@ -16,6 +16,8 @@ long cases many times slower.
   ./rw [NAME...]                  run cases (all by default)
   ./rw --engine PATH              use this kahvi-run (default: release build)
   ./rw --gc-stress                collect at every safe point
+  ./rw --gc-stress --gc-every N   collect at one safe point in N on average
+  ./rw --shard K/N                run every Nth case starting at K
   ./rw --record [NAME...]         rewrite NAME.out from Node
   ./rw --update-expected          rewrite expected-pass.txt from this run
   ./rw --json FILE                also write per-case results as JSON
@@ -47,10 +49,10 @@ def ensure_packages():
     subprocess.run(["npm", "ci", "--ignore-scripts", "--no-audit", "--no-fund"], cwd=HERE, check=True)
 
 
-def case_env(gc_stress=False):
+def case_env(gc_stress=0):
     env = {"PATH": os.environ.get("PATH", ""), "TZ": "UTC"}
     if gc_stress:
-        env["KAHVI_GC_STRESS"] = "1"
+        env["KAHVI_GC_STRESS"] = str(gc_stress)
     return env
 
 
@@ -103,6 +105,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--engine", help="kahvi-run binary (default: build target/release/kahvi-run)")
     ap.add_argument("--gc-stress", action="store_true", help="collect at every safe point")
+    ap.add_argument("--gc-every", type=int, default=0, metavar="N",
+                    help="with --gc-stress: collect at one safe point in N on average")
+    ap.add_argument("--shard", metavar="K/N", help="run only the cases i with i %% N == K")
     ap.add_argument("--timeout", type=int, default=300, help="seconds per case (default 300)")
     ap.add_argument("--record", action="store_true", help="rewrite the .out files from Node")
     ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
@@ -111,6 +116,9 @@ def main():
     ap.add_argument("names", nargs="*")
     args = ap.parse_args()
 
+    if args.gc_every and not args.gc_stress:
+        sys.exit("rw: --gc-every needs --gc-stress")
+    stress = (args.gc_every or 1) if args.gc_stress else 0
     ensure_packages()
     cases = sorted(CASES.glob("*.mjs"))
     if args.names:
@@ -118,6 +126,9 @@ def main():
         if unknown:
             sys.exit(f"rw: no such case: {', '.join(sorted(unknown))}")
         cases = [c for c in cases if c.stem in args.names]
+    if args.shard:
+        k, n = (int(x) for x in args.shard.split("/"))
+        cases = cases[k::n]
     if args.record:
         record(cases)
         return
@@ -131,7 +142,7 @@ def main():
     expected = set(EXPECTED.read_text().split()) if EXPECTED.exists() else set()
     results = []
     for c in cases:
-        r = run_case(engine, c, args.gc_stress, args.timeout)
+        r = run_case(engine, c, stress, args.timeout)
         results.append(r)
         if r["pass"]:
             print(f"ok   {r['name']} ({r['secs']}s)", flush=True)
@@ -159,7 +170,7 @@ def main():
         print(f"REGRESSIONS (in expected-pass.txt): {', '.join(regressions)}")
 
     if args.json:
-        Path(args.json).write_text(json.dumps({"engine": engine, "gc_stress": args.gc_stress,
+        Path(args.json).write_text(json.dumps({"engine": engine, "gc_stress": stress,
                                                "results": results}, indent=1) + "\n")
     if args.markdown:
         Path(args.markdown).write_text(markdown_summary(results, passed, failed))

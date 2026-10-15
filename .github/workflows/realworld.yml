@@ -61,15 +61,20 @@ jobs:
           path: rw-results.json
           if-no-files-found: ignore
 
-  # The same cases with a collection at every safe point, on manual runs and
-  # PRs labelled gc-stress (as for test262 in ci.yml). Timeouts are reported
-  # but not counted.
+  # The same cases with a collection at one safe point in 5000 (every safe
+  # point makes the large cases quadratic), on manual runs and PRs labelled
+  # gc-stress (as for test262 in ci.yml), sharded to keep each job short.
+  # Timeouts are reported but not counted.
   gc-stress:
-    name: real-world packages (GC stress)
+    name: real-world packages (GC stress ${{ matrix.shard }}/6)
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'gc-stress'))
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -79,4 +84,4 @@ jobs:
       - run: cargo build --release -p kahvi-runtime
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: realworld
-      - run: ./rw --engine target/release/kahvi-run --gc-stress --timeout 600
+      - run: ./rw --engine target/release/kahvi-run --gc-stress --gc-every 5000 --timeout 600 --shard ${{ matrix.shard }}/6

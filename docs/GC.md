@@ -19,7 +19,12 @@ the collector that frees them; it is architect-owned.
   threshold that grows with the live heap (`max(MIN, live * 1.0)`).
   `KAHVI_GC_STRESS=1` collects at every safe point: the test262 results
   under stress must equal the normal results, which is how rooting bugs
-  are found.
+  are found. `KAHVI_GC_STRESS=N` collects at one safe point in N on
+  average (gaps drawn from 1..2N-1 with a fixed seed, so runs repeat and
+  loops are not always interrupted at the same instruction). Each
+  collection walks the whole live heap, so every-safe-point stress is
+  quadratic on programs with large heaps; the real-world suite runs with
+  N = 5000.
 
 ## When it is safe to collect
 
