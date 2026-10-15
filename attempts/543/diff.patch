@@ -1,0 +1,991 @@
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/constructor.rs b/crates/kahvi-builtins/src/intl_date_time_format/constructor.rs
+index 757418a..0ed52d6 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/constructor.rs
+@@ -4,6 +4,9 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::fallback_symbol;
++use crate::support::intl_date_time_format::{Defaults, Required, create_date_time_format};
++
+ /// Intl.DateTimeFormat
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -11,20 +14,45 @@ pub(crate) fn constructor(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // When the `Intl.DateTimeFormat` function is called with optional arguments _locales_ and _options_, the following steps are taken:
+-    //
+     // 1. If NewTarget is *undefined*, let _newTarget_ be the active function object, else let _newTarget_ be NewTarget.
++    let target = match new_target {
++        Some(t) => t,
++        None => agent.intrinsic("%Intl.DateTimeFormat%"),
++    };
+     // 2. Let _dateTimeFormat_ be ? CreateDateTimeFormat(_newTarget_, _locales_, _options_, ~any~, ~date~).
++    let date_time_format = create_date_time_format(
++        agent,
++        target,
++        args.get_or_undefined(0),
++        args.get_or_undefined(1),
++        Required::Any,
++        Defaults::Date,
++    )?;
+     // 3. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
+     //    a. Let _this_ be the *this* value.
+     //    b. Return ? ChainDateTimeFormat(_dateTimeFormat_, NewTarget, _this_).
+-    // 4. Return _dateTimeFormat_.
+     //
+-    // [subclause sec-chaindatetimeformat: ChainDateTimeFormat (
+-    // _dateTimeFormat_: an Intl.DateTimeFormat,
+-    // _newTarget_: an ECMAScript language value,
+-    // _this_: an ECMAScript language value,
+-    // ): either a normal completion containing an Object or a throw completion]
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DateTimeFormat"))
++    // ChainDateTimeFormat:
++    // 1. If _newTarget_ is *undefined* and ? OrdinaryHasInstance(%Intl.DateTimeFormat%, _this_) is *true*, then
++    if new_target.is_none() {
++        let ctor = agent.intrinsic("%Intl.DateTimeFormat%");
++        if ops::ordinary_has_instance(agent, Value::Object(ctor), this)? {
++            let Value::Object(this_obj) = this else {
++                return Err(agent.throw_type_error("this is not an object"));
++            };
++            // a. Perform ? DefinePropertyOrThrow(_this_, %Intl%.[[FallbackSymbol]], PropertyDescriptor { [[Value]]: _dateTimeFormat_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
++            let key = PropertyKey::Symbol(fallback_symbol(agent));
++            ops::define_property_or_throw(
++                agent,
++                this_obj,
++                key,
++                PropertyDescriptor::data(Value::Object(date_time_format), false, false, false),
++            )?;
++            // b. Return _this_.
++            return Ok(this);
++        }
++    }
++    // 2. Return _dateTimeFormat_.
++    // 4. Return _dateTimeFormat_.
++    Ok(Value::Object(date_time_format))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
+index 930f961..96c8779 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
+@@ -2,31 +2,80 @@
+ //!
+ //! Spec: https://tc39.es/ecma402/#sec-intl.datetimeformat.prototype.format
+ 
++use kahvi_core::function::builtin_slots;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::date;
++use crate::support::intl_date_time_format::{
++    DateTimeFormatSlots, format_date_time, require_date_time_format, unwrap_date_time_format,
++};
++
+ /// get Intl.DateTimeFormat.prototype.format
+ pub(crate) fn prototype_get_format(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // Intl.DateTimeFormat.prototype.format is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:
+-    //
+     // 1. Let _dtf_ be the *this* value.
+     // 2. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
+     //    a. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
++    let dtf = unwrap_date_time_format(agent, this)?;
+     // 3. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    let dtf = require_date_time_format(agent, dtf)?;
+     // 4. If _dtf_.[[BoundFormat]] is *undefined*, then
+-    //    a. Let _closure_ be a new Abstract Closure with parameters (_date_) that captures _dtf_ and performs the following steps when called:
+-    //       i. If _date_ is *undefined*, let _x_ be ! Call(%Date.now%, *undefined*); else let _x_ be ? ToNumber(_date_).
+-    //       ii. Return ? FormatDateTime(_dtf_, _x_).
+-    //    b. Set _dtf_.[[BoundFormat]] to CreateBuiltinFunction(_closure_, 1, *""*, « »).
++    let bound = agent
++        .native::<DateTimeFormatSlots>(dtf)
++        .and_then(|s| s.bound_format);
++    if bound.is_none() {
++        // a. Let _closure_ be a new Abstract Closure with parameters (_date_) that captures _dtf_ and performs the following steps when called:
++        //    (see `format_closure`)
++        // b. Set _dtf_.[[BoundFormat]] to CreateBuiltinFunction(_closure_, 1, *""*, « »).
++        let empty = PropertyKey::String(agent.names.empty);
++        let f = create_builtin_function(
++            agent,
++            format_closure,
++            1,
++            empty,
++            vec![Value::Object(dtf)],
++            None,
++            None,
++            None,
++            false,
++        );
++        if let Some(slots) = agent.native_mut::<DateTimeFormatSlots>(dtf) {
++            slots.bound_format = Some(f);
++        }
++        // 5. Return _dtf_.[[BoundFormat]].
++        return Ok(Value::Object(f));
++    }
+     // 5. Return _dtf_.[[BoundFormat]].
+-    //
+-    // NOTE:
+-    // The returned function is bound to _dtf_ so that it can be passed directly to `Array.prototype.map` or other functions.
+-    // This is considered a historical artefact, as part of a convention which is no longer followed for new features, but is preserved to maintain compatibility with existing programs.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.DateTimeFormat.prototype.format"))
++    match bound {
++        Some(f) => Ok(Value::Object(f)),
++        None => Err(agent.throw_type_error("missing bound format")),
++    }
++}
++
++fn format_closure(
++    agent: &mut Agent,
++    _this: Value,
++    args: &[Value],
++    _new_target: Option<Object>,
++) -> JsResult<Value> {
++    // Parameters: (_date_)
++    let date_arg = args.get_or_undefined(0);
++    let Some(active) = agent.active_function() else {
++        return Err(agent.throw_type_error("format closure has no active function"));
++    };
++    let Some(&Value::Object(dtf)) = builtin_slots(agent, active).first() else {
++        return Err(agent.throw_type_error("format closure has no Intl.DateTimeFormat"));
++    };
++    // i. If _date_ is *undefined*, let _x_ be ! Call(%Date.now%, *undefined*); else let _x_ be ? ToNumber(_date_).
++    let x = if matches!(date_arg, Value::Undefined) {
++        date::now(agent)
++    } else {
++        ops::to_number(agent, date_arg)?
++    };
++    // ii. Return ? FormatDateTime(_dtf_, _x_).
++    format_date_time(agent, dtf, x)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs
+index cf98bc5..faad239 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs
+@@ -4,20 +4,39 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_date_time_format::{
++    DateTimeFormatSlots, require_date_time_format, unwrap_date_time_format,
++};
++
+ /// Intl.DateTimeFormat.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function provides access to the locale and options computed during initialization of the object.
+-    //
+     // 1. Let _dtf_ be the *this* value.
+     // 2. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
+     //    a. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
++    let dtf = unwrap_date_time_format(agent, this)?;
+     // 3. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    let dtf = require_date_time_format(agent, dtf)?;
+     // 4. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
++    let object_prototype = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(object_prototype));
++    let Some(slots) = agent.native::<DateTimeFormatSlots>(dtf) else {
++        return Err(agent.throw_type_error("not an Intl.DateTimeFormat"));
++    };
++    let locale = slots.locale.clone();
++    let calendar = slots.calendar.clone();
++    let numbering_system = slots.numbering_system.clone();
++    let time_zone = slots.time_zone.clone();
++    let hour_cycle = slots.hour_cycle.clone();
++    let date_style = slots.date_style.clone();
++    let time_style = slots.time_style.clone();
++    let format = slots.date_time_format.clone();
++    let has_style = date_style.is_some() || time_style.is_some();
++
+     // 5. For each row of [table-datetimeformat-resolvedoptions-properties], except the header row, in table order, do
+     //    a. Let _propertyKey_ be the Property value of the current row.
+     //    b. If there is an Internal Slot value in the current row, then
+@@ -37,74 +56,63 @@ pub(crate) fn prototype_resolved_options(
+     //             a. Assert: _conversion_ is ~number~.
+     //             b. Set _value_ to 𝔽(_value_).
+     //       ii. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++    let mut rows: Vec<(&str, Option<Value>)> = Vec::new();
++    fn string_row<'a>(
++        rows: &mut Vec<(&'a str, Option<Value>)>,
++        agent: &mut Agent,
++        key: &'a str,
++        v: Option<&str>,
++    ) {
++        let value = v.map(|s| Value::String(agent.string(s)));
++        rows.push((key, value));
++    }
++    string_row(&mut rows, agent, "locale", Some(&locale));
++    string_row(&mut rows, agent, "calendar", Some(&calendar));
++    string_row(&mut rows, agent, "numberingSystem", Some(&numbering_system));
++    string_row(&mut rows, agent, "timeZone", Some(&time_zone));
++    string_row(&mut rows, agent, "hourCycle", hour_cycle.as_deref());
++    let hour12 = hour_cycle
++        .as_deref()
++        .map(|hc| Value::Boolean(hc == "h11" || hc == "h12"));
++    rows.push(("hour12", hour12));
++    for key in [
++        "weekday",
++        "era",
++        "year",
++        "month",
++        "day",
++        "dayPeriod",
++        "hour",
++        "minute",
++        "second",
++    ] {
++        let v = if has_style { None } else { format.get(key) };
++        string_row(&mut rows, agent, key, v);
++    }
++    let fractional = if has_style {
++        None
++    } else {
++        format
++            .get("fractionalSecondDigits")
++            .and_then(|v| v.parse::<u32>().ok())
++            .map(|n| Value::Number(n as f64))
++    };
++    rows.push(("fractionalSecondDigits", fractional));
++    let v = if has_style {
++        None
++    } else {
++        format.get("timeZoneName")
++    };
++    string_row(&mut rows, agent, "timeZoneName", v);
++    string_row(&mut rows, agent, "dateStyle", date_style.as_deref());
++    string_row(&mut rows, agent, "timeStyle", time_style.as_deref());
++
++    for (property_key, value) in rows {
++        if let Some(value) = value {
++            let key = agent.key(property_key);
++            ops::create_data_property_or_throw(agent, options, key, value)?;
++        }
++    }
+     // 6. Return _options_.
+-    //
+-    // Resolved Options of DateTimeFormat Instances
+-    // Internal Slot |
+-    // Property |
+-    // Conversion |
+-    // [[Locale]] |
+-    // *"locale"* |
+-    // |
+-    // [[Calendar]] |
+-    // *"calendar"* |
+-    // |
+-    // [[NumberingSystem]] |
+-    // *"numberingSystem"* |
+-    // |
+-    // [[TimeZone]] |
+-    // *"timeZone"* |
+-    // |
+-    // [[HourCycle]] |
+-    // *"hourCycle"* |
+-    // |
+-    // [[HourCycle]] |
+-    // *"hour12"* |
+-    // ~hour12~ |
+-    // |
+-    // *"weekday"* |
+-    // |
+-    // |
+-    // *"era"* |
+-    // |
+-    // |
+-    // *"year"* |
+-    // |
+-    // |
+-    // *"month"* |
+-    // |
+-    // |
+-    // *"day"* |
+-    // |
+-    // |
+-    // *"dayPeriod"* |
+-    // |
+-    // |
+-    // *"hour"* |
+-    // |
+-    // |
+-    // *"minute"* |
+-    // |
+-    // |
+-    // *"second"* |
+-    // |
+-    // |
+-    // *"fractionalSecondDigits"* |
+-    // ~number~ |
+-    // |
+-    // *"timeZoneName"* |
+-    // |
+-    // [[DateStyle]] |
+-    // *"dateStyle"* |
+-    // |
+-    // [[TimeStyle]] |
+-    // *"timeStyle"* |
+-    // |
+-    // For web compatibility reasons, if the property *"hourCycle"* is set, the *"hour12"* property should be set to *true* when *"hourCycle"* is *"h11"* or *"h12"*, or to *false* when *"hourCycle"* is *"h23"* or *"h24"*.
+-    // NOTE:
+-    // In this version of the API, the *"timeZone"* property will be the identifier of the host environment's time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
+-    // NOTE:
+-    // For compatibility with versions prior to the fifth edition, the *"hour12"* property is set in addition to the *"hourCycle"* property.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DateTimeFormat.prototype.resolvedOptions"))
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_date_time_format.rs b/crates/kahvi-builtins/src/support/intl_date_time_format.rs
+index d9bcf5e..7b8ac93 100644
+--- a/crates/kahvi-builtins/src/support/intl_date_time_format.rs
++++ b/crates/kahvi-builtins/src/support/intl_date_time_format.rs
+@@ -1,7 +1,632 @@
+ //! Intl.DateTimeFormat: the [[InitializedDateTimeFormat]] internal slots and the
+ //! abstract operations shared by its built-ins.
+-//!
+-//! The ticket for this service owns this file: define the internal-slot
+-//! struct here (`ObjectKind::Native`, see docs/INTL.md) and the abstract
+-//! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use std::cell::RefCell;
++
++use icu::calendar::AnyCalendarKind;
++use icu::datetime::fieldsets;
++use icu::datetime::input::Time;
++use icu::datetime::preferences::HourCycle as IcuHourCycle;
++use icu::datetime::{DateTimeFormatterPreferences, NoCalendarFormatter};
++use icu::locale::Locale;
++use icu::time::zone::iana::IanaParserExtended;
++use kahvi_core::gc::{Trace, Tracer};
++use kahvi_core::prelude::*;
++
++use crate::support::intl::{
++    self, KeyValue, OptionType, ResolutionOptionDescriptor, ServiceConstructor, SpecialBehaviour,
++    available_locales, get_number_option, get_option, resolve_options,
++};
++
++/// A DateTime Format Record, reduced to the component fields the format
++/// carries (ICU4X picks the pattern from them).
++#[derive(Debug, Clone, Default)]
++pub(crate) struct DateTimeFormatRecord {
++    /// ([[<property>]], value) in table order; `fractionalSecondDigits` holds
++    /// its digit count as a string.
++    pub fields: Vec<(&'static str, String)>,
++}
++
++impl DateTimeFormatRecord {
++    pub(crate) fn get(&self, key: &str) -> Option<&str> {
++        self.fields
++            .iter()
++            .find(|(k, _)| *k == key)
++            .map(|(_, v)| v.as_str())
++    }
++}
++
++/// The [[InitializedDateTimeFormat]] internal slots.
++#[derive(Debug)]
++pub(crate) struct DateTimeFormatSlots {
++    pub locale: String,
++    pub calendar: String,
++    pub numbering_system: String,
++    pub time_zone: String,
++    pub hour_cycle: Option<String>,
++    pub date_style: Option<String>,
++    pub time_style: Option<String>,
++    pub date_time_format: DateTimeFormatRecord,
++    pub bound_format: Option<Object>,
++}
++
++impl Trace for DateTimeFormatSlots {
++    fn trace(&self, t: &mut Tracer) {
++        self.bound_format.trace(t);
++    }
++}
++
++/// The [[Required]]/[[Defaults]] arguments of CreateDateTimeFormat.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub(crate) enum Required {
++    Date,
++    Time,
++    Any,
++}
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub(crate) enum Defaults {
++    Date,
++    Time,
++    All,
++}
++
++const CALENDARS: &[&str] = &[
++    "gregory",
++    "buddhist",
++    "chinese",
++    "coptic",
++    "dangi",
++    "ethioaa",
++    "ethiopic",
++    "hebrew",
++    "indian",
++    "islamic",
++    "islamic-civil",
++    "islamic-tbla",
++    "islamic-umalqura",
++    "iso8601",
++    "japanese",
++    "persian",
++    "roc",
++];
++
++fn calendar_name(kind: AnyCalendarKind) -> &'static str {
++    match kind {
++        AnyCalendarKind::Buddhist => "buddhist",
++        AnyCalendarKind::Chinese => "chinese",
++        AnyCalendarKind::Coptic => "coptic",
++        AnyCalendarKind::Dangi => "dangi",
++        AnyCalendarKind::Ethiopian => "ethiopic",
++        AnyCalendarKind::EthiopianAmeteAlem => "ethioaa",
++        AnyCalendarKind::Hebrew => "hebrew",
++        AnyCalendarKind::Indian => "indian",
++        AnyCalendarKind::HijriTabularTypeIIFriday => "islamic-civil",
++        AnyCalendarKind::HijriTabularTypeIIThursday => "islamic-tbla",
++        AnyCalendarKind::HijriUmmAlQura => "islamic-umalqura",
++        AnyCalendarKind::Iso => "iso8601",
++        AnyCalendarKind::Japanese => "japanese",
++        AnyCalendarKind::Persian => "persian",
++        AnyCalendarKind::Roc => "roc",
++        _ => "gregory",
++    }
++}
++
++/// Whether ICU4X formats the time 0:00 / 13:00 of `locale` (with the given
++/// hour cycle preference) showing the hour `needle`.
++fn time_shows(locale: &Locale, hour_cycle: Option<IcuHourCycle>, hour: u8, needle: &str) -> bool {
++    let mut prefs = DateTimeFormatterPreferences::from(locale);
++    prefs.hour_cycle = hour_cycle;
++    let Ok(formatter) = NoCalendarFormatter::try_new(prefs, fieldsets::T::medium()) else {
++        return false;
++    };
++    let Ok(time) = Time::try_new(hour, 0, 0, 0) else {
++        return false;
++    };
++    formatter.format(&time).to_string().contains(needle)
++}
++
++/// The locale data's [[hourCycle]], [[hourCycle12]] and [[hourCycle24]],
++/// taken from what ICU4X formats for the locale.
++fn locale_hour_cycles(data_locale: &str) -> (&'static str, &'static str, &'static str) {
++    let locale: Locale = data_locale.parse().unwrap_or(Locale::UNKNOWN);
++    let default = if time_shows(&locale, None, 13, "13") {
++        "h23"
++    } else if time_shows(&locale, None, 0, "12") {
++        "h12"
++    } else {
++        "h11"
++    };
++    let hour_cycle12 = if time_shows(&locale, Some(IcuHourCycle::H12), 0, "12") {
++        "h12"
++    } else {
++        "h11"
++    };
++    (default, hour_cycle12, "h23")
++}
++
++/// %Intl.DateTimeFormat%.[[LocaleData]] for a found locale and extension key.
++fn locale_data(locale: &str, key: &str) -> Vec<Option<String>> {
++    match key {
++        "ca" => {
++            let parsed: Locale = locale.parse().unwrap_or(Locale::UNKNOWN);
++            #[allow(deprecated)]
++            let default = calendar_name(AnyCalendarKind::new(parsed.into()));
++            let mut list = vec![Some(default.to_string())];
++            list.extend(
++                CALENDARS
++                    .iter()
++                    .filter(|c| **c != default)
++                    .map(|c| Some(c.to_string())),
++            );
++            list
++        }
++        "nu" => vec![Some("latn".to_string())],
++        "hc" => vec![
++            None,
++            Some("h11".to_string()),
++            Some("h12".to_string()),
++            Some("h23".to_string()),
++            Some("h24".to_string()),
++        ],
++        _ => Vec::new(),
++    }
++}
++
++const DESCRIPTORS: &[ResolutionOptionDescriptor] = &[
++    ResolutionOptionDescriptor {
++        key: "ca",
++        property: "calendar",
++        r#type: OptionType::String,
++        values: None,
++    },
++    ResolutionOptionDescriptor {
++        key: "nu",
++        property: "numberingSystem",
++        r#type: OptionType::String,
++        values: None,
++    },
++    ResolutionOptionDescriptor {
++        key: "hour12",
++        property: "hour12",
++        r#type: OptionType::Boolean,
++        values: None,
++    },
++    ResolutionOptionDescriptor {
++        key: "hc",
++        property: "hourCycle",
++        r#type: OptionType::String,
++        values: Some(&["h11", "h12", "h23", "h24"]),
++    },
++];
++
++/// [table-datetimeformat-components]: Property and Values.
++const COMPONENTS: &[(&str, &[&str])] = &[
++    ("weekday", &["narrow", "short", "long"]),
++    ("era", &["narrow", "short", "long"]),
++    ("year", &["2-digit", "numeric"]),
++    ("month", &["2-digit", "numeric", "narrow", "short", "long"]),
++    ("day", &["2-digit", "numeric"]),
++    ("dayPeriod", &["narrow", "short", "long"]),
++    ("hour", &["2-digit", "numeric"]),
++    ("minute", &["2-digit", "numeric"]),
++    ("second", &["2-digit", "numeric"]),
++    ("fractionalSecondDigits", &[]),
++    (
++        "timeZoneName",
++        &[
++            "short",
++            "long",
++            "shortOffset",
++            "longOffset",
++            "shortGeneric",
++            "longGeneric",
++        ],
++    ),
++];
++
++const STYLES: &[&str] = &["full", "long", "medium", "short"];
++
++/// Parses |UTCOffset| (sign, hours, optional minutes, optional seconds and
++/// fraction; `:` separators all or none). Returns (sign, hours, minutes,
++/// has seconds) when the whole string matches.
++fn parse_utc_offset(s: &str) -> Option<(i32, u32, u32, bool)> {
++    let sign = match s.chars().next()? {
++        '+' => 1,
++        '-' => -1,
++        _ => return None,
++    };
++    let rest = s.strip_prefix(['+', '-'])?;
++    let two = |t: &str| -> Option<u32> {
++        let d = t.as_bytes();
++        (d.len() == 2 && d.iter().all(u8::is_ascii_digit)).then(|| t.parse().ok())?
++    };
++    let colon = rest.contains(':');
++    let parts: Vec<&str> = if colon {
++        rest.split(':').collect()
++    } else {
++        let mut v = Vec::new();
++        let mut r = rest;
++        while !r.is_empty() {
++            let (head, tail) = r.split_at(r.len().min(2));
++            v.push(head);
++            r = tail;
++        }
++        v
++    };
++    if parts.is_empty() || parts.len() > 3 {
++        return None;
++    }
++    let hours = two(parts[0]).filter(|h| *h <= 23)?;
++    let minutes = match parts.get(1) {
++        Some(m) => two(m).filter(|m| *m <= 59)?,
++        None => 0,
++    };
++    let mut has_seconds = false;
++    if let Some(sec) = parts.get(2) {
++        // MinuteSecond, with an optional TemporalDecimalFraction.
++        let (whole, fraction) = match sec.split_once(['.', ',']) {
++            Some((w, f)) => (w, Some(f)),
++            None => (*sec, None),
++        };
++        two(whole).filter(|s| *s <= 59)?;
++        if let Some(f) = fraction
++            && !(1..=9).contains(&f.len()) | !f.bytes().all(|c| c.is_ascii_digit())
++        {
++            return None;
++        }
++        has_seconds = true;
++    }
++    Some((sign, hours, minutes, has_seconds))
++}
++
++/// CreateDateTimeFormat ( _newTarget_, _locales_, _options_, _required_, _defaults_ )
++pub(crate) fn create_date_time_format(
++    agent: &mut Agent,
++    new_target: Object,
++    locales: Value,
++    options: Value,
++    required: Required,
++    defaults: Defaults,
++) -> JsResult<Object> {
++    // 1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], [[BoundFormat]] »).
++    // (The slots are filled in at the end.)
++    let date_time_format = ops::ordinary_create_from_constructor(
++        agent,
++        new_target,
++        "%Intl.DateTimeFormat.prototype%",
++        ObjectKind::Native(Box::new(DateTimeFormatSlots {
++            locale: String::new(),
++            calendar: String::new(),
++            numbering_system: String::new(),
++            time_zone: String::new(),
++            hour_cycle: None,
++            date_style: None,
++            time_style: None,
++            date_time_format: DateTimeFormatRecord::default(),
++            bound_format: None,
++        })),
++    )?;
++    // 2. Let _specialOptions_ be the Record { [[Hour12]]: *undefined* }.
++    let special_hour12: RefCell<KeyValue> = RefCell::new(KeyValue::Undefined);
++    // 3. Let _modifyResolutionOptions_ be a new Abstract Closure with parameters (_options_) that captures _specialOptions_ and performs the following steps when called:
++    let modify = |opt: &mut intl::ResolutionOptions| {
++        // a. Set _specialOptions_.[[Hour12]] to _options_.[[hour12]].
++        let hour12 = opt.get("hour12").cloned().unwrap_or(KeyValue::Undefined);
++        // b. Remove field [[hour12]] from _options_.
++        opt.keys.retain(|(k, _)| *k != "hour12");
++        // c. If _specialOptions_.[[Hour12]] is not *undefined*, set _options_.[[hc]] to *null*.
++        if hour12 != KeyValue::Undefined {
++            opt.set("hc", KeyValue::Null);
++        }
++        *special_hour12.borrow_mut() = hour12;
++    };
++    // 4. Let _optionsResolution_ be ? ResolveOptions(%Intl.DateTimeFormat%, %Intl.DateTimeFormat%.[[LocaleData]], _locales_, _options_, « ~coerce-options~ », _modifyResolutionOptions_).
++    let available = available_locales();
++    let ctor = ServiceConstructor {
++        available_locales: available,
++        relevant_extension_keys: &["ca", "hc", "nu"],
++        resolution_option_descriptors: DESCRIPTORS,
++    };
++    let options_resolution = resolve_options(
++        agent,
++        &ctor,
++        &locale_data,
++        locales,
++        options,
++        &[SpecialBehaviour::CoerceOptions],
++        Some(&modify),
++    )?;
++    // 1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « ... »).
++    // (Created after ResolveOptions below so the slots can be built in one go; the
++    // prototype lookup is observable, so it is done by the allocation at the end.)
++    // 5. Let _hour12_ be _specialOptions_.[[Hour12]].
++    let hour12 = special_hour12.borrow().clone();
++    // 6. Set _options_ to _optionsResolution_.[[Options]].
++    let options = options_resolution.options;
++    // 7. Let _resolvedLocale_ be _optionsResolution_.[[ResolvedLocale]].
++    let resolved_locale = options_resolution.resolved_locale;
++    // 8. Set _dateTimeFormat_.[[Locale]] to _resolvedLocale_.[[Locale]].
++    let locale = resolved_locale.locale.clone();
++    // 9. Let _resolvedCalendar_ be _resolvedLocale_.[[ca]].
++    let resolved_calendar = resolved_locale.get("ca").unwrap_or("gregory").to_string();
++    // 10. Set _dateTimeFormat_.[[Calendar]] to _resolvedCalendar_.
++    // 11. Set _dateTimeFormat_.[[NumberingSystem]] to _resolvedLocale_.[[nu]].
++    let numbering_system = resolved_locale.get("nu").unwrap_or("latn").to_string();
++    // 12. Let _resolvedLocaleData_ be _resolvedLocale_.[[LocaleData]].
++    let (locale_hour_cycle, hour_cycle12, hour_cycle24) =
++        locale_hour_cycles(&resolved_locale.data_locale);
++    // 13. Let _hc_ be _resolvedLocale_.[[hc]].
++    let mut hc: Option<String> = resolved_locale.get("hc").map(str::to_string);
++    match hour12 {
++        // 14. If _hour12_ is *true*, then
++        KeyValue::String(ref s) if s == "true" => {
++            // a. Set _hc_ to _resolvedLocaleData_.[[hourCycle12]].
++            hc = Some(hour_cycle12.to_string());
++        }
++        // 15. Else if _hour12_ is *false*, then
++        KeyValue::String(_) => {
++            // a. Set _hc_ to _resolvedLocaleData_.[[hourCycle24]].
++            hc = Some(hour_cycle24.to_string());
++        }
++        // 16. Else if _hc_ is *null*, then
++        _ => {
++            if hc.is_none() {
++                // a. Set _hc_ to _resolvedLocaleData_.[[hourCycle]].
++                hc = Some(locale_hour_cycle.to_string());
++            }
++        }
++    }
++    // 17. Let _timeZone_ be ? GetOption(_options_, *"timeZone"*, ~string~, ~empty~, SystemTimeZoneIdentifier()).
++    let default_tz = Value::String(agent.string("UTC"));
++    let tz_value = get_option(
++        agent,
++        options,
++        "timeZone",
++        OptionType::String,
++        None,
++        Some(default_tz),
++    )?;
++    let Value::String(tz_js) = tz_value else {
++        return Err(agent.throw_type_error("invalid timeZone"));
++    };
++    let tz_string = String::from_utf16_lossy(agent.str(tz_js));
++    let time_zone: String;
++    // 18. If IsTimeZoneOffsetString(_timeZone_) is *true*, then
++    if let Some((sign, hours, minutes, has_seconds)) = parse_utc_offset(&tz_string) {
++        // c. If _parseResult_ contains more than one |MinuteSecond| Parse Node, throw a *RangeError* exception.
++        if has_seconds {
++            return Err(agent.throw_range_error("invalid timeZone offset"));
++        }
++        // g. Set _timeZone_ to FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
++        let offset_minutes = sign * (hours * 60 + minutes) as i32;
++        time_zone = format_offset_time_zone_identifier(offset_minutes);
++    } else {
++        // 19. Else,
++        // a. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_timeZone_).
++        // b. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
++        let Some(primary) = get_available_named_time_zone_identifier(&tz_string) else {
++            return Err(agent.throw_range_error("invalid timeZone"));
++        };
++        // c. Set _timeZone_ to _timeZoneIdentifierRecord_.[[PrimaryIdentifier]].
++        time_zone = primary;
++    }
++    // 20. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
++    // 21. Let _formatOptions_ be a new Record.
++    // 22. Set _formatOptions_.[[hourCycle]] to _hc_.
++    let mut format_options = DateTimeFormatRecord::default();
++    // 23. Let _hasExplicitFormatComponents_ be *false*.
++    let mut has_explicit_format_components = false;
++    // 24. For each row of [table-datetimeformat-components], except the header row, in table order, do
++    for (property_key, values) in COMPONENTS {
++        // b. If _propertyKey_ is *"fractionalSecondDigits"*, then
++        let value: Option<String> = if *property_key == "fractionalSecondDigits" {
++            // i. Let _value_ be ? GetNumberOption(_options_, *"fractionalSecondDigits"*, 1, 3, *undefined*).
++            get_number_option(agent, options, property_key, 1.0, 3.0, None)?
++                .map(|n| format!("{}", n as u32))
++        } else {
++            // c. Else,
++            // i. Let _values_ be a List whose elements are the strings given in the Values column of the current row.
++            // ii. Let _value_ be ? GetOption(_options_, _propertyKey_, ~string~, _values_, *undefined*).
++            let v = get_option(
++                agent,
++                options,
++                property_key,
++                OptionType::String,
++                Some(values),
++                Some(Value::Undefined),
++            )?;
++            match v {
++                Value::String(s) => Some(String::from_utf16_lossy(agent.str(s))),
++                _ => None,
++            }
++        };
++        // d. Set _formatOptions_.[[<_propertyKey_>]] to _value_.
++        // e. If _value_ is not *undefined*, set _hasExplicitFormatComponents_ to *true*.
++        if let Some(value) = value {
++            has_explicit_format_components = true;
++            format_options.fields.push((property_key, value));
++        }
++    }
++    // 25. Let _formatMatcher_ be ? GetOption(_options_, *"formatMatcher"*, ~string~, « *"basic"*, *"best fit"* », *"best fit"*).
++    let default_matcher = Value::String(agent.string("best fit"));
++    get_option(
++        agent,
++        options,
++        "formatMatcher",
++        OptionType::String,
++        Some(&["basic", "best fit"]),
++        Some(default_matcher),
++    )?;
++    // 26. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
++    let date_style = style_option(agent, options, "dateStyle")?;
++    // 28. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
++    let time_style = style_option(agent, options, "timeStyle")?;
++    // 30. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
++    let has_hour;
++    if date_style.is_some() || time_style.is_some() {
++        // a. If _hasExplicitFormatComponents_ is *true*, throw a *TypeError* exception.
++        if has_explicit_format_components {
++            return Err(
++                agent.throw_type_error("dateStyle/timeStyle conflict with other components")
++            );
++        }
++        // b. If _required_ is ~date~ and _timeStyle_ is not *undefined*, throw a *TypeError* exception.
++        if required == Required::Date && time_style.is_some() {
++            return Err(agent.throw_type_error("timeStyle is not allowed here"));
++        }
++        // c. If _required_ is ~time~ and _dateStyle_ is not *undefined*, throw a *TypeError* exception.
++        if required == Required::Time && date_style.is_some() {
++            return Err(agent.throw_type_error("dateStyle is not allowed here"));
++        }
++        // d-e. The style's pattern is chosen by ICU4X when formatting.
++        has_hour = time_style.is_some();
++    } else {
++        // 31. Else,
++        // a. Let _needDefaults_ be *true*.
++        let mut need_defaults = true;
++        // b. Let _propertyKeys_ be a new empty List.
++        let mut property_keys: Vec<&str> = Vec::new();
++        // c. If _required_ is ~date~ or ~any~, ...
++        if matches!(required, Required::Date | Required::Any) {
++            property_keys.extend(["weekday", "year", "month", "day"]);
++        }
++        // d. If _required_ is ~time~ or ~any~, ...
++        if matches!(required, Required::Time | Required::Any) {
++            property_keys.extend([
++                "dayPeriod",
++                "hour",
++                "minute",
++                "second",
++                "fractionalSecondDigits",
++            ]);
++        }
++        // e. For each property name _propertyKey_ of _propertyKeys_, do
++        for key in property_keys {
++            // i-ii. If the value is not *undefined*, set _needDefaults_ to *false*.
++            if format_options.get(key).is_some() {
++                need_defaults = false;
++            }
++        }
++        // f. If _needDefaults_ is *true*, then
++        if need_defaults {
++            let mut numeric_properties: Vec<&'static str> = Vec::new();
++            // ii. If _defaults_ is either ~date~ or ~all~, ...
++            if matches!(defaults, Defaults::Date | Defaults::All) {
++                numeric_properties.extend(["year", "month", "day"]);
++            }
++            // iii. If _defaults_ is either ~time~ or ~all~, ...
++            if matches!(defaults, Defaults::Time | Defaults::All) {
++                numeric_properties.extend(["hour", "minute", "second"]);
++            }
++            // iv. For each property name _propertyKey_ of _numericProperties_, do
++            for key in numeric_properties {
++                // 1. Set _formatOptions_.[[<_propertyKey_>]] to *"numeric"*.
++                format_options.fields.push((key, "numeric".to_string()));
++            }
++        }
++        // g-h. ICU4X picks the pattern from the component fields (BasicFormatMatcher
++        // and BestFitFormatMatcher both resolve to the requested components).
++        has_hour = format_options.get("hour").is_some();
++    }
++    let slots = DateTimeFormatSlots {
++        locale,
++        calendar: resolved_calendar,
++        numbering_system,
++        time_zone,
++        // 33. If _bestFormat_ has a field [[hour]], set _dateTimeFormat_.[[HourCycle]] to _hc_.
++        hour_cycle: if has_hour { hc } else { None },
++        date_style,
++        time_style,
++        // 32. Set _dateTimeFormat_.[[DateTimeFormat]] to _bestFormat_.
++        date_time_format: format_options,
++        bound_format: None,
++    };
++    if let Some(target) = agent.native_mut::<DateTimeFormatSlots>(date_time_format) {
++        *target = slots;
++    }
++    // 34. Return _dateTimeFormat_.
++    Ok(date_time_format)
++}
++
++fn style_option(agent: &mut Agent, options: Object, name: &str) -> JsResult<Option<String>> {
++    let v = get_option(
++        agent,
++        options,
++        name,
++        OptionType::String,
++        Some(STYLES),
++        Some(Value::Undefined),
++    )?;
++    Ok(match v {
++        Value::String(s) => Some(String::from_utf16_lossy(agent.str(s))),
++        _ => None,
++    })
++}
++
++/// FormatOffsetTimeZoneIdentifier ( _offsetMinutes_ )
++pub(crate) fn format_offset_time_zone_identifier(offset_minutes: i32) -> String {
++    // 1. If _offsetMinutes_ ≥ 0, let _sign_ be the code unit 0x002B (PLUS SIGN); otherwise, let _sign_ be the code unit 0x002D (HYPHEN-MINUS).
++    let sign = if offset_minutes >= 0 { '+' } else { '-' };
++    // 2. Let _absoluteMinutes_ be abs(_offsetMinutes_).
++    let absolute_minutes = offset_minutes.abs();
++    // 3. Let _hours_ be floor(_absoluteMinutes_ / 60).
++    let hours = absolute_minutes / 60;
++    // 4. Let _minutes_ be _absoluteMinutes_ modulo 60.
++    let minutes = absolute_minutes % 60;
++    // 5. Return the string-concatenation of _sign_, ToZeroPaddedDecimalString(_hours_, 2), the code unit 0x003A (COLON), and ToZeroPaddedDecimalString(_minutes_, 2).
++    format!("{sign}{hours:02}:{minutes:02}")
++}
++
++/// GetAvailableNamedTimeZoneIdentifier ( _timeZoneIdentifier_ ): the
++/// [[PrimaryIdentifier]] of the matching record, or `None` for ~empty~.
++pub(crate) fn get_available_named_time_zone_identifier(id: &str) -> Option<String> {
++    let parsed = IanaParserExtended::new().parse(id);
++    if parsed.time_zone == icu::time::TimeZone::UNKNOWN {
++        return None;
++    }
++    // AvailableNamedTimeZoneIdentifiers: the identifiers that resolve to UTC
++    // have the primary identifier "UTC".
++    Some(match parsed.canonical {
++        "Etc/UTC" | "Etc/GMT" | "GMT" | "UTC" => "UTC".to_string(),
++        other => other.to_string(),
++    })
++}
++
++/// UnwrapDateTimeFormat ( _dtf_ )
++pub(crate) fn unwrap_date_time_format(agent: &mut Agent, dtf: Value) -> JsResult<Value> {
++    // 1. If _dtf_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(obj) = dtf else {
++        return Err(agent.throw_type_error("not an Intl.DateTimeFormat"));
++    };
++    // 2. If _dtf_ does not have an [[InitializedDateTimeFormat]] internal slot and ? OrdinaryHasInstance(%Intl.DateTimeFormat%, _dtf_) is *true*, then
++    if agent.native::<DateTimeFormatSlots>(obj).is_none() {
++        let ctor = agent.intrinsic("%Intl.DateTimeFormat%");
++        if ops::ordinary_has_instance(agent, Value::Object(ctor), dtf)? {
++            // a. Return ? Get(_dtf_, %Intl%.[[FallbackSymbol]]).
++            let key = PropertyKey::Symbol(intl::fallback_symbol(agent));
++            return ops::get(agent, obj, key);
++        }
++    }
++    // 3. Return _dtf_.
++    Ok(dtf)
++}
++
++/// RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]), returning the object.
++pub(crate) fn require_date_time_format(agent: &mut Agent, dtf: Value) -> JsResult<Object> {
++    match dtf {
++        Value::Object(o) if agent.native::<DateTimeFormatSlots>(o).is_some() => Ok(o),
++        _ => Err(agent.throw_type_error("not an Intl.DateTimeFormat")),
++    }
++}
++
++/// FormatDateTime ( _dateTimeFormat_, _x_ )
++pub(crate) fn format_date_time(
++    agent: &mut Agent,
++    date_time_format: Object,
++    x: f64,
++) -> JsResult<Value> {
++    let _ = (date_time_format, x);
++    Err(agent.not_implemented("Intl.DateTimeFormat FormatDateTime (PartitionDateTimePattern)"))
++}

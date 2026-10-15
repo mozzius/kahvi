@@ -5661,3 +5661,7 @@ test262 at last merge: 82439/82439 runs passing
 [14:45:29] pausing until 2026-10-15 17:21: five_hour window at 91% (swarm cap 75%)
 [14:45:30] I-number-format: attempt 542 finished ($0.578, 31 turns)
 [14:45:31] I-number-format: gate rejected attempt 542: files outside scope: crates/kahvi-cli/src/main.rs
+[14:46:06] stack: stack/0065 (#103) red: 20 regressions in the full suite
+[14:46:10] stack: architect branch arch-intl is red in CI (20 regressions in the full suite); fix it and land again
+[14:47:49] I-date-time-format: attempt 543 finished ($0.757, 60 turns)
+[14:47:50] I-date-time-format: gate rejected attempt 543: lint: lint suppression is architect-only at crates/kahvi-builtins/src/support/intl_date_time_format.rs:154: #[allow(deprecated)]

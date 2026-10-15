@@ -1,0 +1,41 @@
+{
+  "ticket": "I-date-time-format",
+  "base": "f7ad37792420723006f41d8d233699a376a47616",
+  "head": "4ca279078c015c58e4de2b014a2af65f5aa7eb0f",
+  "reject": [
+    "lint: lint suppression is architect-only at crates/kahvi-builtins/src/support/intl_date_time_format.rs:154: #[allow(deprecated)]"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/constructor.rs",
+      "added": 38,
+      "removed": 10
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs",
+      "added": 63,
+      "removed": 14
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs",
+      "added": 81,
+      "removed": 73
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_date_time_format.rs",
+      "added": 629,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_date_time_format.rs",
+      "line": 154,
+      "rule": "lint suppression is architect-only",
+      "text": "#[allow(deprecated)]"
+    }
+  ],
+  "lint_flag": [],
+  "decision": "reject"
+}
