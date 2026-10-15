@@ -11,9 +11,11 @@
 //! the `KahviRuntime*` they are given.
 #![allow(clippy::missing_safety_doc)] // the safety contract is in kahvi.h
 
+mod hermes_internal;
+
 use std::cell::{Cell, RefCell};
 use std::ffi::c_void;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use kahvi::{Agent, JsError, JsResult, Object, Persistent, Runtime, Value};
 use kahvi_core::agent::{ErrorKind, ExecutionContext};
@@ -35,6 +37,8 @@ pub struct KahviRuntime {
     /// The context of each `kahvi_function_new` function, by its index
     /// (`Agent::host_function_index`).
     function_contexts: RefCell<std::collections::HashMap<usize, usize>>,
+    /// `HermesInternal.enablePromiseRejectionTracker`'s state.
+    rejections: Arc<Mutex<hermes_internal::RejectionTracking>>,
 }
 
 /// A reference to a string, symbol, bigint or object.
@@ -243,6 +247,9 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
     let mut runtime = Box::new(Runtime::new());
     // Web APIs Hermes provides and React Native code expects.
     kahvi::encoding::install(&mut runtime);
+    let rejections = Arc::new(Mutex::new(Default::default()));
+    let global = runtime.global();
+    hermes_internal::install(runtime.agent(), global, &rejections);
     let realm = runtime.realm();
     let agent: *mut Agent = runtime.agent();
     unsafe { (*agent).host_now = Some(now_ms) };
@@ -252,6 +259,7 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
         agent: Cell::new(agent),
         exception: RefCell::new(None),
         function_contexts: RefCell::new(Default::default()),
+        rejections,
     }))
 }
 
@@ -295,12 +303,20 @@ pub unsafe extern "C" fn kahvi_eval(
     }
 }
 
-/// Runs queued jobs (promise reactions, microtasks) until there are none.
+/// Runs queued jobs (promise reactions, microtasks) until there are none,
+/// reporting unhandled rejections to `HermesInternal`'s tracker after each
+/// round (a report can queue more jobs).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_run_jobs(rt: *mut KahviRuntime) -> bool {
+    let rejections = unsafe { (*rt).rejections.clone() };
     unsafe {
         op(rt, std::ptr::null_mut(), |agent| {
-            agent.run_jobs().map(|_| Value::Undefined)
+            loop {
+                agent.run_jobs()?;
+                if !hermes_internal::report_rejections(agent, &rejections)? {
+                    return Ok(Value::Undefined);
+                }
+            }
         })
     }
 }

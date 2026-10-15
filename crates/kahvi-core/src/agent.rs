@@ -530,8 +530,11 @@ impl Agent {
     }
 
     /// `frames` as V8 writes them, one `    at ...` line each:
-    /// `    at name (file:line:column)`, `    at file:line:column` for code
-    /// outside any named function, and `(native)` for built-in functions.
+    /// `    at name (file:line:column)`, and `name (native)` for built-in
+    /// functions. Code outside any named function is
+    /// `    at <anonymous> (file:line:column)` (where V8 leaves out the name
+    /// and parentheses), so that React Native's Hermes stack parser, which
+    /// it uses when `HermesInternal` exists, reads every frame too.
     pub fn format_stack(&self, frames: &[StackFrame]) -> String {
         let mut out = String::new();
         for frame in frames {
@@ -551,18 +554,17 @@ impl Agent {
                 None if frame.native => "native".to_string(),
                 None => "<anonymous>".to_string(),
             };
-            match frame.name.as_deref() {
-                Some(name) if !name.is_empty() => {
-                    if frame.construct {
-                        out.push_str("new ");
-                    }
-                    out.push_str(name);
-                    out.push_str(" (");
-                    out.push_str(&place);
-                    out.push(')');
-                }
-                _ => out.push_str(&place),
+            let name = match frame.name.as_deref() {
+                Some(name) if !name.is_empty() => name,
+                _ => "<anonymous>",
+            };
+            if frame.construct {
+                out.push_str("new ");
             }
+            out.push_str(name);
+            out.push_str(" (");
+            out.push_str(&place);
+            out.push(')');
         }
         out
     }

@@ -31,7 +31,10 @@ The entry file is an ES module (ESM only: no CommonJS, no `require`).
   `atob` and `btoa` (an InvalidCharacterError is an `Error` with that name),
   and `process.env` (the environment variables; nothing else of Node's
   `process`). The encoding globals come from `kahvi::encoding`, which the
-  React Native host (`kahvi-ffi`) installs too, as Hermes has them.
+  React Native host (`kahvi-ffi`) installs too, as Hermes has them. That
+  host also has a `HermesInternal` with `hasPromise`,
+  `enablePromiseRejectionTracker` (reported after each `kahvi_run_jobs`)
+  and `getRuntimeProperties`, so React Native keeps native promises.
 - **Modules:** `./` and `../` specifiers resolve against the importing
   file, `/...` and `file://` URLs are absolute; JSON modules with
   `with { type: 'json' }`. `import.meta.url`, `.filename`, `.dirname`.
