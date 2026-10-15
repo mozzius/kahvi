@@ -48,8 +48,8 @@ jobs:
       - run: harness/jsi/run.sh
       - run: KAHVI_GC_STRESS=1 harness/jsi/run.sh
       # react-native/ compiles against React Native's headers (harness/rn);
-      # folly's headers need boost's.
-      - run: sudo apt-get install -y -q libboost-dev
+      # folly's headers need these libraries' headers.
+      - run: sudo apt-get update -q && sudo apt-get install -y -q libboost-dev libdouble-conversion-dev libfmt-dev libgoogle-glog-dev
       - run: harness/rn/check.sh
 
   build:
