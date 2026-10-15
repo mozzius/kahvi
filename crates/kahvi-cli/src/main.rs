@@ -40,7 +40,8 @@ fn parse_args() -> Result<Args, String> {
             _ => return Err("only one script file may be given".into()),
         }
     }
-    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
+    let file =
+        file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
     Ok(Args {
         preludes,
         module,
