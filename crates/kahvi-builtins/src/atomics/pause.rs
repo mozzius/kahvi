@@ -23,6 +23,9 @@ pub(crate) fn pause(
     // Implementations are encouraged to have an internal upper bound on the maximum amount of time paused on the order of tens to hundreds of nanoseconds.
     // NOTE:
     // Due to the overhead of function calls, it is reasonable that an inlined call to this method in an optimizing compiler waits a different amount of time than a non-inlined call.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Atomics.pause"))
+    let _ = (agent, this, args, new_target);
+    // 1. If the execution environment of the ECMAScript implementation supports signaling to the operating system or CPU that the current executing code is in a spin-wait loop, send that signal.
+    std::hint::spin_loop();
+    // 2. Return *undefined*.
+    Ok(Value::Undefined)
 }
