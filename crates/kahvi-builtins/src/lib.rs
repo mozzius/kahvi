@@ -6,6 +6,7 @@
 //! `generated.rs` lists them all; `table.rs` installs them into a realm.
 //! Helpers shared by several built-ins go in `support/`.
 
+mod extensions;
 mod generated;
 pub mod introspect;
 mod support;

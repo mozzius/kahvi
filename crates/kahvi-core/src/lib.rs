@@ -17,7 +17,7 @@ pub mod realm;
 pub mod value;
 pub mod vm;
 
-pub use agent::{Agent, ErrorKind};
+pub use agent::{Agent, ErrorKind, StackFrame, StackLocation};
 pub use error::{JsError, JsResult};
 pub use object::{Property, PropertyDescriptor, PropertyKey};
 pub use realm::RealmId;
