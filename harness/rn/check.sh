@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Compiles (syntax only) the React Native engine package (react-native/)
 # against React Native's own headers, pinned to RN v0.86.3 (social-app's
-# version), with folly and fbjni headers and the JDK's jni.h. Building and
+# version), with folly, boost (libboost-dev) and fbjni headers and the JDK's
+# jni.h. Building and
 # running it in an app needs the Android NDK or Xcode: see
 # react-native/README.md.
 #   harness/rn/check.sh
