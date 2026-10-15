@@ -171,8 +171,18 @@ impl JsonParser<'_> {
                 let units = self.parse_string()?;
                 Value::String(self.agent.intern(&units))
             }
-            Some(0x7B) => return self.parse_object(),
-            Some(0x5B) => return self.parse_array(),
+            // Nested values recurse, so they count against the call depth
+            // (a RangeError, not a native stack overflow).
+            Some(0x7B | 0x5B) => {
+                self.agent.enter_nested()?;
+                let r = if self.peek() == Some(0x7B) {
+                    self.parse_object()
+                } else {
+                    self.parse_array()
+                };
+                self.agent.leave_nested();
+                return r;
+            }
             Some(0x2D | 0x30..=0x39) => Value::Number(self.parse_number()?),
             Some(0x74) => self.parse_literal("true", Value::Boolean(true))?,
             Some(0x66) => self.parse_literal("false", Value::Boolean(false))?,
@@ -369,6 +379,22 @@ fn hex_digit_value(unit: u16) -> Option<u16> {
 
 /// InternalizeJSONProperty ( _holder_, _name_, _reviver_, _parseRecord_ )
 fn internalize_json_property(
+    agent: &mut Agent,
+    holder: Object,
+    name: JsString,
+    reviver: Value,
+    parse_record: Option<&JsonParseRecord>,
+) -> JsResult<Value> {
+    // The steps recurse into elements and properties (and a reviver can
+    // make the structure cyclic), so each level counts against the call
+    // depth.
+    agent.enter_nested()?;
+    let r = internalize_json_property_steps(agent, holder, name, reviver, parse_record);
+    agent.leave_nested();
+    r
+}
+
+fn internalize_json_property_steps(
     agent: &mut Agent,
     holder: Object,
     name: JsString,

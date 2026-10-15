@@ -424,9 +424,9 @@ impl Compiler<'_> {
         self.emit(Op::Await);
         self.emit(Op::PopHandler);
         self.emit(Op::Jump(top));
+        // Await popped the awaited value, so the handler leaves the
+        // rejection where it was: it becomes the received throw completion.
         self.patch(caught);
-        self.emit(Op::Swap);
-        self.emit(Op::Pop);
         self.emit(Op::SetDelegateKind(1));
         self.emit(Op::Jump(top));
         // Done: the value is the result of yield*, or the return value.
