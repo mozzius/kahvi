@@ -17,7 +17,7 @@ pub(crate) fn prototype_get_stack(
         return Err(agent.throw_type_error("Error.prototype.stack getter called on a non-object"));
     };
     // 3. If E does not have an [[ErrorData]] internal slot, return undefined.
-    let Some(frames) = agent.error_stack(e).map(str::to_owned) else {
+    let Some(frames) = agent.error_stack(e).map(|f| agent.format_stack(f)) else {
         return Ok(Value::Undefined);
     };
     // 4. Return an implementation-defined string that represents the stack trace of E.
