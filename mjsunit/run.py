@@ -300,8 +300,10 @@ def classify(name, path, original, status, manual):
 
 
 # Address-space cap per test, so a runaway allocation fails that test instead of
-# getting the whole run killed by the OOM killer.
-MEMORY_LIMIT = 3 << 30
+# getting the whole run killed by the OOM killer. This caps virtual memory, which
+# runs well above resident memory: es6/big-weakmap.js peaks at about 2 GB RSS
+# and needs more than 3 GB of address space. Runaways reach far past 4 GB.
+MEMORY_LIMIT = 4 << 30
 
 
 def limit_memory():
