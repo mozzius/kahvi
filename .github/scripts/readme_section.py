@@ -5,14 +5,14 @@ Usage: readme_section.py NAME MARKDOWN_FILE README_MD
 
 The block lives between <!-- NAME:start --> and <!-- NAME:end -->. If the
 README has no such markers yet, a new section is added just before
-"## How it works", after the results table and any earlier sections, so a new
+"## Using it", after the results table and any earlier sections, so a new
 section only needs to call this script. Pass rates go in the one results
 table instead (readme_results.py); this is for blocks such as the benchmarks.
 """
 import re
 import sys
 
-ANCHOR = "## How it works"
+ANCHOR = "## Using it"
 
 
 def main() -> int:
