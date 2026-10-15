@@ -1,0 +1,32 @@
+{
+  "ticket": "B-atomics-is-lock-free",
+  "base": "a34204f4d61f378ae867243ed5928ff1bd6bcfbb",
+  "head": "833bc6a93ea0cd520337eb095e6d1d5257e41296",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/is_lock_free.rs",
+      "added": 26,
+      "removed": 9
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 14,
+    "before": 8,
+    "after": 14,
+    "new_passes": 6,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

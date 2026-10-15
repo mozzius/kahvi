@@ -1,0 +1,44 @@
+{
+  "ticket": "B-atomics-load",
+  "base": "a34204f4d61f378ae867243ed5928ff1bd6bcfbb",
+  "head": "ee81483716e6954b06b699aba6903c8ca443446b",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/load.rs",
+      "added": 21,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/atomics/load.rs",
+      "line": 26,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"validated by ValidateAtomicAccessOnIntegerTypedArray\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 28,
+    "before": 8,
+    "after": 24,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/load/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/load/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/load/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/load/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store"
+    ]
+  },
+  "decision": "pass"
+}

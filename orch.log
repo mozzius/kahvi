@@ -5284,3 +5284,7 @@ test262 at last merge: 81183/81183 runs passing
 [07:50:09] B-atomics-load: attempt 517 finished ($0.010, 13 turns)
 [07:50:26] B-atomics-is-lock-free: attempt 519 finished ($0.007, 13 turns)
 [07:51:11] B-atomics-compare-exchange: verifier: accept The diff implements Atomics.compareExchange in its own file and follows the spec steps in order. Each step keeps its spec comment above the code. Argu
+[07:51:19] stack: stack/0048 (#78) green: 81637/82037 passing, +454
+[07:51:20] B-atomics-notify: attempt on slot 3 with haiku
+[07:51:33] stack: pushed stack/0049 as #79 with B-atomics-compare-exchange
+[07:52:14] B-atomics-exchange: verifier: accept The diff implements Atomics.exchange as the spec describes. It builds a closure that captures nothing and returns newBytes (step 1 and 1a), then retur
