@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 9000,
+  "stop_reason": "tool_use",
+  "session_id": "c8933e21-bf29-4c38-836b-5bfd0afb6c0f",
+  "total_cost_usd": 0.0631738,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 13239,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 938,
+    "output_tokens_details": {
+      "thinking_tokens": 586
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13239,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 938,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 13239,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 13239
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Atomics.compareExchange following spec steps 1\u201315 in order. It uses the shared support helpers for validation, coercion and revalidation. Coercion order is correct (expected, then replacement, both before RevalidateAtomicAccess). The only edit is to the one in-scope file. The 8 remaining test262 failures come from Atomics.store and Atomics.load being unimplemented, not from this change.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Atomics.compareExchange following spec steps 1\u201315 in order. It uses the shared support helpers for validation, coercion and revalidation. Coercion order is correct (expected, then replacement, both before RevalidateAtomicAccess). The only edit is to the one in-scope file. The 8 remaining test262 failures come from Atomics.store and Atomics.load being unimplemented, not from this change.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7188,
+  "type": "result",
+  "duration_ms": 8956,
+  "uuid": "653c62b4-419c-4318-8def-5a988f7d7320",
+  "ttft_stream_ms": 2335,
+  "time_to_request_ms": 720,
+  "time_to_request_phases_ms": {
+    "other": 38,
+    "system_prompt": 525,
+    "resume_other": 0,
+    "process_user_input": 8,
+    "input_attachments": 29,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 21,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 65,
+    "autocompact": 7,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 6,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 87,
+  "time_to_request_cpu_ms": 265,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 228,
+  "process_anon_mib_turn_start": 110,
+  "process_rss_mib_result": 229,
+  "process_anon_mib_result": 109,
+  "process_peak_rss_mib": 232,
+  "process_cpu_ms_turn": 627,
+  "process_wall_ms_turn": 8954,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 19,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2336,
+  "time_to_request_from_spawn_ms": 1590169,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050657633.7378,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.2,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

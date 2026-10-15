@@ -1,0 +1,35 @@
+diff --git a/crates/kahvi-builtins/src/atomics/exchange.rs b/crates/kahvi-builtins/src/atomics/exchange.rs
+index c3a58dc..5f90b2c 100644
+--- a/crates/kahvi-builtins/src/atomics/exchange.rs
++++ b/crates/kahvi-builtins/src/atomics/exchange.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-atomics.exchange
+ 
++use crate::support::atomics::atomic_read_modify_write;
+ use kahvi_core::prelude::*;
+ 
+ /// Atomics.exchange
+@@ -11,11 +12,17 @@ pub(crate) fn exchange(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
++    let _ = (this, new_target);
++    let (ta, index, value) = (
++        args.get_or_undefined(0),
++        args.get_or_undefined(1),
++        args.get_or_undefined(2),
++    );
+     // 1. Let _second_ be a new read-modify-write modification function with parameters (_oldBytes_, _newBytes_) that captures nothing and performs the following steps atomically when called:
+-    //    a. Return _newBytes_.
++    let mut second = |_agent: &mut Agent, _old_bytes: &[u8], new_bytes: &[u8]| {
++        //    a. Return _newBytes_.
++        new_bytes.to_vec()
++    };
+     // 2. Return ? AtomicReadModifyWrite(_ta_, _index_, _value_, _second_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Atomics.exchange"))
++    atomic_read_modify_write(agent, ta, index, value, &mut second)
+ }

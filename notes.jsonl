@@ -859,3 +859,6 @@
 {"ticket": "B-array-prototype-to-string", "attempt": null, "ts": 1792014077.0873735, "text": "every target run passes after later merges"}
 {"ticket": "B-object-freeze", "attempt": null, "ts": 1792014726.9368567, "text": "every target run passes after later merges"}
 {"ticket": "B-json-raw-json", "attempt": null, "ts": 1792016735.004035, "text": "every target run passes after later merges"}
+{"ticket": "B-atomics-exchange", "attempt": 520, "ts": 1792050608.7553523, "text": "worker reported BLOCKED but changed files: Atomics.load and Atomics.store are not implemented (needed by the exchange tests' setup and assertions)"}
+{"ticket": "B-atomics-load", "attempt": 517, "ts": 1792050609.6883094, "text": "worker reported BLOCKED but changed files: Atomics.store (needed by the remaining 4 Atomics.load good-views tests)"}
+{"ticket": "B-atomics-is-lock-free", "attempt": 519, "ts": 1792050626.2950058, "text": "worker reported BLOCKED but changed files: agent record fields `[[IsLockFree1]]`, `[[IsLockFree2]]` and `[[IsLockFree8]]` do not exist in the engine; the file uses local constants instead."}

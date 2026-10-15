@@ -1,0 +1,60 @@
+{
+  "ticket": "B-atomics-compare-exchange",
+  "base": "a34204f4d61f378ae867243ed5928ff1bd6bcfbb",
+  "head": "018504d9e7faf06e915c5be5cf95a568349167d1",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/compare_exchange.rs",
+      "added": 69,
+      "removed": 25
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/atomics/compare_exchange.rs",
+      "line": 31,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"validated by ValidateAtomicAccessOnIntegerTypedArray\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/atomics/compare_exchange.rs",
+      "line": 69,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"not detached\")[byte_index_in_buffer..byte_index_in_buffer + element_size]"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/atomics/compare_exchange.rs",
+      "line": 75,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"not detached\")[byte_index_in_buffer..byte_index_in_buffer + element_size]"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 0,
+    "after": 24,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/compareExchange/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/compareExchange/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/compareExchange/bigint/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/compareExchange/bigint/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/compareExchange/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/compareExchange/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/compareExchange/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/compareExchange/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load"
+    ]
+  },
+  "decision": "pass"
+}

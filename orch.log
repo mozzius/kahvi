@@ -5252,3 +5252,35 @@ test262 at last merge: 81183/81183 runs passing
 [04:36:40] building trusted runner; integration branch stack, 4 slots
 [04:36:50] stack: pushed stack/0047 as #76 with arch-perf-5
 [04:43:17] stack: stack/0047 (#76) green: 81183/81183 passing, +0
+[04:43:26] nothing left to do
+tickets: blocked 2, done 412
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+attempts: 516  merged: 395  spend: $24.27 (workers $10.11, verifier $14.16)  new test262 passes: 19472  ($0.001 per pass)
+  haiku   accept       387
+  haiku   blocked      6
+  haiku   gate-reject  41
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       16
+  sonnet  accept       12
+  sonnet  blocked      1
+  sonnet  gate-reject  27
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+plan usage at last run: allowed; five_hour 6% (resets Thu 02:20), seven_day 1% (resets Thu 09:00)
+test262 at last merge: 81183/81183 runs passing
+[07:47:51] building trusted runner; integration branch stack, 4 slots
+[07:47:52] B-atomics-compare-exchange: attempt on slot 3 with haiku
+[07:47:52] B-atomics-exchange: attempt on slot 2 with haiku
+[07:47:52] B-atomics-is-lock-free: attempt on slot 1 with haiku
+[07:47:52] B-atomics-load: attempt on slot 0 with haiku
+[07:47:54] stack: stack/0045 (#73) merged into main
+[07:47:55] stack: stack/0046 (#74) merged into stack/0045
+[07:47:56] stack: stack/0047 (#76) merged into stack/0046
+[07:48:02] stack: pushed stack/0048 as #78 with arch-sab
+[07:48:49] B-atomics-compare-exchange: attempt 518 finished ($0.013, 11 turns)
+[07:50:08] B-atomics-exchange: attempt 520 finished ($0.005, 9 turns)
+[07:50:09] B-atomics-load: attempt 517 finished ($0.010, 13 turns)
+[07:50:26] B-atomics-is-lock-free: attempt 519 finished ($0.007, 13 turns)
+[07:51:11] B-atomics-compare-exchange: verifier: accept The diff implements Atomics.compareExchange in its own file and follows the spec steps in order. Each step keeps its spec comment above the code. Argu

@@ -1,0 +1,58 @@
+diff --git a/crates/kahvi-builtins/src/atomics/is_lock_free.rs b/crates/kahvi-builtins/src/atomics/is_lock_free.rs
+index ea81297..fb27b53 100644
+--- a/crates/kahvi-builtins/src/atomics/is_lock_free.rs
++++ b/crates/kahvi-builtins/src/atomics/is_lock_free.rs
+@@ -4,6 +4,16 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++/// The surrounding agent's [[IsLockFree1]]. The spec leaves this implementation-defined.
++/// Atomic operations here are plain byte accesses with a single agent, so no lock is taken.
++const IS_LOCK_FREE_1: bool = true;
++
++/// The surrounding agent's [[IsLockFree2]]. The spec leaves this implementation-defined.
++const IS_LOCK_FREE_2: bool = true;
++
++/// The surrounding agent's [[IsLockFree8]]. The spec leaves this implementation-defined.
++const IS_LOCK_FREE_8: bool = true;
++
+ /// Atomics.isLockFree
+ pub(crate) fn is_lock_free(
+     agent: &mut Agent,
+@@ -11,20 +21,27 @@ pub(crate) fn is_lock_free(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
++    let _ = (this, new_target);
++    let size = args.get_or_undefined(0);
+     // 1. Let _n_ be ? ToIntegerOrInfinity(_size_).
++    let n = ops::to_integer_or_infinity(agent, size)?;
+     // 2. Let _agentRecord_ be the Agent Record of the surrounding agent.
+     // 3. If _n_ = 1, return _agentRecord_.[[IsLockFree1]].
++    if n == 1.0 {
++        return Ok(Value::Boolean(IS_LOCK_FREE_1));
++    }
+     // 4. If _n_ = 2, return _agentRecord_.[[IsLockFree2]].
++    if n == 2.0 {
++        return Ok(Value::Boolean(IS_LOCK_FREE_2));
++    }
+     // 5. If _n_ = 4, return *true*.
++    if n == 4.0 {
++        return Ok(Value::Boolean(true));
++    }
+     // 6. If _n_ = 8, return _agentRecord_.[[IsLockFree8]].
++    if n == 8.0 {
++        return Ok(Value::Boolean(IS_LOCK_FREE_8));
++    }
+     // 7. Return *false*.
+-    //
+-    // NOTE:
+-    // This function is an optimization primitive. The intuition is that if the atomic step of an atomic primitive (`compareExchange`, `load`, `store`, `add`, `sub`, `and`, `or`, `xor`, or `exchange`) on a datum of size _n_ bytes will be performed without the surrounding agent acquiring a lock outside the _n_ bytes comprising the datum, then `Atomics.isLockFree`(_n_) will return *true*. High-performance algorithms will use this function to determine whether to use locks or atomic operations in critical sections. If an atomic primitive is not lock-free then it is often more efficient for an algorithm to provide its own locking.
+-    // `Atomics.isLockFree`(4) always returns *true* as that can be supported on all known relevant hardware. Being able to assume this will generally simplify programs.
+-    // Regardless of the value returned by this function, all atomic operations are guaranteed to be atomic. For example, they will never have a visible operation take place in the middle of the operation (e.g., “tearing”).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Atomics.isLockFree"))
++    Ok(Value::Boolean(false))
+ }
