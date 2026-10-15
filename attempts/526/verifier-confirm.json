@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 8602,
+  "stop_reason": "tool_use",
+  "session_id": "5060fbb5-a3ba-4e25-81c2-2e688b5967bd",
+  "total_cost_usd": 0.0303856,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4763,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 1052,
+    "output_tokens_details": {
+      "thinking_tokens": 554
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4763,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1052,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 4763,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4763
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Atomics.wait calls a local do_wait_sync that follows DoWait in spec order. It runs ValidateIntegerTypedArray(ta, true), the IsSharedArrayBuffer check, ValidateAtomicAccess, ToBigInt64 or ToInt32 by element type, and ToNumber(timeout). It then maps the timeout and throws a TypeError because AgentCanSuspend() is false for sync mode. Every `?` is propagated and nothing is special-cased. The unreachable steps after the throw are not implemented, which is correct given the ticket's premise that the host cannot suspend. The two remaining failures come from SharedArrayBuffer.prototype.grow, which another ticket owns and which throws not-implemented. The test count rose from 6 to 48 passing, which fits the diff. Only the one in-scope file changed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Atomics.wait calls a local do_wait_sync that follows DoWait in spec order. It runs ValidateIntegerTypedArray(ta, true), the IsSharedArrayBuffer check, ValidateAtomicAccess, ToBigInt64 or ToInt32 by element type, and ToNumber(timeout). It then maps the timeout and throws a TypeError because AgentCanSuspend() is false for sync mode. Every `?` is propagated and nothing is special-cased. The unreachable steps after the throw are not implemented, which is correct given the ticket's premise that the host cannot suspend. The two remaining failures come from SharedArrayBuffer.prototype.grow, which another ticket owns and which throws not-implemented. The test count rose from 6 to 48 passing, which fits the diff. Only the one in-scope file changed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 5749,
+  "type": "result",
+  "duration_ms": 8382,
+  "uuid": "3912efdf-e392-46b5-8623-dc03d4d7ea91",
+  "ttft_stream_ms": 1746,
+  "time_to_request_ms": 534,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 303,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 17,
+    "input_hooks": 4,
+    "tool_pool_refresh": 5,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 134,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 354,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 246,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 243,
+  "process_anon_mib_result": 124,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 826,
+  "process_wall_ms_turn": 8382,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 19,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1747,
+  "time_to_request_from_spawn_ms": 1858807,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050929271.8203,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

@@ -5317,3 +5317,5 @@ test262 at last merge: 81183/81183 runs passing
 [07:55:31] B-atomics-xor: verifier: accept The diff replaces the not-implemented stub in Atomics.xor with a closure that calls byte_list_bitwise_op(|a, b| a ^ b, x, y), then returns atomic_read
 [07:55:33] B-shared-array-buffer-prototype-get-byte-length: verifier: accept The diff implements all five spec steps of get SharedArrayBuffer.prototype.byteLength in the stub's file, with each step's comment kept above its code
 [07:55:33] B-iterator-prototype-windows: attempt on slot 3 with haiku
+[07:55:39] B-atomics-wait: verifier: accept The change implements Atomics.wait as `Return ? DoWait(~sync~, ...)` and a DoWait sync path. The order matches the spec: ValidateIntegerTypedArray(ta,
+[07:55:41] B-iterator-prototype-chunks: attempt on slot 0 with haiku
