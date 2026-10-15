@@ -5302,3 +5302,5 @@ test262 at last merge: 81183/81183 runs passing
 [07:53:45] B-atomics-pause: verifier: accept The change implements Atomics.pause in its stub file. Step 1 calls std::hint::spin_loop(), which is a CPU hint with no observable effect, as the spec 
 [07:53:48] B-atomics-wait: attempt on slot 1 with haiku
 [07:54:02] B-atomics-notify: verifier: accept The change implements Atomics.notify in the order the spec gives. It runs ValidateIntegerTypedArray(ta, true), then ValidateAtomicAccess, then the cou
+[07:54:04] B-atomics-store: verifier: accept The change implements Atomics.store in store.rs, following the spec's 8 steps in order: ValidateAtomicAccessOnIntegerTypedArray (with ?), coerce (ToBi
+[07:54:05] B-atomics-xor: attempt on slot 3 with haiku
