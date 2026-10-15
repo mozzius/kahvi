@@ -5712,3 +5712,7 @@ test262 at last merge: 82439/82439 runs passing
 [18:50:54] I-segmenter: verifier: revise The diff implements Segments.prototype.containing, %IntlSegmentIteratorPrototype%.next, resolvedOptions, the constructor's granularity step, and the F
 [18:50:57] I-segmenter: attempt on slot 3 with sonnet
 [18:51:52] I-string-locale-case: verifier: accept The diff adds an `agent.intl` branch to both toLocaleUpperCase and toLocaleLowerCase. The branch runs RequireObjectCoercible(this) and then ToString(t
+[18:51:55] stack: stack/0067 (#105) red: 372 regressions in the full suite
+[18:51:57] stack: architect branch arch-lazy is red in CI (372 regressions in the full suite); fix it and land again
+[18:52:02] stack: pushed stack/0068 as #106 with I-list-format
+[18:52:41] I-supported-values-of: verifier: revise The change is mostly sound. Calendar, numbering-system and time-zone lists come from ICU4X data, and collation, currency and unit throw not_implemente

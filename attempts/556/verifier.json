@@ -1,0 +1,150 @@
+{
+  "duration_api_ms": 70934,
+  "stop_reason": "tool_use",
+  "session_id": "f6442248-c7c1-4b84-ade3-bd40c22f5ed2",
+  "total_cost_usd": 0.012606130000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 14162,
+    "cache_read_input_tokens": 4693,
+    "output_tokens": 16774,
+    "output_tokens_details": {
+      "thinking_tokens": 15344
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14162,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 16774,
+        "cache_read_input_tokens": 4693,
+        "cache_creation_input_tokens": 14162,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14162
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":true,\"skips_observable_steps\":false,\"contradicts_spec\":true,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change is mostly sound. Calendar, numbering-system and time-zone lists come from ICU4X data, and collation, currency and unit throw not_implemented naming what is missing. Two defects in available_canonical_numbering_systems: a Result from iter_ids is silently flattened into an empty or partial list, and empty-attribute entries are filtered out, which may drop the default latn numbering system that the spec requires. The calendar list also omits HijriSimulatedMecca and uses a catch-all that drops unlisted kinds without comment. Line numbers are approximate.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/intl/supported_values_of.rs\",\"question\":\"swallows_errors\",\"issue\":\"available_canonical_numbering_systems (~line 131-138): `IterableDataProvider::iter_ids(&BakedDigits)` returns a Result, and `.into_iter().flatten()` silently discards any Err. A data failure becomes an empty or partial list instead of an error that is thrown or propagated. The spec has no such fallback, so the error must not be replaced by a default.\"},{\"file\":\"crates/kahvi-builtins/src/intl/supported_values_of.rs\",\"question\":\"contradicts_spec\",\"issue\":\"available_canonical_numbering_systems (~line 137): `.filter(|s| !s.is_empty())` drops every entry whose marker attribute is empty. If the default latn digits are stored under the empty attribute, the list omits \\\"latn\\\". The spec says AvailableCanonicalNumberingSystems MUST include every numbering system in table-numbering-system-digits, and that table includes latn. The filter needs a justified mapping of the empty attribute to \\\"latn\\\", not a silent drop.\"},{\"file\":\"crates/kahvi-builtins/src/intl/supported_values_of.rs\",\"question\":\"contradicts_spec\",\"issue\":\"available_calendars (~lines 73-109): the hardcoded `for kind in [...]` list leaves out AnyCalendarKind::HijriSimulatedMecca, and `_ => continue` silently drops any kind not listed. AvailableCalendars must list every calendar the implementation supports, and the ticket says to take the list from icu::calendar. Enumerate all kinds ICU4X provides, or throw not_implemented for any kind that cannot be mapped to a CLDR type. Ideally derive the names from ICU4X rather than a hand-written table.\"}],\"notes_for_next_attempt\":\"1) In available_canonical_numbering_systems, propagate or surface the iter_ids Result (e.g. map the error to a thrown or not_implemented error) instead of `.into_iter().flatten()`. 2) Check whether the default latn digits sit under an empty marker attribute in the baked DecimalDigitsV1 data. If so, map that entry to \\\"latn\\\" rather than dropping it, and confirm \\\"latn\\\" is in the output. 3) In available_calendars, confirm whether icu::calendar supports HijriSimulatedMecca and add it with its CLDR name, or throw not_implemented naming it. Replace `_ => continue` with an explicit handling of the non_exhaustive case. Prefer ICU4X's own CLDR-name APIs over the hand-written name table if they exist. 4) In available_primary_time_zone_identifiers, the comments say step 3.a filters on identifier == primary, but the code maps canonical over every record. Either make the code match the comment or fix the comment. The ICU4X-canonical approach is acceptable, as is the Etc/UTC, Etc/GMT and GMT to UTC mapping. 5) Collation, currency and unit stay not_implemented until their ICU4X data is wired in, which is correct.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": true,
+      "skips_observable_steps": false,
+      "contradicts_spec": true,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change is mostly sound. Calendar, numbering-system and time-zone lists come from ICU4X data, and collation, currency and unit throw not_implemented naming what is missing. Two defects in available_canonical_numbering_systems: a Result from iter_ids is silently flattened into an empty or partial list, and empty-attribute entries are filtered out, which may drop the default latn numbering system that the spec requires. The calendar list also omits HijriSimulatedMecca and uses a catch-all that drops unlisted kinds without comment. Line numbers are approximate.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/intl/supported_values_of.rs",
+        "question": "swallows_errors",
+        "issue": "available_canonical_numbering_systems (~line 131-138): `IterableDataProvider::iter_ids(&BakedDigits)` returns a Result, and `.into_iter().flatten()` silently discards any Err. A data failure becomes an empty or partial list instead of an error that is thrown or propagated. The spec has no such fallback, so the error must not be replaced by a default."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl/supported_values_of.rs",
+        "question": "contradicts_spec",
+        "issue": "available_canonical_numbering_systems (~line 137): `.filter(|s| !s.is_empty())` drops every entry whose marker attribute is empty. If the default latn digits are stored under the empty attribute, the list omits \"latn\". The spec says AvailableCanonicalNumberingSystems MUST include every numbering system in table-numbering-system-digits, and that table includes latn. The filter needs a justified mapping of the empty attribute to \"latn\", not a silent drop."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl/supported_values_of.rs",
+        "question": "contradicts_spec",
+        "issue": "available_calendars (~lines 73-109): the hardcoded `for kind in [...]` list leaves out AnyCalendarKind::HijriSimulatedMecca, and `_ => continue` silently drops any kind not listed. AvailableCalendars must list every calendar the implementation supports, and the ticket says to take the list from icu::calendar. Enumerate all kinds ICU4X provides, or throw not_implemented for any kind that cannot be mapped to a CLDR type. Ideally derive the names from ICU4X rather than a hand-written table."
+      }
+    ],
+    "notes_for_next_attempt": "1) In available_canonical_numbering_systems, propagate or surface the iter_ids Result (e.g. map the error to a thrown or not_implemented error) instead of `.into_iter().flatten()`. 2) Check whether the default latn digits sit under an empty marker attribute in the baked DecimalDigitsV1 data. If so, map that entry to \"latn\" rather than dropping it, and confirm \"latn\" is in the output. 3) In available_calendars, confirm whether icu::calendar supports HijriSimulatedMecca and add it with its CLDR name, or throw not_implemented naming it. Replace `_ => continue` with an explicit handling of the non_exhaustive case. Prefer ICU4X's own CLDR-name APIs over the hand-written name table if they exist. 4) In available_primary_time_zone_identifiers, the comments say step 3.a filters on identifier == primary, but the code maps canonical over every record. Either make the code match the comment or fix the comment. The ICU4X-canonical approach is acceptable, as is the Etc/UTC, Etc/GMT and GMT to UTC mapping. 5) Collation, currency and unit stay not_implemented until their ICU4X data is wired in, which is correct."
+  },
+  "ttft_ms": 64568,
+  "type": "result",
+  "duration_ms": 69935,
+  "uuid": "c42efa13-f166-4fd3-a265-3e1e13f8914f",
+  "ttft_stream_ms": 1553,
+  "time_to_request_ms": 544,
+  "time_to_request_phases_ms": {
+    "other": 19,
+    "system_prompt": 348,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 127,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 16,
+  "time_to_request_cpu_ms": 361,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 246,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 1784,
+  "process_wall_ms_turn": 69935,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1554,
+  "time_to_request_from_spawn_ms": 1426765,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090290581.0527,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.51,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.21,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
