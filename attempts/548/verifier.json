@@ -1,0 +1,150 @@
+{
+  "duration_api_ms": 69067,
+  "stop_reason": "tool_use",
+  "session_id": "84e9325c-13bc-4e51-9fda-fc3e32f67fff",
+  "total_cost_usd": 0.013981,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 23065,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 15221,
+    "output_tokens_details": {
+      "thinking_tokens": 13826
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23065,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 15221,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 23065,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 23065
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":true,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":true,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The constructor, resolvedOptions and compare getter follow the spec steps in order, with the observable Gets (usage, sensitivity, ignorePunctuation) done in spec order, and the ICU work is not test-keyed. The defect is the search usage path. Steps 9-10 (choose SearchLocaleData for usage \\\"search\\\") are collapsed into one closure that always uses sort collation data. A search-usage collator therefore silently returns sort-order results instead of throwing the not-implemented error, and usage-de.js fails with the wrong order. Step 19 is also collapsed: defaultSensitivity is always \\\"variant\\\", even when usage is \\\"search\\\". Both are the made-up-result and spec-deviation problems recorded below.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/intl_collator/constructor.rs\",\"question\":\"made_up_results\",\"issue\":\"Steps 9-10 (choose %Intl.Collator%.[[SearchLocaleData]] when usage is \\\"search\\\") are not implemented. The locale_data closure ignores `usage` and returns the same sort collation list and defaults for search. For usage \\\"search\\\" the collator silently uses sort-order collation and returns sort-order results, instead of throwing agent.not_implemented(...) for the missing search locale data. usage-de.js:sloppy/strict fail with Actual [\u00c4, AE] vs expected [AE, \u00c4], which is this wrong result.\"},{\"file\":\"crates/kahvi-builtins/src/intl_collator/constructor.rs\",\"question\":\"contradicts_spec\",\"issue\":\"Step 10 is a no-op: the comment says ICU4X has no search collations so both branches use the same data, but the spec requires SearchLocaleData for any usage other than \\\"sort\\\". Search usage therefore gets sort collations and sort defaults, which the spec does not allow.\"},{\"file\":\"crates/kahvi-builtins/src/intl_collator/constructor.rs\",\"question\":\"contradicts_spec\",\"issue\":\"Step 19 is collapsed to a constant: `let default_sensitivity = \\\"variant\\\";`. The spec says \\\"variant\\\" only when usage is \\\"sort\\\", and otherwise resolvedLocaleData.[[sensitivity]]. The branch on usage is missing, so the default sensitivity for search is not taken from locale data.\"}],\"notes_for_next_attempt\":\"1) Fix the search usage path. Either implement SearchLocaleData (use ICU4X search collation data if it exists) or throw agent.not_implemented(\\\"Intl.Collator usage \\\\\\\"search\\\\\\\"\\\") when usage is \\\\\\\"search\\\\\\\". Do not silently fall back to sort collation. Verify whether ICU4X really lacks search data before claiming it in a comment.\\n2) Restore the step 19 branch: default sensitivity is \\\"variant\\\" for usage \\\"sort\\\", and resolvedLocaleData.[[sensitivity]] otherwise.\\n3) Restore the spec text removed from prototype_get_compare.rs (the NOTE and the subclause annotation) and from prototype_resolved_options.rs (the table-collator-resolvedoptions-properties table). The ticket says to keep the spec steps as comments.\\n4) Optional cleanup: the `.ok()` fallbacks in support/intl_collator.rs locale_defaults (returns (\\\"false\\\", false, false) on ICU failure) and the `.expect(\\\"a default\\\")` / `expect(\\\"a running built-in\\\")` calls are not spec-visible defects, but they could be replaced with proper error handling.\\nKeep the rest: constructor order, the Gets, the resolvedOptions row order, and the CompareStrings/bound-function logic look right.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": true,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": true,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The constructor, resolvedOptions and compare getter follow the spec steps in order, with the observable Gets (usage, sensitivity, ignorePunctuation) done in spec order, and the ICU work is not test-keyed. The defect is the search usage path. Steps 9-10 (choose SearchLocaleData for usage \"search\") are collapsed into one closure that always uses sort collation data. A search-usage collator therefore silently returns sort-order results instead of throwing the not-implemented error, and usage-de.js fails with the wrong order. Step 19 is also collapsed: defaultSensitivity is always \"variant\", even when usage is \"search\". Both are the made-up-result and spec-deviation problems recorded below.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+        "question": "made_up_results",
+        "issue": "Steps 9-10 (choose %Intl.Collator%.[[SearchLocaleData]] when usage is \"search\") are not implemented. The locale_data closure ignores `usage` and returns the same sort collation list and defaults for search. For usage \"search\" the collator silently uses sort-order collation and returns sort-order results, instead of throwing agent.not_implemented(...) for the missing search locale data. usage-de.js:sloppy/strict fail with Actual [\u00c4, AE] vs expected [AE, \u00c4], which is this wrong result."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+        "question": "contradicts_spec",
+        "issue": "Step 10 is a no-op: the comment says ICU4X has no search collations so both branches use the same data, but the spec requires SearchLocaleData for any usage other than \"sort\". Search usage therefore gets sort collations and sort defaults, which the spec does not allow."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+        "question": "contradicts_spec",
+        "issue": "Step 19 is collapsed to a constant: `let default_sensitivity = \"variant\";`. The spec says \"variant\" only when usage is \"sort\", and otherwise resolvedLocaleData.[[sensitivity]]. The branch on usage is missing, so the default sensitivity for search is not taken from locale data."
+      }
+    ],
+    "notes_for_next_attempt": "1) Fix the search usage path. Either implement SearchLocaleData (use ICU4X search collation data if it exists) or throw agent.not_implemented(\"Intl.Collator usage \\\"search\\\"\") when usage is \\\"search\\\". Do not silently fall back to sort collation. Verify whether ICU4X really lacks search data before claiming it in a comment.\n2) Restore the step 19 branch: default sensitivity is \"variant\" for usage \"sort\", and resolvedLocaleData.[[sensitivity]] otherwise.\n3) Restore the spec text removed from prototype_get_compare.rs (the NOTE and the subclause annotation) and from prototype_resolved_options.rs (the table-collator-resolvedoptions-properties table). The ticket says to keep the spec steps as comments.\n4) Optional cleanup: the `.ok()` fallbacks in support/intl_collator.rs locale_defaults (returns (\"false\", false, false) on ICU failure) and the `.expect(\"a default\")` / `expect(\"a running built-in\")` calls are not spec-visible defects, but they could be replaced with proper error handling.\nKeep the rest: constructor order, the Gets, the resolvedOptions row order, and the CompareStrings/bound-function logic look right."
+  },
+  "ttft_ms": 63056,
+  "type": "result",
+  "duration_ms": 68631,
+  "uuid": "f6025068-8055-499d-a9a6-e24b6f17c909",
+  "ttft_stream_ms": 2501,
+  "time_to_request_ms": 921,
+  "time_to_request_phases_ms": {
+    "other": 46,
+    "system_prompt": 489,
+    "resume_other": 0,
+    "process_user_input": 15,
+    "input_attachments": 76,
+    "input_hooks": 14,
+    "tool_pool_refresh": 1,
+    "init_message": 28,
+    "engine_pickup": 7,
+    "message_prep": 8,
+    "model_config_wait": 126,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 63,
+    "request_build": 23
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 204,
+  "time_to_request_cpu_ms": 267,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 216,
+  "process_anon_mib_turn_start": 98,
+  "process_rss_mib_result": 245,
+  "process_anon_mib_result": 125,
+  "process_peak_rss_mib": 250,
+  "process_cpu_ms_turn": 1438,
+  "process_wall_ms_turn": 68630,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 51,
+    "cpu_ms": 27,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2502,
+  "time_to_request_from_spawn_ms": 816042,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089676952.701,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.3,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.18,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

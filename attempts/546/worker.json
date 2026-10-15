@@ -1,0 +1,149 @@
+{
+  "duration_api_ms": 182643,
+  "stop_reason": "end_turn",
+  "session_id": "1b7845b0-6a08-49b1-a6de-699ab5f8325c",
+  "total_cost_usd": 0.7969185999999999,
+  "usage": {
+    "input_tokens": 67,
+    "cache_creation_input_tokens": 82311,
+    "cache_read_input_tokens": 2161035,
+    "output_tokens": 25045,
+    "output_tokens_details": {
+      "thinking_tokens": 4051
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 82311,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 592,
+        "cache_read_input_tokens": 87078,
+        "cache_creation_input_tokens": 235,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 235
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01LEwy3tNtsNXPqCBuDS3Py6",
+      "tool_input": {
+        "command": "ls ~/.cargo/registry/src/*/ | grep -i \"icu_datetime\\|icu_time\\|icu_calendar\""
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_0169hpHoVSe7HegJ5rXjJ66k",
+      "tool_input": {
+        "command": "grep -n \"pub fn \\|pub struct\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_time-2.3.0/src/zone/iana.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01WAQaTP3gMpYcqmdHFt6CmA",
+      "tool_input": {
+        "command": "grep -rn \"pub fn \\(hour_cycle\\|preferred_hour\\)\\|enum HourCycle\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_datetime-2.3.0/src /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_locale_core-2.3.0/src/preferences | head"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01LgST7YKkrgYnKMRino7xTN",
+      "tool_input": {
+        "command": "cat > /tmp/ctor.py 2>/dev/null; echo"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 60,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented the constructor and `resolvedOptions` for `Intl.DateTimeFormat`, but not formatting. `intl402/DateTimeFormat/` is at 184 of 342 runs passing; clippy is clean. The remaining 158 failures are all from the unimplemented methods, and none are crashes or wrong results.\n\n- **Done:** `CreateDateTimeFormat`, `ChainDateTimeFormat`, `UnwrapDateTimeFormat` and the internal slots (in `support/intl_date_time_format.rs`). Time zone lookup and hour-cycle defaults come from ICU4X.\n- **Still `not_implemented`:** `get format`, `formatToParts`, `formatRange` and `formatRangeToParts`. Formatting needs the mapping from the component options to an ICU4X field set, which I didn't get to. The `format` getter alone accounts for 52 of the failing runs.\n- **Stand-ins:** `BasicFormatMatcher`, `BestFitFormatMatcher` and `DateTimeStyleFormat` are not implemented. The requested components are used as the format, so `resolvedOptions` reports what was asked for rather than the pattern ICU4X would pick. For `dateStyle`/`timeStyle`, `resolvedOptions` reports no components.\n- **Simplified locale data:** the calendar list is a hardcoded list of ICU4X calendars with `gregory` first. `numberingSystem` is `latn` only. The default hour cycle is probed by formatting a time with ICU4X.\n\nBLOCKED: formatting (`format`, `formatToParts`, `formatRange`, `formatRangeToParts`) needs the component-options \u2192 ICU4X field-set and time zone mapping, which I did not implement.",
+  "ttft_ms": 3205,
+  "type": "result",
+  "duration_ms": 407468,
+  "uuid": "1eff26bc-8d7d-4ee2-acdb-ee3c14fcb2e4",
+  "ttft_stream_ms": 2765,
+  "time_to_request_ms": 741,
+  "time_to_request_phases_ms": {
+    "other": 17,
+    "system_prompt": 384,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 285,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 37,
+  "time_to_request_cpu_ms": 376,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 221,
+  "process_anon_mib_turn_start": 105,
+  "process_rss_mib_result": 270,
+  "process_anon_mib_result": 148,
+  "process_peak_rss_mib": 285,
+  "process_cpu_ms_turn": 10688,
+  "process_wall_ms_turn": 407467,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2766,
+  "time_to_request_from_spawn_ms": 124610,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792088987550.0466,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.18,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

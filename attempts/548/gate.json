@@ -1,0 +1,89 @@
+{
+  "ticket": "I-collator",
+  "base": "fedf4feebaf4ff35d2e74860be96ad2d6f8dacc8",
+  "head": "ec34e3ac213a61e3d7a6d24e7fe55e09bed591c7",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+      "added": 145,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs",
+      "added": 59,
+      "removed": 16
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_collator/prototype_resolved_options.rs",
+      "added": 34,
+      "removed": 30
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_collator.rs",
+      "added": 209,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+      "line": 53,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "None => agent.active_function().expect(\"a running built-in\"),"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+      "line": 71,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a default\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/constructor.rs",
+      "line": 151,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a default\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs",
+      "line": 65,
+      "rule": "unwrap/expect can crash the engine",
+      "text": "let f = agent.active_function().expect(\"a running built-in\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs",
+      "line": 67,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"a compare function without its collator\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_collator/prototype_get_compare.rs",
+      "line": 77,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"a compare function for a non-collator\");"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 130,
+    "before": 0,
+    "after": 126,
+    "new_passes": 126,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/Collator/this-value-ignored.js:sloppy  Uncaught InternalError: not implemented: Intl.NumberFormat",
+      "intl402/Collator/this-value-ignored.js:strict  Uncaught InternalError: not implemented: Intl.NumberFormat",
+      "intl402/Collator/usage-de.js:sloppy  Uncaught Test262Error: Actual [\u00c4, AE] and expected [AE, \u00c4] should have the same contents. search",
+      "intl402/Collator/usage-de.js:strict  Uncaught Test262Error: Actual [\u00c4, AE] and expected [AE, \u00c4] should have the same contents. search"
+    ]
+  },
+  "decision": "pass"
+}

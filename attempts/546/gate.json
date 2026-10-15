@@ -1,0 +1,58 @@
+{
+  "ticket": "I-date-time-format",
+  "base": "fedf4feebaf4ff35d2e74860be96ad2d6f8dacc8",
+  "head": "ec2b0df0a8f89f53c5757cfb7eeeb0aa394ccd86",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/constructor.rs",
+      "added": 41,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_resolved_options.rs",
+      "added": 56,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_date_time_format.rs",
+      "added": 582,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 342,
+    "before": 0,
+    "after": 184,
+    "new_passes": 184,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 148,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/DateTimeFormat/date-time-options.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/date-time-options.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/ignore-invalid-unicode-ext-values.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/ignore-invalid-unicode-ext-values.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/bound-to-datetimeformat-instance.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/bound-to-datetimeformat-instance.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/date-constructor-not-called.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/date-constructor-not-called.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-long-en.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-long-en.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-narrow-en.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-narrow-en.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-short-en.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-short-en.js:strict  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format",
+      "intl402/DateTimeFormat/prototype/format/format-function-builtin.js:sloppy  Uncaught InternalError: not implemented: get Intl.DateTimeFormat.prototype.format"
+    ]
+  },
+  "decision": "pass"
+}

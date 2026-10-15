@@ -1,0 +1,133 @@
+{
+  "ticket": "I-locale",
+  "base": "fedf4feebaf4ff35d2e74860be96ad2d6f8dacc8",
+  "head": "ffdc278019f4043407b2c8e9e466f48a49ab465c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/constructor.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_base_name.rs",
+      "added": 6,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_calendar.rs",
+      "added": 2,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_case_first.rs",
+      "added": 2,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_collation.rs",
+      "added": 2,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_first_day_of_week.rs",
+      "added": 4,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_hour_cycle.rs",
+      "added": 2,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_language.rs",
+      "added": 6,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_numbering_system.rs",
+      "added": 4,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_numeric.rs",
+      "added": 3,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_region.rs",
+      "added": 4,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_script.rs",
+      "added": 4,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_text_info.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_get_variants.rs",
+      "added": 4,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_maximize.rs",
+      "added": 3,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_minimize.rs",
+      "added": 3,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_locale/prototype_to_string.rs",
+      "added": 2,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_locale.rs",
+      "added": 469,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 380,
+    "before": 0,
+    "after": 278,
+    "new_passes": 278,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 86,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/Locale/constructor-non-iana-canon.js:sloppy  Uncaught RangeError: invalid language tag",
+      "intl402/Locale/constructor-non-iana-canon.js:strict  Uncaught RangeError: invalid language tag",
+      "intl402/Locale/likely-subtags.js:sloppy  Uncaught Test262Error: \"und\".maximize() should be \"en-Latn-US\" Expected SameValue(\u00ab\"und\"\u00bb, \u00ab\"en-Latn-US\"\u00bb) to be true",
+      "intl402/Locale/likely-subtags.js:strict  Uncaught Test262Error: \"und\".maximize() should be \"en-Latn-US\" Expected SameValue(\u00ab\"und\"\u00bb, \u00ab\"en-Latn-US\"\u00bb) to be true",
+      "intl402/Locale/prototype/getCalendars/branding.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/branding.js:strict  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/likely-subtags-region.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/likely-subtags-region.js:strict  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/output-array.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/output-array.js:strict  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/region-override.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/region-override.js:strict  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/region-priority.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/region-priority.js:strict  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars",
+      "intl402/Locale/prototype/getCalendars/subdivision-region.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale.prototype.getCalendars"
+    ]
+  },
+  "decision": "pass"
+}

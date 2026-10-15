@@ -1,0 +1,63 @@
+{
+  "ticket": "I-number-format",
+  "base": "fedf4feebaf4ff35d2e74860be96ad2d6f8dacc8",
+  "head": "346b26067dc785e2a094c35b420eca851614a2d2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_number_format/constructor.rs",
+      "added": 172,
+      "removed": 25
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_number_format/prototype_get_format.rs",
+      "added": 46,
+      "removed": 14
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs",
+      "added": 78,
+      "removed": 74
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_number_format.rs",
+      "added": 518,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 502,
+    "before": 0,
+    "after": 194,
+    "new_passes": 194,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 304,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/NumberFormat/currency-code-well-formed.js:sloppy  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/currency-code-well-formed.js:strict  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/currency-digits.js:sloppy  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/currency-digits.js:strict  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/currencyDisplay-unit.js:sloppy  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/currencyDisplay-unit.js:strict  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/dft-currency-mnfd-range-check-mxfd.js:sloppy  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/dft-currency-mnfd-range-check-mxfd.js:strict  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/ignore-invalid-unicode-ext-values.js:sloppy  Uncaught InternalError: not implemented: Intl.NumberFormat format: ToIntlMathematicalValue and FormatNumeric",
+      "intl402/NumberFormat/ignore-invalid-unicode-ext-values.js:strict  Uncaught InternalError: not implemented: Intl.NumberFormat format: ToIntlMathematicalValue and FormatNumeric",
+      "intl402/NumberFormat/legacy-regexp-statics-not-modified.js:sloppy  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/legacy-regexp-statics-not-modified.js:strict  Uncaught InternalError: not implemented: CurrencyDigits: ICU4X has no currency fraction digit data",
+      "intl402/NumberFormat/prototype/format/bound-to-numberformat-instance.js:sloppy  Uncaught InternalError: not implemented: Intl.NumberFormat format: ToIntlMathematicalValue and FormatNumeric",
+      "intl402/NumberFormat/prototype/format/bound-to-numberformat-instance.js:strict  Uncaught InternalError: not implemented: Intl.NumberFormat format: ToIntlMathematicalValue and FormatNumeric",
+      "intl402/NumberFormat/prototype/format/default-value.js:sloppy  Uncaught InternalError: not implemented: Intl.NumberFormat format: ToIntlMathematicalValue and FormatNumeric"
+    ]
+  },
+  "decision": "pass"
+}
