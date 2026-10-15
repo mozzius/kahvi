@@ -6,7 +6,9 @@
 Only groups whose functions can be implemented in a single file with the
 existing helpers get tickets; groups that first need new internal-slot types
 or engine support (Map, Promise, RegExp, typed arrays, ...) are listed in
-ARCHITECT_FIRST and wait for the architect.
+ARCHITECT_FIRST and wait for the architect. The Intl services (intl_*
+groups) are not generated: their tickets are written by hand, one per
+service (tickets/I-*.md, docs/INTL.md).
 
 --counts is a JSON object mapping not-implemented names (as the runner
 reports them, e.g. "Array.prototype.concat") to how many test262 runs they
