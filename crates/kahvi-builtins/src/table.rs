@@ -821,7 +821,12 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
     }
 
     // Every other function property.
-    for entry in FUNCTIONS.iter().filter(|e| e.kind != Kind::Constructor) {
+    let legacy_regexp = crate::support::regexp_legacy::FUNCTIONS;
+    for entry in FUNCTIONS
+        .iter()
+        .chain(legacy_regexp)
+        .filter(|e| e.kind != Kind::Constructor)
+    {
         let owner = if entry.owner == "%GlobalObject%" {
             agent.realm(realm).global_object
         } else {
