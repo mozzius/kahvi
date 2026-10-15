@@ -177,9 +177,12 @@ fn serialize_json_property(
 ) -> JsResult<Option<Vec<u16>>> {
     // Callbacks (toJSON, the replacer, getters) may collect garbage; the
     // steps root what they use after one, and the roots go when they return.
+    // Nested values recurse, so each level counts against the call depth.
+    agent.enter_nested()?;
     let mark = agent.gc_roots_len();
     let r = serialize_json_property_steps(agent, state, key, holder);
     agent.pop_roots(mark);
+    agent.leave_nested();
     r
 }
 

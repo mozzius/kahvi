@@ -248,6 +248,10 @@ pub(crate) fn regexp_builtin_exec(agent: &mut Agent, r: Object, s: JsString) -> 
             && (0xD800..=0xDBFF).contains(&units[input_index - 1])
         {
             input_index -= 1;
+            // The match then starts at that character, so its index (and
+            // [[StartIndex]], which must not exceed [[EndIndex]]) is where
+            // the pair starts, as in V8, SpiderMonkey and Hermes.
+            last_index = input_index as f64;
         }
         // c. Let r be matcher(input, inputIndex).
         let data = agent
