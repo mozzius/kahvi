@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Look up ECMA-262 clauses from the pinned spec (vendor/ecma262/spec.html).
+"""Look up ECMA-262 and ECMA-402 clauses from the pinned specs (vendor/ecma262/spec.html,
+vendor/ecma402/).
 
   ./spec sec-array.prototype.flatmap     print one clause, steps numbered as in the spec
   ./spec array.prototype.flatmap         same ("sec-" is optional)
@@ -37,6 +38,50 @@ PROPOSALS = {
 }
 
 
+# ECMA-402 (vendor/ecma402/, tc39/ecma402 spec/ as of 2026-10-15), in the
+# order spec/index.html imports it. Its source does not mark built-in
+# functions, so load() marks every clause whose heading is a function or
+# accessor heading. Its locale-sensitive functions ("sup-" clauses, such as
+# Number.prototype.toLocaleString) replace ECMA-262's.
+ECMA402 = SPEC.parent.parent / "ecma402"
+ECMA402_PARTS = [
+    "conventions.html", "locales-currencies-tz.html", "requirements.html", "intl.html",
+    "negotiation.html", "collator.html", "datetimeformat.html", "displaynames.html",
+    "durationformat.html", "listformat.html", "locale.html", "numberformat.html",
+    "pluralrules.html", "relativetimeformat.html", "segmenter.html",
+    "locale-sensitive-functions.html", "annexes.html",
+]
+FUNCTION_HEAD_RE = re.compile(
+    r"^(?:(?:get|set) )?[%\w.]+(?: \[ %Symbol\.\w+% \])?(?: \((?! \. \. \.).*\))?$"
+)
+# The clause ids that came from ECMA-402 (filled in by load()).
+ECMA402_IDS = set()
+
+
+def mark_ecma402_functions(part):
+    """Adds type="built-in function" to the function clauses of an ECMA-402 file."""
+    out = []
+    last = 0
+    for m in OPEN_RE.finditer(part):
+        attrs = m.group(2)
+        ident = ID_RE.search(attrs)
+        if ident:
+            ECMA402_IDS.add(ident.group(1))
+        if TYPE_RE.search(attrs) or m.group(1) != "emu-clause":
+            continue
+        h1 = H1_RE.search(part, m.end())
+        if not h1 or part.find("<emu-clause", m.end(), h1.start()) != -1:
+            continue
+        head = strip_tags(h1.group(1)).strip()
+        if not FUNCTION_HEAD_RE.match(head) or not ("(" in head or head.startswith(("get ", "set "))):
+            continue
+        out.append(part[last:m.end() - 1])
+        out.append(' type="built-in function">')
+        last = m.end()
+    out.append(part[last:])
+    return "".join(out)
+
+
 def load():
     text = SPEC.read_text(encoding="utf-8")
     for name, functions in PROPOSALS.items():
@@ -46,6 +91,8 @@ def load():
             assert tag in part, f"{name}: no clause {cid}"
             part = part.replace(tag, f'<emu-clause id="{cid}" type="built-in function">')
         text += "\n" + part
+    for name in ECMA402_PARTS:
+        text += "\n" + mark_ecma402_functions((ECMA402 / name).read_text(encoding="utf-8"))
     return text
 
 

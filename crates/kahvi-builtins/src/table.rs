@@ -112,6 +112,7 @@ const OBJECTS: &[(&str, Option<&str>, Shape)] = &[
     ("%IteratorHelperPrototype%", ITER, Shape::Ordinary),
     ("%WrapForValidIteratorPrototype%", ITER, Shape::Ordinary),
     ("%ForInIteratorPrototype%", ITER, Shape::Ordinary),
+    ("%IntlSegmentIteratorPrototype%", ITER, Shape::Ordinary),
     (
         "%AsyncFromSyncIteratorPrototype%",
         Some("%AsyncIteratorPrototype%"),
@@ -640,6 +641,25 @@ const TO_STRING_TAGS: &[(&str, &str)] = &[
     ("%AsyncFunction.prototype%", "AsyncFunction"),
     ("%DisposableStack.prototype%", "DisposableStack"),
     ("%AsyncDisposableStack.prototype%", "AsyncDisposableStack"),
+    // ECMA-402.
+    ("%Intl%", "Intl"),
+    ("%Intl.Collator.prototype%", "Intl.Collator"),
+    ("%Intl.DateTimeFormat.prototype%", "Intl.DateTimeFormat"),
+    ("%Intl.DisplayNames.prototype%", "Intl.DisplayNames"),
+    ("%Intl.DurationFormat.prototype%", "Intl.DurationFormat"),
+    ("%Intl.ListFormat.prototype%", "Intl.ListFormat"),
+    ("%Intl.Locale.prototype%", "Intl.Locale"),
+    ("%Intl.NumberFormat.prototype%", "Intl.NumberFormat"),
+    ("%Intl.PluralRules.prototype%", "Intl.PluralRules"),
+    (
+        "%Intl.RelativeTimeFormat.prototype%",
+        "Intl.RelativeTimeFormat",
+    ),
+    ("%Intl.Segmenter.prototype%", "Intl.Segmenter"),
+    (
+        "%IntlSegmentIteratorPrototype%",
+        "Segmenter String Iterator",
+    ),
 ];
 
 /// Namespace objects installed on the global object.
@@ -786,7 +806,8 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
 
     // Constructors first (other functions' owners may be constructors).
     let function_proto = agent.intrinsic_in(realm, "%Function.prototype%");
-    let mut constructors: Vec<&'static str> = Vec::new();
+    // By intrinsic name without the %s: "Array", "Intl.Collator".
+    let mut constructors: Vec<String> = Vec::new();
     for pass in 0..2 {
         for entry in FUNCTIONS.iter().filter(|e| e.kind == Kind::Constructor) {
             let Key::Str(name) = entry.key else { continue };
@@ -815,8 +836,13 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
                 None,
                 true,
             );
-            agent.set_intrinsic(realm, &format!("%{name}%"), f);
-            constructors.push(name);
+            // ECMA-402's constructors are properties of %Intl%.
+            let full = match entry.owner {
+                "%Intl%" => format!("Intl.{name}"),
+                _ => name.to_string(),
+            };
+            agent.set_intrinsic(realm, &format!("%{full}%"), f);
+            constructors.push(full);
         }
     }
 
@@ -1071,14 +1097,24 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
     agent.obj_mut(global).prototype = Some(object_proto);
     agent.set_intrinsic(realm, "%GlobalObject%", global);
     for name in &constructors {
-        if NOT_GLOBAL.contains(name) {
+        if NOT_GLOBAL.contains(&name.as_str()) {
             continue;
         }
         let ctor = agent.intrinsic_in(realm, &format!("%{name}%"));
-        let k = agent.key(name);
-        define(agent, global, k, Value::Object(ctor), true, false, true);
+        let (owner, key) = match name.rsplit_once('.') {
+            Some((owner, key)) => (
+                intrinsic_or_create(agent, realm, &format!("%{owner}%")),
+                key,
+            ),
+            None => (global, name.as_str()),
+        };
+        let k = agent.key(key);
+        define(agent, owner, k, Value::Object(ctor), true, false, true);
     }
-    for name in NAMESPACES {
+    // Intl is only a global property while the agent asks for it
+    // (`Agent::intl`): its implementation is incomplete (docs/INTL.md).
+    let intl: &[&str] = if agent.intl { &["Intl"] } else { &[] };
+    for name in NAMESPACES.iter().chain(intl) {
         let o = intrinsic_or_create(agent, realm, &format!("%{name}%"));
         let k = agent.key(name);
         define(agent, global, k, Value::Object(o), true, false, true);
@@ -1093,6 +1129,7 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         let k = agent.key(name);
         define(agent, global, k, value, false, false, false);
     }
+    crate::support::intl::install(agent, realm);
     crate::extensions::install(agent, realm);
     Ok(())
 }

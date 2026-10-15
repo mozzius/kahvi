@@ -8,3 +8,14 @@ publish.workspace = true
 kahvi-core = { path = "../kahvi-core" }
 kahvi-regexp = { path = "../kahvi-regexp" }
 kahvi-unicode = { path = "../kahvi-unicode" }
+# ECMA-402 (docs/INTL.md): ICU4X with its compiled CLDR data; "unstable"
+# adds the components still in icu_experimental (display names, relative
+# time, duration formatting) and "sync" makes its objects Send, so they can
+# live in internal slots. The rest list the locales the data covers
+# (AvailableLocales) from a baked data crate's iterable provider.
+icu = { version = "2.3", features = ["unstable", "sync"] }
+icu_provider = { version = "2.3", features = ["baked"] }
+icu_datetime_data = "2.3"
+icu_decimal_data = "2.3"
+icu_locale_fallback = "2.3"
+zerovec = "0.11"

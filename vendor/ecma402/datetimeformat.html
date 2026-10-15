@@ -1,0 +1,1729 @@
+<emu-clause id="datetimeformat-objects">
+  <h1>DateTimeFormat Objects</h1>
+
+  <emu-clause id="sec-intl-datetimeformat-constructor">
+    <h1>The Intl.DateTimeFormat Constructor</h1>
+
+    <p>The Intl.DateTimeFormat constructor:</p>
+    <ul>
+      <li>is <dfn>%Intl.DateTimeFormat%</dfn>.</li>
+      <li>is the initial value of the *"DateTimeFormat"* property of the Intl object.</li>
+    </ul>
+
+    <p>Behaviour common to all service constructor properties of the Intl object is specified in <emu-xref href="#sec-internal-slots"></emu-xref>.</p>
+
+    <emu-clause id="sec-intl.datetimeformat">
+      <h1>Intl.DateTimeFormat ( [ _locales_ [ , _options_ ] ] )</h1>
+
+      <p>When the `Intl.DateTimeFormat` function is called with optional arguments _locales_ and _options_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. If NewTarget is *undefined*, let _newTarget_ be the active function object, else let _newTarget_ be NewTarget.
+        1. Let _dateTimeFormat_ be ? CreateDateTimeFormat(_newTarget_, _locales_, _options_, ~any~, ~date~).
+        1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
+          1. Let _this_ be the *this* value.
+          1. Return ? ChainDateTimeFormat(_dateTimeFormat_, NewTarget, _this_).
+        1. Return _dateTimeFormat_.
+      </emu-alg>
+
+      <emu-clause id="sec-chaindatetimeformat" type="abstract operation" normative-optional>
+        <h1>
+          ChainDateTimeFormat (
+            _dateTimeFormat_: an Intl.DateTimeFormat,
+            _newTarget_: an ECMAScript language value,
+            _this_: an ECMAScript language value,
+          ): either a normal completion containing an Object or a throw completion
+        </h1>
+        <dl class="header">
+        </dl>
+        <emu-alg>
+          1. If _newTarget_ is *undefined* and ? OrdinaryHasInstance(%Intl.DateTimeFormat%, _this_) is *true*, then
+            1. Perform ? DefinePropertyOrThrow(_this_, %Intl%.[[FallbackSymbol]], PropertyDescriptor { [[Value]]: _dateTimeFormat_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
+            1. Return _this_.
+          1. Return _dateTimeFormat_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-createdatetimeformat" type="abstract operation" oldids="sec-initializedatetimeformat,sec-todatetimeoptions,sec-datetime-format-functions">
+      <h1>
+        CreateDateTimeFormat (
+          _newTarget_: a constructor,
+          _locales_: an ECMAScript language value,
+          _options_: an ECMAScript language value,
+          _required_: ~date~, ~time~, or ~any~,
+          _defaults_: ~date~, ~time~, or ~all~,
+        ): either a normal completion containing a DateTimeFormat object or a throw completion
+      </h1>
+
+      <dl class="header">
+      </dl>
+
+      <emu-alg>
+        1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], [[BoundFormat]] »).
+        1. Let _specialOptions_ be the Record { [[Hour12]]: *undefined* }.
+        1. Let _modifyResolutionOptions_ be a new Abstract Closure with parameters (_options_) that captures _specialOptions_ and performs the following steps when called:
+          1. Set _specialOptions_.[[Hour12]] to _options_.[[hour12]].
+          1. Remove field [[hour12]] from _options_.
+          1. If _specialOptions_.[[Hour12]] is not *undefined*, set _options_.[[hc]] to *null*.
+        1. Let _optionsResolution_ be ? ResolveOptions(%Intl.DateTimeFormat%, %Intl.DateTimeFormat%.[[LocaleData]], _locales_, _options_, « ~coerce-options~ », _modifyResolutionOptions_).
+        1. Let _hour12_ be _specialOptions_.[[Hour12]].
+        1. Set _options_ to _optionsResolution_.[[Options]].
+        1. Let _resolvedLocale_ be _optionsResolution_.[[ResolvedLocale]].
+        1. Set _dateTimeFormat_.[[Locale]] to _resolvedLocale_.[[Locale]].
+        1. Let _resolvedCalendar_ be _resolvedLocale_.[[ca]].
+        1. Set _dateTimeFormat_.[[Calendar]] to _resolvedCalendar_.
+        1. Set _dateTimeFormat_.[[NumberingSystem]] to _resolvedLocale_.[[nu]].
+        1. Let _resolvedLocaleData_ be _resolvedLocale_.[[LocaleData]].
+        1. Let _hc_ be _resolvedLocale_.[[hc]].
+        1. If _hour12_ is *true*, then
+          1. Set _hc_ to _resolvedLocaleData_.[[hourCycle12]].
+        1. Else if _hour12_ is *false*, then
+          1. Set _hc_ to _resolvedLocaleData_.[[hourCycle24]].
+        1. Else if _hc_ is *null*, then
+          1. Set _hc_ to _resolvedLocaleData_.[[hourCycle]].
+        1. Let _timeZone_ be ? GetOption(_options_, *"timeZone"*, ~string~, ~empty~, SystemTimeZoneIdentifier()).
+        1. If IsTimeZoneOffsetString(_timeZone_) is *true*, then
+          1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZone_), |UTCOffset|).
+          1. Assert: _parseResult_ is a Parse Node.
+          1. If _parseResult_ contains more than one |MinuteSecond| Parse Node, throw a *RangeError* exception.
+          1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_timeZone_).
+          1. Let _offsetMinutes_ be _offsetNanoseconds_ / (6 × 10<sup>10</sup>).
+          1. Assert: _offsetMinutes_ is an integer.
+          1. Set _timeZone_ to FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
+        1. Else,
+          1. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_timeZone_).
+          1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
+          1. Set _timeZone_ to _timeZoneIdentifierRecord_.[[PrimaryIdentifier]].
+        1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
+        1. Let _formatOptions_ be a new Record.
+        1. Set _formatOptions_.[[hourCycle]] to _hc_.
+        1. Let _hasExplicitFormatComponents_ be *false*.
+        1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
+          1. Let _propertyKey_ be the name given in the Property column of the current row.
+          1. If _propertyKey_ is *"fractionalSecondDigits"*, then
+            1. Let _value_ be ? GetNumberOption(_options_, *"fractionalSecondDigits"*, 1, 3, *undefined*).
+          1. Else,
+            1. Let _values_ be a List whose elements are the strings given in the Values column of the current row.
+            1. Let _value_ be ? GetOption(_options_, _propertyKey_, ~string~, _values_, *undefined*).
+          1. Set _formatOptions_.[[&lt;_propertyKey_>]] to _value_.
+          1. If _value_ is not *undefined*, set _hasExplicitFormatComponents_ to *true*.
+        1. Let _formatMatcher_ be ? GetOption(_options_, *"formatMatcher"*, ~string~, « *"basic"*, *"best fit"* », *"best fit"*).
+        1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
+        1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
+        1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
+        1. Set _dateTimeFormat_.[[TimeStyle]] to _timeStyle_.
+        1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
+          1. If _hasExplicitFormatComponents_ is *true*, throw a *TypeError* exception.
+          1. If _required_ is ~date~ and _timeStyle_ is not *undefined*, throw a *TypeError* exception.
+          1. If _required_ is ~time~ and _dateStyle_ is not *undefined*, throw a *TypeError* exception.
+          1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_>]].
+          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
+        1. Else,
+          1. Let _needDefaults_ be *true*.
+          1. Let _propertyKeys_ be a new empty List.
+          1. If _required_ is ~date~ or ~any~, set _propertyKeys_ to the list-concatenation of _propertyKeys_ and « *"weekday"*, *"year"*, *"month"*, *"day"* ».
+          1. If _required_ is ~time~ or ~any~, set _propertyKeys_ to the list-concatenation of _propertyKeys_ and « *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* ».
+          1. For each property name _propertyKey_ of _propertyKeys_, do
+            1. Let _value_ be _formatOptions_.[[&lt;_propertyKey_>]].
+            1. If _value_ is not *undefined*, set _needDefaults_ to *false*.
+          1. If _needDefaults_ is *true*, then
+            1. Let _numericProperties_ be a new empty List.
+            1. If _defaults_ is either ~date~ or ~all~, set _numericProperties_ to the list-concatenation of _numericProperties_ and « *"year"*, *"month"*, *"day"* ».
+            1. If _defaults_ is either ~time~ or ~all~, set _numericProperties_ to the list-concatenation of _numericProperties_ and « *"hour"*, *"minute"*, *"second"* ».
+            1. For each property name _propertyKey_ of _numericProperties_, do
+              1. Set _formatOptions_.[[&lt;_propertyKey_>]] to *"numeric"*.
+          1. Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_>]].
+          1. If _formatMatcher_ is *"basic"*, let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_); else let _bestFormat_ be BestFitFormatMatcher(_formatOptions_, _formats_).
+        1. Set _dateTimeFormat_.[[DateTimeFormat]] to _bestFormat_.
+        1. If _bestFormat_ has a field [[hour]], set _dateTimeFormat_.[[HourCycle]] to _hc_.
+        1. Return _dateTimeFormat_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatoffsettimezoneidentifier" type="abstract operation">
+      <h1>
+        FormatOffsetTimeZoneIdentifier (
+          _offsetMinutes_: an integer,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It formats a UTC offset, in minutes, into a UTC offset string formatted like ±HH:MM.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _offsetMinutes_ ≥ 0, let _sign_ be the code unit 0x002B (PLUS SIGN); otherwise, let _sign_ be the code unit 0x002D (HYPHEN-MINUS).
+        1. Let _absoluteMinutes_ be abs(_offsetMinutes_).
+        1. Let _hours_ be floor(_absoluteMinutes_ / 60).
+        1. Let _minutes_ be _absoluteMinutes_ modulo 60.
+        1. Return the string-concatenation of _sign_, ToZeroPaddedDecimalString(_hours_, 2), the code unit 0x003A (COLON), and ToZeroPaddedDecimalString(_minutes_, 2).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-intl-datetimeformat-constructor">
+    <h1>Properties of the Intl.DateTimeFormat Constructor</h1>
+
+    <p>The Intl.DateTimeFormat constructor:</p>
+    <ul>
+      <li>has a [[Prototype]] internal slot whose value is %Function.prototype%.</li>
+      <li>has the following properties:</li>
+    </ul>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype">
+      <h1>Intl.DateTimeFormat.prototype</h1>
+
+      <p>The value of `Intl.DateTimeFormat.prototype` is %Intl.DateTimeFormat.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat.supportedlocalesof">
+      <h1>Intl.DateTimeFormat.supportedLocalesOf ( _locales_ [ , _options_ ] )</h1>
+
+      <p>When the `supportedLocalesOf` method is called with arguments _locales_ and _options_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _availableLocales_ be %Intl.DateTimeFormat%.[[AvailableLocales]].
+        1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
+        1. Return ? FilterLocales(_availableLocales_, _requestedLocales_, _options_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat-internal-slots">
+      <h1>Internal slots</h1>
+
+      <p>The value of the [[AvailableLocales]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.</p>
+
+      <p>The value of the [[RelevantExtensionKeys]] internal slot is « *"ca"*, *"hc"*, *"nu"* ».</p>
+
+      <emu-note>
+        <a href="https://unicode.org/reports/tr35/#Key_Type_Definitions">Unicode Technical Standard #35 Part 1 Core, Section 3.6.1 Key and Type Definitions</a> describes four locale extension keys that are relevant to date and time formatting: *"ca"* for calendar, *"hc"* for hour cycle, *"nu"* for numbering system (of formatted numbers), and *"tz"* for time zone. DateTimeFormat, however, requires that the time zone is specified through the *"timeZone"* property in the options objects.
+      </emu-note>
+
+      <p>The value of the [[ResolutionOptionDescriptors]] internal slot is « { [[Key]]: *"ca"*, [[Property]]: *"calendar"* }, { [[Key]]: *"nu"*, [[Property]]: *"numberingSystem"* }, { [[Key]]: *"hour12"*, [[Property]]: *"hour12"*, [[Type]]: ~boolean~ }, { [[Key]]: *"hc"*, [[Property]]: *"hourCycle"*, [[Values]]: « *"h11"*, *"h12"*, *"h23"*, *"h24"* » } ».</p>
+
+      <p>The value of the [[LocaleData]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref> and the following additional constraints, for all locale values _locale_:</p>
+
+      <ul>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]].[[nu]] must be a List that does not include the values *"native"*, *"traditio"*, or *"finance"*.
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]].[[hc]] must be « *null*, *"h11"*, *"h12"*, *"h23"*, *"h24"* ».
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]].[[hourCycle]] must be one of the Strings *"h11"*, *"h12"*, *"h23"*, or *"h24"*.
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]].[[hourCycle12]] must be one of the Strings *"h11"* or *"h12"*.
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]].[[hourCycle24]] must be one of the Strings *"h23"* or *"h24"*.
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]] must have a [[formats]] field. The value of this [[formats]] field must be a Record with a [[&lt;_calendar_>]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_>]] field must be a List of DateTime Format Records. Multiple Records in such a List may use the same subset of the fields as long as the corresponding values differ for at least one field. The following subsets must be available for each locale:
+          <ul>
+            <li>weekday, year, month, day, hour, minute, second, fractionalSecondDigits</li>
+            <li>weekday, year, month, day, hour, minute, second</li>
+            <li>weekday, year, month, day</li>
+            <li>year, month, day</li>
+            <li>year, month</li>
+            <li>month, day</li>
+            <li>month</li>
+            <li>hour, minute, second, fractionalSecondDigits</li>
+            <li>hour, minute, second</li>
+            <li>hour, minute</li>
+            <li>dayPeriod, hour, minute, second, fractionalSecondDigits</li>
+            <li>dayPeriod, hour, minute, second</li>
+            <li>dayPeriod, hour, minute</li>
+            <li>dayPeriod, hour</li>
+          </ul>
+        </li>
+        <li>
+          [[LocaleData]].[[&lt;_locale_>]] must have a [[styles]] field. The value of this [[styles]] field must be a Record with a [[&lt;_calendar_>]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_>]] field must be a DateTime Styles Record.
+        </li>
+      </ul>
+
+      <emu-clause id="sec-datetimeformat-format-record">
+        <h1>DateTime Format Records</h1>
+
+        <p>Each <dfn id="datetimeformat-format-record" variants="DateTime Format Records">DateTime Format Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-format-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-format-record">
+          <emu-caption>DateTime Format Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[weekday]]</td>
+              <td>[[Weekday]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{weekday}"*.</td>
+            </tr>
+            <tr>
+              <td>[[era]]</td>
+              <td>[[Era]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{era}"*.</td>
+            </tr>
+            <tr>
+              <td>[[year]]</td>
+              <td>[[Year]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains at least one of the substrings *"{year}"*, *"{yearName}"*, or *"{relatedYear}"*.</td>
+            </tr>
+            <tr>
+              <td>[[month]]</td>
+              <td>[[Month]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{month}"*.</td>
+            </tr>
+            <tr>
+              <td>[[day]]</td>
+              <td>[[Day]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{day}"*.</td>
+            </tr>
+            <tr>
+              <td>[[dayPeriod]]</td>
+              <td>[[DayPeriod]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{dayPeriod}"*.</td>
+            </tr>
+            <tr>
+              <td>[[hour]]</td>
+              <td>[[Hour]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{hour}"*.</td>
+            </tr>
+            <tr>
+              <td>[[minute]]</td>
+              <td>[[Minute]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{minute}"*.</td>
+            </tr>
+            <tr>
+              <td>[[second]]</td>
+              <td>[[Second]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{second}"*.</td>
+            </tr>
+            <tr>
+              <td>[[fractionalSecondDigits]]</td>
+              <td>[[FractionalSecondDigits]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{fractionalSecondDigits}"*.</td>
+            </tr>
+            <tr>
+              <td>[[timeZoneName]]</td>
+              <td>[[TimeZoneName]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if [[pattern]] contains the substring *"{timeZoneName}"*.</td>
+            </tr>
+            <tr>
+              <td>[[pattern]]</td>
+              <td>a Pattern String</td>
+              <td><emu-not-ref>Contains</emu-not-ref> for each of the date and time format component fields of the record a substring starting with *"{"*, followed by the name of the field, followed by *"}"*. If the record has a [[year]] field, the string may contain the substrings *"{yearName}"* and *"{relatedYear}"*.</td>
+            </tr>
+            <tr>
+              <td>[[pattern12]]</td>
+              <td>a Pattern String</td>
+              <td>Optional field. Present if the [[hour]] field is present. In addition to the substrings of the [[pattern]] field, contains at least one of the substrings *"{ampm}"* or *"{dayPeriod}"*.</td>
+            </tr>
+            <tr>
+              <td>[[rangePatterns]]</td>
+              <td>a DateTime Range Pattern Record</td>
+              <td>Pattern strings in this field are similar to [[pattern]].</td>
+            </tr>
+            <tr>
+              <td>[[rangePatterns12]]</td>
+              <td>a DateTime Range Pattern Record</td>
+              <td>Optional field. Present if the [[hour]] field is present. Pattern strings in this field are similar to [[pattern12]].</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-range-pattern-record">
+        <h1>DateTime Range Pattern Records</h1>
+
+        <p>Each <dfn id="datetimeformat-range-pattern-record">DateTime Range Pattern Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-range-pattern-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-range-pattern-record">
+          <emu-caption>DateTime Range Pattern Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[Default]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>It contains the default range pattern used when a more specific range pattern is not available.</td>
+            </tr>
+            <tr>
+              <td>[[Era]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>era</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Year]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>year</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Month]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>month</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Day]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>day</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[AmPm]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>ante</em> or <em>post meridiem</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[DayPeriod]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>day period</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Hour]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>hour</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Minute]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>minute</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[Second]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>second</em> is the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+            <tr>
+              <td>[[FractionalSecondDigits]]</td>
+              <td>a DateTime Range Pattern Format Record</td>
+              <td>Optional field. Used when <em>fractional seconds</em> are the largest calendar element that is different between the start and end dates.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-range-pattern-format-record">
+        <h1>DateTime Range Pattern Format Records</h1>
+
+        <p>Each <dfn id="datetimeformat-range-pattern-format-record">DateTime Range Pattern Format Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-range-pattern-format-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-range-pattern-format-record">
+          <emu-caption>DateTime Range Pattern Format Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[weekday]]</td>
+              <td>[[Weekday]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{weekday}"*.</td>
+            </tr>
+            <tr>
+              <td>[[era]]</td>
+              <td>[[Era]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{era}"*.</td>
+            </tr>
+            <tr>
+              <td>[[year]]</td>
+              <td>[[Year]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains at least one of the substrings *"{year}"*, *"{yearName}"*, or *"{relatedYear}"*.</td>
+            </tr>
+            <tr>
+              <td>[[month]]</td>
+              <td>[[Month]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{month}"*.</td>
+            </tr>
+            <tr>
+              <td>[[day]]</td>
+              <td>[[Day]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{day}"*.</td>
+            </tr>
+            <tr>
+              <td>[[dayPeriod]]</td>
+              <td>[[DayPeriod]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{dayPeriod}"*.</td>
+            </tr>
+            <tr>
+              <td>[[hour]]</td>
+              <td>[[Hour]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{hour}"*.</td>
+            </tr>
+            <tr>
+              <td>[[minute]]</td>
+              <td>[[Minute]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{minute}"*.</td>
+            </tr>
+            <tr>
+              <td>[[second]]</td>
+              <td>[[Second]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{second}"*.</td>
+            </tr>
+            <tr>
+              <td>[[fractionalSecondDigits]]</td>
+              <td>[[FractionalSecondDigits]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{fractionalSecondDigits}"*.</td>
+            </tr>
+            <tr>
+              <td>[[timeZoneName]]</td>
+              <td>[[TimeZoneName]] values in the Values column of <emu-xref href="#table-datetimeformat-components"></emu-xref></td>
+              <td>Optional field. Present if a Pattern String in [[PatternParts]] contains the substring *"{timeZoneName}"*.</td>
+            </tr>
+            <tr>
+              <td>[[PatternParts]]</td>
+              <td>a List of DateTime Range Pattern Part Records</td>
+              <td>Each record represents a part of the range pattern.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-range-pattern-part-record">
+        <h1>DateTime Range Pattern Part Records</h1>
+
+        <p>Each <dfn id="datetimeformat-range-pattern-part-record" variants="DateTime Range Pattern Part Records">DateTime Range Pattern Part Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-range-pattern-part-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-range-pattern-part-record">
+          <emu-caption>DateTime Range Pattern Part Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[Source]]</td>
+              <td>*"shared"*, *"startRange"*, or *"endRange"*</td>
+              <td>It indicates which of the range's dates should be formatted using the value of the [[Pattern]] field.</td>
+            </tr>
+            <tr>
+              <td>[[Pattern]]</td>
+              <td>a Pattern String</td>
+              <td>A String of the same format as the regular date pattern String.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-styles-record">
+        <h1>DateTime Styles Records</h1>
+
+        <p>Each <dfn id="datetimeformat-styles-record">DateTime Styles Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-styles-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-styles-record">
+          <emu-caption>DateTime Styles Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[Date]]</td>
+              <td>a DateTime Style Record</td>
+            </tr>
+            <tr>
+              <td>[[Time]]</td>
+              <td>a DateTime Style Record</td>
+            </tr>
+            <tr>
+              <td>[[Connector]]</td>
+              <td>a DateTime Connector Record</td>
+            </tr>
+            <tr>
+              <td>[[DateTimeRangeFormat]]</td>
+              <td>a DateTime Date Range Record</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-style-record">
+        <h1>DateTime Style Records</h1>
+
+        <p>Each <dfn id="datetimeformat-style-record">DateTime Style Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-style-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-style-record">
+          <emu-caption>DateTime Style Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[full]]</td>
+              <td>a DateTime Format Record</td>
+              <td>Format record for the *"full"* style.</td>
+            </tr>
+            <tr>
+              <td>[[long]]</td>
+              <td>a DateTime Format Record</td>
+              <td>Format record for the *"long"* style.</td>
+            </tr>
+            <tr>
+              <td>[[medium]]</td>
+              <td>a DateTime Format Record</td>
+              <td>Format record for the *"medium"* style.</td>
+            </tr>
+            <tr>
+              <td>[[short]]</td>
+              <td>a DateTime Format Record</td>
+              <td>Format record for the *"short"* style.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-connector-record">
+        <h1>DateTime Connector Records</h1>
+
+        <p>Each <dfn id="datetimeformat-connector-record">DateTime Connector Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-connector-record"></emu-xref>. All connector pattern strings must contain the strings *"{0}"* and *"{1}"*.</p>
+        <emu-table id="table-datetimeformat-connector-record">
+          <emu-caption>DateTime Connector Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[full]]</td>
+              <td>a Pattern String</td>
+              <td>Connector pattern when the date style is *"full"*.</td>
+            </tr>
+            <tr>
+              <td>[[long]]</td>
+              <td>a Pattern String</td>
+              <td>Connector pattern when the date style is *"long"*.</td>
+            </tr>
+            <tr>
+              <td>[[medium]]</td>
+              <td>a Pattern String</td>
+              <td>Connector pattern when the date style is *"medium"*.</td>
+            </tr>
+            <tr>
+              <td>[[short]]</td>
+              <td>a Pattern String</td>
+              <td>Connector pattern when the date style is *"short"*.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-date-range-record">
+        <h1>DateTime Date Range Records</h1>
+
+        <p>Each <dfn id="datetimeformat-date-range-record">DateTime Date Range Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-date-range-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-date-range-record">
+          <emu-caption>DateTime Date Range Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[full]]</td>
+              <td>a DateTime Time Range Record</td>
+              <td>Used when date style is *"full"*.</td>
+            </tr>
+            <tr>
+              <td>[[long]]</td>
+              <td>a DateTime Time Range Record</td>
+              <td>Used when date style is *"long"*.</td>
+            </tr>
+            <tr>
+              <td>[[medium]]</td>
+              <td>a DateTime Time Range Record</td>
+              <td>Used when date style is *"medium"*.</td>
+            </tr>
+            <tr>
+              <td>[[short]]</td>
+              <td>a DateTime Time Range Record</td>
+              <td>Used when date style is *"short"*.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-time-range-record">
+        <h1>DateTime Time Range Records</h1>
+
+        <p>Each <dfn id="datetimeformat-time-range-record">DateTime Time Range Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-time-range-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-time-range-record">
+          <emu-caption>DateTime Time Range Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[full]]</td>
+              <td>a DateTime Style Range Record</td>
+              <td>Used when time style is *"full"*.</td>
+            </tr>
+            <tr>
+              <td>[[long]]</td>
+              <td>a DateTime Style Range Record</td>
+              <td>Used when time style is *"long"*.</td>
+            </tr>
+            <tr>
+              <td>[[medium]]</td>
+              <td>a DateTime Style Range Record</td>
+              <td>Used when time style is *"medium"*.</td>
+            </tr>
+            <tr>
+              <td>[[short]]</td>
+              <td>a DateTime Style Range Record</td>
+              <td>Used when time style is *"short"*.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-clause id="sec-datetimeformat-style-range-record">
+        <h1>DateTime Style Range Records</h1>
+
+        <p>Each <dfn id="datetimeformat-style-range-record">DateTime Style Range Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-style-range-record"></emu-xref>.</p>
+        <emu-table id="table-datetimeformat-style-range-record">
+          <emu-caption>DateTime Style Range Record</emu-caption>
+          <table class="real-table">
+            <thead>
+              <tr>
+                <th>Field Name</th>
+                <th>Value Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>[[rangePatterns]]</td>
+              <td>a DateTime Range Pattern Record</td>
+              <td>Range patterns to combine date and time styles.</td>
+            </tr>
+            <tr>
+              <td>[[rangePatterns12]]</td>
+              <td>a DateTime Range Pattern Record</td>
+              <td>Optional Field. Range patterns to combine date and time styles for 12-hour formats.</td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+
+      <emu-note>
+        For example, an implementation might include the following Record as part of its English locale data:
+        <ul>
+          <li>[[hour]]: *"numeric"*</li>
+          <li>[[minute]]: *"numeric"*</li>
+          <li>[[pattern]]: *"{hour}:{minute}"*</li>
+          <li>[[pattern12]]: *"{hour}:{minute} {ampm}"*</li>
+          <li>[[rangePatterns]]:
+            <ul>
+              <li>[[Hour]]:
+                <ul>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>[[Minute]]:
+                <ul>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>[[Default]]:
+                <ul>
+                  <li>[[year]]: *"2-digit"*</li>
+                  <li>[[month]]: *"numeric"*</li>
+                  <li>[[day]]: *"numeric"*</li>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{day}/{month}/{year}, {hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{day}/{month}/{year}, {hour}:{minute}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>[[rangePatterns12]]:
+            <ul>
+              <li>[[Hour]]:
+                <ul>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" {ampm}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>[[Minute]]:
+                <ul>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{hour}:{minute}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" {ampm}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>[[Default]]:
+                <ul>
+                  <li>[[year]]: *"2-digit"*</li>
+                  <li>[[month]]: *"numeric"*</li>
+                  <li>[[day]]: *"numeric"*</li>
+                  <li>[[hour]]: *"numeric"*</li>
+                  <li>[[minute]]: *"numeric"*</li>
+                  <li>[[PatternParts]]:
+                    <ul>
+                      <li>{[[Source]]: *"startRange"*, [[Pattern]]: *"{day}/{month}/{year}, {hour}:{minute} {ampm}"*}</li>
+                      <li>{[[Source]]: *"shared"*, [[Pattern]]: *" – "*}</li>
+                      <li>{[[Source]]: *"endRange"*, [[Pattern]]: *"{day}/{month}/{year}, {hour}:{minute} {ampm}"*}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </emu-note>
+
+      <emu-note>
+        It is recommended that implementations use the locale data provided by the Common Locale Data Repository (available at <a href="https://cldr.unicode.org/">https://cldr.unicode.org/</a>).
+      </emu-note>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-intl-datetimeformat-prototype-object">
+    <h1>Properties of the Intl.DateTimeFormat Prototype Object</h1>
+
+    <p>The <dfn>Intl.DateTimeFormat prototype object</dfn>:</p>
+    <ul>
+      <li>is <dfn>%Intl.DateTimeFormat.prototype%</dfn>.</li>
+      <li>is an ordinary object.</li>
+      <li>is not an Intl.DateTimeFormat instance and does not have an [[InitializedDateTimeFormat]] internal slot or any of the other internal slots of Intl.DateTimeFormat instance objects.</li>
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>
+    </ul>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype.constructor">
+      <h1>Intl.DateTimeFormat.prototype.constructor</h1>
+
+      <p>The initial value of `Intl.DateTimeFormat.prototype.constructor` is %Intl.DateTimeFormat%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype.resolvedoptions">
+      <h1>Intl.DateTimeFormat.prototype.resolvedOptions ( )</h1>
+
+      <p>This function provides access to the locale and options computed during initialization of the object.</p>
+
+      <emu-alg>
+        1. Let _dtf_ be the *this* value.
+        1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
+          1. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. For each row of <emu-xref href="#table-datetimeformat-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _propertyKey_ be the Property value of the current row.
+          1. If there is an Internal Slot value in the current row, then
+            1. Let _value_ be the value of _dtf_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Else,
+            1. Let _format_ be _dtf_.[[DateTimeFormat]].
+            1. If _format_ has a field [[&lt;_propertyKey_>]] and _dtf_.[[DateStyle]] is *undefined* and _dtf_.[[TimeStyle]] is *undefined*, then
+              1. Let _value_ be _format_.[[&lt;_propertyKey_>]].
+            1. Else,
+              1. Let _value_ be *undefined*.
+          1. If _value_ is not *undefined*, then
+            1. If there is a Conversion value in the current row, then
+              1. Let _conversion_ be the Conversion value of the current row.
+              1. If _conversion_ is ~hour12~, then
+                1. If _value_ is *"h11"* or *"h12"*, set _value_ to *true*. Otherwise, set _value_ to *false*.
+              1. Else,
+                1. Assert: _conversion_ is ~number~.
+                1. Set _value_ to 𝔽(_value_).
+            1. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
+        1. Return _options_.
+      </emu-alg>
+
+      <emu-table id="table-datetimeformat-resolvedoptions-properties">
+        <emu-caption>Resolved Options of DateTimeFormat Instances</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Internal Slot</th>
+              <th>Property</th>
+              <th>Conversion</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>[[Locale]]</td>
+            <td>*"locale"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[Calendar]]</td>
+            <td>*"calendar"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[NumberingSystem]]</td>
+            <td>*"numberingSystem"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[TimeZone]]</td>
+            <td>*"timeZone"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[HourCycle]]</td>
+            <td>*"hourCycle"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[HourCycle]]</td>
+            <td>*"hour12"*</td>
+            <td>~hour12~</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"weekday"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"era"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"year"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"month"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"day"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"dayPeriod"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"hour"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"minute"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"second"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"fractionalSecondDigits"*</td>
+            <td>~number~</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>*"timeZoneName"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[DateStyle]]</td>
+            <td>*"dateStyle"*</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>[[TimeStyle]]</td>
+            <td>*"timeStyle"*</td>
+            <td></td>
+          </tr>
+        </table>
+      </emu-table>
+
+      <p>For web compatibility reasons, if the property *"hourCycle"* is set, the *"hour12"* property should be set to *true* when *"hourCycle"* is *"h11"* or *"h12"*, or to *false* when *"hourCycle"* is *"h23"* or *"h24"*.</p>
+
+      <emu-note>
+        In this version of the API, the *"timeZone"* property will be the identifier of the host environment's time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
+      </emu-note>
+
+      <emu-note>
+        For compatibility with versions prior to the fifth edition, the *"hour12"* property is set in addition to the *"hourCycle"* property.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype.format">
+      <h1>get Intl.DateTimeFormat.prototype.format</h1>
+
+      <p>Intl.DateTimeFormat.prototype.format is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
+
+      <emu-alg>
+        1. Let _dtf_ be the *this* value.
+        1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
+          1. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. If _dtf_.[[BoundFormat]] is *undefined*, then
+          1. Let _closure_ be a new Abstract Closure with parameters (_date_) that captures _dtf_ and performs the following steps when called:
+            1. If _date_ is *undefined*, let _x_ be ! Call(%Date.now%, *undefined*); else let _x_ be ? ToNumber(_date_).
+            1. Return ? FormatDateTime(_dtf_, _x_).
+          1. Set _dtf_.[[BoundFormat]] to CreateBuiltinFunction(_closure_, 1, *""*, « »).
+        1. Return _dtf_.[[BoundFormat]].
+      </emu-alg>
+
+      <emu-note>
+        The returned function is bound to _dtf_ so that it can be passed directly to `Array.prototype.map` or other functions.
+        This is considered a historical artefact, as part of a convention which is no longer followed for new features, but is preserved to maintain compatibility with existing programs.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype.formatRange">
+      <h1>Intl.DateTimeFormat.prototype.formatRange ( _startDate_, _endDate_ )</h1>
+
+      <p>When the `formatRange` method is called with arguments _startDate_ and _endDate_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _dtf_ be *this* value.
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. If _startDate_ is *undefined* or _endDate_ is *undefined*, throw a *TypeError* exception.
+        1. Let _x_ be ? ToNumber(_startDate_).
+        1. Let _y_ be ? ToNumber(_endDate_).
+        1. Return ? FormatDateTimeRange(_dtf_, _x_, _y_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.DateTimeFormat.prototype.formatRangeToParts">
+      <h1>Intl.DateTimeFormat.prototype.formatRangeToParts ( _startDate_, _endDate_ )</h1>
+
+      <p>When the `formatRangeToParts` method is called with arguments _startDate_ and _endDate_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _dtf_ be *this* value.
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. If _startDate_ is *undefined* or _endDate_ is *undefined*, throw a *TypeError* exception.
+        1. Let _x_ be ? ToNumber(_startDate_).
+        1. Let _y_ be ? ToNumber(_endDate_).
+        1. Return ? FormatDateTimeRangeToParts(_dtf_, _x_, _y_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.DateTimeFormat.prototype.formatToParts">
+      <h1>Intl.DateTimeFormat.prototype.formatToParts ( _date_ )</h1>
+
+      <p>When the `formatToParts` method is called with an argument _date_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _dtf_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. If _date_ is *undefined*, then
+          1. Let _x_ be ! Call(%Date.now%, *undefined*).
+        1. Else,
+          1. Let _x_ be ? ToNumber(_date_).
+        1. Return ? FormatDateTimeToParts(_dtf_, _x_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat.prototype-%symbol.tostringtag%" oldids="sec-intl.datetimeformat.prototype-@@tostringtag">
+      <h1>Intl.DateTimeFormat.prototype [ %Symbol.toStringTag% ]</h1>
+
+      <p>The initial value of the %Symbol.toStringTag% property is the String *"Intl.DateTimeFormat"*.</p>
+
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
+    <h1>Properties of Intl.DateTimeFormat Instances</h1>
+
+    <p>Intl.DateTimeFormat instances are ordinary objects that inherit properties from %Intl.DateTimeFormat.prototype%.</p>
+
+    <p>Intl.DateTimeFormat instances have an [[InitializedDateTimeFormat]] internal slot.</p>
+
+    <p>Intl.DateTimeFormat instances also have several internal slots that are computed by <emu-xref href="#sec-intl-datetimeformat-constructor" title></emu-xref>:</p>
+
+    <ul>
+      <li>[[Locale]] is a String representing the language tag of the locale whose localization is used for formatting.</li>
+      <li>[[Calendar]] is a String representing the <a href="https://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">Unicode Calendar Identifier</a> used for formatting.</li>
+      <li>[[NumberingSystem]] is a String representing the <a href="https://unicode.org/reports/tr35/#UnicodeNumberSystemIdentifier">Unicode Number System Identifier</a> used for formatting.</li>
+      <li>[[TimeZone]] is a String used for formatting that is either an available named time zone identifier or an offset time zone identifier.</li>
+      <li>[[HourCycle]] is a String indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[DateTimeFormat]] has an [[hour]] field.</li>
+      <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
+      <li>[[DateTimeFormat]] is a DateTime Format Record.</li>
+    </ul>
+
+    <p>Finally, Intl.DateTimeFormat instances have a [[BoundFormat]] internal slot that caches the function returned by the format accessor (<emu-xref href="#sec-intl.datetimeformat.prototype.format"></emu-xref>).</p>
+  </emu-clause>
+
+  <emu-clause id="sec-datetimeformat-abstracts">
+    <h1>Abstract Operations for DateTimeFormat Objects</h1>
+
+    <p>Several DateTimeFormat algorithms use values from the following table, which provides internal slots, property names and allowable values for the components of date and time formats:</p>
+
+    <emu-table id="table-datetimeformat-components">
+      <emu-caption>Components of date and time formats</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Property</th>
+            <th>Values</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>[[Weekday]]</td>
+          <td>*"weekday"*</td>
+          <td>*"narrow"*, *"short"*, *"long"*</td>
+        </tr>
+        <tr>
+          <td>[[Era]]</td>
+          <td>*"era"*</td>
+          <td>*"narrow"*, *"short"*, *"long"*</td>
+        </tr>
+        <tr>
+          <td>[[Year]]</td>
+          <td>*"year"*</td>
+          <td>*"2-digit"*, *"numeric"*</td>
+        </tr>
+        <tr>
+          <td>[[Month]]</td>
+          <td>*"month"*</td>
+          <td>*"2-digit"*, *"numeric"*, *"narrow"*, *"short"*, *"long"*</td>
+        </tr>
+        <tr>
+          <td>[[Day]]</td>
+          <td>*"day"*</td>
+          <td>*"2-digit"*, *"numeric"*</td>
+        </tr>
+        <tr>
+          <td>[[DayPeriod]]</td>
+          <td>*"dayPeriod"*</td>
+          <td>*"narrow"*, *"short"*, *"long"*</td>
+        </tr>
+        <tr>
+          <td>[[Hour]]</td>
+          <td>*"hour"*</td>
+          <td>*"2-digit"*, *"numeric"*</td>
+        </tr>
+        <tr>
+          <td>[[Minute]]</td>
+          <td>*"minute"*</td>
+          <td>*"2-digit"*, *"numeric"*</td>
+        </tr>
+        <tr>
+          <td>[[Second]]</td>
+          <td>*"second"*</td>
+          <td>*"2-digit"*, *"numeric"*</td>
+        </tr>
+        <tr>
+          <td>[[FractionalSecondDigits]]</td>
+          <td>*"fractionalSecondDigits"*</td>
+          <td>1, 2, 3</td>
+        </tr>
+        <tr>
+          <td>[[TimeZoneName]]</td>
+          <td>*"timeZoneName"*</td>
+          <td>*"short"*, *"long"*, *"shortOffset"*, *"longOffset"*, *"shortGeneric"*, *"longGeneric"*</td>
+        </tr>
+      </table>
+    </emu-table>
+
+    <emu-clause id="sec-date-time-style-format" type="abstract operation">
+      <h1>
+        DateTimeStyleFormat (
+          _dateStyle_: *"full"*, *"long"*, *"medium"*, *"short"*, or *undefined*,
+          _timeStyle_: *"full"*, *"long"*, *"medium"*, *"short"*, or *undefined*,
+          _styles_: a DateTime Styles Record,
+        ): a DateTime Format Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>_styles_ is a Record from %Intl.DateTimeFormat%.[[LocaleData]].[[&lt;_locale_>]].[[styles]].[[&lt;_calendar_>]] for some locale _locale_ and calendar _calendar_. It returns the appropriate format Record for date time formatting based on the parameters.</dd>
+      </dl>
+      <emu-alg>
+        1. Assert: _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*.
+        1. If _timeStyle_ is not *undefined*, then
+          1. Assert: _timeStyle_ is one of *"full"*, *"long"*, *"medium"*, or *"short"*.
+          1. Let _timeFormat_ be _styles_.[[Time]].[[&lt;_timeStyle_>]].
+        1. If _dateStyle_ is not *undefined*, then
+          1. Assert: _dateStyle_ is one of *"full"*, *"long"*, *"medium"*, or *"short"*.
+          1. Let _dateFormat_ be _styles_.[[Date]].[[&lt;_dateStyle_>]].
+        1. If _dateStyle_ is not *undefined* and _timeStyle_ is not *undefined*, then
+          1. Let _format_ be a new DateTime Format Record.
+          1. Add to _format_ all fields from _dateFormat_ except [[pattern]] and [[rangePatterns]].
+          1. Add to _format_ all fields from _timeFormat_ except [[pattern]], [[rangePatterns]], [[pattern12]], and [[rangePatterns12]], if present.
+          1. Let _connector_ be _styles_.[[Connector]].[[&lt;_dateStyle_>]].
+          1. Let _pattern_ be the string _connector_ with the substring *"{0}"* replaced with _timeFormat_.[[pattern]] and the substring *"{1}"* replaced with _dateFormat_.[[pattern]].
+          1. Set _format_.[[pattern]] to _pattern_.
+          1. If _timeFormat_ has a [[pattern12]] field, then
+            1. Let _pattern12_ be the string _connector_ with the substring *"{0}"* replaced with _timeFormat_.[[pattern12]] and the substring *"{1}"* replaced with _dateFormat_.[[pattern]].
+            1. Set _format_.[[pattern12]] to _pattern12_.
+          1. Let _dateTimeRangeFormat_ be _styles_.[[DateTimeRangeFormat]].[[&lt;_dateStyle_>]].[[&lt;_timeStyle_>]].
+          1. Set _format_.[[rangePatterns]] to _dateTimeRangeFormat_.[[rangePatterns]].
+          1. If _dateTimeRangeFormat_ has a [[rangePatterns12]] field, then
+            1. Set _format_.[[rangePatterns12]] to _dateTimeRangeFormat_.[[rangePatterns12]].
+          1. Return _format_.
+        1. If _timeStyle_ is not *undefined*, then
+          1. Return _timeFormat_.
+        1. Assert: _dateStyle_ is not *undefined*.
+        1. Return _dateFormat_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-basicformatmatcher" type="abstract operation">
+      <h1>
+        BasicFormatMatcher (
+          _options_: a Record,
+          _formats_: a List of DateTime Format Records,
+        ): a DateTime Format Record
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Let _removalPenalty_ be 120.
+        1. Let _additionPenalty_ be 20.
+        1. Let _longLessPenalty_ be 8.
+        1. Let _longMorePenalty_ be 6.
+        1. Let _shortLessPenalty_ be 6.
+        1. Let _shortMorePenalty_ be 3.
+        1. Let _offsetPenalty_ be 1.
+        1. Let _bestScore_ be -∞.
+        1. Let _bestFormat_ be *undefined*.
+        1. For each element _format_ of _formats_, do
+          1. Let _score_ be 0.
+          1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the name given in the Property column of the current row.
+            1. If _options_ has a field [[&lt;_property_>]], let _optionsProp_ be _options_.[[&lt;_property_>]]; else let _optionsProp_ be *undefined*.
+            1. If _format_ has a field [[&lt;_property_>]], let _formatProp_ be _format_.[[&lt;_property_>]]; else let _formatProp_ be *undefined*.
+            1. If _optionsProp_ is *undefined* and _formatProp_ is not *undefined*, then
+              1. Set _score_ to _score_ - _additionPenalty_.
+            1. Else if _optionsProp_ is not *undefined* and _formatProp_ is *undefined*, then
+              1. Set _score_ to _score_ - _removalPenalty_.
+            1. Else if _property_ is *"timeZoneName"*, then
+              1. If _optionsProp_ is *"short"* or *"shortGeneric"*, then
+                1. If _formatProp_ is *"shortOffset"*, set _score_ to _score_ - _offsetPenalty_.
+                1. Else if _formatProp_ is *"longOffset"*, set _score_ to _score_ - (_offsetPenalty_ + _shortMorePenalty_).
+                1. Else if _optionsProp_ is *"short"* and _formatProp_ is *"long"*, set _score_ to _score_ - _shortMorePenalty_.
+                1. Else if _optionsProp_ is *"shortGeneric"* and _formatProp_ is *"longGeneric"*, set _score_ to _score_ - _shortMorePenalty_.
+                1. Else if _optionsProp_ ≠ _formatProp_, set _score_ to _score_ - _removalPenalty_.
+              1. Else if _optionsProp_ is *"shortOffset"* and _formatProp_ is *"longOffset"*, then
+                1. Set _score_ to _score_ - _shortMorePenalty_.
+              1. Else if _optionsProp_ is *"long"* or *"longGeneric"*, then
+                1. If _formatProp_ is *"longOffset"*, set _score_ to _score_ - _offsetPenalty_.
+                1. Else if _formatProp_ is *"shortOffset"*, set _score_ to _score_ - (_offsetPenalty_ + _longLessPenalty_).
+                1. Else if _optionsProp_ is *"long"* and _formatProp_ is *"short"*, set _score_ to _score_ - _longLessPenalty_.
+                1. Else if _optionsProp_ is *"longGeneric"* and _formatProp_ is *"shortGeneric"*, set _score_ to _score_ - _longLessPenalty_.
+                1. Else if _optionsProp_ ≠ _formatProp_, set _score_ to _score_ - _removalPenalty_.
+              1. Else if _optionsProp_ is *"longOffset"* and _formatProp_ is *"shortOffset"*, then
+                1. Set _score_ to _score_ - _longLessPenalty_.
+              1. Else if _optionsProp_ ≠ _formatProp_, then
+                1. Set _score_ to _score_ - _removalPenalty_.
+            1. Else if _optionsProp_ ≠ _formatProp_, then
+              1. If _property_ is *"fractionalSecondDigits"*, then
+                1. Let _values_ be « 1, 2, 3 ».
+              1. Else,
+                1. Let _values_ be « *"2-digit"*, *"numeric"*, *"narrow"*, *"short"*, *"long"* ».
+              1. Let _optionsPropIndex_ be the index of _optionsProp_ within _values_.
+              1. Let _formatPropIndex_ be the index of _formatProp_ within _values_.
+              1. Let _delta_ be max(min(_formatPropIndex_ - _optionsPropIndex_, 2), -2).
+              1. If _delta_ = 2, set _score_ to _score_ - _longMorePenalty_.
+              1. Else if _delta_ = 1, set _score_ to _score_ - _shortMorePenalty_.
+              1. Else if _delta_ = -1, set _score_ to _score_ - _shortLessPenalty_.
+              1. Else if _delta_ = -2, set _score_ to _score_ - _longLessPenalty_.
+          1. If _score_ > _bestScore_, then
+            1. Set _bestScore_ to _score_.
+            1. Set _bestFormat_ to _format_.
+        1. Return _bestFormat_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-bestfitformatmatcher" type="implementation-defined abstract operation">
+      <h1>
+        BestFitFormatMatcher (
+          _options_: a Record,
+          _formats_: a List of DateTime Format Records,
+        ): a DateTime Format Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a set of component representations that a typical user of the selected locale would perceive as at least as good as the one returned by BasicFormatMatcher.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-formatdatetimepattern" type="abstract operation">
+      <h1>
+        FormatDateTimePattern (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _format_: a DateTime Format Record or a DateTime Range Pattern Format Record,
+          _pattern_: a Pattern String,
+          _epochNanoseconds_: a BigInt,
+        ): a List of Records with fields [[Type]] (a String) and [[Value]] (a String)
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates the corresponding parts for the epoch time _epochNanoseconds_ according to _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _format_.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _locale_ be _dateTimeFormat_.[[Locale]].
+        1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
+        1. Let _nf_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nfOptions_ »).
+        1. Let _nf2Options_ be OrdinaryObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, *2*<sub>𝔽</sub>).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
+        1. Let _nf2_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf2Options_ »).
+        1. If _format_ has a field [[fractionalSecondDigits]], then
+          1. Let _fractionalSecondDigits_ be _format_.[[fractionalSecondDigits]].
+          1. Let _nf3Options_ be OrdinaryObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, 𝔽(_fractionalSecondDigits_)).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
+          1. Let _nf3_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf3Options_ »).
+        1. Let _localTime_ be ToLocalTime(_epochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _patternParts_ be PartitionPattern(_pattern_).
+        1. Let _result_ be a new empty List.
+        1. For each Record { [[Type]], [[Value]] } _patternPart_ of _patternParts_, do
+          1. Let _partType_ be _patternPart_.[[Type]].
+          1. If _partType_ is *"literal"*, then
+            1. Append the Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } to _result_.
+          1. Else if _partType_ is *"fractionalSecondDigits"*, then
+            1. Assert: _format_ has a field [[fractionalSecondDigits]].
+            1. Let _value_ be _localTime_.[[Millisecond]].
+            1. Set _value_ to floor(_value_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Let _formattedValue_ be FormatNumeric(_nf3_, _value_).
+            1. Append the Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ is *"dayPeriod"*, then
+            1. Assert: _format_ has a field [[dayPeriod]].
+            1. Let _fieldFormat_ be _format_.[[dayPeriod]].
+            1. Let _formattedValue_ be an ILD String representing the day period of _localTime_ in the form given by _fieldFormat_.
+            1. Append the Record { [[Type]]: _partType_, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ is *"timeZoneName"*, then
+            1. Assert: _format_ has a field [[timeZoneName]].
+            1. Let _fieldFormat_ be _format_.[[timeZoneName]].
+            1. Let _value_ be _dateTimeFormat_.[[TimeZone]].
+            1. Let _formattedValue_ be an ILD String representing _value_ in the form given by _fieldFormat_. Its value may depend on the value of the [[InDST]] field of _localTime_ if _fieldFormat_ is *"short"*, *"long"*, *"shortOffset"*, or *"longOffset"*. If the implementation does not have such a localized representation of _fieldFormat_, then use _value_ itself.
+            1. Append the Record { [[Type]]: _partType_, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
+            1. Assert: _format_ has a field [[&lt;_partType_>]].
+            1. Let _fieldFormat_ be _format_.[[&lt;_partType_>]].
+            1. Let _value_ be the value of _localTime_'s field whose name is the Internal Slot column of the matching row.
+            1. If _partType_ is *"year"* and _value_ ≤ 0, set _value_ to 1 - _value_.
+            1. If _partType_ is *"month"*, set _value_ to _value_ + 1.
+            1. If _partType_ is *"hour"* and _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+              1. Set _value_ to _value_ modulo 12.
+              1. If _value_ = 0 and _dateTimeFormat_.[[HourCycle]] is *"h12"*, set _value_ to 12.
+            1. If _partType_ is *"hour"* and _dateTimeFormat_.[[HourCycle]] is *"h24"*, then
+              1. If _value_ = 0, set _value_ to 24.
+            1. If _fieldFormat_ is *"numeric"*, then
+              1. Let _formattedValue_ be FormatNumeric(_nf_, _value_).
+            1. Else if _fieldFormat_ is *"2-digit"*, then
+              1. Let _formattedValue_ be FormatNumeric(_nf2_, _value_).
+              1. Let _codePoints_ be StringToCodePoints(_formattedValue_).
+              1. Let _count_ be the number of elements in _codePoints_.
+              1. If _count_ > 2, then
+                1. Let _tens_ be _codePoints_[_count_ - 2].
+                1. Let _ones_ be _codePoints_[_count_ - 1].
+                1. Set _formattedValue_ to CodePointsToString(« _tens_, _ones_ »).
+            1. Else if _fieldFormat_ is *"narrow"*, *"short"*, or *"long"*, then
+              1. Let _formattedValue_ be an ILD String representing _value_ in the form given by _fieldFormat_. If _partType_ is *"month"*, then its value may depend on whether _format_ has a [[day]] field. If the implementation does not have a localized representation of _fieldFormat_, then use _value_ itself.
+            1. Append the Record { [[Type]]: _partType_, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ is *"ampm"*, then
+            1. Let _value_ be _localTime_.[[Hour]].
+            1. If _value_ > 11, let _formattedValue_ be an ILD String representing *"post meridiem"*; else let _formattedValue_ be an ILD String representing *"ante meridiem"*.
+            1. Append the Record { [[Type]]: *"dayPeriod"*, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ is *"relatedYear"*, then
+            1. Let _value_ be _localTime_.[[RelatedYear]].
+            1. Let _formattedValue_ be FormatNumeric(_nf_, _value_).
+            1. Append the Record { [[Type]]: *"relatedYear"*, [[Value]]: _formattedValue_ } to _result_.
+          1. Else if _partType_ is *"yearName"*, then
+            1. Let _value_ be _localTime_.[[YearName]].
+            1. Let _formattedValue_ be an ILD String representing _value_.
+            1. Append the Record { [[Type]]: *"yearName"*, [[Value]]: _formattedValue_ } to _result_.
+          1. Else,
+            1. Let _unknown_ be an ILND String based on _epochNanoseconds_ and _partType_.
+            1. Append the Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } to _result_.
+        1. Return _result_.
+      </emu-alg>
+
+      <emu-note>
+        It is recommended that implementations use the locale and calendar dependent strings provided by the Common Locale Data Repository (available at <a href="https://cldr.unicode.org/">https://cldr.unicode.org/</a>), and use CLDR *"abbreviated"* strings for DateTimeFormat *"short"* strings, and CLDR *"wide"* strings for DateTimeFormat *"long"* strings.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-partitiondatetimepattern" type="abstract operation">
+      <h1>
+        PartitionDateTimePattern (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+        ): either a normal completion containing a List of Records with fields [[Type]] (a String) and [[Value]] (a String), or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It interprets _x_ as a time value as specified in ECMA-262, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_.</dd>
+      </dl>
+      <emu-alg>
+        1. Set _x_ to TimeClip(_x_).
+        1. If _x_ is *NaN*, throw a *RangeError* exception.
+        1. Let _epochNanoseconds_ be ℤ(ℝ(_x_) × 10<sup>6</sup>).
+        1. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
+        1. If _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+          1. Let _pattern_ be _format_.[[pattern12]].
+        1. Else,
+          1. Let _pattern_ be _format_.[[pattern]].
+        1. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_).
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatdatetime" type="abstract operation">
+      <h1>
+        FormatDateTime (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
+        1. Let _result_ be the empty String.
+        1. For each Record { [[Type]], [[Value]] } _part_ of _parts_, do
+          1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatdatetimetoparts" type="abstract operation">
+      <h1>
+        FormatDateTimeToParts (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+        ): either a normal completion containing an Array or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
+        1. Let _result_ be ! ArrayCreate(0).
+        1. Let _n_ be 0.
+        1. For each Record { [[Type]], [[Value]] } _part_ of _parts_, do
+          1. Let _partObj_ be OrdinaryObjectCreate(%Object.prototype%).
+          1. Perform ! CreateDataPropertyOrThrow(_partObj_, *"type"*, _part_.[[Type]]).
+          1. Perform ! CreateDataPropertyOrThrow(_partObj_, *"value"*, _part_.[[Value]]).
+          1. Perform ! CreateDataPropertyOrThrow(_result_, ! ToString(𝔽(_n_)), _partObj_).
+          1. Set _n_ to _n_ + 1.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-partitiondatetimerangepattern" type="abstract operation">
+      <h1>
+        PartitionDateTimeRangePattern (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+          _y_: a Number,
+        ): either a normal completion containing a List of Records with fields [[Type]] (a String), [[Value]] (a String), and [[Source]] (a String), or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It interprets _x_ and _y_ as time values as specified in ECMA-262, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_.</dd>
+      </dl>
+      <emu-alg>
+        1. Set _x_ to TimeClip(_x_).
+        1. If _x_ is *NaN*, throw a *RangeError* exception.
+        1. Set _y_ to TimeClip(_y_).
+        1. If _y_ is *NaN*, throw a *RangeError* exception.
+        1. Let _xEpochNanoseconds_ be ℤ(ℝ(_x_) × 10<sup>6</sup>).
+        1. Let _yEpochNanoseconds_ be ℤ(ℝ(_y_) × 10<sup>6</sup>).
+        1. Let _localTime1_ be ToLocalTime(_xEpochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _localTime2_ be ToLocalTime(_yEpochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
+        1. If _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+          1. Let _pattern_ be _format_.[[pattern12]].
+          1. Let _rangePatterns_ be _format_.[[rangePatterns12]].
+        1. Else,
+          1. Let _pattern_ be _format_.[[pattern]].
+          1. Let _rangePatterns_ be _format_.[[rangePatterns]].
+        1. Let _selectedRangePattern_ be *undefined*.
+        1. Let _relevantFieldsEqual_ be *true*.
+        1. Let _checkMoreFields_ be *true*.
+        1. For each row of <emu-xref href="#table-datetimeformat-range-pattern-record"></emu-xref>, except the header row, in table order, do
+          1. Let _fieldName_ be the name given in the Field Name column of the row.
+          1. If _rangePatterns_ has a field whose name is _fieldName_, let _rangePattern_ be _rangePatterns_' field whose name is _fieldName_; else let _rangePattern_ be *undefined*.
+          1. If _selectedRangePattern_ is not *undefined* and _rangePattern_ is *undefined*, then
+            1. NOTE: Because there is no range pattern for differences at or below this field, no further checks will be performed.
+            1. Set _checkMoreFields_ to *false*.
+          1. If _fieldName_ is not equal to [[Default]] and _relevantFieldsEqual_ is *true* and _checkMoreFields_ is *true*, then
+            1. Set _selectedRangePattern_ to _rangePattern_.
+            1. If _fieldName_ is [[AmPm]], then
+              1. If _localTime1_.[[Hour]] is less than 12, let _v1_ be *"am"*; else let _v1_ be *"pm"*.
+              1. If _localTime2_.[[Hour]] is less than 12, let _v2_ be *"am"*; else let _v2_ be *"pm"*.
+            1. Else if _fieldName_ is [[DayPeriod]], then
+              1. Let _v1_ be an ILD String representing the day period of _localTime1_.
+              1. Let _v2_ be an ILD String representing the day period of _localTime2_.
+            1. Else if _fieldName_ is [[FractionalSecondDigits]], then
+              1. If _format_ has a [[fractionalSecondDigits]] field, then
+                1. Let _fractionalSecondDigits_ be _format_.[[fractionalSecondDigits]].
+              1. Else,
+                1. Let _fractionalSecondDigits_ be 3.
+              1. Let _exp_ be _fractionalSecondDigits_ - 3.
+              1. Let _v1_ be floor(_localTime1_.[[Millisecond]] × 10<sup>_exp_</sup>).
+              1. Let _v2_ be floor(_localTime2_.[[Millisecond]] × 10<sup>_exp_</sup>).
+            1. Else,
+              1. Let _v1_ be _localTime1_'s field whose name is _fieldName_.
+              1. Let _v2_ be _localTime2_'s field whose name is _fieldName_.
+            1. If _v1_ is not equal to _v2_, then
+              1. Set _relevantFieldsEqual_ to *false*.
+        1. If _relevantFieldsEqual_ is *true*, then
+          1. Let _collapsedResult_ be a new empty List.
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _xEpochNanoseconds_).
+          1. For each Record { [[Type]], [[Value]] } _part_ of _resultParts_, do
+            1. Append the Record { [[Type]]: _part_.[[Type]], [[Value]]: _part_.[[Value]], [[Source]]: *"shared"* } to _collapsedResult_.
+          1. Return _collapsedResult_.
+        1. Let _rangeResult_ be a new empty List.
+        1. If _selectedRangePattern_ is *undefined*, then
+          1. Set _selectedRangePattern_ to _rangePatterns_.[[Default]].
+        1. For each Record { [[Pattern]], [[Source]] } _rangePatternPart_ of _selectedRangePattern_.[[PatternParts]], do
+          1. Let _pattern_ be _rangePatternPart_.[[Pattern]].
+          1. Let _source_ be _rangePatternPart_.[[Source]].
+          1. If _source_ is *"startRange"* or *"shared"*, then
+            1. Let _z_ be _xEpochNanoseconds_.
+          1. Else,
+            1. Let _z_ be _yEpochNanoseconds_.
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
+          1. For each Record { [[Type]], [[Value]] } _part_ of _resultParts_, do
+            1. Append the Record { [[Type]]: _part_.[[Type]], [[Value]]: _part_.[[Value]], [[Source]]: _source_ } to _rangeResult_.
+        1. Return _rangeResult_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatdatetimerange" type="abstract operation">
+      <h1>
+        FormatDateTimeRange (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+          _y_: a Number,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
+        1. Let _result_ be the empty String.
+        1. For each Record { [[Type]], [[Value]], [[Source]] } _part_ of _parts_, do
+          1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatdatetimerangetoparts" type="abstract operation">
+      <h1>
+        FormatDateTimeRangeToParts (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+          _y_: a Number,
+        ): either a normal completion containing an Array or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
+        1. Let _result_ be ! ArrayCreate(0).
+        1. Let _n_ be 0.
+        1. For each Record { [[Type]], [[Value]], [[Source]] } _part_ of _parts_, do
+          1. Let _partObj_ be OrdinaryObjectCreate(%Object.prototype%).
+          1. Perform ! CreateDataPropertyOrThrow(_partObj_, *"type"*, _part_.[[Type]]).
+          1. Perform ! CreateDataPropertyOrThrow(_partObj_, *"value"*, _part_.[[Value]]).
+          1. Perform ! CreateDataPropertyOrThrow(_partObj_, *"source"*, _part_.[[Source]]).
+          1. Perform ! CreateDataPropertyOrThrow(_result_, ! ToString(𝔽(_n_)), _partObj_).
+          1. Set _n_ to _n_ + 1.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-tolocaltime" type="implementation-defined abstract operation">
+      <h1>
+        ToLocalTime (
+          _epochNs_: a BigInt,
+          _calendar_: a String,
+          _timeZoneIdentifier_: a String,
+        ): a ToLocalTime Record
+      </h1>
+
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
+
+      <emu-alg>
+        1. If IsTimeZoneOffsetString(_timeZoneIdentifier_) is *true*, then
+          1. Let _offsetNs_ be ParseTimeZoneOffsetString(_timeZoneIdentifier_).
+        1. Else,
+          1. Assert: GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) is not ~empty~.
+          1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_timeZoneIdentifier_, _epochNs_).
+        1. Let _tz_ be ℝ(_epochNs_) + _offsetNs_.
+        1. If _calendar_ is *"gregory"*, then
+          1. Return a ToLocalTime Record with fields calculated from _tz_ according to <emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref>.
+        1. Else,
+          1. Return a ToLocalTime Record with the fields calculated from _tz_ for the given _calendar_. The calculations should use best available information about the specified _calendar_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-datetimeformat-tolocaltime-records">
+      <h1>ToLocalTime Records</h1>
+
+      <p>Each <dfn id="datetimeformat-tolocaltime-record">ToLocalTime Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref>.</p>
+
+      <emu-table id="table-datetimeformat-tolocaltime-record">
+        <emu-caption>Record returned by ToLocalTime</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Value Type</th>
+              <th>Value Calculation for Gregorian Calendar</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>[[Weekday]]</td>
+            <td>an integer</td>
+            <td>ℝ(WeekDay(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Era]]</td>
+            <td>a String</td>
+            <td>Let _year_ be YearFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))). If _year_ &lt; *1*<sub>𝔽</sub>, return *"BC"*, else return *"AD"*.</td>
+          </tr>
+          <tr>
+            <td>[[Year]]</td>
+            <td>an integer</td>
+            <td>ℝ(YearFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[RelatedYear]]</td>
+            <td>an integer or *undefined*</td>
+            <td>*undefined*</td>
+          </tr>
+          <tr>
+            <td>[[YearName]]</td>
+            <td>a String or *undefined*</td>
+            <td>*undefined*</td>
+          </tr>
+          <tr>
+            <td>[[Month]]</td>
+            <td>an integer</td>
+            <td>ℝ(MonthFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Day]]</td>
+            <td>an integer</td>
+            <td>ℝ(DateFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Hour]]</td>
+            <td>an integer</td>
+            <td>ℝ(HourFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Minute]]</td>
+            <td>an integer</td>
+            <td>ℝ(MinFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Second]]</td>
+            <td>an integer</td>
+            <td>ℝ(SecFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[Millisecond]]</td>
+            <td>an integer</td>
+            <td>ℝ(msFromTime(𝔽(floor(_tz_ / 10<sup>6</sup>))))</td>
+          </tr>
+          <tr>
+            <td>[[InDST]]</td>
+            <td>a Boolean</td>
+            <td>Calculate *true* or *false* using the best available information about the specified _calendar_ and _timeZoneIdentifier_, including current and historical information from the IANA Time Zone Database about time zone offsets from UTC and daylight saving time rules.</td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-unwrapdatetimeformat" type="abstract operation" normative-optional>
+      <h1>
+        UnwrapDateTimeFormat (
+          _dtf_: an ECMAScript language value,
+        ): either a normal completion containing an ECMAScript language value or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns the DateTimeFormat instance of its input object, which is either the value itself or a value associated with it by %Intl.DateTimeFormat% according to the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _dtf_ is not an Object, throw a *TypeError* exception.
+        1. If _dtf_ does not have an [[InitializedDateTimeFormat]] internal slot and ? OrdinaryHasInstance(%Intl.DateTimeFormat%, _dtf_) is *true*, then
+          1. Return ? Get(_dtf_, %Intl%.[[FallbackSymbol]]).
+        1. Return _dtf_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>

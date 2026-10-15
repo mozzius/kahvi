@@ -172,6 +172,10 @@ pub struct Agent {
     /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
     /// point.
     pub gc_stress: u32,
+    /// Realms created from now on have the `Intl` global (ECMA-402). Off by
+    /// default while ECMA-402 is incomplete (docs/INTL.md): code that
+    /// feature-tests `Intl` would otherwise reach not-implemented stubs.
+    pub intl: bool,
     /// [[KeptAlive]]: WeakRef targets kept until the end of the current job.
     pub(crate) kept_objects: Vec<Object>,
     pub(crate) kept_symbols: Vec<Value>,
@@ -259,6 +263,7 @@ impl Agent {
             spare_vecs: Vec::new(),
             spare_handlers: Vec::new(),
             gc_stress: 0,
+            intl: false,
             kept_objects: Vec::new(),
             kept_symbols: Vec::new(),
             finalization_registries: Vec::new(),
