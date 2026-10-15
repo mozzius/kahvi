@@ -43,8 +43,8 @@ jobs:
         with:
           version: 11.28.5
       - run: harness/rn/social-app-android.sh "${{ inputs.social_app_ref || env.SOCIAL_APP_REF }}" x86_64 apk
+        # cargo-ndk finds the runner's NDK through ANDROID_NDK_ROOT.
         env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_LATEST_HOME }}
           KAHVI_WORK: ${{ runner.temp }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
