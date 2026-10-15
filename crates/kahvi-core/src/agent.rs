@@ -420,6 +420,8 @@ impl Agent {
     /// With `skip_through`, frames up to and including the innermost call
     /// of that function are left out too (`Error.captureStackTrace`), and
     /// the stack is empty when it is not on the stack.
+    #[cold]
+    #[inline(never)]
     pub fn capture_stack(&self, skip_through: Option<Object>) -> Option<Box<[StackFrame]>> {
         let error = *self.realm(self.current_realm()).intrinsics.get("%Error%")?;
         let limit = match self
