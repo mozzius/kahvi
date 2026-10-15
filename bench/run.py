@@ -21,6 +21,7 @@ else node --jitless), so machine speed and noise mostly cancel.
   ./bench/run.py --all                   also the large Octane workloads
   ./bench/run.py --runs 5 --json out.json --markdown out.md
   ./bench/run.py --list                  list workloads and engines found
+  ./bench/run.py --merge a.json b.json --json out.json --markdown out.md
 """
 
 import argparse
@@ -31,6 +32,8 @@ import shutil
 import statistics
 import subprocess
 import sys
+import tempfile
+import threading
 import time
 from pathlib import Path
 
@@ -136,13 +139,21 @@ class Workload:
         self.name, self.kind, self.file, self.check = name, kind, file, check
 
 
-def octane_workload(name, scale):
+def write_built(path, text):
+    """Write a generated workload file whole, so runs started side by side
+    (bench/icount.py -j, or two at once) never read a half-written one."""
     BUILD.mkdir(exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}")
+    tmp.write_text(text)
+    os.replace(tmp, path)
+
+
+def octane_workload(name, scale):
     parts = [(OCTANE / "base.js").read_text()]
     parts += [(OCTANE / f).read_text() for f in OCTANE_FILES[name]]
     parts.append(OCTANE_DRIVER % {"scale": repr(scale)})
     path = BUILD / f"octane-{name}.js"
-    path.write_text("\n;\n".join(parts))
+    write_built(path, "\n;\n".join(parts))
 
     def check(out):
         lines = [l for l in out.splitlines() if l.strip()]
@@ -158,9 +169,8 @@ def realworld_workload(name):
 
 
 def startup_workload():
-    BUILD.mkdir(exist_ok=True)
     path = BUILD / "startup-empty.js"
-    path.write_text("")
+    write_built(path, "")
     return Workload("startup/empty", "script", path, lambda out: out == "")
 
 
@@ -183,34 +193,31 @@ def make_workload(name, scale):
 
 
 def run_once(argv, cwd, env, timeout):
-    """Wall time (s), exit status, stdout and stderr of one run."""
-    start = time.perf_counter()
-    proc = subprocess.Popen(argv, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            stdin=subprocess.DEVNULL, text=True)
-    try:
-        out, err = proc.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        proc.communicate()
-        return None, None, "", f"timeout after {timeout}s"
-    return time.perf_counter() - start, proc.returncode, out, err
+    """Wall time (s), exit status, stdout, stderr and peak RSS (KiB) of one run."""
+    with tempfile.TemporaryFile() as out_f, tempfile.TemporaryFile() as err_f:
+        timed_out = threading.Event()
+        start = time.perf_counter()
+        proc = subprocess.Popen(argv, cwd=cwd, env=env, stdout=out_f, stderr=err_f, stdin=subprocess.DEVNULL)
 
-
-def peak_rss(argv, cwd, env, timeout):
-    """Peak resident set size (KiB) of one run, via wait4."""
-    proc = subprocess.Popen(argv, cwd=cwd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                            stdin=subprocess.DEVNULL)
-    deadline = time.monotonic() + timeout
-    while True:
-        pid, status, usage = os.wait4(proc.pid, os.WNOHANG)
-        if pid:
-            proc.returncode = os.waitstatus_to_exitcode(status)
-            return usage.ru_maxrss
-        if time.monotonic() > deadline:
+        def kill():
+            timed_out.set()
             proc.kill()
-            os.wait4(proc.pid, 0)
-            return None
-        time.sleep(0.01)
+
+        timer = threading.Timer(timeout, kill)
+        timer.start()
+        try:
+            _, status, usage = os.wait4(proc.pid, 0)
+        finally:
+            timer.cancel()
+        secs = time.perf_counter() - start
+        proc.returncode = os.waitstatus_to_exitcode(status)
+        if timed_out.is_set():
+            return None, None, "", f"timeout after {timeout}s", None
+        out_f.seek(0)
+        err_f.seek(0)
+        out = out_f.read().decode(errors="replace")
+        err = err_f.read().decode(errors="replace")
+    return secs, proc.returncode, out, err, usage.ru_maxrss
 
 
 def main():
@@ -223,11 +230,14 @@ def main():
                     help="fraction of Octane's deterministic iteration counts to run (default 0.05)")
     ap.add_argument("--runs", type=int, default=3, help="timed runs per engine and workload (default 3)")
     ap.add_argument("--timeout", type=int, default=900, help="seconds per run (default 900)")
-    ap.add_argument("--no-rss", action="store_true", help="skip the extra run that measures peak memory")
     ap.add_argument("--json", metavar="FILE", help="write results as JSON")
     ap.add_argument("--markdown", metavar="FILE", help="write the results table as Markdown")
     ap.add_argument("--list", action="store_true", help="list workloads and engines, then exit")
+    ap.add_argument("--merge", nargs="+", metavar="FILE",
+                    help="combine the --json files of runs over different workloads or engines")
     args = ap.parse_args()
+    if args.merge:
+        return merge(args)
 
     for d, what in ((HERE, "bench"), (REALWORLD, "realworld")):
         if not (d / "node_modules").is_dir():
@@ -275,9 +285,9 @@ def main():
                 continue
             argv = [a.format(file=str(w.file), bin=found[e], kahvi=found["kahvi"],
                              kahvi_run=str(kahvi_dir / "kahvi-run")) for a in template]
-            times, error = [], None
+            times, rss, error = [], [], None
             for _ in range(args.runs):
-                secs, status, out, err = run_once(argv, w.file.parent, env, args.timeout)
+                secs, status, out, err, rss_kib = run_once(argv, w.file.parent, env, args.timeout)
                 if status is None:
                     error = err
                 elif status != 0:
@@ -287,6 +297,7 @@ def main():
                 if error:
                     break
                 times.append(secs)
+                rss.append(rss_kib)
             r = {"workload": w.name, "engine": e}
             if error:
                 r["error"] = error
@@ -294,8 +305,7 @@ def main():
             else:
                 r["times"] = [round(t, 4) for t in times]
                 r["median"] = round(statistics.median(times), 4)
-                if not args.no_rss:
-                    r["rss_kib"] = peak_rss(argv, w.file.parent, env, args.timeout)
+                r["rss_kib"] = max(rss)
                 print(f"{w.name:28} {e:14} {r['median']:9.3f}s  (runs {', '.join(f'{t:.3f}' for t in times)})"
                       + (f"  rss {r['rss_kib'] // 1024} MiB" if r.get("rss_kib") else ""), flush=True)
             results.append(r)
@@ -313,6 +323,41 @@ def main():
             "octane_scale": args.scale,
             "cpu": platform.processor() or platform.machine(), "runs": args.runs, "baseline": baseline,
             "engines": {e: {"path": found[e], "version": versions[e]} for e in engines}}
+    if args.json:
+        Path(args.json).write_text(json.dumps({"meta": meta, "results": results}, indent=1) + "\n")
+    if args.markdown:
+        Path(args.markdown).write_text(table + "\n")
+
+
+def merge(args):
+    """One result from several --json files, as CI writes them from parallel
+    runners. Each file's ratios were taken against the baseline measured on
+    its own runner, so every file must have the same baseline engine."""
+    runs = [json.loads(Path(f).read_text()) for f in args.merge]
+    metas = [r["meta"] for r in runs]
+    for key in ("baseline", "octane_scale", "runs"):
+        seen = {json.dumps(m.get(key)) for m in metas}
+        if len(seen) != 1:
+            sys.exit(f"bench: --merge: the runs differ in {key} ({', '.join(sorted(seen))})")
+    engines = {}
+    for m in metas:
+        engines.update(m["engines"])
+    engines = {e: engines[e] for e in ENGINES if e in engines}
+    # A (workload, engine) pair measured twice (the baseline, run beside each
+    # group of engines) is reported from the first file that has it.
+    by = {}
+    for run in runs:
+        for r in run["results"]:
+            by.setdefault((r["workload"], r["engine"]), r)
+    order = {n: i for i, n in enumerate(all_workloads(True))}
+    names = sorted({w for w, _ in by}, key=lambda n: (order.get(n, len(order)), n))
+    results = [by[(n, e)] for n in names for e in engines if (n, e) in by]
+    baseline = metas[0]["baseline"]
+    machines = sorted({m["machine"] for m in metas})
+    meta = {**metas[0], "date": min(m["date"] for m in metas), "machine": ", ".join(machines),
+            "engines": engines, "merged_from": len(runs)}
+    table = markdown_table(names, list(engines), by, baseline)
+    print(table)
     if args.json:
         Path(args.json).write_text(json.dumps({"meta": meta, "results": results}, indent=1) + "\n")
     if args.markdown:

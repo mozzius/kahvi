@@ -5,6 +5,9 @@ name: Instruction counts
 # barely move between runs, unlike wall time, so a small slowdown shows. The
 # table goes in the job summary and in one comment on the PR, updated in
 # place. Report-only.
+#
+# Base and head are counted on separate runners at once, each running its
+# workloads side by side, so the whole run takes a few minutes.
 on:
   pull_request:
 
@@ -16,8 +19,49 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  icount:
+  count:
+    name: instruction counts (${{ matrix.side }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        side: [base, head]
+    steps:
+      # Always the head's checkout, so both sides run the PR's own
+      # bench/icount.py and workload list; only the engine differs.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: sudo apt-get install -y -q --no-install-recommends valgrind
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: bench
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: realworld
+      - name: build ${{ matrix.side }}
+        env:
+          SIDE: ${{ matrix.side }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          manifest=Cargo.toml
+          if [ "$SIDE" = base ]; then
+            git worktree add /tmp/base-src "$BASE_SHA"
+            manifest=/tmp/base-src/Cargo.toml
+          fi
+          CARGO_TARGET_DIR="$PWD/target" cargo build --release -p kahvi-cli -p kahvi-runtime --manifest-path "$manifest"
+          mkdir -p /tmp/engine && cp target/release/kahvi target/release/kahvi-run /tmp/engine/
+      - run: bench/icount.py --kahvi-dir /tmp/engine --json ${{ matrix.side }}.json -j "$(nproc)"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: icount-${{ matrix.side }}
+          path: ${{ matrix.side }}.json
+          retention-days: 3
+
+  report:
     name: instruction counts
+    needs: count
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,28 +70,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - uses: dtolnay/rust-toolchain@1.97.0
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
-      - run: sudo apt-get install -y -q valgrind
-      - run: npm ci --ignore-scripts --no-audit --no-fund
-        working-directory: bench
-      - run: npm ci --ignore-scripts --no-audit --no-fund
-        working-directory: realworld
-      - name: build head
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: icount-*
+          merge-multiple: true
+      - name: compare
         run: |
-          cargo build --release -p kahvi-cli -p kahvi-runtime
-          mkdir -p /tmp/head && cp target/release/kahvi target/release/kahvi-run /tmp/head/
-      - name: build base
-        run: |
-          git worktree add /tmp/base-src ${{ github.event.pull_request.base.sha }}
-          CARGO_TARGET_DIR="$PWD/target" cargo build --release -p kahvi-cli -p kahvi-runtime \
-            --manifest-path /tmp/base-src/Cargo.toml
-          mkdir -p /tmp/base && cp target/release/kahvi target/release/kahvi-run /tmp/base/
-      - name: count
-        run: |
-          bench/icount.py --kahvi-dir /tmp/base --json base.json
-          bench/icount.py --kahvi-dir /tmp/head --json head.json
           bench/icount.py --compare base.json head.json --markdown icount.md
           cat icount.md >> "$GITHUB_STEP_SUMMARY"
       - name: comment
