@@ -1,0 +1,27 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": false,
+    "skips_observable_steps": true,
+    "contradicts_spec": false,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The checks that run in the spec's order are implemented correctly: RequireInternalSlot for [[ArrayBufferMaxByteLength]] maps to TypeError, the IsSharedArrayBuffer check, ToIndex with ?, the equal-length early return, the RangeError for shrink or above max, and the delta/OOM RangeError. No test-keyed branches. Steps 8-11 (agent record, LittleEndian, GetRawBytesFromSharedBlock, NumericToRawBytes) and steps 12h-12j (AtomicCompareExchangeInSharedBlock, ByteListEqual, reassigning the raw bytes) are dropped. In their place the code does a direct in-place Vec resize, and the step comments are attached to nothing. The ticket asked for each step as a comment above its code, and for missing helpers to be written locally or to throw not_implemented. Neither was done. The gate's expect() on the data option is a panic on a path that is probably unreachable but is not guarded.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs",
+      "question": "skips_observable_steps",
+      "issue": "Spec steps 8-11 (read agent record LittleEndian, read [[ArrayBufferByteLengthData]], GetRawBytesFromSharedBlock(\u2026, biguint64, true, seq-cst), NumericToRawBytes) are not performed. Step 12b's RawBytesToNumeric is replaced by array_buffer_byte_length(). Step 12h's AtomicCompareExchangeInSharedBlock and step 12i's ByteListEqual are not performed, and step 12j is only a comment. Instead of the compare-exchange loop, lines ~83-88 mutate the buffer directly with array_buffer_data_mut(...).resize(new_byte_length, 0). The ReadSharedMemory/ChosenValue events that the spec records are never produced, and no helper is written or not_implemented thrown for the missing pieces, despite the ticket requiring one or the other.",
+      "line": 57
+    }
+  ],
+  "notes_for_next_attempt": "Keep the existing check ordering (steps 1-7, 12c, 12d); it is correct. Rework the tail so that every spec step has its own comment directly above its code. Steps 8-11 and 12h-12j should either call ops helpers if they exist in kahvi_core::ops (check docs/API.md for GetRawBytesFromSharedBlock, NumericToRawBytes, RawBytesToNumeric, AtomicCompareExchangeInSharedBlock, ByteListEqual), or be written locally in this file if they are needed by other built-ins, and the change should say so. If a helper is truly missing, return agent.not_implemented naming it rather than resizing directly. Replace the .expect(\"a SharedArrayBuffer is never detached\") on d.data with a non-panicking path. Verify that array_buffer_byte_length reads the same length that resize changes, and that the SharedArrayBuffer constructor's allocation matches the spec note at step g (a max-sized block). Also justify the MAX_BYTE_LENGTH constant used for step 12f as the engine's allocation limit. Setting host_handled = false is acceptable as the default for HostGrowSharedArrayBuffer, but it should be commented as such.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "skips_observable_steps"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

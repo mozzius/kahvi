@@ -5347,3 +5347,5 @@ test262 at last merge: 81183/81183 runs passing
 [07:58:33] B-shared-array-buffer-prototype-get-max-byte-length: attempt 535 finished ($0.007, 14 turns)
 [07:58:58] B-shared-array-buffer-prototype-grow: attempt 536 finished ($0.015, 8 turns)
 [07:59:05] B-shared-array-buffer-prototype-get-max-byte-length: verifier: accept The diff implements the get SharedArrayBuffer.prototype.maxByteLength steps in order. Step 2 (RequireInternalSlot) throws a TypeError for non-objects 
+[07:59:07] B-shared-array-buffer-prototype-slice: attempt 537 finished ($0.009, 11 turns)
+[07:59:55] B-shared-array-buffer-prototype-grow: verifier: revise The checks that run in the spec's order are implemented correctly: RequireInternalSlot for [[ArrayBufferMaxByteLength]] maps to TypeError, the IsShare

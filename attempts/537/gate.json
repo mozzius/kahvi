@@ -1,0 +1,32 @@
+{
+  "ticket": "B-shared-array-buffer-prototype-slice",
+  "base": "084b6f34b6558bf3d6006b5bc5b5abc543268581",
+  "head": "828c5907d42fc6666f8d466db5de1399c448cfa1",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/shared_array_buffer/prototype_slice.rs",
+      "added": 109,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 64,
+    "before": 12,
+    "after": 64,
+    "new_passes": 52,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

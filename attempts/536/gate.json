@@ -1,0 +1,39 @@
+{
+  "ticket": "B-shared-array-buffer-prototype-grow",
+  "base": "1c834e45ba074b141d76f647db80f41bb0574830",
+  "head": "cc83e958393a5a29465630e4e443f2985f9270ba",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs",
+      "added": 53,
+      "removed": 6
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs",
+      "line": 87,
+      "rule": "unwrap/expect can crash the engine",
+      "text": ".expect(\"a SharedArrayBuffer is never detached\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 16,
+    "after": 30,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

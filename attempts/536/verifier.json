@@ -1,0 +1,141 @@
+{
+  "duration_api_ms": 43300,
+  "stop_reason": "tool_use",
+  "session_id": "93e188bd-e070-4a6b-aad6-9005ce71bf24",
+  "total_cost_usd": 0.00724967,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8172,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 9654,
+    "output_tokens_details": {
+      "thinking_tokens": 8351
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8172,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 9654,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 8172,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8172
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":true,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The checks that run in the spec's order are implemented correctly: RequireInternalSlot for [[ArrayBufferMaxByteLength]] maps to TypeError, the IsSharedArrayBuffer check, ToIndex with ?, the equal-length early return, the RangeError for shrink or above max, and the delta/OOM RangeError. No test-keyed branches. Steps 8-11 (agent record, LittleEndian, GetRawBytesFromSharedBlock, NumericToRawBytes) and steps 12h-12j (AtomicCompareExchangeInSharedBlock, ByteListEqual, reassigning the raw bytes) are dropped. In their place the code does a direct in-place Vec resize, and the step comments are attached to nothing. The ticket asked for each step as a comment above its code, and for missing helpers to be written locally or to throw not_implemented. Neither was done. The gate's expect() on the data option is a panic on a path that is probably unreachable but is not guarded.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs\",\"question\":\"skips_observable_steps\",\"issue\":\"Spec steps 8-11 (read agent record LittleEndian, read [[ArrayBufferByteLengthData]], GetRawBytesFromSharedBlock(\u2026, biguint64, true, seq-cst), NumericToRawBytes) are not performed. Step 12b's RawBytesToNumeric is replaced by array_buffer_byte_length(). Step 12h's AtomicCompareExchangeInSharedBlock and step 12i's ByteListEqual are not performed, and step 12j is only a comment. Instead of the compare-exchange loop, lines ~83-88 mutate the buffer directly with array_buffer_data_mut(...).resize(new_byte_length, 0). The ReadSharedMemory/ChosenValue events that the spec records are never produced, and no helper is written or not_implemented thrown for the missing pieces, despite the ticket requiring one or the other.\",\"line\":57}],\"notes_for_next_attempt\":\"Keep the existing check ordering (steps 1-7, 12c, 12d); it is correct. Rework the tail so that every spec step has its own comment directly above its code. Steps 8-11 and 12h-12j should either call ops helpers if they exist in kahvi_core::ops (check docs/API.md for GetRawBytesFromSharedBlock, NumericToRawBytes, RawBytesToNumeric, AtomicCompareExchangeInSharedBlock, ByteListEqual), or be written locally in this file if they are needed by other built-ins, and the change should say so. If a helper is truly missing, return agent.not_implemented naming it rather than resizing directly. Replace the .expect(\\\"a SharedArrayBuffer is never detached\\\") on d.data with a non-panicking path. Verify that array_buffer_byte_length reads the same length that resize changes, and that the SharedArrayBuffer constructor's allocation matches the spec note at step g (a max-sized block). Also justify the MAX_BYTE_LENGTH constant used for step 12f as the engine's allocation limit. Setting host_handled = false is acceptable as the default for HostGrowSharedArrayBuffer, but it should be commented as such.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": true,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The checks that run in the spec's order are implemented correctly: RequireInternalSlot for [[ArrayBufferMaxByteLength]] maps to TypeError, the IsSharedArrayBuffer check, ToIndex with ?, the equal-length early return, the RangeError for shrink or above max, and the delta/OOM RangeError. No test-keyed branches. Steps 8-11 (agent record, LittleEndian, GetRawBytesFromSharedBlock, NumericToRawBytes) and steps 12h-12j (AtomicCompareExchangeInSharedBlock, ByteListEqual, reassigning the raw bytes) are dropped. In their place the code does a direct in-place Vec resize, and the step comments are attached to nothing. The ticket asked for each step as a comment above its code, and for missing helpers to be written locally or to throw not_implemented. Neither was done. The gate's expect() on the data option is a panic on a path that is probably unreachable but is not guarded.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs",
+        "question": "skips_observable_steps",
+        "issue": "Spec steps 8-11 (read agent record LittleEndian, read [[ArrayBufferByteLengthData]], GetRawBytesFromSharedBlock(\u2026, biguint64, true, seq-cst), NumericToRawBytes) are not performed. Step 12b's RawBytesToNumeric is replaced by array_buffer_byte_length(). Step 12h's AtomicCompareExchangeInSharedBlock and step 12i's ByteListEqual are not performed, and step 12j is only a comment. Instead of the compare-exchange loop, lines ~83-88 mutate the buffer directly with array_buffer_data_mut(...).resize(new_byte_length, 0). The ReadSharedMemory/ChosenValue events that the spec records are never produced, and no helper is written or not_implemented thrown for the missing pieces, despite the ticket requiring one or the other.",
+        "line": 57
+      }
+    ],
+    "notes_for_next_attempt": "Keep the existing check ordering (steps 1-7, 12c, 12d); it is correct. Rework the tail so that every spec step has its own comment directly above its code. Steps 8-11 and 12h-12j should either call ops helpers if they exist in kahvi_core::ops (check docs/API.md for GetRawBytesFromSharedBlock, NumericToRawBytes, RawBytesToNumeric, AtomicCompareExchangeInSharedBlock, ByteListEqual), or be written locally in this file if they are needed by other built-ins, and the change should say so. If a helper is truly missing, return agent.not_implemented naming it rather than resizing directly. Replace the .expect(\"a SharedArrayBuffer is never detached\") on d.data with a non-panicking path. Verify that array_buffer_byte_length reads the same length that resize changes, and that the SharedArrayBuffer constructor's allocation matches the spec note at step g (a max-sized block). Also justify the MAX_BYTE_LENGTH constant used for step 12f as the engine's allocation limit. Setting host_handled = false is acceptable as the default for HostGrowSharedArrayBuffer, but it should be commented as such."
+  },
+  "ttft_ms": 37744,
+  "type": "result",
+  "duration_ms": 43006,
+  "uuid": "acf354f1-8b5a-44fe-b1ed-2a33c78eabe0",
+  "ttft_stream_ms": 1489,
+  "time_to_request_ms": 641,
+  "time_to_request_phases_ms": {
+    "other": 67,
+    "system_prompt": 413,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 34,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 12,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 44,
+    "autocompact": 13,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 3,
+    "client_creation": 24,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 99,
+  "time_to_request_cpu_ms": 279,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 242,
+  "process_anon_mib_turn_start": 124,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 129,
+  "process_peak_rss_mib": 256,
+  "process_cpu_ms_turn": 1637,
+  "process_wall_ms_turn": 43005,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1494,
+  "time_to_request_from_spawn_ms": 2080778,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051150409.2385,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.28,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
