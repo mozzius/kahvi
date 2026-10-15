@@ -5300,3 +5300,5 @@ test262 at last merge: 81183/81183 runs passing
 [07:53:29] B-atomics-or: verifier: accept The diff is a 9+/4- change to crates/kahvi-builtins/src/atomics/or.rs only. It replaces the not-implemented stub with the two spec steps as comments a
 [07:53:33] B-atomics-sub: attempt on slot 2 with haiku
 [07:53:45] B-atomics-pause: verifier: accept The change implements Atomics.pause in its stub file. Step 1 calls std::hint::spin_loop(), which is a CPU hint with no observable effect, as the spec 
+[07:53:48] B-atomics-wait: attempt on slot 1 with haiku
+[07:54:02] B-atomics-notify: verifier: accept The change implements Atomics.notify in the order the spec gives. It runs ValidateIntegerTypedArray(ta, true), then ValidateAtomicAccess, then the cou

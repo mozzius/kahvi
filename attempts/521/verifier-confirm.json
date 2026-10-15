@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 10495,
+  "stop_reason": "tool_use",
+  "session_id": "a537baf5-feff-4df7-95ef-a8e48c687ce0",
+  "total_cost_usd": 0.042691,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7930,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 984,
+    "output_tokens_details": {
+      "thinking_tokens": 512
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7930,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 984,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 7930,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7930
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Atomics.notify in spec order. It validates the typed array, validates the index, coerces count (undefined becomes +\u221e, otherwise ToIntegerOrInfinity clamped at 0), and returns +0 for a non-shared buffer. For shared buffers it returns min(count, 0), which is RemoveWaiters on the always-empty waiter list, as the ticket describes. All observable operations (ToIndex, ToNumber on count) happen in spec order with errors propagated by `?`. The WaiterList steps are reduced to comments, which is justified because Kahvi has one agent that can never wait. The 6 remaining test262 failures come from unimplemented Atomics.wait and SharedArrayBuffer.prototype.grow, which are outside this ticket.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Atomics.notify in spec order. It validates the typed array, validates the index, coerces count (undefined becomes +\u221e, otherwise ToIntegerOrInfinity clamped at 0), and returns +0 for a non-shared buffer. For shared buffers it returns min(count, 0), which is RemoveWaiters on the always-empty waiter list, as the ticket describes. All observable operations (ToIndex, ToNumber on count) happen in spec order with errors propagated by `?`. The WaiterList steps are reduced to comments, which is justified because Kahvi has one agent that can never wait. The 6 remaining test262 failures come from unimplemented Atomics.wait and SharedArrayBuffer.prototype.grow, which are outside this ticket.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 7785,
+  "type": "result",
+  "duration_ms": 10433,
+  "uuid": "76a6e59c-7f55-4c9b-83e5-974c0b27b617",
+  "ttft_stream_ms": 3583,
+  "time_to_request_ms": 604,
+  "time_to_request_phases_ms": {
+    "other": 41,
+    "system_prompt": 387,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 39,
+    "input_hooks": 6,
+    "tool_pool_refresh": 3,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 68,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 5,
+    "client_creation": 4,
+    "request_build": 9
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 69,
+  "time_to_request_cpu_ms": 348,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 127,
+  "process_rss_mib_result": 241,
+  "process_anon_mib_result": 121,
+  "process_peak_rss_mib": 245,
+  "process_cpu_ms_turn": 808,
+  "process_wall_ms_turn": 10432,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 28,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 3584,
+  "time_to_request_from_spawn_ms": 1759774,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050829733.7166,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.23,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
