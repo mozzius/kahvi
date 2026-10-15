@@ -1,0 +1,19 @@
+{
+  "merged": true,
+  "commit": "3f64d12883510e24bf5df649773c6957267244bf",
+  "batch": [
+    "B-atomics-notify",
+    "B-atomics-store"
+  ],
+  "new_passes": 56,
+  "total_pass": 81829,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Atomics/notify/bigint/non-bigint64-typedarray-throws.js:sloppy  Uncaught InternalError: not implemented: Atomics.wait",
+    "built-ins/Atomics/notify/bigint/non-bigint64-typedarray-throws.js:strict  Uncaught InternalError: not implemented: Atomics.wait",
+    "built-ins/Atomics/notify/not-a-typedarray-throws.js:sloppy  Uncaught InternalError: not implemented: Atomics.wait",
+    "built-ins/Atomics/notify/not-a-typedarray-throws.js:strict  Uncaught InternalError: not implemented: Atomics.wait",
+    "built-ins/Atomics/notify/retrieve-length-before-index-coercion.js:sloppy  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow",
+    "built-ins/Atomics/notify/retrieve-length-before-index-coercion.js:strict  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow"
+  ]
+}

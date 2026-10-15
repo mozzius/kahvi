@@ -5355,3 +5355,24 @@ test262 at last merge: 81183/81183 runs passing
 [08:01:17] stack: pushed stack/0052 as #83 with B-atomics-notify, B-atomics-store
 [08:01:47] B-shared-array-buffer-prototype-grow: attempt 538 finished ($0.022, 16 turns)
 [08:02:50] B-shared-array-buffer-prototype-grow: verifier: accept Reviewed the single-file change to SharedArrayBuffer.prototype.grow. Step order matches the spec: RequireInternalSlot (max_byte_length) before IsShare
+[08:04:00] stack: stack/0052 (#83) green: 81829/82037 passing, +104
+[08:04:00] B-atomics-notify: merged (+56, 81829 total)
+[08:04:00] B-atomics-store: merged (+24, 81829 total)
+[08:04:01] stack: partial tickets after stack/0052: {'done': 4}
+[08:04:15] stack: pushed stack/0053 as #84 with arch-proposals
+[08:07:39] stack: stack/0053 (#84) red: 22 regressions in the full suite
+[08:07:46] stack: architect branch arch-proposals is red in CI (22 regressions in the full suite); fix it and land again
+[08:07:47] stack: B-iterator-prototype-includes (attempt 529) conflicts with newer work; back to the pool
+[08:07:47] stack: B-iterator-prototype-windows (attempt 530) conflicts with newer work; back to the pool
+[08:07:48] stack: B-iterator-prototype-chunks (attempt 531) conflicts with newer work; back to the pool
+[08:08:00] stack: pushed stack/0054 as #86 with B-atomics-sub, B-atomics-xor, B-shared-array-buffer-prototype-get-byte-length, B-atomics-wait, B-iterator-prototype-join, B-shared-array-buffer-prototype-get-growable, B-shared-array-buffer-prototype-get-max-byte-length, B-shared-array-buffer-prototype-slice, B-shared-array-buffer-prototype-grow
+[08:11:20] stack: stack/0054 (#86) green: 82037/82037 passing, +208
+[08:11:20] B-atomics-sub: merged (+22, 82037 total)
+[08:11:20] B-atomics-xor: merged (+22, 82037 total)
+[08:11:20] B-shared-array-buffer-prototype-get-byte-length: merged (+12, 82037 total)
+[08:11:20] B-atomics-wait: merged (+44, 82037 total)
+[08:11:20] B-shared-array-buffer-prototype-get-growable: merged (+12, 82037 total)
+[08:11:20] B-shared-array-buffer-prototype-get-max-byte-length: merged (+14, 82037 total)
+[08:11:20] B-shared-array-buffer-prototype-slice: merged (+52, 82037 total)
+[08:11:21] B-shared-array-buffer-prototype-grow: merged (+14, 82037 total)
+[08:11:21] stack: partial tickets after stack/0054: {'done': 1}
