@@ -1,0 +1,55 @@
+{
+  "ticket": "I-supported-values-of",
+  "base": "083dec1fd2be1509cc8e5363d97102f9d79aeada",
+  "head": "b2da3897e8f1e1983946f27f71fbe3b5719e72a8",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl/supported_values_of.rs",
+      "added": 170,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/intl/supported_values_of.rs",
+      "line": 169,
+      "rule": "shortcut language",
+      "text": "// \"Etc/Unknown\" is ICU4X's placeholder, not an IANA identifier."
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 48,
+    "before": 0,
+    "after": 16,
+    "new_passes": 16,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 30,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/Intl/supportedValuesOf/calendars-accepted-by-DateTimeFormat.js:sloppy  Uncaught InternalError: not implemented: Intl.DateTimeFormat",
+      "intl402/Intl/supportedValuesOf/calendars-accepted-by-DateTimeFormat.js:strict  Uncaught InternalError: not implemented: Intl.DateTimeFormat",
+      "intl402/Intl/supportedValuesOf/calendars-accepted-by-DisplayNames.js:sloppy  Uncaught InternalError: not implemented: Intl.DisplayNames",
+      "intl402/Intl/supportedValuesOf/calendars-accepted-by-DisplayNames.js:strict  Uncaught InternalError: not implemented: Intl.DisplayNames",
+      "intl402/Intl/supportedValuesOf/calendars.js:sloppy  Uncaught InternalError: not implemented: Intl.Locale",
+      "intl402/Intl/supportedValuesOf/calendars.js:strict  Uncaught InternalError: not implemented: Intl.Locale",
+      "intl402/Intl/supportedValuesOf/collations-accepted-by-Collator.js:sloppy  Uncaught InternalError: not implemented: AvailableCanonicalCollations",
+      "intl402/Intl/supportedValuesOf/collations-accepted-by-Collator.js:strict  Uncaught InternalError: not implemented: AvailableCanonicalCollations",
+      "intl402/Intl/supportedValuesOf/collations.js:sloppy  Uncaught InternalError: not implemented: AvailableCanonicalCollations",
+      "intl402/Intl/supportedValuesOf/collations.js:strict  Uncaught InternalError: not implemented: AvailableCanonicalCollations",
+      "intl402/Intl/supportedValuesOf/currencies-accepted-by-DisplayNames.js:sloppy  Uncaught InternalError: not implemented: AvailableCanonicalCurrencies",
+      "intl402/Intl/supportedValuesOf/currencies-accepted-by-DisplayNames.js:strict  Uncaught InternalError: not implemented: AvailableCanonicalCurrencies",
+      "intl402/Intl/supportedValuesOf/currencies-accepted-by-NumberFormat.js:sloppy  Uncaught InternalError: not implemented: AvailableCanonicalCurrencies",
+      "intl402/Intl/supportedValuesOf/currencies-accepted-by-NumberFormat.js:strict  Uncaught InternalError: not implemented: AvailableCanonicalCurrencies",
+      "intl402/Intl/supportedValuesOf/currencies.js:sloppy  Uncaught InternalError: not implemented: AvailableCanonicalCurrencies"
+    ]
+  },
+  "decision": "pass"
+}

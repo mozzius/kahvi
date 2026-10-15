@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 64011,
+  "stop_reason": "tool_use",
+  "session_id": "760263ba-fd2e-4f98-a055-74c711f45a88",
+  "total_cost_usd": 0.01172313,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 14724,
+    "cache_read_input_tokens": 4693,
+    "output_tokens": 14670,
+    "output_tokens_details": {
+      "thinking_tokens": 13825
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14724,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 14670,
+        "cache_read_input_tokens": 4693,
+        "cache_creation_input_tokens": 14724,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14724
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements the key dispatch and the calendar, numbering-system and timeZone lists, and leaves collation, currency and unit as not_implemented (an allowed partial). Nothing is keyed on test inputs. ToString and the RangeError path follow the spec. Only one file is touched. Points to verify rather than defects: the calendar names and aliases are hand-written, the timeZone primary identifier is taken from ICU4X's canonical field instead of spec steps 5.b and 5.d, and the Hijri simulated-Mecca and Julian exclusions rest on an unverified claim about CLDR types.\",\"problems\":[],\"notes_for_next_attempt\":\"Keep this diff as the base. Open items: (1) AvailableCanonicalCollations, AvailableCanonicalCurrencies and AvailableCanonicalUnits still throw not_implemented. The ticket expects ICU4X data for these, so check whether ICU4X can enumerate them before leaving them out. (2) available_calendars hand-writes the CLDR type and alias strings. Prefer ICU4X's own calendar-kind to CLDR-string accessor if it has one. Confirm the claim that HijriSimulatedMecca has no CLDR type; it may map to islamic-rgsa. Julian is correctly absent from CLDR. (3) available_primary_time_zone_identifiers uses record.canonical in place of spec steps 5.b (zone.tab and backzone Link resolution) and 5.d (renamed identifiers). Check that ICU4X's canonical matches the spec's PrimaryIdentifier, especially for the Jan_Mayen/Oslo and renamed-zone cases. (4) The Etc/Unknown filter is a reasonable placeholder exclusion, but explain it in the comment rather than leave it as a lint hit. (5) The ICU error from iter_ids is discarded and replaced with not_implemented. This is acceptable, but keep it in mind.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements the key dispatch and the calendar, numbering-system and timeZone lists, and leaves collation, currency and unit as not_implemented (an allowed partial). Nothing is keyed on test inputs. ToString and the RangeError path follow the spec. Only one file is touched. Points to verify rather than defects: the calendar names and aliases are hand-written, the timeZone primary identifier is taken from ICU4X's canonical field instead of spec steps 5.b and 5.d, and the Hijri simulated-Mecca and Julian exclusions rest on an unverified claim about CLDR types.",
+    "problems": [],
+    "notes_for_next_attempt": "Keep this diff as the base. Open items: (1) AvailableCanonicalCollations, AvailableCanonicalCurrencies and AvailableCanonicalUnits still throw not_implemented. The ticket expects ICU4X data for these, so check whether ICU4X can enumerate them before leaving them out. (2) available_calendars hand-writes the CLDR type and alias strings. Prefer ICU4X's own calendar-kind to CLDR-string accessor if it has one. Confirm the claim that HijriSimulatedMecca has no CLDR type; it may map to islamic-rgsa. Julian is correctly absent from CLDR. (3) available_primary_time_zone_identifiers uses record.canonical in place of spec steps 5.b (zone.tab and backzone Link resolution) and 5.d (renamed identifiers). Check that ICU4X's canonical matches the spec's PrimaryIdentifier, especially for the Jan_Mayen/Oslo and renamed-zone cases. (4) The Etc/Unknown filter is a reasonable placeholder exclusion, but explain it in the comment rather than leave it as a lint hit. (5) The ICU error from iter_ids is discarded and replaced with not_implemented. This is acceptable, but keep it in mind."
+  },
+  "ttft_ms": 60356,
+  "type": "result",
+  "duration_ms": 63776,
+  "uuid": "dc34e706-aac8-41fd-993f-f3ef18780542",
+  "ttft_stream_ms": 1552,
+  "time_to_request_ms": 523,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 379,
+    "resume_other": 2,
+    "process_user_input": 3,
+    "input_attachments": 15,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 69,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 10,
+  "time_to_request_cpu_ms": 300,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 247,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 131,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 1443,
+  "process_wall_ms_turn": 63776,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1553,
+  "time_to_request_from_spawn_ms": 1630978,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090494985.5007,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.22,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
