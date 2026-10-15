@@ -2,6 +2,7 @@
 //! stack and the job queue. Every engine operation takes `&mut Agent`.
 
 use std::collections::VecDeque;
+use std::sync::Arc;
 
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
@@ -16,6 +17,29 @@ pub const MAX_CALL_DEPTH: usize = 2_000;
 pub struct SymbolData {
     /// [[Description]]
     pub description: Option<JsString>,
+}
+
+/// One frame of a captured call stack (`Agent::error_stack`).
+#[derive(Debug, Clone)]
+pub struct StackFrame {
+    /// The function's own "name" data property; None for script, module
+    /// and eval code, empty for a function without a name.
+    pub name: Option<Box<str>>,
+    /// A built-in function: no source position.
+    pub native: bool,
+    /// Called as a constructor.
+    pub construct: bool,
+    /// The instruction running in the frame, when known.
+    pub location: Option<StackLocation>,
+}
+
+/// Where a stack frame was: its script and the source offset of the
+/// instruction it was running.
+#[derive(Debug, Clone)]
+pub struct StackLocation {
+    pub script: u32,
+    pub source: Arc<str>,
+    pub offset: u32,
 }
 
 /// An execution context (§9.4): which function and realm are running.
@@ -123,6 +147,7 @@ pub struct Names {
     pub empty: JsString,
     pub default: JsString,
     pub undefined: JsString,
+    pub stack_trace_limit: JsString,
 }
 
 /// Installs the built-in objects into a fresh realm. Provided by the
@@ -196,9 +221,9 @@ pub struct Agent {
     pub(crate) host_functions: Vec<crate::host::HostFn>,
     /// Data the host attached to objects (`Agent::set_native_state`).
     pub(crate) native_states: crate::hash::FxHashMap<Object, crate::host::NativeState>,
-    /// The call stack when each error object was created, one `    at name`
-    /// line per execution context, innermost first (`Agent::error_stack`).
-    pub(crate) error_stacks: crate::hash::FxHashMap<Object, Box<str>>,
+    /// The call stack when each error object was created, innermost frame
+    /// first (`Agent::error_stack`).
+    pub(crate) error_stacks: crate::hash::FxHashMap<Object, Box<[StackFrame]>>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -286,6 +311,7 @@ impl Agent {
                 empty: placeholder,
                 default: placeholder,
                 undefined: placeholder,
+                stack_trace_limit: placeholder,
             },
             call_depth: 0,
             installer: None,
@@ -334,6 +360,7 @@ impl Agent {
             empty: agent.string(""),
             default: agent.string("default"),
             undefined: agent.string("undefined"),
+            stack_trace_limit: agent.string("stackTraceLimit"),
         };
         fn wk(agent: &mut Agent, name: &str) -> Symbol {
             let d = agent.string(name);
@@ -379,19 +406,37 @@ impl Agent {
             self.objects.push(data);
             Object((self.objects.len() - 1) as u32)
         };
-        if is_error {
-            let stack = self.capture_stack();
+        if is_error && let Some(stack) = self.capture_stack(None) {
             self.error_stacks.insert(o, stack);
         }
         o
     }
 
-    /// The execution context stack as text: one `    at name` line per
-    /// context, innermost first. A function's name is its own "name" data
-    /// property (read without running any code); a script or module is
-    /// `<top level>`. The built-in error constructor creating the object,
-    /// when it is the innermost context, is left out.
-    fn capture_stack(&self) -> Box<str> {
+    /// The execution context stack, innermost first, as V8 and Hermes
+    /// capture it: at most `Error.stackTraceLimit` frames (read as a data
+    /// property of the current realm's %Error%, without running code), and
+    /// nothing when that is not a number. The built-in error constructor
+    /// creating the object, when it is the innermost context, is left out.
+    /// With `skip_through`, frames up to and including the innermost call
+    /// of that function are left out too (`Error.captureStackTrace`), and
+    /// the stack is empty when it is not on the stack.
+    pub fn capture_stack(&self, skip_through: Option<Object>) -> Option<Box<[StackFrame]>> {
+        let error = *self.realm(self.current_realm()).intrinsics.get("%Error%")?;
+        let limit = match self
+            .obj(error)
+            .properties
+            .get(&PropertyKey::String(self.names.stack_trace_limit))
+        {
+            Some(crate::object::Property::Data {
+                value: Value::Number(n),
+                ..
+            }) if n.is_nan() || *n <= 0.0 => 0,
+            Some(crate::object::Property::Data {
+                value: Value::Number(n),
+                ..
+            }) => n.min(usize::MAX as f64) as usize,
+            _ => return None,
+        };
         let name_of = |f: Object| match self
             .obj(f)
             .properties
@@ -400,33 +445,134 @@ impl Agent {
             Some(crate::object::Property::Data {
                 value: Value::String(s),
                 ..
-            }) if !self.str(*s).is_empty() => self.str_lossy(*s),
-            _ => "<anonymous>".to_string(),
+            }) => self.str_lossy(*s),
+            _ => String::new(),
         };
+        let is_native = |f: Object| matches!(self.obj(f).kind, ObjectKind::Builtin(_));
         let mut contexts = self.contexts.iter().rev().peekable();
-        if let Some(f) = contexts.peek().and_then(|c| c.function)
-            && matches!(self.obj(f).kind, ObjectKind::Builtin(_))
+        if skip_through.is_none()
+            && let Some(f) = contexts.peek().and_then(|c| c.function)
+            && is_native(f)
             && name_of(f).ends_with("Error")
         {
             contexts.next();
         }
-        let mut out = String::new();
+        // The frames running ECMAScript code, innermost first: each such
+        // context's frame is the next one running the same function.
+        // SAFETY: see FramePtr; the frames outlive this call.
+        let frames: Vec<&crate::vm::Frame> = self
+            .gc
+            .frames
+            .iter()
+            .rev()
+            .map(|f| unsafe { &*f.0 })
+            .collect();
+        let mut next_frame = 0;
+        let mut skipping = skip_through.is_some();
+        let mut out = Vec::new();
         for ctx in contexts {
+            let native = ctx.function.is_some_and(is_native);
+            let mut frame = None;
+            if !native
+                && let Some(i) = frames[next_frame..]
+                    .iter()
+                    .position(|f| f.function == ctx.function)
+            {
+                frame = Some(frames[next_frame + i]);
+                next_frame += i + 1;
+            }
+            if skipping {
+                skipping = ctx.function != skip_through;
+                continue;
+            }
+            let name = ctx.function.map(|f| name_of(f).into_boxed_str());
+            // Left out, as V8 does: the host's own contexts (running no
+            // code, such as a job's) and anonymous built-in functions (such
+            // as a promise's resolving functions).
+            let shown = match (native, frame) {
+                (true, _) => name.as_deref().is_some_and(|n| !n.is_empty()),
+                (false, frame) => frame.is_some() || ctx.function.is_some(),
+            };
+            if !shown {
+                continue;
+            }
+            if out.len() >= limit {
+                break;
+            }
+            // A function's own function environment holds its new.target.
+            let construct = frame.is_some_and(|frame| {
+                let env = self.get_this_environment(frame.env);
+                env.function_data(self).is_some_and(|d| {
+                    Some(d.function_object) == frame.function
+                        && matches!(d.new_target, Value::Object(_))
+                })
+            });
+            let location = frame.and_then(|frame| {
+                frame
+                    .code
+                    .position_of(frame.pc)
+                    .map(|offset| StackLocation {
+                        script: frame.code.script,
+                        source: frame.code.source.clone(),
+                        offset,
+                    })
+            });
+            out.push(StackFrame {
+                name,
+                native,
+                construct,
+                location,
+            });
+        }
+        Some(out.into_boxed_slice())
+    }
+
+    /// `frames` as V8 writes them, one `    at ...` line each:
+    /// `    at name (file:line:column)`, `    at file:line:column` for code
+    /// outside any named function, and `(native)` for built-in functions.
+    pub fn format_stack(&self, frames: &[StackFrame]) -> String {
+        let mut out = String::new();
+        for frame in frames {
             if !out.is_empty() {
                 out.push('\n');
             }
             out.push_str("    at ");
-            match ctx.function {
-                Some(f) => out.push_str(&name_of(f)),
-                None => out.push_str("<top level>"),
+            let place = match &frame.location {
+                Some(l) => {
+                    let (line, col) = crate::vm::line_col(&l.source, l.offset as usize);
+                    let file = self
+                        .scripts
+                        .get(l.script as usize)
+                        .map_or("<anonymous>", |s| s.name.as_str());
+                    format!("{file}:{line}:{col}")
+                }
+                None if frame.native => "native".to_string(),
+                None => "<anonymous>".to_string(),
+            };
+            match frame.name.as_deref() {
+                Some(name) if !name.is_empty() => {
+                    if frame.construct {
+                        out.push_str("new ");
+                    }
+                    out.push_str(name);
+                    out.push_str(" (");
+                    out.push_str(&place);
+                    out.push(')');
+                }
+                _ => out.push_str(&place),
             }
         }
-        out.into_boxed_str()
+        out
+    }
+
+    /// Records `stack` as error object `o`'s captured stack.
+    pub fn set_error_stack(&mut self, o: Object, stack: Box<[StackFrame]>) {
+        self.error_stacks.insert(o, stack);
     }
 
     /// The stack captured when error object `o` was created (an object with
     /// an [[ErrorData]] internal slot), for `Error.prototype.stack`.
-    pub fn error_stack(&self, o: Object) -> Option<&str> {
+    pub fn error_stack(&self, o: Object) -> Option<&[StackFrame]> {
         self.error_stacks.get(&o).map(|s| &**s)
     }
 

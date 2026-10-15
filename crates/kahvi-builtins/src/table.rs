@@ -1093,5 +1093,6 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         let k = agent.key(name);
         define(agent, global, k, value, false, false, false);
     }
+    crate::extensions::install(agent, realm);
     Ok(())
 }
