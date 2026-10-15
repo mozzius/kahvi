@@ -2,6 +2,7 @@
 //!
 //! Spec: https://tc39.es/proposal-iterator-includes/#sec-iterator.prototype.includes
 
+use kahvi_core::ops::IteratorRecord;
 use kahvi_core::prelude::*;
 
 /// Iterator.prototype.includes
@@ -9,33 +10,73 @@ pub(crate) fn prototype_includes(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // 1. Let _obj_ be the *this* value.
-    // 2. If _obj_ is not an Object, throw a *TypeError* exception.
-    // 3. Let _iterated_ be the Iterator Record { [[Iterator]]: _obj_, [[NextMethod]]: *undefined*, [[Done]]: *false* }.
-    // 4. If _skippedElements_ is *undefined*, then
-    //    a. Let _toSkip_ be *+0*_𝔽.
-    // 5. Else,
-    //    a. If _skippedElements_ is not one of *+∞_𝔽*, *-∞_𝔽*, or an integral Number, then
-    //       i. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
-    //       ii. Return ? IteratorClose(_iterated_, _error_).
-    //    b. Let _toSkip_ be _skippedElements_.
-    // 6. If _toSkip_ < *-0*_𝔽, then
-    //    a. Let _error_ be ThrowCompletion(a newly created *RangeError* object).
-    //    b. Return ? IteratorClose(_iterated_, _error_).
-    // 7. If _toSkip_ is finite and _toSkip_ > 𝔽(2^53 - 1), then
-    //    a. Let _error_ be ThrowCompletion(a newly created *RangeError* object).
-    //    b. Return ? IteratorClose(_iterated_, _error_).
-    // 8. Let _skipped_ be *+0*_𝔽.
-    // 9. Set _iterated_ to ? GetIteratorDirect(_obj_).
+    let search_element = args.get_or_undefined(0);
+    let skipped_elements = args.get_or_undefined(1);
+    // 1. Let obj be the this value.
+    // 2. If obj is not an Object, throw a TypeError exception.
+    let Value::Object(obj) = this else {
+        return Err(agent.throw_type_error("Iterator.prototype.includes called on a non-object"));
+    };
+    // 3. Let iterated be the Iterator Record { [[Iterator]]: obj, [[NextMethod]]: undefined, [[Done]]: false }.
+    let iterated = IteratorRecord {
+        iterator: obj,
+        next_method: Value::Undefined,
+        done: false,
+    };
+    let to_skip = match skipped_elements {
+        // 4. If skippedElements is undefined, then
+        //    a. Let toSkip be +0𝔽.
+        Value::Undefined => 0.0,
+        // 5. Else,
+        //    a. If skippedElements is not one of +∞𝔽, -∞𝔽, or an integral Number, then
+        //       i. Let error be ThrowCompletion(a newly created TypeError object).
+        //       ii. Return ? IteratorClose(iterated, error).
+        //    b. Let toSkip be skippedElements.
+        Value::Number(n) if n.is_infinite() || n.trunc() == n => n,
+        _ => {
+            let error = agent.throw_type_error(
+                "Iterator.prototype.includes: skippedElements must be an integral Number",
+            );
+            return ops::iterator_close(agent, &iterated, Err(error));
+        }
+    };
+    // 6. If toSkip < -0𝔽, then
+    if to_skip < 0.0 {
+        // a. Let error be ThrowCompletion(a newly created RangeError object).
+        let error =
+            agent.throw_range_error("Iterator.prototype.includes: skippedElements is negative");
+        // b. Return ? IteratorClose(iterated, error).
+        return ops::iterator_close(agent, &iterated, Err(error));
+    }
+    // 7. If toSkip is finite and toSkip > 𝔽(2^53 - 1), then
+    if to_skip.is_finite() && to_skip > 9007199254740991.0 {
+        // a. Let error be ThrowCompletion(a newly created RangeError object).
+        let error =
+            agent.throw_range_error("Iterator.prototype.includes: skippedElements is too large");
+        // b. Return ? IteratorClose(iterated, error).
+        return ops::iterator_close(agent, &iterated, Err(error));
+    }
+    // 8. Let skipped be +0𝔽.
+    let mut skipped = 0.0;
+    // 9. Set iterated to ? GetIteratorDirect(obj).
+    let mut iterated = ops::get_iterator_direct(agent, obj)?;
     // 10. Repeat,
-    //    a. Let _value_ be ? IteratorStepValue(_iterated_).
-    //    b. If _value_ is ~done~, return *false*.
-    //    c. If _skipped_ < _toSkip_, then
-    //       i. Set _skipped_ to _skipped_ + *1*_𝔽.
-    //    d. Else if SameValueZero(_value_, _searchElement_) is *true*, then
-    //       i. Return ? IteratorClose(_iterated_, NormalCompletion(*true*)).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Iterator.prototype.includes"))
+    loop {
+        // a. Let value be ? IteratorStepValue(iterated).
+        let Some(value) = ops::iterator_step_value(agent, &mut iterated)? else {
+            // b. If value is done, return false.
+            return Ok(Value::Boolean(false));
+        };
+        // c. If skipped < toSkip, then
+        if skipped < to_skip {
+            // i. Set skipped to skipped + 1𝔽.
+            skipped += 1.0;
+        } else if ops::same_value_zero(agent, value, search_element) {
+            // d. Else if SameValueZero(value, searchElement) is true, then
+            //    i. Return ? IteratorClose(iterated, NormalCompletion(true)).
+            return ops::iterator_close(agent, &iterated, Ok(Value::Boolean(true)));
+        }
+    }
 }
