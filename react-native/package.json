@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "description": "The kahvi JavaScript engine for React Native",
   "license": "UNLICENSED",
-  "keywords": ["react-native", "kahvi", "jsi", "ios", "android"],
+  "keywords": [
+    "react-native",
+    "kahvi",
+    "jsi",
+    "ios",
+    "android"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mozzius/kahvi.git",
     "directory": "react-native"
   },
   "files": [
+    "app.plugin.js",
+    "patches",
     "cpp",
     "include",
     "android",
@@ -19,6 +27,12 @@
     "!android/.cxx"
   ],
   "peerDependencies": {
-    "react-native": ">=0.79"
+    "react-native": ">=0.79",
+    "expo": "*"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   }
 }
