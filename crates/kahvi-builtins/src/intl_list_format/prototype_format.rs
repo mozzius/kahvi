@@ -1,0 +1,22 @@
+//! Intl.ListFormat.prototype.format ( _list_ )
+//!
+//! Spec: https://tc39.es/ecma402/#sec-Intl.ListFormat.prototype.format
+
+use kahvi_core::prelude::*;
+
+/// Intl.ListFormat.prototype.format
+pub(crate) fn prototype_format(
+    agent: &mut Agent,
+    this: Value,
+    args: &[Value],
+    new_target: Option<Object>,
+) -> JsResult<Value> {
+    // When the `format` method is called with an argument _list_, the following steps are taken:
+    //
+    // 1. Let _lf_ be the *this* value.
+    // 2. Perform ? RequireInternalSlot(_lf_, [[InitializedListFormat]]).
+    // 3. Let _stringList_ be ? StringListFromIterable(_list_).
+    // 4. Return FormatList(_lf_, _stringList_).
+    let _ = (this, args, new_target);
+    Err(agent.not_implemented("Intl.ListFormat.prototype.format"))
+}

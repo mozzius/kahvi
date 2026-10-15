@@ -14,6 +14,7 @@ struct Args {
     preludes: Vec<String>,
     module: bool,
     parse_only: bool,
+    intl: bool,
     file: String,
 }
 
@@ -21,6 +22,7 @@ fn parse_args() -> Result<Args, String> {
     let mut preludes = Vec::new();
     let mut module = false;
     let mut parse_only = false;
+    let mut intl = true;
     let mut file = None;
     let mut it = std::env::args().skip(1);
     while let Some(arg) = it.next() {
@@ -28,6 +30,7 @@ fn parse_args() -> Result<Args, String> {
             "--prelude" => preludes.push(it.next().ok_or("--prelude needs a file")?),
             "--module" => module = true,
             "--parse-only" => parse_only = true,
+            "--no-intl" => intl = false,
             "--version" => {
                 println!("kahvi {}", env!("CARGO_PKG_VERSION"));
                 std::process::exit(0);
@@ -37,11 +40,12 @@ fn parse_args() -> Result<Args, String> {
             _ => return Err("only one script file may be given".into()),
         }
     }
-    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] FILE")?;
+    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
     Ok(Args {
         preludes,
         module,
         parse_only,
+        intl,
         file,
     })
 }
@@ -79,6 +83,9 @@ fn run(args: &Args) -> u8 {
     // KAHVI_GC_STRESS=1 collects at every safe point (finds rooting bugs);
     // KAHVI_GC_STRESS=N at one in N on average.
     agent.gc_stress = Agent::gc_stress_from_env();
+    // test262's intl402 tests measure ECMA-402, so the test engine has Intl
+    // unless --no-intl (docs/INTL.md).
+    agent.intl = args.intl;
     agent.set_intrinsics_installer(kahvi_builtins::install);
     agent.host_now = Some(host::now_ms);
     let realm = match host::new_realm(&mut agent) {

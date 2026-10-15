@@ -1,0 +1,126 @@
+<emu-clause id="intl-object">
+  <h1>The Intl Object</h1>
+
+  <p>The <dfn>Intl object</dfn>:</p>
+  <ul>
+    <li>is <dfn>%Intl%</dfn>.</li>
+    <li>is the initial value of the *"Intl"* property of the global object.</li>
+    <li>is an ordinary object.</li>
+    <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>
+    <li>is not a function object.</li>
+    <li>does not have a [[Construct]] internal method; it cannot be used as a constructor with the `new` operator.</li>
+    <li>does not have a [[Call]] internal method; it cannot be invoked as a function.</li>
+    <li>has a [[FallbackSymbol]] internal slot, which is a new %Symbol% in the current realm with the [[Description]] *"IntlLegacyConstructedSymbol"*.</li>
+  </ul>
+
+  <emu-clause id="sec-value-properties-of-the-intl-object">
+    <h1>Value Properties of the Intl Object</h1>
+
+    <emu-clause id="sec-intl-%symbol.tostringtag%" oldids="sec-Intl-toStringTag">
+      <h1>Intl [ %Symbol.toStringTag% ]</h1>
+
+      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Intl"*.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-constructor-properties-of-the-intl-object">
+    <h1>Constructor Properties of the Intl Object</h1>
+
+    <p>With the exception of Intl.Locale, each of the following constructors is a <dfn id="service-constructor">service constructor</dfn> that creates objects providing locale-sensitive services.</p>
+
+    <emu-clause id="sec-intl.collator-intro">
+      <h1>Intl.Collator ( . . . )</h1>
+      <p>See <emu-xref href="#collator-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.datetimeformat-intro">
+      <h1>Intl.DateTimeFormat ( . . . )</h1>
+      <p>See <emu-xref href="#datetimeformat-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.displaynames-intro">
+      <h1>Intl.DisplayNames ( . . . )</h1>
+      <p>See <emu-xref href="#intl-displaynames-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.durationformat-intro">
+      <h1>Intl.DurationFormat ( . . . )</h1>
+      <p>See <emu-xref href="#durationformat-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.listformat-intro">
+      <h1>Intl.ListFormat ( . . . )</h1>
+      <p>See <emu-xref href="#listformat-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.locale-intro">
+      <h1>Intl.Locale ( . . . )</h1>
+      <p>See <emu-xref href="#locale-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.numberformat-intro">
+      <h1>Intl.NumberFormat ( . . . )</h1>
+      <p>See <emu-xref href="#numberformat-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.pluralrules-intro">
+      <h1>Intl.PluralRules ( . . . )</h1>
+      <p>See <emu-xref href="#pluralrules-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.relativetimeformat-intro">
+      <h1>Intl.RelativeTimeFormat ( . . . )</h1>
+      <p>See <emu-xref href="#relativetimeformat-objects"></emu-xref>.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.segmenter-intro">
+      <h1>Intl.Segmenter ( . . . )</h1>
+      <p>See <emu-xref href="#segmenter-objects"></emu-xref>.</p>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-function-properties-of-the-intl-object">
+    <h1>Function Properties of the Intl Object</h1>
+
+    <emu-clause id="sec-intl.getcanonicallocales">
+      <h1>Intl.getCanonicalLocales ( _locales_ )</h1>
+
+      <p>When the `getCanonicalLocales` method is called with argument _locales_, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _localeList_ be ? CanonicalizeLocaleList(_locales_).
+        1. Return CreateArrayFromList(_localeList_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-intl.supportedvaluesof">
+      <h1>Intl.supportedValuesOf ( _key_ )</h1>
+
+      <p>When the `supportedValuesOf` method is called with argument _key_ , the following steps are taken:</p>
+
+      <emu-alg>
+        1. Set _key_ to ? ToString(_key_).
+        1. If _key_ is *"calendar"*, then
+          1. Let _list_ be a new empty List.
+          1. For each element _identifier_ of AvailableCalendars(), do
+            1. Let _canonical_ be CanonicalizeUValue(*"ca"*, _identifier_).
+            1. If _identifier_ is _canonical_, then
+              1. Append _identifier_ to _list_.
+        1. Else if _key_ is *"collation"*, then
+          1. Let _list_ be AvailableCanonicalCollations( ).
+        1. Else if _key_ is *"currency"*, then
+          1. Let _list_ be AvailableCanonicalCurrencies( ).
+        1. Else if _key_ is *"numberingSystem"*, then
+          1. Let _list_ be AvailableCanonicalNumberingSystems( ).
+        1. Else if _key_ is *"timeZone"*, then
+          1. Let _list_ be AvailablePrimaryTimeZoneIdentifiers( ).
+        1. Else if _key_ is *"unit"*, then
+          1. Let _list_ be AvailableCanonicalUnits( ).
+        1. Else,
+          1. Throw a *RangeError* exception.
+        1. Return CreateArrayFromList( _list_ ).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
