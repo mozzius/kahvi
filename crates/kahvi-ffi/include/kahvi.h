@@ -65,6 +65,10 @@ typedef struct {
 /* Runtime */
 KahviRuntime *kahvi_runtime_new(void);
 void kahvi_runtime_free(KahviRuntime *rt);
+/* Hosts that must prepare threads kahvi makes (deep calls run on a thread
+ * with a larger stack): wrap(run, data) calls run(data) once. Android
+ * attaches the thread to the JVM. */
+void kahvi_set_thread_wrapper(void (*wrap)(void (*run)(void *), void *data));
 bool kahvi_eval(KahviRuntime *rt, const char *source, size_t len, const char *name, size_t name_len,
                 KahviValue *result);
 bool kahvi_run_jobs(KahviRuntime *rt);
