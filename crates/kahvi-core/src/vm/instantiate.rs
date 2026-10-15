@@ -47,9 +47,27 @@ pub(super) fn function_declaration_instantiation(
         frame.env = env;
         env
     };
+    // (Room for the bindings steps 21-34 create here, so the list grows once.)
+    if let Environment::Declarative { bindings, .. } = agent.env_mut(env_record) {
+        let d = &code.decls;
+        let mut n = params.names.len() + 1;
+        if !params.has_expressions {
+            n += d.var_names.len() + d.functions.len();
+            if strict {
+                n += d.lexical.len();
+            }
+        }
+        bindings.reserve(n);
+    }
     // 21. For each String paramName of parameterNames, do
     for &name in &params.names {
         // a. Let alreadyDeclared be ! env.HasBinding(paramName).
+        //    (env is new, so only a duplicate name is already declared.)
+        if !params.has_duplicates {
+            // c.i Perform ! env.CreateMutableBinding(paramName, false).
+            env_record.create_new_mutable_binding(agent, name, None);
+            continue;
+        }
         if !env_record.has_binding(agent, name)? {
             // c.i Perform ! env.CreateMutableBinding(paramName, false).
             env_record.create_mutable_binding(agent, name, false)?;
@@ -113,8 +131,8 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         for n in var_names {
             // i. If instantiatedVarNames does not contain n, then
             if !env_record.has_binding(agent, n)? {
-                env_record.create_mutable_binding(agent, n, false)?;
-                env_record.initialize_binding(agent, n, Value::Undefined)?;
+                // 1-3. Append n; ! env.CreateMutableBinding(n, false); ! env.InitializeBinding(n, undefined).
+                env_record.create_new_mutable_binding(agent, n, Some(Value::Undefined));
             }
         }
         env_record
@@ -159,7 +177,9 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         frame.annex_b.push(name);
     }
     // 30-31. Non-strict functions put top-level lexical declarations in their own environment.
-    let lex_env = if code.strict {
+    //     (That environment only matters to a direct eval's conflict check
+    //     when it has bindings, so with no lexical declarations it is varEnv.)
+    let lex_env = if code.strict || decls.lexical.is_empty() {
         var_env
     } else {
         Environment::new_declarative(agent, Some(var_env))

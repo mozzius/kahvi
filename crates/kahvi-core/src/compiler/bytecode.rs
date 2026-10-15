@@ -292,6 +292,8 @@ pub enum Op {
     IteratorNext(Label),
     /// [] -> [value]: IteratorStepValue for destructuring (undefined once done).
     IteratorNextOrUndefined,
+    /// [] -> []: IteratorStep for an elision (the result's value is not read).
+    IteratorSkip,
     /// [] -> [array]: the remaining values of the top iterator.
     IteratorRest,
     /// [] -> []: pops the top iterator without closing it.
@@ -581,6 +583,10 @@ pub struct FunctionCode {
     pub classes: Vec<ClassStatic>,
     pub messages: Vec<String>,
     pub finally_targets: Vec<Vec<Label>>,
+    /// Instruction ranges `[start, end)` that are strict mode code inside
+    /// non-strict code: a class's heritage and element keys (all parts of a
+    /// ClassDeclaration or ClassExpression are strict mode code).
+    pub strict_ranges: Vec<(u32, u32)>,
     /// The whole source text and this code's span in it (Function.prototype.toString).
     pub source: Arc<str>,
     pub span: (u32, u32),

@@ -713,6 +713,8 @@ impl Compiler<'_> {
             let after = self.emit(Op::Jump(0));
             self.patch(try_handler);
             throw_into_finally.clear();
+            // Catch: Return ? UpdateEmpty(C, undefined) (the try block's value is not kept).
+            self.reset_completion();
             if finally_index.is_some() {
                 throw_into_finally.push(self.emit(Op::PushHandler(0)));
                 self.scopes.push(JumpScope::Handler);

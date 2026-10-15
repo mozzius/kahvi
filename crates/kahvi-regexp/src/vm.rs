@@ -528,6 +528,20 @@ impl<'a> Matcher<'a> {
             }
             e
         };
+        // With full Unicode the input is a list of code points, so the
+        // compared characters cannot end (or, backward, start) inside a
+        // surrogate pair.
+        if self.prog.unicode {
+            let splits = |i: usize| {
+                i > 0
+                    && i < self.input.len()
+                    && (0xD800..0xDC00).contains(&self.input[i - 1])
+                    && (0xDC00..0xE000).contains(&self.input[i])
+            };
+            if splits(if back { g } else { g + len }) {
+                return None;
+            }
+        }
         let a = &self.input[s..se];
         let b = &self.input[g..g + len];
         let same = if fold == Fold::None {

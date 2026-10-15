@@ -141,6 +141,15 @@ pub fn iterator_step(agent: &mut Agent, record: &mut IteratorRecord) -> JsResult
     iterator_step_impl(agent, record, false)
 }
 
+/// IteratorStep for a caller that keeps the iterator record rooted (see
+/// `iterator_step_value_rooted`).
+pub fn iterator_step_rooted(
+    agent: &mut Agent,
+    record: &mut IteratorRecord,
+) -> JsResult<Option<Object>> {
+    iterator_step_impl(agent, record, true)
+}
+
 fn iterator_step_impl(
     agent: &mut Agent,
     record: &mut IteratorRecord,

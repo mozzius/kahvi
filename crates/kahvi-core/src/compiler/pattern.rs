@@ -262,8 +262,7 @@ impl Compiler<'_> {
         for el in elements {
             match el {
                 None => {
-                    self.emit(Op::IteratorNextOrUndefined);
-                    self.emit(Op::Pop);
+                    self.emit(Op::IteratorSkip);
                 }
                 Some(elem) => {
                     self.bind_element(elem, mode, &mut |c: &mut Self, _| {

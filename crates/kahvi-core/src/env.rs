@@ -52,6 +52,23 @@ impl Bindings {
         self.position(name).is_some()
     }
 
+    /// Adds a binding for a name the list does not have yet.
+    fn push_new(&mut self, name: JsString, binding: Binding) {
+        debug_assert!(self.position(&name).is_none());
+        self.list.push((name, binding));
+        if let Some(ix) = &mut self.index {
+            ix.insert(name, self.list.len() - 1);
+        } else if self.list.len() >= INDEX_FROM {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+    }
+
     /// Adds or replaces a binding.
     pub fn insert(&mut self, name: JsString, binding: Binding) -> Option<Binding> {
         if let Some(i) = self.position(&name) {
@@ -70,6 +87,20 @@ impl Bindings {
             );
         }
         None
+    }
+
+    pub(crate) fn capacity(&self) -> usize {
+        self.list.capacity()
+    }
+
+    pub(crate) fn reserve(&mut self, additional: usize) {
+        self.list.reserve(additional);
+    }
+
+    /// Empties the list, keeping its allocation.
+    pub(crate) fn clear(&mut self) {
+        self.list.clear();
+        self.index = None;
     }
 
     pub fn remove(&mut self, name: &JsString) -> Option<Binding> {
@@ -163,15 +194,7 @@ impl Environment {
     }
 
     pub fn new_declarative(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer,
-            function: None,
-            imports: Default::default(),
-            is_module: false,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        agent.alloc_declarative(outer, None, false)
     }
 
     /// A new declarative environment for a Catch clause's parameter.
@@ -199,36 +222,21 @@ impl Environment {
         outer: EnvId,
         lexical_this: bool,
     ) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer: Some(outer),
-            function: Some(Box::new(FunctionEnvData {
-                this_value: Value::Undefined,
-                this_binding_status: if lexical_this {
-                    ThisBindingStatus::Lexical
-                } else {
-                    ThisBindingStatus::Uninitialized
-                },
-                function_object: f,
-                new_target,
-            })),
-            imports: Default::default(),
-            is_module: false,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        let data = FunctionEnvData {
+            this_value: Value::Undefined,
+            this_binding_status: if lexical_this {
+                ThisBindingStatus::Lexical
+            } else {
+                ThisBindingStatus::Uninitialized
+            },
+            function_object: f,
+            new_target,
+        };
+        agent.alloc_declarative(Some(outer), Some(data), false)
     }
 
     pub fn new_module(agent: &mut Agent, outer: EnvId) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer: Some(outer),
-            function: None,
-            imports: Default::default(),
-            is_module: true,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        agent.alloc_declarative(Some(outer), None, true)
     }
 
     /// NewObjectEnvironment(O, W, E)
@@ -366,6 +374,26 @@ impl EnvId {
     }
 
     /// CreateMutableBinding(N, D) for declarative records.
+    /// CreateMutableBinding(N, false) on a declarative record known to have
+    /// no binding for N, then InitializeBinding(N, V) if `value` is given
+    /// (the same steps, without searching for N).
+    pub(crate) fn create_new_mutable_binding(
+        self,
+        agent: &mut Agent,
+        name: JsString,
+        value: Option<Value>,
+    ) {
+        self.decl_bindings(agent).push_new(
+            name,
+            Binding {
+                value,
+                mutable: true,
+                strict: false,
+                deletable: false,
+            },
+        );
+    }
+
     pub fn create_mutable_binding(
         self,
         agent: &mut Agent,
@@ -735,6 +763,56 @@ impl EnvId {
             Environment::Declarative { bindings, .. } => bindings.list.get(slot).map(|(n, _)| *n),
             _ => None,
         }
+    }
+
+    /// The value of the binding at `slot` of a declarative record, if it is
+    /// initialized.
+    #[inline]
+    pub(crate) fn initialized_value_at(self, agent: &Agent, slot: usize) -> Option<Value> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.list[slot].1.value,
+            _ => None,
+        }
+    }
+
+    /// SetMutableBinding(N, V, S) for the binding at `slot` of a declarative
+    /// record (one `binding_slot` returned), if it is still `name`'s.
+    pub(crate) fn set_mutable_binding_at(
+        self,
+        agent: &mut Agent,
+        slot: usize,
+        name: JsString,
+        value: Value,
+        strict: bool,
+    ) -> JsResult<()> {
+        if self.set_initialized_mutable_at(agent, slot, name, value) {
+            return Ok(());
+        }
+        // The other cases (TDZ, immutable, a moved binding) take the full path.
+        self.set_mutable_binding(agent, name, value, strict)
+    }
+
+    /// SetMutableBinding's step 3 for an initialized mutable binding at
+    /// `slot` that is still `name`'s: changes its bound value to V. False
+    /// (and nothing done) in any other case.
+    #[inline]
+    pub(crate) fn set_initialized_mutable_at(
+        self,
+        agent: &mut Agent,
+        slot: usize,
+        name: JsString,
+        value: Value,
+    ) -> bool {
+        if let Environment::Declarative { bindings, .. } = agent.env_mut(self)
+            && let Some((n, b)) = bindings.list.get_mut(slot)
+            && *n == name
+            && b.mutable
+            && b.value.is_some()
+        {
+            b.value = Some(value);
+            return true;
+        }
+        false
     }
 
     /// The record's [[DisposableResourceStack]] (declarative records only).
