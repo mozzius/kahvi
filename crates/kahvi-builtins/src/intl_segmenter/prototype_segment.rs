@@ -31,5 +31,5 @@ pub(crate) fn prototype_segment(
     // 4. Return CreateSegmentsObject(_segmenter_, _string_).
     Ok(Value::Object(create_segments_object(
         agent, segmenter, string,
-    )))
+    )?))
 }

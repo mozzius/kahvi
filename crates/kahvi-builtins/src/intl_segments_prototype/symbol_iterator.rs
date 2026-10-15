@@ -30,8 +30,9 @@ pub(crate) fn symbol_iterator(
     let segmenter = slots.segmenter;
     // 4. Let _string_ be _segments_.[[SegmentsString]].
     let string = slots.string;
+    let bounds = slots.bounds.clone();
     // 5. Return CreateSegmentIterator(_segmenter_, _string_).
     Ok(Value::Object(create_segment_iterator(
-        agent, segmenter, string,
+        agent, segmenter, string, bounds,
     )))
 }

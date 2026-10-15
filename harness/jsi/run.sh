@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Builds the JSI shim (react-native/cpp) against React Native's JSI headers
-# and runs harness/jsi/test.cpp. JSI is fetched once, pinned to RN v0.76.0.
+# and runs harness/jsi/test.cpp. JSI is fetched once, pinned to RN v0.86.3.
 #   harness/jsi/run.sh            (set KAHVI_GC_STRESS=1 to collect on every allocation)
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 WORK="${KAHVI_WORK:-$PWD/work}"
-JSI="$WORK/jsi-v0.76.0"
+JSI="$WORK/jsi-v0.86.3"
 if [ ! -f "$JSI/jsi/jsi.cpp" ]; then
   mkdir -p "$JSI/jsi"
-  base=https://raw.githubusercontent.com/facebook/react-native/v0.76.0/packages/react-native/ReactCommon/jsi/jsi
+  base=https://raw.githubusercontent.com/facebook/react-native/v0.86.3/packages/react-native/ReactCommon/jsi/jsi
   for f in jsi.h jsi-inl.h jsi.cpp instrumentation.h; do
     curl -sSfL "$base/$f" -o "$JSI/jsi/$f"
   done

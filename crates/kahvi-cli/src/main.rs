@@ -212,9 +212,13 @@ fn parse_only(args: &Args) -> ExitCode {
     };
     let source = String::from_utf8_lossy(&bytes);
     let result = if args.module {
-        kahvi_parser::parse_module(&source).map(|_| ())
+        kahvi_parser::parse_module(&source, true).map(|_| ())
     } else {
-        kahvi_parser::parse_script(&source, &kahvi_parser::ParseOptions::default()).map(|_| ())
+        let opts = kahvi_parser::ParseOptions {
+            lazy: true,
+            ..Default::default()
+        };
+        kahvi_parser::parse_script(&source, &opts).map(|_| ())
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,

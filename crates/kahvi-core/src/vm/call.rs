@@ -252,6 +252,42 @@ fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value
     env.bind_this_value(agent, this_value)
 }
 
+/// Compiles the lazy function `f` on its first call (`FunctionCode::lazy`):
+/// reparses it from its script's source, keeps the code for every closure
+/// made from the same function, and gives it to `f`.
+fn compile_lazy(
+    agent: &mut Agent,
+    f: Object,
+    stub: &Arc<FunctionCode>,
+) -> JsResult<Arc<FunctionCode>> {
+    let lazy = stub.lazy.as_ref().expect("lazy code");
+    let code = match lazy.compiled.get() {
+        Some(code) => code.clone(),
+        None => {
+            let ast = match kahvi_parser::parse_lazy_function(
+                &stub.source,
+                stub.span.0 as usize,
+                lazy.function,
+            ) {
+                Ok(ast) => ast,
+                // The first parse found no early errors in this source.
+                Err(e) => return Err(agent.throw_syntax_error(&e.message)),
+            };
+            debug_assert_eq!((ast.span.start, ast.span.end), stub.span);
+            let code = crate::compiler::compile_lazy_function(agent, &ast, stub, lazy);
+            debug_assert!(
+                code.lazy.is_none(),
+                "a reparsed function is compiled eagerly"
+            );
+            let code = lazy.compiled.get_or_init(|| code).clone();
+            stub.constants.add_lazy(code.clone());
+            code
+        }
+    };
+    ecma_mut(agent, f).code = code.clone();
+    Ok(code)
+}
+
 /// OrdinaryCallEvaluateBody: runs the body in a new frame. Returns the
 /// frame's result; generator functions return their generator object.
 fn evaluate_body(
@@ -263,6 +299,11 @@ fn evaluate_body(
     let (code, private_env) = {
         let e = ecma(agent, f);
         (e.code.clone(), e.private_environment.clone())
+    };
+    let code = if code.lazy.is_some() {
+        compile_lazy(agent, f, &code)?
+    } else {
+        code
     };
     let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
     frame.stack = agent.spare_vec();

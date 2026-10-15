@@ -4,6 +4,7 @@
 
 use kahvi_core::prelude::*;
 
+use super::prototype_to_locale_upper_case::transform_case;
 use super::prototype_to_lower_case::prototype_to_lower_case;
 
 /// String.prototype.toLocaleLowerCase
@@ -13,6 +14,15 @@ pub(crate) fn prototype_to_locale_lower_case(
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
+    if agent.intl {
+        let locales = args.first().copied().unwrap_or(Value::Undefined);
+        // 1. Let _thisValue_ be ? RequireObjectCoercible(*this* value).
+        ops::require_object_coercible(agent, this)?;
+        // 2. Let _string_ be ? ToString(_thisValue_).
+        let string = ops::to_string(agent, this)?;
+        // 3. Return ? TransformCase(_string_, _locales_, ~lower~).
+        return transform_case(agent, string, locales, true);
+    }
     // An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in ECMA-402. Otherwise, the following specification of this method is used:
     // This method interprets a String value as a sequence of UTF-16 encoded code points, as described in [sec-ecmascript-language-types-string-type].
     // It works exactly the same as `toLowerCase` except that it is intended to yield a locale-sensitive result corresponding with conventions of the host environment's current locale. There will only be a difference in the few cases (such as Turkish) where the rules for that language conflict with the regular Unicode case mappings.

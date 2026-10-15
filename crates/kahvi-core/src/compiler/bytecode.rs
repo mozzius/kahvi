@@ -539,6 +539,10 @@ pub struct ClassStatic {
 #[derive(Debug, Default)]
 pub struct CodeConstants {
     values: std::sync::OnceLock<Box<[crate::value::Value]>>,
+    /// The code compiled later for this unit's lazy functions (each its own
+    /// unit), traced with it: a lazy function's code is shared by every
+    /// closure made from it.
+    lazy: std::sync::Mutex<Vec<Arc<FunctionCode>>>,
 }
 
 impl CodeConstants {
@@ -551,6 +555,26 @@ impl CodeConstants {
     pub fn values(&self) -> &[crate::value::Value] {
         self.values.get().map_or(&[], |v| v)
     }
+
+    pub(crate) fn add_lazy(&self, code: Arc<FunctionCode>) {
+        self.lazy.lock().expect("lazy code list").push(code);
+    }
+
+    pub(crate) fn lazy_code(&self) -> Vec<Arc<FunctionCode>> {
+        self.lazy.lock().expect("lazy code list").clone()
+    }
+}
+
+/// A function compiled when it is first called (`ast::Function::lazy`):
+/// its `FunctionCode` holds only what creating a closure needs.
+#[derive(Debug)]
+pub struct LazyCode {
+    pub function: kahvi_parser::ast::LazyFunction,
+    /// The enclosing `with` bodies and direct-eval functions
+    /// (`CompileUnit::dynamic_scopes`).
+    pub dynamic_scopes: u32,
+    pub is_expression: bool,
+    pub compiled: std::sync::OnceLock<Arc<FunctionCode>>,
 }
 
 /// Compiled code for a script, module, eval or function body.
@@ -601,6 +625,8 @@ pub struct FunctionCode {
     /// no direct eval in or around them, not eval code) get one: there a
     /// binding, once found, is always found in the same place.
     pub name_caches: Box<[std::sync::atomic::AtomicU64]>,
+    /// Set for a function not compiled yet.
+    pub lazy: Option<Box<LazyCode>>,
 }
 
 /// The cache index of a name instruction that has no binding cache.
