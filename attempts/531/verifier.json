@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 28600,
+  "stop_reason": "tool_use",
+  "session_id": "88c7260e-a8ce-4ae2-99f5-5a2147d53eb0",
+  "total_cost_usd": 0.0057069700000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8979,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 6099,
+    "output_tokens_details": {
+      "thinking_tokens": 5531
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8979,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6099,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 8979,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8979
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Iterator.prototype.chunks in its own file, following the spec steps in order. Steps 2-6 are in the right order: the this-object check, the integral check and IteratorClose on TypeError, the range check and IteratorClose on RangeError, then GetIteratorDirect with its `?`. The closure keeps the buffer across resumptions and yields a partial chunk on done. It uses the spec's 1..=2^32-1 bounds with no test-shaped branches. The final flush sets a `flushed` flag so that a return during that Yield is discarded (step 7.b.ii.1.a) and the underlying iterator is not closed. A return during a full-chunk Yield closes the underlying iterator through on_return (IfAbruptCloseIterator). The one lint flag is an unreachable! after an is_integral_number check. It is truly unreachable provided ops::is_integral_number returns true only for Number values, which the spec's IsIntegralNumber requires. I did not see the ops source, so that is an assumption. Nothing is faked and no errors are swallowed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Iterator.prototype.chunks in its own file, following the spec steps in order. Steps 2-6 are in the right order: the this-object check, the integral check and IteratorClose on TypeError, the range check and IteratorClose on RangeError, then GetIteratorDirect with its `?`. The closure keeps the buffer across resumptions and yields a partial chunk on done. It uses the spec's 1..=2^32-1 bounds with no test-shaped branches. The final flush sets a `flushed` flag so that a return during that Yield is discarded (step 7.b.ii.1.a) and the underlying iterator is not closed. A return during a full-chunk Yield closes the underlying iterator through on_return (IfAbruptCloseIterator). The one lint flag is an unreachable! after an is_integral_number check. It is truly unreachable provided ops::is_integral_number returns true only for Number values, which the spec's IsIntegralNumber requires. I did not see the ops source, so that is an assumption. Nothing is faked and no errors are swallowed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 26079,
+  "type": "result",
+  "duration_ms": 28582,
+  "uuid": "3ff60759-d687-441b-a17b-df22d68c0734",
+  "ttft_stream_ms": 1642,
+  "time_to_request_ms": 799,
+  "time_to_request_phases_ms": {
+    "other": 55,
+    "system_prompt": 406,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 58,
+    "input_hooks": 17,
+    "tool_pool_refresh": 3,
+    "init_message": 16,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 118,
+    "autocompact": 64,
+    "query_setup": 5,
+    "model_gates": 4,
+    "tool_schema_build": 9,
+    "message_normalization": 2,
+    "client_creation": 10,
+    "request_build": 21
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 197,
+  "time_to_request_cpu_ms": 442,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 126,
+  "process_rss_mib_result": 260,
+  "process_anon_mib_result": 140,
+  "process_peak_rss_mib": 260,
+  "process_cpu_ms_turn": 1295,
+  "process_wall_ms_turn": 28581,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 30,
+    "cpu_ms": 59,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1643,
+  "time_to_request_from_spawn_ms": 1970517,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051040332.5098,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.26,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

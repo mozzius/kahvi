@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-join",
+  "base": "eec097213a7d27b1ccb915fa5dc58d2e46570dcc",
+  "head": "28ab5fcd4c9dae2b41695d63a184bdb9e65224cb",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_join.rs",
+      "added": 52,
+      "removed": 16
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 36,
+    "before": 0,
+    "after": 36,
+    "new_passes": 36,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

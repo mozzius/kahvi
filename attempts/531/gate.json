@@ -1,0 +1,39 @@
+{
+  "ticket": "B-iterator-prototype-chunks",
+  "base": "d36f1a35a33593a2f701500d3999faac7a77da3f",
+  "head": "b02fd1eb11e81568fd0cdda905205824c424f1ff",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_chunks.rs",
+      "added": 121,
+      "removed": 31
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_chunks.rs",
+      "line": 40,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"IsIntegralNumber(chunkSize) is true only for Numbers\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 76,
+    "before": 8,
+    "after": 76,
+    "new_passes": 68,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
