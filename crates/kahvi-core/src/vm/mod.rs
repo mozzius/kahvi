@@ -96,6 +96,10 @@ impl PrivateEnv {
 #[derive(Debug, Clone, Copy)]
 pub enum Reference {
     Env(EnvId, JsString),
+    /// A binding of a declarative record, found at position `slot` of its
+    /// bindings (a resolution shortcut: GetValue and PutValue use the slot
+    /// while it still holds `name`).
+    Slot(EnvId, u32, JsString),
     Unresolvable(JsString),
 }
 
@@ -306,7 +310,13 @@ impl Frame {
     }
 
     fn strict(&self) -> bool {
-        self.code.strict
+        self.code.strict || {
+            let pc = self.pc as u32;
+            self.code
+                .strict_ranges
+                .iter()
+                .any(|&(s, e)| s <= pc && pc < e)
+        }
     }
 }
 
@@ -355,6 +365,9 @@ fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult>
     loop {
         let pc = frame.pc;
         let op = frame.code.ops[pc];
+        if fast_step(agent, frame, op, pc) {
+            continue;
+        }
         match execute(agent, frame, op) {
             Ok(Flow::Next) => frame.pc = pc + 1,
             Ok(Flow::Jump(target)) => {
@@ -374,6 +387,112 @@ fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult>
             }
             Err(e) => return Err(e),
         }
+    }
+}
+
+/// The commonest instructions in their common cases, without the call into
+/// `execute`: the same steps as there, for operands that cannot run user
+/// code or throw. Returns false (having done nothing) otherwise.
+#[inline(always)]
+fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
+    match op {
+        Op::GetName(name, ic) => {
+            let Some((env, slot)) = cached_binding(agent, &frame.code, frame.env, name, ic) else {
+                return false;
+            };
+            let Some(v) = env.initialized_value_at(agent, slot) else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
+        Op::ResolveName(name, ic) => {
+            let Some((env, slot)) = cached_binding(agent, &frame.code, frame.env, name, ic) else {
+                return false;
+            };
+            frame.refs.push(Reference::Slot(env, slot as u32, name));
+        }
+        Op::GetRef => {
+            let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
+                return false;
+            };
+            if env.binding_name_at(agent, slot as usize) != Some(name) {
+                return false;
+            }
+            let Some(v) = env.initialized_value_at(agent, slot as usize) else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
+        Op::PutRef => {
+            let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
+                return false;
+            };
+            let v = frame.peek();
+            if !env.set_initialized_mutable_at(agent, slot as usize, name, v) {
+                return false;
+            }
+            frame.refs.pop();
+        }
+        Op::ToNumeric => {
+            if !matches!(frame.stack.last(), Some(Value::Number(_))) {
+                return false;
+            }
+        }
+        Op::Inc | Op::Dec => {
+            let Some(Value::Number(n)) = frame.stack.last_mut() else {
+                return false;
+            };
+            *n = if op == Op::Inc { *n + 1.0 } else { *n - 1.0 };
+        }
+        Op::Pop => {
+            frame.stack.pop();
+        }
+        Op::Dup => {
+            let v = frame.peek();
+            frame.stack.push(v);
+        }
+        Op::Undefined => frame.stack.push(Value::Undefined),
+        Op::Number(n) => frame.stack.push(Value::Number(n)),
+        Op::Binary(bop) => {
+            let n = frame.stack.len();
+            let (Some(&Value::Number(a)), Some(&Value::Number(b))) = (
+                frame.stack.get(n.wrapping_sub(2)),
+                frame.stack.get(n.wrapping_sub(1)),
+            ) else {
+                return false;
+            };
+            let Some(v) = operators::number_binary(bop, a, b) else {
+                return false;
+            };
+            frame.stack.truncate(n - 2);
+            frame.stack.push(v);
+        }
+        Op::Jump(l) => {
+            fast_jump(agent, frame, l, pc);
+            return true;
+        }
+        Op::JumpIfFalse(l) => {
+            let Some(&Value::Boolean(b)) = frame.stack.last() else {
+                return false;
+            };
+            frame.stack.pop();
+            if !b {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        _ => return false,
+    }
+    frame.pc = pc + 1;
+    true
+}
+
+/// A jump from `fast_step`: a backward one is a safe point, as in the loop.
+#[inline(always)]
+fn fast_jump(agent: &mut Agent, frame: &mut Frame, l: u32, pc: usize) {
+    frame.pc = l as usize;
+    if frame.pc <= pc {
+        safe_point(agent, frame);
     }
 }
 
@@ -407,8 +526,8 @@ fn resolve_binding_cached(
     let Some(cache) = code.name_caches.get(ic as usize) else {
         return resolve_binding(agent, env, name);
     };
-    if let Some((id, _)) = cached_binding(agent, code, env, name, ic) {
-        return Ok(Reference::Env(id, name));
+    if let Some((id, slot)) = cached_binding(agent, code, env, name, ic) {
+        return Ok(Reference::Slot(id, slot as u32, name));
     }
     let mut e = Some(env);
     let mut hops = 0u64;
@@ -416,6 +535,7 @@ fn resolve_binding_cached(
         if id.has_binding(agent, name)? {
             if let Some(slot) = id.binding_slot(agent, name) {
                 cache.store(((hops << 32) | slot as u64) + 1, Relaxed);
+                return Ok(Reference::Slot(id, slot as u32, name));
             }
             return Ok(Reference::Env(id, name));
         }
@@ -459,6 +579,13 @@ fn not_defined(agent: &mut Agent, name: JsString) -> JsError {
 pub fn get_reference(agent: &mut Agent, r: Reference, strict: bool) -> JsResult<Value> {
     match r {
         Reference::Env(env, name) => env.get_binding_value(agent, name, strict),
+        Reference::Slot(env, slot, name) => {
+            if env.binding_name_at(agent, slot as usize) == Some(name) {
+                env.binding_value_at(agent, slot as usize)
+            } else {
+                env.get_binding_value(agent, name, strict)
+            }
+        }
         Reference::Unresolvable(name) => Err(not_defined(agent, name)),
     }
 }
@@ -467,6 +594,9 @@ pub fn get_reference(agent: &mut Agent, r: Reference, strict: bool) -> JsResult<
 pub fn put_reference(agent: &mut Agent, r: Reference, value: Value, strict: bool) -> JsResult<()> {
     match r {
         Reference::Env(env, name) => env.set_mutable_binding(agent, name, value, strict),
+        Reference::Slot(env, slot, name) => {
+            env.set_mutable_binding_at(agent, slot as usize, name, value, strict)
+        }
         Reference::Unresolvable(name) => {
             if strict {
                 return Err(not_defined(agent, name));
@@ -763,7 +893,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let v = get_reference(agent, r, frame.strict())?;
             let this = match r {
                 Reference::Env(env, _) => env.with_base_object(agent),
-                Reference::Unresolvable(_) => Value::Undefined,
+                // A declarative record's WithBaseObject() is undefined.
+                Reference::Slot(..) | Reference::Unresolvable(_) => Value::Undefined,
             };
             frame.push(v);
             frame.push(this);
@@ -805,7 +936,9 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let r = resolve_binding(agent, frame.env, name)?;
             let result = match r {
                 Reference::Unresolvable(_) => true,
-                Reference::Env(env, name) => env.delete_binding(agent, name)?,
+                Reference::Env(env, name) | Reference::Slot(env, _, name) => {
+                    env.delete_binding(agent, name)?
+                }
             };
             frame.push(Value::Boolean(result));
         }
@@ -1695,6 +1828,23 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             }
             frame.push(r?.unwrap_or(Value::Undefined));
         }
+        Op::IteratorSkip => {
+            let FrameIter::Iter(record) = frame.top_iter() else {
+                unreachable!("iterator expected")
+            };
+            let mut record = *record;
+            // Elision: if iteratorRecord.[[Done]] is false, then
+            //   Let next be ? IteratorStep(iteratorRecord) (done sets [[Done]]).
+            let r = if record.done {
+                Ok(None)
+            } else {
+                ops::iterator_step_rooted(agent, &mut record)
+            };
+            if let FrameIter::Iter(top) = frame.top_iter() {
+                *top = record;
+            }
+            r?;
+        }
         Op::IteratorRest => {
             let FrameIter::Iter(record) = frame.top_iter() else {
                 unreachable!("iterator expected")
@@ -2007,7 +2157,7 @@ impl Trace for PrivateEnv {
 impl Trace for Reference {
     fn trace(&self, t: &mut Tracer) {
         match self {
-            Reference::Env(env, name) => {
+            Reference::Env(env, name) | Reference::Slot(env, _, name) => {
                 t.env(*env);
                 t.string(*name);
             }

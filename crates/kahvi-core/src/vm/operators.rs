@@ -134,20 +134,28 @@ fn apply_string_or_numeric(
 /// Evaluates a binary operator (§13.6-13.12).
 pub fn apply_binary_operator(agent: &mut Agent, op: BinOp, l: Value, r: Value) -> JsResult<Value> {
     // Fast path for the common Number case.
-    if let (Value::Number(a), Value::Number(b)) = (l, r) {
-        let v = match op {
-            BinOp::Lt => Value::Boolean(a < b),
-            BinOp::Gt => Value::Boolean(a > b),
-            BinOp::LtEq => Value::Boolean(a <= b),
-            BinOp::GtEq => Value::Boolean(a >= b),
-            BinOp::StrictEq | BinOp::Eq => Value::Boolean(a == b),
-            BinOp::StrictNotEq | BinOp::NotEq => Value::Boolean(a != b),
-            BinOp::In | BinOp::InstanceOf => return apply_slow(agent, op, l, r),
-            _ => Value::Number(number_op(op, a, b)),
-        };
+    if let (Value::Number(a), Value::Number(b)) = (l, r)
+        && let Some(v) = number_binary(op, a, b)
+    {
         return Ok(v);
     }
     apply_slow(agent, op, l, r)
+}
+
+/// A binary operator on two Numbers, where that cannot run user code (all
+/// but `in` and `instanceof`, which need an object).
+#[inline(always)]
+pub(crate) fn number_binary(op: BinOp, a: f64, b: f64) -> Option<Value> {
+    Some(match op {
+        BinOp::Lt => Value::Boolean(a < b),
+        BinOp::Gt => Value::Boolean(a > b),
+        BinOp::LtEq => Value::Boolean(a <= b),
+        BinOp::GtEq => Value::Boolean(a >= b),
+        BinOp::StrictEq | BinOp::Eq => Value::Boolean(a == b),
+        BinOp::StrictNotEq | BinOp::NotEq => Value::Boolean(a != b),
+        BinOp::In | BinOp::InstanceOf => return None,
+        _ => Value::Number(number_op(op, a, b)),
+    })
 }
 
 fn apply_slow(agent: &mut Agent, op: BinOp, l: Value, r: Value) -> JsResult<Value> {

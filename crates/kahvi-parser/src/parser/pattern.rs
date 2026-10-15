@@ -164,8 +164,12 @@ impl Parser<'_> {
                 op: AssignOp::Assign,
                 target,
                 value,
-                ..
+                span,
             } => {
+                // A parenthesized target (`((x) = y) => {}`) is not a BindingElement.
+                if target.span().start != span.start {
+                    return self.err("invalid destructuring target", span.start as usize);
+                }
                 let target = self.pattern_to_binding(*target)?;
                 Ok(Param {
                     target,

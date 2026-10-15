@@ -28,10 +28,15 @@ pub(crate) fn parse(
     let text = agent.str_lossy(string);
     // If the String conforms to the Date Time String Format, substitute values take the place of absent format elements. When the `MM` or `DD` elements are absent, *"01"* is used. When the `HH`, `mm`, or `ss` elements are absent, *"00"* is used. When the `sss` element is absent, *"000"* is used. When the UTC offset representation is absent, date-only forms are interpreted as a UTC time and date-time forms are interpreted as a local time.
     // The substitution and the time value are computed by `parse_iso`. Strings that do not conform fall back to NaN, which the spec allows.
-    let tv = date::parse_iso(agent, &text)
-        .or_else(|| parse_date_string(agent, &text))
-        .unwrap_or(f64::NAN);
-    Ok(Value::Number(tv))
+    Ok(Value::Number(parse_time_value(agent, &text)))
+}
+
+/// The time value Date.parse gives for `text` (also used by the Date constructor,
+/// which parses "in exactly the same manner as for the parse method").
+pub(crate) fn parse_time_value(agent: &Agent, text: &str) -> f64 {
+    date::parse_iso(agent, text)
+        .or_else(|| parse_date_string(agent, text))
+        .unwrap_or(f64::NAN)
 }
 
 const MONTH_NAMES: [&str; 12] = [

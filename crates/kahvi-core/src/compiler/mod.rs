@@ -129,6 +129,7 @@ impl<'a> Compiler<'a> {
                 classes: Vec::new(),
                 messages: Vec::new(),
                 finally_targets: Vec::new(),
+                strict_ranges: Vec::new(),
                 source,
                 span: (span.start, span.end),
                 script,

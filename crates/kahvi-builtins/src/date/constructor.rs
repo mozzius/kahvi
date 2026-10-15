@@ -40,7 +40,7 @@ pub(crate) fn constructor(
                         // c.ii If v is a String, then let tv be the result of parsing v as a date (Date.parse).
                         Value::String(s) => {
                             let text = agent.str_lossy(s);
-                            date::parse_iso(agent, &text).unwrap_or(f64::NAN)
+                            super::parse::parse_time_value(agent, &text)
                         }
                         // c.iii Else, let tv be ? ToNumber(v).
                         v => ops::to_number(agent, v)?,

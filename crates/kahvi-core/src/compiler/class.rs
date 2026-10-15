@@ -50,6 +50,8 @@ impl Compiler<'_> {
         let scope = (self.code.scopes.len() - 1) as u32;
         self.emit(Op::PushScope(scope));
         self.scopes.push(JumpScope::Env);
+        // All parts of a class are strict mode code (sec-strict-mode-code).
+        let strict_start = self.code.ops.len() as u32;
 
         // ClassHeritage, evaluated in classEnv with the outer private environment.
         if let Some(h) = &c.super_class {
@@ -107,6 +109,10 @@ impl Compiler<'_> {
         self.scopes.pop();
         self.emit(Op::PopScope);
         self.emit(Op::FinishClass);
+        if !self.code.strict {
+            let end = self.code.ops.len() as u32;
+            self.code.strict_ranges.push((strict_start, end));
+        }
     }
 
     /// A constructor for a class without one: `constructor() {}` or
