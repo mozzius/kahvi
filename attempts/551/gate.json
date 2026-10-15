@@ -1,0 +1,41 @@
+{
+  "ticket": "I-segmenter",
+  "base": "95cc16889acc73c03206ca10b2fa4cf12c6f797c",
+  "head": "34e98f6d4dee117128ff94178bb33c762d2e334f",
+  "reject": [
+    "clippy failed"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs",
+      "added": 35,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segmenter/constructor.rs",
+      "added": 6,
+      "removed": 4
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs",
+      "added": 25,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_segments_prototype/containing.rs",
+      "added": 29,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_segmenter.rs",
+      "added": 158,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "error: large size difference between variants\n  --> crates/kahvi-builtins/src/support/intl_segmenter.rs:18:1\n   |\n18 | / pub(crate) enum Breaker {\n19 | |     #[default]\n20 | |     Unset,\n21 | |     Grapheme,\n22 | |     Word(Box<WordSegmenter>),\n   | |     ------------------------ the second-largest variant contains at least 8 bytes\n23 | |     Sentence(SentenceSegmenter),\n   | |     --------------------------- the largest variant contains at least 224 bytes\n24 | | }\n   | |_^ the entire enum is at least 224 bytes\n   |\n   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#large_enum_variant\n   = note: `-D clippy::large-enum-variant` implied by `-D warnings`\n   = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`\nhelp: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum\n   |\n23 -     Sentence(SentenceSegmenter),\n23 +     Sentence(Box<SentenceSegmenter>),\n   |\n\nerror: could not compile `kahvi-builtins` (lib test) due to 1 previous error\nerror: could not compile `kahvi-builtins` (lib) due to 1 previous error\n",
+  "decision": "reject"
+}

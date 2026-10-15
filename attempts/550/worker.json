@@ -1,0 +1,156 @@
+{
+  "duration_api_ms": 144300,
+  "stop_reason": "end_turn",
+  "session_id": "3d1e9904-b008-4232-97d1-e5207b4d1314",
+  "total_cost_usd": 0.6263558000000001,
+  "usage": {
+    "input_tokens": 51,
+    "cache_creation_input_tokens": 76653,
+    "cache_read_input_tokens": 1371740,
+    "output_tokens": 18196,
+    "output_tokens_details": {
+      "thinking_tokens": 4501
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 76653,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 346,
+        "cache_read_input_tokens": 82910,
+        "cache_creation_input_tokens": 720,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 720
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01VL2oxc8vSpBd3u2YKCsaLt",
+      "tool_input": {
+        "command": "cd /home/user/kahvi/work/slots/slot-0/crates/kahvi-builtins/src/support; sed -n 500,600p intl.rs; sed -n 735,1000p intl.rs; grep -rn \"resolve_options(\" .. | head"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01VkSVmRVqz1EasCVAm9qf7d",
+      "tool_input": {
+        "command": "find / -type d -path \"*icu_list-*/src\" -not -path \"/proc/*\""
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01ECRCx8UPaJtRd4sr5GgXSH",
+      "tool_input": {
+        "command": "grep -n \"pub \\|^impl\\|parts\" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_list-2.3.0/src/list_formatter.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01QPgGHJwFgDtKhYLGSv6NQS",
+      "tool_input": {
+        "command": "grep -n \"pub \" /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_list-2.3.0/src/options.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01McU5dwL7t2TuSowqmbSDvt",
+      "tool_input": {
+        "command": "python3 - <<'EOF'\nEOF\necho ok"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 50,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Intl.ListFormat is implemented: the constructor, `resolvedOptions`, `format` and `formatToParts`. `./t262 intl402/ListFormat/` passes 162/162 and `cargo clippy` is clean. I ran `cargo fmt` after the last test run but didn't re-run the tests afterwards.\n\n- **Templates:** `[[Templates]]` is an ICU4X list formatter for the resolved locale, type and style. It chooses the start/middle/end/pair patterns itself.\n- **Recovering parts:** the `writeable` crate isn't a dependency and I can't change manifests, so I couldn't ask ICU4X for formatted parts directly. `CreatePartsFromList` formats the list with a private-use marker after each element to find where each element ends, then checks that the result matches the plain formatting. If that check fails, or the list uses every private-use character, it throws the engine's not-implemented error instead of returning wrong parts. Adding `writeable` as a dependency would let this use ICU4X's part annotations directly.",
+  "ttft_ms": 1985,
+  "type": "result",
+  "duration_ms": 174338,
+  "uuid": "55ae52f8-9df3-4d84-9398-c0c9191b36d4",
+  "ttft_stream_ms": 1747,
+  "time_to_request_ms": 517,
+  "time_to_request_phases_ms": {
+    "other": 20,
+    "system_prompt": 351,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 8,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 95,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 11,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 27,
+  "time_to_request_cpu_ms": 377,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 242,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 275,
+  "process_anon_mib_result": 153,
+  "process_peak_rss_mib": 296,
+  "process_cpu_ms_turn": 7878,
+  "process_wall_ms_turn": 174337,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1748,
+  "time_to_request_from_spawn_ms": 901757,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089765674.983,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.4,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.19,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

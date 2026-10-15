@@ -1,0 +1,445 @@
+diff --git a/crates/kahvi-builtins/src/intl_list_format/constructor.rs b/crates/kahvi-builtins/src/intl_list_format/constructor.rs
+index 824851f..d70a84a 100644
+--- a/crates/kahvi-builtins/src/intl_list_format/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_list_format/constructor.rs
+@@ -4,6 +4,11 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::{
++    ServiceConstructor, available_locales, get_string_option, resolve_options,
++};
++use crate::support::intl_list_format::{ListFormatSlots, templates_for};
++
+ /// Intl.ListFormat
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -13,20 +18,71 @@ pub(crate) fn constructor(
+ ) -> JsResult<Value> {
+     // When the `Intl.ListFormat` function is called with optional arguments _locales_ and _options_, the following steps are taken:
+     //
++    let _ = this;
++    let locales = args.get_or_undefined(0);
++    let options = args.get_or_undefined(1);
+     // 1. If NewTarget is *undefined*, throw a *TypeError* exception.
++    let Some(new_target) = new_target else {
++        return Err(agent.throw_type_error("Constructor Intl.ListFormat requires 'new'"));
++    };
+     // 2. Let _listFormat_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Intl.ListFormat.prototype%"*, « [[InitializedListFormat]], [[Locale]], [[Type]], [[Style]], [[Templates]] »).
++    let list_format = ops::ordinary_create_from_constructor(
++        agent,
++        new_target,
++        "%Intl.ListFormat.prototype%",
++        ObjectKind::Native(Box::new(ListFormatSlots::default())),
++    )?;
+     // 3. Let _optionsResolution_ be ? ResolveOptions(%Intl.ListFormat%, %Intl.ListFormat%.[[LocaleData]], _locales_, _options_).
++    // (%Intl.ListFormat% has no relevant extension keys or resolution option descriptors.)
++    let ctor = ServiceConstructor {
++        available_locales: available_locales(),
++        relevant_extension_keys: &[],
++        resolution_option_descriptors: &[],
++    };
++    let options_resolution = resolve_options(
++        agent,
++        &ctor,
++        &|_, _| Vec::new(),
++        locales,
++        options,
++        &[],
++        None,
++    )?;
+     // 4. Set _options_ to _optionsResolution_.[[Options]].
++    let options = options_resolution.options;
+     // 5. Let _resolvedLocale_ be _optionsResolution_.[[ResolvedLocale]].
++    let resolved_locale = options_resolution.resolved_locale;
+     // 6. Set _listFormat_.[[Locale]] to _resolvedLocale_.[[Locale]].
+     // 7. Let _type_ be ? GetOption(_options_, *"type"*, ~string~, « *"conjunction"*, *"disjunction"*, *"unit"* », *"conjunction"*).
++    let r#type = get_string_option(
++        agent,
++        options,
++        "type",
++        &["conjunction", "disjunction", "unit"],
++        Some("conjunction"),
++    )?
++    .unwrap_or_default();
+     // 8. Set _listFormat_.[[Type]] to _type_.
+     // 9. Let _style_ be ? GetOption(_options_, *"style"*, ~string~, « *"long"*, *"short"*, *"narrow"* », *"long"*).
++    let style = get_string_option(
++        agent,
++        options,
++        "style",
++        &["long", "short", "narrow"],
++        Some("long"),
++    )?
++    .unwrap_or_default();
+     // 10. Set _listFormat_.[[Style]] to _style_.
+     // 11. Let _resolvedLocaleData_ be _resolvedLocale_.[[LocaleData]].
+     // 12. Let _dataLocaleTypes_ be _resolvedLocaleData_.[[<_type_>]].
+     // 13. Set _listFormat_.[[Templates]] to _dataLocaleTypes_.[[<_style_>]].
++    let templates = templates_for(agent, &resolved_locale.data_locale, &r#type, &style)?;
++    if let Some(slots) = agent.native_mut::<ListFormatSlots>(list_format) {
++        slots.locale = resolved_locale.locale;
++        slots.r#type = r#type;
++        slots.style = style;
++        slots.templates = Some(templates);
++    }
+     // 14. Return _listFormat_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.ListFormat"))
++    Ok(Value::Object(list_format))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_list_format/prototype_format.rs b/crates/kahvi-builtins/src/intl_list_format/prototype_format.rs
+index 6644707..4f0d811 100644
+--- a/crates/kahvi-builtins/src/intl_list_format/prototype_format.rs
++++ b/crates/kahvi-builtins/src/intl_list_format/prototype_format.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_list_format::{ListFormatSlots, format_list, string_list_from_iterable};
++
+ /// Intl.ListFormat.prototype.format
+ pub(crate) fn prototype_format(
+     agent: &mut Agent,
+@@ -13,10 +15,15 @@ pub(crate) fn prototype_format(
+ ) -> JsResult<Value> {
+     // When the `format` method is called with an argument _list_, the following steps are taken:
+     //
++    let _ = new_target;
+     // 1. Let _lf_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_lf_, [[InitializedListFormat]]).
++    let lf = match this {
++        Value::Object(o) if agent.native::<ListFormatSlots>(o).is_some() => o,
++        _ => return Err(agent.throw_type_error("not an Intl.ListFormat")),
++    };
+     // 3. Let _stringList_ be ? StringListFromIterable(_list_).
++    let string_list = string_list_from_iterable(agent, args.get_or_undefined(0))?;
+     // 4. Return FormatList(_lf_, _stringList_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.ListFormat.prototype.format"))
++    format_list(agent, lf, &string_list)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_list_format/prototype_format_to_parts.rs b/crates/kahvi-builtins/src/intl_list_format/prototype_format_to_parts.rs
+index 6aeebe4..6e94f37 100644
+--- a/crates/kahvi-builtins/src/intl_list_format/prototype_format_to_parts.rs
++++ b/crates/kahvi-builtins/src/intl_list_format/prototype_format_to_parts.rs
+@@ -4,6 +4,10 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_list_format::{
++    ListFormatSlots, format_list_to_parts, string_list_from_iterable,
++};
++
+ /// Intl.ListFormat.prototype.formatToParts
+ pub(crate) fn prototype_format_to_parts(
+     agent: &mut Agent,
+@@ -13,10 +17,15 @@ pub(crate) fn prototype_format_to_parts(
+ ) -> JsResult<Value> {
+     // When the `formatToParts` method is called with an argument _list_, the following steps are taken:
+     //
++    let _ = new_target;
+     // 1. Let _lf_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_lf_, [[InitializedListFormat]]).
++    let lf = match this {
++        Value::Object(o) if agent.native::<ListFormatSlots>(o).is_some() => o,
++        _ => return Err(agent.throw_type_error("not an Intl.ListFormat")),
++    };
+     // 3. Let _stringList_ be ? StringListFromIterable(_list_).
++    let string_list = string_list_from_iterable(agent, args.get_or_undefined(0))?;
+     // 4. Return FormatListToParts(_lf_, _stringList_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.ListFormat.prototype.formatToParts"))
++    format_list_to_parts(agent, lf, &string_list)
+ }
+diff --git a/crates/kahvi-builtins/src/intl_list_format/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_list_format/prototype_resolved_options.rs
+index d387932..c9d018e 100644
+--- a/crates/kahvi-builtins/src/intl_list_format/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_list_format/prototype_resolved_options.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_list_format::ListFormatSlots;
++
+ /// Intl.ListFormat.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+@@ -32,6 +34,34 @@ pub(crate) fn prototype_resolved_options(
+     // *"type"* |
+     // [[Style]] |
+     // *"style"* |
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.ListFormat.prototype.resolvedOptions"))
++    // 1. Let _lf_ be the *this* value.
++    let _ = (args, new_target);
++    // 2. Perform ? RequireInternalSlot(_lf_, [[InitializedListFormat]]).
++    let slots = match this {
++        Value::Object(o) => agent.native::<ListFormatSlots>(o),
++        _ => None,
++    };
++    let Some(slots) = slots else {
++        return Err(agent.throw_type_error("not an Intl.ListFormat"));
++    };
++    let values = [
++        ("locale", slots.locale.clone()),
++        ("type", slots.r#type.clone()),
++        ("style", slots.style.clone()),
++    ];
++    // 3. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
++    let proto = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(proto));
++    // 4. For each row of [table-listformat-resolvedoptions-properties], except the header row, in table order, do
++    for (property, value) in values {
++        // a. Let _propertyKey_ be the Property value of the current row.
++        let key = agent.key(property);
++        // b. Let _value_ be the value of _lf_'s internal slot whose name is the Internal Slot value of the current row.
++        // c. Assert: _value_ is not *undefined*.
++        let value = agent.string(&value);
++        // d. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++        ops::create_data_property_or_throw(agent, options, key, Value::String(value))?;
++    }
++    // 5. Return _options_.
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_list_format.rs b/crates/kahvi-builtins/src/support/intl_list_format.rs
+index 6d33fa9..bcfc46d 100644
+--- a/crates/kahvi-builtins/src/support/intl_list_format.rs
++++ b/crates/kahvi-builtins/src/support/intl_list_format.rs
+@@ -1,7 +1,232 @@
+ //! Intl.ListFormat: the [[InitializedListFormat]] internal slots and the
+ //! abstract operations shared by its built-ins.
+-//!
+-//! The ticket for this service owns this file: define the internal-slot
+-//! struct here (`ObjectKind::Native`, see docs/INTL.md) and the abstract
+-//! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use icu::list::ListFormatter;
++use icu::list::options::{ListFormatterOptions, ListLength};
++use icu::locale::Locale;
++use kahvi_core::gc::{Trace, Tracer};
++use kahvi_core::ops::iteration::{IteratorKind, get_iterator, iterator_close, iterator_step_value};
++use kahvi_core::prelude::*;
++
++/// The internal slots of an Intl.ListFormat: [[InitializedListFormat]],
++/// [[Locale]], [[Type]], [[Style]], [[Templates]].
++///
++/// [[Templates]] is the ICU4X list formatter for the locale, type and style:
++/// it holds the start, middle, end and pair patterns and selects among them
++/// from the neighbouring elements (the implementation-defined index _n_).
++#[derive(Debug, Default)]
++pub(crate) struct ListFormatSlots {
++    /// [[Locale]]
++    pub locale: String,
++    /// [[Type]]: "conjunction", "disjunction" or "unit".
++    pub r#type: String,
++    /// [[Style]]: "long", "short" or "narrow".
++    pub style: String,
++    /// [[Templates]]
++    pub templates: Option<ListFormatter>,
++}
++
++impl Trace for ListFormatSlots {
++    fn trace(&self, _: &mut Tracer) {}
++}
++
++/// A Record with fields [[Type]] ("element" or "literal") and [[Value]].
++#[derive(Debug, Clone)]
++pub(crate) struct ListPart {
++    pub is_element: bool,
++    pub value: Vec<u16>,
++}
++
++/// The [[Templates]] for a locale, type and style (steps 11-13 of the
++/// constructor), from ICU4X data.
++pub(crate) fn templates_for(
++    agent: &mut Agent,
++    locale: &str,
++    r#type: &str,
++    style: &str,
++) -> JsResult<ListFormatter> {
++    let Ok(locale) = Locale::try_from_str(locale) else {
++        return Err(agent.throw_range_error("invalid locale"));
++    };
++    let length = match style {
++        "short" => ListLength::Short,
++        "narrow" => ListLength::Narrow,
++        _ => ListLength::Wide,
++    };
++    let options = ListFormatterOptions::default().with_length(length);
++    let formatter = match r#type {
++        "disjunction" => ListFormatter::try_new_or((&locale).into(), options),
++        "unit" => ListFormatter::try_new_unit((&locale).into(), options),
++        _ => ListFormatter::try_new_and((&locale).into(), options),
++    };
++    match formatter {
++        Ok(f) => Ok(f),
++        Err(_) => Err(agent.not_implemented("Intl.ListFormat list patterns for this locale")),
++    }
++}
++
++/// StringListFromIterable ( _iterable_ )
++pub(crate) fn string_list_from_iterable(
++    agent: &mut Agent,
++    iterable: Value,
++) -> JsResult<Vec<JsString>> {
++    // 1. If _iterable_ is *undefined*, then
++    if matches!(iterable, Value::Undefined) {
++        // a. Return a new empty List.
++        return Ok(Vec::new());
++    }
++    // 2. Let _iteratorRecord_ be ? GetIterator(_iterable_, ~sync~).
++    let mut iterator_record = get_iterator(agent, iterable, IteratorKind::Sync)?;
++    // 3. Let _list_ be a new empty List.
++    let mut list = Vec::new();
++    // 4. Repeat,
++    loop {
++        // a. Let _next_ be ? IteratorStepValue(_iteratorRecord_).
++        let next = iterator_step_value(agent, &mut iterator_record)?;
++        // b. If _next_ is ~done~, then
++        let Some(next) = next else {
++            // i. Return _list_.
++            return Ok(list);
++        };
++        // c. If _next_ is not a String, then
++        let Value::String(next) = next else {
++            // i. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
++            let error = Err(agent.throw_type_error("list elements must be strings"));
++            // ii. Return ? IteratorClose(_iteratorRecord_, _error_).
++            return iterator_close(agent, &iterator_record, error);
++        };
++        // d. Append _next_ to _list_.
++        list.push(next);
++    }
++}
++
++/// CreatePartsFromList ( _listFormat_, _list_ )
++///
++/// The ICU4X formatter chooses the patterns (the index _n_ and the
++/// DeconstructPattern substitution) itself and gives only the formatted
++/// string, so the parts are recovered from it: every element is formatted
++/// followed by a marker character that occurs in no element, which makes
++/// each element's end, and so the literal before it, unambiguous.
++pub(crate) fn create_parts_from_list(
++    agent: &mut Agent,
++    list_format: Object,
++    list: &[JsString],
++) -> JsResult<Vec<ListPart>> {
++    // 1. Let _size_ be the number of elements of _list_.
++    let size = list.len();
++    // 2. If _size_ is 0, then
++    if size == 0 {
++        // a. Return a new empty List.
++        return Ok(Vec::new());
++    }
++    let elements: Vec<String> = list.iter().map(|s| agent.str_lossy(*s)).collect();
++    let Some(slots) = agent.native::<ListFormatSlots>(list_format) else {
++        return Err(agent.throw_type_error("not an Intl.ListFormat"));
++    };
++    let Some(formatter) = &slots.templates else {
++        return Err(agent.not_implemented("Intl.ListFormat without templates"));
++    };
++    // Steps 3-8: the patterns for pair, start, middle and end, applied by ICU4X.
++    let plain = formatter.format(elements.iter()).to_string();
++    let Some(marker) = ('\u{E000}'..='\u{F8FF}').find(|m| !elements.iter().any(|e| e.contains(*m)))
++    else {
++        return Err(agent
++            .not_implemented("Intl.ListFormat parts of lists using every private-use character"));
++    };
++    let marked: Vec<String> = elements.iter().map(|e| format!("{e}{marker}")).collect();
++    let formatted = formatter.format(marked.iter()).to_string();
++    // The text before each marker is the literal before the element, then the element.
++    let mut segments: Vec<&str> = formatted.split(marker).collect();
++    // The last segment follows the last element: only a literal.
++    let tail = segments.pop().unwrap_or("");
++    let mut parts = Vec::new();
++    let mut rebuilt = String::new();
++    for (segment, (element, original)) in segments.iter().zip(elements.iter().zip(list)) {
++        let Some(literal) = segment.strip_suffix(element.as_str()) else {
++            return Err(agent.not_implemented(
++                "Intl.ListFormat parts: element not found in the formatted list",
++            ));
++        };
++        if !literal.is_empty() {
++            parts.push(ListPart {
++                is_element: false,
++                value: literal.encode_utf16().collect(),
++            });
++        }
++        parts.push(ListPart {
++            is_element: true,
++            value: agent.str(*original).to_vec(),
++        });
++        rebuilt.push_str(literal);
++        rebuilt.push_str(element);
++    }
++    rebuilt.push_str(tail);
++    if !tail.is_empty() {
++        parts.push(ListPart {
++            is_element: false,
++            value: tail.encode_utf16().collect(),
++        });
++    }
++    // The marker must not have changed which patterns apply.
++    if rebuilt != plain {
++        return Err(agent.not_implemented("Intl.ListFormat parts for this list"));
++    }
++    // 9. Return _parts_.
++    Ok(parts)
++}
++
++/// FormatList ( _listFormat_, _list_ )
++pub(crate) fn format_list(
++    agent: &mut Agent,
++    list_format: Object,
++    list: &[JsString],
++) -> JsResult<Value> {
++    // 1. Let _parts_ be CreatePartsFromList(_listFormat_, _list_).
++    let parts = create_parts_from_list(agent, list_format, list)?;
++    // 2. Let _result_ be the empty String.
++    let mut result: Vec<u16> = Vec::new();
++    // 3. For each Record { [[Type]], [[Value]] } _part_ of _parts_, do
++    for part in &parts {
++        // a. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
++        result.extend_from_slice(&part.value);
++    }
++    // 4. Return _result_.
++    Ok(Value::String(agent.intern(&result)))
++}
++
++/// FormatListToParts ( _listFormat_, _list_ )
++pub(crate) fn format_list_to_parts(
++    agent: &mut Agent,
++    list_format: Object,
++    list: &[JsString],
++) -> JsResult<Value> {
++    // 1. Let _parts_ be CreatePartsFromList(_listFormat_, _list_).
++    let parts = create_parts_from_list(agent, list_format, list)?;
++    // 2. Let _result_ be ! ArrayCreate(0).
++    // 3. Let _n_ be 0.
++    let mut objects = Vec::new();
++    // 4. For each Record { [[Type]], [[Value]] } _part_ of _parts_, do
++    for part in &parts {
++        // a. Let _obj_ be OrdinaryObjectCreate(%Object.prototype%).
++        let proto = agent.intrinsic("%Object.prototype%");
++        let obj = agent.ordinary_object_create(Some(proto));
++        // b. Perform ! CreateDataPropertyOrThrow(_obj_, *"type"*, _part_.[[Type]]).
++        let key = agent.key("type");
++        let type_name = agent.string(if part.is_element {
++            "element"
++        } else {
++            "literal"
++        });
++        ops::create_data_property_or_throw(agent, obj, key, Value::String(type_name))?;
++        // c. Perform ! CreateDataPropertyOrThrow(_obj_, *"value"*, _part_.[[Value]]).
++        let key = agent.key("value");
++        let value = agent.intern(&part.value);
++        ops::create_data_property_or_throw(agent, obj, key, Value::String(value))?;
++        // d. Perform ! CreateDataPropertyOrThrow(_result_, ! ToString(𝔽(_n_)), _obj_).
++        objects.push(Value::Object(obj));
++        // e. Set _n_ to _n_ + 1.
++    }
++    // 5. Return _result_.
++    Ok(Value::Object(ops::create_array_from_list(agent, &objects)))
++}
