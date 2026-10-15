@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 11135,
+  "stop_reason": "tool_use",
+  "session_id": "e2eb7219-9705-42d7-b6d0-c5610ca0f750",
+  "total_cost_usd": 0.0492169,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8980,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 1206,
+    "output_tokens_details": {
+      "thinking_tokens": 942
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8980,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1206,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 8980,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8980
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change follows the spec steps in order. The target went from 8 to 76 passing with no regressions, which fits the size of the diff. I found no defects.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change follows the spec steps in order. The target went from 8 to 76 passing with no regressions, which fits the size of the diff. I found no defects.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9974,
+  "type": "result",
+  "duration_ms": 11248,
+  "uuid": "3d1bdd6e-107f-4084-9cef-7ef223346f65",
+  "ttft_stream_ms": 2223,
+  "time_to_request_ms": 690,
+  "time_to_request_phases_ms": {
+    "other": 34,
+    "system_prompt": 390,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 49,
+    "input_hooks": 18,
+    "tool_pool_refresh": 2,
+    "init_message": 15,
+    "engine_pickup": 4,
+    "message_prep": 2,
+    "model_config_wait": 146,
+    "autocompact": 5,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 127,
+  "time_to_request_cpu_ms": 450,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 247,
+  "process_anon_mib_turn_start": 130,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 117,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 868,
+  "process_wall_ms_turn": 11247,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 41,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2224,
+  "time_to_request_from_spawn_ms": 2000803,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051070761.2126,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.27,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

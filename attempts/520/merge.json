@@ -1,0 +1,20 @@
+{
+  "merged": true,
+  "commit": "3662d28bde38819a12c54ed2de1a8933b7df5447",
+  "batch": [
+    "B-atomics-exchange",
+    "B-atomics-is-lock-free",
+    "B-atomics-load",
+    "B-atomics-or",
+    "B-atomics-pause"
+  ],
+  "new_passes": 18,
+  "total_pass": 81725,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Atomics/exchange/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/exchange/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/exchange/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/exchange/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "ticket": "B-shared-array-buffer-prototype-get-growable",
+  "base": "59c7617965947bbcca2ff962ddd72ec94112985b",
+  "head": "70292a20694f9b5b9d1bb1f1d2ac5f6804bb5e68",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/shared_array_buffer/prototype_get_growable.rs",
+      "added": 21,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 6,
+    "after": 18,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
