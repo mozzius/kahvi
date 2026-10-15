@@ -4,6 +4,10 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::intl_date_time_format::{
+    COMPONENTS, DateTimeFormatSlots, unwrap_date_time_format,
+};
+
 /// Intl.DateTimeFormat.prototype.resolvedOptions
 pub(crate) fn prototype_resolved_options(
     agent: &mut Agent,
@@ -105,6 +109,56 @@ pub(crate) fn prototype_resolved_options(
     // In this version of the API, the *"timeZone"* property will be the identifier of the host environment's time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
     // NOTE:
     // For compatibility with versions prior to the fifth edition, the *"hour12"* property is set in addition to the *"hourCycle"* property.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Intl.DateTimeFormat.prototype.resolvedOptions"))
+    let _ = (args, new_target);
+    let dtf = unwrap_date_time_format(agent, this)?;
+    let slots = match dtf {
+        Value::Object(o) => agent.native::<DateTimeFormatSlots>(o),
+        _ => None,
+    };
+    let Some(slots) = slots else {
+        return Err(agent.throw_type_error("not an Intl.DateTimeFormat"));
+    };
+    let locale = slots.locale.clone();
+    let calendar = slots.calendar.clone();
+    let numbering_system = slots.numbering_system.clone();
+    let time_zone = slots.time_zone.clone();
+    let hour_cycle = slots.hour_cycle.clone();
+    let date_style = slots.date_style.clone();
+    let time_style = slots.time_style.clone();
+    let format = slots.date_time_format.clone();
+    let styled = date_style.is_some() || time_style.is_some();
+    let options = agent.ordinary_object_create(Some(agent.intrinsic("%Object.prototype%")));
+    let mut props: Vec<(&str, Value)> = Vec::new();
+    let string_value = |agent: &mut Agent, s: &str| Value::String(agent.string(s));
+    props.push(("locale", string_value(agent, &locale)));
+    props.push(("calendar", string_value(agent, &calendar)));
+    props.push(("numberingSystem", string_value(agent, &numbering_system)));
+    props.push(("timeZone", string_value(agent, &time_zone)));
+    if let Some(hc) = &hour_cycle {
+        props.push(("hourCycle", string_value(agent, hc)));
+        props.push(("hour12", Value::Boolean(hc == "h11" || hc == "h12")));
+    }
+    for (property_key, _) in COMPONENTS {
+        if styled {
+            break;
+        }
+        if *property_key == "fractionalSecondDigits" {
+            if let Some(n) = format.fractional_second_digits {
+                props.push((property_key, Value::Number(n as f64)));
+            }
+        } else if let Some(v) = format.get(property_key) {
+            props.push((property_key, string_value(agent, v)));
+        }
+    }
+    if let Some(s) = &date_style {
+        props.push(("dateStyle", string_value(agent, s)));
+    }
+    if let Some(s) = &time_style {
+        props.push(("timeStyle", string_value(agent, s)));
+    }
+    for (name, value) in props {
+        let key = agent.key(name);
+        ops::create_data_property_or_throw(agent, options, key, value)?;
+    }
+    Ok(Value::Object(options))
 }

@@ -385,19 +385,23 @@ pub(crate) fn default_locale() -> &'static str {
 
 /// Lists the locales of ICU4X's baked data. Baked data leaves out a locale
 /// whose data equals its parent's, so one marker misses locales: Gregorian
-/// month names cover every language, number symbols add regional variants.
+/// month names cover every language, number symbols and date patterns add
+/// regional variants (en-GB has its own date order but en-001's names).
 struct BakedLocales;
 
 const _: () = {
-    use icu_datetime_data::__impl_datetime_names_month_gregorian_v1;
+    use icu_datetime_data::{
+        __impl_datetime_names_month_gregorian_v1, __impl_datetime_patterns_date_gregorian_v1,
+    };
     use icu_decimal_data::{__impl_decimal_symbols_v1, make_provider};
     make_provider!(BakedLocales);
     __impl_datetime_names_month_gregorian_v1!(BakedLocales, ITER);
+    __impl_datetime_patterns_date_gregorian_v1!(BakedLocales, ITER);
     __impl_decimal_symbols_v1!(BakedLocales, ITER);
 };
 
 /// The Available Locales List of every service: the locales ICU4X's
-/// compiled data has month names or number symbols for, plus
+/// compiled data has month names, number symbols or date patterns for, plus
 /// DefaultLocale(), plus the less narrow tags ECMA-402 requires for each
 /// (language, language-script, language-region).
 pub(crate) fn available_locales() -> &'static [String] {
@@ -409,7 +413,10 @@ pub(crate) fn available_locales() -> &'static [String] {
         let symbols = IterableDataProvider::<icu::decimal::provider::DecimalSymbolsV1>::iter_ids(
             &BakedLocales,
         );
-        let ids = months.into_iter().chain(symbols).flatten();
+        let patterns = IterableDataProvider::<
+            icu::datetime::provider::semantic_skeletons::DatetimePatternsDateGregorianV1,
+        >::iter_ids(&BakedLocales);
+        let ids = months.into_iter().chain(symbols).chain(patterns).flatten();
         let mut list: Vec<String> = Vec::new();
         let mut add = |tag: String| {
             if !list.contains(&tag) {
@@ -431,6 +438,28 @@ pub(crate) fn available_locales() -> &'static [String] {
                 add(format!("{lang}-{region}"));
             }
             add(canonicalize_unicode_locale_id(&full.to_string()));
+        }
+        // Baked data stores a language's default region under the bare
+        // language (pt is pt-BR's data), so add the likely-subtags region of
+        // each language: CLDR's data for "pt" is the data for "pt-BR".
+        let expander = icu::locale::LocaleExpander::new_common();
+        let mut regional = Vec::new();
+        for tag in &list {
+            let Ok(mut id) = icu::locale::LanguageIdentifier::try_from_str(tag) else {
+                continue;
+            };
+            if id.region.is_some() || id.script.is_some() || id.language.is_unknown() {
+                continue;
+            }
+            expander.maximize(&mut id);
+            if let Some(region) = id.region {
+                regional.push(format!("{}-{region}", id.language));
+            }
+        }
+        for tag in regional {
+            if !list.contains(&tag) {
+                list.push(tag);
+            }
         }
         list.sort();
         list
