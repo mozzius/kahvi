@@ -1,0 +1,411 @@
+diff --git a/crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs b/crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs
+index 1be8d17..03b54d0 100644
+--- a/crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs
++++ b/crates/kahvi-builtins/src/intl_segment_iterator_prototype/next.rs
+@@ -4,6 +4,10 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_segmenter::{
++    SegmentIteratorSlots, create_segment_data_object, find_boundary,
++};
++
+ /// IntlSegmentIteratorPrototype.next
+ pub(crate) fn next(
+     agent: &mut Agent,
+@@ -25,6 +29,36 @@ pub(crate) fn next(
+     // 9. Set _iterator_.[[IteratedStringNextSegmentCodeUnitIndex]] to _endIndex_.
+     // 10. Let _segmentData_ be CreateSegmentDataObject(_segmenter_, _string_, _startIndex_, _endIndex_).
+     // 11. Return CreateIteratorResultObject(_segmentData_, *false*).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("IntlSegmentIteratorPrototype.next"))
++    let _ = (args, new_target);
++    let Some(slots) = (match this {
++        Value::Object(o) => agent.native::<SegmentIteratorSlots>(o),
++        _ => None,
++    }) else {
++        return Err(
++            agent.throw_type_error("%SegmentIterator%.next called on an incompatible receiver")
++        );
++    };
++    let (segmenter, string, start_index) = (slots.segmenter, slots.string, slots.next_index);
++    let bounds = slots.bounds.clone();
++    let length = agent.str_len(string);
++    if start_index >= length {
++        return Ok(Value::Object(ops::create_iter_result_object(
++            agent,
++            Value::Undefined,
++            true,
++        )));
++    }
++    let end_index = find_boundary(agent, &bounds, string, start_index, true);
++    if let Value::Object(o) = this
++        && let Some(slots) = agent.native_mut::<SegmentIteratorSlots>(o)
++    {
++        slots.next_index = end_index;
++    }
++    let segment_data =
++        create_segment_data_object(agent, segmenter, &bounds, string, start_index, end_index)?;
++    Ok(Value::Object(ops::create_iter_result_object(
++        agent,
++        Value::Object(segment_data),
++        false,
++    )))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_segmenter/constructor.rs b/crates/kahvi-builtins/src/intl_segmenter/constructor.rs
+index b677037..952b16f 100644
+--- a/crates/kahvi-builtins/src/intl_segmenter/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_segmenter/constructor.rs
+@@ -55,18 +55,20 @@ pub(crate) fn constructor(
+     let resolved_locale = options_resolution.resolved_locale;
+     // 7. Set _segmenter_.[[Locale]] to _resolvedLocale_.[[Locale]].
+     // 8. Let _granularity_ be ? GetOption(_options_, *"granularity"*, ~string~, « *"grapheme"*, *"word"*, *"sentence"* », *"grapheme"*).
+-    let granularity = get_string_option(
++    let Some(granularity) = get_string_option(
+         agent,
+         options,
+         "granularity",
+         &["grapheme", "word", "sentence"],
+         Some("grapheme"),
+     )?
+-    .expect("a default");
++    else {
++        return Err(agent.not_implemented("Intl.Segmenter: granularity option has no default"));
++    };
+     // 9. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
+-    let slots = agent
+-        .native_mut::<SegmenterSlots>(segmenter)
+-        .expect("created above");
++    let Some(slots) = agent.native_mut::<SegmenterSlots>(segmenter) else {
++        return Err(agent.not_implemented("Intl.Segmenter: lost internal slots"));
++    };
+     slots.locale = resolved_locale.locale;
+     slots.granularity = granularity;
+     // 10. Return _segmenter_.
+diff --git a/crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs
+index 5f8b986..f7ad992 100644
+--- a/crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_segmenter/prototype_resolved_options.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_segmenter::SegmenterSlots;
++
+ /// Intl.Segmenter.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+@@ -30,6 +32,24 @@ pub(crate) fn prototype_resolved_options(
+     // *"locale"* |
+     // [[SegmenterGranularity]] |
+     // *"granularity"* |
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.Segmenter.prototype.resolvedOptions"))
++    let _ = (args, new_target);
++    let Some((locale, granularity)) = (match this {
++        Value::Object(o) => agent
++            .native::<SegmenterSlots>(o)
++            .map(|s| (s.locale.clone(), s.granularity.clone())),
++        _ => None,
++    }) else {
++        return Err(agent.throw_type_error(
++            "Intl.Segmenter.prototype.resolvedOptions called on an incompatible receiver",
++        ));
++    };
++    let proto = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(proto));
++    let locale = agent.string(&locale);
++    let key = agent.key("locale");
++    ops::create_data_property_or_throw(agent, options, key, Value::String(locale))?;
++    let granularity = agent.string(&granularity);
++    let key = agent.key("granularity");
++    ops::create_data_property_or_throw(agent, options, key, Value::String(granularity))?;
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_segmenter/prototype_segment.rs b/crates/kahvi-builtins/src/intl_segmenter/prototype_segment.rs
+index 14fb0a4..898a25f 100644
+--- a/crates/kahvi-builtins/src/intl_segmenter/prototype_segment.rs
++++ b/crates/kahvi-builtins/src/intl_segmenter/prototype_segment.rs
+@@ -31,5 +31,5 @@ pub(crate) fn prototype_segment(
+     // 4. Return CreateSegmentsObject(_segmenter_, _string_).
+     Ok(Value::Object(create_segments_object(
+         agent, segmenter, string,
+-    )))
++    )?))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_segments_prototype/containing.rs b/crates/kahvi-builtins/src/intl_segments_prototype/containing.rs
+index ea2a239..a1682f5 100644
+--- a/crates/kahvi-builtins/src/intl_segments_prototype/containing.rs
++++ b/crates/kahvi-builtins/src/intl_segments_prototype/containing.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_segmenter::{SegmentsSlots, create_segment_data_object, find_boundary};
++
+ /// IntlSegmentsPrototype.containing
+ pub(crate) fn containing(
+     agent: &mut Agent,
+@@ -23,6 +25,32 @@ pub(crate) fn containing(
+     // 8. Let _startIndex_ be FindBoundary(_segmenter_, _string_, _n_, ~before~).
+     // 9. Let _endIndex_ be FindBoundary(_segmenter_, _string_, _n_, ~after~).
+     // 10. Return CreateSegmentDataObject(_segmenter_, _string_, _startIndex_, _endIndex_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("IntlSegmentsPrototype.containing"))
++    let _ = new_target;
++    let Some(slots) = (match this {
++        Value::Object(o) => agent.native::<SegmentsSlots>(o),
++        _ => None,
++    }) else {
++        return Err(
++            agent.throw_type_error("%Segments%.containing called on an incompatible receiver")
++        );
++    };
++    let segmenter = slots.segmenter;
++    let string = slots.string;
++    let bounds = slots.bounds.clone();
++    let length = agent.str_len(string);
++    let n = ops::to_integer_or_infinity(agent, args.get_or_undefined(0))?;
++    if n < 0.0 || n >= length as f64 {
++        return Ok(Value::Undefined);
++    }
++    let n = n as usize;
++    let start_index = find_boundary(agent, &bounds, string, n, false);
++    let end_index = find_boundary(agent, &bounds, string, n, true);
++    Ok(Value::Object(create_segment_data_object(
++        agent,
++        segmenter,
++        &bounds,
++        string,
++        start_index,
++        end_index,
++    )?))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_segments_prototype/symbol_iterator.rs b/crates/kahvi-builtins/src/intl_segments_prototype/symbol_iterator.rs
+index 79c4777..2f3ab84 100644
+--- a/crates/kahvi-builtins/src/intl_segments_prototype/symbol_iterator.rs
++++ b/crates/kahvi-builtins/src/intl_segments_prototype/symbol_iterator.rs
+@@ -30,8 +30,9 @@ pub(crate) fn symbol_iterator(
+     let segmenter = slots.segmenter;
+     // 4. Let _string_ be _segments_.[[SegmentsString]].
+     let string = slots.string;
++    let bounds = slots.bounds.clone();
+     // 5. Return CreateSegmentIterator(_segmenter_, _string_).
+     Ok(Value::Object(create_segment_iterator(
+-        agent, segmenter, string,
++        agent, segmenter, string, bounds,
+     )))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_segmenter.rs b/crates/kahvi-builtins/src/support/intl_segmenter.rs
+index 736d8b8..33d9f54 100644
+--- a/crates/kahvi-builtins/src/support/intl_segmenter.rs
++++ b/crates/kahvi-builtins/src/support/intl_segmenter.rs
+@@ -6,6 +6,11 @@
+ //! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
+ 
++use std::sync::Arc;
++
++use icu::locale::Locale;
++use icu::segmenter::options::{SentenceBreakOptions, WordBreakOptions};
++use icu::segmenter::{GraphemeClusterSegmenter, SentenceSegmenter, WordSegmenter};
+ use kahvi_core::gc::{Trace, Tracer};
+ use kahvi_core::prelude::*;
+ 
+@@ -30,6 +35,8 @@ pub(crate) struct SegmentsSlots {
+     pub segmenter: Object,
+     /// [[SegmentsString]]
+     pub string: JsString,
++    /// The boundaries of [[SegmentsString]], computed once (see `boundaries`).
++    pub bounds: Arc<Vec<(usize, bool)>>,
+ }
+ 
+ impl Trace for SegmentsSlots {
+@@ -48,6 +55,8 @@ pub(crate) struct SegmentIteratorSlots {
+     pub string: JsString,
+     /// [[IteratedStringNextSegmentCodeUnitIndex]]
+     pub next_index: usize,
++    /// The boundaries of [[IteratedString]], shared with the Segments instance.
++    pub bounds: Arc<Vec<(usize, bool)>>,
+ }
+ 
+ impl Trace for SegmentIteratorSlots {
+@@ -62,17 +71,158 @@ pub(crate) fn create_segments_object(
+     agent: &mut Agent,
+     segmenter: Object,
+     string: JsString,
+-) -> Object {
++) -> JsResult<Object> {
++    let bounds = Arc::new(boundaries(agent, segmenter, string)?);
+     // 1. Let _internalSlotsList_ be « [[SegmentsSegmenter]], [[SegmentsString]] ».
+     // 2. Let _segments_ be OrdinaryObjectCreate(%IntlSegmentsPrototype%, _internalSlotsList_).
+     // 3. Set _segments_.[[SegmentsSegmenter]] to _segmenter_.
+     // 4. Set _segments_.[[SegmentsString]] to _string_.
+     let proto = agent.intrinsic("%IntlSegmentsPrototype%");
+     // 5. Return _segments_.
+-    agent.object_with_kind(
++    Ok(agent.object_with_kind(
+         Some(proto),
+-        ObjectKind::Native(Box::new(SegmentsSlots { segmenter, string })),
+-    )
++        ObjectKind::Native(Box::new(SegmentsSlots {
++            segmenter,
++            string,
++            bounds,
++        })),
++    ))
++}
++
++/// The segmentation boundaries of `string` for `granularity`, ascending, as
++/// code unit indices paired with whether the segment they end is word-like
++/// (only meaningful for "word"). The first entry is the boundary at 0.
++///
++/// The word and sentence segmenters are built for [[Locale]]. ICU4X has no
++/// locale-specific grapheme cluster data, so that segmenter is locale-independent.
++/// For "word", the flag is that of the segment ending at the boundary.
++fn boundaries(
++    agent: &mut Agent,
++    segmenter: Object,
++    string: JsString,
++) -> JsResult<Vec<(usize, bool)>> {
++    let Some((locale, granularity)) = agent
++        .native::<SegmenterSlots>(segmenter)
++        .map(|s| (s.locale.clone(), s.granularity.clone()))
++    else {
++        return Err(agent.not_implemented("Intl.Segmenter: segmenter has no internal slots"));
++    };
++    let Ok(locale) = locale.parse::<Locale>() else {
++        return Err(agent.not_implemented("Intl.Segmenter: unparseable [[Locale]]"));
++    };
++    let units = agent.str(string);
++    match granularity.as_str() {
++        "word" => {
++            let mut options = WordBreakOptions::default();
++            options.content_locale = Some(&locale.id);
++            match WordSegmenter::try_new_auto(options) {
++                Ok(s) => Ok(s
++                    .as_borrowed()
++                    .segment_utf16(units)
++                    .iter_with_word_type()
++                    .map(|(i, t)| (i, t.is_word_like()))
++                    .collect()),
++                Err(_) => Err(agent.not_implemented("Intl.Segmenter: word break data")),
++            }
++        }
++        "sentence" => {
++            let mut options = SentenceBreakOptions::default();
++            options.content_locale = Some(&locale.id);
++            match SentenceSegmenter::try_new(options) {
++                Ok(s) => Ok(s
++                    .as_borrowed()
++                    .segment_utf16(units)
++                    .map(|i| (i, false))
++                    .collect()),
++                Err(_) => Err(agent.not_implemented("Intl.Segmenter: sentence break data")),
++            }
++        }
++        "grapheme" => Ok(GraphemeClusterSegmenter::new()
++            .segment_utf16(units)
++            .map(|i| (i, false))
++            .collect()),
++        _ => Err(agent.not_implemented("Intl.Segmenter: unknown [[SegmenterGranularity]]")),
++    }
++}
++
++/// FindBoundary ( _segmenter_, _string_, _startIndex_, _direction_ )
++///
++/// `bounds` is the boundary list of _string_ for _segmenter_ (see `boundaries`).
++pub(crate) fn find_boundary(
++    agent: &Agent,
++    bounds: &[(usize, bool)],
++    string: JsString,
++    start_index: usize,
++    after: bool,
++) -> usize {
++    // 1. Let _length_ be the length of _string_.
++    let length = agent.str_len(string);
++    // 2. Assert: _startIndex_ < _length_.
++    // 3. Let _locale_ be _segmenter_.[[Locale]].
++    // 4. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].
++    if !after {
++        // 5. If _direction_ is ~before~, then
++        //    a. Search _string_ for the last segmentation boundary that is preceded by at most _startIndex_ code units from the beginning, using locale _locale_ and text element granularity _granularity_.
++        //    b. If a boundary is found, return the count of code units in _string_ preceding it.
++        if let Some((i, _)) = bounds.iter().rev().find(|(i, _)| *i <= start_index) {
++            return *i;
++        }
++        //    c. Return 0.
++        return 0;
++    }
++    // 6. Assert: _direction_ is ~after~.
++    // 7. Search _string_ for the first segmentation boundary that follows the code unit at index _startIndex_, using locale _locale_ and text element granularity _granularity_.
++    // 8. If a boundary is found, return the count of code units in _string_ preceding it.
++    if let Some((i, _)) = bounds.iter().find(|(i, _)| *i > start_index) {
++        return *i;
++    }
++    // 9. Return _length_.
++    length
++}
++
++/// CreateSegmentDataObject ( _segmenter_, _string_, _startIndex_, _endIndex_ )
++pub(crate) fn create_segment_data_object(
++    agent: &mut Agent,
++    segmenter: Object,
++    bounds: &[(usize, bool)],
++    string: JsString,
++    start_index: usize,
++    end_index: usize,
++) -> JsResult<Object> {
++    // 1. Let _length_ be the length of _string_.
++    // 2. Assert: _endIndex_ ≤ _length_.
++    // 3. Assert: _startIndex_ < _endIndex_.
++    // 4. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
++    let proto = agent.intrinsic("%Object.prototype%");
++    let result = agent.ordinary_object_create(Some(proto));
++    // 5. Let _segment_ be the substring of _string_ from _startIndex_ to _endIndex_.
++    let segment = agent.substring(string, start_index, end_index);
++    // 6. Perform ! CreateDataPropertyOrThrow(_result_, *"segment"*, _segment_).
++    let key = agent.key("segment");
++    ops::create_data_property_or_throw(agent, result, key, Value::String(segment))?;
++    // 7. Perform ! CreateDataPropertyOrThrow(_result_, *"index"*, 𝔽(_startIndex_)).
++    let key = agent.key("index");
++    ops::create_data_property_or_throw(agent, result, key, Value::Number(start_index as f64))?;
++    // 8. Perform ! CreateDataPropertyOrThrow(_result_, *"input"*, _string_).
++    let key = agent.key("input");
++    ops::create_data_property_or_throw(agent, result, key, Value::String(string))?;
++    // 9. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].
++    let Some(granularity) = agent
++        .native::<SegmenterSlots>(segmenter)
++        .map(|s| s.granularity.clone())
++    else {
++        return Err(agent.not_implemented("Intl.Segmenter: segmenter has no internal slots"));
++    };
++    // 10. If _granularity_ is *"word"*, then
++    if granularity == "word" {
++        //    a. Let _isWordLike_ be a Boolean indicating whether the _segment_ in _string_ is "word-like" according to locale _segmenter_.[[Locale]].
++        let is_word_like = bounds.iter().any(|(i, w)| *i == end_index && *w);
++        //    b. Perform ! CreateDataPropertyOrThrow(_result_, *"isWordLike"*, _isWordLike_).
++        let key = agent.key("isWordLike");
++        ops::create_data_property_or_throw(agent, result, key, Value::Boolean(is_word_like))?;
++    }
++    // 11. Return _result_.
++    Ok(result)
+ }
+ 
+ /// CreateSegmentIterator ( _segmenter_, _string_ )
+@@ -80,6 +230,7 @@ pub(crate) fn create_segment_iterator(
+     agent: &mut Agent,
+     segmenter: Object,
+     string: JsString,
++    bounds: Arc<Vec<(usize, bool)>>,
+ ) -> Object {
+     // 1. Let _internalSlotsList_ be « [[IteratingSegmenter]], [[IteratedString]], [[IteratedStringNextSegmentCodeUnitIndex]] ».
+     // 2. Let _iterator_ be OrdinaryObjectCreate(%IntlSegmentIteratorPrototype%, _internalSlotsList_).
+@@ -94,6 +245,7 @@ pub(crate) fn create_segment_iterator(
+             segmenter,
+             string,
+             next_index: 0,
++            bounds,
+         })),
+     )
+ }

@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 47816,
+  "stop_reason": "tool_use",
+  "session_id": "bc8b8d83-a62e-4e7e-8d6b-3f94f060c5ec",
+  "total_cost_usd": 0.009858829999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 15427,
+    "cache_read_input_tokens": 4693,
+    "output_tokens": 10521,
+    "output_tokens_details": {
+      "thinking_tokens": 9798
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15427,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 10521,
+        "cache_read_input_tokens": 4693,
+        "cache_creation_input_tokens": 15427,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 15427
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Reviewed the Intl.Segmenter diff (constructor, resolvedOptions, segment, Segments.containing, Segments[@@iterator], SegmentIterator.next, and the support/intl_segmenter.rs helpers) against the spec steps supplied. Step order and abrupt completions match the spec: RequireInternalSlot-style checks, ToIntegerOrInfinity in containing, the Get/CreateDataProperty order in CreateSegmentDataObject (segment, index, input, then isWordLike for word granularity), and the iterator's FindBoundary(after) followed by setting the next index before building the result. FindBoundary's before and after branches and their fallbacks (return 0 and return length) follow steps 5 to 9. No test-shaped branches or hardcoded outputs. ICU4X does the segmentation; unparseable locale or missing ICU data becomes not_implemented rather than a fake result. The removed .expect calls now return not_implemented on paths that should be unreachable. Nothing unrelated changed. Minor non-blocking observations: boundaries are computed eagerly at Segments creation, and isWordLike and find_boundary do linear scans, so long strings are quadratic. Whether the word-type flag is attached to the segment ending at a boundary depends on ICU4X semantics, which test262 will reveal. The 0 to 158 test262 jump is plausible given that ICU4X does the heavy lifting, though I could not see whether Intl.Segmenter.supportedLocalesOf exists on main.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Reviewed the Intl.Segmenter diff (constructor, resolvedOptions, segment, Segments.containing, Segments[@@iterator], SegmentIterator.next, and the support/intl_segmenter.rs helpers) against the spec steps supplied. Step order and abrupt completions match the spec: RequireInternalSlot-style checks, ToIntegerOrInfinity in containing, the Get/CreateDataProperty order in CreateSegmentDataObject (segment, index, input, then isWordLike for word granularity), and the iterator's FindBoundary(after) followed by setting the next index before building the result. FindBoundary's before and after branches and their fallbacks (return 0 and return length) follow steps 5 to 9. No test-shaped branches or hardcoded outputs. ICU4X does the segmentation; unparseable locale or missing ICU data becomes not_implemented rather than a fake result. The removed .expect calls now return not_implemented on paths that should be unreachable. Nothing unrelated changed. Minor non-blocking observations: boundaries are computed eagerly at Segments creation, and isWordLike and find_boundary do linear scans, so long strings are quadratic. Whether the word-type flag is attached to the segment ending at a boundary depends on ICU4X semantics, which test262 will reveal. The 0 to 158 test262 jump is plausible given that ICU4X does the heavy lifting, though I could not see whether Intl.Segmenter.supportedLocalesOf exists on main.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 43697,
+  "type": "result",
+  "duration_ms": 46672,
+  "uuid": "6c656060-6a5d-46dd-9c5f-dd27eec67dd9",
+  "ttft_stream_ms": 2297,
+  "time_to_request_ms": 573,
+  "time_to_request_phases_ms": {
+    "other": 28,
+    "system_prompt": 376,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 21,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 99,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 66,
+  "time_to_request_cpu_ms": 386,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 127,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 1531,
+  "process_wall_ms_turn": 46671,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2297,
+  "time_to_request_from_spawn_ms": 1531714,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090395538.9495,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.54,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.21,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

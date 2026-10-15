@@ -1,0 +1,135 @@
+{
+  "duration_api_ms": 89990,
+  "stop_reason": "end_turn",
+  "session_id": "0c8a87a7-b253-44f3-a777-543f8ce3272d",
+  "total_cost_usd": 0.39056029999999997,
+  "usage": {
+    "input_tokens": 43,
+    "cache_creation_input_tokens": 45951,
+    "cache_read_input_tokens": 847502,
+    "output_tokens": 12123,
+    "output_tokens_details": {
+      "thinking_tokens": 1205
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 45951,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 402,
+        "cache_read_input_tokens": 52811,
+        "cache_creation_input_tokens": 117,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 117
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01968YT2LVU7m3oXy4T6mQjA",
+      "tool_input": {
+        "command": "grep -n \"pub fn \\|pub struct\\|impl\" /root/.cargo/registry/src/*/icu_segmenter-2*/src/word.rs --include=word.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_016dPenbfgDKkt8UcGRfyqXe",
+      "tool_input": {
+        "command": "sed -i 's/std::rc::Rc/std::sync::Arc/; s/\\bRc</Arc</g; s/Rc::new/Arc::new/g' crates/kahvi-builtins/src/support/intl_segmenter.rs"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 49,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Intl.Segmenter now passes all of `intl402/Segmenter/` (158 runs, 0 failures), and `cargo clippy` and `cargo build` are clean. I ran `cargo fmt` last and did not re-run the tests or clippy after it.\n\nI addressed the reviewer's points from attempt 554:\n- **Locale:** Word and sentence segmenters are built from the resolved locale through ICU4X. ICU4X has no per-locale grapheme data, so grapheme segmentation is the same for every locale (noted in a comment). A data-load failure returns `not_implemented`.\n- **Caching:** Boundaries are computed once in `segment()` and shared with the iterator through an `Arc`, so `next()` and `containing()` no longer re-segment the string.\n- **`isWordLike`:** In ICU4X the word type belongs to the segment ending at the boundary, and `isWordLike` now uses that boundary list.\n- **Constructor and slots:** The `GetOption` default path is kept. The `unwrap_or_default` fallback is replaced by a `not_implemented` error when the slots are missing.\n\nI used `Arc` instead of `Rc` because the native-slot types must be `Send`.",
+  "ttft_ms": 2794,
+  "type": "result",
+  "duration_ms": 118451,
+  "uuid": "ceb3f5d9-a2c0-4cd4-9232-88e917e44f64",
+  "ttft_stream_ms": 2579,
+  "time_to_request_ms": 567,
+  "time_to_request_phases_ms": {
+    "other": 26,
+    "system_prompt": 333,
+    "resume_other": 1,
+    "process_user_input": 10,
+    "input_attachments": 22,
+    "input_hooks": 9,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 121,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 11,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 60,
+  "time_to_request_cpu_ms": 262,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 240,
+  "process_anon_mib_turn_start": 122,
+  "process_rss_mib_result": 276,
+  "process_anon_mib_result": 154,
+  "process_peak_rss_mib": 301,
+  "process_cpu_ms_turn": 7711,
+  "process_wall_ms_turn": 118447,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 12,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2580,
+  "time_to_request_from_spawn_ms": 1395895,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090259198.379,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.53,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.21,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

@@ -1,0 +1,210 @@
+diff --git a/crates/kahvi-builtins/src/intl/supported_values_of.rs b/crates/kahvi-builtins/src/intl/supported_values_of.rs
+index df46210..5d48ad8 100644
+--- a/crates/kahvi-builtins/src/intl/supported_values_of.rs
++++ b/crates/kahvi-builtins/src/intl/supported_values_of.rs
+@@ -2,8 +2,13 @@
+ //!
+ //! Spec: https://tc39.es/ecma402/#sec-intl.supportedvaluesof
+ 
++use icu::calendar::AnyCalendarKind;
++use icu::time::zone::iana::IanaParserExtended;
++use icu_provider::IterableDataProvider;
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::canonicalize_u_value;
++
+ /// Intl.supportedValuesOf
+ pub(crate) fn supported_values_of(
+     agent: &mut Agent,
+@@ -13,26 +18,171 @@ pub(crate) fn supported_values_of(
+ ) -> JsResult<Value> {
+     // When the `supportedValuesOf` method is called with argument _key_ , the following steps are taken:
+     //
++    let _ = (this, new_target);
+     // 1. Set _key_ to ? ToString(_key_).
+-    // 2. If _key_ is *"calendar"*, then
+-    //    a. Let _list_ be a new empty List.
+-    //    b. For each element _identifier_ of AvailableCalendars(), do
+-    //       i. Let _canonical_ be CanonicalizeUValue(*"ca"*, _identifier_).
+-    //       ii. If _identifier_ is _canonical_, then
+-    //          1. Append _identifier_ to _list_.
+-    // 3. Else if _key_ is *"collation"*, then
+-    //    a. Let _list_ be AvailableCanonicalCollations( ).
+-    // 4. Else if _key_ is *"currency"*, then
+-    //    a. Let _list_ be AvailableCanonicalCurrencies( ).
+-    // 5. Else if _key_ is *"numberingSystem"*, then
+-    //    a. Let _list_ be AvailableCanonicalNumberingSystems( ).
+-    // 6. Else if _key_ is *"timeZone"*, then
+-    //    a. Let _list_ be AvailablePrimaryTimeZoneIdentifiers( ).
+-    // 7. Else if _key_ is *"unit"*, then
+-    //    a. Let _list_ be AvailableCanonicalUnits( ).
+-    // 8. Else,
+-    //    a. Throw a *RangeError* exception.
++    let key = args.get_or_undefined(0);
++    let key = ops::to_string(agent, key)?;
++    let key = agent.str_lossy(key);
++    let list: Vec<String> = match key.as_str() {
++        // 2. If _key_ is *"calendar"*, then
++        "calendar" => {
++            // a. Let _list_ be a new empty List.
++            let mut list = Vec::new();
++            // b. For each element _identifier_ of AvailableCalendars(), do
++            for identifier in available_calendars(agent)? {
++                // i. Let _canonical_ be CanonicalizeUValue(*"ca"*, _identifier_).
++                let canonical = canonicalize_u_value("ca", identifier);
++                // ii. If _identifier_ is _canonical_, then
++                if identifier == canonical {
++                    // 1. Append _identifier_ to _list_.
++                    list.push(identifier.to_string());
++                }
++            }
++            list
++        }
++        // 3. Else if _key_ is *"collation"*, then
++        //    a. Let _list_ be AvailableCanonicalCollations( ).
++        "collation" => return Err(agent.not_implemented("AvailableCanonicalCollations")),
++        // 4. Else if _key_ is *"currency"*, then
++        //    a. Let _list_ be AvailableCanonicalCurrencies( ).
++        "currency" => return Err(agent.not_implemented("AvailableCanonicalCurrencies")),
++        // 5. Else if _key_ is *"numberingSystem"*, then
++        //    a. Let _list_ be AvailableCanonicalNumberingSystems( ).
++        "numberingSystem" => available_canonical_numbering_systems(agent)?,
++        // 6. Else if _key_ is *"timeZone"*, then
++        //    a. Let _list_ be AvailablePrimaryTimeZoneIdentifiers( ).
++        "timeZone" => available_primary_time_zone_identifiers(),
++        // 7. Else if _key_ is *"unit"*, then
++        //    a. Let _list_ be AvailableCanonicalUnits( ).
++        "unit" => return Err(agent.not_implemented("AvailableCanonicalUnits")),
++        // 8. Else,
++        //    a. Throw a *RangeError* exception.
++        _ => return Err(agent.throw_range_error("invalid key for Intl.supportedValuesOf")),
++    };
+     // 9. Return CreateArrayFromList( _list_ ).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.supportedValuesOf"))
++    let elements: Vec<Value> = list
++        .iter()
++        .map(|l| Value::String(agent.string(l)))
++        .collect();
++    Ok(Value::Object(ops::create_array_from_list(agent, &elements)))
++}
++
++/// AvailableCalendars ( ): the calendars of `icu::calendar` (one per
++/// `AnyCalendarKind` with a CLDR calendar type), with their aliases, sorted.
++fn available_calendars(agent: &mut Agent) -> JsResult<Vec<&'static str>> {
++    let mut list: Vec<&'static str> = Vec::new();
++    for kind in [
++        AnyCalendarKind::Buddhist,
++        AnyCalendarKind::Chinese,
++        AnyCalendarKind::Coptic,
++        AnyCalendarKind::Dangi,
++        AnyCalendarKind::Ethiopian,
++        AnyCalendarKind::EthiopianAmeteAlem,
++        AnyCalendarKind::Gregorian,
++        AnyCalendarKind::Hebrew,
++        AnyCalendarKind::Indian,
++        AnyCalendarKind::HijriTabularTypeIIFriday,
++        AnyCalendarKind::HijriTabularTypeIIThursday,
++        AnyCalendarKind::HijriUmmAlQura,
++        AnyCalendarKind::Iso,
++        AnyCalendarKind::Japanese,
++        AnyCalendarKind::Persian,
++        AnyCalendarKind::Roc,
++    ] {
++        let (type_, aliases): (&str, &[&str]) = match kind {
++            AnyCalendarKind::Buddhist => ("buddhist", &[]),
++            AnyCalendarKind::Chinese => ("chinese", &[]),
++            AnyCalendarKind::Coptic => ("coptic", &[]),
++            AnyCalendarKind::Dangi => ("dangi", &[]),
++            AnyCalendarKind::Ethiopian => ("ethiopic", &[]),
++            AnyCalendarKind::EthiopianAmeteAlem => ("ethioaa", &["ethiopic-amete-alem"]),
++            AnyCalendarKind::Gregorian => ("gregory", &[]),
++            AnyCalendarKind::Hebrew => ("hebrew", &[]),
++            AnyCalendarKind::Indian => ("indian", &[]),
++            AnyCalendarKind::HijriTabularTypeIIFriday => ("islamic-civil", &["islamicc"]),
++            AnyCalendarKind::HijriTabularTypeIIThursday => ("islamic-tbla", &[]),
++            AnyCalendarKind::HijriUmmAlQura => ("islamic-umalqura", &[]),
++            AnyCalendarKind::Iso => ("iso8601", &[]),
++            AnyCalendarKind::Japanese => ("japanese", &[]),
++            AnyCalendarKind::Persian => ("persian", &[]),
++            AnyCalendarKind::Roc => ("roc", &[]),
++            // HijriSimulatedMecca and Julian have no CLDR calendar type, so
++            // there is no canonical calendar identifier to list for them.
++            AnyCalendarKind::HijriSimulatedMecca | AnyCalendarKind::Julian => continue,
++            _ => return Err(agent.not_implemented("AvailableCalendars: unknown AnyCalendarKind")),
++        };
++        list.push(type_);
++        list.extend_from_slice(aliases);
++    }
++    list.sort_unstable();
++    Ok(list)
++}
++
++/// Lists the numbering systems of ICU4X's baked decimal digits data.
++struct BakedDigits;
++
++const _: () = {
++    use icu_decimal_data::{__impl_decimal_digits_v1, make_provider};
++    make_provider!(BakedDigits);
++    __impl_decimal_digits_v1!(BakedDigits, ITER);
++};
++
++/// AvailableCanonicalNumberingSystems ( ): the numbering systems with digits
++/// in ICU4X's decimal data, sorted.
++fn available_canonical_numbering_systems(agent: &mut Agent) -> JsResult<Vec<String>> {
++    let ids =
++        IterableDataProvider::<icu::decimal::provider::DecimalDigitsV1>::iter_ids(&BakedDigits)
++            .map_err(|_| {
++                agent.not_implemented(
++                    "AvailableCanonicalNumberingSystems: ICU4X decimal data cannot be enumerated",
++                )
++            })?;
++    let mut list: Vec<String> = ids
++        .into_iter()
++        .map(|id| {
++            let system = id.marker_attributes.as_str();
++            // The default digits (Latin) are stored under the empty attribute.
++            if system.is_empty() {
++                "latn".to_string()
++            } else {
++                system.to_string()
++            }
++        })
++        .collect();
++    list.sort();
++    list.dedup();
++    Ok(list)
++}
++
++/// AvailablePrimaryTimeZoneIdentifiers ( ): the canonical IANA identifiers of
++/// `icu::time`, sorted.
++fn available_primary_time_zone_identifiers() -> Vec<String> {
++    // 1. Let _records_ be AvailableNamedTimeZoneIdentifiers().
++    // (Each record is ICU4X's normalized IANA identifier with its canonical
++    // identifier as [[PrimaryIdentifier]].)
++    let parser = IanaParserExtended::new();
++    // 2. Let _result_ be a new empty List.
++    let mut result: Vec<String> = Vec::new();
++    // 3. For each element _timeZoneIdentifierRecord_ of _records_, do
++    for record in parser.iter_all() {
++        let identifier = record.normalized;
++        // "Etc/Unknown" is ICU4X's placeholder, not an IANA identifier.
++        if identifier == "Etc/Unknown" {
++            continue;
++        }
++        let mut primary = record.canonical;
++        // c. If _primary_ is one of *"Etc/UTC"*, *"Etc/GMT"*, or *"GMT"*, set _primary_ to *"UTC"*.
++        if matches!(primary, "Etc/UTC" | "Etc/GMT" | "GMT") {
++            primary = "UTC";
++        }
++        // a. If _timeZoneIdentifierRecord_.[[Identifier]] is _timeZoneIdentifierRecord_.[[PrimaryIdentifier]], then
++        if identifier == primary {
++            // i. Append _timeZoneIdentifierRecord_.[[Identifier]] to _result_.
++            result.push(identifier.to_string());
++        }
++    }
++    // 4. Return _result_.
++    result.sort();
++    result.dedup();
++    result
+ }

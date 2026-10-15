@@ -1,0 +1,142 @@
+{
+  "duration_api_ms": 55497,
+  "stop_reason": "end_turn",
+  "session_id": "3229a185-5d6c-40ad-a77e-ce5c37666029",
+  "total_cost_usd": 0.24235540000000003,
+  "usage": {
+    "input_tokens": 32,
+    "cache_creation_input_tokens": 33382,
+    "cache_read_input_tokens": 484952,
+    "output_tokens": 5935,
+    "output_tokens_details": {
+      "thinking_tokens": 900
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 33382,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 593,
+        "cache_read_input_tokens": 39342,
+        "cache_creation_input_tokens": 1017,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1017
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01NprHU5d7SpuAZpHrnx96RK",
+      "tool_input": {
+        "command": "grep -rn \"fn as_bcp47_string\\|fn as_cldr_str\\|fn as_bcp47\\|HijriSimulatedMecca\" /root/.cargo/registry/src --include=any_calendar.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Bb6Uvk3kQzsHdUhFp1UrF4",
+      "tool_input": {
+        "command": "grep -n \"fn iter_ids\\|type Error\\|Result<\" /root/.cargo/registry/src/*/icu_provider-*/src/dynutil.rs /root/.cargo/registry/src/*/icu_provider-*/src/data_provider.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01PowbrHAdok1w3kYxdQprje",
+      "tool_input": {
+        "command": "python3 -c \"print(1)\""
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 24,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I fixed the four review points in `supported_values_of.rs`, but `./t262 intl402/Intl/supportedValuesOf/` is only 16 of 48 runs passing (the build and clippy are clean).\n\n- **Numbering systems:** the `iter_ids` error is now surfaced as a not-implemented error instead of being dropped. The empty marker attribute now maps to `\"latn\"`. I didn't confirm that the empty attribute is Latin digits in the baked data, so that mapping rests on your review note. I also didn't check that `\"latn\"` appears in the output.\n- **Calendars:** ICU4X documents `HijriSimulatedMecca` and `Julian` as having no CLDR calendar type, so they are skipped. Any other unknown kind now throws not-implemented. I kept the hand-written name table because I found no CLDR-name API in ICU4X.\n- **Time zones:** the code now follows the spec literally. It filters on identifier equal to primary, using the extended parser's normalized and canonical IANA ids, with the Etc/UTC, Etc/GMT and GMT mapping to `UTC`. It skips ICU4X's `Etc/Unknown` placeholder, which is not an IANA id.\n- **Collation, currency, unit:** these stay not-implemented as you said. They account for most of the failures.\n- **Other failures:** several tests also fail because `Intl.DateTimeFormat`, `Intl.Locale`, `Intl.DisplayNames`, `Intl.NumberFormat` and `Intl.RelativeTimeFormat` are not implemented.\n\nBLOCKED: the collation, currency and unit lists need ICU4X data crates that aren't dependencies of `kahvi-builtins`, and Cargo manifests are outside my file scope.",
+  "ttft_ms": 4349,
+  "type": "result",
+  "duration_ms": 92392,
+  "uuid": "403d5417-3292-4e24-a720-6267e708a392",
+  "ttft_stream_ms": 4133,
+  "time_to_request_ms": 612,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 420,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 1,
+    "message_prep": 4,
+    "model_config_wait": 87,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 14,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 67,
+  "time_to_request_cpu_ms": 453,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 124,
+  "process_rss_mib_result": 262,
+  "process_anon_mib_result": 141,
+  "process_peak_rss_mib": 287,
+  "process_cpu_ms_turn": 4885,
+  "process_wall_ms_turn": 92392,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 22,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4134,
+  "time_to_request_from_spawn_ms": 1502364,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090366135.877,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.56,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.22,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
