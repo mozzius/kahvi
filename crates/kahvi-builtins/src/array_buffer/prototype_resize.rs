@@ -62,7 +62,7 @@ pub(crate) fn prototype_resize(
     // 15. Set obj.[[ArrayBufferByteLength]] to newByteLength.
     // The byte length is the length of the data block, so storing newBlock sets both.
     let data = array_buffer_data_mut(agent, o).expect("an ArrayBuffer");
-    data.data = Some(new_block);
+    data.data = Some(new_block.into());
     // 16. Return undefined.
     Ok(Value::Undefined)
 }

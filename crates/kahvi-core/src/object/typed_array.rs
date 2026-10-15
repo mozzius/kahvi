@@ -18,7 +18,7 @@ pub const MAX_BYTE_LENGTH: f64 = (1u64 << 32) as f64;
 #[derive(Debug)]
 pub struct ArrayBufferData {
     /// The data block; `None` once detached.
-    pub data: Option<Vec<u8>>,
+    pub data: Option<DataBlock>,
     /// The maximum byte length of a resizable buffer.
     pub max_byte_length: Option<usize>,
     pub detach_key: Value,
@@ -27,6 +27,113 @@ pub struct ArrayBufferData {
     /// never detached. A growable one's [[ArrayBufferByteLengthData]] is the
     /// data's length, and [[ArrayBufferMaxByteLength]] is `max_byte_length`.
     pub shared: bool,
+}
+
+/// A Data Block (§6.2.9): bytes the engine owns, or memory an embedder
+/// lent it (JSI's `createArrayBuffer`), released when the block is dropped
+/// (the buffer is detached or collected).
+pub enum DataBlock {
+    Owned(Vec<u8>),
+    External(ExternalBlock),
+}
+
+/// Embedder memory backing an ArrayBuffer.
+pub struct ExternalBlock {
+    ptr: *mut u8,
+    len: usize,
+    release: Option<Box<dyn FnOnce() + Send>>,
+}
+
+impl ExternalBlock {
+    /// # Safety
+    /// `ptr` must be valid for reads and writes of `len` bytes, and not be
+    /// used by anything else as a Rust reference, until `release` runs; and
+    /// usable from whichever thread runs the agent (the agent may move
+    /// between threads, never run on two).
+    pub unsafe fn new(
+        ptr: *mut u8,
+        len: usize,
+        release: Box<dyn FnOnce() + Send>,
+    ) -> ExternalBlock {
+        ExternalBlock {
+            ptr,
+            len,
+            release: Some(release),
+        }
+    }
+}
+
+// SAFETY: ExternalBlock::new's contract: the memory goes with the agent.
+unsafe impl Send for ExternalBlock {}
+
+impl Drop for ExternalBlock {
+    fn drop(&mut self) {
+        if let Some(release) = self.release.take() {
+            release();
+        }
+    }
+}
+
+impl std::fmt::Debug for DataBlock {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DataBlock::Owned(v) => write!(f, "DataBlock({} bytes)", v.len()),
+            DataBlock::External(e) => write!(f, "DataBlock({} external bytes)", e.len),
+        }
+    }
+}
+
+impl From<Vec<u8>> for DataBlock {
+    fn from(v: Vec<u8>) -> DataBlock {
+        DataBlock::Owned(v)
+    }
+}
+
+impl Clone for DataBlock {
+    /// A copy of the bytes, owned by the engine.
+    fn clone(&self) -> DataBlock {
+        DataBlock::Owned(self.to_vec())
+    }
+}
+
+impl std::ops::Deref for DataBlock {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        match self {
+            DataBlock::Owned(v) => v,
+            // SAFETY: ExternalBlock::new's contract.
+            DataBlock::External(e) if e.len > 0 => unsafe {
+                std::slice::from_raw_parts(e.ptr, e.len)
+            },
+            DataBlock::External(_) => &[],
+        }
+    }
+}
+
+impl std::ops::DerefMut for DataBlock {
+    fn deref_mut(&mut self) -> &mut [u8] {
+        match self {
+            DataBlock::Owned(v) => v,
+            // SAFETY: ExternalBlock::new's contract.
+            DataBlock::External(e) if e.len > 0 => unsafe {
+                std::slice::from_raw_parts_mut(e.ptr, e.len)
+            },
+            DataBlock::External(_) => &mut [],
+        }
+    }
+}
+
+impl DataBlock {
+    /// Resizes the block in place (a resizable ArrayBuffer or growable
+    /// SharedArrayBuffer; external blocks are neither, and would be copied).
+    pub fn resize(&mut self, len: usize, value: u8) {
+        if let DataBlock::External(_) = self {
+            *self = DataBlock::Owned(self.to_vec());
+        }
+        if let DataBlock::Owned(v) = self {
+            v.resize(len, value);
+        }
+    }
 }
 
 /// An Element Type (Table 71).
@@ -180,7 +287,7 @@ pub fn allocate_array_buffer(
         constructor,
         "%ArrayBuffer.prototype%",
         ObjectKind::ArrayBuffer(Box::new(ArrayBufferData {
-            data: Some(Vec::new()),
+            data: Some(DataBlock::Owned(Vec::new())),
             max_byte_length: None,
             detach_key: Value::Undefined,
             shared: false,
@@ -199,7 +306,7 @@ pub fn allocate_array_buffer(
     };
     let data = array_buffer_data_mut(agent, obj).expect("an ArrayBuffer");
     // 6-7. Set obj.[[ArrayBufferData]] to block and obj.[[ArrayBufferByteLength]] to byteLength.
-    data.data = Some(block);
+    data.data = Some(block.into());
     // 8.b. Set obj.[[ArrayBufferMaxByteLength]] to maxByteLength.
     data.max_byte_length = max;
     // 9. Return obj.
@@ -225,7 +332,7 @@ pub fn allocate_shared_array_buffer(
         ctor,
         "%SharedArrayBuffer.prototype%",
         ObjectKind::ArrayBuffer(Box::new(ArrayBufferData {
-            data: Some(Vec::new()),
+            data: Some(DataBlock::Owned(Vec::new())),
             max_byte_length: None,
             detach_key: Value::Undefined,
             shared: true,
@@ -242,7 +349,7 @@ pub fn allocate_shared_array_buffer(
     let data = array_buffer_data_mut(agent, obj).expect("a SharedArrayBuffer");
     // 8. Set obj.[[ArrayBufferData]] to block.
     // 9.b-d / 10.a. [[ArrayBufferByteLengthData]] or [[ArrayBufferByteLength]] is byteLength.
-    data.data = Some(block);
+    data.data = Some(block.into());
     // 9.e. Set obj.[[ArrayBufferMaxByteLength]] to maxByteLength.
     data.max_byte_length = max_byte_length.map(|m| m as usize);
     // 11. Return obj.
@@ -295,7 +402,7 @@ pub fn detach_array_buffer(agent: &mut Agent, buffer: Object, key: Value) -> JsR
 pub fn array_buffer_byte_length(agent: &Agent, buffer: Object) -> usize {
     array_buffer_data(agent, buffer)
         .and_then(|d| d.data.as_ref())
-        .map_or(0, Vec::len)
+        .map_or(0, |d| d.len())
 }
 
 /// IsFixedLengthArrayBuffer(arrayBuffer) (§25.1.3.?)
@@ -320,7 +427,7 @@ pub fn clone_array_buffer(
         .to_vec();
     array_buffer_data_mut(agent, target)
         .expect("an ArrayBuffer")
-        .data = Some(bytes);
+        .data = Some(bytes.into());
     Ok(target)
 }
 

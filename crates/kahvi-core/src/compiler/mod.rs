@@ -135,6 +135,7 @@ impl<'a> Compiler<'a> {
                 script,
                 constants,
                 name_caches: Box::default(),
+                lazy: None,
             },
             scopes: Vec::new(),
             pending_labels: Vec::new(),
@@ -560,6 +561,30 @@ pub fn compile_dynamic_function(
 ) -> Arc<FunctionCode> {
     pinned(agent, |agent| {
         function::compile_function(agent, f, source, script_id, false)
+    })
+}
+
+/// Compiles a lazy function (`FunctionCode::lazy`) from its reparsed AST.
+pub fn compile_lazy_function(
+    agent: &mut Agent,
+    f: &ast::Function,
+    stub: &FunctionCode,
+    lazy: &LazyCode,
+) -> Arc<FunctionCode> {
+    pinned(agent, |agent| {
+        agent
+            .gc
+            .compiling
+            .as_mut()
+            .expect("compiling")
+            .dynamic_scopes = lazy.dynamic_scopes;
+        function::compile_function(
+            agent,
+            f,
+            stub.source.clone(),
+            stub.script,
+            lazy.is_expression,
+        )
     })
 }
 

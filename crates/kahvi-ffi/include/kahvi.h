@@ -106,6 +106,10 @@ bool kahvi_is_array_buffer(KahviRuntime *rt, KahviValue v);
 bool kahvi_length(KahviRuntime *rt, KahviValue v, size_t *result);
 bool kahvi_array_buffer_new(KahviRuntime *rt, size_t length, KahviValue *result);
 uint8_t *kahvi_array_buffer_data(KahviRuntime *rt, KahviValue buffer, size_t *length);
+/* An ArrayBuffer over host memory: data stays valid until finalize(context)
+ * runs (the buffer is detached or collected, or the runtime is freed). */
+bool kahvi_array_buffer_new_external(KahviRuntime *rt, uint8_t *data, size_t length, void *context,
+                                     KahviFinalizer finalize, KahviValue *result);
 bool kahvi_weak_new(KahviRuntime *rt, KahviValue object, KahviValue *result);
 bool kahvi_weak_lock(KahviRuntime *rt, KahviValue weak, KahviValue *result);
 

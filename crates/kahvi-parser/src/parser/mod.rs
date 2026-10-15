@@ -33,6 +33,9 @@ pub struct ParseOptions {
     /// Lone surrogates in the original UTF-16 source, which `src` holds as
     /// U+FFFD: (byte offset in `src`, code unit), sorted by offset.
     pub lone_surrogates: Vec<(usize, u16)>,
+    /// Lazy compilation: drop the bodies of ordinary functions once they
+    /// are checked (see `ast::Function::lazy`).
+    pub lazy: bool,
 }
 
 impl Default for ParseOptions {
@@ -46,6 +49,7 @@ impl Default for ParseOptions {
             in_class_field_init: false,
             private_names: Vec::new(),
             lone_surrogates: Vec::new(),
+            lazy: false,
         }
     }
 }
@@ -84,9 +88,10 @@ pub fn parse_dynamic_function(
     Parser::parse_dynamic_function_parts(params, body, source, is_async, is_generator)
 }
 
-pub fn parse_module(src: &str) -> PResult<Module> {
+pub fn parse_module(src: &str, lazy: bool) -> PResult<Module> {
     let opts = ParseOptions {
         strict: true,
+        lazy,
         ..ParseOptions::default()
     };
     let mut p = Parser::new(src, true, &opts)?;
@@ -99,6 +104,31 @@ pub fn parse_module(src: &str) -> PResult<Module> {
         body,
         span: Span::new(0, src.len()),
     })
+}
+
+/// Parses the lazy function that starts at byte offset `start` of `src`
+/// (the whole script or module it was first parsed in), this time keeping
+/// its body. Functions nested in it are lazy.
+pub fn parse_lazy_function(
+    src: &str,
+    start: usize,
+    lazy: crate::ast::LazyFunction,
+) -> PResult<Function> {
+    let opts = ParseOptions {
+        strict: lazy.outer_strict,
+        lazy: true,
+        ..ParseOptions::default()
+    };
+    let mut p = Parser::new(src, lazy.module, &opts)?;
+    p.lx.pos = start;
+    p.tok = p.lx.next_token()?;
+    p.prev_end = start;
+    p.eager_at = Some(start);
+    let is_async = p.eat_word("async")?;
+    // Its name was checked against the enclosing code by the first parse;
+    // as a declaration it is checked against the top level, which allows
+    // every name that code did.
+    p.parse_function(start, is_async, true, true)
 }
 
 #[derive(Debug, Clone)]
@@ -203,6 +233,11 @@ pub(crate) struct Parser<'a> {
     /// The last statement list parsed by `parse_directives_and_statements`
     /// had a "use strict" directive.
     pub saw_use_strict: bool,
+    /// See `ParseOptions::lazy`.
+    pub lazy: bool,
+    /// The start of a function to parse eagerly: the one being reparsed,
+    /// or one in parentheses (likely called at once, like V8's heuristic).
+    pub eager_at: Option<usize>,
 }
 
 impl<'a> Parser<'a> {
@@ -224,6 +259,8 @@ impl<'a> Parser<'a> {
             allow_in: true,
             spread_trailing_comma: Default::default(),
             saw_use_strict: false,
+            lazy: opts.lazy && opts.lone_surrogates.is_empty(),
+            eager_at: None,
         })
     }
 

@@ -143,7 +143,7 @@ pub fn install(rt: &mut Runtime) {
         let buffer = allocate_array_buffer(agent, ctor, bytes.len() as f64, None)?;
         array_buffer_data_mut(agent, buffer)
             .expect("an ArrayBuffer")
-            .data = Some(bytes);
+            .data = Some(bytes.into());
         Ok(Value::Object(buffer))
     });
     let encode_into = rt.function("encodeInto", 2, |agent, _, args| {
@@ -273,7 +273,7 @@ fn decode_result(
         let buffer = allocate_array_buffer(agent, ctor, pending.len() as f64, None)?;
         array_buffer_data_mut(agent, buffer)
             .expect("an ArrayBuffer")
-            .data = Some(pending);
+            .data = Some(pending.into());
         Value::Object(buffer)
     };
     let list = [text, pending, Value::Boolean(bom_seen)];

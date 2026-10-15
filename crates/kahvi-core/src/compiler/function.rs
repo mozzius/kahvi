@@ -6,7 +6,7 @@ use std::sync::Arc;
 use kahvi_parser::ast::{self, Function, FunctionBody, FunctionKind, Pattern, Stmt, VarKind};
 use kahvi_parser::early;
 
-use super::{CodeKind, Compiler, FunctionCode, FunctionFlavor, Op, ScopeInfo};
+use super::{CodeKind, Compiler, FunctionCode, FunctionFlavor, LazyCode, Op, ScopeInfo};
 use crate::agent::Agent;
 use crate::function::ThisMode;
 use crate::value::JsString;
@@ -45,6 +45,22 @@ pub(super) fn compile_function(
     c.code.length = f.expected_args;
     c.code.uses_arguments = f.uses_arguments;
     c.code.has_direct_eval = f.has_direct_eval;
+    if let Some(lazy) = f.lazy {
+        let dynamic_scopes = c
+            .agent
+            .gc
+            .compiling
+            .as_ref()
+            .expect("compiling")
+            .dynamic_scopes;
+        c.code.lazy = Some(Box::new(LazyCode {
+            function: lazy,
+            dynamic_scopes,
+            is_expression,
+            compiled: std::sync::OnceLock::new(),
+        }));
+        return c.finish();
+    }
 
     // Parameters (BoundNames of the formals, in order).
     let mut names: Vec<JsString> = Vec::new();

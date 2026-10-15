@@ -111,6 +111,9 @@ impl Tracer {
             for &v in code.constants.values() {
                 self.value(v);
             }
+            for lazy in code.constants.lazy_code() {
+                self.code(&lazy);
+            }
         }
     }
 
