@@ -9,6 +9,7 @@ state) and catch what falls between the features.
 ./rw                       # all cases (builds the release kahvi-run first)
 ./rw prettier zod          # some cases
 ./rw --gc-stress           # collect at every safe point
+./rw --gc-stress --gc-every 5000   # at one safe point in 5000 on average
 ./rw --record              # rewrite cases/*.out from Node
 ./rw --update-expected     # rewrite expected-pass.txt from this run
 ```
@@ -34,4 +35,7 @@ differs from Node and fixed in the engine or the runtime.
 
 CI: `.github/workflows/realworld.yml`, report-only (not a required check).
 PRs labelled `gc-stress` and manual runs also run every case with
-`--gc-stress`; there a timeout is reported but not counted as a regression.
+`--gc-stress --gc-every 5000`, in shards. A collection walks the whole live
+heap, so collecting at every safe point makes prettier or terser run for
+hours; one in 5000 keeps each shard to a few minutes. A timeout there is
+reported but not counted as a regression.

@@ -48,7 +48,8 @@ The entry file is an ES module (ESM only: no CommonJS, no `require`).
   properties without running JavaScript: getters show as `[Getter]`,
   proxies are not looked through. A leading string argument may hold
   `%s %d %i %f %o %O %j %c %%`.
-- `KAHVI_GC_STRESS=1` collects at every safe point, as in `kahvi`.
+- `KAHVI_GC_STRESS=1` collects at every safe point, as in `kahvi`;
+  `KAHVI_GC_STRESS=N` at one in N on average (docs/GC.md).
 
 ## End-to-end tests
 

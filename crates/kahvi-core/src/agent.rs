@@ -142,8 +142,11 @@ pub struct Agent {
     pub(crate) spare_vecs: Vec<Vec<Value>>,
     /// Exception-handler lists kept for reuse, like `spare_vecs`.
     pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
-    /// Collect at every safe point (finds rooting bugs; set by the host).
-    pub gc_stress: bool,
+    /// Collect at one safe point in `gc_stress` on average, regardless of
+    /// heap growth (finds rooting bugs; set by the host, see
+    /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
+    /// point.
+    pub gc_stress: u32,
     /// [[KeptAlive]]: WeakRef targets kept until the end of the current job.
     pub(crate) kept_objects: Vec<Object>,
     pub(crate) kept_symbols: Vec<Value>,
@@ -230,7 +233,7 @@ impl Agent {
             gc: Default::default(),
             spare_vecs: Vec::new(),
             spare_handlers: Vec::new(),
-            gc_stress: false,
+            gc_stress: 0,
             kept_objects: Vec::new(),
             kept_symbols: Vec::new(),
             finalization_registries: Vec::new(),

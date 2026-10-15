@@ -40,7 +40,7 @@ impl Host {
         agent.host_now = Some(now_ms);
         agent.host_load_module = Some(loader::load_module);
         agent.host_import_meta = Some(loader::import_meta);
-        agent.gc_stress = std::env::var_os("KAHVI_GC_STRESS").is_some();
+        agent.gc_stress = kahvi_core::Agent::gc_stress_from_env();
         let timers = Arc::new(Mutex::new(Timers::new()));
         console::install(&mut rt);
         timers::install(&mut rt, &timers);
