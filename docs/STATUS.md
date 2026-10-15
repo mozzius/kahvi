@@ -102,8 +102,8 @@ pauses itself at the limit; architect sessions should stop well before it
   integration package is `react-native/` (README there): a JSRuntimeFactory
   for Android and iOS that `harness/rn/check.sh` compiles against RN
   0.86.3's headers. CI runs both harnesses. Missing: an app build that uses
-  it, a react-native-worklets patch (it calls `makeHermesRuntime`), and
-  running a real Metro bundle on a device.
+  it, and running a real Metro bundle on a device. react-native-worklets
+  (which calls `makeHermesRuntime`) has a patch in `react-native/patches/`.
 
 ## Standing decisions from the user
 

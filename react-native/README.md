@@ -23,9 +23,7 @@ What is checked:
   headers, folly and fbjni. CI runs it on every PR. It only checks syntax
   and types: nothing here has been linked or run in an app yet.
 
-What is missing: an Android or iOS app build that uses the package, and a
-`react-native-worklets` build over kahvi. Worklets makes its UI-thread
-runtime with `makeHermesRuntime`.
+What is missing: an Android or iOS app build that uses the package.
 
 ## Building kahvi's library
 
@@ -56,6 +54,15 @@ import dev.kahvi.reactnative.KahviRuntimeFactory
 override val reactHost: ReactHost
   get() = getDefaultReactHost(applicationContext, reactNativeHost, KahviRuntimeFactory())
 ```
+
+### react-native-worklets (Reanimated 4)
+
+Worklets makes its UI-thread runtimes with `makeHermesRuntime`.
+`patches/react-native-worklets+0.13.0.patch` (for patch-package) makes
+them kahvi runtimes instead, links worklets to this package, and turns off
+its Hermes sampling profiler. `harness/rn/check.sh` compiles the patched
+files. Expo needs no patch on Android: its Hermes code is only built for
+expo-modules-core's own tests.
 
 ### iOS
 
