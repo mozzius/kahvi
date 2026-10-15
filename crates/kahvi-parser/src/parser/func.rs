@@ -74,6 +74,11 @@ impl Parser<'_> {
     ) -> PResult<Function> {
         let saved_strict = self.strict;
         let saved_classes_len = self.classes.len();
+        // Before the body, which can set `eager_at` for a function in it.
+        let lazy = self.lazy
+            && kind == FunctionKind::Normal
+            && self.classes.is_empty()
+            && self.eager_at != Some(start);
         self.push_fn(ctx);
         let result = (|| {
             let (params, rest) = self.parse_formal_parameters()?;
@@ -108,11 +113,7 @@ impl Parser<'_> {
         };
         self.validate_function(&f, unique_params)?;
         let mut f = f;
-        if self.lazy
-            && kind == FunctionKind::Normal
-            && self.classes.is_empty()
-            && self.eager_at != Some(start)
-        {
+        if lazy {
             f.lazy = Some(LazyFunction {
                 outer_strict: saved_strict,
                 module: self.module,

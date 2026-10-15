@@ -275,6 +275,10 @@ fn compile_lazy(
             };
             debug_assert_eq!((ast.span.start, ast.span.end), stub.span);
             let code = crate::compiler::compile_lazy_function(agent, &ast, stub, lazy);
+            debug_assert!(
+                code.lazy.is_none(),
+                "a reparsed function is compiled eagerly"
+            );
             let code = lazy.compiled.get_or_init(|| code).clone();
             stub.constants.add_lazy(code.clone());
             code
