@@ -728,6 +728,56 @@ impl EnvId {
         }
     }
 
+    /// The value of the binding at `slot` of a declarative record, if it is
+    /// initialized.
+    #[inline]
+    pub(crate) fn initialized_value_at(self, agent: &Agent, slot: usize) -> Option<Value> {
+        match agent.env(self) {
+            Environment::Declarative { bindings, .. } => bindings.list[slot].1.value,
+            _ => None,
+        }
+    }
+
+    /// SetMutableBinding(N, V, S) for the binding at `slot` of a declarative
+    /// record (one `binding_slot` returned), if it is still `name`'s.
+    pub(crate) fn set_mutable_binding_at(
+        self,
+        agent: &mut Agent,
+        slot: usize,
+        name: JsString,
+        value: Value,
+        strict: bool,
+    ) -> JsResult<()> {
+        if self.set_initialized_mutable_at(agent, slot, name, value) {
+            return Ok(());
+        }
+        // The other cases (TDZ, immutable, a moved binding) take the full path.
+        self.set_mutable_binding(agent, name, value, strict)
+    }
+
+    /// SetMutableBinding's step 3 for an initialized mutable binding at
+    /// `slot` that is still `name`'s: changes its bound value to V. False
+    /// (and nothing done) in any other case.
+    #[inline]
+    pub(crate) fn set_initialized_mutable_at(
+        self,
+        agent: &mut Agent,
+        slot: usize,
+        name: JsString,
+        value: Value,
+    ) -> bool {
+        if let Environment::Declarative { bindings, .. } = agent.env_mut(self)
+            && let Some((n, b)) = bindings.list.get_mut(slot)
+            && *n == name
+            && b.mutable
+            && b.value.is_some()
+        {
+            b.value = Some(value);
+            return true;
+        }
+        false
+    }
+
     /// The record's [[DisposableResourceStack]] (declarative records only).
     pub fn disposable_resource_stack_mut(self, agent: &mut Agent) -> &mut Vec<DisposableResource> {
         match agent.env_mut(self) {
