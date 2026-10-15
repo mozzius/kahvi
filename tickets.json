@@ -5305,13 +5305,13 @@
  },
  {
   "id": "I-locale-canonicalization",
-  "status": "open",
+  "status": "blocked",
   "tier": "sonnet",
-  "attempts": 0,
+  "attempts": 1,
   "strikes": 0,
-  "reason": "",
+  "reason": "CLDR common/bcp47 alias data (`-u-` `tz` aliases and the `-t-` field value aliases such as `m0-names`) isn't available through ICU4X's `icu_locale`/`LocaleCanonicalizer`. It would need an architect-provided data source, such as generated tables from CLDR.",
   "salvage_attempt": null,
-  "updated": 1792075171.5069811,
+  "updated": 1792090152.0569468,
   "errors": 0,
   "resume_attempt": null
  },
@@ -5371,7 +5371,7 @@
   "strikes": 1,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792089977.9273906,
+  "updated": 1792090129.5131714,
   "errors": 0,
   "resume_attempt": null
  },

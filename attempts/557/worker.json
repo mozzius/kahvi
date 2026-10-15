@@ -1,0 +1,135 @@
+{
+  "duration_api_ms": 19516,
+  "stop_reason": "end_turn",
+  "session_id": "7945a88b-4553-4062-bfb8-66aaeb2fa789",
+  "total_cost_usd": 0.0790976,
+  "usage": {
+    "input_tokens": 13,
+    "cache_creation_input_tokens": 13501,
+    "cache_read_input_tokens": 112402,
+    "output_tokens": 1354,
+    "output_tokens_details": {
+      "thinking_tokens": 137
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13501,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 362,
+        "cache_read_input_tokens": 20038,
+        "cache_creation_input_tokens": 440,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 440
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01PZT6wQyRU9v3jnX5B4j6uW",
+      "tool_input": {
+        "command": "head -c 0 /dev/null; sed -n 170,235p crates/kahvi-builtins/src/support/intl.rs"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01ALN5ZwrhG5KrpGbEr6L5nA",
+      "tool_input": {
+        "command": "grep -rli \"cnckg\" /root/.cargo/registry/src --include=*.rs"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I made no changes. ICU4X doesn't carry the data this ticket needs.\n\nI searched the vendored `icu_locale*` crates for the `tz` aliases (`cnckg` -> `cnsha`) and the `-t-` field aliases (`m0-names` -> `m0-prprname`). `cnckg` appears only in `icu_locale-2.3.1/tests/fixtures/canonicalize.json`, which is a test fixture and not exposed data. `LocaleCanonicalizer` has no data for `-u-` or `-t-` extension value aliases. Writing the table by hand is ruled out, so I stopped.\n\nBLOCKED: CLDR common/bcp47 alias data (`-u-` `tz` aliases and the `-t-` field value aliases such as `m0-names`) isn't available through ICU4X's `icu_locale`/`LocaleCanonicalizer`. It would need an architect-provided data source, such as generated tables from CLDR.",
+  "ttft_ms": 2408,
+  "type": "result",
+  "duration_ms": 24433,
+  "uuid": "6be7359f-8934-4301-ac94-731cd6ccbaba",
+  "ttft_stream_ms": 1765,
+  "time_to_request_ms": 503,
+  "time_to_request_phases_ms": {
+    "other": 40,
+    "system_prompt": 308,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 15,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 10,
+    "engine_pickup": 6,
+    "message_prep": 7,
+    "model_config_wait": 59,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 27,
+    "message_normalization": 2,
+    "client_creation": 9,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 124,
+  "time_to_request_cpu_ms": 399,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 123,
+  "process_rss_mib_result": 257,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 265,
+  "process_cpu_ms_turn": 2082,
+  "process_wall_ms_turn": 24433,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1766,
+  "time_to_request_from_spawn_ms": 1261960,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090125851.663,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.48,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.21,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

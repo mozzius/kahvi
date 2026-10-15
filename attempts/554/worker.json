@@ -1,0 +1,149 @@
+{
+  "duration_api_ms": 86578,
+  "stop_reason": "end_turn",
+  "session_id": "49fb7672-29c2-4e5f-90c7-bb1fd7ec4b23",
+  "total_cost_usd": 0.4283091,
+  "usage": {
+    "input_tokens": 39,
+    "cache_creation_input_tokens": 53330,
+    "cache_read_input_tokens": 772379,
+    "output_tokens": 13703,
+    "output_tokens_details": {
+      "thinking_tokens": 1086
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 53330,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 286,
+        "cache_read_input_tokens": 60080,
+        "cache_creation_input_tokens": 227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Khs9hQxbZu4ND4dsvAjj3B",
+      "tool_input": {
+        "command": "cd crates/kahvi-builtins/src && cat intl_segments_prototype/*.rs intl_segment_iterator_prototype/*.rs; ls support | head -80; git log --oneline | head -3"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_0135mXBWGt8xuG6Q1tdQosTS",
+      "tool_input": {
+        "command": "ls /root/.cargo/registry/src/*/ | grep -E \"icu_segmenter|^icu-\""
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_0141a9jfWj2Yhrw3VxFSEEYT",
+      "tool_input": {
+        "command": "grep -rn \"fn create_iterator_result_object\\|fn to_integer_or_infinity\\|pub fn native_mut\\|pub fn as_utf16\\|pub fn len\\|pub fn substring\\|pub fn from_utf16\\|pub fn code_units\" /home/user/kahvi/crates/kahvi-core/src /home/user/kahvi/docs/API.md"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_019wRuWB8icb4d4UerZ59sdF",
+      "tool_input": {
+        "command": "cd /home/user/kahvi/work/slots/slot-3/crates/kahvi-builtins/src/support && python3 - <<'EOF'\np='intl_segmenter.rs'\ns=open(p).read()\ns=s.replace('''use kahvi_core::gc::{Trace, Tracer};\nuse kahvi_core::prelude::*;\n''','''use icu::segmenter::options::{SentenceBreakInvariantOptions, WordBreakInvariantOptions};\nuse icu::segmenter::{GraphemeClusterSegmenter, SentenceSegmenter, WordSegmenter};\nuse kahvi_core::gc::{Trace, Tracer};\nuse kahvi_core::prelude::*;\n''')\ns+='''\n/// The segmentation boundaries of `string` for `granularity`, ascending, as\n/// code unit indices paired with whether the segment they end is word-like\n/// (only meaningful for \"word\"). The first entry is the boundary at 0.\nfn boundaries(agent: &Agent, string: JsString, granularity: &str) -> Vec<(usize, bool)> {\n    let units = agent.str(string);\n    match granularity {\n        \"word\" => WordSegmenter::new_auto(WordBreakInvariantOptions::default())\n            .segment_utf16(units)\n            .iter_with_word_type()\n            .map(|(i, t)| (i, t.is_word_like()))\n            .collect(),\n        \"sentence\" => SentenceSegmenter::new(SentenceBreakInvariantOptions::default())\n            .segment_utf16(units)\n            .map(|i| (i, false))\n            .collect(),\n        _ => GraphemeClusterSegmenter::new()\n            .segment_utf16(units)\n            .map(|i| (i, false))\n            .collect(),\n    }\n}\n\n/// The [[SegmenterGranularity]] of a segmenter object.\nfn granularity_of(agent: &Agent, segmenter: Object) -> String {\n    agent\n        .native::<SegmenterSlots>(segmenter)\n        .map(|s| s.granularity.clone())\n        .unwrap_or_default()\n}\n\n/// FindBoundary ( _segmenter_, _string_, _startIndex_, _direction_ )\npub(crate) fn find_boundary(\n    agent: &Agent,\n    segmenter: Object,\n    string: JsString,\n    start_index: usize,\n    after: bool,\n) -> usize {\n    // 1. Let _length_ be the length of _string_.\n    let length = agent.str_len(string);\n    // 2. Assert: _startIndex_ < _length_.\n    // 3. Let _locale_ be _segmenter_.[[Locale]].\n    // 4. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].\n    let granularity = granularity_of(agent, segmenter);\n    let bounds = boundaries(agent, string, &granularity);\n    if !after {\n        // 5. If _direction_ is ~before~, then\n        //    a. Search _string_ for the last segmentation boundary that is preceded by at most _startIndex_ code units from the beginning, using locale _locale_ and text element granularity _granularity_.\n        //    b. If a boundary is found, return the count of code units in _string_ preceding it.\n        if let Some((i, _)) = bounds.iter().rev().find(|(i, _)| *i <= start_index) {\n            return *i;\n        }\n        //    c. Return 0.\n        return 0;\n    }\n    // 6. Assert: _direction_ is ~after~.\n    // 7. Search _string_ for the first segmentation boundary that follows the code unit at index _startIndex_, using locale _locale_ and text element granularity _granularity_.\n    // 8. If a boundary is found, return the count of code units in _string_ preceding it.\n    if let Some((i, _)) = bounds.iter().find(|(i, _)| *i > start_index) {\n        return *i;\n    }\n    // 9. Return _length_.\n    length\n}\n\n/// CreateSegmentDataObject ( _segmenter_, _string_, _startIndex_, _endIndex_ )\npub(crate) fn create_segment_data_object(\n    agent: &mut Agent,\n    segmenter: Object,\n    string: JsString,\n    start_index: usize,\n    end_index: usize,\n) -> JsResult<Object> {\n    // 1. Let _length_ be the length of _string_.\n    // 2. Assert: _endIndex_ \u2264 _length_.\n    // 3. Assert: _startIndex_ < _endIndex_.\n    // 4. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).\n    let proto = agent.intrinsic(\"%Object.prototype%\");\n    let result = agent.ordinary_object_create(Some(proto));\n    // 5. Let _segment_ be the substring of _string_ from _startIndex_ to _endIndex_.\n    let segment = agent.substring(string, start_index, end_index);\n    // 6. Perform ! CreateDataPropertyOrThrow(_result_, *\"segment\"*, _segment_).\n    let key = agent.key(\"segment\");\n    ops::create_data_property_or_throw(agent, result, key, Value::String(segment))?;\n    // 7. Perform ! CreateDataPropertyOrThrow(_result_, *\"index\"*, \ud835\udd3d(_startIndex_)).\n    let key = agent.key(\"index\");\n    ops::create_data_property_or_throw(agent, result, key, Value::Number(start_index as f64))?;\n    // 8. Perform ! CreateDataPropertyOrThrow(_result_, *\"input\"*, _string_).\n    let key = agent.key(\"input\");\n    ops::create_data_property_or_throw(agent, result, key, Value::String(string))?;\n    // 9. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].\n    let granularity = granularity_of(agent, segmenter);\n    // 10. If _granularity_ is *\"word\"*, then\n    if granularity == \"word\" {\n        //    a. Let _isWordLike_ be a Boolean indicating whether the _segment_ in _string_ is \"word-like\" according to locale _segmenter_.[[Locale]].\n        let is_word_like = boundaries(agent, string, &granularity)\n            .iter()\n            .any(|(i, w)| *i == end_index && *w);\n        //    b. Perform ! CreateDataPropertyOrThrow(_result_, *\"isWordLike\"*, _isWordLike_).\n        let key = agent.key(\"isWordLike\");\n        ops::create_data_property_or_throw(agent, result, key, Value::Boolean(is_word_like))?;\n    }\n    // 11. Return _result_.\n    Ok(result)\n}\n'''\nopen(p,'w').write(s)\n\np='../intl_segmenter/constructor.rs'\ns=open(p).read()\ns=s.replace('''    )?\n    .expect(\"a default\");\n    // 9. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.\n    let slots = agent\n        .native_mut::<SegmenterSlots>(segmenter)\n        .expect(\"created above\");\n''','''    )?\n    .unwrap_or_else(|| \"grapheme\".to_string());\n    // 9. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.\n    let Some(slots) = agent.native_mut::<SegmenterSlots>(segmenter) else {\n        return Err(agent.not_implemented(\"Intl.Segmenter: lost internal slots\"));\n    };\n''')\nopen(p,'w').write(s)\nEOF"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 46,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Implemented `Intl.Segmenter`: the constructor, `resolvedOptions`, `segment`, `containing` and the segment iterator's `next`. `./t262 intl402/Segmenter/` passes 158/158, `cargo clippy` is clean, and I ran `cargo fmt`.\n\n- **Segmentation:** `find_boundary` and `create_segment_data_object` are in `support/intl_segmenter.rs`. They use ICU4X's grapheme, word and sentence segmenters on the UTF-16 string, and word-likeness comes from ICU4X's word type.\n- **Not locale-tailored:** ICU4X is called with its invariant options, so results don't vary by locale. The spec only recommends tailoring.\n- **Clippy fix:** the earlier attempt failed clippy; I removed the `expect` calls in the constructor.",
+  "ttft_ms": 1629,
+  "type": "result",
+  "duration_ms": 149206,
+  "uuid": "281dc7c4-9343-455d-9c6d-587295a022da",
+  "ttft_stream_ms": 1376,
+  "time_to_request_ms": 536,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 353,
+    "resume_other": 0,
+    "process_user_input": 5,
+    "input_attachments": 9,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 107,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 10,
+    "message_normalization": 3,
+    "client_creation": 3,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 41,
+  "time_to_request_cpu_ms": 421,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 240,
+  "process_anon_mib_turn_start": 123,
+  "process_rss_mib_result": 271,
+  "process_anon_mib_result": 149,
+  "process_peak_rss_mib": 284,
+  "process_cpu_ms_turn": 8283,
+  "process_wall_ms_turn": 149206,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 9,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1377,
+  "time_to_request_from_spawn_ms": 1114899,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089978812.7039,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.47,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.2,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
