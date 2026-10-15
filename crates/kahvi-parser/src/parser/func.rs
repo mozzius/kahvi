@@ -104,8 +104,23 @@ impl Parser<'_> {
             uses_arguments: fctx.uses_arguments,
             uses_this: fctx.uses_this,
             has_direct_eval: fctx.has_direct_eval,
+            lazy: None,
         };
         self.validate_function(&f, unique_params)?;
+        let mut f = f;
+        if self.lazy
+            && kind == FunctionKind::Normal
+            && self.classes.is_empty()
+            && self.eager_at != Some(start)
+        {
+            f.lazy = Some(LazyFunction {
+                outer_strict: saved_strict,
+                module: self.module,
+            });
+            f.params = Vec::new();
+            f.rest = None;
+            f.body = FunctionBody::Block(Vec::new());
+        }
         Ok(f)
     }
 
@@ -307,6 +322,7 @@ impl Parser<'_> {
             uses_arguments: fctx.uses_arguments,
             uses_this: fctx.uses_this,
             has_direct_eval: fctx.has_direct_eval,
+            lazy: None,
         };
         self.validate_function(&f, true)?;
         Ok(Expr::Arrow(Rc::new(f)))
@@ -634,6 +650,7 @@ impl Parser<'_> {
             uses_arguments: false,
             uses_this: fctx.uses_this,
             has_direct_eval: fctx.has_direct_eval,
+            lazy: None,
             expected_args: 0,
         })
     }
@@ -673,6 +690,7 @@ impl Parser<'_> {
             uses_arguments: false,
             uses_this: fctx.uses_this,
             has_direct_eval: fctx.has_direct_eval,
+            lazy: None,
             expected_args: 0,
         })
     }

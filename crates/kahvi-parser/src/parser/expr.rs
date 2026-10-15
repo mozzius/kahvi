@@ -1138,6 +1138,9 @@ impl Parser<'_> {
     fn parse_paren_or_arrow(&mut self) -> PResult<Expr> {
         let start = self.start();
         self.next()?;
+        if self.is_word("function") || self.is_word("async") {
+            self.eager_at = Some(self.tok.start);
+        }
         let saved_yield = self.fn_ctx_mut().yield_or_await_pos.take();
         let mut inner = Cover::default();
         let mut items: Vec<Expr> = Vec::new();

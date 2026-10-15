@@ -654,6 +654,19 @@ pub struct Function {
     pub has_direct_eval: bool,
     /// For the expected-argument-count `length` property.
     pub expected_args: u32,
+    /// Parsed with lazy compilation: the body was checked for early errors
+    /// and dropped (`params`, `rest` and `body` are empty). It is parsed
+    /// again from the source when the function is first called.
+    pub lazy: Option<LazyFunction>,
+}
+
+/// What reparsing a lazy function needs besides its source position.
+#[derive(Debug, Clone, Copy)]
+pub struct LazyFunction {
+    /// The code around the function is strict mode code.
+    pub outer_strict: bool,
+    /// Parsed with the Module goal.
+    pub module: bool,
 }
 
 #[derive(Debug, Clone)]
