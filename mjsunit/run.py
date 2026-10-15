@@ -2,7 +2,7 @@
 """mjsunit: V8's test/mjsunit suite run under the kahvi engine CLI.
 
 V8's tests are fetched at the commit pinned in mjsunit/v8.lock into
-target/mjsunit/ (a sparse, blob-filtered clone of test/mjsunit only). Each test
+mjsunit/.cache/ (a sparse, blob-filtered clone of test/mjsunit only). Each test
 runs as V8's own runner runs it (test/mjsunit/testcfg.py): mjsunit.js first,
 then any `// Files:` it names, then the test, as a script (or as a module for
 .mjs). It passes when the engine exits 0, or, for a test with `--throws` in its
@@ -56,7 +56,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-CACHE = ROOT / "target" / "mjsunit"
+# Outside target/, which CI caches and prunes (rust-cache).
+CACHE = HERE / ".cache"
 EXPECTED = HERE / "expected-pass.txt"
 SKIP_FILE = HERE / "skip.txt"
 SHIM = HERE / "shim.js"
@@ -133,7 +134,7 @@ def fetch():
     src = CACHE / "v8"
     if (src / ".git").is_dir():
         have = subprocess.run(["git", "rev-parse", "HEAD"], cwd=src, capture_output=True, text=True).stdout.strip()
-        if have == commit:
+        if have == commit and (src / "test" / "mjsunit" / "mjsunit.js").is_file():
             return src, commit
     else:
         src.mkdir(parents=True, exist_ok=True)
@@ -145,7 +146,7 @@ def fetch():
     git = lambda *a: subprocess.run(["git", *a], cwd=src, check=True, stdout=subprocess.DEVNULL)
     git("remote", "set-url", "origin", repo)
     git("fetch", "-q", "--depth", "1", "--filter=blob:none", "origin", commit)
-    git("checkout", "-q", "--detach", commit)
+    git("checkout", "-q", "-f", "--detach", commit)
     return src, commit
 
 
@@ -171,13 +172,16 @@ def rewrite_specifiers(text):
 
 
 def prepare(src, commit):
-    """Copy test/mjsunit to target/mjsunit/prepared-COMMIT with natives rewritten."""
+    """Copy test/mjsunit to mjsunit/.cache/prepared-COMMIT with natives rewritten."""
     dst = CACHE / f"prepared-{commit[:12]}-v{PREPARE_VERSION}"
     if (dst / ".done").exists():
         return dst
     if dst.exists():
         shutil.rmtree(dst)
     base = src / "test" / "mjsunit"
+    if not (base / "mjsunit.js").is_file():
+        sys.exit(f"mjs: {base} has no mjsunit.js; delete {CACHE} and run again")
+    dst.mkdir(parents=True)
     for p in base.rglob("*"):
         if not p.is_file():
             continue
