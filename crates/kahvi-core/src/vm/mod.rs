@@ -101,7 +101,7 @@ pub enum Reference {
 
 /// An exception handler installed by `PushHandler`.
 #[derive(Debug, Clone)]
-struct Handler {
+pub(crate) struct Handler {
     pc: usize,
     stack_len: usize,
     refs_len: usize,

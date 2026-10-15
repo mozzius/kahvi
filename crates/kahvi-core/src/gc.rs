@@ -608,7 +608,23 @@ impl Agent {
             if t.envs.get(i) {
                 live_count += 1;
             } else if !self.gc.is_free_env.get(i) {
-                self.envs[i as usize] = Environment::dead();
+                // A declarative record keeps its allocations for
+                // `alloc_declarative`; a large one gives them back.
+                match &mut self.envs[i as usize] {
+                    Environment::Declarative {
+                        bindings,
+                        outer,
+                        imports,
+                        disposable_resource_stack,
+                        ..
+                    } if bindings.capacity() <= 64 => {
+                        bindings.clear();
+                        *outer = None;
+                        imports.clear();
+                        disposable_resource_stack.clear();
+                    }
+                    e => *e = Environment::dead(),
+                }
                 self.gc.is_free_env.insert(i);
                 self.gc.free_envs.push(i);
             }

@@ -72,6 +72,16 @@ impl Bindings {
         None
     }
 
+    pub(crate) fn capacity(&self) -> usize {
+        self.list.capacity()
+    }
+
+    /// Empties the list, keeping its allocation.
+    pub(crate) fn clear(&mut self) {
+        self.list.clear();
+        self.index = None;
+    }
+
     pub fn remove(&mut self, name: &JsString) -> Option<Binding> {
         let i = self.position(name)?;
         let (_, b) = self.list.remove(i);
@@ -163,15 +173,7 @@ impl Environment {
     }
 
     pub fn new_declarative(agent: &mut Agent, outer: Option<EnvId>) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer,
-            function: None,
-            imports: Default::default(),
-            is_module: false,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        agent.alloc_declarative(outer, None, false)
     }
 
     /// A new declarative environment for a Catch clause's parameter.
@@ -199,36 +201,21 @@ impl Environment {
         outer: EnvId,
         lexical_this: bool,
     ) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer: Some(outer),
-            function: Some(Box::new(FunctionEnvData {
-                this_value: Value::Undefined,
-                this_binding_status: if lexical_this {
-                    ThisBindingStatus::Lexical
-                } else {
-                    ThisBindingStatus::Uninitialized
-                },
-                function_object: f,
-                new_target,
-            })),
-            imports: Default::default(),
-            is_module: false,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        let data = FunctionEnvData {
+            this_value: Value::Undefined,
+            this_binding_status: if lexical_this {
+                ThisBindingStatus::Lexical
+            } else {
+                ThisBindingStatus::Uninitialized
+            },
+            function_object: f,
+            new_target,
+        };
+        agent.alloc_declarative(Some(outer), Some(data), false)
     }
 
     pub fn new_module(agent: &mut Agent, outer: EnvId) -> EnvId {
-        agent.alloc_env(Environment::Declarative {
-            bindings: Default::default(),
-            outer: Some(outer),
-            function: None,
-            imports: Default::default(),
-            is_module: true,
-            is_catch: false,
-            disposable_resource_stack: Vec::new(),
-        })
+        agent.alloc_declarative(Some(outer), None, true)
     }
 
     /// NewObjectEnvironment(O, W, E)

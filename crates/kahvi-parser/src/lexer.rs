@@ -414,8 +414,9 @@ impl<'a> Lexer<'a> {
             self.pos += 2;
             return Ok(QDot);
         }
+        let first = self.src.as_bytes().get(self.pos).copied();
         for &(s, p) in TABLE {
-            if self.starts_with(s) {
+            if Some(s.as_bytes()[0]) == first && self.starts_with(s) {
                 self.pos += s.len();
                 return Ok(p);
             }
