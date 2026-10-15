@@ -35,6 +35,21 @@ jobs:
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace
 
+  jsi:
+    name: JSI shim and React Native package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.CHECKOUT_REF }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      # The jsi::Runtime over the C ABI, against RN's JSI (harness/jsi).
+      - run: harness/jsi/run.sh
+      - run: KAHVI_GC_STRESS=1 harness/jsi/run.sh
+      # react-native/ compiles against React Native's headers (harness/rn).
+      - run: harness/rn/check.sh
+
   build:
     name: build release engine
     runs-on: ubuntu-latest

@@ -179,6 +179,19 @@ int main() {
     WeakObject weak(rt, o);
     EXPECT(weak.lock(rt).isObject());
 
+    // Properties keyed by any value (ToPropertyKey).
+    {
+      Object k = Object(rt);
+      k.setProperty(rt, Value(rt, String::createFromAscii(rt, "a")), 1);
+      k.setProperty(rt, Value(7), 2);
+      EXPECT(k.getProperty(rt, Value(rt, String::createFromAscii(rt, "7"))).getNumber() == 2);
+      EXPECT(k.hasProperty(rt, Value(rt, String::createFromAscii(rt, "a"))));
+      EXPECT(!k.hasProperty(rt, Value(8)));
+      Value sym = eval(rt, "Symbol.iterator");
+      k.setProperty(rt, sym, 3);
+      EXPECT(k.getProperty(rt, sym).getNumber() == 3);
+    }
+
     // ArrayBuffers created by JS.
     Object ab = eval(rt, "new Uint8Array([1, 2, 3]).buffer").getObject(rt);
     EXPECT(ab.isArrayBuffer(rt));
