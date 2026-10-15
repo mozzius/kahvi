@@ -5438,3 +5438,66 @@ plan usage at last run: allowed; five_hour 70% (resets Thu 12:20), seven_day 36%
 test262 at last merge: 82037/82037 runs passing
 [08:39:29] building trusted runner; integration branch stack, 4 slots
 [08:39:46] stack: pushed stack/0056 as #92 with arch-legacy
+[08:40:32] stopped on request
+tickets: blocked 2, done 428, open 3, stacked 1
+  B-iterator-prototype-chunks open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-includes open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-join stacked          tier=haiku   attempts=2 strikes=1
+  B-iterator-prototype-windows open             tier=haiku   attempts=2 strikes=0
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+attempts: 541  merged: 411  spend: $25.48 (workers $10.36, verifier $15.12)  new test262 passes: 19820  ($0.001 per pass)
+  haiku   accept       410
+  haiku   blocked      6
+  haiku   gate-reject  42
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       17
+  sonnet  accept       12
+  sonnet  blocked      1
+  sonnet  gate-reject  27
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+plan usage at last run: allowed; five_hour 70% (resets Thu 12:20), seven_day 36% (resets Thu 09:00)
+test262 at last merge: 82037/82037 runs passing
+[08:47:48] building trusted runner; integration branch stack, 4 slots
+[08:59:07] stack: stack/0048 (#78) green: 81637/82037 passing, +454
+[09:00:20] stack: stack/0049 (#79) green: 81653/82037 passing, +16
+[09:00:20] B-atomics-compare-exchange: merged (+16, 81653 total)
+[09:01:31] stack: stack/0050 (#81) green: 81725/82037 passing, +72
+[09:01:31] B-atomics-exchange: merged (+18, 81725 total)
+[09:01:31] B-atomics-is-lock-free: merged (+6, 81725 total)
+[09:01:31] B-atomics-load: merged (+16, 81725 total)
+[09:01:31] B-atomics-or: merged (+18, 81725 total)
+[09:01:31] B-atomics-pause: merged (+2, 81725 total)
+[09:02:42] stack: stack/0051 (#82) green: 81725/82037 passing, +0
+[09:03:52] stack: stack/0052 (#83) green: 81829/82037 passing, +104
+[09:03:52] B-atomics-notify: merged (+56, 81829 total)
+[09:03:52] B-atomics-store: merged (+24, 81829 total)
+[09:03:52] stack: partial tickets after stack/0052: {'done': 4}
+[09:05:01] stack: stack/0054 (#86) green: 82037/82037 passing, +208
+[09:05:01] B-atomics-sub: merged (+22, 82037 total)
+[09:05:01] B-atomics-xor: merged (+22, 82037 total)
+[09:05:01] B-shared-array-buffer-prototype-get-byte-length: merged (+12, 82037 total)
+[09:05:01] B-atomics-wait: merged (+44, 82037 total)
+[09:05:01] B-iterator-prototype-join: merged (+0, 82037 total)
+[09:05:01] B-shared-array-buffer-prototype-get-growable: merged (+12, 82037 total)
+[09:05:01] B-shared-array-buffer-prototype-get-max-byte-length: merged (+14, 82037 total)
+[09:05:01] B-shared-array-buffer-prototype-slice: merged (+52, 82037 total)
+[09:05:01] B-shared-array-buffer-prototype-grow: merged (+14, 82037 total)
+[09:05:01] stack: partial tickets after stack/0054: {'done': 2}
+[09:05:15] stack: adding #93 to the GitHub stack failed (POST stacks/91/add: {"message":"Pull requests must form a stack, where each PR's base ref is the previous PR's head ref","documentation_url":"https://docs.github.com/rest/pulls/stacks#add-pull-requests-to-a-pull-request-stack","status":"422"}gh: Pull requests must form a stack, where each PR's base ref is the previous PR's head ref (HTTP 422)); relinking
+[09:05:19] stack: pushed stack/0057 as #93 with arch-legacy
+[09:07:30] stack: stack/0048 (#78) merged into main
+[09:07:31] stack: stack/0049 (#79) merged into stack/0048
+[09:07:31] stack: stack/0050 (#81) merged into stack/0049
+[09:07:32] stack: stack/0051 (#82) merged into stack/0050
+[09:07:33] stack: stack/0052 (#83) merged into stack/0051
+[09:07:33] stack: stack/0054 (#86) merged into stack/0052
+[09:09:40] stack: stack/0057 (#93) moved on GitHub to d211316653; judging that
+[09:16:02] stack: stack/0057 (#93) moved on GitHub to 13cc992ce7; judging that
+[12:24:06] building trusted runner; integration branch stack, 4 slots
+[12:24:27] stack: stack/0057 (#93) green: 82439/82439 passing, +376
+[12:24:28] stack: stack/0057 (#93) merged into main
+[12:24:33] stack: pushed stack/0058 as #95 with arch-pmap
+[12:27:43] stack: stack/0058 (#95) green: 82439/82439 passing, +376
