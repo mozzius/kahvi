@@ -268,6 +268,7 @@ fn evaluate_body(
     frame.stack = agent.spare_vec();
     frame.args = agent.spare_vec();
     frame.args.extend_from_slice(args);
+    frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
     if code.is_async && !code.is_generator {
@@ -280,6 +281,11 @@ fn evaluate_body(
     if !code.is_generator {
         agent.give_back_vec(std::mem::take(&mut frame.stack));
         agent.give_back_vec(std::mem::take(&mut frame.args));
+        let mut handlers = std::mem::take(&mut frame.handlers);
+        if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
+            handlers.clear();
+            agent.spare_handlers.push(handlers);
+        }
     }
     if code.is_generator {
         // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.

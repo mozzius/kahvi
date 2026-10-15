@@ -140,6 +140,8 @@ pub struct Agent {
     /// Empty vectors kept from finished frames (operand stacks, argument
     /// lists) so a call does not allocate new ones. They hold no values.
     pub(crate) spare_vecs: Vec<Vec<Value>>,
+    /// Exception-handler lists kept for reuse, like `spare_vecs`.
+    pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
     /// Collect at every safe point (finds rooting bugs; set by the host).
     pub gc_stress: bool,
     /// [[KeptAlive]]: WeakRef targets kept until the end of the current job.
@@ -224,6 +226,7 @@ impl Agent {
             symbols: Vec::new(),
             gc: Default::default(),
             spare_vecs: Vec::new(),
+            spare_handlers: Vec::new(),
             gc_stress: false,
             kept_objects: Vec::new(),
             kept_symbols: Vec::new(),
@@ -604,6 +607,51 @@ impl Agent {
         }
         self.envs.push(env);
         EnvId((self.envs.len() - 1) as u32)
+    }
+
+    /// A new declarative (function, module) environment record. A collected
+    /// record's slot is refilled in place, so its allocations are reused.
+    pub(crate) fn alloc_declarative(
+        &mut self,
+        outer: Option<EnvId>,
+        function: Option<crate::env::FunctionEnvData>,
+        is_module: bool,
+    ) -> EnvId {
+        if let Some(&i) = self.gc.free_envs.last()
+            && let Environment::Declarative {
+                bindings,
+                outer: o,
+                function: f,
+                imports,
+                is_module: m,
+                is_catch,
+                disposable_resource_stack,
+            } = &mut self.envs[i as usize]
+        {
+            self.gc.free_envs.pop();
+            self.gc.is_free_env.remove(i);
+            self.gc.allocated += 1;
+            bindings.clear();
+            *o = outer;
+            match (f.as_mut(), function) {
+                (Some(b), Some(data)) => **b = data,
+                (_, data) => *f = data.map(Box::new),
+            }
+            imports.clear();
+            *m = is_module;
+            *is_catch = false;
+            disposable_resource_stack.clear();
+            return EnvId(i);
+        }
+        self.alloc_env(Environment::Declarative {
+            bindings: Default::default(),
+            outer,
+            function: function.map(Box::new),
+            imports: Default::default(),
+            is_module,
+            is_catch: false,
+            disposable_resource_stack: Vec::new(),
+        })
     }
 
     pub fn env(&self, id: EnvId) -> &Environment {
