@@ -1,0 +1,85 @@
+diff --git a/crates/kahvi-builtins/src/atomics/wait.rs b/crates/kahvi-builtins/src/atomics/wait.rs
+index 2429d6f..8d04500 100644
+--- a/crates/kahvi-builtins/src/atomics/wait.rs
++++ b/crates/kahvi-builtins/src/atomics/wait.rs
+@@ -2,6 +2,10 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-atomics.wait
+ 
++use crate::support::atomics::{
++    element_type, validate_atomic_access, validate_integer_typed_array, viewed_buffer,
++};
++use kahvi_core::object::typed_array::{ElementType, is_shared_array_buffer};
+ use kahvi_core::prelude::*;
+ 
+ /// Atomics.wait
+@@ -11,10 +15,67 @@ pub(crate) fn wait(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let _ = (this, new_target);
++    let (ta, index, value, timeout) = (
++        args.get_or_undefined(0),
++        args.get_or_undefined(1),
++        args.get_or_undefined(2),
++        args.get_or_undefined(3),
++    );
+     // This function puts the surrounding agent in a wait queue and suspends it until notified or until the wait times out, returning a String differentiating those cases.
+     // It performs the following steps when called:
+     //
+     // 1. Return ? DoWait(~sync~, _ta_, _index_, _value_, _timeout_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Atomics.wait"))
++    do_wait_sync(agent, ta, index, value, timeout)
++}
++
++/// DoWait(mode, ta, index, value, timeout) with _mode_ = ~sync~.
++///
++/// Kahvi's single agent cannot suspend (its [[CanBlock]] is false and no other
++/// agent could ever notify it), so the steps after AgentCanSuspend() are never
++/// reached in ~sync~ mode.
++fn do_wait_sync(
++    agent: &mut Agent,
++    ta: Value,
++    index: Value,
++    value: Value,
++    timeout: Value,
++) -> JsResult<Value> {
++    // 1. Let taRecord be ? ValidateIntegerTypedArray(ta, true).
++    let ta_record = validate_integer_typed_array(agent, ta, true)?;
++    let ta_object = ta_record.object;
++    // 2. Let buffer be taRecord.[[Object]].[[ViewedArrayBuffer]].
++    let buffer = viewed_buffer(agent, ta_object);
++    // 3. If IsSharedArrayBuffer(buffer) is false, throw a TypeError exception.
++    if !is_shared_array_buffer(agent, buffer) {
++        return Err(agent.throw_type_error("Atomics.wait needs a SharedArrayBuffer"));
++    }
++    // 4. Let byteIndexInBuffer be ? ValidateAtomicAccess(taRecord, index).
++    let _byte_index_in_buffer = validate_atomic_access(agent, ta_record, index)?;
++    // 5. Let elementType be TypedArrayElementType(ta).
++    let element_type = element_type(agent, ta_object);
++    // 6. Assert: elementType is either bigint64 or int32.
++    // 7. If elementType is bigint64, let expected be ? ToBigInt64(value); else let expected be ? ToInt32(value).
++    if matches!(element_type, ElementType::BigInt64) {
++        let _expected = ops::bigint::to_big_int64(agent, value)?;
++    } else {
++        let _expected = ops::to_int32(agent, value)?;
++    }
++    // 8. Let timeoutNumber be ? ToNumber(timeout).
++    let timeout_number = ops::to_number(agent, timeout)?;
++    // 9. If timeoutNumber is either NaN or +∞𝔽, let realTimeout be +∞.
++    // 10. Else if timeoutNumber is -∞𝔽, let realTimeout be 0.
++    // 11. Else, let realTimeout be max(ℝ(timeoutNumber), 0).
++    let _real_timeout = if timeout_number.is_nan() || timeout_number == f64::INFINITY {
++        f64::INFINITY
++    } else if timeout_number == f64::NEG_INFINITY {
++        0.0
++    } else {
++        timeout_number.max(0.0)
++    };
++    // 12. If mode is ~sync~ and AgentCanSuspend() is false, throw a TypeError exception.
++    // AgentCanSuspend() is always false here, so this is the outcome for every ~sync~ call.
++    // Steps 13-31 (the waiter list, the critical section and SuspendThisAgent) are
++    // unreachable in this host, so they are not implemented.
++    Err(agent.throw_type_error("Atomics.wait cannot suspend the agent"))
+ }

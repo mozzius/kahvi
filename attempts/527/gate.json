@@ -1,0 +1,37 @@
+{
+  "ticket": "B-atomics-xor",
+  "base": "ad059dbc8ee8a1a6904d514f383f01bd6bdfe60b",
+  "head": "d1d96e44bf1e6b9e7e6848093ce6745f26df9371",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/xor.rs",
+      "added": 9,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 8,
+    "after": 26,
+    "new_passes": 18,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 4,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/xor/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/xor/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/xor/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/xor/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store"
+    ]
+  },
+  "decision": "pass"
+}

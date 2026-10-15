@@ -1,0 +1,32 @@
+{
+  "ticket": "B-shared-array-buffer-prototype-get-byte-length",
+  "base": "4e19943a457be78b8f61e890608e5ca105f8eed3",
+  "head": "bec4bca899c117d401b942751923edce645b9f1c",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/shared_array_buffer/prototype_get_byte_length.rs",
+      "added": 18,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 18,
+    "before": 6,
+    "after": 18,
+    "new_passes": 12,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

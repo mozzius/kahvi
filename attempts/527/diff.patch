@@ -1,0 +1,32 @@
+diff --git a/crates/kahvi-builtins/src/atomics/xor.rs b/crates/kahvi-builtins/src/atomics/xor.rs
+index 0104cd0..af72f68 100644
+--- a/crates/kahvi-builtins/src/atomics/xor.rs
++++ b/crates/kahvi-builtins/src/atomics/xor.rs
+@@ -2,6 +2,7 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-atomics.xor
+ 
++use crate::support::atomics::{atomic_read_modify_write, byte_list_bitwise_op};
+ use kahvi_core::prelude::*;
+ 
+ /// Atomics.xor
+@@ -11,11 +12,15 @@ pub(crate) fn xor(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function performs the following steps when called:
+-    //
++    let _ = (this, new_target);
++    let (ta, index, value) = (
++        args.get_or_undefined(0),
++        args.get_or_undefined(1),
++        args.get_or_undefined(2),
++    );
+     // 1. Let _xor_ be a new read-modify-write modification function with parameters (_xBytes_, _yBytes_) that captures nothing and performs the following steps atomically when called:
+     //    a. Return ByteListBitwiseOp(`^`, _xBytes_, _yBytes_).
++    let mut xor = |_: &mut Agent, x: &[u8], y: &[u8]| byte_list_bitwise_op(|a, b| a ^ b, x, y);
+     // 2. Return ? AtomicReadModifyWrite(_ta_, _index_, _value_, _xor_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Atomics.xor"))
++    atomic_read_modify_write(agent, ta, index, value, &mut xor)
+ }

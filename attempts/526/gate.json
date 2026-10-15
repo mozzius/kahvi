@@ -1,0 +1,42 @@
+{
+  "ticket": "B-atomics-wait",
+  "base": "8741e81a93010f321389fe91f28160c1806c0a87",
+  "head": "babefc454c248967a6e92c72e7734277e8ad16f1",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/wait.rs",
+      "added": 63,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/atomics/wait.rs",
+      "line": 79,
+      "rule": "admits missing functionality: fine if honest, check it",
+      "text": "// unreachable in this host, so they are not implemented."
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 50,
+    "before": 6,
+    "after": 48,
+    "new_passes": 42,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 2,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/wait/retrieve-length-before-index-coercion.js:sloppy  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow",
+      "built-ins/Atomics/wait/retrieve-length-before-index-coercion.js:strict  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow"
+    ]
+  },
+  "decision": "pass"
+}

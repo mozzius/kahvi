@@ -1,0 +1,20 @@
+{
+  "merged": true,
+  "commit": "9907d41167f52c08ff2364e63b843c62d6db8838",
+  "batch": [
+    "B-atomics-compare-exchange"
+  ],
+  "new_passes": 16,
+  "total_pass": 81653,
+  "target_complete": false,
+  "remaining": [
+    "built-ins/Atomics/compareExchange/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/compareExchange/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/compareExchange/bigint/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+    "built-ins/Atomics/compareExchange/bigint/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load",
+    "built-ins/Atomics/compareExchange/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/compareExchange/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+    "built-ins/Atomics/compareExchange/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+    "built-ins/Atomics/compareExchange/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load"
+  ]
+}

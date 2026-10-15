@@ -1,0 +1,54 @@
+{
+  "ticket": "B-atomics-sub",
+  "base": "172b7eb6201b806d0f6bd50cdff6f8c480e7182c",
+  "head": "1e9ff173f85fdc7621c4034a48b9e78543e601f0",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/sub.rs",
+      "added": 35,
+      "removed": 17
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/atomics/sub.rs",
+      "line": 26,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"validated by AtomicReadModifyWrite\")"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/atomics/sub.rs",
+      "line": 42,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "_ => unreachable!(\"RawBytesToNumeric gives one content type\"),"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/sub/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/bigint/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/bigint/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/sub/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.store"
+    ]
+  },
+  "decision": "pass"
+}

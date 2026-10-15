@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 36634,
+  "stop_reason": "end_turn",
+  "session_id": "aa2a3d48-47ca-419c-bfe6-e4addeb65def",
+  "total_cost_usd": 0.012072900000000001,
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 27453,
+    "cache_read_input_tokens": 230320,
+    "output_tokens": 7971,
+    "output_tokens_details": {
+      "thinking_tokens": 3817
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27453,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 417,
+        "cache_read_input_tokens": 34471,
+        "cache_creation_input_tokens": 739,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 739
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "Atomics.wait is implemented in `crates/kahvi-builtins/src/atomics/wait.rs`: DoWait's steps 1\u201312 run in order, and step 12 throws the TypeError because this agent cannot suspend. `./t262 built-ins/Atomics/wait/` gives 48 pass and 2 fail. Both failures are `retrieve-length-before-index-coercion.js` (sloppy and strict), which call `SharedArrayBuffer.prototype.grow`, and that is not implemented yet. Clippy and rustfmt are clean for the file.\n\nBLOCKED: SharedArrayBuffer.prototype.grow (needed by built-ins/Atomics/wait/retrieve-length-before-index-coercion.js)",
+  "ttft_ms": 1502,
+  "type": "result",
+  "duration_ms": 64649,
+  "uuid": "1d7dbb5b-fbb5-45e6-bccf-e8a289f9f071",
+  "ttft_stream_ms": 1273,
+  "time_to_request_ms": 540,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 398,
+    "resume_other": 1,
+    "process_user_input": 13,
+    "input_attachments": 19,
+    "input_hooks": 4,
+    "tool_pool_refresh": 7,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 22,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 14,
+    "message_normalization": 3,
+    "client_creation": 7,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 124,
+  "time_to_request_cpu_ms": 269,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 124,
+  "process_rss_mib_result": 267,
+  "process_anon_mib_result": 146,
+  "process_peak_rss_mib": 268,
+  "process_cpu_ms_turn": 4299,
+  "process_wall_ms_turn": 64649,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 15,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1275,
+  "time_to_request_from_spawn_ms": 1758673,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050828801.7192,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.23,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

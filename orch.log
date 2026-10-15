@@ -5304,3 +5304,12 @@ test262 at last merge: 81183/81183 runs passing
 [07:54:02] B-atomics-notify: verifier: accept The change implements Atomics.notify in the order the spec gives. It runs ValidateIntegerTypedArray(ta, true), then ValidateAtomicAccess, then the cou
 [07:54:04] B-atomics-store: verifier: accept The change implements Atomics.store in store.rs, following the spec's 8 steps in order: ValidateAtomicAccessOnIntegerTypedArray (with ?), coerce (ToBi
 [07:54:05] B-atomics-xor: attempt on slot 3 with haiku
+[07:54:10] B-shared-array-buffer-prototype-get-byte-length: attempt on slot 0 with haiku
+[07:54:17] B-atomics-sub: attempt 525 finished ($0.009, 17 turns)
+[07:54:52] B-atomics-xor: attempt 527 finished ($0.005, 10 turns)
+[07:54:54] B-shared-array-buffer-prototype-get-byte-length: attempt 528 finished ($0.007, 12 turns)
+[07:54:55] B-atomics-wait: attempt 526 finished ($0.012, 16 turns)
+[07:55:15] stack: stack/0049 (#79) green: 81653/82037 passing, +16
+[07:55:15] B-atomics-compare-exchange: merged (+16, 81653 total)
+[07:55:16] B-atomics-sub: verifier: accept The diff implements Atomics.sub as the spec describes. The subtract closure follows steps 1.a to 1.j: element type lookup, RawBytesToNumeric on both o
+[07:55:24] stack: pushed stack/0050 as #81 with B-atomics-exchange, B-atomics-is-lock-free, B-atomics-load, B-atomics-or, B-atomics-pause

@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 19569,
+  "stop_reason": "tool_use",
+  "session_id": "918c9abe-194f-4a27-b13a-95f8ec84d2dd",
+  "total_cost_usd": 0.0037239700000000005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 5940,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 3956,
+    "output_tokens_details": {
+      "thinking_tokens": 3359
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5940,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3956,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 5940,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5940
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Atomics.sub as the spec describes. The subtract closure follows steps 1.a to 1.j: element type lookup, RawBytesToNumeric on both operands, Number subtraction for Number content and BigInt subtraction for BigInt content, NumericToRawBytes, and return of the byte list. Step 2 is delegated to the shared atomic_read_modify_write helper, which is outside this diff. The closure does no observable work, so no observable steps are skipped. Nothing is keyed on test inputs, no value is made up, and no error is swallowed. The two lint flags are unreachable! calls. The first (sub.rs:26) relies on AtomicReadModifyWrite validating ta before calling the op, which the spec guarantees. The second (sub.rs:42) is truly unreachable because both RawBytesToNumeric calls use the same element type. The 8 remaining failures are not-implemented errors for Atomics.store, a dependency on another built-in, which is an honest throw. The unverified dependency is that the shared helper validates ta before invoking the op, and that LITTLE_ENDIAN is the engine's agent endianness constant.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Atomics.sub as the spec describes. The subtract closure follows steps 1.a to 1.j: element type lookup, RawBytesToNumeric on both operands, Number subtraction for Number content and BigInt subtraction for BigInt content, NumericToRawBytes, and return of the byte list. Step 2 is delegated to the shared atomic_read_modify_write helper, which is outside this diff. The closure does no observable work, so no observable steps are skipped. Nothing is keyed on test inputs, no value is made up, and no error is swallowed. The two lint flags are unreachable! calls. The first (sub.rs:26) relies on AtomicReadModifyWrite validating ta before calling the op, which the spec guarantees. The second (sub.rs:42) is truly unreachable because both RawBytesToNumeric calls use the same element type. The 8 remaining failures are not-implemented errors for Atomics.store, a dependency on another built-in, which is an honest throw. The unverified dependency is that the shared helper validates ta before invoking the op, and that LITTLE_ENDIAN is the engine's agent endianness constant.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 16959,
+  "type": "result",
+  "duration_ms": 19231,
+  "uuid": "48218b12-342e-44c8-b15a-ea9c10ff946e",
+  "ttft_stream_ms": 2180,
+  "time_to_request_ms": 680,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 354,
+    "resume_other": 0,
+    "process_user_input": 6,
+    "input_attachments": 73,
+    "input_hooks": 8,
+    "tool_pool_refresh": 6,
+    "init_message": 9,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 176,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 6,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 27,
+  "time_to_request_cpu_ms": 347,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 243,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 239,
+  "process_anon_mib_result": 119,
+  "process_peak_rss_mib": 243,
+  "process_cpu_ms_turn": 1074,
+  "process_wall_ms_turn": 19231,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 55,
+    "cpu_ms": 66,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 2181,
+  "time_to_request_from_spawn_ms": 1815696,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050885621.1135,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.23,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

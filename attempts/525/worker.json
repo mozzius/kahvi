@@ -1,0 +1,137 @@
+{
+  "duration_api_ms": 28832,
+  "stop_reason": "end_turn",
+  "session_id": "258f0f1c-2132-4d95-a392-52b119ffc6e6",
+  "total_cost_usd": 0.0091678,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 20091,
+    "cache_read_input_tokens": 208350,
+    "output_tokens": 5550,
+    "output_tokens_details": {
+      "thinking_tokens": 1276
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20091,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 563,
+        "cache_read_input_tokens": 26699,
+        "cache_creation_input_tokens": 1149,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1149
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Write",
+      "tool_use_id": "toolu_01577doEwRMRQ9uuf1MYCwSz",
+      "tool_input": {
+        "file_path": "/home/user/kahvi/work/slots/slot-2/scratch_sub_check.js",
+        "content": "var ta = new Int32Array(new SharedArrayBuffer(16));\nta[0] = 10;\nvar r1 = Atomics.sub(ta, 0, 3);\nif (r1 !== 10 || ta[0] !== 7) throw new Error(\"int32: r1=\" + r1 + \" ta0=\" + ta[0]);\nvar u8 = new Uint8Array(4);\nu8[0] = 1;\nvar r2 = Atomics.sub(u8, 0, 2);\nif (r2 !== 1 || u8[0] !== 255) throw new Error(\"uint8 wrap: r2=\" + r2 + \" u8=\" + u8[0]);\nvar b = new BigInt64Array(new SharedArrayBuffer(16));\nb[0] = 5n;\nvar r3 = Atomics.sub(b, 0, 8n);\nif (r3 !== 5n || b[0] !== -3n) throw new Error(\"bigint: r3=\" + r3 + \" b0=\" + b[0]);\nprint(\"ok\");\n"
+      }
+    },
+    {
+      "tool_name": "Write",
+      "tool_use_id": "toolu_01Xta7mXzyAduUHuxu1aKZMg",
+      "tool_input": {
+        "file_path": "/tmp/claude-0/-home-user-kahvi-work-slots-slot-2/258f0f1c-2132-4d95-a392-52b119ffc6e6/scratchpad/sub_check.js",
+        "content": "var ta = new Int32Array(new SharedArrayBuffer(16));\nta[0] = 10;\nvar r1 = Atomics.sub(ta, 0, 3);\nif (r1 !== 10 || ta[0] !== 7) throw new Error(\"int32: r1=\" + r1 + \" ta0=\" + ta[0]);\nvar u8 = new Uint8Array(4);\nu8[0] = 1;\nvar r2 = Atomics.sub(u8, 0, 2);\nif (r2 !== 1 || u8[0] !== 255) throw new Error(\"uint8 wrap: r2=\" + r2 + \" u8=\" + u8[0]);\nvar b = new BigInt64Array(new SharedArrayBuffer(16));\nb[0] = 5n;\nvar r3 = Atomics.sub(b, 0, 8n);\nif (r3 !== 5n || b[0] !== -3n) throw new Error(\"bigint: r3=\" + r3 + \" b0=\" + b[0]);\nprint(\"ok\");\n"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 17,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `Atomics.sub` in `crates/kahvi-builtins/src/atomics/sub.rs`, mirroring `add.rs` with subtraction. It builds, `cargo fmt --check` and `cargo clippy` are clean, and `./t262 built-ins/Atomics/sub/` gives 22 pass and 8 fail. All 8 failures are `not implemented: Atomics.store`, because those tests call `Atomics.store` directly. I could not run a manual sanity script because the scope guard blocks writing any file outside `sub.rs`.\n\nBLOCKED: `Atomics.store` is not implemented, and the 8 `built-ins/Atomics/sub/` tests that call it cannot pass until it is.",
+  "ttft_ms": 1586,
+  "type": "result",
+  "duration_ms": 42246,
+  "uuid": "904a7417-fe18-4452-88b4-17bd9c62e74a",
+  "ttft_stream_ms": 1433,
+  "time_to_request_ms": 547,
+  "time_to_request_phases_ms": {
+    "other": 30,
+    "system_prompt": 393,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 14,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 7,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 51,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 15,
+    "message_normalization": 2,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 80,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 243,
+  "process_anon_mib_turn_start": 125,
+  "process_rss_mib_result": 258,
+  "process_anon_mib_result": 138,
+  "process_peak_rss_mib": 265,
+  "process_cpu_ms_turn": 4025,
+  "process_wall_ms_turn": 42245,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1434,
+  "time_to_request_from_spawn_ms": 1743072,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050813424.9036,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.23,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
