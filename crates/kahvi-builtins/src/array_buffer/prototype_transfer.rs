@@ -29,7 +29,9 @@ fn array_buffer_copy_and_detach(
         }
     };
     // 2. If IsSharedArrayBuffer(_arrayBuffer_) is *true*, throw a *TypeError* exception.
-    //    The engine has no Shared Data Blocks, so no ArrayBuffer is ever shared.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 3. If _newLength_ is *undefined*, then
     let new_byte_length = if new_length.is_undefined() {
         // a. Let _newByteLength_ be _arrayBuffer_.[[ArrayBufferByteLength]].
