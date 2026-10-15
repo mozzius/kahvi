@@ -96,9 +96,10 @@ pauses itself at the limit; architect sessions should stop well before it
   (`crates/kahvi-ffi`, header `include/kahvi.h`) and a `jsi::Runtime` over it
   (`react-native/cpp/KahviJSI.cpp`). `harness/jsi/run.sh` builds it against
   RN v0.76.0's JSI and runs `harness/jsi/test.cpp` (also run it with
-  `KAHVI_GC_STRESS=1` and under ASan after changes). Missing: ArrayBuffers
-  over host memory (`createArrayBuffer` throws not-implemented), the RN
-  integration package, and running a real Metro bundle.
+  `KAHVI_GC_STRESS=1` and under ASan after changes). ArrayBuffers over
+  host memory (`createArrayBuffer`) use external data blocks
+  (`DataBlock::External`, `kahvi_array_buffer_new_external`). Missing: the
+  RN integration package, and running a real Metro bundle.
 
 ## Standing decisions from the user
 

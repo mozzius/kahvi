@@ -185,6 +185,33 @@ int main() {
     EXPECT(ab.getArrayBuffer(rt).size(rt) == 3);
     EXPECT(ab.getArrayBuffer(rt).data(rt)[2] == 3);
 
+    // ArrayBuffers over host memory: JS sees and writes the host's bytes,
+    // and detaching the buffer releases them.
+    {
+      struct HostBuffer : MutableBuffer {
+        uint8_t bytes[4] = {9, 8, 7, 6};
+        bool* released;
+        explicit HostBuffer(bool* r) : released(r) {}
+        ~HostBuffer() override { *released = true; }
+        size_t size() const override { return sizeof(bytes); }
+        uint8_t* data() override { return bytes; }
+      };
+      bool released = false;
+      auto host = std::make_shared<HostBuffer>(&released);
+      uint8_t* bytes = host->data();
+      ArrayBuffer hab(rt, std::move(host));
+      EXPECT(hab.size(rt) == 4);
+      EXPECT(hab.data(rt) == bytes);
+      rt.global().setProperty(rt, "hab", hab);
+      EXPECT(eval(rt, "new Uint8Array(hab)[1]").getNumber() == 8);
+      eval(rt, "new Uint8Array(hab)[0] = 42");
+      EXPECT(bytes[0] == 42);
+      EXPECT(!released);
+      eval(rt, "globalThis.copy = hab.transfer(); hab = undefined");
+      EXPECT(released);
+      EXPECT(eval(rt, "new Uint8Array(copy)[0]").getNumber() == 42);
+    }
+
     // Prepared scripts.
     auto prepared = rt.prepareJavaScript(std::make_shared<StringBuffer>("6 * 7"), "p.js");
     EXPECT(rt.evaluatePreparedJavaScript(prepared).getNumber() == 42);

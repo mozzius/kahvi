@@ -289,11 +289,20 @@ class KahviRuntimeImpl final : public jsi::Runtime {
   }
 
   jsi::ArrayBuffer createArrayBuffer(
-      std::shared_ptr<jsi::MutableBuffer> /*buffer*/) override {
-    // An ArrayBuffer over host memory needs external backing stores in
-    // kahvi-core, which do not exist yet.
-    throw jsi::JSINativeException(
-        "InternalError: not implemented: ArrayBuffer over host memory");
+      std::shared_ptr<jsi::MutableBuffer> buffer) override {
+    // The buffer keeps the MutableBuffer alive until it is detached or
+    // collected.
+    uint8_t* data = buffer->data();
+    size_t length = buffer->size();
+    auto* holder = new std::shared_ptr<jsi::MutableBuffer>(std::move(buffer));
+    KahviValue out;
+    check(kahvi_array_buffer_new_external(
+        rt_, data, length, holder,
+        [](void* context) {
+          delete static_cast<std::shared_ptr<jsi::MutableBuffer>*>(context);
+        },
+        &out));
+    return takeAs<jsi::ArrayBuffer>(out);
   }
 
   size_t size(const jsi::Array& a) override {
