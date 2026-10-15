@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 11115,
+  "stop_reason": "tool_use",
+  "session_id": "cf02685d-8101-4980-8358-8e40fdf5f9c7",
+  "total_cost_usd": 0.0528226,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 9850,
+    "cache_read_input_tokens": 4314,
+    "output_tokens": 1208,
+    "output_tokens_details": {
+      "thinking_tokens": 858
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9850,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1208,
+        "cache_read_input_tokens": 4314,
+        "cache_creation_input_tokens": 9850,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9850
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements Iterator.prototype.windows step by step. It checks this, windowSize and undersized in spec order. Each failed check goes through IteratorClose with the right error type, and GetIteratorDirect runs after the checks. The closure keeps the buffer and handles the allow-partial case. The target went from 10 to 80 passing with no regressions, which fits the size of the change. I found no spec deviations.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements Iterator.prototype.windows step by step. It checks this, windowSize and undersized in spec order. Each failed check goes through IteratorClose with the right error type, and GetIteratorDirect runs after the checks. The closure keeps the buffer and handles the allow-partial case. The target went from 10 to 80 passing with no regressions, which fits the size of the change. I found no spec deviations.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9426,
+  "type": "result",
+  "duration_ms": 11221,
+  "uuid": "91f8fb82-399f-4923-a49b-35d9674ef5d0",
+  "ttft_stream_ms": 1877,
+  "time_to_request_ms": 632,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 364,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 200,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 68,
+  "time_to_request_cpu_ms": 353,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 247,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 117,
+  "process_peak_rss_mib": 253,
+  "process_cpu_ms_turn": 842,
+  "process_wall_ms_turn": 11221,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 26,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1878,
+  "time_to_request_from_spawn_ms": 4032637,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792053103021.9966,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.7,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.36,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
