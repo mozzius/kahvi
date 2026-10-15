@@ -46,7 +46,8 @@ WORKER_GROUPS = {
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
-    "Iterator.prototype.join": "not in the pinned spec's test scope (skipped feature)",
+    "get Error.prototype.stack": "needs a stack trace captured with each error (skipped feature)",
+    "set Error.prototype.stack": "needs a stack trace captured with each error (skipped feature)",
     "Atomics.waitAsync": "needs host timers and an agent that can be woken (skipped feature)",
 }
 
