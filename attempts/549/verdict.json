@@ -1,0 +1,34 @@
+{
+  "answers": {
+    "special_cases_inputs": false,
+    "made_up_results": false,
+    "swallows_errors": true,
+    "skips_observable_steps": false,
+    "contradicts_spec": true,
+    "unrelated_changes": false
+  },
+  "worth_keeping": true,
+  "summary": "The constructor, the getters, toString, maximize/minimize and getTextInfo are implemented following the spec steps in order, with the observable Get/ToString/CoerceOptionsToObject/GetOption sequence preserved. Two defects: MakeLocaleRecord clears the value \"true\" to \"\" for every key, not only for boolean keys such as kn (so calendar \"true\" becomes \"-u-ca\" instead of \"-u-ca-true\"); and getTextInfo maps an ICU parse failure to an undefined direction instead of computing or propagating. Neither is test-shaped. The rest of the change is local and reasonable to keep.",
+  "problems": [
+    {
+      "file": "crates/kahvi-builtins/src/support/intl_locale.rs",
+      "question": "contradicts_spec",
+      "line": 326,
+      "issue": "make_locale_record clears a canonical value of \"true\" to the empty string for every key (ca, co, fw, hc, kf, kn, nu). Per CanonicalizeUValue (UTS #35 canonicalization), the \"true\" to \"\" alias applies only to boolean keys such as kn. For other keys \"true\" is a valid type that must be kept, so calendar: \"true\" should give \"-u-ca-true\", not \"-u-ca\". Restrict the rule to boolean keys, or drop it and rely on canonicalize_u_value."
+    },
+    {
+      "file": "crates/kahvi-builtins/src/intl_locale/prototype_get_text_info.rs",
+      "question": "swallows_errors",
+      "line": 38,
+      "issue": "When icu::locale::Locale::try_from_str fails, the Err(_) arm silently yields None, so getTextInfo reports an undefined direction instead of computing it or surfacing an error. The loc.locale slot is meant to be well-formed, so this is an error path being replaced by a default."
+    }
+  ],
+  "notes_for_next_attempt": "1) In support/intl_locale.rs make_locale_record (about line 326), apply the \"true\" to \"\" canonicalization only for boolean keys (kn). Keep other values verbatim after CanonicalizeUValue. Check that calendar, collation and numberingSystem set to \"true\" round-trip as \"-u-ca-true\" and so on.\n2) In prototype_get_text_info.rs (about line 38), do not map an ICU parse failure to undefined. Either compute the direction from the parsed id or return agent.not_implemented naming the gap. Do not silently return undefined.\n3) Investigate intl402/Locale/likely-subtags.js: \"und\".maximize() returns \"und\". The construct_with_likely_subtags path either hits the `if let Ok` fallback or LocaleExpander::new_extended() does not expand. The spec allows the unchanged fallback only when an error is signaled. Verify the ICU data is present and that the parse succeeds for \"und\".\n4) Step 42 of the constructor: Numeric should be stored as false when kn is not in the extension keys, not left as None. The getter masks this, but storing false matches the spec.\n5) getCalendars, getCollations, getHourCycles, getNumberingSystems, getTimeZones and getWeekInfo should keep throwing not_implemented until implemented. That is correct as is.",
+  "model": "claude-haiku-5-5",
+  "defects": [
+    "swallows_errors",
+    "contradicts_spec"
+  ],
+  "fakery": false,
+  "decision": "revise"
+}

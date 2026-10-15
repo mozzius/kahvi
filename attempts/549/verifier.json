@@ -1,0 +1,147 @@
+{
+  "duration_api_ms": 117737,
+  "stop_reason": "tool_use",
+  "session_id": "6f3110f8-d2d1-43f2-a948-d341b38e36c4",
+  "total_cost_usd": 0.02281937,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 31372,
+    "cache_read_input_tokens": 4717,
+    "output_tokens": 26874,
+    "output_tokens_details": {
+      "thinking_tokens": 25617
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 31372,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 26874,
+        "cache_read_input_tokens": 4717,
+        "cache_creation_input_tokens": 31372,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 31372
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":true,\"skips_observable_steps\":false,\"contradicts_spec\":true,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The constructor, the getters, toString, maximize/minimize and getTextInfo are implemented following the spec steps in order, with the observable Get/ToString/CoerceOptionsToObject/GetOption sequence preserved. Two defects: MakeLocaleRecord clears the value \\\"true\\\" to \\\"\\\" for every key, not only for boolean keys such as kn (so calendar \\\"true\\\" becomes \\\"-u-ca\\\" instead of \\\"-u-ca-true\\\"); and getTextInfo maps an ICU parse failure to an undefined direction instead of computing or propagating. Neither is test-shaped. The rest of the change is local and reasonable to keep.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/support/intl_locale.rs\",\"question\":\"contradicts_spec\",\"line\":326,\"issue\":\"make_locale_record clears a canonical value of \\\"true\\\" to the empty string for every key (ca, co, fw, hc, kf, kn, nu). Per CanonicalizeUValue (UTS #35 canonicalization), the \\\"true\\\" to \\\"\\\" alias applies only to boolean keys such as kn. For other keys \\\"true\\\" is a valid type that must be kept, so calendar: \\\"true\\\" should give \\\"-u-ca-true\\\", not \\\"-u-ca\\\". Restrict the rule to boolean keys, or drop it and rely on canonicalize_u_value.\"},{\"file\":\"crates/kahvi-builtins/src/intl_locale/prototype_get_text_info.rs\",\"question\":\"swallows_errors\",\"line\":38,\"issue\":\"When icu::locale::Locale::try_from_str fails, the Err(_) arm silently yields None, so getTextInfo reports an undefined direction instead of computing it or surfacing an error. The loc.locale slot is meant to be well-formed, so this is an error path being replaced by a default.\"}],\"notes_for_next_attempt\":\"1) In support/intl_locale.rs make_locale_record (about line 326), apply the \\\"true\\\" to \\\"\\\" canonicalization only for boolean keys (kn). Keep other values verbatim after CanonicalizeUValue. Check that calendar, collation and numberingSystem set to \\\"true\\\" round-trip as \\\"-u-ca-true\\\" and so on.\\n2) In prototype_get_text_info.rs (about line 38), do not map an ICU parse failure to undefined. Either compute the direction from the parsed id or return agent.not_implemented naming the gap. Do not silently return undefined.\\n3) Investigate intl402/Locale/likely-subtags.js: \\\"und\\\".maximize() returns \\\"und\\\". The construct_with_likely_subtags path either hits the `if let Ok` fallback or LocaleExpander::new_extended() does not expand. The spec allows the unchanged fallback only when an error is signaled. Verify the ICU data is present and that the parse succeeds for \\\"und\\\".\\n4) Step 42 of the constructor: Numeric should be stored as false when kn is not in the extension keys, not left as None. The getter masks this, but storing false matches the spec.\\n5) getCalendars, getCollations, getHourCycles, getNumberingSystems, getTimeZones and getWeekInfo should keep throwing not_implemented until implemented. That is correct as is.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": true,
+      "skips_observable_steps": false,
+      "contradicts_spec": true,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The constructor, the getters, toString, maximize/minimize and getTextInfo are implemented following the spec steps in order, with the observable Get/ToString/CoerceOptionsToObject/GetOption sequence preserved. Two defects: MakeLocaleRecord clears the value \"true\" to \"\" for every key, not only for boolean keys such as kn (so calendar \"true\" becomes \"-u-ca\" instead of \"-u-ca-true\"); and getTextInfo maps an ICU parse failure to an undefined direction instead of computing or propagating. Neither is test-shaped. The rest of the change is local and reasonable to keep.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_locale.rs",
+        "question": "contradicts_spec",
+        "line": 326,
+        "issue": "make_locale_record clears a canonical value of \"true\" to the empty string for every key (ca, co, fw, hc, kf, kn, nu). Per CanonicalizeUValue (UTS #35 canonicalization), the \"true\" to \"\" alias applies only to boolean keys such as kn. For other keys \"true\" is a valid type that must be kept, so calendar: \"true\" should give \"-u-ca-true\", not \"-u-ca\". Restrict the rule to boolean keys, or drop it and rely on canonicalize_u_value."
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl_locale/prototype_get_text_info.rs",
+        "question": "swallows_errors",
+        "line": 38,
+        "issue": "When icu::locale::Locale::try_from_str fails, the Err(_) arm silently yields None, so getTextInfo reports an undefined direction instead of computing it or surfacing an error. The loc.locale slot is meant to be well-formed, so this is an error path being replaced by a default."
+      }
+    ],
+    "notes_for_next_attempt": "1) In support/intl_locale.rs make_locale_record (about line 326), apply the \"true\" to \"\" canonicalization only for boolean keys (kn). Keep other values verbatim after CanonicalizeUValue. Check that calendar, collation and numberingSystem set to \"true\" round-trip as \"-u-ca-true\" and so on.\n2) In prototype_get_text_info.rs (about line 38), do not map an ICU parse failure to undefined. Either compute the direction from the parsed id or return agent.not_implemented naming the gap. Do not silently return undefined.\n3) Investigate intl402/Locale/likely-subtags.js: \"und\".maximize() returns \"und\". The construct_with_likely_subtags path either hits the `if let Ok` fallback or LocaleExpander::new_extended() does not expand. The spec allows the unchanged fallback only when an error is signaled. Verify the ICU data is present and that the parse succeeds for \"und\".\n4) Step 42 of the constructor: Numeric should be stored as false when kn is not in the extension keys, not left as None. The getter masks this, but storing false matches the spec.\n5) getCalendars, getCollations, getHourCycles, getNumberingSystems, getTimeZones and getWeekInfo should keep throwing not_implemented until implemented. That is correct as is."
+  },
+  "ttft_ms": 112869,
+  "type": "result",
+  "duration_ms": 118054,
+  "uuid": "03bc6098-ec24-41d6-980e-24688d68747a",
+  "ttft_stream_ms": 4302,
+  "time_to_request_ms": 1294,
+  "time_to_request_phases_ms": {
+    "other": 22,
+    "system_prompt": 854,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 22,
+    "input_hooks": 4,
+    "tool_pool_refresh": 4,
+    "init_message": 11,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 349,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 2,
+    "client_creation": 2,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 52,
+  "time_to_request_cpu_ms": 493,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 232,
+  "process_anon_mib_turn_start": 115,
+  "process_rss_mib_result": 250,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 1937,
+  "process_wall_ms_turn": 118054,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 10,
+    "cpu_ms": 24,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 4303,
+  "time_to_request_from_spawn_ms": 866298,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792089728370.5583,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.31,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.18,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
