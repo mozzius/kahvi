@@ -145,7 +145,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     env:
       MODE: gc
       KAHVI_ENGINE: /usr/bin/env KAHVI_GC_STRESS=1 target/release/kahvi
@@ -187,7 +187,7 @@ jobs:
             exit 1
           fi
           gc=0
-          if [ "$GC_STRESS" = true ]; then gc=12; fi
+          if [ "$GC_STRESS" = true ]; then gc=16; fi
           .github/scripts/t262_merge.py t262-results conformance/expected-pass.txt shards 6 "$gc"
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

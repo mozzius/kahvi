@@ -4,6 +4,10 @@ name: mjsunit
 # kahvi CLI (mjsunit/, ./mjs). Report-only for now: not a required check. It
 # fails only on a regression (a test in mjsunit/expected-pass.txt that no
 # longer passes).
+#
+# The tests are dealt across parallel shards and merged by the `mjsunit` job,
+# so the run takes a few minutes rather than one runner's quarter of an hour
+# (most of that is the few dozen tests that hang until the 60s timeout).
 on:
   push:
     branches: [main]
@@ -19,8 +23,42 @@ env:
   CHECKOUT_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
+  shard:
+    name: mjsunit shard ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in step with --shard below.
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.CHECKOUT_REF }}
+      - uses: dtolnay/rust-toolchain@1.97.0
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      # The V8 checkout and its prepared copy, which take ~2 minutes to fetch
+      # and write. run.py re-prepares when PREPARE_VERSION changes.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: mjsunit/.cache
+          key: mjsunit-v8-${{ hashFiles('mjsunit/v8.lock') }}-${{ hashFiles('mjsunit/run.py') }}
+          restore-keys: mjsunit-v8-${{ hashFiles('mjsunit/v8.lock') }}-
+      - run: cargo build --release -p kahvi-cli
+      - run: ./mjs --engine target/release/kahvi --shard ${{ matrix.shard }}/10 --json shard.json
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mjs-shard-${{ matrix.shard }}
+          path: shard.json
+          if-no-files-found: ignore
+          retention-days: 3
+
   mjsunit:
     name: mjsunit
+    needs: shard
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -28,10 +66,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.CHECKOUT_REF }}
-      - uses: dtolnay/rust-toolchain@1.97.0
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
-      - run: cargo build --release -p kahvi-cli
-      - run: ./mjs --engine target/release/kahvi --json mjs-results.json --markdown mjs-results.md
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: mjs-shard-*
+          path: shards
+      # Fails on a regression, or when a shard's results are missing.
+      - run: ./mjs --merge shards/*/shard.json --json mjs-results.json --markdown mjs-results.md
       - name: Update README
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('mjs-results.md') != ''
         run: |

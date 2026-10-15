@@ -6,7 +6,7 @@ instructions executed barely moves, so a 1-2% regression is visible. Each
 workload's output is checked as in bench/run.py: a wrong answer is a failure,
 not a count.
 
-  bench/icount.py --kahvi-dir DIR --json out.json
+  bench/icount.py --kahvi-dir DIR --json out.json [-j N]
   bench/icount.py --compare base.json head.json [--markdown out.md]
 """
 
@@ -17,14 +17,18 @@ import re
 import subprocess
 import sys
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run as bench  # noqa: E402
 
-# Short enough to run under valgrind (roughly 50x slower) in a few minutes.
-WORKLOADS = ["startup/empty", "octane/richards", "octane/deltablue", "octane/crypto", "octane/raytrace",
-             "octane/splay", "octane/regexp", "realworld/zod", "realworld/lodash", "realworld/date-fns"]
+# Short enough to run under valgrind (roughly 50x slower) in about a minute
+# each, so a PR's counts take a few minutes. Octane's crypto, regexp and
+# raytrace are left out: even at one iteration they ran 6 to 19 minutes each
+# under valgrind. bench/run.py still times them every night.
+WORKLOADS = ["startup/empty", "octane/richards", "octane/deltablue", "octane/splay", "realworld/zod",
+             "realworld/lodash", "realworld/date-fns"]
 SCALE = 0.002
 
 
@@ -40,19 +44,26 @@ def count(argv, cwd, env):
 def measure(args):
     kahvi_dir = Path(args.kahvi_dir).resolve()
     env = {"PATH": os.environ.get("PATH", ""), "TZ": "UTC", "HOME": os.environ.get("HOME", "")}
-    results = {}
-    for name in args.workloads or WORKLOADS:
+
+    def one(name):
         w = bench.make_workload(name, SCALE)
         template = bench.ENGINES["kahvi"][w.kind]
         argv = [a.format(file=str(w.file), kahvi=str(kahvi_dir / "kahvi"), kahvi_run=str(kahvi_dir / "kahvi-run"),
                          bin="") for a in template]
         status, out, err, irefs = count(argv, w.file.parent, env)
         if status != 0 or irefs is None or not w.check(out):
-            results[name] = {"error": (err.strip().splitlines() or [f"exit {status}"])[-1][:200]}
-            print(f"{name:24} FAIL {results[name]['error']}", flush=True)
+            r = {"error": (err.strip().splitlines() or [f"exit {status}"])[-1][:200]}
+            print(f"{name:24} FAIL {r['error']}", flush=True)
         else:
-            results[name] = {"irefs": irefs}
+            r = {"irefs": irefs}
             print(f"{name:24} {irefs:>16,}", flush=True)
+        return r
+
+    names = args.workloads or WORKLOADS
+    # Instruction counts do not depend on what else the machine is doing, so
+    # the workloads can run side by side.
+    with ThreadPoolExecutor(args.jobs) as pool:
+        results = dict(zip(names, pool.map(one, names)))
     Path(args.json).write_text(json.dumps({"scale": SCALE, "results": results}, indent=1) + "\n")
 
 
@@ -82,6 +93,7 @@ def main():
     ap.add_argument("--json")
     ap.add_argument("--compare", nargs=2, metavar=("BASE", "HEAD"))
     ap.add_argument("--markdown")
+    ap.add_argument("-j", "--jobs", type=int, default=1, help="workloads to count at once (default 1)")
     args = ap.parse_args()
     if args.compare:
         compare(args)

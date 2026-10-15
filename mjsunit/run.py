@@ -38,6 +38,10 @@ and the run exits 1. Other failures are reported, grouped by cause.
   ./mjs --json FILE               also write per-test results as JSON
   ./mjs --skipped                 list skipped tests with their reasons
   ./mjs --markdown FILE           also write the README summary table
+  ./mjs --shard K/N --json FILE   run only the K-th of N slices of the tests
+  ./mjs --merge FILE... [--json FILE] [--markdown FILE]
+                                  report on the --json files of every shard
+                                  as if they were one run
 """
 
 import argparse
@@ -374,48 +378,8 @@ def markdown_summary(commit, results, passed, skipped):
     return note + "\n\n" + "\n".join(rows) + "\n"
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--engine", help="kahvi binary (default: build target/release/kahvi)")
-    ap.add_argument("--gc-stress", action="store_true", help="collect at every safe point")
-    ap.add_argument("--timeout", type=int, default=60, help="seconds per test (default 60)")
-    ap.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 4)
-    ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
-    ap.add_argument("--json", metavar="FILE", help="write per-test results to FILE")
-    ap.add_argument("--markdown", metavar="FILE", help="write the README summary table to FILE")
-    ap.add_argument("--skipped", action="store_true", help="list skipped tests and their reasons")
-    ap.add_argument("prefixes", nargs="*")
-    args = ap.parse_args()
-
-    src, commit = fetch()
-    prepared = prepare(src, commit)
-    tests = collect(prepared, src, args.prefixes)
-    skipped = [(n, s["skip"]) for n, _, s in tests if "skip" in s]
-    runnable = [(n, p, s) for n, p, s in tests if "skip" not in s]
-    if args.skipped:
-        for n, why in skipped:
-            print(f"{n}  {why}")
-        return
-
-    engine = args.engine
-    if not engine:
-        subprocess.run(["cargo", "build", "-q", "--release", "-p", "kahvi-cli"], cwd=ROOT, check=True)
-        engine = str(ROOT / "target" / "release" / "kahvi")
-    engine = str(Path(engine).resolve())
-
-    expected = set(EXPECTED.read_text().split()) if EXPECTED.exists() else set()
-    print(f"mjs: V8 {commit[:12]}, {len(runnable)} tests to run, {len(skipped)} skipped", flush=True)
-    results = []
-    with ThreadPoolExecutor(args.jobs) as pool:
-        futs = [pool.submit(run_test, engine, prepared, n, p, s, args.gc_stress, args.timeout) for n, p, s in runnable]
-        for i, f in enumerate(futs, 1):
-            r = f.result()
-            results.append(r)
-            if not r["pass"] and r["name"] in expected:
-                print(f"REGRESSION {r['name']}: {r['reason']}", flush=True)
-            if i % 500 == 0:
-                print(f"  {i}/{len(futs)}", flush=True)
-
+def report(results, skipped, commit, expected, args):
+    """Print the summary of a run and write its outputs; exit 1 on a regression."""
     passed = sorted(r["name"] for r in results if r["pass"])
     failed = [r for r in results if not r["pass"]]
     groups = defaultdict(list)
@@ -436,18 +400,107 @@ def main():
     if regressions:
         print(f"REGRESSIONS (in expected-pass.txt): {', '.join(regressions)}")
 
-    if args.json:
-        Path(args.json).write_text(json.dumps({"engine": engine, "v8": commit, "gc_stress": args.gc_stress,
-                                               "results": results, "skipped": dict(skipped)}, indent=1) + "\n")
-    if args.markdown and not args.prefixes:
+    whole = not args.prefixes and not args.shard
+    if args.markdown and whole:
         Path(args.markdown).write_text(markdown_summary(commit, results, passed, skipped))
     if args.update_expected:
-        if args.prefixes:
+        if not whole:
             sys.exit("mjs: --update-expected needs a run of every test")
         EXPECTED.write_text("".join(n + "\n" for n in passed))
         print(f"wrote {EXPECTED.relative_to(ROOT)}")
     elif regressions:
         sys.exit(1)
+
+
+def merge(args, expected):
+    """Combine the --json files of the N shards of one run."""
+    shards = [json.loads(Path(f).read_text()) for f in args.merge]
+    counts = {s.get("shard", "").partition("/")[2] for s in shards}
+    if len(counts) != 1 or "" in counts:
+        sys.exit(f"mjs: --merge needs the --json files of one sharded run (shard counts seen: {sorted(counts)})")
+    n = int(counts.pop())
+    have = sorted(int(s["shard"].partition("/")[0]) for s in shards)
+    if have != list(range(n)):
+        sys.exit(f"mjs: --merge has shards {have} of {n}; a shard is missing or repeated")
+    if len({s["v8"] for s in shards}) != 1:
+        sys.exit("mjs: --merge: shards ran different V8 commits")
+    results = sorted((r for s in shards for r in s["results"]), key=lambda r: r["name"])
+    skipped = sorted(shards[0]["skipped"].items())
+    commit = shards[0]["v8"]
+    print(f"mjs: merged {n} shards: {len(results)} tests run, {len(skipped)} skipped")
+    if args.json:
+        Path(args.json).write_text(json.dumps({"engine": shards[0]["engine"], "v8": commit,
+                                               "gc_stress": shards[0]["gc_stress"], "results": results,
+                                               "skipped": dict(skipped)}, indent=1) + "\n")
+    args.shard = None
+    report(results, skipped, commit, expected, args)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--engine", help="kahvi binary (default: build target/release/kahvi)")
+    ap.add_argument("--gc-stress", action="store_true", help="collect at every safe point")
+    ap.add_argument("--timeout", type=int, default=60, help="seconds per test (default 60)")
+    ap.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 4)
+    ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
+    ap.add_argument("--json", metavar="FILE", help="write per-test results to FILE")
+    ap.add_argument("--markdown", metavar="FILE", help="write the README summary table to FILE")
+    ap.add_argument("--skipped", action="store_true", help="list skipped tests and their reasons")
+    ap.add_argument("--shard", metavar="K/N", help="run every N-th test, starting at the K-th (0-based)")
+    ap.add_argument("--merge", nargs="+", metavar="FILE", help="report on the --json files of every shard")
+    ap.add_argument("prefixes", nargs="*")
+    args = ap.parse_args()
+
+    expected = set(EXPECTED.read_text().split()) if EXPECTED.exists() else set()
+    if args.merge:
+        if args.prefixes or args.shard or args.update_expected:
+            ap.error("--merge takes no test prefixes, --shard or --update-expected")
+        return merge(args, expected)
+    if args.shard:
+        k, _, n = args.shard.partition("/")
+        if not (k.isdigit() and n.isdigit() and int(k) < int(n)):
+            ap.error("--shard wants K/N with 0 <= K < N")
+        shard = (int(k), int(n))
+
+    src, commit = fetch()
+    prepared = prepare(src, commit)
+    tests = collect(prepared, src, args.prefixes)
+    skipped = [(n, s["skip"]) for n, _, s in tests if "skip" in s]
+    runnable = [(n, p, s) for n, p, s in tests if "skip" not in s]
+    if args.skipped:
+        for n, why in skipped:
+            print(f"{n}  {why}")
+        return
+    if args.shard:
+        # Dealt round-robin in name order, so each shard gets a similar mix.
+        runnable = runnable[shard[0]::shard[1]]
+
+    engine = args.engine
+    if not engine:
+        subprocess.run(["cargo", "build", "-q", "--release", "-p", "kahvi-cli"], cwd=ROOT, check=True)
+        engine = str(ROOT / "target" / "release" / "kahvi")
+    engine = str(Path(engine).resolve())
+
+    print(f"mjs: V8 {commit[:12]}, {len(runnable)} tests to run{f' (shard {args.shard})' if args.shard else ''}, "
+          f"{len(skipped)} skipped", flush=True)
+    results = []
+    with ThreadPoolExecutor(args.jobs) as pool:
+        futs = [pool.submit(run_test, engine, prepared, n, p, s, args.gc_stress, args.timeout) for n, p, s in runnable]
+        for i, f in enumerate(futs, 1):
+            r = f.result()
+            results.append(r)
+            if not r["pass"] and r["name"] in expected:
+                print(f"REGRESSION {r['name']}: {r['reason']}", flush=True)
+            if i % 500 == 0:
+                print(f"  {i}/{len(futs)}", flush=True)
+
+    if args.json:
+        out = {"engine": engine, "v8": commit, "gc_stress": args.gc_stress, "results": results,
+               "skipped": dict(skipped)}
+        if args.shard:
+            out["shard"] = args.shard
+        Path(args.json).write_text(json.dumps(out, indent=1) + "\n")
+    report(results, skipped, commit, expected, args)
 
 
 if __name__ == "__main__":
