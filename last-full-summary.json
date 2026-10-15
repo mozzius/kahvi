@@ -9,13 +9,13 @@
   "not_implemented": 0,
   "engine": "/home/runner/work/kahvi/kahvi/target/release/kahvi",
   "canaries_ok": true,
-  "elapsed_ms": 87363,
+  "elapsed_ms": 84592,
   "shards_lost": 0,
   "valid": true,
   "regressions": [],
   "new_passes": [],
   "gc_stress": {
-    "pass": 80267,
+    "pass": 80266,
     "runs": 81183,
     "canaries_ok": true,
     "shards_lost": 0,
@@ -26,8 +26,6 @@
       "annexB/built-ins/RegExp/RegExp-leading-escape-BMP.js:strict",
       "annexB/built-ins/RegExp/RegExp-trailing-escape-BMP.js:sloppy",
       "annexB/built-ins/RegExp/RegExp-trailing-escape-BMP.js:strict",
-      "built-ins/Array/prototype/concat/Array.prototype.concat_large-typed-array.js:sloppy",
-      "built-ins/Array/prototype/concat/Array.prototype.concat_large-typed-array.js:strict",
       "built-ins/Iterator/zip/basic-longest.js:sloppy",
       "built-ins/Iterator/zip/basic-longest.js:strict",
       "built-ins/Iterator/zipKeyed/basic-longest.js:sloppy",
@@ -44,6 +42,8 @@
       "built-ins/RegExp/CharacterClassEscapes/character-class-whitespace-class-escape-negative-cases.js:strict",
       "built-ins/RegExp/CharacterClassEscapes/character-class-word-class-escape-negative-cases.js:sloppy",
       "built-ins/RegExp/CharacterClassEscapes/character-class-word-class-escape-negative-cases.js:strict",
+      "built-ins/RegExp/character-class-escape-non-whitespace.js:sloppy",
+      "built-ins/RegExp/character-class-escape-non-whitespace.js:strict",
       "built-ins/RegExp/property-escapes/generated/ASCII.js:sloppy",
       "built-ins/RegExp/property-escapes/generated/ASCII.js:strict",
       "built-ins/RegExp/property-escapes/generated/ASCII_Hex_Digit.js:sloppy",
@@ -937,7 +937,8 @@
       "built-ins/decodeURI/S15.1.3.1_A2.5_T1.js:sloppy",
       "built-ins/decodeURI/S15.1.3.1_A2.5_T1.js:strict",
       "built-ins/decodeURIComponent/S15.1.3.2_A2.5_T1.js:sloppy",
-      "built-ins/decodeURIComponent/S15.1.3.2_A2.5_T1.js:strict"
+      "built-ins/decodeURIComponent/S15.1.3.2_A2.5_T1.js:strict",
+      "built-ins/encodeURIComponent/S15.1.3.4_A2.3_T1.js:sloppy"
     ]
   }
 }
