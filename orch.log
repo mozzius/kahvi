@@ -5344,3 +5344,6 @@ test262 at last merge: 81183/81183 runs passing
 [07:58:17] stack: pushed stack/0051 as #82 with arch-proposals
 [07:58:24] B-shared-array-buffer-prototype-slice: attempt on slot 0 with haiku
 [07:58:25] B-shared-array-buffer-prototype-get-growable: verifier: accept The diff implements get SharedArrayBuffer.prototype.growable as specified. Step 2 (RequireInternalSlot for [[ArrayBufferData]]) throws a TypeError for
+[07:58:33] B-shared-array-buffer-prototype-get-max-byte-length: attempt 535 finished ($0.007, 14 turns)
+[07:58:58] B-shared-array-buffer-prototype-grow: attempt 536 finished ($0.015, 8 turns)
+[07:59:05] B-shared-array-buffer-prototype-get-max-byte-length: verifier: accept The diff implements the get SharedArrayBuffer.prototype.maxByteLength steps in order. Step 2 (RequireInternalSlot) throws a TypeError for non-objects 

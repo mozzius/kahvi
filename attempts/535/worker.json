@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 16679,
+  "stop_reason": "end_turn",
+  "session_id": "1ea8c789-ead9-4d93-89a1-b188446bb66b",
+  "total_cost_usd": 0.007311290000000001,
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 20587,
+    "cache_read_input_tokens": 142589,
+    "output_tokens": 2988,
+    "output_tokens_details": {
+      "thinking_tokens": 314
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20587,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 159,
+        "cache_read_input_tokens": 28152,
+        "cache_creation_input_tokens": 192,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 192
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I implemented `get SharedArrayBuffer.prototype.maxByteLength` in its file, following the spec steps with each step as a comment. All 20 test262 runs under `built-ins/SharedArrayBuffer/prototype/maxByteLength/` pass, and `cargo build`, `cargo clippy` and a format check are clean.\n\nThe getter reports the buffer's max byte length when it has one, and its current byte length otherwise. No helpers were added and no other files were touched.",
+  "ttft_ms": 2084,
+  "type": "result",
+  "duration_ms": 33522,
+  "uuid": "96562398-ddab-4768-aea1-2355255a9f9f",
+  "ttft_stream_ms": 1891,
+  "time_to_request_ms": 1023,
+  "time_to_request_phases_ms": {
+    "other": 114,
+    "system_prompt": 697,
+    "resume_other": 0,
+    "process_user_input": 27,
+    "input_attachments": 28,
+    "input_hooks": 8,
+    "tool_pool_refresh": 11,
+    "init_message": 17,
+    "engine_pickup": 2,
+    "message_prep": 19,
+    "model_config_wait": 29,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 2,
+    "tool_schema_build": 27,
+    "message_normalization": 2,
+    "client_creation": 23,
+    "request_build": 14
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 286,
+  "time_to_request_cpu_ms": 459,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 127,
+  "process_rss_mib_result": 255,
+  "process_anon_mib_result": 134,
+  "process_peak_rss_mib": 264,
+  "process_cpu_ms_turn": 3272,
+  "process_wall_ms_turn": 33516,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 11,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1892,
+  "time_to_request_from_spawn_ms": 2009051,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051078761.5598,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.27,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

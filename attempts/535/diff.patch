@@ -1,0 +1,57 @@
+diff --git a/crates/kahvi-builtins/src/shared_array_buffer/prototype_get_max_byte_length.rs b/crates/kahvi-builtins/src/shared_array_buffer/prototype_get_max_byte_length.rs
+index 3087901..be69e2b 100644
+--- a/crates/kahvi-builtins/src/shared_array_buffer/prototype_get_max_byte_length.rs
++++ b/crates/kahvi-builtins/src/shared_array_buffer/prototype_get_max_byte_length.rs
+@@ -2,25 +2,48 @@
+ //!
+ //! Spec: https://tc39.es/ecma262/#sec-get-sharedarraybuffer.prototype.maxbytelength
+ 
++use kahvi_core::object::typed_array::{
++    array_buffer_byte_length, array_buffer_data, is_shared_array_buffer,
++};
+ use kahvi_core::prelude::*;
+ 
+ /// get SharedArrayBuffer.prototype.maxByteLength
+ pub(crate) fn prototype_get_max_byte_length(
+     agent: &mut Agent,
+     this: Value,
+-    args: &[Value],
+-    new_target: Option<Object>,
++    _args: &[Value],
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
+     // `SharedArrayBuffer.prototype.maxByteLength` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps when called:
+     //
+     // 1. Let _obj_ be the *this* value.
+     // 2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferData]]).
++    let obj = match this {
++        Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
++        _ => {
++            return Err(agent.throw_type_error(
++                "get SharedArrayBuffer.prototype.maxByteLength called on a non-SharedArrayBuffer",
++            ));
++        }
++    };
+     // 3. If IsSharedArrayBuffer(_obj_) is *false*, throw a *TypeError* exception.
++    if !is_shared_array_buffer(agent, obj) {
++        return Err(agent.throw_type_error("not a SharedArrayBuffer"));
++    }
+     // 4. If IsFixedLengthArrayBuffer(_obj_) is *true*, then
+     //    a. Let _length_ be _obj_.[[ArrayBufferByteLength]].
+     // 5. Else,
+     //    a. Let _length_ be _obj_.[[ArrayBufferMaxByteLength]].
++    // IsFixedLengthArrayBuffer(_obj_) is true exactly when _obj_ has no
++    // [[ArrayBufferMaxByteLength]] slot, so a buffer without a max length reports
++    // its current byte length and a growable one reports its max.
++    let length = match array_buffer_data(agent, obj).and_then(|d| d.max_byte_length) {
++        // 5. Else, a. Let _length_ be _obj_.[[ArrayBufferMaxByteLength]].
++        Some(max) => max,
++        // 4. If IsFixedLengthArrayBuffer(_obj_) is *true*, then
++        //    a. Let _length_ be _obj_.[[ArrayBufferByteLength]].
++        None => array_buffer_byte_length(agent, obj),
++    };
+     // 6. Return 𝔽(_length_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get SharedArrayBuffer.prototype.maxByteLength"))
++    Ok(Value::Number(length as f64))
+ }
