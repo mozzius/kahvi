@@ -19,6 +19,30 @@ pub(crate) fn prototype_get_text_info(
     // 4. Let _dir_ be TextDirectionOfLocale(_loc_).
     // 5. Perform ! CreateDataPropertyOrThrow(_info_, *"direction"*, _dir_).
     // 6. Return _info_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Intl.Locale.prototype.getTextInfo"))
+    let _ = (args, new_target);
+    let loc = crate::support::intl_locale::require_locale(agent, this)?;
+    let proto = agent.intrinsic("%Object.prototype%");
+    let info = agent.ordinary_object_create(Some(proto));
+    // TextDirectionOfLocale ( _loc_ ): "ltr", "rtl", or *undefined* when unknown.
+    let dir = match icu::locale::Locale::try_from_str(&loc.locale) {
+        Ok(parsed) => {
+            let directionality = icu::locale::LocaleDirectionality::new_extended();
+            if directionality.is_right_to_left(&parsed.id) {
+                Some("rtl")
+            } else if directionality.is_left_to_right(&parsed.id) {
+                Some("ltr")
+            } else {
+                None
+            }
+        }
+        Err(_) => {
+            return Err(agent.not_implemented(
+                "Intl.Locale.prototype.getTextInfo: locale identifier not parsed by ICU4X",
+            ));
+        }
+    };
+    let dir = crate::support::intl_locale::optional_string(agent, dir);
+    let key = agent.key("direction");
+    ops::create_data_property_or_throw(agent, info, key, dir)?;
+    Ok(Value::Object(info))
 }

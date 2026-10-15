@@ -15,6 +15,7 @@ pub(crate) fn prototype_minimize(
     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
     // 3. Let _minimal_ be the result of the Remove Likely Subtags algorithm applied to _loc_.[[Locale]]. If an error is signaled, set _minimal_ to _loc_.[[Locale]].
     // 4. Return ! Construct(%Intl.Locale%, « _minimal_ »).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Intl.Locale.prototype.minimize"))
+    let _ = (args, new_target);
+    let loc = crate::support::intl_locale::require_locale(agent, this)?;
+    crate::support::intl_locale::construct_with_likely_subtags(agent, &loc, false)
 }

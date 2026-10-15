@@ -16,6 +16,8 @@ pub(crate) fn prototype_get_first_day_of_week(
     // 1. Let _loc_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
     // 3. Return _loc_.[[FirstDayOfWeek]].
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get Intl.Locale.prototype.firstDayOfWeek"))
+    let _ = (args, new_target);
+    crate::support::intl_locale::locale_string_getter(agent, this, |loc| {
+        loc.first_day_of_week.clone()
+    })
 }
