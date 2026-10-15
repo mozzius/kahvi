@@ -30,7 +30,9 @@ pub(crate) fn prototype_resize(
         }
     };
     // 3. If IsSharedArrayBuffer(obj) is true, throw a TypeError exception.
-    // This engine has no Shared Data Blocks, so IsSharedArrayBuffer(obj) is always false.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, o) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4. Let newByteLength be ? ToIndex(newLength).
     let new_byte_length = ops::to_index(agent, args.get_or_undefined(0))?;
     // 5. If IsDetachedBuffer(obj) is true, throw a TypeError exception.

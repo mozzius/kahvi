@@ -99,9 +99,13 @@ fn set_typed_array_from_typed_array(
     // 16. If IsSharedArrayBuffer(srcBuffer) is true, IsSharedArrayBuffer(targetBuffer) is true,
     //     and srcBuffer.[[ArrayBufferData]] is targetBuffer.[[ArrayBufferData]], let
     //     sameSharedArrayBuffer be true; else let sameSharedArrayBuffer be false.
-    // NOTE: ArrayBufferData has no shared variant and the SharedArrayBuffer constructor is not
-    //       implemented, so no buffer here is shared and sameSharedArrayBuffer is always false.
-    let same_shared_array_buffer = false;
+    //     (With one agent, each SharedArrayBuffer has its own Shared Data Block.)
+    let same_shared_array_buffer = {
+        use kahvi_core::object::typed_array::is_shared_array_buffer;
+        is_shared_array_buffer(agent, src_buffer)
+            && is_shared_array_buffer(agent, target_buffer)
+            && src_buffer == target_buffer
+    };
     // 17. If SameValue(srcBuffer, targetBuffer) is true or sameSharedArrayBuffer is true, then
     let (src_buffer, mut src_byte_index) = if src_buffer == target_buffer
         || same_shared_array_buffer

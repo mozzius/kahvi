@@ -2,34 +2,140 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-sharedarraybuffer.prototype.slice
 
+use kahvi_core::object::typed_array::{
+    array_buffer_byte_length, array_buffer_data, array_buffer_data_mut, is_shared_array_buffer,
+};
 use kahvi_core::prelude::*;
+
+/// ToClampedIndex(_value_, _length_)
+///
+/// Spec: https://tc39.es/ecma262/#sec-toclampedindex
+///
+/// Not yet in `ops`; only the TypedArray, Array and ArrayBuffer built-ins need it so far.
+fn to_clamped_index(agent: &mut Agent, value: Value, length: f64) -> JsResult<f64> {
+    // 1. Let _index_ be ? ToAbsoluteIndex(_value_, _length_).
+    //    ToAbsoluteIndex ( _start_, _length_ ):
+    //    1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_start_).
+    let relative_index = ops::to_integer_or_infinity(agent, value)?;
+    //    2. If _relativeIndex_ is -∞, return +0𝔽.
+    //    3. Else if _relativeIndex_ < 0, return max(_length_ + _relativeIndex_, 0).
+    //    4. Else, return min(_relativeIndex_, _length_).
+    let index = if relative_index == f64::NEG_INFINITY {
+        0.0
+    } else if relative_index < 0.0 {
+        (length + relative_index).max(0.0)
+    } else {
+        relative_index.min(length)
+    };
+    // 2. Return the result of clamping _index_ between 0 and _length_.
+    Ok(index.clamp(0.0, length))
+}
+
+/// CopyDataBlockBytes(toBlock, toIndex, fromBlock, fromIndex, count)
+///
+/// Spec: https://tc39.es/ecma262/#sec-copydatablockbytes
+///
+/// Not yet in `ops`; only SharedArrayBuffer.prototype.slice needs it so far.
+/// The callers have already checked that both data blocks are in range.
+fn copy_data_block_bytes(
+    agent: &mut Agent,
+    to_block: Object,
+    to_index: usize,
+    from_block: Object,
+    from_index: usize,
+    count: usize,
+) -> JsResult<()> {
+    // Copy the source bytes out first, so the two buffers are never borrowed at once.
+    let Some(from_bytes) = array_buffer_data(agent, from_block).and_then(|d| d.data.as_ref())
+    else {
+        return Err(agent.throw_type_error("source SharedArrayBuffer has no data block"));
+    };
+    let bytes = from_bytes[from_index..from_index + count].to_vec();
+    let Some(to_bytes) = array_buffer_data_mut(agent, to_block).and_then(|d| d.data.as_mut())
+    else {
+        return Err(agent.throw_type_error("target SharedArrayBuffer has no data block"));
+    };
+    to_bytes[to_index..to_index + count].copy_from_slice(&bytes);
+    Ok(())
+}
 
 /// SharedArrayBuffer.prototype.slice
 pub(crate) fn prototype_slice(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
     // This method performs the following steps when called:
     //
     // 1. Let _obj_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferData]]).
+    let obj = match this {
+        Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
+        _ => {
+            return Err(agent.throw_type_error(
+                "SharedArrayBuffer.prototype.slice called on a non-SharedArrayBuffer",
+            ));
+        }
+    };
     // 3. If IsSharedArrayBuffer(_obj_) is *false*, throw a *TypeError* exception.
+    if !is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not a SharedArrayBuffer"));
+    }
     // 4. Let _length_ be ArrayBufferByteLength(_obj_, ~seq-cst~).
+    let length = array_buffer_byte_length(agent, obj) as f64;
     // 5. Let _first_ be ? ToClampedIndex(_start_, _length_).
+    let first = to_clamped_index(agent, args.get_or_undefined(0), length)?;
     // 6. If _end_ is *undefined*, let _final_ be _length_; else let _final_ be ? ToClampedIndex(_end_, _length_).
+    let end = args.get_or_undefined(1);
+    let final_index = if end.is_undefined() {
+        length
+    } else {
+        to_clamped_index(agent, end, length)?
+    };
     // 7. Let _newLength_ be max(_final_ - _first_, 0).
+    let new_length = (final_index - first).max(0.0);
     // 8. Let _ctor_ be ? SpeciesConstructor(_obj_, %SharedArrayBuffer%).
+    let default_ctor = agent.intrinsic("%SharedArrayBuffer%");
+    let ctor = ops::species_constructor(agent, obj, default_ctor)?;
     // 9. Let _new_ be ? Construct(_ctor_, « 𝔽(_newLength_) »).
+    let new = ops::construct(agent, ctor, &[Value::Number(new_length)], None)?;
     // 10. Perform ? RequireInternalSlot(_new_, [[ArrayBufferData]]).
+    if array_buffer_data(agent, new).is_none() {
+        return Err(
+            agent.throw_type_error("species constructor did not return a SharedArrayBuffer")
+        );
+    }
     // 11. If IsSharedArrayBuffer(_new_) is *false*, throw a *TypeError* exception.
+    if !is_shared_array_buffer(agent, new) {
+        return Err(
+            agent.throw_type_error("species constructor did not return a SharedArrayBuffer")
+        );
+    }
     // 12. If _new_.[[ArrayBufferData]] is _obj_.[[ArrayBufferData]], throw a *TypeError* exception.
+    //     Each buffer owns its own data block, so this is the same as the objects being the same.
+    if ops::same_value(agent, Value::Object(new), Value::Object(obj)) {
+        return Err(
+            agent.throw_type_error("species constructor returned the same SharedArrayBuffer")
+        );
+    }
     // 13. If ArrayBufferByteLength(_new_, ~seq-cst~) < _newLength_, throw a *TypeError* exception.
+    if (array_buffer_byte_length(agent, new) as f64) < new_length {
+        return Err(agent.throw_type_error("new SharedArrayBuffer is too small"));
+    }
     // 14. Let _fromBlock_ be _obj_.[[ArrayBufferData]].
+    let from_block = obj;
     // 15. Let _toBlock_ be _new_.[[ArrayBufferData]].
+    let to_block = new;
     // 16. Perform CopyDataBlockBytes(_toBlock_, 0, _fromBlock_, _first_, _newLength_).
+    copy_data_block_bytes(
+        agent,
+        to_block,
+        0,
+        from_block,
+        first as usize,
+        new_length as usize,
+    )?;
     // 17. Return _new_.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("SharedArrayBuffer.prototype.slice"))
+    Ok(Value::Object(new))
 }

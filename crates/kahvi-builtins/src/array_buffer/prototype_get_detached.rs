@@ -26,8 +26,9 @@ pub(crate) fn prototype_get_detached(
         }
     };
     // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
-    //    The engine has no Shared Data Blocks: a SharedArrayBuffer is not an
-    //    `ObjectKind::ArrayBuffer`, so it already threw a TypeError in step 2.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4. Return IsDetachedBuffer(_obj_).
     Ok(Value::Boolean(is_detached_buffer(agent, obj)))
 }
