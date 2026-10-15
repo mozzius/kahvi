@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 31262,
+  "stop_reason": "tool_use",
+  "session_id": "1b924262-f9aa-4337-b198-8e0b8282daba",
+  "total_cost_usd": 0.006509370000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 10252,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 6935,
+    "output_tokens_details": {
+      "thinking_tokens": 6188
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10252,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6935,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 10252,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10252
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"Reviewed the single-file change to SharedArrayBuffer.prototype.grow. Step order matches the spec: RequireInternalSlot (max_byte_length) before IsSharedArrayBuffer, then ToIndex, host hook, byte-length read, range checks (c, d), the delta capacity check (f), and the compare-exchange loop (h to j). Errors are propagated with `?` and throw the right types. No test-shaped branches or hardcoded outputs. The host hook is modelled as a constant \\\"unhandled\\\", which the spec permits for an implementation-defined hook, so I did not count it as made up. The byte-length block is modelled as the data block's Vec length. That is consistent with the spec's observable behaviour provided the constructor and byteLength getter use the same length, which I could not verify from the diff.\",\"problems\":[],\"notes_for_next_attempt\":\"The change looks sound and can be merged as is. Optional cleanups: (1) `host_handled` is a constant `false`, so the `if host_handled` branch is dead. Keep it only if it documents the hook, or replace it with a comment. (2) The helpers biguint64_to_raw_bytes, raw_bytes_to_biguint64, get_raw_bytes_from_byte_length_block and atomic_compare_exchange_in_byte_length_block are local because `ops` lacks them. The ticket asks for them to be reported as shared helpers if other built-ins need them, e.g. the Atomics and growable-buffer paths. (3) Confirm that the SAB constructor allocates the data Vec at the current length (not max), and that the byteLength getter reads the same length, so the byte-length model stays consistent.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "Reviewed the single-file change to SharedArrayBuffer.prototype.grow. Step order matches the spec: RequireInternalSlot (max_byte_length) before IsSharedArrayBuffer, then ToIndex, host hook, byte-length read, range checks (c, d), the delta capacity check (f), and the compare-exchange loop (h to j). Errors are propagated with `?` and throw the right types. No test-shaped branches or hardcoded outputs. The host hook is modelled as a constant \"unhandled\", which the spec permits for an implementation-defined hook, so I did not count it as made up. The byte-length block is modelled as the data block's Vec length. That is consistent with the spec's observable behaviour provided the constructor and byteLength getter use the same length, which I could not verify from the diff.",
+    "problems": [],
+    "notes_for_next_attempt": "The change looks sound and can be merged as is. Optional cleanups: (1) `host_handled` is a constant `false`, so the `if host_handled` branch is dead. Keep it only if it documents the hook, or replace it with a comment. (2) The helpers biguint64_to_raw_bytes, raw_bytes_to_biguint64, get_raw_bytes_from_byte_length_block and atomic_compare_exchange_in_byte_length_block are local because `ops` lacks them. The ticket asks for them to be reported as shared helpers if other built-ins need them, e.g. the Atomics and growable-buffer paths. (3) Confirm that the SAB constructor allocates the data Vec at the current length (not max), and that the byteLength getter reads the same length, so the byte-length model stays consistent."
+  },
+  "ttft_ms": 27844,
+  "type": "result",
+  "duration_ms": 31052,
+  "uuid": "0772c31a-a03e-4ce5-9e36-e7cb5612b196",
+  "ttft_stream_ms": 1495,
+  "time_to_request_ms": 493,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 294,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 6,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 2,
+    "model_config_wait": 120,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 6
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 55,
+  "time_to_request_cpu_ms": 328,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 246,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 247,
+  "process_anon_mib_result": 127,
+  "process_peak_rss_mib": 257,
+  "process_cpu_ms_turn": 1307,
+  "process_wall_ms_turn": 31051,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1496,
+  "time_to_request_from_spawn_ms": 2253803,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051324047.4365,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.31,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.31,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

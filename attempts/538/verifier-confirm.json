@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 11906,
+  "stop_reason": "tool_use",
+  "session_id": "7361789c-7ffd-41e9-a71d-51565f49e9a5",
+  "total_cost_usd": 0.06821680000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 13206,
+    "cache_read_input_tokens": 1288,
+    "output_tokens": 1431,
+    "output_tokens_details": {
+      "thinking_tokens": 1025
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13206,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1431,
+        "cache_read_input_tokens": 1288,
+        "cache_creation_input_tokens": 13206,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 13206
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff follows spec steps 1\u201312 in order with each step as a comment above its code. RequireInternalSlot is modelled via max_byte_length presence, and the TypeError, RangeError and ToIndex ordering are right. The compare-exchange loop and ByteListEqual are done on 8-byte arrays. HostGrowSharedArrayBuffer is a constant \\\"not handled\\\", which matches the spec's default. The gate shows 30/30 target tests passing with no regressions. The change stays inside the single in-scope file, and the local helpers are documented as not yet in `ops`.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff follows spec steps 1\u201312 in order with each step as a comment above its code. RequireInternalSlot is modelled via max_byte_length presence, and the TypeError, RangeError and ToIndex ordering are right. The compare-exchange loop and ByteListEqual are done on 8-byte arrays. HostGrowSharedArrayBuffer is a constant \"not handled\", which matches the spec's default. The gate shows 30/30 target tests passing with no regressions. The change stays inside the single in-scope file, and the local helpers are documented as not yet in `ops`.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 9588,
+  "type": "result",
+  "duration_ms": 11744,
+  "uuid": "04de37e5-3199-4faa-bc68-c7a7e8d4d88b",
+  "ttft_stream_ms": 1681,
+  "time_to_request_ms": 449,
+  "time_to_request_phases_ms": {
+    "other": 25,
+    "system_prompt": 288,
+    "resume_other": 1,
+    "process_user_input": 9,
+    "input_attachments": 24,
+    "input_hooks": 5,
+    "tool_pool_refresh": 3,
+    "init_message": 13,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 40,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 4,
+    "message_normalization": 1,
+    "client_creation": 25,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 79,
+  "time_to_request_cpu_ms": 319,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 126,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 248,
+  "process_cpu_ms_turn": 866,
+  "process_wall_ms_turn": 11743,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 17,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1682,
+  "time_to_request_from_spawn_ms": 2286295,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051356571.3472,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.34,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.31,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

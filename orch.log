@@ -5351,3 +5351,7 @@ test262 at last merge: 81183/81183 runs passing
 [07:59:55] B-shared-array-buffer-prototype-grow: verifier: revise The checks that run in the spec's order are implemented correctly: RequireInternalSlot for [[ArrayBufferMaxByteLength]] maps to TypeError, the IsShare
 [07:59:56] B-shared-array-buffer-prototype-slice: verifier: accept The diff implements all 17 steps of SharedArrayBuffer.prototype.slice in order, each with its spec comment above the code. Observable operations match
 [07:59:58] B-shared-array-buffer-prototype-grow: attempt on slot 1 with haiku
+[08:01:07] stack: stack/0051 (#82) green: 81725/82037 passing, +0
+[08:01:17] stack: pushed stack/0052 as #83 with B-atomics-notify, B-atomics-store
+[08:01:47] B-shared-array-buffer-prototype-grow: attempt 538 finished ($0.022, 16 turns)
+[08:02:50] B-shared-array-buffer-prototype-grow: verifier: accept Reviewed the single-file change to SharedArrayBuffer.prototype.grow. Step order matches the spec: RequireInternalSlot (max_byte_length) before IsShare

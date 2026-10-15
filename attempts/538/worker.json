@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 78248,
+  "stop_reason": "end_turn",
+  "session_id": "b23b98fe-0891-4205-883e-b11475a297da",
+  "total_cost_usd": 0.022436530000000003,
+  "usage": {
+    "input_tokens": 26,
+    "cache_creation_input_tokens": 43496,
+    "cache_read_input_tokens": 450413,
+    "output_tokens": 17430,
+    "output_tokens_details": {
+      "thinking_tokens": 10340
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 43496,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 660,
+        "cache_read_input_tokens": 50653,
+        "cache_creation_input_tokens": 600,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 600
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01BzRxXNhQ8NbwVSBZ6qnLAb",
+      "tool_input": {
+        "command": "rustfmt --edition 2024 crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs && cargo fmt -- --check 2>&1 | head -5; cargo clippy -p kahvi-builtins 2>&1 | tail -3; ./t262 built-ins/SharedArrayBuffer/prototype/grow/ 2>&1 | tail -3; git status --short",
+        "description": "Format the file, recheck fmt, clippy, tests and scope"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 16,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "SharedArrayBuffer.prototype.grow is implemented in `prototype_grow.rs`, and all 30 runs under `built-ins/SharedArrayBuffer/prototype/grow/` pass with clippy clean. The only file changed is `prototype_grow.rs`.\n\n- **Helpers:** `GetRawBytesFromSharedBlock`, `AtomicCompareExchangeInSharedBlock`, `ByteListEqual` and the biguint64 encode/decode are not in `ops`. I wrote them as private functions in this file and they are not shared with other built-ins. Steps 7\u201312 now each have their own comment above the code.\n- **Panic removed:** the `.expect` on the data block is gone. A missing block now throws a TypeError.\n- **Length check:** `array_buffer_byte_length` reads the data `Vec`'s length, and the grow resizes that same `Vec`, so the two agree.\n- **Constructor mismatch (not fixed, outside my scope):** `allocate_shared_array_buffer` allocates `byteLength` bytes, not a max-sized block as the step-g note describes. It checks the max against the engine limit and grows in place. Observable behaviour matches, but the constructor does not follow the note literally.\n- **MAX_BYTE_LENGTH:** step 12f uses it because it is the limit `CreateByteDataBlock` already enforces, so it is the engine's allocation limit.\n- **Host hook:** `host_handled = false` is commented as the implementation-defined default.",
+  "ttft_ms": 2073,
+  "type": "result",
+  "duration_ms": 106373,
+  "uuid": "185069f4-82dc-4fbb-9340-972596955c65",
+  "ttft_stream_ms": 1933,
+  "time_to_request_ms": 559,
+  "time_to_request_phases_ms": {
+    "other": 48,
+    "system_prompt": 348,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 19,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 12,
+    "engine_pickup": 7,
+    "message_prep": 3,
+    "model_config_wait": 42,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 1,
+    "tool_schema_build": 19,
+    "message_normalization": 2,
+    "client_creation": 27,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 168,
+  "time_to_request_cpu_ms": 400,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 238,
+  "process_anon_mib_turn_start": 121,
+  "process_rss_mib_result": 264,
+  "process_anon_mib_result": 144,
+  "process_peak_rss_mib": 273,
+  "process_cpu_ms_turn": 5380,
+  "process_wall_ms_turn": 106372,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 9,
+    "cpu_ms": 18,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1935,
+  "time_to_request_from_spawn_ms": 2129087,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792051198963.3977,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.31,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.31,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

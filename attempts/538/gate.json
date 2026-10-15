@@ -1,0 +1,32 @@
+{
+  "ticket": "B-shared-array-buffer-prototype-grow",
+  "base": "149eabfe548a5ca698ca11cd8ba10055e76ae8f0",
+  "head": "67c021affb9b28f771f11bfab12a1646c5dc2d45",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/shared_array_buffer/prototype_grow.rs",
+      "added": 135,
+      "removed": 16
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 16,
+    "after": 30,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
