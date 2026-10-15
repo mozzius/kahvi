@@ -10,7 +10,7 @@ use crate::support::intl::{
     get_string_option, resolve_options,
 };
 use crate::support::intl_number_format::{
-    NumberFormatSlots, numbering_systems_of, set_number_format_digit_options,
+    NumberFormatSlots, currency_digits, numbering_systems_of, set_number_format_digit_options,
     set_number_format_unit_options,
 };
 
@@ -105,12 +105,14 @@ pub(crate) fn constructor(
     // 13. If _style_ is *"currency"* and _notation_ is *"standard"*, then
     let (mnfd_default, mxfd_default) = if style == "currency" && notation == "standard" {
         // a. Let _currency_ be _numberFormat_.[[Currency]].
+        let currency = slots.currency.clone().unwrap_or_default();
         // b. Let _cDigits_ be CurrencyDigits(_currency_).
+        let Some(c_digits) = currency_digits(&currency) else {
+            return Err(agent.not_implemented("CurrencyDigits: ICU4X currency data"));
+        };
         // c. Let _mnfdDefault_ be _cDigits_.
         // d. Let _mxfdDefault_ be _cDigits_.
-        return Err(
-            agent.not_implemented("CurrencyDigits: ICU4X has no currency fraction digit data")
-        );
+        (f64::from(c_digits), f64::from(c_digits))
     } else if style == "percent" {
         // 14. Else,
         // a. Let _mnfdDefault_ be 0.

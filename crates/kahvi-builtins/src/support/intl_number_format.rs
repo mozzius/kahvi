@@ -559,3 +559,23 @@ pub(crate) fn numbering_systems_of(locale: &str) -> Option<Vec<Option<String>>> 
     );
     Some(list)
 }
+
+/// CurrencyDigits ( _currency_ ): the fraction digits of CLDR's currency
+/// data (ICU4X), whose default for currencies it does not list is 2.
+pub(crate) fn currency_digits(currency: &str) -> Option<u8> {
+    use icu::experimental::dimension::provider::currency::fractions::CurrencyFractionsV1;
+    use icu_provider::prelude::*;
+
+    // 1. Assert: IsWellFormedCurrencyCode(_currency_) is *true*.
+    // 2. Return a non-negative integer indicating the number of fractional digits used when formatting quantities of the currency corresponding to _currency_. If there is no available information on the number of digits to be used, return 2.
+    let code = icu::experimental::dimension::currency::CurrencyType::try_from_str(
+        &currency.to_ascii_lowercase(),
+    )
+    .ok()?;
+    let response = DataProvider::<CurrencyFractionsV1>::load(
+        &icu::experimental::provider::Baked,
+        DataRequest::default(),
+    )
+    .ok()?;
+    Some(response.payload.get().resolve(code).digits)
+}
