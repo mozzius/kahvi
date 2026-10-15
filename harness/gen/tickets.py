@@ -42,10 +42,12 @@ WORKER_GROUPS = {
     "array_buffer", "typed_array", "data_view",
     "iterator", "iterator_helper_prototype", "wrap_for_valid_iterator_prototype",
     "disposable_stack", "async_disposable_stack", "big_int", "uint8_array", "async_iterator_prototype",
+    "shared_array_buffer", "atomics",
 }
 # Individual functions that need the architect first, with the reason.
 ARCHITECT_FIRST = {
     "Iterator.prototype.join": "not in the pinned spec's test scope (skipped feature)",
+    "Atomics.waitAsync": "needs host timers and an agent that can be woken (skipped feature)",
 }
 
 # Installed as aliases of another built-in (see ALIASES in table.rs): the stub
@@ -93,6 +95,18 @@ for _g in ("array_buffer", "typed_array", "data_view"):
         "crates/kahvi-core/src/object/typed_array.rs",
         "crates/kahvi-builtins/src/typed_array/prototype_get_length.rs",
     ]
+EXTRA_READ["shared_array_buffer"] = [
+    "crates/kahvi-builtins/src/support/typed_array.rs",
+    "crates/kahvi-core/src/object/typed_array.rs",
+    "crates/kahvi-builtins/src/shared_array_buffer/constructor.rs",
+    "crates/kahvi-builtins/src/array_buffer/prototype_slice.rs",
+]
+EXTRA_READ["atomics"] = [
+    "crates/kahvi-builtins/src/support/atomics.rs",
+    "crates/kahvi-builtins/src/atomics/add.rs",
+    "crates/kahvi-builtins/src/atomics/and.rs",
+    "crates/kahvi-core/src/object/typed_array.rs",
+]
 for _g in ("disposable_stack", "async_disposable_stack"):
     EXTRA_READ[_g] = [
         "crates/kahvi-builtins/src/support/disposable_stack.rs",

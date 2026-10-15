@@ -198,6 +198,14 @@ impl Cloner<'_> {
 
     fn clone_array_buffer(&mut self, agent: &mut Agent, o: Object) -> JsResult<Object> {
         let data = array_buffer_data(agent, o).expect("an ArrayBuffer");
+        // A SharedArrayBuffer would need its Shared Data Block shared by the
+        // clone, which this engine cannot represent (one block per object).
+        if data.shared {
+            return Err(data_clone_error(
+                agent,
+                "a SharedArrayBuffer could not be cloned",
+            ));
+        }
         let Some(bytes) = data.data.clone() else {
             return Err(data_clone_error(
                 agent,

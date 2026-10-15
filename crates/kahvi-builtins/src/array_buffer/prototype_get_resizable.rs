@@ -20,8 +20,9 @@ pub(crate) fn prototype_get_resizable(
         _ => return Err(agent.throw_type_error("not an ArrayBuffer")),
     };
     // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
-    // The engine has no Shared Data Block representation: an object with
-    // [[ArrayBufferData]] is never shared, so this check is always *false*.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4. If IsFixedLengthArrayBuffer(_obj_) is *false*, return *true*.
     if !is_fixed_length_array_buffer(agent, obj) {
         return Ok(Value::Boolean(true));
