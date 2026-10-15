@@ -2,7 +2,75 @@
 //!
 //! Spec: https://tc39.es/ecma262/#sec-sharedarraybuffer.prototype.grow
 
+use crate::support::atomics::LITTLE_ENDIAN;
+use kahvi_core::object::typed_array::{
+    MAX_BYTE_LENGTH, array_buffer_byte_length, array_buffer_data, array_buffer_data_mut,
+    is_shared_array_buffer,
+};
 use kahvi_core::prelude::*;
+
+/// NumericToRawBytes(~biguint64~, _value_, _isLittleEndian_)
+///
+/// Spec: https://tc39.es/ecma262/#sec-numerictorawbytes
+///
+/// Not yet in `ops`; the typed-array helper takes a BigInt Value, and only
+/// SharedArrayBuffer.prototype.grow needs the byte-list form so far.
+fn biguint64_to_raw_bytes(value: u64, is_little_endian: bool) -> [u8; 8] {
+    let mut bytes = value.to_le_bytes();
+    if !is_little_endian {
+        bytes.reverse();
+    }
+    bytes
+}
+
+/// RawBytesToNumeric(~biguint64~, _rawBytes_, _isLittleEndian_)
+///
+/// Spec: https://tc39.es/ecma262/#sec-rawbytestonumeric
+///
+/// Not yet in `ops`; see `biguint64_to_raw_bytes`.
+fn raw_bytes_to_biguint64(raw_bytes: [u8; 8], is_little_endian: bool) -> u64 {
+    let mut bytes = raw_bytes;
+    if !is_little_endian {
+        bytes.reverse();
+    }
+    u64::from_le_bytes(bytes)
+}
+
+/// GetRawBytesFromSharedBlock(_byteLengthBlock_, 0, ~biguint64~, *true*, ~seq-cst~)
+/// for the [[ArrayBufferByteLengthData]] of a growable SharedArrayBuffer.
+///
+/// Spec: https://tc39.es/ecma262/#sec-getrawbytesfromsharedblock
+///
+/// The byte length block is the data block's length (see `ArrayBufferData::shared`),
+/// so its 8 bytes are the encoded length. Not yet in `ops`.
+fn get_raw_bytes_from_byte_length_block(agent: &Agent, obj: Object) -> [u8; 8] {
+    biguint64_to_raw_bytes(array_buffer_byte_length(agent, obj) as u64, LITTLE_ENDIAN)
+}
+
+/// AtomicCompareExchangeInSharedBlock(_byteLengthBlock_, 0, 8, _expectedBytes_, _replacementBytes_)
+/// for the [[ArrayBufferByteLengthData]] of a growable SharedArrayBuffer.
+///
+/// Returns the bytes read at the block. If they equal _expectedBytes_, the block's
+/// length is replaced by _replacementBytes_ (grown in place, zero-filled). With one
+/// agent nothing else can write the block between the read and the write, so the
+/// read-then-write here is one atomic step. Not yet in `ops`.
+fn atomic_compare_exchange_in_byte_length_block(
+    agent: &mut Agent,
+    obj: Object,
+    expected_bytes: [u8; 8],
+    replacement_bytes: [u8; 8],
+) -> JsResult<[u8; 8]> {
+    let Some(block) = array_buffer_data_mut(agent, obj).and_then(|d| d.data.as_mut()) else {
+        return Err(agent.throw_type_error("SharedArrayBuffer has no data block"));
+    };
+    let read_bytes = biguint64_to_raw_bytes(block.len() as u64, LITTLE_ENDIAN);
+    // ByteListEqual(readBytes, expectedBytes) is equality of the byte arrays.
+    if read_bytes == expected_bytes {
+        let new_length = raw_bytes_to_biguint64(replacement_bytes, LITTLE_ENDIAN) as usize;
+        block.resize(new_length, 0);
+    }
+    Ok(read_bytes)
+}
 
 /// SharedArrayBuffer.prototype.grow
 pub(crate) fn prototype_grow(
@@ -11,34 +79,85 @@ pub(crate) fn prototype_grow(
     args: &[Value],
     new_target: Option<Object>,
 ) -> JsResult<Value> {
+    let _ = new_target;
     // This method performs the following steps when called:
     //
     // 1. Let _obj_ be the *this* value.
+    let obj = this;
     // 2. Perform ? RequireInternalSlot(_obj_, [[ArrayBufferMaxByteLength]]).
+    //    (Only a growable buffer has [[ArrayBufferMaxByteLength]].)
+    let (obj, max_byte_length) = match obj {
+        Value::Object(o) => match array_buffer_data(agent, o).and_then(|d| d.max_byte_length) {
+            Some(max) => (o, max),
+            None => {
+                return Err(agent.throw_type_error(
+                    "SharedArrayBuffer.prototype.grow called on a non-growable buffer",
+                ));
+            }
+        },
+        _ => {
+            return Err(
+                agent.throw_type_error("SharedArrayBuffer.prototype.grow called on a non-object")
+            );
+        }
+    };
     // 3. If IsSharedArrayBuffer(_obj_) is *false*, throw a *TypeError* exception.
+    if !is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not a SharedArrayBuffer"));
+    }
     // 4. Let _newByteLength_ be ? ToIndex(_newLength_).
+    let new_byte_length = ops::to_index(agent, args.get_or_undefined(0))?;
     // 5. Let _hostHandled_ be ? HostGrowSharedArrayBuffer(_obj_, _newByteLength_).
+    //    HostGrowSharedArrayBuffer is implementation-defined. This engine has no host
+    //    hook for it, so the host never handles the grow: *false* is the default.
+    let host_handled = false;
     // 6. If _hostHandled_ is ~handled~, return *undefined*.
+    if host_handled {
+        return Ok(Value::Undefined);
+    }
     // 7. Let _agentRecord_ be the Agent Record of the surrounding agent.
     // 8. Let _isLittleEndian_ be _agentRecord_.[[LittleEndian]].
+    let is_little_endian = LITTLE_ENDIAN;
     // 9. Let _byteLengthBlock_ be _obj_.[[ArrayBufferByteLengthData]].
     // 10. Let _currentByteLengthRawBytes_ be GetRawBytesFromSharedBlock(_byteLengthBlock_, 0, ~biguint64~, *true*, ~seq-cst~).
+    let mut current_byte_length_raw_bytes = get_raw_bytes_from_byte_length_block(agent, obj);
     // 11. Let _newByteLengthRawBytes_ be NumericToRawBytes(~biguint64~, ℤ(_newByteLength_), _isLittleEndian_).
+    let new_byte_length_raw_bytes =
+        biguint64_to_raw_bytes(new_byte_length as u64, is_little_endian);
     // 12. Repeat,
-    //    a. NOTE: This is a compare-and-exchange loop to ensure that parallel, racing grows of the same buffer are totally ordered, are not lost, and do not silently do nothing. The loop exits if it was able to attempt to grow uncontended.
-    //    b. Let _currentByteLength_ be ℝ(RawBytesToNumeric(~biguint64~, _currentByteLengthRawBytes_, _isLittleEndian_)).
-    //    c. If _newByteLength_ = _currentByteLength_, return *undefined*.
-    //    d. If _newByteLength_ < _currentByteLength_ or _newByteLength_ > _obj_.[[ArrayBufferMaxByteLength]], throw a *RangeError* exception.
-    //    e. Let _byteLengthDelta_ be _newByteLength_ - _currentByteLength_.
-    //    f. If it is impossible to create a new Shared Data Block value consisting of _byteLengthDelta_ bytes, throw a *RangeError* exception.
-    //    g. NOTE: No new Shared Data Block is constructed and used here. The observable behaviour of growable SharedArrayBuffers is specified by allocating a max-sized Shared Data Block at construction time, and this step captures the requirement that implementations that run out of memory must throw a *RangeError*.
-    //    h. Let _readByteLengthRawBytes_ be AtomicCompareExchangeInSharedBlock(_byteLengthBlock_, 0, 8, _currentByteLengthRawBytes_, _newByteLengthRawBytes_).
-    //    i. If ByteListEqual(_readByteLengthRawBytes_, _currentByteLengthRawBytes_) is *true*, return *undefined*.
-    //    j. Set _currentByteLengthRawBytes_ to _readByteLengthRawBytes_.
-    //
-    // NOTE:
-    // Spurious failures of the compare-exchange to update the length are prohibited. If the bounds checking for the new length passes and the implementation is not out of memory, a ReadModifyWriteSharedMemory event (i.e. a successful compare-exchange) is always added into the candidate execution.
-    // Parallel calls to SharedArrayBuffer.prototype.grow are totally ordered. For example, consider two racing calls: `sab.grow(10)` and `sab.grow(20)`. One of the two calls is guaranteed to win the race. The call to `sab.grow(10)` will never shrink `sab` even if `sab.grow(20)` happened first; in that case it will instead throw a RangeError.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("SharedArrayBuffer.prototype.grow"))
+    loop {
+        // a. NOTE: This is a compare-and-exchange loop to ensure that parallel, racing grows of the same buffer are totally ordered, are not lost, and do not silently do nothing. The loop exits if it was able to attempt to grow uncontended.
+        // b. Let _currentByteLength_ be ℝ(RawBytesToNumeric(~biguint64~, _currentByteLengthRawBytes_, _isLittleEndian_)).
+        let current_byte_length =
+            raw_bytes_to_biguint64(current_byte_length_raw_bytes, is_little_endian) as f64;
+        // c. If _newByteLength_ = _currentByteLength_, return *undefined*.
+        if new_byte_length == current_byte_length {
+            return Ok(Value::Undefined);
+        }
+        // d. If _newByteLength_ < _currentByteLength_ or _newByteLength_ > _obj_.[[ArrayBufferMaxByteLength]], throw a *RangeError* exception.
+        if new_byte_length < current_byte_length || new_byte_length > max_byte_length as f64 {
+            return Err(agent.throw_range_error("SharedArrayBuffer.prototype.grow: invalid length"));
+        }
+        // e. Let _byteLengthDelta_ be _newByteLength_ - _currentByteLength_.
+        let byte_length_delta = new_byte_length - current_byte_length;
+        // f. If it is impossible to create a new Shared Data Block value consisting of _byteLengthDelta_ bytes, throw a *RangeError* exception.
+        //    (The engine's limit is CreateByteDataBlock's MAX_BYTE_LENGTH, applied to the delta.)
+        if byte_length_delta > MAX_BYTE_LENGTH {
+            return Err(agent.throw_range_error("SharedArrayBuffer.prototype.grow: out of memory"));
+        }
+        // g. NOTE: No new Shared Data Block is constructed and used here. The observable behaviour of growable SharedArrayBuffers is specified by allocating a max-sized Shared Data Block at construction time, and this step captures the requirement that implementations that run out of memory must throw a *RangeError*.
+        // h. Let _readByteLengthRawBytes_ be AtomicCompareExchangeInSharedBlock(_byteLengthBlock_, 0, 8, _currentByteLengthRawBytes_, _newByteLengthRawBytes_).
+        let read_byte_length_raw_bytes = atomic_compare_exchange_in_byte_length_block(
+            agent,
+            obj,
+            current_byte_length_raw_bytes,
+            new_byte_length_raw_bytes,
+        )?;
+        // i. If ByteListEqual(_readByteLengthRawBytes_, _currentByteLengthRawBytes_) is *true*, return *undefined*.
+        if read_byte_length_raw_bytes == current_byte_length_raw_bytes {
+            return Ok(Value::Undefined);
+        }
+        // j. Set _currentByteLengthRawBytes_ to _readByteLengthRawBytes_.
+        current_byte_length_raw_bytes = read_byte_length_raw_bytes;
+    }
 }
