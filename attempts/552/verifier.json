@@ -1,0 +1,171 @@
+{
+  "duration_api_ms": 83850,
+  "stop_reason": "tool_use",
+  "session_id": "71b0a0ea-0262-4575-8e4f-9e86fa8628f1",
+  "total_cost_usd": 0.014449530000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 15535,
+    "cache_read_input_tokens": 4693,
+    "output_tokens": 19635,
+    "output_tokens_details": {
+      "thinking_tokens": 17392
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15535,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 19635,
+        "cache_read_input_tokens": 4693,
+        "cache_creation_input_tokens": 15535,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 15535
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":true,\"made_up_results\":true,\"swallows_errors\":true,\"skips_observable_steps\":false,\"contradicts_spec\":true,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The constructor and resolvedOptions are close to the spec: the steps are in order, and the observable GetOption calls come in the spec's order. The problems are in support/intl_display_names.rs. (1) is_unicode_language_id accepts a bare 4-letter script as the whole language, which unicode_language_id does not allow. It then adds an explicit \\\"root\\\" exclusion to patch that, which is a string-specific branch. (2) The type-language-valid test262 target still throws RangeError on valid codes. (3) Calendar step 4b (backwards-compatibility syntax) is silently skipped, so inputs the spec rejects are accepted. (4) lookup_display_name turns ICU4X try_new and parse failures into Ok(None), so a data failure reads as \\\"no name\\\" and returns the code. The language branch also treats name == code as \\\"no name\\\", a heuristic. The calendar and dateTimeField/currency not-implemented paths are honest and fine.\",\"problems\":[{\"file\":\"crates/kahvi-builtins/src/support/intl_display_names.rs\",\"question\":\"special_cases_inputs\",\"issue\":\"is_unicode_language_id special-cases the string \\\"root\\\" (`if first.eq_ignore_ascii_case(\\\"root\\\") { return false; }`, around line 89). It is needed only because the grammar accepts a bare 4-letter first subtag (line ~96, `else if !alpha(first, &[4])`). The spec's unicode_language_id requires a unicode_language_subtag (alpha{2,3} | alpha{5,8}) first, so the grammar should be fixed and this exception removed.\",\"line\":89},{\"file\":\"crates/kahvi-builtins/src/support/intl_display_names.rs\",\"question\":\"contradicts_spec\",\"issue\":\"CanonicalCodeForDisplayNames step 1a: the bare-script branch (`else if !alpha(first, &[4])`, line ~96) lets codes that cannot be matched by unicode_language_id reach the later checks. It should reject them, and the spec's grammar has no bare-script form.\",\"line\":96},{\"file\":\"crates/kahvi-builtins/src/intl_display_names/prototype_of.rs\",\"question\":\"contradicts_spec\",\"issue\":\"Test262 target intl402/DisplayNames/prototype/of/type-language-valid.js fails on both sloppy and strict with RangeError \\\"invalid language code\\\". Valid language codes are rejected by the step 1a/1b checks (is_unicode_language_id or is_well_formed_language_tag), so the wrong error type is thrown for valid input.\",\"line\":25},{\"file\":\"crates/kahvi-builtins/src/support/intl_display_names.rs\",\"question\":\"contradicts_spec\",\"issue\":\"CanonicalCodeForDisplayNames step 4b (calendar: a code using backwards-compatibility syntax of UTS #35 must throw RangeError) is skipped silently. The comment says \\\"not implemented\\\", but the code does not throw not_implemented either. Such codes are accepted, and then `of` ends in an InternalError rather than the RangeError the spec requires. Per the rules, the unimplemented step should throw agent.not_implemented at that point.\",\"line\":156},{\"file\":\"crates/kahvi-builtins/src/support/intl_display_names.rs\",\"question\":\"swallows_errors\",\"issue\":\"In lookup_display_name, a failing RegionDisplayNames::try_new, ScriptDisplayNames::try_new or LocaleDisplayNamesFormatter::try_new (ICU4X data load for the resolved locale) is turned into Ok(None), meaning \\\"no such field\\\". The result is the code (fallback \\\"code\\\") or undefined (fallback \\\"none\\\"), and the data failure is never reported. Parse failures on already-validated codes (Region/Script/Locale::try_from_str) are swallowed the same way. These errors should propagate as errors (for example agent.not_implemented or an internal error), not be converted into a lookup miss.\",\"line\":213},{\"file\":\"crates/kahvi-builtins/src/support/intl_display_names.rs\",\"question\":\"made_up_results\",\"issue\":\"When ICU4X data cannot be loaded (try_new failure) or the code cannot be parsed, lookup_display_name returns Ok(None). `of` then returns the code or undefined as if the name were absent. That is a default answer substituted for a failed computation. Also, in the language branch, `if name == code { Ok(None) }` (around line 238) treats ICU's echo of the input as \\\"no name\\\". This is a heuristic, and ICU composes names for unknown subtags, so fallback \\\"none\\\" results will not match the spec's table lookup.\",\"line\":238}],\"notes_for_next_attempt\":\"1. Fix is_unicode_language_id to follow unicode_language_id exactly: language subtag required (alpha{2,3} or alpha{5,8}), then optional script (alpha{4}), optional region (alpha{2} or digit{3}), then variants. Remove the bare-script branch and the \\\"root\\\" special case. Do not special-case \\\"root\\\".\\n2. Find the valid code that type-language-valid.js rejects with RangeError (check is_unicode_language_id and is_well_formed_language_tag against it). Fix the grammar or the well-formedness check in general, not for that string.\\n3. Calendar, step 4b: detect backwards-compatibility syntax, or throw agent.not_implemented at that step naming the missing check. Do not silently accept such codes.\\n4. lookup_display_name: propagate ICU4X try_new and parse failures as errors (not_implemented or an internal error). Do not map them to Ok(None). Keep Ok(None) only for \\\"ICU has no entry for this code\\\".\\n5. Language lookup: replace the name == code heuristic with a real lookup, or document why ICU's composed names are acceptable for fallback \\\"none\\\". Check that unknown subtags such as \\\"en-ZZ\\\" give undefined under fallback \\\"none\\\".\\n6. Keep the constructor and resolvedOptions as they are: they match the spec steps and order. Keep dateTimeField, calendar and currency in `of` as not_implemented until their ICU4X data is wired up.\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": true,
+      "made_up_results": true,
+      "swallows_errors": true,
+      "skips_observable_steps": false,
+      "contradicts_spec": true,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The constructor and resolvedOptions are close to the spec: the steps are in order, and the observable GetOption calls come in the spec's order. The problems are in support/intl_display_names.rs. (1) is_unicode_language_id accepts a bare 4-letter script as the whole language, which unicode_language_id does not allow. It then adds an explicit \"root\" exclusion to patch that, which is a string-specific branch. (2) The type-language-valid test262 target still throws RangeError on valid codes. (3) Calendar step 4b (backwards-compatibility syntax) is silently skipped, so inputs the spec rejects are accepted. (4) lookup_display_name turns ICU4X try_new and parse failures into Ok(None), so a data failure reads as \"no name\" and returns the code. The language branch also treats name == code as \"no name\", a heuristic. The calendar and dateTimeField/currency not-implemented paths are honest and fine.",
+    "problems": [
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+        "question": "special_cases_inputs",
+        "issue": "is_unicode_language_id special-cases the string \"root\" (`if first.eq_ignore_ascii_case(\"root\") { return false; }`, around line 89). It is needed only because the grammar accepts a bare 4-letter first subtag (line ~96, `else if !alpha(first, &[4])`). The spec's unicode_language_id requires a unicode_language_subtag (alpha{2,3} | alpha{5,8}) first, so the grammar should be fixed and this exception removed.",
+        "line": 89
+      },
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+        "question": "contradicts_spec",
+        "issue": "CanonicalCodeForDisplayNames step 1a: the bare-script branch (`else if !alpha(first, &[4])`, line ~96) lets codes that cannot be matched by unicode_language_id reach the later checks. It should reject them, and the spec's grammar has no bare-script form.",
+        "line": 96
+      },
+      {
+        "file": "crates/kahvi-builtins/src/intl_display_names/prototype_of.rs",
+        "question": "contradicts_spec",
+        "issue": "Test262 target intl402/DisplayNames/prototype/of/type-language-valid.js fails on both sloppy and strict with RangeError \"invalid language code\". Valid language codes are rejected by the step 1a/1b checks (is_unicode_language_id or is_well_formed_language_tag), so the wrong error type is thrown for valid input.",
+        "line": 25
+      },
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+        "question": "contradicts_spec",
+        "issue": "CanonicalCodeForDisplayNames step 4b (calendar: a code using backwards-compatibility syntax of UTS #35 must throw RangeError) is skipped silently. The comment says \"not implemented\", but the code does not throw not_implemented either. Such codes are accepted, and then `of` ends in an InternalError rather than the RangeError the spec requires. Per the rules, the unimplemented step should throw agent.not_implemented at that point.",
+        "line": 156
+      },
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+        "question": "swallows_errors",
+        "issue": "In lookup_display_name, a failing RegionDisplayNames::try_new, ScriptDisplayNames::try_new or LocaleDisplayNamesFormatter::try_new (ICU4X data load for the resolved locale) is turned into Ok(None), meaning \"no such field\". The result is the code (fallback \"code\") or undefined (fallback \"none\"), and the data failure is never reported. Parse failures on already-validated codes (Region/Script/Locale::try_from_str) are swallowed the same way. These errors should propagate as errors (for example agent.not_implemented or an internal error), not be converted into a lookup miss.",
+        "line": 213
+      },
+      {
+        "file": "crates/kahvi-builtins/src/support/intl_display_names.rs",
+        "question": "made_up_results",
+        "issue": "When ICU4X data cannot be loaded (try_new failure) or the code cannot be parsed, lookup_display_name returns Ok(None). `of` then returns the code or undefined as if the name were absent. That is a default answer substituted for a failed computation. Also, in the language branch, `if name == code { Ok(None) }` (around line 238) treats ICU's echo of the input as \"no name\". This is a heuristic, and ICU composes names for unknown subtags, so fallback \"none\" results will not match the spec's table lookup.",
+        "line": 238
+      }
+    ],
+    "notes_for_next_attempt": "1. Fix is_unicode_language_id to follow unicode_language_id exactly: language subtag required (alpha{2,3} or alpha{5,8}), then optional script (alpha{4}), optional region (alpha{2} or digit{3}), then variants. Remove the bare-script branch and the \"root\" special case. Do not special-case \"root\".\n2. Find the valid code that type-language-valid.js rejects with RangeError (check is_unicode_language_id and is_well_formed_language_tag against it). Fix the grammar or the well-formedness check in general, not for that string.\n3. Calendar, step 4b: detect backwards-compatibility syntax, or throw agent.not_implemented at that step naming the missing check. Do not silently accept such codes.\n4. lookup_display_name: propagate ICU4X try_new and parse failures as errors (not_implemented or an internal error). Do not map them to Ok(None). Keep Ok(None) only for \"ICU has no entry for this code\".\n5. Language lookup: replace the name == code heuristic with a real lookup, or document why ICU's composed names are acceptable for fallback \"none\". Check that unknown subtags such as \"en-ZZ\" give undefined under fallback \"none\".\n6. Keep the constructor and resolvedOptions as they are: they match the spec steps and order. Keep dateTimeField, calendar and currency in `of` as not_implemented until their ICU4X data is wired up."
+  },
+  "ttft_ms": 74429,
+  "type": "result",
+  "duration_ms": 83212,
+  "uuid": "418e97a1-0c98-4103-b843-6dcf23e7d6e1",
+  "ttft_stream_ms": 1422,
+  "time_to_request_ms": 495,
+  "time_to_request_phases_ms": {
+    "other": 23,
+    "system_prompt": 351,
+    "resume_other": 1,
+    "process_user_input": 4,
+    "input_attachments": 16,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 6,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 66,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 5,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 31,
+  "time_to_request_cpu_ms": 328,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 247,
+  "process_anon_mib_turn_start": 129,
+  "process_rss_mib_result": 252,
+  "process_anon_mib_result": 132,
+  "process_peak_rss_mib": 261,
+  "process_cpu_ms_turn": 1987,
+  "process_wall_ms_turn": 83212,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 20,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1423,
+  "time_to_request_from_spawn_ms": 1173587,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792090037526.972,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792106400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.44,
+        "resetsAt": 1792106400
+      },
+      "seven_day": {
+        "utilization": 0.2,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}
