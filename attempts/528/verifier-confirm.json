@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 5874,
+  "stop_reason": "tool_use",
+  "session_id": "f8699210-3319-4cdd-8fa5-510248e97ce8",
+  "total_cost_usd": 0.024967000000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4479,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 626,
+    "output_tokens_details": {
+      "thinking_tokens": 185
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4479,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 626,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 4479,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4479
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The diff implements the spec steps in order. Step 2 throws a TypeError if `this` is not an object or lacks [[ArrayBufferData]]. Step 3 throws a TypeError if the buffer isn't shared. Step 4 calls the core `array_buffer_byte_length` helper, and step 5 returns the length as a Number. It has no special-casing, no swallowed errors, and no unrelated edits. The gate report shows 18 of 18 target tests passing, 12 of them new, with 0 regressions. I did not open the repo to confirm that `array_buffer_data`, `is_shared_array_buffer` and `array_buffer_byte_length` behave as assumed.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The diff implements the spec steps in order. Step 2 throws a TypeError if `this` is not an object or lacks [[ArrayBufferData]]. Step 3 throws a TypeError if the buffer isn't shared. Step 4 calls the core `array_buffer_byte_length` helper, and step 5 returns the length as a Number. It has no special-casing, no swallowed errors, and no unrelated edits. The gate report shows 18 of 18 target tests passing, 12 of them new, with 0 regressions. I did not open the repo to confirm that `array_buffer_data`, `is_shared_array_buffer` and `array_buffer_byte_length` behave as assumed.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 3671,
+  "type": "result",
+  "duration_ms": 5777,
+  "uuid": "653b9080-d7a5-4c7a-82ce-24795ea566df",
+  "ttft_stream_ms": 1870,
+  "time_to_request_ms": 571,
+  "time_to_request_phases_ms": {
+    "other": 32,
+    "system_prompt": 339,
+    "resume_other": 1,
+    "process_user_input": 11,
+    "input_attachments": 19,
+    "input_hooks": 4,
+    "tool_pool_refresh": 2,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 3,
+    "model_config_wait": 114,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 5,
+    "message_normalization": 2,
+    "client_creation": 19,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 43,
+  "time_to_request_cpu_ms": 385,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 246,
+  "process_anon_mib_turn_start": 128,
+  "process_rss_mib_result": 237,
+  "process_anon_mib_result": 117,
+  "process_peak_rss_mib": 252,
+  "process_cpu_ms_turn": 781,
+  "process_wall_ms_turn": 5777,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 12,
+    "cpu_ms": 25,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1871,
+  "time_to_request_from_spawn_ms": 1855890,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050926307.7202,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.24,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.3,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
