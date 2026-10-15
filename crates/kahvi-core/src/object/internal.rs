@@ -253,7 +253,7 @@ impl Object {
         if let Some(r) = crate::object::proxy::set(agent, self, key, value, receiver) {
             return r;
         }
-        if let Some(r) = super::host_object::set(agent, self, key, value) {
+        if let Some(r) = super::host_object::set(agent, self, key, value, receiver) {
             return r;
         }
         if let Some(r) = super::namespace::set(agent, self) {

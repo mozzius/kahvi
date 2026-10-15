@@ -61,8 +61,21 @@ Worklets makes its UI-thread runtimes with `makeHermesRuntime`.
 `patches/react-native-worklets+0.13.0.patch` (for patch-package) makes
 them kahvi runtimes instead, links worklets to this package, and turns off
 its Hermes sampling profiler. `harness/rn/check.sh` compiles the patched
-files. Expo needs no patch on Android: its Hermes code is only built for
-expo-modules-core's own tests.
+files.
+
+### Expo
+
+Add the config plugin, which does the Android steps above at prebuild:
+
+```js
+plugins: ["react-native-kahvi"]
+```
+
+Expo 57's `ExpoReactHostFactory.getDefaultReactHost` takes a
+`jsRuntimeFactory` but always makes a Hermes one;
+`patches/expo+57.0.24.patch` makes it use the one it is given.
+`harness/rn/social-app-android.sh` builds Bluesky's app this way
+(`.github/workflows/social-app-android.yml`).
 
 ### iOS
 
