@@ -107,7 +107,11 @@ the frame for the duration.
   objects, frames and modules trace their code's constants
   (`Tracer::code`, once per unit per collection). The code itself is
   reference-counted (`Arc`) and freed with its last holder. Only the
-  agent's common names and the well-known symbols are pinned.
+  agent's common names and the well-known symbols are pinned. A lazy
+  function (compiled on its first call, `FunctionCode::lazy`) is its own
+  unit; its code is listed in the constants of the unit that holds its
+  stub and traced with them, since every closure made from that stub
+  shares it.
 - Script records of eval and dynamic functions are freed once no live code
   belongs to them (their template objects go too), and the index is reused
   by a new record with the same realm and name.

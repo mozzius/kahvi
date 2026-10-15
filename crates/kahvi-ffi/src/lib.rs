@@ -253,6 +253,8 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
     let realm = runtime.realm();
     let agent: *mut Agent = runtime.agent();
     unsafe { (*agent).host_now = Some(now_ms) };
+    // KAHVI_GC_STRESS, as for the CLI and kahvi-run (harness/jsi/run.sh).
+    unsafe { (*agent).gc_stress = Agent::gc_stress_from_env() };
     Box::into_raw(Box::new(KahviRuntime {
         _runtime: runtime,
         realm,
@@ -819,6 +821,38 @@ pub unsafe extern "C" fn kahvi_array_buffer_new(
             let ctor = agent.intrinsic("%ArrayBuffer%");
             kahvi_core::object::typed_array::allocate_array_buffer(agent, ctor, len as f64, None)
                 .map(Value::Object)
+        })
+    }
+}
+
+/// A new ArrayBuffer over `len` bytes of host memory at `data`, which must
+/// stay valid until `finalize(context)` runs: when the buffer is detached
+/// or collected, or the runtime is freed.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_array_buffer_new_external(
+    rt: *mut KahviRuntime,
+    data: *mut u8,
+    len: usize,
+    context: *mut c_void,
+    finalize: KahviFinalizer,
+    out: *mut KahviValue,
+) -> bool {
+    use kahvi_core::object::typed_array::{DataBlock, ExternalBlock, array_buffer_data_mut};
+    let release = Finalize {
+        finalize,
+        context: context as usize,
+    };
+    unsafe {
+        op(rt, out, |agent| {
+            let ctor = agent.intrinsic("%ArrayBuffer%");
+            let buffer =
+                kahvi_core::object::typed_array::allocate_array_buffer(agent, ctor, 0.0, None)?;
+            // SAFETY: the caller keeps `data` valid until `finalize` runs.
+            let block = ExternalBlock::new(data, len, Box::new(move || drop(release)));
+            array_buffer_data_mut(agent, buffer)
+                .expect("an ArrayBuffer")
+                .data = Some(DataBlock::External(block));
+            Ok(Value::Object(buffer))
         })
     }
 }

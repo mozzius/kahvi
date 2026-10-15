@@ -179,11 +179,51 @@ int main() {
     WeakObject weak(rt, o);
     EXPECT(weak.lock(rt).isObject());
 
+    // Properties keyed by any value (ToPropertyKey).
+    {
+      Object k = Object(rt);
+      k.setProperty(rt, Value(rt, String::createFromAscii(rt, "a")), 1);
+      k.setProperty(rt, Value(7), 2);
+      EXPECT(k.getProperty(rt, Value(rt, String::createFromAscii(rt, "7"))).getNumber() == 2);
+      EXPECT(k.hasProperty(rt, Value(rt, String::createFromAscii(rt, "a"))));
+      EXPECT(!k.hasProperty(rt, Value(8)));
+      Value sym = eval(rt, "Symbol.iterator");
+      k.setProperty(rt, sym, 3);
+      EXPECT(k.getProperty(rt, sym).getNumber() == 3);
+    }
+
     // ArrayBuffers created by JS.
     Object ab = eval(rt, "new Uint8Array([1, 2, 3]).buffer").getObject(rt);
     EXPECT(ab.isArrayBuffer(rt));
     EXPECT(ab.getArrayBuffer(rt).size(rt) == 3);
     EXPECT(ab.getArrayBuffer(rt).data(rt)[2] == 3);
+
+    // ArrayBuffers over host memory: JS sees and writes the host's bytes,
+    // and detaching the buffer releases them.
+    {
+      struct HostBuffer : MutableBuffer {
+        uint8_t bytes[4] = {9, 8, 7, 6};
+        bool* released;
+        explicit HostBuffer(bool* r) : released(r) {}
+        ~HostBuffer() override { *released = true; }
+        size_t size() const override { return sizeof(bytes); }
+        uint8_t* data() override { return bytes; }
+      };
+      bool released = false;
+      auto host = std::make_shared<HostBuffer>(&released);
+      uint8_t* bytes = host->data();
+      ArrayBuffer hab(rt, std::move(host));
+      EXPECT(hab.size(rt) == 4);
+      EXPECT(hab.data(rt) == bytes);
+      rt.global().setProperty(rt, "hab", hab);
+      EXPECT(eval(rt, "new Uint8Array(hab)[1]").getNumber() == 8);
+      eval(rt, "new Uint8Array(hab)[0] = 42");
+      EXPECT(bytes[0] == 42);
+      EXPECT(!released);
+      eval(rt, "globalThis.copy = hab.transfer(); hab = undefined");
+      EXPECT(released);
+      EXPECT(eval(rt, "new Uint8Array(copy)[0]").getNumber() == 42);
+    }
 
     // Prepared scripts.
     auto prepared = rt.prepareJavaScript(std::make_shared<StringBuffer>("6 * 7"), "p.js");
