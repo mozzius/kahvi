@@ -1,0 +1,939 @@
+diff --git a/crates/kahvi-builtins/src/intl_number_format/constructor.rs b/crates/kahvi-builtins/src/intl_number_format/constructor.rs
+index 71ec59e..4f8f1fd 100644
+--- a/crates/kahvi-builtins/src/intl_number_format/constructor.rs
++++ b/crates/kahvi-builtins/src/intl_number_format/constructor.rs
+@@ -4,6 +4,15 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::{
++    OptionType, ResolutionOptionDescriptor, ServiceConstructor, SpecialBehaviour,
++    available_locales, fallback_symbol, get_boolean_or_string_number_format_option,
++    get_string_option, resolve_options,
++};
++use crate::support::intl_number_format::{
++    NumberFormatSlots, set_number_format_digit_options, set_number_format_unit_options,
++};
++
+ /// Intl.NumberFormat
+ pub(crate) fn constructor(
+     agent: &mut Agent,
+@@ -59,6 +68,168 @@ pub(crate) fn constructor(
+     // _newTarget_: an ECMAScript language value,
+     // _this_: an ECMAScript language value,
+     // ): either a normal completion containing an Object or a throw completion]
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.NumberFormat"))
++    // 1. (see above)
++    let new_target_obj = match new_target {
++        Some(nt) => nt,
++        None => match agent.active_function() {
++            Some(f) => f,
++            None => return Err(agent.throw_type_error("no active function")),
++        },
++    };
++    // 2. (see above)
++    let number_format = ops::ordinary_create_from_constructor(
++        agent,
++        new_target_obj,
++        "%Intl.NumberFormat.prototype%",
++        ObjectKind::Native(Box::new(NumberFormatSlots::default())),
++    )?;
++    let locales = args.get_or_undefined(0);
++    let options = args.get_or_undefined(1);
++    // 3. (see above)
++    let descriptors = [ResolutionOptionDescriptor {
++        key: "nu",
++        property: "numberingSystem",
++        r#type: OptionType::String,
++        values: None,
++    }];
++    let ctor = ServiceConstructor {
++        available_locales: available_locales(),
++        relevant_extension_keys: &["nu"],
++        resolution_option_descriptors: &descriptors,
++    };
++    // [[LocaleData]]: the numbering systems for the locale, the default first.
++    let locale_data = |_locale: &str, key: &str| -> Vec<Option<String>> {
++        if key == "nu" {
++            vec![Some("latn".to_string())]
++        } else {
++            Vec::new()
++        }
++    };
++    let options_resolution = resolve_options(
++        agent,
++        &ctor,
++        &locale_data,
++        locales,
++        options,
++        &[SpecialBehaviour::CoerceOptions],
++        None,
++    )?;
++    // 4. (see above)
++    let options = options_resolution.options;
++    // 5. (see above)
++    let resolved_locale = options_resolution.resolved_locale;
++    let mut slots = NumberFormatSlots::default();
++    // 6. (see above)
++    slots.locale = resolved_locale.locale.clone();
++    // 7. (see above)
++    slots.data_locale = resolved_locale.data_locale.clone();
++    // 8. (see above)
++    slots.numbering_system = resolved_locale.get("nu").map(str::to_string);
++    // 9. (see above)
++    set_number_format_unit_options(agent, &mut slots, options)?;
++    // 10. (see above)
++    let style = slots.style.clone();
++    // 11. (see above)
++    let notation = get_string_option(
++        agent,
++        options,
++        "notation",
++        &["standard", "scientific", "engineering", "compact"],
++        Some("standard"),
++    )?
++    .unwrap_or_default();
++    // 12. (see above)
++    slots.notation = notation.clone();
++    // 13.
++    if style == "currency" && notation == "standard" {
++        // CurrencyDigits: ICU4X has no currency digits data.
++        return Err(agent.not_implemented("Intl.NumberFormat CurrencyDigits"));
++    }
++    // 14.
++    let mnfd_default = 0;
++    let mxfd_default = if style == "percent" { 0 } else { 3 };
++    // 15. (see above)
++    set_number_format_digit_options(
++        agent,
++        &mut slots,
++        options,
++        mnfd_default,
++        mxfd_default,
++        &notation,
++    )?;
++    // 16. (see above)
++    let compact_display = get_string_option(
++        agent,
++        options,
++        "compactDisplay",
++        &["short", "long"],
++        Some("short"),
++    )?;
++    // 17. (see above)
++    let mut default_use_grouping = "auto";
++    // 18. (see above)
++    if notation == "compact" {
++        slots.compact_display = compact_display;
++        default_use_grouping = "min2";
++    }
++    // 19. NOTE: For historical reasons, the strings *"true"* and *"false"* are accepted and replaced with the default value.
++    // 20. (see above)
++    let fallback = Value::String(agent.string(default_use_grouping));
++    let use_grouping = get_boolean_or_string_number_format_option(
++        agent,
++        options,
++        "useGrouping",
++        &["min2", "auto", "always", "true", "false"],
++        fallback,
++    )?;
++    // 21.-23. UseGrouping is None for *false*.
++    slots.use_grouping = match use_grouping {
++        // 22. If _useGrouping_ is *true*, set _useGrouping_ to *"always"*.
++        Value::Boolean(true) => Some("always".to_string()),
++        Value::Boolean(false) => None,
++        Value::String(s) => {
++            let s = agent.str_lossy(s);
++            // 21. If _useGrouping_ is *"true"* or _useGrouping_ is *"false"*, set _useGrouping_ to _defaultUseGrouping_.
++            if s == "true" || s == "false" {
++                Some(default_use_grouping.to_string())
++            } else {
++                Some(s)
++            }
++        }
++        _ => None,
++    };
++    // 24. (see above)
++    slots.sign_display = get_string_option(
++        agent,
++        options,
++        "signDisplay",
++        &["auto", "never", "always", "exceptZero", "negative"],
++        Some("auto"),
++    )?
++    .unwrap_or_default();
++    agent.obj_mut(number_format).kind = ObjectKind::Native(Box::new(slots));
++    // 26. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
++    //    a. Let _this_ be the *this* value.
++    //    b. Return ? ChainNumberFormat(_numberFormat_, NewTarget, _this_).
++    // ChainNumberFormat:
++    // 1. If _newTarget_ is *undefined* and ? OrdinaryHasInstance(%Intl.NumberFormat%, _this_) is *true*, then
++    if new_target.is_none() {
++        let intrinsic = agent.intrinsic("%Intl.NumberFormat%");
++        if ops::ordinary_has_instance(agent, Value::Object(intrinsic), this)? {
++            if let Value::Object(this_obj) = this {
++                // a. Perform ? DefinePropertyOrThrow(_this_, %Intl%.[[FallbackSymbol]], PropertyDescriptor { [[Value]]: _numberFormat_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
++                let key = PropertyKey::from(fallback_symbol(agent));
++                ops::define_property_or_throw(
++                    agent,
++                    this_obj,
++                    key,
++                    PropertyDescriptor::data(Value::Object(number_format), false, false, false),
++                )?;
++                // b. Return _this_.
++                return Ok(this);
++            }
++        }
++    }
++    // 2. Return _numberFormat_.
++    Ok(Value::Object(number_format))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs b/crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs
+index f3eb67f..0b824dc 100644
+--- a/crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs
++++ b/crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs
+@@ -4,6 +4,9 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl::fallback_symbol;
++use crate::support::intl_number_format::NumberFormatSlots;
++
+ /// Intl.NumberFormat.prototype.resolvedOptions
+ pub(crate) fn prototype_resolved_options(
+     agent: &mut Agent,
+@@ -11,90 +14,139 @@ pub(crate) fn prototype_resolved_options(
+     args: &[Value],
+     new_target: Option<Object>,
+ ) -> JsResult<Value> {
+-    // This function provides access to the locale and options computed during initialization of the object.
+-    //
++    let _ = (args, new_target);
+     // 1. Let _nf_ be the *this* value.
++    let mut nf = this;
+     // 2. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
+     //    a. Set _nf_ to ? UnwrapNumberFormat(_nf_).
++    // UnwrapNumberFormat: if _nf_ is not an Object with the slot, and OrdinaryHasInstance(%Intl.NumberFormat%, _nf_) is true, read the fallback symbol.
++    if let Value::Object(o) = nf {
++        if agent.native::<NumberFormatSlots>(o).is_none() {
++            let intrinsic = agent.intrinsic("%Intl.NumberFormat%");
++            if ops::ordinary_has_instance(agent, Value::Object(intrinsic), nf)? {
++                let key = PropertyKey::from(fallback_symbol(agent));
++                nf = ops::get(agent, o, key)?;
++            }
++        }
++    }
+     // 3. Perform ? RequireInternalSlot(_nf_, [[InitializedNumberFormat]]).
++    let Some(o) = (match nf {
++        Value::Object(o) => Some(o),
++        _ => None,
++    })
++    .filter(|o| agent.native::<NumberFormatSlots>(*o).is_some()) else {
++        return Err(agent.throw_type_error("not an Intl.NumberFormat"));
++    };
++    let (strings, numbers) = {
++        let Some(s) = agent.native::<NumberFormatSlots>(o) else {
++            return Err(agent.throw_type_error("not an Intl.NumberFormat"));
++        };
++        let strings: Vec<(&str, Option<String>)> = vec![
++            ("locale", Some(s.locale.clone())),
++            ("numberingSystem", s.numbering_system.clone()),
++            ("style", Some(s.style.clone())),
++            ("currency", s.currency.clone()),
++            ("currencyDisplay", s.currency_display.clone()),
++            ("currencySign", s.currency_sign.clone()),
++            ("unit", s.unit.clone()),
++            ("unitDisplay", s.unit_display.clone()),
++        ];
++        let numbers: Vec<(&str, Option<f64>)> = vec![
++            (
++                "minimumIntegerDigits",
++                Some(s.minimum_integer_digits as f64),
++            ),
++            (
++                "minimumFractionDigits",
++                s.minimum_fraction_digits.map(f64::from),
++            ),
++            (
++                "maximumFractionDigits",
++                s.maximum_fraction_digits.map(f64::from),
++            ),
++            (
++                "minimumSignificantDigits",
++                s.minimum_significant_digits.map(f64::from),
++            ),
++            (
++                "maximumSignificantDigits",
++                s.maximum_significant_digits.map(f64::from),
++            ),
++        ];
++        (
++            (
++                strings,
++                s.use_grouping.clone(),
++                s.notation.clone(),
++                s.compact_display.clone(),
++                s.sign_display.clone(),
++            ),
++            (
++                numbers,
++                s.rounding_increment,
++                s.rounding_mode.clone(),
++                s.computed_rounding_priority.clone(),
++                s.trailing_zero_display.clone(),
++            ),
++        )
++    };
++    let (strings, use_grouping, notation, compact_display, sign_display) = strings;
++    let (numbers, rounding_increment, rounding_mode, rounding_priority, trailing_zero_display) =
++        numbers;
+     // 4. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
++    let proto = agent.intrinsic("%Object.prototype%");
++    let options = agent.ordinary_object_create(Some(proto));
+     // 5. For each row of [table-numberformat-resolvedoptions-properties], except the header row, in table order, do
+     //    a. Let _propertyKey_ be the Property value of the current row.
+     //    b. Let _value_ be the value of _nf_'s internal slot whose name is the Internal Slot value of the current row.
+     //    c. If _value_ is not *undefined*, then
+-    //       i. If there is a Conversion value in the current row, then
+-    //          1. Assert: The Conversion value of the current row is ~number~.
+-    //          2. Set _value_ to 𝔽(_value_).
++    //       i. If there is a Conversion value in the current row, set _value_ to 𝔽(_value_).
+     //       ii. Perform ! CreateDataPropertyOrThrow(_options_, _propertyKey_, _value_).
++    let put = |agent: &mut Agent, name: &str, value: Value| -> JsResult<()> {
++        let key = agent.key(name);
++        ops::create_data_property_or_throw(agent, options, key, value)
++    };
++    for (name, value) in &strings[..2] {
++        if let Some(v) = value {
++            let v = Value::String(agent.string(v));
++            put(agent, name, v)?;
++        }
++    }
++    for (name, value) in &strings[2..] {
++        if let Some(v) = value {
++            let v = Value::String(agent.string(v));
++            put(agent, name, v)?;
++        }
++    }
++    for (name, value) in &numbers[..5] {
++        if let Some(v) = value {
++            put(agent, name, Value::Number(*v))?;
++        }
++    }
++    let grouping = match use_grouping {
++        Some(g) => Value::String(agent.string(&g)),
++        None => Value::Boolean(false),
++    };
++    put(agent, "useGrouping", grouping)?;
++    let v = Value::String(agent.string(&notation));
++    put(agent, "notation", v)?;
++    if let Some(c) = compact_display {
++        let v = Value::String(agent.string(&c));
++        put(agent, "compactDisplay", v)?;
++    }
++    let v = Value::String(agent.string(&sign_display));
++    put(agent, "signDisplay", v)?;
++    put(
++        agent,
++        "roundingIncrement",
++        Value::Number(rounding_increment as f64),
++    )?;
++    let v = Value::String(agent.string(&rounding_mode));
++    put(agent, "roundingMode", v)?;
++    let v = Value::String(agent.string(&rounding_priority));
++    put(agent, "roundingPriority", v)?;
++    let v = Value::String(agent.string(&trailing_zero_display));
++    put(agent, "trailingZeroDisplay", v)?;
+     // 6. Return _options_.
+-    //
+-    // Resolved Options of NumberFormat Instances
+-    // Internal Slot |
+-    // Property |
+-    // Conversion |
+-    // [[Locale]] |
+-    // *"locale"* |
+-    // |
+-    // [[NumberingSystem]] |
+-    // *"numberingSystem"* |
+-    // |
+-    // [[Style]] |
+-    // *"style"* |
+-    // |
+-    // [[Currency]] |
+-    // *"currency"* |
+-    // |
+-    // [[CurrencyDisplay]] |
+-    // *"currencyDisplay"* |
+-    // |
+-    // [[CurrencySign]] |
+-    // *"currencySign"* |
+-    // |
+-    // [[Unit]] |
+-    // *"unit"* |
+-    // |
+-    // [[UnitDisplay]] |
+-    // *"unitDisplay"* |
+-    // |
+-    // [[MinimumIntegerDigits]] |
+-    // *"minimumIntegerDigits"* |
+-    // ~number~ |
+-    // [[MinimumFractionDigits]] |
+-    // *"minimumFractionDigits"* |
+-    // ~number~ |
+-    // [[MaximumFractionDigits]] |
+-    // *"maximumFractionDigits"* |
+-    // ~number~ |
+-    // [[MinimumSignificantDigits]] |
+-    // *"minimumSignificantDigits"* |
+-    // ~number~ |
+-    // [[MaximumSignificantDigits]] |
+-    // *"maximumSignificantDigits"* |
+-    // ~number~ |
+-    // [[UseGrouping]] |
+-    // *"useGrouping"* |
+-    // |
+-    // [[Notation]] |
+-    // *"notation"* |
+-    // |
+-    // [[CompactDisplay]] |
+-    // *"compactDisplay"* |
+-    // |
+-    // [[SignDisplay]] |
+-    // *"signDisplay"* |
+-    // |
+-    // [[RoundingIncrement]] |
+-    // *"roundingIncrement"* |
+-    // ~number~ |
+-    // [[RoundingMode]] |
+-    // *"roundingMode"* |
+-    // |
+-    // [[ComputedRoundingPriority]] |
+-    // *"roundingPriority"* |
+-    // |
+-    // [[TrailingZeroDisplay]] |
+-    // *"trailingZeroDisplay"* |
+-    // |
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.NumberFormat.prototype.resolvedOptions"))
++    Ok(Value::Object(options))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_number_format.rs b/crates/kahvi-builtins/src/support/intl_number_format.rs
+index 4f563cb..aa44af7 100644
+--- a/crates/kahvi-builtins/src/support/intl_number_format.rs
++++ b/crates/kahvi-builtins/src/support/intl_number_format.rs
+@@ -1,7 +1,496 @@
+ //! Intl.NumberFormat: the [[InitializedNumberFormat]] internal slots and the
+ //! abstract operations shared by its built-ins.
+-//!
+-//! The ticket for this service owns this file: define the internal-slot
+-//! struct here (`ObjectKind::Native`, see docs/INTL.md) and the abstract
+-//! operations more than one of its built-ins needs.
+ #![allow(dead_code)] // helpers for the Intl tickets
++
++use kahvi_core::gc::{Trace, Tracer};
++use kahvi_core::prelude::*;
++
++use crate::support::intl::{default_number_option, get_number_option, get_string_option};
++
++/// [[RoundingType]]
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub(crate) enum RoundingType {
++    MorePrecision,
++    LessPrecision,
++    SignificantDigits,
++    FractionDigits,
++}
++
++/// The internal slots of an Intl.NumberFormat.
++#[derive(Debug)]
++pub(crate) struct NumberFormatSlots {
++    /// [[Locale]]
++    pub locale: String,
++    /// The locale [[LocaleData]] was found for.
++    pub data_locale: String,
++    /// [[NumberingSystem]]
++    pub numbering_system: Option<String>,
++    /// [[Style]]
++    pub style: String,
++    /// [[Unit]]
++    pub unit: Option<String>,
++    /// [[UnitDisplay]]
++    pub unit_display: Option<String>,
++    /// [[Currency]]
++    pub currency: Option<String>,
++    /// [[CurrencyDisplay]]
++    pub currency_display: Option<String>,
++    /// [[CurrencySign]]
++    pub currency_sign: Option<String>,
++    /// [[MinimumIntegerDigits]]
++    pub minimum_integer_digits: u32,
++    /// [[MinimumFractionDigits]]
++    pub minimum_fraction_digits: Option<u32>,
++    /// [[MaximumFractionDigits]]
++    pub maximum_fraction_digits: Option<u32>,
++    /// [[MinimumSignificantDigits]]
++    pub minimum_significant_digits: Option<u32>,
++    /// [[MaximumSignificantDigits]]
++    pub maximum_significant_digits: Option<u32>,
++    /// [[RoundingType]]
++    pub rounding_type: RoundingType,
++    /// [[Notation]]
++    pub notation: String,
++    /// [[CompactDisplay]]
++    pub compact_display: Option<String>,
++    /// [[UseGrouping]]: `None` is *false*.
++    pub use_grouping: Option<String>,
++    /// [[SignDisplay]]
++    pub sign_display: String,
++    /// [[RoundingIncrement]]
++    pub rounding_increment: u32,
++    /// [[RoundingMode]]
++    pub rounding_mode: String,
++    /// [[ComputedRoundingPriority]]
++    pub computed_rounding_priority: String,
++    /// [[TrailingZeroDisplay]]
++    pub trailing_zero_display: String,
++    /// [[BoundFormat]]
++    pub bound_format: Option<Object>,
++}
++
++impl Default for NumberFormatSlots {
++    fn default() -> Self {
++        NumberFormatSlots {
++            locale: String::new(),
++            data_locale: String::new(),
++            numbering_system: None,
++            style: String::new(),
++            unit: None,
++            unit_display: None,
++            currency: None,
++            currency_display: None,
++            currency_sign: None,
++            minimum_integer_digits: 1,
++            minimum_fraction_digits: None,
++            maximum_fraction_digits: None,
++            minimum_significant_digits: None,
++            maximum_significant_digits: None,
++            rounding_type: RoundingType::FractionDigits,
++            notation: String::new(),
++            compact_display: None,
++            use_grouping: None,
++            sign_display: String::new(),
++            rounding_increment: 1,
++            rounding_mode: String::new(),
++            computed_rounding_priority: String::new(),
++            trailing_zero_display: String::new(),
++            bound_format: None,
++        }
++    }
++}
++
++impl Trace for NumberFormatSlots {
++    fn trace(&self, t: &mut Tracer) {
++        if let Some(o) = &self.bound_format {
++            o.trace(t);
++        }
++    }
++}
++
++/// The sanctioned simple unit identifiers (ECMA-402 table "Sanctioned simple
++/// unit identifiers").
++const SANCTIONED_UNITS: &[&str] = &[
++    "acre",
++    "bit",
++    "byte",
++    "celsius",
++    "centimeter",
++    "day",
++    "degree",
++    "fahrenheit",
++    "fluid-ounce",
++    "foot",
++    "gallon",
++    "gigabit",
++    "gigabyte",
++    "gram",
++    "hectare",
++    "hour",
++    "inch",
++    "kilobit",
++    "kilobyte",
++    "kilogram",
++    "kilometer",
++    "liter",
++    "megabit",
++    "megabyte",
++    "meter",
++    "microsecond",
++    "mile",
++    "mile-scandinavian",
++    "milliliter",
++    "millimeter",
++    "millisecond",
++    "minute",
++    "month",
++    "nanosecond",
++    "ounce",
++    "percent",
++    "petabyte",
++    "pound",
++    "second",
++    "stone",
++    "terabit",
++    "terabyte",
++    "week",
++    "yard",
++    "year",
++];
++
++/// IsWellFormedCurrencyCode ( _currency_ )
++fn is_well_formed_currency_code(currency: &str) -> bool {
++    // 1. Let _normalized_ be the ASCII-uppercase of _currency_.
++    // 2. If the length of _normalized_ is not 3, return *false*.
++    // 3. If _normalized_ contains any code unit outside of 0x0041 through 0x005A (corresponding to Unicode characters LATIN CAPITAL LETTER A through LATIN CAPITAL LETTER Z), return *false*.
++    // 4. Return *true*.
++    currency.len() == 3 && currency.bytes().all(|b| b.is_ascii_alphabetic())
++}
++
++/// IsWellFormedUnitIdentifier ( _unitIdentifier_ )
++fn is_well_formed_unit_identifier(unit_identifier: &str) -> bool {
++    // 1. If the substring "-per-" does not occur exactly once in _unitIdentifier_, then
++    //    a. If IsSanctionedSimpleUnitIdentifier(_unitIdentifier_) is *true*, return *true*; else return *false*.
++    // 2. Let _numerator_ be the substring of _unitIdentifier_ from the beginning to just before "-per-".
++    // 3. If IsSanctionedSimpleUnitIdentifier(_numerator_) is *false*, return *false*.
++    // 4. Let _denominator_ be the substring of _unitIdentifier_ from just after "-per-" to the end.
++    // 5. If IsSanctionedSimpleUnitIdentifier(_denominator_) is *false*, return *false*.
++    // 6. Return *true*.
++    let mut parts = unit_identifier.split("-per-");
++    match (parts.next(), parts.next(), parts.next()) {
++        (Some(u), None, _) => SANCTIONED_UNITS.contains(&u),
++        (Some(n), Some(d), None) => SANCTIONED_UNITS.contains(&n) && SANCTIONED_UNITS.contains(&d),
++        _ => false,
++    }
++}
++
++/// SetNumberFormatUnitOptions ( _intlObj_, _options_ )
++pub(crate) fn set_number_format_unit_options(
++    agent: &mut Agent,
++    intl_obj: &mut NumberFormatSlots,
++    options: Object,
++) -> JsResult<()> {
++    // 1. Let _style_ be ? GetOption(_options_, *"style"*, ~string~, « *"decimal"*, *"percent"*, *"currency"*, *"unit"* », *"decimal"*).
++    let style = get_string_option(
++        agent,
++        options,
++        "style",
++        &["decimal", "percent", "currency", "unit"],
++        Some("decimal"),
++    )?
++    .unwrap_or_default();
++    // 2. Set _intlObj_.[[Style]] to _style_.
++    intl_obj.style = style.clone();
++    // 3. Let _currency_ be ? GetOption(_options_, *"currency"*, ~string~, ~empty~, *undefined*).
++    let currency = get_string_option(agent, options, "currency", &[], None)?;
++    match &currency {
++        // 4. If _currency_ is *undefined*, then
++        None => {
++            // a. If _style_ is *"currency"*, throw a *TypeError* exception.
++            if style == "currency" {
++                return Err(agent.throw_type_error("currency is required with style currency"));
++            }
++        }
++        // 5. Else,
++        Some(c) => {
++            // a. If IsWellFormedCurrencyCode(_currency_) is *false*, throw a *RangeError* exception.
++            if !is_well_formed_currency_code(c) {
++                return Err(agent.throw_range_error("invalid currency code"));
++            }
++        }
++    }
++    // 6. Let _currencyDisplay_ be ? GetOption(_options_, *"currencyDisplay"*, ~string~, « *"code"*, *"symbol"*, *"narrowSymbol"*, *"name"* », *"symbol"*).
++    let currency_display = get_string_option(
++        agent,
++        options,
++        "currencyDisplay",
++        &["code", "symbol", "narrowSymbol", "name"],
++        Some("symbol"),
++    )?;
++    // 7. Let _currencySign_ be ? GetOption(_options_, *"currencySign"*, ~string~, « *"standard"*, *"accounting"* », *"standard"*).
++    let currency_sign = get_string_option(
++        agent,
++        options,
++        "currencySign",
++        &["standard", "accounting"],
++        Some("standard"),
++    )?;
++    // 8. Let _unit_ be ? GetOption(_options_, *"unit"*, ~string~, ~empty~, *undefined*).
++    let unit = get_string_option(agent, options, "unit", &[], None)?;
++    match &unit {
++        // 9. If _unit_ is *undefined*, then
++        None => {
++            // a. If _style_ is *"unit"*, throw a *TypeError* exception.
++            if style == "unit" {
++                return Err(agent.throw_type_error("unit is required with style unit"));
++            }
++        }
++        // 10. Else,
++        Some(u) => {
++            // a. If IsWellFormedUnitIdentifier(_unit_) is *false*, throw a *RangeError* exception.
++            if !is_well_formed_unit_identifier(u) {
++                return Err(agent.throw_range_error("invalid unit"));
++            }
++        }
++    }
++    // 11. Let _unitDisplay_ be ? GetOption(_options_, *"unitDisplay"*, ~string~, « *"short"*, *"narrow"*, *"long"* », *"short"*).
++    let unit_display = get_string_option(
++        agent,
++        options,
++        "unitDisplay",
++        &["short", "narrow", "long"],
++        Some("short"),
++    )?;
++    // 12. If _style_ is *"currency"*, then
++    if style == "currency" {
++        // a. Set _intlObj_.[[Currency]] to the ASCII-uppercase of _currency_.
++        intl_obj.currency = currency.map(|c| c.to_ascii_uppercase());
++        // b. Set _intlObj_.[[CurrencyDisplay]] to _currencyDisplay_.
++        intl_obj.currency_display = currency_display;
++        // c. Set _intlObj_.[[CurrencySign]] to _currencySign_.
++        intl_obj.currency_sign = currency_sign;
++    }
++    // 13. If _style_ is *"unit"*, then
++    if style == "unit" {
++        // a. Set _intlObj_.[[Unit]] to _unit_.
++        intl_obj.unit = unit;
++        // b. Set _intlObj_.[[UnitDisplay]] to _unitDisplay_.
++        intl_obj.unit_display = unit_display;
++    }
++    // 14. Return ~unused~.
++    Ok(())
++}
++
++/// SetNumberFormatDigitOptions ( _intlObj_, _options_, _mnfdDefault_, _mxfdDefault_, _notation_ )
++pub(crate) fn set_number_format_digit_options(
++    agent: &mut Agent,
++    intl_obj: &mut NumberFormatSlots,
++    options: Object,
++    mnfd_default: u32,
++    mut mxfd_default: u32,
++    notation: &str,
++) -> JsResult<()> {
++    // 1. Let _mnid_ be ? GetNumberOption(_options_, *"minimumIntegerDigits"*, 1, 21, 1).
++    let mnid = get_number_option(agent, options, "minimumIntegerDigits", 1.0, 21.0, Some(1.0))?;
++    // 2. Let _mnfd_ be ? Get(_options_, *"minimumFractionDigits"*).
++    let key = agent.key("minimumFractionDigits");
++    let mnfd = ops::get(agent, options, key)?;
++    // 3. Let _mxfd_ be ? Get(_options_, *"maximumFractionDigits"*).
++    let key = agent.key("maximumFractionDigits");
++    let mxfd = ops::get(agent, options, key)?;
++    // 4. Let _mnsd_ be ? Get(_options_, *"minimumSignificantDigits"*).
++    let key = agent.key("minimumSignificantDigits");
++    let mnsd = ops::get(agent, options, key)?;
++    // 5. Let _mxsd_ be ? Get(_options_, *"maximumSignificantDigits"*).
++    let key = agent.key("maximumSignificantDigits");
++    let mxsd = ops::get(agent, options, key)?;
++    // 6. Set _intlObj_.[[MinimumIntegerDigits]] to _mnid_.
++    intl_obj.minimum_integer_digits = mnid.unwrap_or(1.0) as u32;
++    // 7. Let _roundingIncrement_ be ? GetNumberOption(_options_, *"roundingIncrement"*, 1, 5000, 1).
++    let rounding_increment =
++        get_number_option(agent, options, "roundingIncrement", 1.0, 5000.0, Some(1.0))?
++            .unwrap_or(1.0) as u32;
++    // 8. If _roundingIncrement_ is not in « 1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000 », throw a *RangeError* exception.
++    if ![
++        1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000,
++    ]
++    .contains(&rounding_increment)
++    {
++        return Err(agent.throw_range_error("invalid roundingIncrement"));
++    }
++    // 9. Let _roundingMode_ be ? GetOption(_options_, *"roundingMode"*, ~string~, « *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, *"halfEven"* », *"halfExpand"*).
++    let rounding_mode = get_string_option(
++        agent,
++        options,
++        "roundingMode",
++        &[
++            "ceil",
++            "floor",
++            "expand",
++            "trunc",
++            "halfCeil",
++            "halfFloor",
++            "halfExpand",
++            "halfTrunc",
++            "halfEven",
++        ],
++        Some("halfExpand"),
++    )?
++    .unwrap_or_default();
++    // 10. Let _roundingPriority_ be ? GetOption(_options_, *"roundingPriority"*, ~string~, « *"auto"*, *"morePrecision"*, *"lessPrecision"* », *"auto"*).
++    let rounding_priority = get_string_option(
++        agent,
++        options,
++        "roundingPriority",
++        &["auto", "morePrecision", "lessPrecision"],
++        Some("auto"),
++    )?
++    .unwrap_or_default();
++    // 11. Let _trailingZeroDisplay_ be ? GetOption(_options_, *"trailingZeroDisplay"*, ~string~, « *"auto"*, *"stripIfInteger"* », *"auto"*).
++    let trailing_zero_display = get_string_option(
++        agent,
++        options,
++        "trailingZeroDisplay",
++        &["auto", "stripIfInteger"],
++        Some("auto"),
++    )?
++    .unwrap_or_default();
++    // 12. NOTE: All fields required by SetNumberFormatDigitOptions have now been read from _options_. The remainder of this AO interprets the options and may throw exceptions.
++    // 13. If _roundingIncrement_ is not 1, set _mxfdDefault_ to _mnfdDefault_.
++    if rounding_increment != 1 {
++        mxfd_default = mnfd_default;
++    }
++    // 14. Set _intlObj_.[[RoundingIncrement]] to _roundingIncrement_.
++    intl_obj.rounding_increment = rounding_increment;
++    // 15. Set _intlObj_.[[RoundingMode]] to _roundingMode_.
++    intl_obj.rounding_mode = rounding_mode;
++    // 16. Set _intlObj_.[[TrailingZeroDisplay]] to _trailingZeroDisplay_.
++    intl_obj.trailing_zero_display = trailing_zero_display;
++    // 17. If _mnsd_ is *undefined* and _mxsd_ is *undefined*, let _hasSd_ be *false*. Otherwise, let _hasSd_ be *true*.
++    let has_sd = !(matches!(mnsd, Value::Undefined) && matches!(mxsd, Value::Undefined));
++    // 18. If _mnfd_ is *undefined* and _mxfd_ is *undefined*, let _hasFd_ be *false*. Otherwise, let _hasFd_ be *true*.
++    let has_fd = !(matches!(mnfd, Value::Undefined) && matches!(mxfd, Value::Undefined));
++    // 19. Let _needSd_ be *true*.
++    let mut need_sd = true;
++    // 20. Let _needFd_ be *true*.
++    let mut need_fd = true;
++    // 21. If _roundingPriority_ is *"auto"*, then
++    if rounding_priority == "auto" {
++        // a. Set _needSd_ to _hasSd_.
++        need_sd = has_sd;
++        // b. If _needSd_ is *true*, or _hasFd_ is *false* and _notation_ is *"compact"*, then
++        if need_sd || (!has_fd && notation == "compact") {
++            // i. Set _needFd_ to *false*.
++            need_fd = false;
++        }
++    }
++    // 22. If _needSd_ is *true*, then
++    if need_sd {
++        // a. If _hasSd_ is *true*, then
++        if has_sd {
++            // i. Set _intlObj_.[[MinimumSignificantDigits]] to ? DefaultNumberOption(_mnsd_, 1, 21, 1).
++            let min =
++                default_number_option(agent, mnsd, 1.0, 21.0, Some(1.0))?.unwrap_or(1.0) as u32;
++            intl_obj.minimum_significant_digits = Some(min);
++            // ii. Set _intlObj_.[[MaximumSignificantDigits]] to ? DefaultNumberOption(_mxsd_, _intlObj_.[[MinimumSignificantDigits]], 21, 21).
++            let max = default_number_option(agent, mxsd, min as f64, 21.0, Some(21.0))?
++                .unwrap_or(21.0) as u32;
++            intl_obj.maximum_significant_digits = Some(max);
++        } else {
++            // b. Else,
++            // i. Set _intlObj_.[[MinimumSignificantDigits]] to 1.
++            intl_obj.minimum_significant_digits = Some(1);
++            // ii. Set _intlObj_.[[MaximumSignificantDigits]] to 21.
++            intl_obj.maximum_significant_digits = Some(21);
++        }
++    }
++    // 23. If _needFd_ is *true*, then
++    if need_fd {
++        // a. If _hasFd_ is *true*, then
++        if has_fd {
++            // i. Set _mnfd_ to ? DefaultNumberOption(_mnfd_, 0, 100, *undefined*).
++            let mut mnfd = default_number_option(agent, mnfd, 0.0, 100.0, None)?.map(|v| v as u32);
++            // ii. Set _mxfd_ to ? DefaultNumberOption(_mxfd_, 0, 100, *undefined*).
++            let mut mxfd = default_number_option(agent, mxfd, 0.0, 100.0, None)?.map(|v| v as u32);
++            match (mnfd, mxfd) {
++                // iii. If _mnfd_ is *undefined*, set _mnfd_ to min(_mnfdDefault_, _mxfd_).
++                (None, Some(x)) => mnfd = Some(mnfd_default.min(x)),
++                // iv. Else if _mxfd_ is *undefined*, set _mxfd_ to max(_mxfdDefault_, _mnfd_).
++                (Some(n), None) => mxfd = Some(mxfd_default.max(n)),
++                // v. Else if _mnfd_ is greater than _mxfd_, throw a *RangeError* exception.
++                (Some(n), Some(x)) if n > x => {
++                    return Err(agent.throw_range_error(
++                        "minimumFractionDigits is greater than maximumFractionDigits",
++                    ));
++                }
++                _ => {}
++            }
++            // vi. Set _intlObj_.[[MinimumFractionDigits]] to _mnfd_.
++            intl_obj.minimum_fraction_digits = mnfd;
++            // vii. Set _intlObj_.[[MaximumFractionDigits]] to _mxfd_.
++            intl_obj.maximum_fraction_digits = mxfd;
++        } else {
++            // b. Else,
++            // i. Set _intlObj_.[[MinimumFractionDigits]] to _mnfdDefault_.
++            intl_obj.minimum_fraction_digits = Some(mnfd_default);
++            // ii. Set _intlObj_.[[MaximumFractionDigits]] to _mxfdDefault_.
++            intl_obj.maximum_fraction_digits = Some(mxfd_default);
++        }
++    }
++    // 24. If _needSd_ is *false* and _needFd_ is *false*, then
++    if !need_sd && !need_fd {
++        // a. Set _intlObj_.[[MinimumFractionDigits]] to 0.
++        intl_obj.minimum_fraction_digits = Some(0);
++        // b. Set _intlObj_.[[MaximumFractionDigits]] to 0.
++        intl_obj.maximum_fraction_digits = Some(0);
++        // c. Set _intlObj_.[[MinimumSignificantDigits]] to 1.
++        intl_obj.minimum_significant_digits = Some(1);
++        // d. Set _intlObj_.[[MaximumSignificantDigits]] to 2.
++        intl_obj.maximum_significant_digits = Some(2);
++        // e. Set _intlObj_.[[RoundingType]] to ~more-precision~.
++        intl_obj.rounding_type = RoundingType::MorePrecision;
++        // f. Set _intlObj_.[[ComputedRoundingPriority]] to *"morePrecision"*.
++        intl_obj.computed_rounding_priority = "morePrecision".to_string();
++    } else if rounding_priority == "morePrecision" {
++        // 25. Else if _roundingPriority_ is *"morePrecision"*, then
++        // a. Set _intlObj_.[[RoundingType]] to ~more-precision~.
++        intl_obj.rounding_type = RoundingType::MorePrecision;
++        // b. Set _intlObj_.[[ComputedRoundingPriority]] to *"morePrecision"*.
++        intl_obj.computed_rounding_priority = "morePrecision".to_string();
++    } else if rounding_priority == "lessPrecision" {
++        // 26. Else if _roundingPriority_ is *"lessPrecision"*, then
++        // a. Set _intlObj_.[[RoundingType]] to ~less-precision~.
++        intl_obj.rounding_type = RoundingType::LessPrecision;
++        // b. Set _intlObj_.[[ComputedRoundingPriority]] to *"lessPrecision"*.
++        intl_obj.computed_rounding_priority = "lessPrecision".to_string();
++    } else if has_sd {
++        // 27. Else if _hasSd_ is *true*, then
++        // a. Set _intlObj_.[[RoundingType]] to ~significant-digits~.
++        intl_obj.rounding_type = RoundingType::SignificantDigits;
++        // b. Set _intlObj_.[[ComputedRoundingPriority]] to *"auto"*.
++        intl_obj.computed_rounding_priority = "auto".to_string();
++    } else {
++        // 28. Else,
++        // a. Set _intlObj_.[[RoundingType]] to ~fraction-digits~.
++        intl_obj.rounding_type = RoundingType::FractionDigits;
++        // b. Set _intlObj_.[[ComputedRoundingPriority]] to *"auto"*.
++        intl_obj.computed_rounding_priority = "auto".to_string();
++    }
++    // 29. If _roundingIncrement_ is not 1, then
++    if rounding_increment != 1 {
++        // a. If _intlObj_.[[RoundingType]] is not ~fraction-digits~, throw a *TypeError* exception.
++        if intl_obj.rounding_type != RoundingType::FractionDigits {
++            return Err(
++                agent.throw_type_error("roundingIncrement requires fraction digits rounding")
++            );
++        }
++        // b. If _intlObj_.[[MaximumFractionDigits]] is not _intlObj_.[[MinimumFractionDigits]], throw a *RangeError* exception.
++        if intl_obj.maximum_fraction_digits != intl_obj.minimum_fraction_digits {
++            return Err(agent.throw_range_error(
++                "roundingIncrement requires equal minimum and maximum fraction digits",
++            ));
++        }
++    }
++    // 30. Return ~unused~.
++    Ok(())
++}
+diff --git a/crates/kahvi-cli/src/main.rs b/crates/kahvi-cli/src/main.rs
+index 1f6ccdc..77a95bd 100644
+--- a/crates/kahvi-cli/src/main.rs
++++ b/crates/kahvi-cli/src/main.rs
+@@ -40,7 +40,8 @@ fn parse_args() -> Result<Args, String> {
+             _ => return Err("only one script file may be given".into()),
+         }
+     }
+-    let file = file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
++    let file =
++        file.ok_or("usage: kahvi [--prelude FILE]... [--module] [--parse-only] [--no-intl] FILE")?;
+     Ok(Args {
+         preludes,
+         module,

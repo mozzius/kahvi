@@ -1,0 +1,34 @@
+{
+  "ticket": "I-number-format",
+  "base": "f7ad37792420723006f41d8d233699a376a47616",
+  "head": "724449a262c982acede45b209a1accf70fcda41d",
+  "reject": [
+    "files outside scope: crates/kahvi-cli/src/main.rs"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_number_format/constructor.rs",
+      "added": 173,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_number_format/prototype_resolved_options.rs",
+      "added": 127,
+      "removed": 75
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_number_format.rs",
+      "added": 493,
+      "removed": 4
+    },
+    {
+      "path": "crates/kahvi-cli/src/main.rs",
+      "added": 2,
+      "removed": 1
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "decision": "reject"
+}

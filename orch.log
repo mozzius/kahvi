@@ -5625,3 +5625,39 @@ test262 at last merge: 82439/82439 runs passing
 [14:09:42] building trusted runner; integration branch stack, 4 slots
 [14:09:53] stack: pushed stack/0063 as #101 with arch-hermes-internal
 [14:16:25] stack: stack/0063 (#101) green: 82439/82439 passing, +0
+[14:16:28] nothing left to do
+tickets: blocked 2, done 429, open 3
+  B-iterator-prototype-chunks open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-includes open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-windows open             tier=haiku   attempts=2 strikes=0
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+attempts: 541  merged: 412  spend: $25.48 (workers $10.36, verifier $15.12)  new test262 passes: 19820  ($0.001 per pass)
+  haiku   accept       410
+  haiku   blocked      6
+  haiku   gate-reject  42
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       17
+  sonnet  accept       12
+  sonnet  blocked      1
+  sonnet  gate-reject  27
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+plan usage at last run: allowed; five_hour 70% (resets Thu 12:20), seven_day 36% (resets Thu 09:00)
+test262 at last merge: 82439/82439 runs passing
+[14:39:31] building trusted runner; integration branch stack, 4 slots
+[14:39:31] I-number-format: attempt on slot 3 with sonnet
+[14:39:31] I-date-time-format: attempt on slot 2 with sonnet
+[14:39:31] I-locale: attempt on slot 1 with sonnet
+[14:39:31] I-collator: attempt on slot 0 with sonnet
+[14:39:32] stack: stack/0061 (#98) merged into main
+[14:39:33] stack: stack/0062 (#99) merged into stack/0061
+[14:39:33] stack: stack/0063 (#101) merged into stack/0062
+[14:39:41] stack: pushed stack/0064 as #102 with arch-intl
+[14:40:42] stack: stack/0064 (#102) red: CI failed: fmt, clippy, test
+[14:40:45] stack: architect branch arch-intl is red in CI (CI failed: fmt, clippy, test); fix it and land again
+[14:41:50] stack: pushed stack/0065 as #103 with arch-intl
+[14:45:29] pausing until 2026-10-15 17:21: five_hour window at 91% (swarm cap 75%)
+[14:45:30] I-number-format: attempt 542 finished ($0.578, 31 turns)
+[14:45:31] I-number-format: gate rejected attempt 542: files outside scope: crates/kahvi-cli/src/main.rs
