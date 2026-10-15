@@ -823,6 +823,38 @@ pub unsafe extern "C" fn kahvi_array_buffer_new(
     }
 }
 
+/// A new ArrayBuffer over `len` bytes of host memory at `data`, which must
+/// stay valid until `finalize(context)` runs: when the buffer is detached
+/// or collected, or the runtime is freed.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_array_buffer_new_external(
+    rt: *mut KahviRuntime,
+    data: *mut u8,
+    len: usize,
+    context: *mut c_void,
+    finalize: KahviFinalizer,
+    out: *mut KahviValue,
+) -> bool {
+    use kahvi_core::object::typed_array::{DataBlock, ExternalBlock, array_buffer_data_mut};
+    let release = Finalize {
+        finalize,
+        context: context as usize,
+    };
+    unsafe {
+        op(rt, out, |agent| {
+            let ctor = agent.intrinsic("%ArrayBuffer%");
+            let buffer =
+                kahvi_core::object::typed_array::allocate_array_buffer(agent, ctor, 0.0, None)?;
+            // SAFETY: the caller keeps `data` valid until `finalize` runs.
+            let block = ExternalBlock::new(data, len, Box::new(move || drop(release)));
+            array_buffer_data_mut(agent, buffer)
+                .expect("an ArrayBuffer")
+                .data = Some(DataBlock::External(block));
+            Ok(Value::Object(buffer))
+        })
+    }
+}
+
 /// An ArrayBuffer's bytes (valid until the buffer is detached, resized or
 /// collected); NULL if `v` is not an attached ArrayBuffer.
 #[unsafe(no_mangle)]
