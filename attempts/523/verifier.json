@@ -1,0 +1,134 @@
+{
+  "duration_api_ms": 6091,
+  "stop_reason": "tool_use",
+  "session_id": "34e570c5-9267-465d-80d3-c55658597822",
+  "total_cost_usd": 0.00150247,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3305,
+    "cache_read_input_tokens": 4127,
+    "output_tokens": 1097,
+    "output_tokens_details": {
+      "thinking_tokens": 690
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3305,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1097,
+        "cache_read_input_tokens": 4127,
+        "cache_creation_input_tokens": 3305,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3305
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The change implements Atomics.pause in its stub file. Step 1 calls std::hint::spin_loop(), which is a CPU hint with no observable effect, as the spec permits. Step 2 returns Ok(Value::Undefined). The spec defines no arguments and no observable operations, so ignoring this/args/new_target matches the spec. The stub's not-implemented error is removed, and the diff touches only the in-scope file. No special-casing, made-up values, or swallowed errors are present. Clippy and lint are clean, and the gate reports +2 passing tests with no regressions.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The change implements Atomics.pause in its stub file. Step 1 calls std::hint::spin_loop(), which is a CPU hint with no observable effect, as the spec permits. Step 2 returns Ok(Value::Undefined). The spec defines no arguments and no observable operations, so ignoring this/args/new_target matches the spec. The stub's not-implemented error is removed, and the diff touches only the in-scope file. No special-casing, made-up values, or swallowed errors are present. Clippy and lint are clean, and the gate reports +2 passing tests with no regressions.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 4641,
+  "type": "result",
+  "duration_ms": 5984,
+  "uuid": "e1f6da7e-576b-4b5a-b1f0-451f00036ed9",
+  "ttft_stream_ms": 1202,
+  "time_to_request_ms": 498,
+  "time_to_request_phases_ms": {
+    "other": 21,
+    "system_prompt": 404,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 3,
+    "model_config_wait": 29,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 20,
+  "time_to_request_cpu_ms": 393,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 245,
+  "process_anon_mib_turn_start": 128,
+  "process_rss_mib_result": 236,
+  "process_anon_mib_result": 116,
+  "process_peak_rss_mib": 251,
+  "process_cpu_ms_turn": 785,
+  "process_wall_ms_turn": 5983,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 8,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1203,
+  "time_to_request_from_spawn_ms": 1741800,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050812158.5017,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.22,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

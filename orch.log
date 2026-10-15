@@ -5298,3 +5298,5 @@ test262 at last merge: 81183/81183 runs passing
 [07:53:14] B-atomics-pause: attempt 523 finished ($0.004, 11 turns)
 [07:53:17] B-atomics-store: attempt 524 finished ($0.009, 13 turns)
 [07:53:29] B-atomics-or: verifier: accept The diff is a 9+/4- change to crates/kahvi-builtins/src/atomics/or.rs only. It replaces the not-implemented stub with the two spec steps as comments a
+[07:53:33] B-atomics-sub: attempt on slot 2 with haiku
+[07:53:45] B-atomics-pause: verifier: accept The change implements Atomics.pause in its stub file. Step 1 calls std::hint::spin_loop(), which is a CPU hint with no observable effect, as the spec 

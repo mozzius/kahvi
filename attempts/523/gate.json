@@ -1,0 +1,32 @@
+{
+  "ticket": "B-atomics-pause",
+  "base": "813ed092be1739d842a07545fc8b2c354999426e",
+  "head": "95afd3db40cc2b95fd528edb62239fbb4e24cdcc",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/pause.rs",
+      "added": 5,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 10,
+    "before": 8,
+    "after": 10,
+    "new_passes": 2,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

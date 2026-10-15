@@ -1,0 +1,39 @@
+{
+  "ticket": "B-atomics-store",
+  "base": "d4f8fbd0eb4b44155a62e9b353e695e0bf321c78",
+  "head": "a3b0340a6e2f820fd7e40dc1436330633d859f39",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/store.rs",
+      "added": 28,
+      "removed": 2
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/atomics/store.rs",
+      "line": 30,
+      "rule": "unreachable! must be truly unreachable",
+      "text": "unreachable!(\"validated by ValidateAtomicAccessOnIntegerTypedArray\")"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 32,
+    "before": 8,
+    "after": 32,
+    "new_passes": 24,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
