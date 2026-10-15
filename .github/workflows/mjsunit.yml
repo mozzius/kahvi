@@ -35,13 +35,8 @@ jobs:
       - name: Update README
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('mjs-results.md') != ''
         run: |
-          python3 .github/scripts/readme_section.py mjsunit mjs-results.md README.md
-          git diff --quiet README.md && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git commit -m "README: update mjsunit results [skip ci]" README.md
-          git pull --rebase origin main
-          git push origin HEAD:main
+          .github/scripts/readme_commit.sh "README: update mjsunit results [skip ci]" \
+            .github/scripts/readme_results.py mjsunit mjs-results.json README.md
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

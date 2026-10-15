@@ -203,10 +203,5 @@ jobs:
       - name: Update README pass rate
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('t262-results/summary.json') != ''
         run: |
-          python3 .github/scripts/readme_pass_rate.py t262-results/summary.json README.md
-          git diff --quiet README.md && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git commit -m "README: update test262 results [skip ci]" README.md
-          git pull --rebase origin main
-          git push origin HEAD:main
+          .github/scripts/readme_commit.sh "README: update test262 results [skip ci]" \
+            .github/scripts/readme_results.py test262 t262-results/summary.json README.md

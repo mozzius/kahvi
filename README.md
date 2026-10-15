@@ -5,38 +5,20 @@ A JavaScript engine written in Rust, built mostly by a swarm of cheap models
 progress against the official [test262](https://github.com/tc39/test262)
 conformance suite.
 
-<!-- test262:start -->
+Every suite's CI job on main rewrites its own row: test262 is the only judge of
+correctness, mjsunit is V8's own tests run under the `kahvi` CLI (`./mjs`), and
+realworld runs npm packages and programs under `kahvi-run`, checked against
+Node (`./rw`).
 
-| test262 | |
-|---|--:|
-| **Pass rate** | **100.00%** |
-| Passing runs | 81,183 / 81,183 |
-| Not implemented | 0 |
-| Test files | 48,751 |
+<!-- results:start -->
 
-<!-- test262:end -->
+| Suite | Passing | Pass rate | |
+|---|--:|--:|---|
+| [test262](https://github.com/tc39/test262) | 81,183 / 81,183 | 100.00% | 48,751 files, 0 not implemented |
+| [mjsunit](mjsunit/run.py) | 5,187 / 5,534 | 93.73% | V8 [758f9aba526b](https://chromium.googlesource.com/v8/v8/+/758f9aba526bfbd1183e18f420096e5b4cf9df07/test/mjsunit); 4,319 skipped (need d8 or V8 internals) |
+| [realworld](realworld/README.md) | 17 / 17 | 100.00% | npm packages and programs, checked byte for byte against Node |
 
-<!-- realworld:start -->
-
-npm packages and programs run under `kahvi-run`, each checked byte for byte against Node ([realworld/](realworld/README.md), `./rw`).
-
-| Real-world packages | |
-|---|--:|
-| **Passing** | **17 / 17** |
-| Cases | acorn, data, date-fns, decimal, diff, immer, immutable, js-yaml, lisp, lodash, marked, meriyah, prettier, raytracer, terser, yaml, zod |
-
-<!-- realworld:end -->
-
-<!-- mjsunit:start -->
-
-V8's mjsunit tests at [758f9aba526b](https://chromium.googlesource.com/v8/v8/+/758f9aba526bfbd1183e18f420096e5b4cf9df07/test/mjsunit), run under the `kahvi` CLI; tests that need d8 or V8 internals are skipped with a reason ([mjsunit/](mjsunit/run.py), `./mjs`).
-
-| mjsunit | |
-|---|--:|
-| **Passing** | **5187 / 5534** |
-| Skipped | 4319 |
-
-<!-- mjsunit:end -->
+<!-- results:end -->
 
 ## How it works
 
