@@ -142,6 +142,7 @@ def fetch():
         git("sparse-checkout", "set", "test/mjsunit")
     print(f"mjs: fetching V8 test/mjsunit at {commit[:12]}", flush=True)
     git = lambda *a: subprocess.run(["git", *a], cwd=src, check=True, stdout=subprocess.DEVNULL)
+    git("remote", "set-url", "origin", repo)
     git("fetch", "-q", "--depth", "1", "--filter=blob:none", "origin", commit)
     git("checkout", "-q", "--detach", commit)
     return src, commit
