@@ -2,4 +2,6 @@
 
 pub(crate) mod constructor;
 pub(crate) mod is_error;
+pub(crate) mod prototype_get_stack;
+pub(crate) mod prototype_set_stack;
 pub(crate) mod prototype_to_string;
