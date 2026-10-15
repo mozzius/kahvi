@@ -265,7 +265,9 @@ fn evaluate_body(
         (e.code.clone(), e.private_environment.clone())
     };
     let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
-    frame.args = args.to_vec();
+    frame.stack = agent.spare_vec();
+    frame.args = agent.spare_vec();
+    frame.args.extend_from_slice(args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
     if code.is_async && !code.is_generator {
@@ -275,6 +277,10 @@ fn evaluate_body(
     }
     decl?;
     let result = run_frame(agent, &mut frame)?;
+    if !code.is_generator {
+        agent.give_back_vec(std::mem::take(&mut frame.stack));
+        agent.give_back_vec(std::mem::take(&mut frame.args));
+    }
     if code.is_generator {
         // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
         let g = if code.is_async {

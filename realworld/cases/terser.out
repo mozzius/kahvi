@@ -1,0 +1,6 @@
+function n(r){return r<2?r:n(r-1)+n(r-2)}export function run(r){const t=[];for(let o=0;o<r;o++)t.push(n(o));return t.join(",")+" 10!"}
+map: AACA,SAASA,EAAIC,GAAK,OAAOA,EAAI,EAAIA,EAAID,EAAIC,EAAI,GAAKD,EAAIC,EAAI,EAAI,QAEvD,SAASC,IAAIC,GAClB,MAAMC,EAAU,GAChB,IAAK,IAAIC,EAAI,EAAGA,EAAIF,EAAOE,IAAmBD,EAAQE,KAAKN,EAAIK,IAC/D,OAAOD,EAAQG,KAAK,KAAbH,MACT
+import{a as b,default as c}from"./x.js";export const answer=6*7;export default class Point extends Base{#x=0;static count=0;constructor(x,y=1,...rest){super();this.#x=x;this.y=y??rest[0]}get x(){return this.#x}static{Point.count++}*[Symbol.iterator](){yield this.#x;yield*[this.y]}async load(url){for await(const chunk of fetchAll(url)){this.y+=chunk?.length??0}}}const re=/(?<year>\d{4})-(?<month>\d{2})/gu;const t=tag`a${1+2}b${`nested ${3}`}`;label:for(let i=0,j=10;i<j;i++,j--){if(i%2)continue label;else break label}const{p:p,q:[r,,s=5]=[],...others}=obj;x||=1;y&&=2;z??=3;n=1000000n**2n;try{throw new Error("e")}catch{void 0}finally{delete obj[key]}switch(typeof v){case"number":v++;break;default:v=!v}
+large minified length: 70913
+large minified hash: f1c52785
+error: JS_Parse_Error Unexpected token: punc (()

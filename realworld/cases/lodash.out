@@ -1,0 +1,18 @@
+groupBy: {"engine":[{"name":"ada","age":36,"team":"engine"},{"name":"linus","age":28,"team":"engine"}],"compiler":[{"name":"grace","age":45,"team":"compiler"}],"runtime":[{"name":"barbara","age":52,"team":"runtime"}]}
+sortBy: ["grace","ada","linus","barbara"]
+partition: [["grace","barbara"],["ada","linus"]]
+chunk: [[0,3,6],[9,12,15],[18]]
+zipObject: {"a":1,"b.c":2,"d":3}
+uniqBy: [2.1,1.2,3.4]
+intersectionWith: [{"x":2}]
+cloneDeep equal: [true,true,true,0,"/x/gi"]
+merge: {"a":[{"b":2,"c":3},{"d":4,"e":5}]}
+set/get: [{"x":[{"y":{"z":5}}]},5,"default",true]
+strings: ["fooBarBazQux","foo-bar-baz","angstrom_unit","Foo Bar",["fred","barney","pebbles"],"_-_abc_-_","&lt;a href=&#39;x&#39;&gt;&amp;&lt;/a&gt;","hi-diddly-ho there..."]
+memoize fib(80): 23416728348467684
+template: <li>fred</li><li>&lt;b&gt;barney&lt;/b&gt;</li> total=2
+debounce is function: function
+flow: 21
+countBy: {"3":2,"5":1}
+orderBy: [52,45,36,28]
+isEqual: [true,true,false]

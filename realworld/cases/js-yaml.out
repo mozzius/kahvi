@@ -1,0 +1,19 @@
+load: {"server":{"host":"example.org","ports":[80,443],"tls":{"cert":"/etc/c.pem","key":"/etc/k.pem"}},"users":[{"name":"ada","roles":["admin"]},{"name":"grace","roles":[]}],"when":"2020-02-02","octal":15}
+json schema: {"a":"2020-02-02","b":"yes"}
+nested:
+    list:
+        - 1
+        -   - 2
+            - 3
+        -   a: b
+    'n': -0.5
+    quoted: 'yes'
+    text: |
+        multi
+        line
+
+- {a: 1, b: [1, 2]}
+- plain
+
+error: YAMLException deficient indentation 1:0
+loadAll: [1,[2],{"c":3}]

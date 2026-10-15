@@ -87,6 +87,10 @@ pub fn validate(pattern: &[u16], flags: Flags) -> Result<(), Error> {
     parser::parse_pattern(&pattern_chars(pattern, rer.either_unicode()), rer).map(|_| ())
 }
 
+/// The span of the whole match and of each group (`None` for a group that
+/// did not participate).
+pub type Captures = Vec<Option<(usize, usize)>>;
+
 impl Regex {
     /// [[RegExpRecord]].[[CapturingGroupsCount]]
     pub fn group_count(&self) -> usize {
@@ -105,15 +109,62 @@ impl Regex {
         if index > input.len() {
             return None;
         }
-        let mut m = vm::Matcher::new(&self.program, input);
-        if !m.match_at(index) {
-            return None;
+        self.search(input, index, None).map(|(_, caps)| caps)
+    }
+
+    /// The matcher applied at `index` and then, until it succeeds, at each
+    /// position after it that RegExpBuiltinExec's loop would try (the next
+    /// code unit, or the next code point when `full_unicode`), up to the
+    /// end of the input: the position it succeeded at and the spans.
+    pub fn search_from(
+        &self,
+        input: &[u16],
+        index: usize,
+        full_unicode: bool,
+    ) -> Option<(usize, Captures)> {
+        self.search(input, index, Some(full_unicode))
+    }
+
+    /// One start position (`advance` is `None`), or a search.
+    fn search(
+        &self,
+        input: &[u16],
+        mut index: usize,
+        advance: Option<bool>,
+    ) -> Option<(usize, Captures)> {
+        thread_local! {
+            static SCRATCH: std::cell::Cell<Option<vm::Scratch>> = const { std::cell::Cell::new(None) };
         }
-        Some(
-            m.caps
+        let scratch = SCRATCH.take().unwrap_or_default();
+        let mut m = vm::Matcher::with_scratch(&self.program, input, scratch);
+        let found = loop {
+            if index > input.len() {
+                break None;
+            }
+            if m.match_at(index) {
+                break Some(index);
+            }
+            match advance {
+                None => break None,
+                // AdvanceStringIndex: a surrogate pair is one step in Unicode mode.
+                Some(full_unicode) => {
+                    let pair = full_unicode
+                        && index + 1 < input.len()
+                        && (0xD800..=0xDBFF).contains(&input[index])
+                        && (0xDC00..=0xDFFF).contains(&input[index + 1]);
+                    index += if pair { 2 } else { 1 };
+                }
+            }
+        };
+        let result = found.map(|at| {
+            let caps = m
+                .caps
                 .chunks(2)
                 .map(|c| (c[0] != usize::MAX && c[1] != usize::MAX).then_some((c[0], c[1])))
-                .collect(),
-        )
+                .collect();
+            (at, caps)
+        });
+        SCRATCH.set(Some(m.into_scratch()));
+        result
     }
 }

@@ -199,7 +199,9 @@ pub enum FrameIter {
 #[derive(Debug, Clone, Default)]
 pub struct PendingBody {
     pub env_record: Option<EnvId>,
-    pub param_bindings: Vec<JsString>,
+    /// parameterBindings is the parameter names plus "arguments" when
+    /// this is set (step 22.f).
+    pub arguments_bound: bool,
 }
 
 /// A running (or suspended) function body, script or eval.
@@ -2041,7 +2043,6 @@ impl Trace for Handler {
 impl Trace for PendingBody {
     fn trace(&self, t: &mut Tracer) {
         self.env_record.trace(t);
-        self.param_bindings.trace(t);
     }
 }
 

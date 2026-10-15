@@ -241,7 +241,24 @@ pub(crate) fn regexp_builtin_exec(agent: &mut Agent, r: Object, s: JsString) -> 
         let Some(matcher) = &data.matcher else {
             return Err(agent.throw_type_error("RegExp is not initialized"));
         };
-        match matcher.match_at(agent.str(s), input_index) {
+        let mut result = matcher.match_at(agent.str(s), input_index);
+        if result.is_none() && !sticky {
+            // d.ii and the iterations after it, at once: lastIndex advances by
+            // AdvanceStringIndex(S, lastIndex, fullUnicode) until the matcher
+            // succeeds or lastIndex passes the end (step a).
+            last_index = advance_string_index(agent.str(s), last_index, full_unicode);
+            match matcher.search_from(agent.str(s), last_index as usize, full_unicode) {
+                Some((at, caps)) => {
+                    last_index = at as f64;
+                    result = Some(caps);
+                }
+                None => {
+                    last_index = length as f64 + 1.0;
+                    continue;
+                }
+            }
+        }
+        match result {
             // e. Else, set matchSucceeded to true.
             Some(caps) => {
                 let names: Vec<Option<String>> = (1..caps.len())
