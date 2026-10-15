@@ -55,18 +55,20 @@ pub(crate) fn constructor(
     let resolved_locale = options_resolution.resolved_locale;
     // 7. Set _segmenter_.[[Locale]] to _resolvedLocale_.[[Locale]].
     // 8. Let _granularity_ be ? GetOption(_options_, *"granularity"*, ~string~, « *"grapheme"*, *"word"*, *"sentence"* », *"grapheme"*).
-    let granularity = get_string_option(
+    let Some(granularity) = get_string_option(
         agent,
         options,
         "granularity",
         &["grapheme", "word", "sentence"],
         Some("grapheme"),
     )?
-    .expect("a default");
+    else {
+        return Err(agent.not_implemented("Intl.Segmenter: granularity option has no default"));
+    };
     // 9. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
-    let slots = agent
-        .native_mut::<SegmenterSlots>(segmenter)
-        .expect("created above");
+    let Some(slots) = agent.native_mut::<SegmenterSlots>(segmenter) else {
+        return Err(agent.not_implemented("Intl.Segmenter: lost internal slots"));
+    };
     slots.locale = resolved_locale.locale;
     slots.granularity = granularity;
     // 10. Return _segmenter_.

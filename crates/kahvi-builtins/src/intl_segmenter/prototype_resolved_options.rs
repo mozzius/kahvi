@@ -4,6 +4,8 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::intl_segmenter::SegmenterSlots;
+
 /// Intl.Segmenter.prototype.resolvedOptions
 pub(crate) fn prototype_resolved_options(
     agent: &mut Agent,
@@ -30,6 +32,24 @@ pub(crate) fn prototype_resolved_options(
     // *"locale"* |
     // [[SegmenterGranularity]] |
     // *"granularity"* |
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("Intl.Segmenter.prototype.resolvedOptions"))
+    let _ = (args, new_target);
+    let Some((locale, granularity)) = (match this {
+        Value::Object(o) => agent
+            .native::<SegmenterSlots>(o)
+            .map(|s| (s.locale.clone(), s.granularity.clone())),
+        _ => None,
+    }) else {
+        return Err(agent.throw_type_error(
+            "Intl.Segmenter.prototype.resolvedOptions called on an incompatible receiver",
+        ));
+    };
+    let proto = agent.intrinsic("%Object.prototype%");
+    let options = agent.ordinary_object_create(Some(proto));
+    let locale = agent.string(&locale);
+    let key = agent.key("locale");
+    ops::create_data_property_or_throw(agent, options, key, Value::String(locale))?;
+    let granularity = agent.string(&granularity);
+    let key = agent.key("granularity");
+    ops::create_data_property_or_throw(agent, options, key, Value::String(granularity))?;
+    Ok(Value::Object(options))
 }
