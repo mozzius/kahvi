@@ -19,6 +19,7 @@ long cases many times slower.
   ./rw --record [NAME...]         rewrite NAME.out from Node
   ./rw --update-expected          rewrite expected-pass.txt from this run
   ./rw --json FILE                also write per-case results as JSON
+  ./rw --markdown FILE            also write the summary table (for README.md)
 """
 
 import argparse
@@ -106,6 +107,7 @@ def main():
     ap.add_argument("--record", action="store_true", help="rewrite the .out files from Node")
     ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
     ap.add_argument("--json", metavar="FILE", help="write per-case results to FILE")
+    ap.add_argument("--markdown", metavar="FILE", help="write the summary table to FILE")
     ap.add_argument("names", nargs="*")
     args = ap.parse_args()
 
@@ -159,6 +161,8 @@ def main():
     if args.json:
         Path(args.json).write_text(json.dumps({"engine": engine, "gc_stress": args.gc_stress,
                                                "results": results}, indent=1) + "\n")
+    if args.markdown:
+        Path(args.markdown).write_text(markdown_summary(results, passed, failed))
     if args.update_expected:
         if args.names:
             sys.exit("rw: --update-expected needs a run of every case")
@@ -166,6 +170,18 @@ def main():
         print(f"wrote {EXPECTED.relative_to(ROOT)}")
     elif regressions:
         sys.exit(1)
+
+
+def markdown_summary(results, passed, failed):
+    """The README table: how many cases pass, and which fail and why."""
+    rows = ["| Real-world packages | |", "|---|--:|",
+            f"| **Passing** | **{len(passed)} / {len(results)}** |",
+            f"| Cases | {', '.join(r['name'] for r in results)} |"]
+    for r in failed:
+        rows.append(f"| Failing: {r['name']} | {r['reason'].replace('|', '/')[:120]} |")
+    note = ("npm packages and programs run under `kahvi-run`, each checked byte for byte against Node "
+            "([realworld/](realworld/README.md), `./rw`).")
+    return note + "\n\n" + "\n".join(rows) + "\n"
 
 
 if __name__ == "__main__":

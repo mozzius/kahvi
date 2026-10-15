@@ -103,3 +103,19 @@ jobs:
           git -C results-branch add -A
           git -C results-branch commit -qm "bench: results for ${GITHUB_SHA::10}"
           git -C results-branch push origin bench-results
+      # The latest table also goes in the README, next to test262's.
+      - name: Update README
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          {
+            echo "Benchmarks from the last run on main ($(date -u +%F), Kahvi ${GITHUB_SHA::10}, a GitHub-hosted runner):"
+            echo "median wall time per workload, with each engine's ratio to the baseline in brackets; lower is faster."
+            echo "History and engine versions are on the [bench-results](https://github.com/${GITHUB_REPOSITORY}/tree/bench-results) branch; see [bench/](bench/README.md)."
+            echo
+            sed '$d' bench.md
+          } > bench-readme.md
+          python3 .github/scripts/readme_section.py benchmarks bench-readme.md README.md
+          git diff --quiet README.md && exit 0
+          git commit -m "README: update benchmark results [skip ci]" README.md
+          git pull --rebase origin main
+          git push origin HEAD:main
