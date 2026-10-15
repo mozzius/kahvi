@@ -1,0 +1,20 @@
+{
+  "ticket": "B-iterator-prototype-join",
+  "base": "eec097213a7d27b1ccb915fa5dc58d2e46570dcc",
+  "head": "21193aea7597e2a67504f417d161b71832f5babd",
+  "reject": [
+    "build failed"
+  ],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_join.rs",
+      "added": 67,
+      "removed": 19
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "error[E0614]: type `kahvi_core::Value` cannot be dereferenced\n  --> crates/kahvi-builtins/src/iterator/prototype_join.rs:41:54\n   |\n41 |         let separator_string = ops::to_string(agent, *separator);\n   |                                                      ^^^^^^^^^^ can't be dereferenced\n\nFor more information about this error, try `rustc --explain E0614`.\nerror: could not compile `kahvi-builtins` (lib) due to 1 previous error\n",
+  "decision": "reject"
+}

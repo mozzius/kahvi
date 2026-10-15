@@ -1,0 +1,110 @@
+diff --git a/crates/kahvi-builtins/src/iterator/prototype_join.rs b/crates/kahvi-builtins/src/iterator/prototype_join.rs
+index 6cea8fd..4fb3f5e 100644
+--- a/crates/kahvi-builtins/src/iterator/prototype_join.rs
++++ b/crates/kahvi-builtins/src/iterator/prototype_join.rs
+@@ -4,38 +4,86 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use kahvi_core::ops::IteratorRecord;
++
++use crate::support::iterator_helper::if_abrupt_close_iterator;
++
+ /// Iterator.prototype.join
+ pub(crate) fn prototype_join(
+     agent: &mut Agent,
+     this: Value,
+     args: &[Value],
+-    new_target: Option<Object>,
++    _new_target: Option<Object>,
+ ) -> JsResult<Value> {
++    let separator = args.get_or_undefined(0);
+     // This method converts the values of the iterator to Strings, and then concatenates these Strings, separated by occurrences of the _separator_. If no separator is provided, a single comma is used as the separator.
+     // It performs the following steps when called:
+     //
+     // 1. Let _obj_ be the *this* value.
+     // 2. If _obj_ is not an Object, throw a *TypeError* exception.
++    let Value::Object(obj) = this else {
++        return Err(agent.throw_type_error("Iterator.prototype.join called on a non-object"));
++    };
+     // 3. Let _iterated_ be the Iterator Record { [[Iterator]]: _obj_, [[NextMethod]]: *undefined*, [[Done]]: *false* }.
++    let iterated = IteratorRecord {
++        iterator: obj,
++        next_method: Value::Undefined,
++        done: false,
++    };
+     // 4. If _separator_ is *undefined*, then
+-    //    a. Let _separatorString_ be *","*.
++    let separator_string = if separator.is_undefined() {
++        // a. Let _separatorString_ be *","*.
++        agent.string(",")
++    }
+     // 5. Else,
+-    //    a. Let _separatorString_ be Completion(ToString(_separator_)).
+-    //    b. IfAbruptCloseIterator(_separatorString_, _iterated_).
++    else {
++        // a. Let _separatorString_ be Completion(ToString(_separator_)).
++        let separator_string = ops::to_string(agent, *separator);
++        // b. IfAbruptCloseIterator(_separatorString_, _iterated_).
++        if_abrupt_close_iterator(agent, separator_string, &iterated)?
++    };
+     // 6. Set _iterated_ to ? GetIteratorDirect(_obj_).
+-    // 7. Let _result_ be the empty String.
+-    // 8. Let _first_ be *true*.
+-    // 9. Repeat,
+-    //    a. Let _value_ be ? IteratorStepValue(_iterated_).
+-    //    b. If _value_ is ~done~, return _result_.
+-    //    c. If _first_ is *true*, then
+-    //       i. Set _first_ to *false*.
+-    //    d. Else,
+-    //       i. Set _result_ to the string-concatenation of _result_ and _separatorString_.
+-    //    e. If _value_ is neither *undefined* nor *null*, then
+-    //       i. Let _valueString_ be Completion(ToString(_value_)).
+-    //       ii. IfAbruptCloseIterator(_valueString_, _iterated_).
+-    //       iii. Set _result_ to the string-concatenation of _result_ and _valueString_.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Iterator.prototype.join"))
++    let mut iterated = ops::get_iterator_direct(agent, obj)?;
++    // The separator and the iterator object stay rooted while user code runs.
++    agent.with_roots(
++        &[Value::String(separator_string), Value::Object(obj)],
++        |agent| {
++            // 7. Let _result_ be the empty String.
++            let mut result = agent.string("");
++            // 8. Let _first_ be *true*.
++            let mut first = true;
++            // 9. Repeat,
++            loop {
++                // a. Let _value_ be ? IteratorStepValue(_iterated_).
++                let Some(value) = ops::iterator_step_value(agent, &mut iterated)? else {
++                    // b. If _value_ is ~done~, return _result_.
++                    return Ok(Value::String(result));
++                };
++                // The value and the partial result stay rooted while ToString runs user code.
++                agent.with_roots(&[value, Value::String(result)], |agent| {
++                    // c. If _first_ is *true*, then
++                    if first {
++                        // i. Set _first_ to *false*.
++                        first = false;
++                    }
++                    // d. Else,
++                    else {
++                        // i. Set _result_ to the string-concatenation of _result_ and _separatorString_.
++                        result = agent.concat(result, separator_string);
++                    }
++                    // e. If _value_ is neither *undefined* nor *null*, then
++                    if !value.is_undefined() && !value.is_null() {
++                        // i. Let _valueString_ be Completion(ToString(_value_)).
++                        let value_string = ops::to_string(agent, value);
++                        // ii. IfAbruptCloseIterator(_valueString_, _iterated_).
++                        let value_string =
++                            if_abrupt_close_iterator(agent, value_string, &iterated)?;
++                        // iii. Set _result_ to the string-concatenation of _result_ and _valueString_.
++                        result = agent.concat(result, value_string);
++                    }
++                    Ok(())
++                })?;
++            }
++        },
++    )
+ }
