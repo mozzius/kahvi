@@ -25,6 +25,13 @@ if [ ! -d "$WORK/folly-$FOLLY_TAG" ]; then
     https://github.com/facebook/folly.git "$WORK/folly-$FOLLY_TAG"
   git -C "$WORK/folly-$FOLLY_TAG" sparse-checkout set folly
 fi
+WORKLETS=react-native-worklets@0.13.0
+if [ ! -d "$WORK/worklets/node_modules/react-native-worklets" ]; then
+  rm -rf "$WORK/worklets" && mkdir -p "$WORK/worklets/node_modules"
+  (cd "$WORK/worklets" && npm pack -q "$WORKLETS" >/dev/null && mkdir -p x && tar xzf ./*.tgz -C x \
+    && mv x/package node_modules/react-native-worklets)
+  patch -s -d "$WORK/worklets" -p1 < "react-native/patches/${WORKLETS/@/+}.patch"
+fi
 if [ ! -d "$WORK/fbjni-$FBJNI_TAG" ]; then
   git clone -q --depth 1 --branch "$FBJNI_TAG" \
     https://github.com/facebookincubator/fbjni.git "$WORK/fbjni-$FBJNI_TAG"
@@ -49,4 +56,11 @@ check react-native/android/src/main/cpp/OnLoad.cpp
 # The Apple factory is Objective-C++ only in its #import lines.
 sed 's/^#import/#include/' react-native/apple/RCTKahviInstanceFactory.mm > "$WORK/RCTKahviInstanceFactory.cpp"
 check -Ireact-native/apple "$WORK/RCTKahviInstanceFactory.cpp"
+# react-native-worklets with react-native/patches applied: the files the
+# patch changes.
+WL="$WORK/worklets/node_modules/react-native-worklets/Common/cpp"
+for f in WorkletRuntime HermesProfiling; do
+  check -I"$WL" -I"$RN/ReactCommon/jsiexecutor" -I"$RN/ReactCommon/react/nativemodule/core" \
+    "$WL/worklets/WorkletRuntime/$f.cpp"
+done
 echo "rn: all files compile against React Native $RN_TAG"
