@@ -407,13 +407,75 @@ impl Agent {
     }
 }
 
+/// Native stack a call on a switched-to stack may use (see
+/// [`Agent::native_stack_limit`]); the thread gets a little more.
+const SWITCHED_STACK_LIMIT: usize = 60 << 20;
+
+/// Where a call should run: here, or on a fresh thread with a larger stack.
+enum CallStack {
+    Here,
+    Switch,
+}
+
 fn enter_call(agent: &mut Agent) -> JsResult<()> {
+    match enter_call_or_switch(agent, false)? {
+        CallStack::Here => Ok(()),
+        CallStack::Switch => unreachable!(),
+    }
+}
+
+fn enter_call_or_switch(agent: &mut Agent, may_switch: bool) -> JsResult<CallStack> {
+    // The native stack grows down on every platform kahvi runs on.
+    let marker = 0u8;
+    let sp = std::hint::black_box(&marker) as *const u8 as usize;
+    if agent.call_depth == 0 {
+        agent.stack_base = sp;
+    }
     agent.call_depth += 1;
     if agent.call_depth > MAX_CALL_DEPTH {
         agent.call_depth -= 1;
         return Err(agent.throw_range_error("Maximum call stack size exceeded"));
     }
-    Ok(())
+    let stack_used = agent.stack_base.saturating_sub(sp);
+    if agent.native_stack_limit != 0 && stack_used > agent.native_stack_limit {
+        if may_switch && agent.native_stack_limit < SWITCHED_STACK_LIMIT {
+            return Ok(CallStack::Switch);
+        }
+        agent.call_depth -= 1;
+        return Err(agent.throw_range_error("Maximum call stack size exceeded"));
+    }
+    Ok(CallStack::Here)
+}
+
+/// Runs `f` on a new thread with a large stack while this one waits: the
+/// host's thread stack (React Native's JS thread has 1 MiB) is too small
+/// for deep recursion, and each JavaScript call here takes native stack.
+fn on_large_stack<T: Send>(agent: &mut Agent, f: impl FnOnce(&mut Agent) -> T + Send) -> T {
+    let (base, limit) = (agent.stack_base, agent.native_stack_limit);
+    let wrapper = agent.host_thread_wrapper;
+    let r = std::thread::scope(|s| {
+        let h = std::thread::Builder::new()
+            .name("kahvi-deep".into())
+            .stack_size(SWITCHED_STACK_LIMIT + (4 << 20))
+            .spawn_scoped(s, || {
+                let marker = 0u8;
+                agent.stack_base = std::hint::black_box(&marker) as *const u8 as usize;
+                agent.native_stack_limit = SWITCHED_STACK_LIMIT;
+                let mut f = Some(f);
+                let mut out = None;
+                let mut run = || out = Some((f.take().expect("run once"))(&mut *agent));
+                match wrapper {
+                    Some(w) => w(&mut run),
+                    None => run(),
+                }
+                out.expect("the host thread wrapper must run its argument")
+            })
+            .expect("spawning a thread for a deep call");
+        h.join().unwrap_or_else(|p| std::panic::resume_unwind(p))
+    });
+    agent.stack_base = base;
+    agent.native_stack_limit = limit;
+    r
 }
 
 impl Object {
@@ -433,8 +495,10 @@ impl Object {
         this: Value,
         args: &[Value],
     ) -> JsResult<Value> {
-        enter_call(agent)?;
-        let result = self.call_inner(agent, this, args);
+        let result = match enter_call_or_switch(agent, true)? {
+            CallStack::Here => self.call_inner(agent, this, args),
+            CallStack::Switch => on_large_stack(agent, |agent| self.call_inner(agent, this, args)),
+        };
         agent.call_depth -= 1;
         result
     }

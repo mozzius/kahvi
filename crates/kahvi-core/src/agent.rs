@@ -193,6 +193,14 @@ pub struct Agent {
     pub symbols_wk: WellKnownSymbols,
     pub names: Names,
     pub call_depth: usize,
+    /// The native stack address where the outermost call began (set when
+    /// `call_depth` leaves 0).
+    pub(crate) stack_base: usize,
+    /// How many bytes of native stack calls may use below `stack_base`
+    /// before a RangeError; 0 is no limit beyond [`MAX_CALL_DEPTH`]. Hosts
+    /// that run JavaScript on small thread stacks set it (React Native's
+    /// JS thread on Android has about 1 MiB).
+    pub native_stack_limit: usize,
     pub(crate) installer: Option<IntrinsicsInstaller>,
     /// Unhandled promise rejections the host may report.
     pub rejection_tracker: Vec<(Object, bool)>,
@@ -205,6 +213,11 @@ pub struct Agent {
     /// Host hook: the current time in milliseconds since the epoch (Date.now).
     /// The engine never reads the system clock itself.
     pub host_now: Option<fn() -> f64>,
+    /// Host hook: runs its argument on the current thread, after whatever
+    /// setup the host needs on a thread the engine made (a deep call on a
+    /// larger stack, see `native_stack_limit`), such as attaching it to the
+    /// JVM so host functions can use JNI.
+    pub host_thread_wrapper: Option<fn(&mut dyn FnMut())>,
     /// Host hook: LocalTZA(t, isUTC) (§21.4.1.25), the local time zone
     /// offset in milliseconds. Without it, local time is UTC.
     pub host_local_tza: Option<fn(f64, bool) -> f64>,
@@ -319,6 +332,8 @@ impl Agent {
                 stack_trace_limit: placeholder,
             },
             call_depth: 0,
+            stack_base: 0,
+            native_stack_limit: 0,
             installer: None,
             rejection_tracker: Vec::new(),
             scripts: Vec::new(),
@@ -335,6 +350,7 @@ impl Agent {
             native_states: Default::default(),
             error_stacks: Default::default(),
             host_now: None,
+            host_thread_wrapper: None,
             host_local_tza: None,
         };
         // The common names and well-known symbols live as long as the agent.
