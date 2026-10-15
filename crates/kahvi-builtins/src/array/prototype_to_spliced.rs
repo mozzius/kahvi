@@ -19,7 +19,7 @@ pub(crate) fn prototype_to_spliced(
     let actual_start = to_clamped_index(agent, args.get_or_undefined(0), length)?;
     // 4. Let _insertCount_ be the number of elements in _items_.
     let items = args.get(2..).unwrap_or(&[]);
-    let insert_count = items.len() as f64;
+    let insert_count = items.len() as i128;
     // 5. Let _maxSkipCount_ be _length_ - _actualStart_.
     let max_skip_count = length - actual_start;
     let actual_skip_count = if args.is_empty() {
@@ -37,10 +37,14 @@ pub(crate) fn prototype_to_spliced(
         skip_count.max(0.0).min(max_skip_count)
     };
     // 9. Let _newLength_ be _length_ + _insertCount_ - _actualSkipCount_.
-    let new_length = length + insert_count - actual_skip_count;
+    // These are mathematical values: all three are integers of at most
+    // 2^53 - 1, so the sum is exact in i128 (in f64 it can round down to
+    // 2^53 - 1 and miss step 11).
+    let new_length_exact = length as i128 + insert_count - actual_skip_count as i128;
+    let new_length = new_length_exact as f64;
     // 10. Assert: _newLength_ ≥ 0.
     // 11. If _newLength_ > 2^53 - 1, throw a *TypeError* exception.
-    if new_length > 9_007_199_254_740_991.0 {
+    if new_length_exact > 9_007_199_254_740_991 {
         return Err(agent.throw_type_error("Array.prototype.toSpliced length exceeds 2^53 - 1"));
     }
     // 12. Let _newArray_ be ? ArrayCreate(_newLength_).

@@ -393,6 +393,20 @@ pub fn get_function_realm(agent: &mut Agent, f: Object) -> JsResult<RealmId> {
     }
 }
 
+impl Agent {
+    /// Counts one level of native recursion (a built-in that recurses on
+    /// its input, like JSON.parse) against [`MAX_CALL_DEPTH`], throwing a
+    /// RangeError past it. Pair each success with [`Agent::leave_nested`].
+    pub fn enter_nested(&mut self) -> JsResult<()> {
+        enter_call(self)
+    }
+
+    /// Ends a level begun by [`Agent::enter_nested`].
+    pub fn leave_nested(&mut self) {
+        self.call_depth -= 1;
+    }
+}
+
 fn enter_call(agent: &mut Agent) -> JsResult<()> {
     agent.call_depth += 1;
     if agent.call_depth > MAX_CALL_DEPTH {

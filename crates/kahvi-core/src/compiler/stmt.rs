@@ -614,8 +614,9 @@ impl Compiler<'_> {
                 self.emit(Op::PopHandler);
                 self.emit(Op::Pop);
                 let to_throw = self.emit(Op::Jump(0));
+                // Await popped innerResult, so the handler leaves
+                // [exception, rejection].
                 self.patch(ignore);
-                self.emit(Op::Pop);
                 self.emit(Op::Pop);
                 self.patch(skip);
                 self.patch(to_throw);
