@@ -22,6 +22,11 @@ pub struct ArrayBufferData {
     /// The maximum byte length of a resizable buffer.
     pub max_byte_length: Option<usize>,
     pub detach_key: Value,
+    /// The data block is a Shared Data Block (a SharedArrayBuffer). With one
+    /// agent, a Shared Data Block holds bytes like any Data Block; it is
+    /// never detached. A growable one's [[ArrayBufferByteLengthData]] is the
+    /// data's length, and [[ArrayBufferMaxByteLength]] is `max_byte_length`.
+    pub shared: bool,
 }
 
 /// An Element Type (Table 71).
@@ -178,6 +183,7 @@ pub fn allocate_array_buffer(
             data: Some(Vec::new()),
             max_byte_length: None,
             detach_key: Value::Undefined,
+            shared: false,
         })),
     )?;
     // 5. Let block be ? CreateByteDataBlock(byteLength).
@@ -200,6 +206,54 @@ pub fn allocate_array_buffer(
     Ok(obj)
 }
 
+/// AllocateSharedArrayBuffer(ctor, byteLength [, maxByteLength])
+pub fn allocate_shared_array_buffer(
+    agent: &mut Agent,
+    ctor: Object,
+    byte_length: f64,
+    max_byte_length: Option<f64>,
+) -> JsResult<Object> {
+    // 2-3. If allocatingGrowableBuffer is true and byteLength > maxByteLength, throw a RangeError exception.
+    if let Some(max) = max_byte_length
+        && byte_length > max
+    {
+        return Err(agent.throw_range_error("byte length exceeds the maximum byte length"));
+    }
+    // 5. Let obj be ? OrdinaryCreateFromConstructor(ctor, "%SharedArrayBuffer.prototype%", slots).
+    let obj = ops::ordinary_create_from_constructor(
+        agent,
+        ctor,
+        "%SharedArrayBuffer.prototype%",
+        ObjectKind::ArrayBuffer(Box::new(ArrayBufferData {
+            data: Some(Vec::new()),
+            max_byte_length: None,
+            detach_key: Value::Undefined,
+            shared: true,
+        })),
+    )?;
+    // 6. If allocatingGrowableBuffer is true, let allocationLength be maxByteLength; else byteLength.
+    // 7. Let block be ? CreateSharedByteDataBlock(allocationLength).
+    //    (The block holds byteLength bytes and grows in place up to maxByteLength.)
+    let allocation_length = max_byte_length.unwrap_or(byte_length);
+    if allocation_length > MAX_BYTE_LENGTH {
+        return Err(agent.throw_range_error("shared array buffer allocation failed"));
+    }
+    let block = create_byte_data_block(agent, byte_length)?;
+    let data = array_buffer_data_mut(agent, obj).expect("a SharedArrayBuffer");
+    // 8. Set obj.[[ArrayBufferData]] to block.
+    // 9.b-d / 10.a. [[ArrayBufferByteLengthData]] or [[ArrayBufferByteLength]] is byteLength.
+    data.data = Some(block);
+    // 9.e. Set obj.[[ArrayBufferMaxByteLength]] to maxByteLength.
+    data.max_byte_length = max_byte_length.map(|m| m as usize);
+    // 11. Return obj.
+    Ok(obj)
+}
+
+/// IsSharedArrayBuffer(obj): obj.[[ArrayBufferData]] is a Shared Data Block.
+pub fn is_shared_array_buffer(agent: &Agent, obj: Object) -> bool {
+    array_buffer_data(agent, obj).is_some_and(|d| d.shared)
+}
+
 /// CreateByteDataBlock(size) (§6.2.9.1)
 pub fn create_byte_data_block(agent: &mut Agent, size: f64) -> JsResult<Vec<u8>> {
     // 1. If size > 2^53 - 1, throw a RangeError exception.
@@ -218,6 +272,11 @@ pub fn is_detached_buffer(agent: &Agent, buffer: Object) -> bool {
 
 /// DetachArrayBuffer(arrayBuffer [, key]) (§25.1.3.5)
 pub fn detach_array_buffer(agent: &mut Agent, buffer: Object, key: Value) -> JsResult<()> {
+    // 1. Assert: IsSharedArrayBuffer(arrayBuffer) is false. (A host can ask:
+    //    a Shared Data Block is never detached, so that throws a TypeError.)
+    if is_shared_array_buffer(agent, buffer) {
+        return Err(agent.throw_type_error("a SharedArrayBuffer cannot be detached"));
+    }
     // 3. If SameValue(arrayBuffer.[[ArrayBufferDetachKey]], key) is false, throw a TypeError exception.
     let detach_key = array_buffer_data(agent, buffer)
         .expect("an ArrayBuffer")
@@ -545,8 +604,11 @@ pub fn is_typed_array_fixed_length(agent: &Agent, o: Object) -> bool {
     if d.array_length.is_none() {
         return false;
     }
-    // 2-4. A view of a resizable, non-shared buffer is not fixed-length.
-    is_fixed_length_array_buffer(agent, d.buffer.expect("initialized"))
+    // 2. Let buffer be O.[[ViewedArrayBuffer]].
+    let buffer = d.buffer.expect("initialized");
+    // 3. If IsFixedLengthArrayBuffer(buffer) is false and IsSharedArrayBuffer(buffer) is false, return false.
+    // 4. Return true.
+    is_fixed_length_array_buffer(agent, buffer) || is_shared_array_buffer(agent, buffer)
 }
 
 /// IsValidIntegerIndex(O, index) (§10.4.5.17)

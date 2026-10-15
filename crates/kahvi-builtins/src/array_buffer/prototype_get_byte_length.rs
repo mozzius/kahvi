@@ -15,11 +15,14 @@ pub(crate) fn prototype_get_byte_length(
 ) -> JsResult<Value> {
     // 1. Let O be the this value.
     // 2. Perform ? RequireInternalSlot(O, [[ArrayBufferData]]).
-    // 3. If IsSharedArrayBuffer(O) is true, throw a TypeError exception.
     let o = match this {
         Value::Object(o) if array_buffer_data(agent, o).is_some() => o,
         _ => return Err(agent.throw_type_error("not an ArrayBuffer")),
     };
+    // 3. If IsSharedArrayBuffer(O) is true, throw a TypeError exception.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, o) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4-6. Return 𝔽(O.[[ArrayBufferByteLength]]), which is 0 once detached.
     Ok(Value::Number(array_buffer_byte_length(agent, o) as f64))
 }

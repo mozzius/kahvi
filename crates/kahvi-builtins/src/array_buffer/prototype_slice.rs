@@ -74,7 +74,9 @@ pub(crate) fn prototype_slice(
         }
     };
     // 3. If IsSharedArrayBuffer(_obj_) is *true*, throw a *TypeError* exception.
-    //    The engine has no Shared Data Blocks, so no ArrayBuffer is ever shared.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, obj) {
+        return Err(agent.throw_type_error("not an ArrayBuffer (a SharedArrayBuffer)"));
+    }
     // 4. If IsDetachedBuffer(_obj_) is *true*, throw a *TypeError* exception.
     if is_detached_buffer(agent, obj) {
         return Err(agent.throw_type_error("ArrayBuffer is detached"));
@@ -102,7 +104,9 @@ pub(crate) fn prototype_slice(
         return Err(agent.throw_type_error("species constructor did not return an ArrayBuffer"));
     }
     // 12. If IsSharedArrayBuffer(_new_) is *true*, throw a *TypeError* exception.
-    //     As in step 3, no ArrayBuffer is ever shared.
+    if kahvi_core::object::typed_array::is_shared_array_buffer(agent, new) {
+        return Err(agent.throw_type_error("species constructor returned a SharedArrayBuffer"));
+    }
     // 13. If IsDetachedBuffer(_new_) is *true*, throw a *TypeError* exception.
     if is_detached_buffer(agent, new) {
         return Err(agent.throw_type_error("new ArrayBuffer is detached"));
