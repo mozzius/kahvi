@@ -5724,3 +5724,25 @@ test262 at last merge: 82439/82439 runs passing
 [18:55:31] I-list-format: merged (+162, 83295 total)
 [18:55:40] stack: pushed stack/0069 as #107 with arch-jsi-ab
 [18:56:22] I-supported-values-of: verifier: accept The change implements the key dispatch and the calendar, numbering-system and timeZone lists, and leaves collation, currency and unit as not_implement
+[19:02:55] stack: stack/0069 (#107) red: 372 regressions in the full suite
+[19:02:58] stack: architect branch arch-jsi-ab is red in CI (372 regressions in the full suite); fix it and land again
+[19:03:07] stack: pushed stack/0070 as #109 with I-string-locale-case, I-segmenter, I-supported-values-of
+[19:06:19] stack: stack/0070 (#109) green: 83371/84983 passing, +76
+[19:06:19] I-string-locale-case: merged (+16, 83371 total)
+[19:06:19] I-segmenter: merged (+52, 83371 total)
+[19:06:19] I-supported-values-of: merged (+8, 83371 total)
+[19:06:30] stack: pushed stack/0071 as #111 with arch-rn-pkg
+[19:07:31] stack: arch-jsi-ab conflicts with the stack; land it again after merging the stack top into it
+[19:07:32] stack: stack/0071 (#111) moved on GitHub to 042490c10f; judging that
+[19:12:59] stack: stack/0071 (#111) moved on GitHub to 33e59b6aec; judging that
+[19:12:59] stack: arch-rn-pkg conflicts with the stack; land it again after merging the stack top into it
+[19:12:59] stack: arch-worklets conflicts with the stack; land it again after merging the stack top into it
+[19:16:16] stack: stack/0071 (#111) moved on GitHub to 4a69a760a3; judging that
+[19:23:53] stack: stack/0071 (#111) green: 83371/84983 passing, +0
+[19:24:02] stack: pushed stack/0072 as #112 with arch-lazy
+[19:26:09] stack: stack/0072 (#112) moved on GitHub to b6cba773a5; judging that
+[19:26:10] stack: stack/0068 (#106) merged into main
+[19:26:11] stack: stack/0070 (#109) merged into stack/0068
+[19:26:11] stack: stack/0071 (#111) merged into stack/0070
+[19:31:27] stack: arch-load-speed conflicts with the stack; land it again after merging the stack top into it
+[19:31:31] stack: stack/0072 (#112) green: 83371/84983 passing, +0
