@@ -11,6 +11,7 @@ pub(crate) mod intl;
 pub(crate) mod intl_collator;
 pub(crate) mod intl_date_time_format;
 pub(crate) mod intl_display_names;
+pub(crate) mod intl_dtf_icu;
 pub(crate) mod intl_duration_format;
 pub(crate) mod intl_list_format;
 pub(crate) mod intl_locale;
