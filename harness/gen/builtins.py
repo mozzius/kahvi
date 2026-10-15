@@ -206,6 +206,9 @@ def collect(text):
                 continue
             seen.add(sig)
             length = 0 if acc else expected_length(params, body)
+            # A setter whose prose gives it a parameter ("takes an argument _v_").
+            if acc == "set" and re.search(r"takes an argument _\w+_", body):
+                length = 1
             if constructor and key in ctor_lengths:
                 length = ctor_lengths[key]
             fns.append(Fn(cid, head, owner, key, sym, acc, length, attributes(body), body, constructor))

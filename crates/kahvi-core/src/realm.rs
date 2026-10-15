@@ -6,6 +6,7 @@ use crate::agent::{Agent, ExecutionContext};
 use crate::env::{EnvId, Environment};
 use crate::error::JsResult;
 use crate::object::{ObjectData, ObjectKind};
+use crate::value::JsString;
 use crate::value::Object;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -21,6 +22,35 @@ pub struct Realm {
     pub global_env: EnvId,
     /// [[TemplateMap]]: template site (script id, span start) to its array.
     pub template_map: HashMap<(u32, u32), Object>,
+    /// The legacy static properties of this realm's %RegExp% (Annex B
+    /// proposal "Legacy RegExp features"): its [[RegExpInput]] ...
+    /// [[RegExpParen9]] internal slots.
+    pub legacy_regexp: LegacyRegExpStatics,
+}
+
+/// The values of %RegExp%'s legacy static slots. `None` is ~empty~.
+#[derive(Debug, Clone)]
+pub struct LegacyRegExpStatics {
+    /// [[RegExpInput]]
+    pub input: Option<JsString>,
+    /// The other slots, set together by the last match.
+    pub last_match: Option<LegacyLastMatch>,
+}
+
+/// [[RegExpLastMatch]], [[RegExpLastParen]], [[RegExpLeftContext]],
+/// [[RegExpRightContext]] and [[RegExpParen1-9]], kept as the matched string
+/// and indices; the getters cut the substrings.
+#[derive(Debug, Clone)]
+pub struct LegacyLastMatch {
+    /// The string the match was in.
+    pub matched_in: JsString,
+    /// startIndex and endIndex of the match.
+    pub start: usize,
+    pub end: usize,
+    /// [[RegExpLastParen]]
+    pub last_paren: JsString,
+    /// [[RegExpParen1]] ... [[RegExpParen9]]
+    pub parens: [JsString; 9],
 }
 
 impl Agent {
@@ -37,6 +67,17 @@ impl Agent {
             global_object: placeholder,
             global_env: EnvId(0),
             template_map: HashMap::new(),
+            // The initial value of all these internal slots is the empty String.
+            legacy_regexp: LegacyRegExpStatics {
+                input: Some(self.names.empty),
+                last_match: Some(LegacyLastMatch {
+                    matched_in: self.names.empty,
+                    start: 0,
+                    end: 0,
+                    last_paren: self.names.empty,
+                    parens: [self.names.empty; 9],
+                }),
+            },
         });
         self.contexts.push(ExecutionContext {
             function: None,

@@ -28,6 +28,25 @@ pub(crate) fn prototype_compile(
     // 1. Let obj be the this value.
     // 2. Perform ? RequireInternalSlot(obj, [[RegExpMatcher]]).
     let obj = require_regexp(agent, this)?;
+    // (Legacy RegExp features) Let thisRealm be the current Realm Record.
+    let this_realm = agent.current_realm();
+    // Let oRealm be the value of O's [[Realm]] internal slot.
+    let data = agent
+        .native::<RegExpData>(obj)
+        .expect("checked by RequireInternalSlot");
+    let (o_realm, legacy) = (data.realm, data.legacy_features_enabled);
+    // If SameValue(thisRealm, oRealm) is false, throw a TypeError exception.
+    if this_realm != o_realm {
+        return Err(
+            agent.throw_type_error("RegExp.prototype.compile on a RegExp from another realm")
+        );
+    }
+    // If the value of R's [[LegacyFeaturesEnabled]] internal slot is false, throw a TypeError exception.
+    if !legacy {
+        return Err(
+            agent.throw_type_error("RegExp.prototype.compile on a RegExp subclass instance")
+        );
+    }
     let mut pattern = args.get_or_undefined(0);
     let mut flags = args.get_or_undefined(1);
     // 3. If pattern is an Object and pattern has a [[RegExpMatcher]] internal slot, then
