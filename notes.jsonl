@@ -862,3 +862,6 @@
 {"ticket": "B-atomics-exchange", "attempt": 520, "ts": 1792050608.7553523, "text": "worker reported BLOCKED but changed files: Atomics.load and Atomics.store are not implemented (needed by the exchange tests' setup and assertions)"}
 {"ticket": "B-atomics-load", "attempt": 517, "ts": 1792050609.6883094, "text": "worker reported BLOCKED but changed files: Atomics.store (needed by the remaining 4 Atomics.load good-views tests)"}
 {"ticket": "B-atomics-is-lock-free", "attempt": 519, "ts": 1792050626.2950058, "text": "worker reported BLOCKED but changed files: agent record fields `[[IsLockFree1]]`, `[[IsLockFree2]]` and `[[IsLockFree8]]` do not exist in the engine; the file uses local constants instead."}
+{"ticket": "B-atomics-or", "attempt": 522, "ts": 1792050768.807362, "text": "worker reported BLOCKED but changed files: Atomics.load and Atomics.store are still stubs (needed by the 8 failing built-ins/Atomics/or/ tests)"}
+{"ticket": "B-atomics-notify", "attempt": 521, "ts": 1792050792.5156214, "text": "worker reported BLOCKED but changed files: Atomics.wait (needed by 4 notify tests that throw on non-Int32/BigInt64 arrays) and SharedArrayBuffer.prototype.grow (needed by retrieve-length-before-index-coercion.js)"}
+{"ticket": "B-atomics-store", "attempt": 524, "ts": 1792050797.1981604, "text": "worker reported BLOCKED but changed files: none"}

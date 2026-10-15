@@ -5292,3 +5292,9 @@ test262 at last merge: 81183/81183 runs passing
 [07:52:28] B-atomics-is-lock-free: verifier: accept The change implements Atomics.isLockFree in the spec's order. ToIntegerOrInfinity(size) is called first with `?` propagation. The branches for n = 1, 
 [07:52:28] B-atomics-load: verifier: accept The diff implements Atomics.load in its file, following the five spec steps in order. Step 1 uses `?` on ValidateAtomicAccessOnIntegerTypedArray, step
 [07:52:31] B-atomics-pause: attempt on slot 1 with haiku
+[07:52:36] B-atomics-store: attempt on slot 0 with haiku
+[07:52:48] B-atomics-or: attempt 522 finished ($0.005, 7 turns)
+[07:53:12] B-atomics-notify: attempt 521 finished ($0.011, 16 turns)
+[07:53:14] B-atomics-pause: attempt 523 finished ($0.004, 11 turns)
+[07:53:17] B-atomics-store: attempt 524 finished ($0.009, 13 turns)
+[07:53:29] B-atomics-or: verifier: accept The diff is a 9+/4- change to crates/kahvi-builtins/src/atomics/or.rs only. It replaces the not-implemented stub with the two spec steps as comments a

@@ -1,0 +1,41 @@
+{
+  "ticket": "B-atomics-or",
+  "base": "e285583978ca2e8c5ffba352d6e614bf4a1d2d48",
+  "head": "7cb2ae5626cdf690725c782ee7afd5ff5839f116",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/or.rs",
+      "added": 9,
+      "removed": 4
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 30,
+    "before": 8,
+    "after": 22,
+    "new_passes": 14,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 8,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/or/bigint/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/or/bigint/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/or/bigint/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/or/bigint/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/or/good-views.js:sloppy  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/or/good-views.js:strict  Uncaught InternalError: not implemented: Atomics.store",
+      "built-ins/Atomics/or/non-shared-bufferdata.js:sloppy  Uncaught InternalError: not implemented: Atomics.load",
+      "built-ins/Atomics/or/non-shared-bufferdata.js:strict  Uncaught InternalError: not implemented: Atomics.load"
+    ]
+  },
+  "decision": "pass"
+}

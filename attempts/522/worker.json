@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 9585,
+  "stop_reason": "end_turn",
+  "session_id": "82ae9cc0-3d6e-4521-be27-80d436c0eea1",
+  "total_cost_usd": 0.00472452,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 14296,
+    "cache_read_input_tokens": 62632,
+    "output_tokens": 1895,
+    "output_tokens_details": {
+      "thinking_tokens": 58
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14296,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 243,
+        "cache_read_input_tokens": 21531,
+        "cache_creation_input_tokens": 522,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 522
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 7,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Atomics.or` is implemented in `crates/kahvi-builtins/src/atomics/or.rs`, mirroring the `Atomics.and` pattern: it builds the `|` read-modify-write function and calls `atomic_read_modify_write`. Clippy and fmt are clean.\n\n`./t262 built-ins/Atomics/or/` gives 22 pass and 8 fail. All 8 failures are `Atomics.load` or `Atomics.store` throwing not-implemented, which is outside this ticket's file scope, so the Done-when target is not met yet.\n\nBLOCKED: Atomics.load and Atomics.store are still stubs (needed by the 8 failing built-ins/Atomics/or/ tests)",
+  "ttft_ms": 2049,
+  "type": "result",
+  "duration_ms": 28153,
+  "uuid": "6711ef3d-08a8-4b8e-ba84-d3f5aca930eb",
+  "ttft_stream_ms": 1568,
+  "time_to_request_ms": 628,
+  "time_to_request_phases_ms": {
+    "other": 49,
+    "system_prompt": 376,
+    "resume_other": 0,
+    "process_user_input": 10,
+    "input_attachments": 19,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 5,
+    "engine_pickup": 6,
+    "message_prep": 2,
+    "model_config_wait": 48,
+    "autocompact": 9,
+    "query_setup": 3,
+    "model_gates": 1,
+    "tool_schema_build": 27,
+    "message_normalization": 3,
+    "client_creation": 50,
+    "request_build": 13
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 148,
+  "time_to_request_cpu_ms": 341,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 238,
+  "process_anon_mib_turn_start": 121,
+  "process_rss_mib_result": 249,
+  "process_anon_mib_result": 128,
+  "process_peak_rss_mib": 264,
+  "process_cpu_ms_turn": 2347,
+  "process_wall_ms_turn": 28152,
+  "input_attachments_detail": {
+    "slowest_producer": "model",
+    "slowest_producer_ms": 15,
+    "cpu_ms": 14,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1569,
+  "time_to_request_from_spawn_ms": 1668152,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050737956.4915,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.21,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

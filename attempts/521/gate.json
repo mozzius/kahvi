@@ -1,0 +1,39 @@
+{
+  "ticket": "B-atomics-notify",
+  "base": "f5008cefe2a0409cd15cbcd8dd4929ccb4454597",
+  "head": "2b254b126d646f191a1be194f2b9feaa76c00be2",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/atomics/notify.rs",
+      "added": 30,
+      "removed": 3
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 70,
+    "before": 8,
+    "after": 64,
+    "new_passes": 56,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 6,
+    "canaries_ok": true,
+    "failing_sample": [
+      "built-ins/Atomics/notify/bigint/non-bigint64-typedarray-throws.js:sloppy  Uncaught InternalError: not implemented: Atomics.wait",
+      "built-ins/Atomics/notify/bigint/non-bigint64-typedarray-throws.js:strict  Uncaught InternalError: not implemented: Atomics.wait",
+      "built-ins/Atomics/notify/not-a-typedarray-throws.js:sloppy  Uncaught InternalError: not implemented: Atomics.wait",
+      "built-ins/Atomics/notify/not-a-typedarray-throws.js:strict  Uncaught InternalError: not implemented: Atomics.wait",
+      "built-ins/Atomics/notify/retrieve-length-before-index-coercion.js:sloppy  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow",
+      "built-ins/Atomics/notify/retrieve-length-before-index-coercion.js:strict  Uncaught InternalError: not implemented: SharedArrayBuffer.prototype.grow"
+    ]
+  },
+  "decision": "pass"
+}

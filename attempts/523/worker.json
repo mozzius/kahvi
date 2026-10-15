@@ -1,0 +1,120 @@
+{
+  "duration_api_ms": 11702,
+  "stop_reason": "end_turn",
+  "session_id": "fb9419b4-5f51-4115-860d-70d85e00efc8",
+  "total_cost_usd": 0.00406602,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 10199,
+    "cache_read_input_tokens": 84942,
+    "output_tokens": 1726,
+    "output_tokens_details": {
+      "thinking_tokens": 218
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10199,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 163,
+        "cache_read_input_tokens": 17234,
+        "cache_creation_input_tokens": 722,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 722
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 11,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Atomics.pause` is implemented in `crates/kahvi-builtins/src/atomics/pause.rs`: step 1 calls `std::hint::spin_loop()` and step 2 returns `undefined`, with the spec text kept above each step. All 10 runs under `built-ins/Atomics/pause/` pass (the ticket said 8 on main; this run reports 10), clippy reports no warnings, and `cargo fmt --check` is clean on the file. No other files were changed.",
+  "ttft_ms": 1938,
+  "type": "result",
+  "duration_ms": 40356,
+  "uuid": "f372529e-4807-49ac-9bb2-548999f5c9b5",
+  "ttft_stream_ms": 1639,
+  "time_to_request_ms": 898,
+  "time_to_request_phases_ms": {
+    "other": 51,
+    "system_prompt": 534,
+    "resume_other": 1,
+    "process_user_input": 52,
+    "input_attachments": 22,
+    "input_hooks": 8,
+    "tool_pool_refresh": 2,
+    "init_message": 19,
+    "engine_pickup": 2,
+    "message_prep": 6,
+    "model_config_wait": 130,
+    "autocompact": 18,
+    "query_setup": 4,
+    "model_gates": 1,
+    "tool_schema_build": 12,
+    "message_normalization": 4,
+    "client_creation": 20,
+    "request_build": 12
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 265,
+  "time_to_request_cpu_ms": 378,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 239,
+  "process_anon_mib_turn_start": 122,
+  "process_rss_mib_result": 251,
+  "process_anon_mib_result": 130,
+  "process_peak_rss_mib": 263,
+  "process_cpu_ms_turn": 2686,
+  "process_wall_ms_turn": 40355,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 18,
+    "cpu_ms": 17,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1641,
+  "time_to_request_from_spawn_ms": 1682922,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792050752508.375,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.22,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.29,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
