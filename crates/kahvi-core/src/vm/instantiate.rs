@@ -62,6 +62,12 @@ pub(super) fn function_declaration_instantiation(
     // 21. For each String paramName of parameterNames, do
     for &name in &params.names {
         // a. Let alreadyDeclared be ! env.HasBinding(paramName).
+        //    (env is new, so only a duplicate name is already declared.)
+        if !params.has_duplicates {
+            // c.i Perform ! env.CreateMutableBinding(paramName, false).
+            env_record.create_new_mutable_binding(agent, name, None);
+            continue;
+        }
         if !env_record.has_binding(agent, name)? {
             // c.i Perform ! env.CreateMutableBinding(paramName, false).
             env_record.create_mutable_binding(agent, name, false)?;
@@ -125,8 +131,8 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         for n in var_names {
             // i. If instantiatedVarNames does not contain n, then
             if !env_record.has_binding(agent, n)? {
-                env_record.create_mutable_binding(agent, n, false)?;
-                env_record.initialize_binding(agent, n, Value::Undefined)?;
+                // 1-3. Append n; ! env.CreateMutableBinding(n, false); ! env.InitializeBinding(n, undefined).
+                env_record.create_new_mutable_binding(agent, n, Some(Value::Undefined));
             }
         }
         env_record

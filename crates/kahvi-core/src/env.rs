@@ -52,6 +52,23 @@ impl Bindings {
         self.position(name).is_some()
     }
 
+    /// Adds a binding for a name the list does not have yet.
+    fn push_new(&mut self, name: JsString, binding: Binding) {
+        debug_assert!(self.position(&name).is_none());
+        self.list.push((name, binding));
+        if let Some(ix) = &mut self.index {
+            ix.insert(name, self.list.len() - 1);
+        } else if self.list.len() >= INDEX_FROM {
+            self.index = Some(
+                self.list
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (n, _))| (*n, i))
+                    .collect(),
+            );
+        }
+    }
+
     /// Adds or replaces a binding.
     pub fn insert(&mut self, name: JsString, binding: Binding) -> Option<Binding> {
         if let Some(i) = self.position(&name) {
@@ -357,6 +374,26 @@ impl EnvId {
     }
 
     /// CreateMutableBinding(N, D) for declarative records.
+    /// CreateMutableBinding(N, false) on a declarative record known to have
+    /// no binding for N, then InitializeBinding(N, V) if `value` is given
+    /// (the same steps, without searching for N).
+    pub(crate) fn create_new_mutable_binding(
+        self,
+        agent: &mut Agent,
+        name: JsString,
+        value: Option<Value>,
+    ) {
+        self.decl_bindings(agent).push_new(
+            name,
+            Binding {
+                value,
+                mutable: true,
+                strict: false,
+                deletable: false,
+            },
+        );
+    }
+
     pub fn create_mutable_binding(
         self,
         agent: &mut Agent,
