@@ -115,15 +115,33 @@ class Fn:
         return f"{self.acc} {base}" if self.acc else base
 
     @property
+    def intl_service(self):
+        """'Collator' for Intl.Collator and its methods (each Intl service is a
+        group of its own); None otherwise."""
+        parts = self.owner.strip("%").split(".")
+        if parts == ["Intl"]:
+            return self.key if self.constructor else None
+        return parts[1] if parts[0] == "Intl" else None
+
+    @property
     def group(self):
+        if self.intl_service:
+            return "intl_" + snake(self.intl_service)
         root = self.owner.strip("%").split(".")[0]
         if root in ("GlobalObject", "Intrinsic"):
             root = self.key if self.constructor else "global"
         return snake(root)
 
     @property
+    def spec_url(self):
+        doc = "ecma402" if self.id in spec.ECMA402_IDS else "ecma262"
+        return f"https://tc39.es/{doc}/#{self.id}"
+
+    @property
     def file(self):
         parts = self.owner.strip("%").split(".")[1:]
+        if self.intl_service:
+            parts = parts[1:]
         if self.owner in ("%GlobalObject%", "%Intrinsic%"):
             parts = [] if self.constructor else [self.key]
         elif not self.sym:
@@ -197,20 +215,26 @@ def collect(text):
                 owner = owner_intrinsic(owner_path)
             else:
                 owner, key = "%GlobalObject%", path.replace("%", "")
-            constructor = owner == "%GlobalObject%" and (key[:1].isupper() or path == "%TypedArray%")
+            constructor = owner in ("%GlobalObject%", "%Intl%") and (key[:1].isupper() or path == "%TypedArray%")
             if path == "%TypedArray%" and not sym and not acc:
                 # %TypedArray% is a constructor but not a global property.
                 owner, key, constructor = "%Intrinsic%", "TypedArray", True
             sig = (owner, key, sym, acc)
             if sig in seen:
+                # ECMA-402's locale-sensitive functions replace ECMA-262's.
+                if cid.startswith("sup-"):
+                    for fn in fns:
+                        if (fn.owner, fn.key, fn.sym, fn.acc) == sig:
+                            fn.id, fn.head, fn.body = cid, head, body
                 continue
             seen.add(sig)
             length = 0 if acc else expected_length(params, body)
             # A setter whose prose gives it a parameter ("takes an argument _v_").
             if acc == "set" and re.search(r"takes an argument _\w+_", body):
                 length = 1
-            if constructor and key in ctor_lengths:
-                length = ctor_lengths[key]
+            ctor_name = f"Intl.{key}" if owner == "%Intl%" else key
+            if constructor and ctor_name in ctor_lengths:
+                length = ctor_lengths[ctor_name]
             fns.append(Fn(cid, head, owner, key, sym, acc, length, attributes(body), body, constructor))
     return fns
 
@@ -221,7 +245,7 @@ def stub(fn):
     name = ident(fn.file)
     return f"""//! {fn.head}
 //!
-//! Spec: https://tc39.es/ecma262/#{fn.id}
+//! Spec: {fn.spec_url}
 
 use kahvi_core::prelude::*;
 

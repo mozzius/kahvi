@@ -1,0 +1,539 @@
+<emu-clause id="locales-currencies-tz">
+  <h1>Identification of Locales, Currencies, Time Zones, Measurement Units, Numbering Systems, Collations, and Calendars</h1>
+
+  <p>This clause describes the String values used in this specification to identify locales, currencies, time zones, measurement units, numbering systems, collations, calendars, and pattern strings.</p>
+
+  <emu-clause id="sec-case-sensitivity-and-case-mapping">
+    <h1>Case Sensitivity and Case Mapping</h1>
+
+    <p>The String values used to identify locales, currencies, scripts, and time zones are interpreted in an ASCII-case-insensitive manner, treating the code units 0x0041 through 0x005A (corresponding to Unicode characters LATIN CAPITAL LETTER A through LATIN CAPITAL LETTER Z) as equivalent to the corresponding code units 0x0061 through 0x007A (corresponding to Unicode characters LATIN SMALL LETTER A through LATIN SMALL LETTER Z), both inclusive. No other case folding equivalences are applied.</p>
+    <emu-note>
+      For example, *"ß"* (U+00DF) must not match or be mapped to *"SS"* (U+0053, U+0053). *"ı"* (U+0131) must not match or be mapped to *"I"* (U+0049).
+    </emu-note>
+    <p>The <dfn>ASCII-uppercase</dfn> of a String value _string_ is the String value derived from _string_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units.</p>
+    <p>The <dfn>ASCII-lowercase</dfn> of a String value _string_ is the String value derived from _string_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units.</p>
+    <p>A String value _A_ is an <dfn>ASCII-case-insensitive match</dfn> for String value _B_ if the ASCII-uppercase of _A_ is exactly the same sequence of code units as the ASCII-uppercase of _B_. A sequence of Unicode code points _A_ is an ASCII-case-insensitive match for _B_ if _B_ is an ASCII-case-insensitive match for CodePointsToString(_A_).</p>
+  </emu-clause>
+
+  <emu-clause id="sec-language-tags">
+    <h1>Language Tags</h1>
+
+    <p>
+      This specification identifies locales using <dfn variants="Unicode BCP 47 locale identifier">Unicode BCP 47 locale identifiers</dfn> as defined by <a href="https://unicode.org/reports/tr35/#BCP_47_Conformance">Unicode Technical Standard #35 Part 1 Core, Section 3.3 BCP 47 Conformance</a>, and its algorithms refer to <dfn variants="Unicode locale nonterminal">Unicode locale nonterminals</dfn> defined in the grammars of <a href="https://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers">Section 3 Unicode Language and Locale Identifiers</a>.
+      Each such identifier can also be referred to as a <dfn variants="language tags">language tag</dfn>, and is in fact a <emu-not-ref>well-formed language tag</emu-not-ref> as that term is used in <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> at <a href="https://www.rfc-editor.org/info/rfc5646/#section-2.1">RFC 5646 section 2.1</a> (although the converse does not hold; tags like *"en-GB-oed"*, *"i-navajo"*, and *"x-foo"* are valid according to BCP 47 but are not Unicode BCP 47 locale identifiers).
+      A locale identifier in canonical form as specified in <a href="https://unicode.org/reports/tr35/#Canonical_Unicode_Locale_Identifiers">Unicode Technical Standard #35 Part 1 Core, Section 3.2.1 Canonical Unicode Locale Identifiers</a> is referred to as a "<dfn variants="Unicode canonicalized locale identifiers">Unicode canonicalized locale identifier</dfn>".
+    </p>
+
+    <p>
+      Locale identifiers consist of case-insensitive Unicode Basic Latin alphanumeric <dfn id="bcp-47-subtag" variants="subtag">subtags</dfn> separated by *"-"* (U+002D HYPHEN-MINUS) characters, with single-character <emu-not-ref>subtags</emu-not-ref> referred to as "<dfn variants="singleton subtag">singleton subtags</dfn>".
+      <a href="https://unicode.org/reports/tr35/#u_Extension">Unicode Technical Standard #35 Part 1 Core, Section 3.6 Unicode BCP 47 U Extension</a> subtag sequences are used extensively, and the term "<dfn id="unicode-locale-extension-sequence" oldids="sec-unicode-locale-extension-sequences" variants="Unicode locale extension sequences">Unicode locale extension sequence</dfn>" describes the longest <emu-not-ref>substring</emu-not-ref> of a language tag that can be matched by the <code>unicode_locale_extensions</code> Unicode locale nonterminal and is not part of a *"-x-…"* private use <emu-not-ref>subtag sequence</emu-not-ref>. It starts with *"-u-"* and includes all immediately following <emu-not-ref>subtags</emu-not-ref> that are not singleton subtags, along with their preceding *"-"* separators. For example, the <emu-not-ref>Unicode locale extension sequence</emu-not-ref> of *"en-US-u-fw-mon-x-u-ex-foobar"* is *"-u-fw-mon"*.
+    </p>
+
+    <p>All well-formed language tags are appropriate for use with the APIs defined by this specification, but implementations are not required to use Unicode Common Locale Data Repository (<a href="https://cldr.unicode.org">CLDR</a>) data for validating them; the set of locales and thus language tags that an implementation supports with adequate localizations is implementation-defined. <emu-xref href="#sec-constructor-properties-of-the-intl-object">Intl constructors</emu-xref> map requested language tags to locales supported by their respective implementations.</p>
+
+    <emu-clause id="sec-iswellformedlanguagetag" oldids="sec-isstructurallyvalidlanguagetag" type="abstract operation">
+      <h1>
+        IsWellFormedLanguageTag (
+          _locale_: a String,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+		<dd>It determines whether _locale_ is a <dfn variants="well-formed language tags">well-formed language tag</dfn> matched by the <code>langtag</code> ABNF nonterminal of <a href="https://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP 47</a> and conforming with the well-formedness constraints of <a href="https://unicode.org/reports/tr35/#unicode_bcp47_locale_id"><code>unicode_bcp47_locale_id</code></a> except those relating to <code>ukey</code> and <code>tkey</code> duplicates. It does not consider whether _locale_ conveys any meaningful semantics, nor does it differentiate between aliased subtags and their preferred replacement subtags or require canonical casing or subtag ordering.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _lowerLocale_ be the ASCII-lowercase of _locale_.
+        1. If _lowerLocale_ cannot be matched by the <code>unicode_locale_id</code> Unicode locale nonterminal, return *false*.
+        1. If _lowerLocale_ uses any of the backwards compatibility syntax described in <a href="https://unicode.org/reports/tr35/#BCP_47_Conformance">Unicode Technical Standard #35 Part 1 Core, Section 3.3 BCP 47 Conformance</a>, return *false*.
+        1. Let _baseName_ be GetLocaleBaseName(_lowerLocale_).
+        1. Let _variants_ be GetLocaleVariants(_baseName_).
+        1. If _variants_ is not *undefined*, then
+          1. If _variants_ contains any duplicate subtags, return *false*.
+        1. Let _extensions_ be the suffix of _lowerLocale_ following _baseName_.
+        1. NOTE: A *"-x-…"* private use subtag sequence matched by the <code>pu_extensions</code> Unicode locale nonterminal must be ignored, but an isolated final *"x"* subtag with no following content does not affect any of the below checks.
+        1. Let _puIndex_ be StringIndexOf(_extensions_, *"-x-"*, 0).
+        1. If _puIndex_ is not ~not-found~, set _extensions_ to the substring of _extensions_ from 0 to _puIndex_.
+        1. If _extensions_ is not the empty String, then
+          1. If _extensions_ contains any duplicate singleton subtags, return *false*.
+          1. Let _transformExtension_ be the longest <emu-not-ref>substring</emu-not-ref> of _extensions_ matched by the <code>transformed_extensions</code> Unicode locale nonterminal. If there is no such <emu-not-ref>substring</emu-not-ref>, return *true*.
+          1. Assert: The substring of _transformExtension_ from 0 to 3 is *"-t-"*.
+          1. Let _tPrefix_ be the substring of _transformExtension_ from 3.
+          1. Let _tlang_ be the longest prefix of _tPrefix_ matched by the <code>tlang</code> Unicode locale nonterminal. If there is no such prefix, return *true*.
+          1. Let _tlangVariants_ be GetLocaleVariants(_tlang_).
+          1. If _tlangVariants_ is not *undefined*, then
+            1. If _tlangVariants_ contains any duplicate subtags, return *false*.
+        1. Return *true*.
+      </emu-alg>
+      <emu-note>
+        There is a subtle distinction between this definition of "well-formed language tag" and the grammatical and well-formedness constraints of a Unicode BCP 47 locale identifier: duplicate <code>ukey</code> and <code>tkey</code> subtags are allowed in the former (and therefore do not affect this operation) but disallowed in the latter (as in any <code>unicode_locale_id</code>). The distinction is reconciled in CanonicalizeUnicodeLocaleId by discarding all but the first <code>ufield</code> for any given <code>ukey</code>.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-canonicalizeunicodelocaleid" type="abstract operation">
+      <h1>
+        CanonicalizeUnicodeLocaleId (
+          _locale_: a language tag,
+        ): a Unicode canonicalized locale identifier
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns the canonical and case-regularized form of _locale_.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _localeId_ be the String value resulting from performing the <a href="https://unicode.org/reports/tr35/#processing-localeids">Processing LocaleIds</a> algorithm to transform _locale_ to canonical form per <a href="https://unicode.org/reports/tr35/#LocaleId_Canonicalization">Unicode Technical Standard #35 Part 1 Core, Annex C LocaleId Canonicalization</a>.
+        1. [id="step-canonicalizeunicodelocaleid-u-extension"] If _localeId_ contains a <emu-not-ref>substring</emu-not-ref> that is a Unicode locale extension sequence, then
+          1. Let _extension_ be the String value consisting of the <emu-not-ref>substring</emu-not-ref> of the Unicode locale extension sequence within _localeId_.
+          1. Let _newExtension_ be *"-u"*.
+          1. Let _components_ be UnicodeExtensionComponents(_extension_).
+          1. For each element _attr_ of _components_.[[Attributes]], do
+            1. Set _newExtension_ to the string-concatenation of _newExtension_, *"-"*, and _attr_.
+          1. For each Record { [[Key]], [[Value]] } _keyword_ of _components_.[[Keywords]], do
+            1. Set _newExtension_ to the string-concatenation of _newExtension_, *"-"*, and _keyword_.[[Key]].
+            1. If _keyword_.[[Value]] is not the empty String, then
+              1. Set _newExtension_ to the string-concatenation of _newExtension_, *"-"*, and _keyword_.[[Value]].
+          1. Assert: _newExtension_ is not *"-u"*.
+          1. Set _localeId_ to a copy of _localeId_ in which the first appearance of <emu-not-ref>substring</emu-not-ref> _extension_ has been replaced with _newExtension_.
+        1. Return _localeId_.
+      </emu-alg>
+
+      <emu-note>
+        Step <emu-xref href="#step-canonicalizeunicodelocaleid-u-extension"></emu-xref> ensures that a Unicode locale extension sequence in the returned language tag contains:
+        <ul>
+          <li>only the first instance of any attribute duplicated in the input, and</li>
+          <li>only the first <emu-not-ref>keyword</emu-not-ref> for a given key in the input.</li>
+        </ul>
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-defaultlocale" type="implementation-defined abstract operation">
+      <h1>DefaultLocale ( ): a Unicode canonicalized locale identifier</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned String value represents the well-formed (<emu-xref href="#sec-iswellformedlanguagetag"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizeunicodelocaleid"></emu-xref>) language tag for the host environment's current locale. It must not contain a Unicode locale extension sequence.</dd>
+      </dl>
+      <emu-note>
+        The returned value is is a potential fingerprinting vector. In browser environments, it should match <a href="https://html.spec.whatwg.org/#language-preferences"><code>navigator.language</code></a> to avoid providing any additional distinguishing information.
+      </emu-note>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-currency-codes">
+    <h1>Currency Codes</h1>
+
+    <p>This specification identifies currencies using 3-letter currency codes as defined by ISO 4217. Their canonical form is uppercase.</p>
+
+    <p>All well-formed 3-letter ISO 4217 currency codes are allowed. However, the set of combinations of currency code and language tag for which localized currency symbols are available is implementation dependent. Where a localized currency symbol is not available, the ISO 4217 currency code is used for formatting.</p>
+
+    <emu-clause id="sec-iswellformedcurrencycode" type="abstract operation">
+      <h1>
+        IsWellFormedCurrencyCode (
+          _currency_: a String,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It verifies that the _currency_ argument represents a well-formed 3-letter ISO 4217 currency code.</dd>
+      </dl>
+      <emu-alg>
+        1. If the length of _currency_ is not 3, return *false*.
+        1. Let _normalized_ be the ASCII-uppercase of _currency_.
+        1. If _normalized_ contains any code unit outside of 0x0041 through 0x005A (corresponding to Unicode characters LATIN CAPITAL LETTER A through LATIN CAPITAL LETTER Z), return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-availablecanonicalcurrencies" type="implementation-defined abstract operation">
+    <h1>AvailableCanonicalCurrencies ( ): a List of Strings</h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>The returned List is sorted according to lexicographic code unit order, and contains unique, well-formed, and upper case canonicalized 3-letter ISO 4217 currency codes, identifying the currencies for which the implementation provides the functionality of Intl.DisplayNames and Intl.NumberFormat objects.</dd>
+    </dl>
+  </emu-clause>
+
+  <emu-clause id="sec-use-of-iana-time-zone-database" oldids="sec-time-zone-names">
+    <h1>Use of the IANA Time Zone Database</h1>
+
+    <p>
+      Implementations that adopt this specification must be time zone aware: they must use the IANA Time Zone Database <a href="https://www.iana.org/time-zones/">https://www.iana.org/time-zones/</a> to supply available named time zone identifiers and data used in ECMAScript calculations and formatting.
+      This section defines how the IANA Time Zone Database should be used by time zone aware implementations.
+      No String may be an available named time zone identifier unless it is a Zone name or a Link name in the IANA Time Zone Database.
+      Available named time zone identifiers returned by ECMAScript built-in objects must use the casing found in the IANA Time Zone Database.
+    </p>
+    <p>Each Zone in the IANA Time Zone Database must be a primary time zone identifier and each Link name in the IANA Time Zone Database must be a non-primary time zone identifier that resolves to its corresponding Zone name, with the following exceptions implemented in AvailableNamedTimeZoneIdentifiers:</p>
+    <ul>
+      <li>
+        For historical reasons, *"UTC"* must be a primary time zone identifier.
+        *"Etc/UTC"*, *"Etc/GMT"*, and *"GMT"*, as well as all Link names that resolve to any of them, must be non-primary time identifiers that resolve to *"UTC"*.
+      </li>
+      <li>
+        Any Link name that is present in the “TZ” column of file <code>zone.tab</code> must be a primary time zone identifier.
+        For example, both *"Europe/Prague"* and *"Europe/Bratislava"* must be primary time zone identifiers.
+        This requirement guarantees at least one primary time zone identifier for each <a href="https://www.iso.org/glossary-for-iso-3166.html">ISO 3166-1 Alpha-2</a> country code, and ensures that future changes to time zone rules of one country will not affect ECMAScript programs that use another country's time zone(s), unless those countries' territorial boundaries have also changed.
+      </li>
+      <li>
+        Any Link name that is not listed in the “TZ” column of file <code>zone.tab</code> and that represents a geographical area entirely contained within the territory of a single <a href="https://www.iso.org/glossary-for-iso-3166.html">ISO 3166-1 Alpha-2</a> country code must resolve to a primary identifier that also represents a geographical area entirely contained within the territory of the same country code.
+        For example, *"Atlantic/Jan_Mayen"* must resolve to *"Arctic/Longyearbyen"*.
+      </li>
+    </ul>
+
+    <emu-note>
+      <p>
+        The IANA Time Zone Database offers build options that affect which available named time zone identifiers are primary.
+        The default build options merge different countries' time zones, for example *"Atlantic/Reykjavik"* is built as a Link to the Zone *"Africa/Abidjan"*.
+        Geographically and politically distinct locations are likely to introduce divergent time zone rules in a future version of the IANA Time Zone Database.
+        The exceptions above serve to mitigate these future-compatibility issues.
+      </p>
+      <p>
+        The Unicode Common Locale Data Repository (<a href="https://cldr.unicode.org">CLDR</a>) implements most of the exceptions above when determining which available named time zone identifiers are primary or non-primary.
+        Although use of CLDR data is recommended for consistency between implementations, it is not required.
+        Non-CLDR-based implementations can still use CLDR's identifier data in <a href="https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml"><code>timezone.xml</code></a>.
+        Implementations may also build the IANA Time Zone Database directly, for example by using build options such as <code>PACKRATDATA=backzone PACKRATLIST=zone.tab</code> and performing any post-processing needed to ensure compliance with the requirements above.
+      </p>
+    </emu-note>
+
+    <p>
+      The IANA Time Zone Database is typically updated between five and ten times per year.
+      These updates may add new Zone or Link names, may change Zones to Links, and may change the UTC offsets and transitions associated with any Zone.
+      Implementations are recommended to include updates to the IANA Time Zone Database as soon as possible.
+      Such prompt action ensures that ECMAScript programs can accurately perform time-zone-sensitive calculations and can use newly-added available named time zone identifiers supplied by external input or the host environment.
+    </p>
+    <p>
+      Although the IANA Time Zone Database maintainers strive for stability, in rare cases (averaging less than once per year) a Zone may be replaced by a new Zone.
+      For example, in 2022 "*Europe/Kiev*" was deprecated to a Link resolving to a new "*Europe/Kyiv*" Zone.
+      The deprecated Link is called a <dfn variants="renamed time zone identifiers">renamed time zone identifier</dfn> and the newly-added Zone is called a <dfn variants="replacement time zone identifiers">replacement time zone identifier</dfn>.
+    </p>
+    <p>
+      To reduce disruption from these infrequent changes, implementations should initially add each replacement time zone identifier as a non-primary time zone identifier that resolves to the existing renamed time zone identifier.
+      This allows ECMAScript programs to recognize both identifiers, but also reduces the chance that an ECMAScript program will send the replacement time zone identifier to another system that does not yet recognize it.
+      After a <dfn id="rename-waiting-period">rename waiting period</dfn>, implementations should promote the new Zone to a primary time zone identifier while simultaneously demoting the renamed time zone identifier to non-primary.
+      To provide ample time for other systems to be updated, the recommended rename waiting period is two years.
+      However, it does not need to be either exact or dynamic.
+      Instead, implementations should make the replacement time zone identifier primary after the waiting period as part of their normal release process for updating time zone data.
+    </p>
+    <p>
+      A waiting period should only apply when a new Zone is added to replace an existing Zone.
+      If an existing Zone and Link are swapped, then no renaming has happened and no waiting period is necessary.
+    </p>
+
+    <p>
+      If implementations revise time zone information during the lifetime of an agent, then it is required that the list of available named time zone identifiers, the primary time zone identifier associated with any available named time zone identifier, and the UTC offsets and transitions associated with any available named time zone identifier, be consistent with results previously observed by that agent.
+      Due to the complexity of supporting this requirement, it is recommended that implementations maintain a fully consistent copy of the IANA Time Zone Database for the lifetime of each agent.
+    </p>
+
+    <p>This section complements but does not supersede <emu-xref href="#sec-time-zone-identifiers"></emu-xref>.</p>
+
+    <emu-clause id="sup-availablenamedtimezoneidentifiers" oldids="sec-availabletimezones" type="implementation-defined abstract operation">
+      <h1>AvailableNamedTimeZoneIdentifiers ( ): a List of Time Zone Identifier Records</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          Its result describes all available named time zone identifiers in this implementation, as well as the primary time zone identifier corresponding to each available named time zone identifier.
+          The List is ordered according to the [[Identifier]] field of each Time Zone Identifier Record.
+        </dd>
+      </dl>
+      <p>This definition supersedes the definition provided in <emu-xref href="#sec-availablenamedtimezoneidentifiers"></emu-xref>.</p>
+      <emu-alg>
+        1. Let _identifiers_ be a List containing the String value of each Zone or Link name in the IANA Time Zone Database.
+        1. Assert: No element of _identifiers_ is an ASCII-case-insensitive match for any other element.
+        1. Sort _identifiers_ according to lexicographic code unit order.
+        1. Let _result_ be a new empty List.
+        1. For each element _identifier_ of _identifiers_, do
+          1. Let _primary_ be _identifier_.
+          1. If _identifier_ is a Link name in the IANA Time Zone Database and _identifier_ is not present in the “TZ” column of <code>zone.tab</code> of the IANA Time Zone Database, then
+            1. Let _zone_ be the Zone name that _identifier_ resolves to, according to the rules for resolving Link names in the IANA Time Zone Database.
+            1. If _zone_ starts with *"Etc/"*, then
+              1. Set _primary_ to _zone_.
+            1. Else,
+              1. Let _identifierCountryCode_ be the <a href="https://www.iso.org/glossary-for-iso-3166.html">ISO 3166-1 Alpha-2</a> country code whose territory contains the geographical area corresponding to _identifier_.
+              1. Let _zoneCountryCode_ be the ISO 3166-1 Alpha-2 country code whose territory contains the geographical area corresponding to _zone_.
+              1. If _identifierCountryCode_ is _zoneCountryCode_, then
+                1. Set _primary_ to _zone_.
+              1. Else,
+                1. Let _countryCodeLineCount_ be the number of lines in file <code>zone.tab</code> of the IANA Time Zone Database where the “country-code” column is _identifierCountryCode_.
+                1. If _countryCodeLineCount_ is 1, then
+                  1. Let _countryCodeLine_ be the line in file <code>zone.tab</code> of the IANA Time Zone Database where the “country-code” column is _identifierCountryCode_.
+                  1. Set _primary_ to the contents of the “TZ” column of _countryCodeLine_.
+                1. Else,
+                  1. Let _backzone_ be *undefined*.
+                  1. Let _backzoneLinkLines_ be the List of lines in the file <code>backzone</code> of the IANA Time Zone Database that start with either *"Link "* or *"#PACKRATLIST zone.tab Link "*.
+                  1. For each element _line_ of _backzoneLinkLines_, do
+                    1. Let _i_ be StringIndexOf(_line_, *"Link "*, 0).
+                    1. Set _line_ to the substring of _line_ from _i_ + 5.
+                    1. Let _backzoneAndLink_ be StringSplitToList(_line_, *" "*).
+                    1. Assert: _backzoneAndLink_ has at least two elements, and both _backzoneAndLink_[0] and _backzoneAndLink_[1] are available named time zone identifiers.
+                    1. If _backzoneAndLink_[1] is _identifier_, then
+                      1. Assert: _backzone_ is *undefined*.
+                      1. Set _backzone_ to _backzoneAndLink_[0].
+                  1. Assert: _backzone_ is not *undefined*.
+                  1. Set _primary_ to _backzone_.
+          1. If _primary_ is one of *"Etc/UTC"*, *"Etc/GMT"*, or *"GMT"*, set _primary_ to *"UTC"*.
+          1. If _primary_ is a replacement time zone identifier and its rename waiting period has not concluded, then
+            1. Let _renamedIdentifier_ be the renamed time zone identifier that _primary_ replaced.
+            1. Set _primary_ to _renamedIdentifier_.
+          1. Let _record_ be the Time Zone Identifier Record { [[Identifier]]: _identifier_, [[PrimaryIdentifier]]: _primary_ }.
+          1. Append _record_ to _result_.
+        1. Assert: _result_ contains a Time Zone Identifier Record _utcRecord_ such that _utcRecord_.[[Identifier]] is *"UTC"* and _utcRecord_.[[PrimaryIdentifier]] is *"UTC"*.
+        1. Return _result_.
+      </emu-alg>
+
+      <emu-note>
+        <p>The algorithm above for resolving Links to primary time zone identifiers is intended to correspond to the behaviour of <code>icu::TimeZone::getIanaID()</code> in the International Components for Unicode (<a href="https://icu.unicode.org/">ICU</a>) and the processes for maintaining time zone identifier data in the Unicode Common Locale Data Repository (<a href="https://cldr.unicode.org">CLDR</a>).</p>
+        <p>
+          This algorithm resolves Links to primary time zone identifiers without crossing the boundaries of ISO 3166-1 Alpha-2 country codes, using data from files <code>zone.tab</code> and <code>backzone</code> of the IANA Time Zone Database.
+          If the country code of a Link has only one line in <code>zone.tab</code>, then that line will determine the primary time zone identifier.
+          However, if that country code has multiple lines in <code>zone.tab</code>, then historical mappings in <code>backzone</code> must be used to identify the correct primary time zone identifier.
+        </p>
+        <p>
+          For example, to resolve "Pacific/Truk" (in country code "FM") if the default build options of the IANA Time Zone Database identify it as a Link to "Pacific/Port_Moresby" (in country code "PG"), then the “country-code” column of <code>zone.tab</code> must be checked for lines corresponding with "FM".
+          If there were only one such line, then the “TZ” column of that line would determine the primary time zone identifier associated with "Pacific/Truk".
+          But if there are multiple "FM" lines in <code>zone.tab</code>, then <code>backzone</code> must be inspected and a line such as "Link Pacific/Chuuk Pacific/Truk" would result in using "Pacific/Chuuk" as the primary time zone identifier.
+        </p>
+        <p>
+          Note that <code>zone.tab</code> is the preferred source of mapping data because <code>backzone</code> mappings may, in rare cases, cross the boundaries of ISO 3166-1 Alpha-2 country codes.
+          For example, "Atlantic/Jan_Mayen" (in country code "SJ") is mapped in <code>backzone</code> to "Europe/Oslo" (in country code "NO").
+          As of the 2024a release of the IANA Time Zone Database, "Atlantic/Jan_Mayen" is the only case where this happens.
+        </p>
+      </emu-note>
+
+      <emu-note>
+        Time zone identifiers in the IANA Time Zone Database can change over time.
+        At a minimum, it is recommended that implementations limit changes to the result of AvailableNamedTimeZoneIdentifiers to the changes allowed by GetAvailableNamedTimeZoneIdentifier, for the lifetime of the surrounding agent.
+        Due to the complexity of supporting these recommendations, it is recommended that the result of AvailableNamedTimeZoneIdentifiers remains the same for the lifetime of the surrounding agent.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-getavailablenamedtimezoneidentifier" type="abstract operation">
+      <h1>
+        GetAvailableNamedTimeZoneIdentifier (
+          _timeZoneIdentifier_: a String,
+        ): either a Time Zone Identifier Record or ~empty~
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          If _timeZoneIdentifier_ is an available named time zone identifier, then it returns one of the Records in the List returned by AvailableNamedTimeZoneIdentifiers.
+          Otherwise, ~empty~ will be returned.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. For each element _record_ of AvailableNamedTimeZoneIdentifiers(), do
+          1. If _record_.[[Identifier]] is an ASCII-case-insensitive match for _timeZoneIdentifier_, return _record_.
+        1. Return ~empty~.
+      </emu-alg>
+      <emu-note>
+        For any _timeZoneIdentifier_, or any value that is an ASCII-case-insensitive match for it, it is required that the resulting Time Zone Identifier Record contain the same field values for the lifetime of the surrounding agent.
+        Furthermore, it is required that time zone identifiers not dynamically change from primary to non-primary during the lifetime of the surrounding agent, meaning that if _timeZoneIdentifier_ is an ASCII-case-insensitive match for the [[PrimaryIdentifier]] field of the result of a previous call to GetAvailableNamedTimeZoneIdentifier, then GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) must return a Time Zone Identifier Record where [[Identifier]] is [[PrimaryIdentifier]].
+        Due to the complexity of supporting these requirements, it is recommended that the result of AvailableNamedTimeZoneIdentifiers (and therefore GetAvailableNamedTimeZoneIdentifier too) remains the same for the lifetime of the surrounding agent.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-availableprimarytimezoneidentifiers" oldids="sec-availablecanonicaltimezones" type="abstract operation">
+      <h1>AvailablePrimaryTimeZoneIdentifiers ( ): a List of Strings</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is a sorted List of supported Zone and Link names in the IANA Time Zone Database.</dd>
+      </dl>
+
+      <emu-alg>
+        1. Let _records_ be AvailableNamedTimeZoneIdentifiers().
+        1. Let _result_ be a new empty List.
+        1. For each element _timeZoneIdentifierRecord_ of _records_, do
+          1. If _timeZoneIdentifierRecord_.[[Identifier]] is _timeZoneIdentifierRecord_.[[PrimaryIdentifier]], then
+            1. Append _timeZoneIdentifierRecord_.[[Identifier]] to _result_.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-string-split-to-list" type="abstract operation">
+      <h1>
+        StringSplitToList (
+          _string_: a String,
+          _separator_: a String,
+        ): a List of Strings
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          The returned List contains all disjoint substrings of _string_ that do not contain _separator_ but are immediately preceded and/or immediately followed by an occurrence of _separator_.
+          Each such <emu-not-ref>substring</emu-not-ref> will be the empty String between adjacent occurrences of _separator_, before a _separator_ at the very start of _string_, or after a _separator_ at the very end of _string_, but otherwise will not be empty.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Assert: _string_ is not the empty String.
+        1. Assert: _separator_ is not the empty String.
+        1. Let _separatorLength_ be the length of _separator_.
+        1. Let _substrings_ be a new empty List.
+        1. Let _i_ be 0.
+        1. Let _j_ be StringIndexOf(_string_, _separator_, 0).
+        1. Repeat, while _j_ is not ~not-found~,
+          1. Let _substring_ be the substring of _string_ from _i_ to _j_.
+          1. Append _substring_ to _substrings_.
+          1. Set _i_ to _j_ + _separatorLength_.
+          1. Set _j_ to StringIndexOf(_string_, _separator_, _i_).
+        1. Let _substring_ be the substring of _string_ from _i_.
+        1. Append _substring_ to _substrings_.
+        1. Return _substrings_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-measurement-unit-identifiers">
+    <h1>Measurement Unit Identifiers</h1>
+
+    <p>This specification identifies measurement units using a <dfn variants="core unit identifiers,core unit ID,core unit IDs">core unit identifier</dfn> (or equivalently <em>core unit ID</em>) as defined by <a href="https://unicode.org/reports/tr35/tr35-general.html#Unit_Identifiers">Unicode Technical Standard #35 Part 2 General, Section 6.2 Unit Identifiers</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).</p>
+
+    <p>
+      Only a limited set of core unit identifiers are sanctioned.
+      Attempting to use an unsanctioned core unit identifier results in a *RangeError*.
+    </p>
+
+    <emu-clause id="sec-iswellformedunitidentifier" type="abstract operation">
+      <h1>
+        IsWellFormedUnitIdentifier (
+          _unitIdentifier_: a String,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It verifies that the _unitIdentifier_ argument represents a well-formed core unit identifier that is either a sanctioned single unit or a complex unit formed by division of two sanctioned single units.</dd>
+      </dl>
+      <emu-alg>
+        1. If IsSanctionedSingleUnitIdentifier(_unitIdentifier_) is *true*, then
+          1. Return *true*.
+        1. Let _numeratorAndDenominator_ be StringSplitToList(_unitIdentifier_, *"-per-"*).
+        1. If _numeratorAndDenominator_ does not have exactly 2 elements, return *false*.
+        1. If IsSanctionedSingleUnitIdentifier(_numeratorAndDenominator_[0]) is *false*, return *false*.
+        1. If IsSanctionedSingleUnitIdentifier(_numeratorAndDenominator_[1]) is *false*, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-issanctionedsingleunitidentifier" type="abstract operation" oldids="sec-issanctionedsimpleunitidentifier">
+      <h1>
+        IsSanctionedSingleUnitIdentifier (
+          _unitIdentifier_: a String,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It verifies that the _unitIdentifier_ argument is among the single unit identifiers sanctioned in the current version of this specification, which are a subset of the Common Locale Data Repository <a href="https://github.com/unicode-org/cldr/blob/maint/maint-38/common/validity/unit.xml">release 38 unit validity data</a>; the list may grow over time. As discussed in <a href="https://unicode.org/reports/tr35/tr35-general.html#Unit_Identifiers">Unicode Technical Standard #35 Part 2 General, Section 6.2 Unit Identifiers</a>, a single unit identifier is a core unit identifier that is not composed of multiplication or division of other unit identifiers.</dd>
+      </dl>
+      <emu-alg>
+        1. If _unitIdentifier_ is listed in <emu-xref href="#table-sanctioned-single-unit-identifiers"></emu-xref> below, return *true*.
+        1. Else, return *false*.
+      </emu-alg>
+
+      <emu-table id="table-sanctioned-single-unit-identifiers" oldids="table-sanctioned-simple-unit-identifiers">
+        <emu-caption>Single units sanctioned for use in ECMAScript</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Single Unit Identifier</th>
+            </tr>
+          </thead>
+          <tr><td>acre</td></tr>
+          <tr><td>bit</td></tr>
+          <tr><td>byte</td></tr>
+          <tr><td>celsius</td></tr>
+          <tr><td>centimeter</td></tr>
+          <tr><td>day</td></tr>
+          <tr><td>degree</td></tr>
+          <tr><td>fahrenheit</td></tr>
+          <tr><td>fluid-ounce</td></tr>
+          <tr><td>foot</td></tr>
+          <tr><td>gallon</td></tr>
+          <tr><td>gigabit</td></tr>
+          <tr><td>gigabyte</td></tr>
+          <tr><td>gram</td></tr>
+          <tr><td>hectare</td></tr>
+          <tr><td>hour</td></tr>
+          <tr><td>inch</td></tr>
+          <tr><td>kilobit</td></tr>
+          <tr><td>kilobyte</td></tr>
+          <tr><td>kilogram</td></tr>
+          <tr><td>kilometer</td></tr>
+          <tr><td>liter</td></tr>
+          <tr><td>megabit</td></tr>
+          <tr><td>megabyte</td></tr>
+          <tr><td>meter</td></tr>
+          <tr><td>microsecond</td></tr>
+          <tr><td>mile</td></tr>
+          <tr><td>mile-scandinavian</td></tr>
+          <tr><td>milliliter</td></tr>
+          <tr><td>millimeter</td></tr>
+          <tr><td>millisecond</td></tr>
+          <tr><td>minute</td></tr>
+          <tr><td>month</td></tr>
+          <tr><td>nanosecond</td></tr>
+          <tr><td>ounce</td></tr>
+          <tr><td>percent</td></tr>
+          <tr><td>petabyte</td></tr>
+          <tr><td>pound</td></tr>
+          <tr><td>second</td></tr>
+          <tr><td>stone</td></tr>
+          <tr><td>terabit</td></tr>
+          <tr><td>terabyte</td></tr>
+          <tr><td>week</td></tr>
+          <tr><td>yard</td></tr>
+          <tr><td>year</td></tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-availablecanonicalunits" type="abstract operation">
+      <h1>AvailableCanonicalUnits ( ): a List of Strings</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is sorted according to lexicographic code unit order, and consists of the unique values of simple unit identifiers listed in every row of <emu-xref href="#table-sanctioned-single-unit-identifiers"></emu-xref>, except the header row.</dd>
+      </dl>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-numberingsystem-identifiers">
+    <h1>Numbering System Identifiers</h1>
+
+    <p>This specification identifies numbering systems using a <dfn variants="numbering system identifiers">numbering system identifier</dfn> corresponding with the name referenced by <a href="https://unicode.org/reports/tr35/tr35-numbers.html#Numbering_Systems">Unicode Technical Standard #35 Part 3 Numbers, Section 1 Numbering Systems</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z).</p>
+
+    <emu-clause id="sec-availablecanonicalnumberingsystems" type="implementation-defined abstract operation">
+      <h1>AvailableCanonicalNumberingSystems ( ): a List of Strings</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is sorted according to lexicographic code unit order, and contains unique canonical numbering systems identifiers identifying the numbering systems for which the implementation provides the functionality of Intl.DateTimeFormat, Intl.NumberFormat, and Intl.RelativeTimeFormat objects. The List must include the Numbering System value of every row of <emu-xref href="#table-numbering-system-digits"></emu-xref>, except the header row.</dd>
+      </dl>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-collation-types">
+    <h1>Collation Types</h1>
+
+    <p>This specification identifies collations using a <dfn variants="collation types">collation type</dfn> as defined by <a href="https://unicode.org/reports/tr35/tr35-collation.html#Collation_Types">Unicode Technical Standard #35 Part 5 Collation, Section 3.1 Collation Types</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).</p>
+
+    <emu-clause id="sec-availablecanonicalcollations" type="implementation-defined abstract operation">
+      <h1>AvailableCanonicalCollations ( ): a List of Strings</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is sorted according to lexicographic code unit order, and contains unique canonical collation types identifying the collations for which the implementation provides the functionality of Intl.Collator objects.</dd>
+      </dl>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-calendar-types">
+    <h1>Calendar Types</h1>
+
+    <p>This specification identifies calendars using a <dfn variants="calendar types">calendar type</dfn> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35 Part 4 Dates, Section 2 Calendar Elements</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).</p>
+
+    <emu-clause id="sec-availablecalendars" oldids="sec-availablecanonicalcalendars" type="implementation-defined abstract operation">
+      <h1>AvailableCalendars ( ): a List of Strings</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is sorted according to lexicographic code unit order, and contains unique calendar types in canonical form (<emu-xref href="#sec-calendar-types"></emu-xref>) identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects, including their aliases (e.g., either both or neither of *"islamicc"* and *"islamic-civil"*). The List must include *"iso8601"*.</dd>
+      </dl>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-pattern-string-types">
+    <h1>Pattern String Types</h1>
+    <p><dfn>Pattern String</dfn> is a String value which contains zero or more substrings of the form *"{key}"*, where key can be any non-empty sequence consisting only of elements from the ASCII word characters. The syntax of the abstract pattern strings is an implementation detail and is not exposed to users of ECMA-402.</p>
+  </emu-clause>
+</emu-clause>

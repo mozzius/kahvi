@@ -315,7 +315,9 @@ def limit_memory():
 
 
 def run_test(engine, prepared, name, path, spec, gc_stress, timeout):
-    cmd = [engine, "--prelude", str(SHIM)]
+    # No Intl until ECMA-402 is complete (docs/INTL.md): mjsunit's Intl tests
+    # check for it, and would reach not-implemented services.
+    cmd = [engine, "--no-intl", "--prelude", str(SHIM)]
     if spec["expose_gc"]:
         cmd += ["--prelude", str(HERE / "expose-gc.js")]
     if spec["harness"]:
