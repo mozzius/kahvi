@@ -658,7 +658,19 @@ impl Agent {
 
     /// A String value from Rust text.
     pub fn string(&mut self, s: &str) -> JsString {
-        let units: Vec<u16> = s.encode_utf16().collect();
+        // A string has no more UTF-16 code units than UTF-8 bytes, so short
+        // ones (most names and keys) fit on the stack.
+        if s.len() <= 64 {
+            let mut buf = [0u16; 64];
+            let mut n = 0;
+            for u in s.encode_utf16() {
+                buf[n] = u;
+                n += 1;
+            }
+            return self.intern(&buf[..n]);
+        }
+        let mut units = Vec::with_capacity(s.len());
+        units.extend(s.encode_utf16());
         self.intern(&units)
     }
 
