@@ -193,6 +193,9 @@ pub struct Agent {
     pub(crate) host_functions: Vec<crate::host::HostFn>,
     /// Data the host attached to objects (`Agent::set_native_state`).
     pub(crate) native_states: crate::hash::FxHashMap<Object, crate::host::NativeState>,
+    /// The call stack when each error object was created, one `    at name`
+    /// line per execution context, innermost first (`Agent::error_stack`).
+    pub(crate) error_stacks: crate::hash::FxHashMap<Object, Box<str>>,
 }
 
 impl std::fmt::Debug for Agent {
@@ -296,6 +299,7 @@ impl Agent {
             persistent: Default::default(),
             host_functions: Vec::new(),
             native_states: Default::default(),
+            error_stacks: Default::default(),
             host_now: None,
             host_local_tza: None,
         };
@@ -363,13 +367,64 @@ impl Agent {
 
     pub fn alloc(&mut self, data: ObjectData) -> Object {
         self.gc.allocated += 1;
-        if let Some(i) = self.gc.free_objects.pop() {
+        let is_error = matches!(data.kind, ObjectKind::Error);
+        let o = if let Some(i) = self.gc.free_objects.pop() {
             self.gc.is_free_object.remove(i);
             self.objects[i as usize] = data;
-            return Object(i);
+            Object(i)
+        } else {
+            self.objects.push(data);
+            Object((self.objects.len() - 1) as u32)
+        };
+        if is_error {
+            let stack = self.capture_stack();
+            self.error_stacks.insert(o, stack);
         }
-        self.objects.push(data);
-        Object((self.objects.len() - 1) as u32)
+        o
+    }
+
+    /// The execution context stack as text: one `    at name` line per
+    /// context, innermost first. A function's name is its own "name" data
+    /// property (read without running any code); a script or module is
+    /// `<top level>`. The built-in error constructor creating the object,
+    /// when it is the innermost context, is left out.
+    fn capture_stack(&self) -> Box<str> {
+        let name_of = |f: Object| match self
+            .obj(f)
+            .properties
+            .get(&PropertyKey::String(self.names.name))
+        {
+            Some(crate::object::Property::Data {
+                value: Value::String(s),
+                ..
+            }) if !self.str(*s).is_empty() => self.str_lossy(*s),
+            _ => "<anonymous>".to_string(),
+        };
+        let mut contexts = self.contexts.iter().rev().peekable();
+        if let Some(f) = contexts.peek().and_then(|c| c.function)
+            && matches!(self.obj(f).kind, ObjectKind::Builtin(_))
+            && name_of(f).ends_with("Error")
+        {
+            contexts.next();
+        }
+        let mut out = String::new();
+        for ctx in contexts {
+            if !out.is_empty() {
+                out.push('\n');
+            }
+            out.push_str("    at ");
+            match ctx.function {
+                Some(f) => out.push_str(&name_of(f)),
+                None => out.push_str("<top level>"),
+            }
+        }
+        out.into_boxed_str()
+    }
+
+    /// The stack captured when error object `o` was created (an object with
+    /// an [[ErrorData]] internal slot), for `Error.prototype.stack`.
+    pub fn error_stack(&self, o: Object) -> Option<&str> {
+        self.error_stacks.get(&o).map(|s| &**s)
     }
 
     pub fn obj(&self, o: Object) -> &ObjectData {

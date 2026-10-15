@@ -4,20 +4,29 @@
 
 use kahvi_core::prelude::*;
 
+use crate::support::iterator_helper::setter_that_ignores_prototype_properties;
+
 /// set Error.prototype.stack
 pub(crate) fn prototype_set_stack(
     agent: &mut Agent,
     this: Value,
     args: &[Value],
-    new_target: Option<Object>,
+    _new_target: Option<Object>,
 ) -> JsResult<Value> {
-    // The value of the [[Set]] attribute is a built-in function that takes an argument _v_. It performs the following steps when called:
-    //
-    // 1. Let _E_ be the *this* value.
-    // 2. If _E_ is not an Object, throw a *TypeError* exception.
-    // 3. If _v_ is not a String, throw a *TypeError* exception.
-    // 4. Perform ? SetterThatIgnoresPrototypeProperties(*this* value, %Error.prototype%, *"stack"*, _v_).
-    // 5. Return *undefined*.
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("set Error.prototype.stack"))
+    let v = args.first().copied().unwrap_or(Value::Undefined);
+    // 1. Let E be the this value.
+    // 2. If E is not an Object, throw a TypeError exception.
+    if !matches!(this, Value::Object(_)) {
+        return Err(agent.throw_type_error("Error.prototype.stack setter called on a non-object"));
+    }
+    // 3. If v is not a String, throw a TypeError exception.
+    if !matches!(v, Value::String(_)) {
+        return Err(agent.throw_type_error("Error.prototype.stack must be set to a string"));
+    }
+    // 4. Perform ? SetterThatIgnoresPrototypeProperties(this value, %Error.prototype%, "stack", v).
+    let home = agent.intrinsic("%Error.prototype%");
+    let key = agent.key("stack");
+    setter_that_ignores_prototype_properties(agent, this, home, key, v)?;
+    // 5. Return undefined.
+    Ok(Value::Undefined)
 }

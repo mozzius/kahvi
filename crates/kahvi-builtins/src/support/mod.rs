@@ -9,6 +9,7 @@ pub(crate) mod disposable_stack;
 pub(crate) mod error;
 pub(crate) mod iterator_helper;
 pub(crate) mod regexp;
+pub(crate) mod regexp_legacy;
 pub(crate) mod regexp_string_iterator;
 pub(crate) mod string_iterator;
 pub(crate) mod this_value;

@@ -525,6 +525,16 @@ impl Agent {
             for &o in r.template_map.values() {
                 t.object(o);
             }
+            if let Some(s) = r.legacy_regexp.input {
+                t.string(s);
+            }
+            if let Some(l) = &r.legacy_regexp.last_match {
+                t.string(l.matched_in);
+                t.string(l.last_paren);
+                for &p in &l.parens {
+                    t.string(p);
+                }
+            }
         }
         for c in &self.contexts {
             c.function.trace(t);
@@ -604,6 +614,7 @@ impl Agent {
         }
         // A collected object's native state goes with it.
         self.native_states.retain(|o, _| t.objects.get(o.0));
+        self.error_stacks.retain(|o, _| t.objects.get(o.0));
         for i in 0..self.envs.len() as u32 {
             if t.envs.get(i) {
                 live_count += 1;
