@@ -754,6 +754,13 @@ fn intrinsic_or_create(agent: &mut Agent, realm: RealmId, name: &str) -> Object 
 
 /// CreateIntrinsics + SetDefaultGlobalBindings for `realm`. Pass this to
 /// `Agent::set_intrinsics_installer`.
+/// Whether a built-in belongs to ECMA-402 (`%Intl%`, its constructors'
+/// objects and the Segmenter iterator prototypes). Without `agent.intl`
+/// none of them is created, which keeps realm creation as cheap as before.
+fn is_intl(owner: &str) -> bool {
+    owner.starts_with("%Intl")
+}
+
 pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
     agent.regexp_matcher_check = Some(crate::support::regexp::has_regexp_matcher);
     // The objects with special shapes, in order.
@@ -804,12 +811,16 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         agent.set_intrinsic(realm, &format!("%{ta}.prototype%"), o);
     }
 
+    let intl = agent.intl;
     // Constructors first (other functions' owners may be constructors).
     let function_proto = agent.intrinsic_in(realm, "%Function.prototype%");
     // By intrinsic name without the %s: "Array", "Intl.Collator".
     let mut constructors: Vec<String> = Vec::new();
     for pass in 0..2 {
-        for entry in FUNCTIONS.iter().filter(|e| e.kind == Kind::Constructor) {
+        for entry in FUNCTIONS
+            .iter()
+            .filter(|e| e.kind == Kind::Constructor && (intl || !is_intl(e.owner)))
+        {
             let Key::Str(name) = entry.key else { continue };
             let proto_name = CONSTRUCTOR_PROTOS
                 .iter()
@@ -851,7 +862,7 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
     for entry in FUNCTIONS
         .iter()
         .chain(legacy_regexp)
-        .filter(|e| e.kind != Kind::Constructor)
+        .filter(|e| e.kind != Kind::Constructor && (intl || !is_intl(e.owner)))
     {
         let owner = if entry.owner == "%GlobalObject%" {
             agent.realm(realm).global_object
@@ -1129,7 +1140,9 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         let k = agent.key(name);
         define(agent, global, k, value, false, false, false);
     }
-    crate::support::intl::install(agent, realm);
+    if agent.intl {
+        crate::support::intl::install(agent, realm);
+    }
     crate::extensions::install(agent, realm);
     Ok(())
 }
