@@ -104,7 +104,8 @@ fn run(args: &Args) -> u8 {
     };
     for path in scripts {
         let source = match std::fs::read(path) {
-            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Ok(b) => String::from_utf8(b)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
             Err(err) => {
                 eprintln!("kahvi: cannot read {path}: {err}");
                 return 2;
@@ -130,7 +131,8 @@ fn run(args: &Args) -> u8 {
             .map(|p| p.to_string_lossy().into_owned())
             .unwrap_or_else(|_| args.file.clone());
         let source = match std::fs::read(path) {
-            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Ok(b) => String::from_utf8(b)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
             Err(err) => {
                 eprintln!("kahvi: cannot read {}: {err}", args.file);
                 return 2;
