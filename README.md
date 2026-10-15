@@ -27,6 +27,17 @@ npm packages and programs run under `kahvi-run`, each checked byte for byte agai
 
 <!-- realworld:end -->
 
+<!-- mjsunit:start -->
+
+V8's mjsunit tests at [758f9aba526b](https://chromium.googlesource.com/v8/v8/+/758f9aba526bfbd1183e18f420096e5b4cf9df07/test/mjsunit), run under the `kahvi` CLI; tests that need d8 or V8 internals are skipped with a reason ([mjsunit/](mjsunit/run.py), `./mjs`).
+
+| mjsunit | |
+|---|--:|
+| **Passing** | **5187 / 5534** |
+| Skipped | 4319 |
+
+<!-- mjsunit:end -->
+
 ## How it works
 
 - **test262 is the only judge.** It is pinned in `vendor/test262`, agents
