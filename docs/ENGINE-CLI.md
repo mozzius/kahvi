@@ -5,7 +5,7 @@ The test262 runner (`harness/t262`) drives the engine binary
 changing it means changing the runner, which only the architect does.
 
 ```
-kahvi [--prelude FILE]... [--module] FILE
+kahvi [--prelude FILE]... [--module] [--no-intl] FILE
 ```
 
 - Each `--prelude` file is evaluated, in order, as a **script** in the same
@@ -15,6 +15,8 @@ kahvi [--prelude FILE]... [--module] FILE
   specifiers starting with `./` resolve relative to `FILE`'s directory.
 - After evaluation the engine runs the job queue (promise jobs) until empty,
   then exits.
+- The global `Intl` exists unless `--no-intl` is given (docs/INTL.md). The
+  mjsunit runner passes it while ECMA-402 is incomplete.
 
 ## Host bindings
 
