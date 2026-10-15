@@ -37,6 +37,7 @@ and the run exits 1. Other failures are reported, grouped by cause.
   ./mjs --update-expected         rewrite expected-pass.txt from this run
   ./mjs --json FILE               also write per-test results as JSON
   ./mjs --skipped                 list skipped tests with their reasons
+  ./mjs --markdown FILE           also write the README summary table
 """
 
 import argparse
@@ -358,6 +359,17 @@ def cause(reason):
     return reason[:120]
 
 
+def markdown_summary(commit, results, passed, skipped):
+    """The README table: how many of the run tests pass, and how many are skipped."""
+    rows = ["| mjsunit | |", "|---|--:|",
+            f"| **Passing** | **{len(passed)} / {len(results)}** |",
+            f"| Skipped | {len(skipped)} |"]
+    note = (f"V8's mjsunit tests at [{commit[:12]}](https://chromium.googlesource.com/v8/v8/+/{commit}/test/mjsunit), "
+            "run under the `kahvi` CLI; tests that need d8 or V8 internals are skipped with a reason "
+            "([mjsunit/](mjsunit/run.py), `./mjs`).")
+    return note + "\n\n" + "\n".join(rows) + "\n"
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--engine", help="kahvi binary (default: build target/release/kahvi)")
@@ -366,6 +378,7 @@ def main():
     ap.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 4)
     ap.add_argument("--update-expected", action="store_true", help="rewrite expected-pass.txt")
     ap.add_argument("--json", metavar="FILE", help="write per-test results to FILE")
+    ap.add_argument("--markdown", metavar="FILE", help="write the README summary table to FILE")
     ap.add_argument("--skipped", action="store_true", help="list skipped tests and their reasons")
     ap.add_argument("prefixes", nargs="*")
     args = ap.parse_args()
@@ -422,6 +435,8 @@ def main():
     if args.json:
         Path(args.json).write_text(json.dumps({"engine": engine, "v8": commit, "gc_stress": args.gc_stress,
                                                "results": results, "skipped": dict(skipped)}, indent=1) + "\n")
+    if args.markdown and not args.prefixes:
+        Path(args.markdown).write_text(markdown_summary(commit, results, passed, skipped))
     if args.update_expected:
         if args.prefixes:
             sys.exit("mjs: --update-expected needs a run of every test")
