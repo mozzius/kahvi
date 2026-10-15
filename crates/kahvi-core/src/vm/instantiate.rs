@@ -47,6 +47,18 @@ pub(super) fn function_declaration_instantiation(
         frame.env = env;
         env
     };
+    // (Room for the bindings steps 21-34 create here, so the list grows once.)
+    if let Environment::Declarative { bindings, .. } = agent.env_mut(env_record) {
+        let d = &code.decls;
+        let mut n = params.names.len() + 1;
+        if !params.has_expressions {
+            n += d.var_names.len() + d.functions.len();
+            if strict {
+                n += d.lexical.len();
+            }
+        }
+        bindings.reserve(n);
+    }
     // 21. For each String paramName of parameterNames, do
     for &name in &params.names {
         // a. Let alreadyDeclared be ! env.HasBinding(paramName).
@@ -159,7 +171,9 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         frame.annex_b.push(name);
     }
     // 30-31. Non-strict functions put top-level lexical declarations in their own environment.
-    let lex_env = if code.strict {
+    //     (That environment only matters to a direct eval's conflict check
+    //     when it has bindings, so with no lexical declarations it is varEnv.)
+    let lex_env = if code.strict || decls.lexical.is_empty() {
         var_env
     } else {
         Environment::new_declarative(agent, Some(var_env))

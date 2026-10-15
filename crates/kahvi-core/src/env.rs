@@ -76,6 +76,10 @@ impl Bindings {
         self.list.capacity()
     }
 
+    pub(crate) fn reserve(&mut self, additional: usize) {
+        self.list.reserve(additional);
+    }
+
     /// Empties the list, keeping its allocation.
     pub(crate) fn clear(&mut self) {
         self.list.clear();
