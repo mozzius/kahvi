@@ -1,0 +1,129 @@
+{
+  "duration_api_ms": 14982,
+  "stop_reason": "end_turn",
+  "session_id": "df0fc0cb-9c17-472b-96e8-8b47477270b2",
+  "total_cost_usd": 0.0076824,
+  "usage": {
+    "input_tokens": 9,
+    "cache_creation_input_tokens": 24050,
+    "cache_read_input_tokens": 114610,
+    "output_tokens": 2441,
+    "output_tokens_details": {
+      "thinking_tokens": 1096
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24050,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 342,
+        "cache_read_input_tokens": 31305,
+        "cache_creation_input_tokens": 502,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 502
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_0127hdmog6yvmNAL39geBmjf",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2024 crates/kahvi-builtins/src/iterator/prototype_windows.rs; echo \"fmt exit: $?\"",
+        "description": "Check formatting of the windows file"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`Iterator.prototype.windows` is implemented in `crates/kahvi-builtins/src/iterator/prototype_windows.rs`, carried over from the previous attempt. `./t262 built-ins/Iterator/prototype/windows/` passes 80 of 80 runs (40 files, each run in two modes), `cargo clippy` reports nothing for the file, and `cargo fmt --check` is clean. The file is staged but not committed, and I changed no other files and added no tests.\n\nBLOCKED: none",
+  "ttft_ms": 1530,
+  "type": "result",
+  "duration_ms": 73489,
+  "uuid": "6838b6c8-1e5d-4b6a-b812-9a4874bf8c9a",
+  "ttft_stream_ms": 1382,
+  "time_to_request_ms": 494,
+  "time_to_request_phases_ms": {
+    "other": 31,
+    "system_prompt": 391,
+    "resume_other": 0,
+    "process_user_input": 3,
+    "input_attachments": 8,
+    "input_hooks": 3,
+    "tool_pool_refresh": 3,
+    "init_message": 16,
+    "engine_pickup": 2,
+    "message_prep": 4,
+    "model_config_wait": 1,
+    "autocompact": 4,
+    "query_setup": 0,
+    "model_gates": 1,
+    "tool_schema_build": 13,
+    "message_normalization": 3,
+    "client_creation": 4,
+    "request_build": 7
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 80,
+  "time_to_request_cpu_ms": 299,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 241,
+  "process_anon_mib_turn_start": 123,
+  "process_rss_mib_result": 268,
+  "process_anon_mib_result": 148,
+  "process_peak_rss_mib": 268,
+  "process_cpu_ms_turn": 2626,
+  "process_wall_ms_turn": 73489,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1383,
+  "time_to_request_from_spawn_ms": 3863576,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792052933646.2637,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.68,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.35,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}

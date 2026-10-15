@@ -1,0 +1,87 @@
+{
+  "ticket": "B-iterator-prototype-includes",
+  "base": "7fb654220175652d165d3111a9e3e874464a8742",
+  "head": "0a8ff4099ea1bd774b5644cf11d526fd834c37b9",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "added": 64,
+      "removed": 20
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 17,
+      "rule": "skipping something: check what and why",
+      "text": "let skipped_elements = args.get_or_undefined(1);"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 29,
+      "rule": "skipping something: check what and why",
+      "text": "let to_skip = match skipped_elements {"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 38,
+      "rule": "skipping something: check what and why",
+      "text": "Value::Number(n) if n.is_infinite() || ops::is_integral_number(skipped_elements) => n,"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 41,
+      "rule": "skipping something: check what and why",
+      "text": "\"Iterator.prototype.includes: skippedElements is not an integral number\","
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 50,
+      "rule": "skipping something: check what and why",
+      "text": "agent.throw_range_error(\"Iterator.prototype.includes: skippedElements is negative\");"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 58,
+      "rule": "skipping something: check what and why",
+      "text": "\"Iterator.prototype.includes: skippedElements is greater than 2^53 - 1\","
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 64,
+      "rule": "skipping something: check what and why",
+      "text": "let mut skipped = 0.0;"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 75,
+      "rule": "skipping something: check what and why",
+      "text": "if skipped < to_skip {"
+    },
+    {
+      "file": "crates/kahvi-builtins/src/iterator/prototype_includes.rs",
+      "line": 77,
+      "rule": "skipping something: check what and why",
+      "text": "skipped += 1.0;"
+    }
+  ],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 88,
+    "before": 8,
+    "after": 88,
+    "new_passes": 80,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

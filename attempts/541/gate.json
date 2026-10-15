@@ -1,0 +1,32 @@
+{
+  "ticket": "B-iterator-prototype-windows",
+  "base": "7fb654220175652d165d3111a9e3e874464a8742",
+  "head": "4ee1ab61b2f8ae3edf5dbaab489e19c49547d1fc",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/iterator/prototype_windows.rs",
+      "added": 161,
+      "removed": 36
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 80,
+    "before": 10,
+    "after": 80,
+    "new_passes": 70,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}

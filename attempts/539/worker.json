@@ -1,0 +1,137 @@
+{
+  "duration_api_ms": 15709,
+  "stop_reason": "end_turn",
+  "session_id": "09464be5-5e31-4b08-969b-89d78e262d1f",
+  "total_cost_usd": 0.0067383600000000005,
+  "usage": {
+    "input_tokens": 11,
+    "cache_creation_input_tokens": 19658,
+    "cache_read_input_tokens": 125886,
+    "output_tokens": 2303,
+    "output_tokens_details": {
+      "thinking_tokens": 846
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19658,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 406,
+        "cache_read_input_tokens": 26691,
+        "cache_creation_input_tokens": 724,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 724
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01FDcFYCLcnppMpKvezC6AAg",
+      "tool_input": {
+        "command": "rustfmt --check --edition 2024 crates/kahvi-builtins/src/iterator/prototype_includes.rs; echo \"rustfmt exit: $?\"; git diff --stat HEAD",
+        "description": "Check rustfmt on the file and the diff scope"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Me55d43UZLoMEE3squLmxu",
+      "tool_input": {
+        "command": "cargo fmt --check 2>&1 | head -30; echo \"exit: ${PIPESTATUS[0]}\"",
+        "description": "Check formatting across the workspace"
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The `Iterator.prototype.includes` implementation in `crates/kahvi-builtins/src/iterator/prototype_includes.rs` builds and passes all 88 `built-ins/Iterator/prototype/includes/` tests, and clippy reports nothing for the file. I did not verify formatting: `cargo fmt --check` and `rustfmt` were both denied in this session. The diff touches only the ticket's file.",
+  "ttft_ms": 1737,
+  "type": "result",
+  "duration_ms": 76117,
+  "uuid": "47c5b570-967e-46be-ba16-2f95eb7e035a",
+  "ttft_stream_ms": 1491,
+  "time_to_request_ms": 510,
+  "time_to_request_phases_ms": {
+    "other": 27,
+    "system_prompt": 321,
+    "resume_other": 1,
+    "process_user_input": 5,
+    "input_attachments": 13,
+    "input_hooks": 4,
+    "tool_pool_refresh": 3,
+    "init_message": 8,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 78,
+    "autocompact": 3,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 14,
+    "message_normalization": 3,
+    "client_creation": 17,
+    "request_build": 8
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 84,
+  "time_to_request_cpu_ms": 396,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 127,
+  "process_rss_mib_result": 266,
+  "process_anon_mib_result": 146,
+  "process_peak_rss_mib": 269,
+  "process_cpu_ms_turn": 2686,
+  "process_wall_ms_turn": 76117,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 7,
+    "cpu_ms": 23,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1492,
+  "time_to_request_from_spawn_ms": 3863203,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792052933527.6052,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792066800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.68,
+        "resetsAt": 1792066800
+      },
+      "seven_day": {
+        "utilization": 0.35,
+        "resetsAt": 1792054800
+      }
+    }
+  }
+}
