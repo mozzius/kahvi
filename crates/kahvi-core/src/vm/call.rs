@@ -338,35 +338,32 @@ fn compile_lazy(
     Ok(code)
 }
 
-/// A frame for the body of `f`, reusing spare buffers.
-#[inline(always)]
+/// A frame for the body of `f`.
 fn body_frame(
-    agent: &mut Agent,
     code: Arc<FunctionCode>,
     env: EnvId,
     private_env: Option<Arc<PrivateEnv>>,
     f: Object,
     args: &[Value],
 ) -> Frame {
-    let locals = code.locals.as_ref().map(|locals| {
-        let mut v = agent.spare_locals.pop().unwrap_or_default();
-        v.extend(
-            locals
+    let mut frame = Frame::new(code, env, private_env, Some(f));
+    init_locals(&mut frame);
+    frame.args.extend_from_slice(args);
+    frame
+}
+
+/// Gives a new frame its locals: `var` ones start undefined, the rest
+/// uninitialized.
+#[inline(always)]
+fn init_locals(frame: &mut Frame) {
+    let Frame { code, locals, .. } = frame;
+    if let Some(infos) = &code.locals {
+        locals.extend(
+            infos
                 .iter()
                 .map(|l| (l.kind == LocalKind::Var).then_some(Value::Undefined)),
         );
-        v
-    });
-    let mut frame = Frame::new(code, env, private_env, Some(f));
-    if let Some(locals) = locals {
-        frame.locals = locals;
     }
-    frame.stack = agent.spare_vec();
-    frame.args = agent.spare_vec();
-    frame.args.extend_from_slice(args);
-    frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
-    frame.refs = agent.spare_refs.pop().unwrap_or_default();
-    frame
 }
 
 /// OrdinaryCallEvaluateBody: runs the body in a new frame. Returns the
@@ -389,7 +386,16 @@ fn evaluate_body(
     if code.is_async || code.is_generator {
         return evaluate_suspendable_body(agent, f, code, env, private_env, args);
     }
-    let mut frame = body_frame(agent, code, env, private_env, f, args);
+    // A pooled frame: no allocation, and no large frame on the native stack.
+    let mut frame = match agent.spare_frames.pop() {
+        Some(mut frame) => {
+            frame.reinit(code, env, private_env, Some(f));
+            frame
+        }
+        None => Box::new(Frame::new(code, env, private_env, Some(f))),
+    };
+    init_locals(&mut frame);
+    frame.args.extend_from_slice(args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
     let result = run_frame(agent, &mut frame);
@@ -397,22 +403,8 @@ fn evaluate_body(
         free_scopes_between(agent, frame.env, env);
     }
     let result = result?;
-    agent.give_back_vec(std::mem::take(&mut frame.stack));
-    agent.give_back_vec(std::mem::take(&mut frame.args));
-    let mut handlers = std::mem::take(&mut frame.handlers);
-    if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
-        handlers.clear();
-        agent.spare_handlers.push(handlers);
-    }
-    let mut refs = std::mem::take(&mut frame.refs);
-    if agent.spare_refs.len() < 64 && refs.capacity() <= 64 && refs.capacity() > 0 {
-        refs.clear();
-        agent.spare_refs.push(refs);
-    }
-    let mut locals = std::mem::take(&mut frame.locals);
-    if agent.spare_locals.len() < 64 && locals.capacity() <= 1024 && locals.capacity() > 0 {
-        locals.clear();
-        agent.spare_locals.push(locals);
+    if agent.spare_frames.len() < 256 && frame.empty_for_pool() {
+        agent.spare_frames.push(frame);
     }
     Ok(result)
 }
@@ -451,7 +443,7 @@ fn evaluate_suspendable_body(
     private_env: Option<Arc<PrivateEnv>>,
     args: &[Value],
 ) -> JsResult<FrameResult> {
-    let mut frame = body_frame(agent, code.clone(), env, private_env, f, args);
+    let mut frame = body_frame(code.clone(), env, private_env, f, args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
     if !code.is_generator {

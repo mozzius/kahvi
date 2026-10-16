@@ -162,15 +162,10 @@ pub struct Agent {
     pub(crate) symbols: Vec<SymbolData>,
     /// The garbage collector's state (docs/GC.md).
     pub(crate) gc: crate::gc::GcState,
-    /// Empty vectors kept from finished frames (operand stacks, argument
-    /// lists) so a call does not allocate new ones. They hold no values.
-    pub(crate) spare_vecs: Vec<Vec<Value>>,
-    /// Exception-handler lists kept for reuse, like `spare_vecs`.
-    pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
-    /// Frame-local lists kept for reuse, like `spare_vecs`.
-    pub(crate) spare_locals: Vec<Vec<Option<Value>>>,
-    /// Reference stacks kept for reuse, like `spare_vecs`.
-    pub(crate) spare_refs: Vec<Vec<crate::vm::Reference>>,
+    /// Frames of finished calls, emptied (`Frame::empty_for_pool`).
+    // (Boxed: a frame keeps its address while running, and moves cheaply.)
+    #[allow(clippy::vec_box)]
+    pub(crate) spare_frames: Vec<Box<crate::vm::Frame>>,
     /// Collect at one safe point in `gc_stress` on average, regardless of
     /// heap growth (finds rooting bugs; set by the host, see
     /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
@@ -256,19 +251,6 @@ impl std::fmt::Debug for Agent {
 }
 
 impl Agent {
-    /// An empty vector, reusing one a finished frame gave back.
-    pub(crate) fn spare_vec(&mut self) -> Vec<Value> {
-        self.spare_vecs.pop().unwrap_or_default()
-    }
-
-    /// Keeps `v`'s allocation for `spare_vec` (a bounded number of them).
-    pub(crate) fn give_back_vec(&mut self, mut v: Vec<Value>) {
-        if self.spare_vecs.len() < 64 && v.capacity() <= 1024 {
-            v.clear();
-            self.spare_vecs.push(v);
-        }
-    }
-
     pub fn new() -> Agent {
         let placeholder = JsString(0);
         let mut agent = Agent {
@@ -277,10 +259,7 @@ impl Agent {
             string_index: Default::default(),
             symbols: Vec::new(),
             gc: Default::default(),
-            spare_vecs: Vec::new(),
-            spare_handlers: Vec::new(),
-            spare_locals: Vec::new(),
-            spare_refs: Vec::new(),
+            spare_frames: Vec::new(),
             gc_stress: 0,
             intl: false,
             kept_objects: Vec::new(),
