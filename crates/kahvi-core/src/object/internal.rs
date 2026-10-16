@@ -744,6 +744,32 @@ pub(crate) fn ordinary_get_data(agent: &Agent, o: Object, key: PropertyKey) -> O
     }
 }
 
+/// [`ordinary_get_data`] for a property instruction, with its position
+/// hint (`PropCache`).
+#[inline]
+pub(crate) fn ordinary_get_data_hinted(
+    agent: &Agent,
+    o: Object,
+    key: PropertyKey,
+    hint: &crate::compiler::PropCache,
+) -> Option<Value> {
+    let mut o = o;
+    loop {
+        let obj = agent.obj(o);
+        if !has_ordinary_get(&obj.kind) {
+            return None;
+        }
+        match obj.properties.get_hinted(&key, hint) {
+            Some(Property::Data { value, .. }) => return Some(*value),
+            Some(Property::Accessor { .. }) => return None,
+            None => match obj.prototype {
+                Some(parent) => o = parent,
+                None => return Some(Value::Undefined),
+            },
+        }
+    }
+}
+
 fn has_ordinary_get(kind: &ObjectKind) -> bool {
     matches!(
         kind,

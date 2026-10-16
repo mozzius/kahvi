@@ -27,6 +27,9 @@ pub struct Realm {
     /// Recent `Agent::intrinsic_in` lookups: (name address, name length,
     /// intrinsic). The intrinsics map holds (and roots) every object here.
     pub(crate) intrinsic_cache: [std::cell::Cell<(usize, usize, Option<Object>)>; INTRINSIC_CACHE],
+    /// %Function.prototype.call% and %Function.prototype.apply%, which
+    /// Op::Call looks for on every call of a built-in (`begin_indirect_call`).
+    pub(crate) call_apply: [Option<Object>; 2],
 }
 
 /// The number of entries in `Realm::intrinsic_cache`.
@@ -72,6 +75,7 @@ impl Agent {
             global_env: EnvId(0),
             template_map: Default::default(),
             intrinsic_cache: std::array::from_fn(|_| std::cell::Cell::new((0, 0, None))),
+            call_apply: [None, None],
             // The initial value of all these internal slots is the empty String.
             legacy_regexp: LegacyRegExpStatics {
                 input: Some(self.names.empty),
@@ -109,6 +113,12 @@ impl Agent {
 
     /// Registers an intrinsic of `realm` under its spec name.
     pub fn set_intrinsic(&mut self, realm: RealmId, name: &str, o: Object) {
-        self.realm_mut(realm).intrinsics.insert(name.into(), o);
+        let r = self.realm_mut(realm);
+        match name {
+            "%Function.prototype.call%" => r.call_apply[0] = Some(o),
+            "%Function.prototype.apply%" => r.call_apply[1] = Some(o),
+            _ => {}
+        }
+        r.intrinsics.insert(name.into(), o);
     }
 }
