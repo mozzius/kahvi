@@ -5825,3 +5825,40 @@ test262 at last merge: 83371/84983 runs passing
 [00:24:49] I-date-time-format: attempt on slot 3 with sonnet
 [00:25:24] I-date-time-format: attempt 563 finished ($0.202, 14 turns)
 [00:25:24] I-date-time-format: blocked: `support/intl_dtf_icu.rs` must be added to this ticket's scope, to make `field_set_for` throw not-implemented for minute/second/fractionalSecondDigits without an hour. `writeable` must be added to the `kahvi-builtins` manifest, for `formatToParts` and `formatRangeToParts`. dayPeriod can't be done because ICU4X has no field set for it.
+[00:25:29] nothing left to do
+tickets: blocked 5, done 433, needs-architect 3, open 10, partial 1
+  B-iterator-prototype-chunks open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-includes open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-windows open             tier=haiku   attempts=2 strikes=0
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+  I-array-to-locale-string open             tier=sonnet  attempts=0 strikes=0
+  I-collator needs-architect  tier=sonnet  attempts=2 strikes=2  failed at the top tier; last: rejected (made_up_results, contradicts_spec): The constructo
+  I-date-time-format blocked          tier=sonnet  attempts=4 strikes=0  `support/intl_dtf_icu.rs` must be added to this ticket's scope, to make `field_set_for` th
+  I-display-names needs-architect  tier=sonnet  attempts=1 strikes=2  failed at the top tier; last: rejected (special_cases_inputs, made_up_results, swallows_er
+  I-duration-format open             tier=sonnet  attempts=0 strikes=0
+  I-locale   needs-architect  tier=sonnet  attempts=3 strikes=2  failed at the top tier; last: rejected (made_up_results, contradicts_spec): The constructo
+  I-locale-canonicalization blocked          tier=sonnet  attempts=1 strikes=0  CLDR common/bcp47 alias data (`-u-` `tz` aliases and the `-t-` field value aliases such as
+  I-number-format blocked          tier=sonnet  attempts=3 strikes=0  `kahvi-builtins` needs `fixed_decimal` and `writeable` as direct dependencies (or `icu::de
+  I-number-format-range open             tier=sonnet  attempts=0 strikes=0
+  I-number-to-locale-string open             tier=sonnet  attempts=0 strikes=0
+  I-plural-rules open             tier=sonnet  attempts=0 strikes=0
+  I-relative-time-format open             tier=sonnet  attempts=0 strikes=0
+  I-string-locale-compare open             tier=sonnet  attempts=0 strikes=0
+  I-supported-values-of partial          tier=sonnet  attempts=2 strikes=0  20 target runs still failing: AvailableCanonicalCurrencies (6), AvailableCanonicalCollatio
+attempts: 563  merged: 418  spend: $38.59 (workers $22.76, verifier $15.83)  new test262 passes: 20122  ($0.002 per pass)
+  haiku   accept       410
+  haiku   blocked      6
+  haiku   gate-reject  42
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       17
+  sonnet  accept       18
+  sonnet  blocked      4
+  sonnet  gate-reject  32
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+  sonnet  reject       5
+  sonnet  revise       3
+plan usage at last run: allowed_warning; five_hour 72% (resets Fri 04:20), seven_day 37% (resets Thu 09:00)
+test262 at last merge: 84067/84983 runs passing
