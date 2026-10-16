@@ -1,30 +1,32 @@
 +++
 id = "I-number-format"
-title = "Intl.NumberFormat"
+title = "Intl.NumberFormat formatting"
 kind = "builtin"
 tier = "sonnet"
 scope = ["crates/kahvi-builtins/src/intl_number_format/*.rs", "crates/kahvi-builtins/src/support/intl_number_format.rs"]
-read = ["docs/INTL.md", "docs/API.md", "crates/kahvi-builtins/src/support/intl.rs", "crates/kahvi-builtins/src/intl_collator/supported_locales_of.rs", "crates/kahvi-builtins/src/disposable_stack/constructor.rs"]
-spec = ["sec-intl.numberformat", "sec-chainnumberformat", "sec-setnumberformatdigitoptions", "sec-formatnumber"]
+read = ["docs/INTL.md", "docs/API.md", "crates/kahvi-builtins/src/support/intl.rs", "crates/kahvi-builtins/src/intl_number_format/constructor.rs"]
+spec = ["sec-intl.numberformat.prototype.format", "sec-formatnumber", "sec-tointlmathematicalvalue", "sec-formatnumerictostring", "sec-torawprecision", "sec-torawfixed", "sec-partitionnumberpattern", "sec-formatnumbertoparts", "sec-intl.numberformat.prototype.formattoparts"]
 target = ["intl402/NumberFormat/"]
 needs = []
 priority = 5000
 +++
-Implement this Intl service: the constructor, its internal slots and its
-prototype methods, following the spec steps already in each stub (keep each
-step as a comment directly above the code for it). Read docs/INTL.md first.
+The constructor, SetNumberFormatDigitOptions and resolvedOptions are done.
+This ticket is the formatting: the `format` getter, FormatNumeric,
+`formatToParts`, ToIntlMathematicalValue and FormatNumericToString,
+following the spec steps already in each stub (keep each step as a comment
+directly above the code for it). Read docs/INTL.md first.
 
-- The negotiation and option operations (ResolveOptions, GetOption, ...)
-  are in `support/intl.rs`; do not re-implement them. Put this service's
-  internal-slot struct and shared abstract operations in its own
-  `support/intl_*.rs` file (in scope).
-- Locale data and formatting come from ICU4X (`icu` crate). Never write
-  tables of expected outputs.
-- Work in steps: the constructor and resolvedOptions first, then the
-  methods. Anything you cannot finish must still return
-  `Err(agent.not_implemented("..."))` naming what is missing.
-- No new Rust tests: test262 is the measure.
-- SetNumberFormatDigitOptions is shared with Intl.PluralRules: make it
-  `pub(crate)` in `support/intl_number_format.rs`.
-- Intl.NumberFormat called without `new` on an Intl object uses
-  `support::intl::fallback_symbol` (ChainNumberFormat).
+- An Intl mathematical value is exact: keep it as a decimal
+  (`icu::decimal::input::Decimal`, which parses strings and BigInts), never
+  as an f64 once ToIntlMathematicalValue has read a string or BigInt.
+- FormatNumericToString, ToRawPrecision and ToRawFixed are spec
+  algorithms on decimals: implement them as written, with the rounding
+  modes and increments from the slots. Make FormatNumericToString
+  `pub(crate)` in `support/intl_number_format.rs` (Intl.PluralRules uses it).
+- PartitionNumberPattern takes its patterns and symbols from ICU4X
+  (`icu::decimal::DecimalFormatter` for digits, grouping and signs; the
+  `icu::experimental` currency, percent, unit and compact formatters for
+  the other styles and notations). Map ICU4X's parts to the spec's part
+  types for formatToParts. Whatever ICU4X has no data for throws
+  not-implemented naming it.
+- Never write tables of expected outputs. No new Rust tests.

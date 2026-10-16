@@ -18,7 +18,8 @@ Pod::Spec.new do |s|
   s.platforms           = { :ios => "15.1" }
   s.source              = { :git => "https://github.com/mozzius/kahvi.git", :tag => "#{s.version}" }
   s.source_files        = "cpp/*.{cpp,h}", "apple/*.{mm,h}", "include/kahvi.h"
-  s.public_header_files = "apple/RCTKahviInstanceFactory.h"
+  # KahviJSI.h for libraries that make their own runtimes (react-native-worklets).
+  s.public_header_files = "apple/RCTKahviInstanceFactory.h", "cpp/KahviJSI.h"
   s.vendored_frameworks = "apple/KahviFFI.xcframework"
   s.compiler_flags      = folly_config[:compiler_flags] + " " + boost_config[:compiler_flags]
   s.pod_target_xcconfig = {

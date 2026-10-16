@@ -86,7 +86,7 @@ fn begin(
     generator: Value,
 ) -> JsResult<Result<(Object, PromiseCapability), Value>> {
     // 2. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(promise_ctor))?;
     // 3-4. Let result be Completion(AsyncGeneratorValidate(generator, empty)); IfAbruptRejectPromise(result, promiseCapability).
     match generator {
@@ -267,7 +267,7 @@ fn await_return(agent: &mut Agent, g: Object) -> JsResult<()> {
         return Ok(());
     };
     // 6. Let promiseCompletion be Completion(PromiseResolve(%Promise%, completion.[[Value]])).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let promise = match promise_resolve(agent, promise_ctor, value) {
         Ok(p) => p,
         // 7. If promiseCompletion is an abrupt completion, then complete the step with it and drain.

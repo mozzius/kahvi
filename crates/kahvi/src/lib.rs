@@ -33,7 +33,14 @@ const _: () = {
 impl Runtime {
     /// A runtime with the ECMAScript built-ins and nothing from the host.
     pub fn new() -> Runtime {
+        Runtime::with_intl(false)
+    }
+
+    /// As [`Runtime::new`], with the `Intl` global (ECMA-402) when `intl`
+    /// (docs/INTL.md: off by default while ECMA-402 is incomplete).
+    pub fn with_intl(intl: bool) -> Runtime {
         let mut agent = Agent::new();
+        agent.intl = intl;
         agent.set_intrinsics_installer(kahvi_builtins::install);
         let realm = agent
             .create_realm()

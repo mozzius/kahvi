@@ -122,7 +122,7 @@ fn active_slots(agent: &Agent) -> Vec<Value> {
 /// CreateResolvingFunctions(promise) (§27.2.1.3): (resolve, reject).
 pub fn create_resolving_functions(agent: &mut Agent, promise: Object) -> (Object, Object) {
     // 1. Let alreadyResolved be the Record { [[Value]]: false }.
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let already = agent.object_with_kind(
         Some(proto),
         ObjectKind::Native(Box::new(AlreadyResolved(false))),
@@ -449,7 +449,7 @@ pub fn new_promise_capability(agent: &mut Agent, c: Value) -> JsResult<PromiseCa
         }
     };
     // 3. Let resolvingFunctions be the Record { [[Resolve]]: undefined, [[Reject]]: undefined }.
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let cells = agent.object_with_kind(
         Some(proto),
         ObjectKind::Native(Box::new(CapabilityCells::default())),

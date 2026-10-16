@@ -23,9 +23,7 @@ What is checked:
   headers, folly and fbjni. CI runs it on every PR. It only checks syntax
   and types: nothing here has been linked or run in an app yet.
 
-What is missing: an Android or iOS app build that uses the package, and a
-`react-native-worklets` build over kahvi. Worklets makes its UI-thread
-runtime with `makeHermesRuntime`.
+What is missing: an Android or iOS app build that uses the package.
 
 ## Building kahvi's library
 
@@ -54,8 +52,30 @@ In `MainApplication`, pass the factory to the React host:
 import dev.kahvi.reactnative.KahviRuntimeFactory
 
 override val reactHost: ReactHost
-  get() = getDefaultReactHost(applicationContext, reactNativeHost, KahviRuntimeFactory())
+  get() = getDefaultReactHost(applicationContext, reactNativeHost, KahviRuntimeFactory(applicationContext))
 ```
+
+### react-native-worklets (Reanimated 4)
+
+Worklets makes its UI-thread runtimes with `makeHermesRuntime`.
+`patches/react-native-worklets+0.13.0.patch` (for patch-package) makes
+them kahvi runtimes instead, links worklets to this package, and turns off
+its Hermes sampling profiler. `harness/rn/check.sh` compiles the patched
+files.
+
+### Expo
+
+Add the config plugin, which does the Android steps above at prebuild:
+
+```js
+plugins: ["react-native-kahvi"]
+```
+
+Expo 57's `ExpoReactHostFactory.getDefaultReactHost` takes a
+`jsRuntimeFactory` but always makes a Hermes one;
+`patches/expo+57.0.24.patch` makes it use the one it is given.
+`harness/rn/social-app-android.sh` builds Bluesky's app this way
+(`.github/workflows/social-app-android.yml`).
 
 ### iOS
 

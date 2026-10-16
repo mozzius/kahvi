@@ -42,11 +42,11 @@ pub use operators::{apply_binary_operator, number_exponentiate, type_of};
 
 use crate::ScriptOrModule;
 use crate::agent::Agent;
-use crate::compiler::{CodeKind, ErrorType, FunctionCode, Op};
+use crate::compiler::{BinOp, CodeKind, ErrorType, FunctionCode, LocalKind, Op};
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
-use crate::object::{ObjectKind, PropertyKey};
+use crate::object::{ObjectKind, Property, PropertyKey};
 use crate::ops::dispose::{DisposeKind, DisposeResources, DisposeStep};
 use crate::ops::{self, IteratorRecord};
 use crate::realm::RealmId;
@@ -64,6 +64,15 @@ pub struct ScriptRecord {
     /// An eval or dynamic function's record: freed (and its index reused by
     /// a record with the same realm and name) once no code refers to it.
     pub collectable: bool,
+    /// What parsing the source learned about its lazy function bodies, for
+    /// reparsing them (`kahvi_parser::preparse`).
+    pub preparse: Option<Arc<kahvi_parser::preparse::Preparse>>,
+    /// Byte offsets of the starts of the source's lines, built the first
+    /// time a position in it is turned into a line and column (an error
+    /// stack), so later ones need not scan the source.
+    pub line_starts: std::sync::OnceLock<Box<[u32]>>,
+    /// The source's key in `code_cache`, if it is large enough to cache.
+    pub(crate) cache_key: Option<crate::code_cache::Key>,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.
@@ -101,6 +110,8 @@ pub enum Reference {
     /// while it still holds `name`).
     Slot(EnvId, u32, JsString),
     Unresolvable(JsString),
+    /// A frame local of the running code (`FunctionCode::locals`).
+    Local(u32),
 }
 
 /// An exception handler installed by `PushHandler`.
@@ -241,6 +252,9 @@ pub struct Frame {
     /// instantiation gave a var binding (from `code.decls`, which keeps the
     /// strings alive).
     pub annex_b: Vec<JsString>,
+    /// The values of the code's frame locals (`FunctionCode::locals`),
+    /// `None` for one not initialized yet.
+    pub locals: Vec<Option<Value>>,
 }
 
 impl Frame {
@@ -269,9 +283,89 @@ impl Frame {
             delegate_kind: 0,
             resume_pc: None,
             annex_b: Vec::new(),
+            locals: Vec::new(),
         }
     }
 
+    /// Makes a pooled frame (one `empty_for_pool` left) a new frame like
+    /// `Frame::new`, keeping its buffers' capacity.
+    #[inline]
+    pub(crate) fn reinit(
+        &mut self,
+        code: Arc<FunctionCode>,
+        env: EnvId,
+        private_env: Option<Arc<PrivateEnv>>,
+        function: Option<Object>,
+    ) {
+        // (Every field is named, so a new one cannot be missed here.)
+        let Frame {
+            code: c,
+            pc,
+            stack,
+            refs,
+            iters,
+            handlers,
+            env: e,
+            var_env,
+            private_env: p,
+            function: f,
+            args,
+            completion,
+            pending,
+            yield_return_pc,
+            delegating,
+            delegate_kind,
+            resume_pc,
+            annex_b,
+            locals,
+        } = self;
+        debug_assert!(
+            stack.is_empty()
+                && refs.is_empty()
+                && iters.is_empty()
+                && handlers.is_empty()
+                && args.is_empty()
+                && annex_b.is_empty()
+                && locals.is_empty()
+        );
+        *c = code;
+        *pc = 0;
+        *e = env;
+        *var_env = env;
+        *p = private_env;
+        *f = function;
+        *completion = Value::Undefined;
+        *pending = PendingBody::default();
+        *yield_return_pc = 0;
+        *delegating = false;
+        *delegate_kind = 0;
+        *resume_pc = None;
+    }
+
+    /// Empties the frame for the pool: it keeps no values (the collector
+    /// does not trace pooled frames) and buffers of reasonable size.
+    /// Returns false for a frame not worth keeping.
+    #[inline]
+    pub(crate) fn empty_for_pool(&mut self) -> bool {
+        self.stack.clear();
+        self.refs.clear();
+        self.iters.clear();
+        self.handlers.clear();
+        self.args.clear();
+        self.annex_b.clear();
+        self.locals.clear();
+        self.function = None;
+        self.private_env = None;
+        self.completion = Value::Undefined;
+        self.stack.capacity() <= 1024
+            && self.args.capacity() <= 1024
+            && self.locals.capacity() <= 1024
+            && self.refs.capacity() <= 64
+            && self.handlers.capacity() <= 64
+            && self.iters.capacity() <= 64
+    }
+
+    #[inline]
     fn pop(&mut self) -> Value {
         self.stack.pop().expect("operand stack underflow")
     }
@@ -362,13 +456,35 @@ fn safe_point(agent: &mut Agent, frame: &Frame) {
 
 fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
     safe_point(agent, frame);
+    // (The frame's code never changes while it runs; a handle of our own
+    // keeps the instructions in a register instead of behind the frame.)
+    let code = frame.code.clone();
+    let ops = &code.ops[..];
     loop {
         let pc = frame.pc;
-        let op = frame.code.ops[pc];
+        let op = ops[pc];
         if fast_step(agent, frame, op, pc) {
             continue;
         }
-        match execute(agent, frame, op) {
+        // Calls run outside `execute`, whose large native frame would
+        // otherwise stay on the stack for the whole callee (React Native's
+        // JavaScript thread has 1 MiB of stack).
+        let flow = match op {
+            Op::Call(argc) => call_op(agent, frame, argc).map(|()| Flow::Next),
+            Op::CallSpread => call_spread_op(agent, frame).map(|()| Flow::Next),
+            Op::New(argc) => new_op(agent, frame, argc).map(|()| Flow::Next),
+            // (Here rather than in `execute`, which costs more to enter.)
+            Op::Return => {
+                let v = frame.pop();
+                let v = match frame.code.kind {
+                    CodeKind::Script | CodeKind::Eval => frame.completion,
+                    _ => v,
+                };
+                Ok(Flow::Done(FrameResult::Return(v)))
+            }
+            _ => execute(agent, frame, op),
+        };
+        match flow {
             Ok(Flow::Next) => frame.pc = pc + 1,
             Ok(Flow::Jump(target)) => {
                 frame.pc = target;
@@ -411,6 +527,26 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             };
             frame.refs.push(Reference::Slot(env, slot as u32, name));
         }
+        Op::GetLocal(slot) => {
+            let Some(v) = frame.locals[slot as usize] else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
+        Op::ResolveLocal(slot) => frame.refs.push(Reference::Local(slot)),
+        Op::InitLocal(slot) => {
+            let v = frame.pop();
+            frame.locals[slot as usize] = Some(v);
+        }
+        Op::GetRef if matches!(frame.refs.last(), Some(Reference::Local(_))) => {
+            let Some(&Reference::Local(slot)) = frame.refs.last() else {
+                unreachable!()
+            };
+            let Some(v) = frame.locals[slot as usize] else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
         Op::GetRef => {
             let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
                 return false;
@@ -422,6 +558,19 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
                 return false;
             };
             frame.stack.push(v);
+        }
+        Op::PutRef if matches!(frame.refs.last(), Some(Reference::Local(_))) => {
+            let Some(&Reference::Local(slot)) = frame.refs.last() else {
+                unreachable!()
+            };
+            let locals = frame.code.locals.as_ref().expect("code with locals");
+            if frame.locals[slot as usize].is_none()
+                || locals[slot as usize].kind == LocalKind::Const
+            {
+                return false;
+            }
+            frame.locals[slot as usize] = Some(frame.peek());
+            frame.refs.pop();
         }
         Op::PutRef => {
             let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
@@ -451,7 +600,152 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             let v = frame.peek();
             frame.stack.push(v);
         }
+        Op::GetProp(key) => {
+            let Some(&Value::Object(o)) = frame.stack.last() else {
+                return false;
+            };
+            let Some(v) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            *frame.stack.last_mut().expect("checked") = v;
+        }
+        Op::GetPropForCall(key) => {
+            let Some(&Value::Object(o)) = frame.stack.last() else {
+                return false;
+            };
+            let Some(f) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            *frame.stack.last_mut().expect("checked") = f;
+            frame.stack.push(Value::Object(o));
+        }
+        // CreateDataPropertyOrThrow on an object literal's ordinary object
+        // that lacks the key: ValidateAndApplyPropertyDescriptor creates
+        // the data property.
+        Op::DefineField(key) => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&v)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            let obj = agent.obj_mut(o);
+            if !matches!(obj.kind, ObjectKind::Ordinary)
+                || !obj.extensible
+                || obj.properties.get(&key).is_some()
+            {
+                return false;
+            }
+            obj.properties.insert(
+                key,
+                Property::Data {
+                    value: v,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true,
+                },
+            );
+            frame.stack.pop();
+        }
+        // PutValue to an ordinary object's own writable data property:
+        // OrdinarySet's [[DefineOwnProperty]] of { [[Value]]: V } on the
+        // object itself only changes the value.
+        Op::SetProp(key) => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&v)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            let obj = agent.obj_mut(o);
+            if !matches!(obj.kind, ObjectKind::Ordinary) {
+                return false;
+            }
+            let Some(Property::Data {
+                value,
+                writable: true,
+                ..
+            }) = obj.properties.get_mut(&key)
+            else {
+                return false;
+            };
+            *value = v;
+            frame.stack.truncate(n - 2);
+            frame.stack.push(v);
+        }
+        // (ToPropertyKey of a primitive runs no user code.)
+        Op::GetElem => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&key)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            if !matches!(key, Value::Number(_) | Value::String(_) | Value::Symbol(_)) {
+                return false;
+            }
+            let Ok(key) = ops::to_property_key(agent, key) else {
+                return false;
+            };
+            let Some(v) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            frame.stack.truncate(n - 2);
+            frame.stack.push(v);
+        }
         Op::Undefined => frame.stack.push(Value::Undefined),
+        Op::Null => frame.stack.push(Value::Null),
+        Op::String(s) => frame.stack.push(Value::String(s)),
+        Op::GetArg(i) => {
+            let v = frame
+                .args
+                .get(i as usize)
+                .copied()
+                .unwrap_or(Value::Undefined);
+            frame.stack.push(v);
+        }
+        Op::Not => {
+            let v = frame.pop();
+            let b = ops::to_boolean(agent, v);
+            frame.stack.push(Value::Boolean(!b));
+        }
+        // (IsStrictlyEqual runs no user code and cannot throw.)
+        Op::Binary(bop @ (BinOp::StrictEq | BinOp::StrictNotEq)) => {
+            let b = frame.pop();
+            let a = frame.pop();
+            let eq = ops::is_strictly_equal(agent, a, b);
+            frame
+                .stack
+                .push(Value::Boolean(eq == (bop == BinOp::StrictEq)));
+        }
+        Op::JumpIfTrue(l) => {
+            let v = frame.pop();
+            if ops::to_boolean(agent, v) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        Op::JumpIfFalseKeep(l) => {
+            if !ops::to_boolean(agent, frame.peek()) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        Op::JumpIfTrueKeep(l) => {
+            if ops::to_boolean(agent, frame.peek()) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        // FunctionDeclarationInstantiation steps 27-36 for code with
+        // locals (see `instantiate::function_body_instantiation`).
+        Op::InstantiateFunctionBody if frame.code.locals.is_some() => {
+            let Some(env_record) = frame.pending.env_record.take() else {
+                return false;
+            };
+            frame.var_env = env_record;
+            frame.env = env_record;
+        }
         Op::Number(n) => frame.stack.push(Value::Number(n)),
         Op::Binary(bop) => {
             let n = frame.stack.len();
@@ -472,11 +766,8 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             return true;
         }
         Op::JumpIfFalse(l) => {
-            let Some(&Value::Boolean(b)) = frame.stack.last() else {
-                return false;
-            };
-            frame.stack.pop();
-            if !b {
+            let v = frame.pop();
+            if !ops::to_boolean(agent, v) {
                 fast_jump(agent, frame, l, pc);
                 return true;
             }
@@ -529,6 +820,22 @@ fn resolve_binding_cached(
     if let Some((id, slot)) = cached_binding(agent, code, env, name, ic) {
         return Ok(Reference::Slot(id, slot as u32, name));
     }
+    // A binding without a slot (the global object's) is cached as its
+    // environment's distance with slot `ENV_BINDING`: the declarative
+    // environments in between cannot gain the name, so only that one
+    // environment needs asking again.
+    let cached = cache.load(Relaxed);
+    if cached != 0 && (cached - 1) as u32 == ENV_BINDING {
+        let mut id = Some(env);
+        for _ in 0..(cached - 1) >> 32 {
+            id = id.and_then(|e| e.outer(agent));
+        }
+        if let Some(id) = id
+            && id.has_binding(agent, name)?
+        {
+            return Ok(Reference::Env(id, name));
+        }
+    }
     let mut e = Some(env);
     let mut hops = 0u64;
     while let Some(id) = e {
@@ -537,6 +844,7 @@ fn resolve_binding_cached(
                 cache.store(((hops << 32) | slot as u64) + 1, Relaxed);
                 return Ok(Reference::Slot(id, slot as u32, name));
             }
+            cache.store(((hops << 32) | u64::from(ENV_BINDING)) + 1, Relaxed);
             return Ok(Reference::Env(id, name));
         }
         e = id.outer(agent);
@@ -544,6 +852,10 @@ fn resolve_binding_cached(
     }
     Ok(Reference::Unresolvable(name))
 }
+
+/// The slot of a binding cache entry for a binding found in an object
+/// environment record (see `resolve_binding_cached`).
+const ENV_BINDING: u32 = u32::MAX;
 
 /// The environment and slot where name instruction `ic` found `name` last
 /// time, if it is still there (see `resolve_binding_cached`).
@@ -587,6 +899,7 @@ pub fn get_reference(agent: &mut Agent, r: Reference, strict: bool) -> JsResult<
             }
         }
         Reference::Unresolvable(name) => Err(not_defined(agent, name)),
+        Reference::Local(_) => unreachable!("a local reference outside its frame"),
     }
 }
 
@@ -606,7 +919,48 @@ pub fn put_reference(agent: &mut Agent, r: Reference, value: Value, strict: bool
             let key = agent.key_from_string(name);
             ops::set(agent, global, key, value, false)
         }
+        Reference::Local(_) => unreachable!("a local reference outside its frame"),
     }
+}
+
+/// GetValue of frame local `slot`: GetBindingValue of a declarative
+/// record's binding (§9.1.1.1.6).
+#[inline]
+fn get_local(agent: &mut Agent, frame: &Frame, slot: u32) -> JsResult<Value> {
+    match frame.locals[slot as usize] {
+        Some(v) => Ok(v),
+        // 2. If the binding for N in envRec is an uninitialized binding, throw a ReferenceError exception.
+        None => Err(uninitialized_local(agent, frame, slot)),
+    }
+}
+
+/// PutValue to frame local `slot`: SetMutableBinding of a declarative
+/// record's binding (§9.1.1.1.5).
+fn put_local(agent: &mut Agent, frame: &mut Frame, slot: u32, value: Value) -> JsResult<()> {
+    let info = &frame.code.locals.as_ref().expect("code with locals")[slot as usize];
+    // 4. If the binding for N in envRec has not yet been initialized, throw a ReferenceError exception.
+    if frame.locals[slot as usize].is_none() {
+        return Err(uninitialized_local(agent, frame, slot));
+    }
+    // 6. Else, (an immutable binding, created strict by const declarations)
+    //    if S is true, throw a TypeError exception.
+    if info.kind == LocalKind::Const {
+        let msg = format!("assignment to constant '{}'", agent.str_lossy(info.name));
+        return Err(agent.throw_type_error(&msg));
+    }
+    // 5. Else if the binding for N in envRec is a mutable binding, change its bound value to V.
+    frame.locals[slot as usize] = Some(value);
+    Ok(())
+}
+
+#[cold]
+fn uninitialized_local(agent: &mut Agent, frame: &Frame, slot: u32) -> JsError {
+    let name = frame.code.locals.as_ref().expect("code with locals")[slot as usize].name;
+    let msg = format!(
+        "cannot access '{}' before initialization",
+        agent.str_lossy(name)
+    );
+    agent.throw_reference_error(&msg)
 }
 
 /// ResolveThisBinding (§9.4.4)
@@ -894,7 +1248,9 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let this = match r {
                 Reference::Env(env, _) => env.with_base_object(agent),
                 // A declarative record's WithBaseObject() is undefined.
-                Reference::Slot(..) | Reference::Unresolvable(_) => Value::Undefined,
+                Reference::Slot(..) | Reference::Unresolvable(_) | Reference::Local(_) => {
+                    Value::Undefined
+                }
             };
             frame.push(v);
             frame.push(this);
@@ -905,13 +1261,31 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
         Op::GetRef => {
             let r = *frame.refs.last().expect("reference stack underflow");
-            let v = get_reference(agent, r, frame.strict())?;
+            let v = match r {
+                Reference::Local(slot) => get_local(agent, frame, slot)?,
+                r => get_reference(agent, r, frame.strict())?,
+            };
             frame.push(v);
         }
         Op::PutRef => {
             let r = frame.refs.pop().expect("reference stack underflow");
             let v = frame.peek();
-            put_reference(agent, r, v, frame.strict())?;
+            match r {
+                Reference::Local(slot) => put_local(agent, frame, slot, v)?,
+                r => put_reference(agent, r, v, frame.strict())?,
+            }
+        }
+        Op::GetLocal(slot) => {
+            let v = get_local(agent, frame, slot)?;
+            frame.push(v);
+        }
+        Op::ResolveLocal(slot) => frame.refs.push(Reference::Local(slot)),
+        Op::InitLocal(slot) => {
+            let v = frame.pop();
+            frame.locals[slot as usize] = Some(v);
+        }
+        Op::ClearLocals(start, count) => {
+            frame.locals[start as usize..(start + count) as usize].fill(None);
         }
         Op::DropRef => {
             frame.refs.pop();
@@ -939,6 +1313,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 Reference::Env(env, name) | Reference::Slot(env, _, name) => {
                     env.delete_binding(agent, name)?
                 }
+                Reference::Local(_) => unreachable!("resolve_binding finds no locals"),
             };
             frame.push(Value::Boolean(result));
         }
@@ -962,15 +1337,22 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
         Op::PushEmptyScope => frame.env = Environment::new_declarative(agent, Some(frame.env)),
         Op::PopScope => {
-            frame.env = frame
-                .env
+            let scope = frame.env;
+            frame.env = scope
                 .outer(agent)
-                .expect("PopScope at the outermost environment")
+                .expect("PopScope at the outermost environment");
+            if frame.code.envs_die_with_call {
+                agent.free_env(scope);
+            }
         }
         Op::CopyScope => {
-            // CreatePerIterationEnvironment
-            let copy = agent.env(frame.env).clone();
-            frame.env = agent.alloc_env(copy);
+            // CreatePerIterationEnvironment. Without closures nothing can
+            // tell the copy from the last iteration's environment, so a
+            // function whose environments die with its call keeps that one.
+            if !frame.code.envs_die_with_call {
+                let copy = agent.env(frame.env).clone();
+                frame.env = agent.alloc_env(copy);
+            }
         }
         Op::PushWith => {
             let v = frame.pop();
@@ -1389,25 +1771,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         // The call instructions leave the callee, this and the arguments on
         // the operand stack until the callee returns: the frame roots them
         // (docs/GC.md).
-        Op::Call(argc) => {
-            let base = frame.stack.len() - argc as usize - 2;
-            let (f, this) = (frame.stack[base], frame.stack[base + 1]);
-            let r = call_value(agent, f, this, &frame.stack[base + 2..])?;
-            frame.stack.truncate(base);
-            frame.push(r);
-        }
-        Op::CallSpread => {
-            let base = frame.stack.len() - 3;
-            let (f, this, array) = (
-                frame.stack[base],
-                frame.stack[base + 1],
-                frame.stack[base + 2],
-            );
-            let args = array_elements(agent, array)?;
-            let r = call_value(agent, f, this, &args)?;
-            frame.stack.truncate(base);
-            frame.push(r);
-        }
+        Op::Call(argc) => call_op(agent, frame, argc)?,
+        Op::CallSpread => call_spread_op(agent, frame)?,
         Op::CallEval(argc) => {
             let base = frame.stack.len() - argc as usize - 2;
             let (f, this) = (frame.stack[base], frame.stack[base + 1]);
@@ -1428,13 +1793,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.stack.truncate(base);
             frame.push(r);
         }
-        Op::New(argc) => {
-            let base = frame.stack.len() - argc as usize - 1;
-            let c = frame.stack[base];
-            let r = construct_value(agent, c, &frame.stack[base + 1..])?;
-            frame.stack.truncate(base);
-            frame.push(r);
-        }
+        Op::New(argc) => new_op(agent, frame, argc)?,
         Op::NewSpread => {
             let base = frame.stack.len() - 2;
             let (c, array) = (frame.stack[base], frame.stack[base + 1]);
@@ -1531,7 +1890,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
 
         // ---- literals
         Op::NewObject => {
-            let proto = agent.intrinsic("%Object.prototype%");
+            let proto = agent.intrinsic_c("%Object.prototype%");
             let o = agent.ordinary_object_create(Some(proto));
             frame.push(Value::Object(o));
         }
@@ -1630,7 +1989,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(Value::Object(t));
         }
         Op::RegExp(pattern, flags) => {
-            let ctor = agent.intrinsic("%RegExp%");
+            let ctor = agent.intrinsic_c("%RegExp%");
             let r = ops::construct(
                 agent,
                 ctor,
@@ -1940,8 +2299,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 call::class_heritage(agent, superclass)?
             } else {
                 (
-                    Some(agent.intrinsic("%Object.prototype%")),
-                    agent.intrinsic("%Function.prototype%"),
+                    Some(agent.intrinsic_c("%Object.prototype%")),
+                    agent.intrinsic_c("%Function.prototype%"),
                 )
             };
             frame.push(proto_parent.map(Value::Object).unwrap_or(Value::Null));
@@ -2073,11 +2432,55 @@ fn yield_delegate(agent: &mut Agent, frame: &mut Frame, ret: usize) -> JsResult<
 
 /// Call(func, this, args) with a TypeError naming non-callables.
 /// Call from an instruction whose operands stay on the frame's stack (rooted).
+/// Op::Call: [func this args...] -> [result].
+#[inline(never)]
+fn call_op(agent: &mut Agent, frame: &mut Frame, argc: u32) -> JsResult<()> {
+    let base = frame.stack.len() - argc as usize - 2;
+    let (f, this) = (frame.stack[base], frame.stack[base + 1]);
+    let r = call_value(agent, f, this, &frame.stack[base + 2..])?;
+    frame.stack.truncate(base);
+    frame.push(r);
+    Ok(())
+}
+
+/// Op::CallSpread: [func this array] -> [result].
+#[inline(never)]
+fn call_spread_op(agent: &mut Agent, frame: &mut Frame) -> JsResult<()> {
+    let base = frame.stack.len() - 3;
+    let (f, this, array) = (
+        frame.stack[base],
+        frame.stack[base + 1],
+        frame.stack[base + 2],
+    );
+    let args = array_elements(agent, array)?;
+    let r = call_value(agent, f, this, &args)?;
+    frame.stack.truncate(base);
+    frame.push(r);
+    Ok(())
+}
+
+/// Op::New: [constructor args...] -> [result].
+#[inline(never)]
+fn new_op(agent: &mut Agent, frame: &mut Frame, argc: u32) -> JsResult<()> {
+    let base = frame.stack.len() - argc as usize - 1;
+    let c = frame.stack[base];
+    let r = construct_value(agent, c, &frame.stack[base + 1..])?;
+    frame.stack.truncate(base);
+    frame.push(r);
+    Ok(())
+}
+
 fn call_value(agent: &mut Agent, f: Value, this: Value, args: &[Value]) -> JsResult<Value> {
     match f {
         Value::Object(o) if o.is_callable(agent) => o.internal_call_rooted(agent, this, args),
-        _ => Err(callable_error(agent, &describe(agent, f))),
+        _ => Err(not_callable(agent, f)),
     }
+}
+
+#[cold]
+#[inline(never)]
+fn not_callable(agent: &mut Agent, f: Value) -> JsError {
+    callable_error(agent, &describe(agent, f))
 }
 
 fn construct_value(agent: &mut Agent, c: Value, args: &[Value]) -> JsResult<Value> {
@@ -2085,11 +2488,15 @@ fn construct_value(agent: &mut Agent, c: Value, args: &[Value]) -> JsResult<Valu
         Value::Object(o) if o.is_constructor(agent) => {
             Ok(Value::Object(o.internal_construct_rooted(agent, args, o)?))
         }
-        _ => {
-            let msg = format!("{} is not a constructor", describe(agent, c));
-            Err(agent.throw_type_error(&msg))
-        }
+        _ => Err(not_constructor(agent, c)),
     }
+}
+
+#[cold]
+#[inline(never)]
+fn not_constructor(agent: &mut Agent, c: Value) -> JsError {
+    let msg = format!("{} is not a constructor", describe(agent, c));
+    agent.throw_type_error(&msg)
 }
 
 /// A short description of a value for error messages.
@@ -2117,7 +2524,7 @@ fn call_maybe_eval(
 ) -> JsResult<Value> {
     if let Value::Object(o) = f
         && agent.has_intrinsic("%eval%")
-        && o == agent.intrinsic("%eval%")
+        && o == agent.intrinsic_c("%eval%")
     {
         // a. If argList has no elements, return undefined.
         let Some(&arg) = args.first() else {
@@ -2162,6 +2569,8 @@ impl Trace for Reference {
                 t.string(*name);
             }
             Reference::Unresolvable(name) => t.string(*name),
+            // (The frame traces its locals.)
+            Reference::Local(_) => {}
         }
     }
 }
@@ -2210,6 +2619,9 @@ impl Trace for Frame {
         self.args.trace(t);
         t.value(self.completion);
         self.pending.trace(t);
+        for v in self.locals.iter().flatten() {
+            t.value(*v);
+        }
     }
 }
 

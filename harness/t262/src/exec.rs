@@ -96,6 +96,15 @@ impl Engine {
         if std::env::var_os("KAHVI_GC_STRESS").is_some() {
             cmd.env("KAHVI_GC_STRESS", "1");
         }
+        // KAHVI_CODE_CACHE_DIR set for the runner shares a code cache between
+        // the engine runs (kahvi_core::code_cache).
+        if let Some(dir) = std::env::var_os("KAHVI_CODE_CACHE_DIR") {
+            cmd.env("KAHVI_CODE_CACHE_DIR", dir);
+        }
+        // KAHVI_CODE_CACHE_STRESS: functions run decoded code (code_cache).
+        if std::env::var_os("KAHVI_CODE_CACHE_STRESS").is_some() {
+            cmd.env("KAHVI_CODE_CACHE_STRESS", "1");
+        }
 
         let start = Instant::now();
         let mut child = match cmd.spawn() {

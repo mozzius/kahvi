@@ -4,6 +4,7 @@
 //! Built-in objects live in `kahvi-builtins`; the embedding API in `kahvi`.
 
 pub mod agent;
+pub mod code_cache;
 pub mod compiler;
 pub mod env;
 pub mod error;

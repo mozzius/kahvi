@@ -143,6 +143,13 @@ int main() {
            "host get failed");
     EXPECT(ho.isHostObject(rt));
     EXPECT(ho.getHostObject<Counter>(rt) == counter);
+    // A [[Set]] that reaches the host object through the prototype chain
+    // lands on the receiver (React Native's TurboModules cache methods so).
+    eval(rt, "globalThis.derived = Object.create(counter); derived.cached = 7; derived.count = 1");
+    EXPECT(eval(rt, "Object.getOwnPropertyNames(derived).join()").getString(rt).utf8(rt) ==
+           "cached,count");
+    EXPECT(eval(rt, "derived.cached").getNumber() == 7);
+    EXPECT(counter->count == 6);
 
     // Native state.
     Object holder(rt);

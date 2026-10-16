@@ -15,6 +15,7 @@ use std::collections::HashMap;
 use crate::SyntaxError;
 use crate::ast::*;
 use crate::lexer::{Lexer, P, Tok, Token};
+use crate::preparse::Preparse;
 
 pub type PResult<T> = Result<T, SyntaxError>;
 
@@ -36,6 +37,9 @@ pub struct ParseOptions {
     /// Lazy compilation: drop the bodies of ordinary functions once they
     /// are checked (see `ast::Function::lazy`).
     pub lazy: bool,
+    /// What an earlier lazy parse of the same source text with the same
+    /// options recorded: its lazy function bodies are skipped.
+    pub preparse: Option<std::sync::Arc<Preparse>>,
 }
 
 impl Default for ParseOptions {
@@ -50,11 +54,18 @@ impl Default for ParseOptions {
             private_names: Vec::new(),
             lone_surrogates: Vec::new(),
             lazy: false,
+            preparse: None,
         }
     }
 }
 
 pub fn parse_script(src: &str, opts: &ParseOptions) -> PResult<Script> {
+    parse_script_preparsed(src, opts).map(|(script, _)| script)
+}
+
+/// [`parse_script`], also returning what it learned about the script's
+/// lazy function bodies (see [`Preparse`]).
+pub fn parse_script_preparsed(src: &str, opts: &ParseOptions) -> PResult<(Script, Preparse)> {
     let mut p = Parser::new(src, false, opts)?;
     p.strict = opts.strict;
     let body = p.parse_directives_and_statements(true, |p| p.tok.kind == Tok::Eof)?;
@@ -68,11 +79,12 @@ pub fn parse_script(src: &str, opts: &ParseOptions) -> PResult<Script> {
     }
     crate::early::check_script_declarations(&body, p.fn_ctx().is_eval_like)?;
     p.finish_private_names()?;
-    Ok(Script {
+    let script = Script {
         body,
         strict,
         span: Span::new(0, src.len()),
-    })
+    };
+    Ok((script, p.preparse_out))
 }
 
 /// The parsing of CreateDynamicFunction (§20.2.1.1.1 steps 17-24): `params`
@@ -89,9 +101,20 @@ pub fn parse_dynamic_function(
 }
 
 pub fn parse_module(src: &str, lazy: bool) -> PResult<Module> {
+    parse_module_preparsed(src, lazy, None).map(|(module, _)| module)
+}
+
+/// [`parse_module`] with the [`Preparse`] of an earlier parse of `src`,
+/// also returning what this parse learned.
+pub fn parse_module_preparsed(
+    src: &str,
+    lazy: bool,
+    preparse: Option<std::sync::Arc<Preparse>>,
+) -> PResult<(Module, Preparse)> {
     let opts = ParseOptions {
         strict: true,
         lazy,
+        preparse,
         ..ParseOptions::default()
     };
     let mut p = Parser::new(src, true, &opts)?;
@@ -100,10 +123,11 @@ pub fn parse_module(src: &str, lazy: bool) -> PResult<Module> {
     let body = p.parse_module_items()?;
     p.finish_private_names()?;
     crate::early::check_module(&body)?;
-    Ok(Module {
+    let module = Module {
         body,
         span: Span::new(0, src.len()),
-    })
+    };
+    Ok((module, p.preparse_out))
 }
 
 /// Parses the lazy function that starts at byte offset `start` of `src`
@@ -114,9 +138,21 @@ pub fn parse_lazy_function(
     start: usize,
     lazy: crate::ast::LazyFunction,
 ) -> PResult<Function> {
+    parse_lazy_function_preparsed(src, start, lazy, None)
+}
+
+/// [`parse_lazy_function`], skipping the bodies of the functions nested in
+/// it that `preparse` (from the first parse of `src`) recorded.
+pub fn parse_lazy_function_preparsed(
+    src: &str,
+    start: usize,
+    lazy: crate::ast::LazyFunction,
+    preparse: Option<std::sync::Arc<Preparse>>,
+) -> PResult<Function> {
     let opts = ParseOptions {
         strict: lazy.outer_strict,
         lazy: true,
+        preparse,
         ..ParseOptions::default()
     };
     let mut p = Parser::new(src, lazy.module, &opts)?;
@@ -238,6 +274,10 @@ pub(crate) struct Parser<'a> {
     /// The start of a function to parse eagerly: the one being reparsed,
     /// or one in parentheses (likely called at once, like V8's heuristic).
     pub eager_at: Option<usize>,
+    /// See `ParseOptions::preparse`.
+    pub(crate) preparse_in: Option<std::sync::Arc<Preparse>>,
+    /// The lazy function bodies this parse checked or skipped.
+    pub(crate) preparse_out: Preparse,
 }
 
 impl<'a> Parser<'a> {
@@ -261,6 +301,8 @@ impl<'a> Parser<'a> {
             saw_use_strict: false,
             lazy: opts.lazy && opts.lone_surrogates.is_empty(),
             eager_at: None,
+            preparse_in: opts.preparse.clone(),
+            preparse_out: Preparse::default(),
         })
     }
 

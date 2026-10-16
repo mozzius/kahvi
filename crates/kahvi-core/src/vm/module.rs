@@ -209,8 +209,11 @@ fn declared_names(agent: &mut Agent, s: &ast::Stmt) -> Vec<JsString> {
 pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) -> JsResult<u32> {
     // 1. Let body be ParseText(sourceText, Module).
     // 2. If body is a List of errors, return body.
-    let body = match kahvi_parser::parse_module(source, true) {
-        Ok(b) => b,
+    let cache_key = crate::code_cache::key(source, true);
+    let cached = cache_key.as_ref().and_then(crate::code_cache::lookup);
+    let (body, preparse) = match kahvi_parser::parse_module_preparsed(source, true, cached.clone())
+    {
+        Ok(parsed) => parsed,
         Err(e) => {
             let (line, col) = line_col(source, e.pos);
             let msg = format!("{} ({}:{}:{})", e.message, key, line, col);
@@ -378,9 +381,18 @@ pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) 
             Some(_) => indirect_export_entries.push(ee),
         }
     }
+    let preparse = cached.unwrap_or_else(|| {
+        let p = Arc::new(preparse);
+        if let Some(key) = &cache_key {
+            crate::code_cache::store(key, &p);
+        }
+        p
+    });
     let source: Arc<str> = Arc::from(source);
     let script = register_script(agent, realm, source.clone(), key, false);
     agent.scripts[script as usize].module = Some(id);
+    agent.scripts[script as usize].preparse = Some(preparse);
+    agent.scripts[script as usize].cache_key = cache_key;
     let code = compiler::compile_module(agent, &body, source, script);
     // 11. Let async be body Contains await.
     let has_tla = code.is_async;
@@ -471,7 +483,7 @@ fn all_import_attributes_supported(agent: &Agent, attributes: &[(JsString, JsStr
 /// LoadRequestedModules([hostDefined]) (§16.2.1.5.1): the promise it returns.
 pub fn load_requested_modules(agent: &mut Agent, module: u32) -> JsResult<Value> {
     // 2. Let pc be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     // 3. Let state be the GraphLoadingState Record { [[IsLoading]]: true, [[PendingModulesCount]]: 1, ... }.
     let mut state = GraphLoadingState {
@@ -976,7 +988,7 @@ pub fn evaluate(agent: &mut Agent, module: u32) -> JsResult<Value> {
     }
     // 5-7. Let stack be empty; promiseCapability be ! NewPromiseCapability(%Promise%).
     let mut stack = Vec::new();
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     m_mut(agent, module).top_level_capability = Some(capability);
     // 8. Let result be Completion(InnerModuleEvaluation(module, stack, 0)).
@@ -1172,7 +1184,7 @@ fn module_of_active(agent: &Agent) -> u32 {
 /// ExecuteAsyncModule(module) (§16.2.1.6.1.3.2)
 fn execute_async_module(agent: &mut Agent, module: u32) -> JsResult<()> {
     // 3. Let capability be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     // 4-7. onFulfilled and onRejected run AsyncModuleExecutionFulfilled/Rejected.
     let on_fulfilled = module_closure(agent, async_fulfilled_closure, module, 0);
@@ -1406,7 +1418,7 @@ pub fn evaluate_import_call(
         None => Referrer::Realm(agent.current_realm()),
     };
     // 7. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     let reject = |agent: &mut Agent, e: JsError| -> JsResult<Value> {
         let v = throw_value(e)?;

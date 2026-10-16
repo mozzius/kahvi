@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::object::{ObjectData, ObjectKind, PropertyKey};
-use crate::realm::{Realm, RealmId};
+use crate::realm::{INTRINSIC_CACHE, Realm, RealmId};
 use crate::value::{JsString, Object, Symbol, Value};
 
 /// Maximum nesting of calls before a RangeError (the Rust stack is finite).
@@ -162,11 +162,10 @@ pub struct Agent {
     pub(crate) symbols: Vec<SymbolData>,
     /// The garbage collector's state (docs/GC.md).
     pub(crate) gc: crate::gc::GcState,
-    /// Empty vectors kept from finished frames (operand stacks, argument
-    /// lists) so a call does not allocate new ones. They hold no values.
-    pub(crate) spare_vecs: Vec<Vec<Value>>,
-    /// Exception-handler lists kept for reuse, like `spare_vecs`.
-    pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
+    /// Frames of finished calls, emptied (`Frame::empty_for_pool`).
+    // (Boxed: a frame keeps its address while running, and moves cheaply.)
+    #[allow(clippy::vec_box)]
+    pub(crate) spare_frames: Vec<Box<crate::vm::Frame>>,
     /// Collect at one safe point in `gc_stress` on average, regardless of
     /// heap growth (finds rooting bugs; set by the host, see
     /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
@@ -193,6 +192,14 @@ pub struct Agent {
     pub symbols_wk: WellKnownSymbols,
     pub names: Names,
     pub call_depth: usize,
+    /// The native stack address where the outermost call began (set when
+    /// `call_depth` leaves 0).
+    pub(crate) stack_base: usize,
+    /// How many bytes of native stack calls may use below `stack_base`
+    /// before a RangeError; 0 is no limit beyond [`MAX_CALL_DEPTH`]. Hosts
+    /// that run JavaScript on small thread stacks set it (React Native's
+    /// JS thread on Android has about 1 MiB).
+    pub native_stack_limit: usize,
     pub(crate) installer: Option<IntrinsicsInstaller>,
     /// Unhandled promise rejections the host may report.
     pub rejection_tracker: Vec<(Object, bool)>,
@@ -205,6 +212,11 @@ pub struct Agent {
     /// Host hook: the current time in milliseconds since the epoch (Date.now).
     /// The engine never reads the system clock itself.
     pub host_now: Option<fn() -> f64>,
+    /// Host hook: runs its argument on the current thread, after whatever
+    /// setup the host needs on a thread the engine made (a deep call on a
+    /// larger stack, see `native_stack_limit`), such as attaching it to the
+    /// JVM so host functions can use JNI.
+    pub host_thread_wrapper: Option<fn(&mut dyn FnMut())>,
     /// Host hook: LocalTZA(t, isUTC) (§21.4.1.25), the local time zone
     /// offset in milliseconds. Without it, local time is UTC.
     pub host_local_tza: Option<fn(f64, bool) -> f64>,
@@ -239,19 +251,6 @@ impl std::fmt::Debug for Agent {
 }
 
 impl Agent {
-    /// An empty vector, reusing one a finished frame gave back.
-    pub(crate) fn spare_vec(&mut self) -> Vec<Value> {
-        self.spare_vecs.pop().unwrap_or_default()
-    }
-
-    /// Keeps `v`'s allocation for `spare_vec` (a bounded number of them).
-    pub(crate) fn give_back_vec(&mut self, mut v: Vec<Value>) {
-        if self.spare_vecs.len() < 64 && v.capacity() <= 1024 {
-            v.clear();
-            self.spare_vecs.push(v);
-        }
-    }
-
     pub fn new() -> Agent {
         let placeholder = JsString(0);
         let mut agent = Agent {
@@ -260,8 +259,7 @@ impl Agent {
             string_index: Default::default(),
             symbols: Vec::new(),
             gc: Default::default(),
-            spare_vecs: Vec::new(),
-            spare_handlers: Vec::new(),
+            spare_frames: Vec::new(),
             gc_stress: 0,
             intl: false,
             kept_objects: Vec::new(),
@@ -319,6 +317,8 @@ impl Agent {
                 stack_trace_limit: placeholder,
             },
             call_depth: 0,
+            stack_base: 0,
+            native_stack_limit: 0,
             installer: None,
             rejection_tracker: Vec::new(),
             scripts: Vec::new(),
@@ -335,6 +335,7 @@ impl Agent {
             native_states: Default::default(),
             error_stacks: Default::default(),
             host_now: None,
+            host_thread_wrapper: None,
             host_local_tza: None,
         };
         // The common names and well-known symbols live as long as the agent.
@@ -549,11 +550,14 @@ impl Agent {
             out.push_str("    at ");
             let place = match &frame.location {
                 Some(l) => {
-                    let (line, col) = crate::vm::line_col(&l.source, l.offset as usize);
-                    let file = self
-                        .scripts
-                        .get(l.script as usize)
-                        .map_or("<anonymous>", |s| s.name.as_str());
+                    let record = self.scripts.get(l.script as usize);
+                    let (line, col) = match record {
+                        Some(r) if Arc::ptr_eq(&r.source, &l.source) => {
+                            r.line_col(l.offset as usize)
+                        }
+                        _ => crate::vm::line_col(&l.source, l.offset as usize),
+                    };
+                    let file = record.map_or("<anonymous>", |s| s.name.as_str());
                     format!("{file}:{line}:{col}")
                 }
                 None if frame.native => "native".to_string(),
@@ -658,7 +662,19 @@ impl Agent {
 
     /// A String value from Rust text.
     pub fn string(&mut self, s: &str) -> JsString {
-        let units: Vec<u16> = s.encode_utf16().collect();
+        // A string has no more UTF-16 code units than UTF-8 bytes, so short
+        // ones (most names and keys) fit on the stack.
+        if s.len() <= 64 {
+            let mut buf = [0u16; 64];
+            let mut n = 0;
+            for u in s.encode_utf16() {
+                buf[n] = u;
+                n += 1;
+            }
+            return self.intern(&buf[..n]);
+        }
+        let mut units = Vec::with_capacity(s.len());
+        units.extend(s.encode_utf16());
         self.intern(&units)
     }
 
@@ -786,7 +802,7 @@ impl Agent {
     }
 
     /// An intrinsic of the current realm by its spec name, e.g.
-    /// `agent.intrinsic("%Array.prototype%")`.
+    /// `agent.intrinsic_c("%Array.prototype%")`.
     pub fn intrinsic(&self, name: &str) -> Object {
         self.intrinsic_in(self.current_realm(), name)
     }
@@ -795,6 +811,29 @@ impl Agent {
         match self.realm(realm).intrinsics.get(name) {
             Some(&o) => o,
             None => panic!("intrinsic {name} is not installed"),
+        }
+    }
+
+    /// `intrinsic_const` in the current realm.
+    #[inline]
+    pub fn intrinsic_c(&self, name: &'static str) -> Object {
+        self.intrinsic_const(self.current_realm(), name)
+    }
+
+    /// `intrinsic_in` for a name that is a string constant, looked up first
+    /// by the constant's address in a small cache per realm (for the
+    /// lookups made on every call, closure or primitive property access).
+    #[inline]
+    pub fn intrinsic_const(&self, realm: RealmId, name: &'static str) -> Object {
+        let r = self.realm(realm);
+        let slot = &r.intrinsic_cache[(name.as_ptr() as usize >> 3) % INTRINSIC_CACHE];
+        match slot.get() {
+            (ptr, len, Some(o)) if ptr == name.as_ptr() as usize && len == name.len() => o,
+            _ => {
+                let o = self.intrinsic_in(realm, name);
+                slot.set((name.as_ptr() as usize, name.len(), Some(o)));
+                o
+            }
         }
     }
 
@@ -867,6 +906,33 @@ impl Agent {
         })
     }
 
+    /// Frees environment `id` now, for code that knows nothing references
+    /// it any more (`FunctionCode::envs_die_with_call`): its slot and
+    /// allocations go back to `alloc_declarative` without waiting for a
+    /// collection.
+    pub(crate) fn free_env(&mut self, id: EnvId) {
+        let i = id.0;
+        debug_assert!(!self.gc.is_free_env.get(i), "environment freed twice");
+        match &mut self.envs[i as usize] {
+            Environment::Declarative {
+                bindings,
+                outer,
+                imports,
+                disposable_resource_stack,
+                ..
+            } if bindings.capacity() <= 64 => {
+                bindings.clear();
+                *outer = None;
+                imports.clear();
+                disposable_resource_stack.clear();
+            }
+            e => *e = Environment::dead(),
+        }
+        self.gc.is_free_env.insert(i);
+        self.gc.free_envs.push(i);
+        self.gc.allocated = self.gc.allocated.saturating_sub(1);
+    }
+
     pub fn env(&self, id: EnvId) -> &Environment {
         &self.envs[id.0 as usize]
     }
@@ -879,7 +945,7 @@ impl Agent {
 
     /// A new error object from the current realm's `%NativeError%` constructor.
     pub fn create_error(&mut self, kind: ErrorKind, message: &str) -> Object {
-        let proto = self.intrinsic(kind.prototype_intrinsic());
+        let proto = self.intrinsic_c(kind.prototype_intrinsic());
         let o = self.object_with_kind(Some(proto), ObjectKind::Error);
         let msg = self.string(message);
         let key = PropertyKey::String(self.names.message);

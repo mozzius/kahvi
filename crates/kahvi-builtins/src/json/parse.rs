@@ -335,6 +335,7 @@ impl JsonParser<'_> {
         let object_proto = self.agent.intrinsic("%Object.prototype%");
         let object = self.agent.ordinary_object_create(Some(object_proto));
         let mut entries: Vec<(Vec<u16>, JsonParseRecord)> = Vec::new();
+        let mut index: Option<std::collections::HashMap<Vec<u16>, usize>> = None;
         self.skip_ws();
         if self.peek() == Some(0x7D) {
             self.pos += 1;
@@ -355,9 +356,28 @@ impl JsonParser<'_> {
                 let key = ops::to_property_key(self.agent, Value::String(name_string))?;
                 ops::create_data_property_or_throw(self.agent, object, key, record.value)?;
                 // A repeated name replaces the earlier member, keeping its position.
-                match entries.iter_mut().find(|entry| entry.0 == name) {
-                    Some(entry) => entry.1 = record,
-                    None => entries.push((name, record)),
+                // Large objects look names up by hash rather than by scanning.
+                if index.is_none() && entries.len() >= 16 {
+                    index = Some(
+                        entries
+                            .iter()
+                            .enumerate()
+                            .map(|(i, entry)| (entry.0.clone(), i))
+                            .collect(),
+                    );
+                }
+                let found = match &index {
+                    Some(index) => index.get(&name).copied(),
+                    None => entries.iter().position(|entry| entry.0 == name),
+                };
+                match found {
+                    Some(i) => entries[i].1 = record,
+                    None => {
+                        if let Some(index) = &mut index {
+                            index.insert(name.clone(), entries.len());
+                        }
+                        entries.push((name, record));
+                    }
                 }
                 self.skip_ws();
                 match self.peek() {

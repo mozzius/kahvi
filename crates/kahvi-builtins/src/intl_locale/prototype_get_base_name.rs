@@ -16,6 +16,10 @@ pub(crate) fn prototype_get_base_name(
     // 1. Let _loc_ be the *this* value.
     // 2. Perform ? RequireInternalSlot(_loc_, [[InitializedLocale]]).
     // 3. Return GetLocaleBaseName(_loc_.[[Locale]]).
-    let _ = (this, args, new_target);
-    Err(agent.not_implemented("get Intl.Locale.prototype.baseName"))
+    let _ = (args, new_target);
+    crate::support::intl_locale::locale_string_getter(agent, this, |loc| {
+        Some(crate::support::intl_locale::get_locale_base_name(
+            &loc.locale,
+        ))
+    })
 }

@@ -5,6 +5,11 @@
 
 mod host;
 
+// Parsing and the heap allocate many small blocks; mimalloc does that in a
+// fraction of the system allocator's time.
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use std::process::ExitCode;
 
 use kahvi_core::prelude::*;
@@ -68,6 +73,11 @@ fn main() -> ExitCode {
     if args.parse_only {
         return parse_only(&args);
     }
+    // KAHVI_CODE_CACHE_DIR keeps what parsing large sources learned between
+    // runs (kahvi_core::code_cache).
+    if let Some(dir) = std::env::var_os("KAHVI_CODE_CACHE_DIR") {
+        kahvi_core::code_cache::set_dir(Some(dir.into()));
+    }
     // Deep JavaScript recursion recurses on the Rust stack.
     let runner = std::thread::Builder::new()
         .stack_size(512 << 20)
@@ -104,7 +114,8 @@ fn run(args: &Args) -> u8 {
     };
     for path in scripts {
         let source = match std::fs::read(path) {
-            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Ok(b) => String::from_utf8(b)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
             Err(err) => {
                 eprintln!("kahvi: cannot read {path}: {err}");
                 return 2;
@@ -130,7 +141,8 @@ fn run(args: &Args) -> u8 {
             .map(|p| p.to_string_lossy().into_owned())
             .unwrap_or_else(|_| args.file.clone());
         let source = match std::fs::read(path) {
-            Ok(b) => String::from_utf8_lossy(&b).into_owned(),
+            Ok(b) => String::from_utf8(b)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
             Err(err) => {
                 eprintln!("kahvi: cannot read {}: {err}", args.file);
                 return 2;

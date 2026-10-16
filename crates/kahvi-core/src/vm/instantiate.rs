@@ -38,6 +38,13 @@ pub(super) fn function_declaration_instantiation(
         && this_mode != ThisMode::Lexical
         && !params.names.contains(&arguments)
         && !shadowed;
+    if code.locals.is_some() {
+        // The bindings are frame locals: callee_env gets none (and with
+        // no parameter expressions it is env).
+        frame.pending.env_record = Some(callee_env);
+        frame.pending.arguments_bound = false;
+        return Ok(());
+    }
     // 19-20. The environment for the parameters.
     let env_record = if strict || !params.has_expressions {
         callee_env
@@ -108,6 +115,15 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
         // Not function code (a default constructor run directly): nothing to do.
         return Ok(());
     };
+    if code.locals.is_some() {
+        // 27. The var bindings, and 34. the lexical ones, are frame locals
+        //     (the frame starts vars at undefined); there are no functions
+        //     to initialize.
+        frame.var_env = env_record;
+        frame.env = env_record;
+        frame.pending.env_record = None;
+        return Ok(());
+    }
     let arguments = agent.names.arguments;
     let arguments_bound = std::mem::take(&mut frame.pending.arguments_bound);
     let is_param_binding =

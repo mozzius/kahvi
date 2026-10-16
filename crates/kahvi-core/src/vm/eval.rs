@@ -37,6 +37,21 @@ pub fn line_col(source: &str, pos: usize) -> (usize, usize) {
     (line, col)
 }
 
+impl ScriptRecord {
+    /// [`line_col`] of byte offset `pos` in this record's source.
+    pub fn line_col(&self, pos: usize) -> (usize, usize) {
+        let starts = self.line_starts.get_or_init(|| {
+            std::iter::once(0)
+                .chain(self.source.match_indices('\n').map(|(i, _)| i as u32 + 1))
+                .collect()
+        });
+        let pos = pos.min(self.source.len());
+        // The last line start at or before `pos`.
+        let line = starts.partition_point(|&s| s as usize <= pos);
+        (line, pos - starts[line - 1] as usize + 1)
+    }
+}
+
 pub(super) fn register_script(
     agent: &mut Agent,
     realm: RealmId,
@@ -54,6 +69,9 @@ pub(super) fn register_script(
             .and_then(|v| v.pop())
         {
             agent.scripts[id as usize].source = source;
+            agent.scripts[id as usize].preparse = None;
+            agent.scripts[id as usize].line_starts = std::sync::OnceLock::new();
+            agent.scripts[id as usize].cache_key = None;
             return id;
         }
     }
@@ -63,6 +81,9 @@ pub(super) fn register_script(
         name: name.to_string(),
         module: None,
         collectable,
+        preparse: None,
+        line_starts: std::sync::OnceLock::new(),
+        cache_key: None,
     });
     (agent.scripts.len() - 1) as u32
 }
@@ -75,12 +96,15 @@ pub fn parse_script(
     name: &str,
     realm: RealmId,
 ) -> JsResult<ParsedScript> {
+    let cache_key = crate::code_cache::key(source, false);
+    let cached = cache_key.as_ref().and_then(crate::code_cache::lookup);
     let opts = ParseOptions {
         lazy: true,
+        preparse: cached.clone(),
         ..ParseOptions::default()
     };
-    let ast = match kahvi_parser::parse_script(source, &opts) {
-        Ok(ast) => ast,
+    let (ast, preparse) = match kahvi_parser::parse_script_preparsed(source, &opts) {
+        Ok(parsed) => parsed,
         Err(e) => {
             agent.contexts.push(ExecutionContext {
                 function: None,
@@ -92,8 +116,17 @@ pub fn parse_script(
             return Err(err);
         }
     };
+    let preparse = cached.unwrap_or_else(|| {
+        let p = Arc::new(preparse);
+        if let Some(key) = &cache_key {
+            crate::code_cache::store(key, &p);
+        }
+        p
+    });
     let source: Arc<str> = Arc::from(source);
     let id = register_script(agent, realm, source.clone(), name, false);
+    agent.scripts[id as usize].preparse = Some(preparse);
+    agent.scripts[id as usize].cache_key = cache_key;
     let code = compiler::compile_script(agent, &ast, source, id);
     Ok(ParsedScript { id, code })
 }

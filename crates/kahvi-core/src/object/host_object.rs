@@ -5,6 +5,11 @@
 //! - [[Get]] always asks the host (a host returns undefined for names it
 //!   does not know; the prototype chain is not consulted).
 //! - [[Set]] and [[DefineOwnProperty]] with a value hand it to the host.
+//!   A [[Set]] that reaches the host object through a prototype chain (the
+//!   receiver is another object) does not: it goes on as if the host had no
+//!   such property, so the value lands on the receiver. React Native's
+//!   TurboModules rely on this: a module is a plain object whose prototype is
+//!   the host object, and each method looked up is cached on the plain object.
 //! - [[OwnPropertyKeys]] are the host's property names; [[GetOwnProperty]]
 //!   of one of them is a writable, enumerable, configurable data property
 //!   whose value the host gives.
@@ -43,7 +48,7 @@ impl Trace for HostObjectData {
 
 /// A new host object with %Object.prototype% as its prototype.
 pub fn create_host_object(agent: &mut Agent, host: Arc<dyn HostObject>) -> Object {
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let o = agent.ordinary_object_create(Some(proto));
     agent.obj_mut(o).kind = ObjectKind::Native(Box::new(HostObjectData(host)));
     o
@@ -112,8 +117,14 @@ pub(crate) fn set(
     o: Object,
     key: PropertyKey,
     value: Value,
+    receiver: Value,
 ) -> Option<JsResult<bool>> {
     let host = host_of(agent, o)?;
+    if !matches!(receiver, Value::Object(r) if r == o) {
+        return Some(crate::object::internal::ordinary_set_with_own_descriptor(
+            agent, o, key, value, receiver, None,
+        ));
+    }
     Some(host.set(agent, o, key, value).map(|_| true))
 }
 

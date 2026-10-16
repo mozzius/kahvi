@@ -13,8 +13,15 @@
 
 mod hermes_internal;
 
+// Parsing an app bundle and the heap allocate many small blocks; mimalloc
+// does that in a fraction of the platform allocator's time (Android's Scudo
+// especially).
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use std::cell::{Cell, RefCell};
 use std::ffi::c_void;
+use std::sync::atomic::{AtomicPtr, Ordering};
 use std::sync::{Arc, Mutex};
 
 use kahvi::{Agent, JsError, JsResult, Object, Persistent, Runtime, Value};
@@ -244,7 +251,9 @@ unsafe fn enter_callback<T>(
 
 #[unsafe(no_mangle)]
 pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
-    let mut runtime = Box::new(Runtime::new());
+    // Hermes has Intl, and React Native apps (Bluesky's, for one) use it
+    // without feature-testing it.
+    let mut runtime = Box::new(Runtime::with_intl(true));
     // Web APIs Hermes provides and React Native code expects.
     kahvi::encoding::install(&mut runtime);
     let rejections = Arc::new(Mutex::new(Default::default()));
@@ -253,6 +262,11 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
     let realm = runtime.realm();
     let agent: *mut Agent = runtime.agent();
     unsafe { (*agent).host_now = Some(now_ms) };
+    unsafe { (*agent).host_thread_wrapper = Some(wrap_thread) };
+    // React Native runs JavaScript on a thread with Android's default 1 MiB
+    // stack: stop well before it overflows, with room for the host's frames
+    // and for throwing the RangeError.
+    unsafe { (*agent).native_stack_limit = 640 * 1024 };
     // KAHVI_GC_STRESS, as for the CLI and kahvi-run (harness/jsi/run.sh).
     unsafe { (*agent).gc_stress = Agent::gc_stress_from_env() };
     Box::into_raw(Box::new(KahviRuntime {
@@ -263,6 +277,60 @@ pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
         function_contexts: RefCell::new(Default::default()),
         rejections,
     }))
+}
+
+/// How a host prepares threads kahvi makes: `wrap(run, data)` must call
+/// `run(data)` once, on the calling thread.
+pub type KahviThreadWrapper = extern "C" fn(run: extern "C" fn(*mut c_void), data: *mut c_void);
+
+static THREAD_WRAPPER: AtomicPtr<c_void> = AtomicPtr::new(std::ptr::null_mut());
+
+/// Sets the process's thread wrapper (Android: attach to the JVM), for the
+/// threads kahvi makes to run deep calls on a larger stack.
+#[unsafe(no_mangle)]
+pub extern "C" fn kahvi_set_thread_wrapper(wrap: Option<KahviThreadWrapper>) {
+    let p = wrap.map_or(std::ptr::null_mut(), |f| f as *mut c_void);
+    THREAD_WRAPPER.store(p, Ordering::Release);
+}
+
+/// Keeps what parsing large sources (an app bundle) learned in the directory
+/// at `path` (`len` bytes of UTF-8), so later runtimes and launches skip the
+/// work (`kahvi_core::code_cache`). Returns false if `path` is not UTF-8.
+///
+/// # Safety
+/// `path` points to `len` readable bytes.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_set_code_cache_dir(path: *const u8, len: usize) -> bool {
+    let bytes = unsafe { std::slice::from_raw_parts(path, len) };
+    let Ok(dir) = std::str::from_utf8(bytes) else {
+        return false;
+    };
+    kahvi_core::code_cache::set_dir(Some(dir.into()));
+    true
+}
+
+/// `bytes` as UTF-8, with U+FFFD for invalid sequences. Valid text (the
+/// usual case) is checked by `from_utf8`, which is much faster than the
+/// lossy decoder on large inputs such as an app bundle.
+fn utf8_lossy(bytes: &[u8]) -> std::borrow::Cow<'_, str> {
+    match std::str::from_utf8(bytes) {
+        Ok(s) => std::borrow::Cow::Borrowed(s),
+        Err(_) => String::from_utf8_lossy(bytes),
+    }
+}
+
+fn wrap_thread(run: &mut dyn FnMut()) {
+    extern "C" fn trampoline(data: *mut c_void) {
+        let run = unsafe { &mut *(data as *mut &mut dyn FnMut()) };
+        run();
+    }
+    let p = THREAD_WRAPPER.load(Ordering::Acquire);
+    if p.is_null() {
+        return run();
+    }
+    let wrap: KahviThreadWrapper = unsafe { std::mem::transmute(p) };
+    let mut run = run;
+    wrap(trampoline, &mut run as *mut &mut dyn FnMut() as *mut c_void);
 }
 
 #[unsafe(no_mangle)]
@@ -289,8 +357,9 @@ pub unsafe extern "C" fn kahvi_eval(
     name_len: usize,
     out: *mut KahviValue,
 ) -> bool {
-    let source =
-        String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(source, len) }).into_owned();
+    let source = unsafe { std::slice::from_raw_parts(source, len) };
+    // Borrowed when valid UTF-8: an app bundle is tens of megabytes.
+    let source = utf8_lossy(source);
     let name = if name.is_null() {
         String::from("<eval>")
     } else {
@@ -408,7 +477,7 @@ pub unsafe extern "C" fn kahvi_string_new(
     utf8: *const u8,
     len: usize,
 ) -> KahviValue {
-    let s = String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(utf8, len) }).into_owned();
+    let s = utf8_lossy(unsafe { std::slice::from_raw_parts(utf8, len) }).into_owned();
     unsafe {
         with_agent(rt, |agent| {
             let js = agent.string(&s);

@@ -7,8 +7,8 @@ use std::sync::Arc;
 use super::{Frame, FrameResult, PrivateEnv, generator, instantiate, run_frame};
 use crate::agent::{Agent, ExecutionContext};
 use crate::compiler::{
-    ClassStatic, FieldDef, FunctionCode, FunctionFlavor, MethodDef, MethodKind, PrivateMethodDef,
-    TemplateInfo,
+    ClassStatic, FieldDef, FunctionCode, FunctionFlavor, LocalKind, MethodDef, MethodKind,
+    PrivateMethodDef, TemplateInfo,
 };
 use crate::env::{EnvId, Environment};
 use crate::error::JsResult;
@@ -80,7 +80,7 @@ pub fn create_closure(
     code: Arc<FunctionCode>,
     name: Option<PropertyKey>,
 ) -> JsResult<Object> {
-    let proto = agent.intrinsic(function_prototype_intrinsic(&code));
+    let proto = agent.intrinsic_c(function_prototype_intrinsic(&code));
     // A named function expression binds its own name in funcEnv.
     let own_name = code.name.filter(|_| code.binds_own_name);
     let func_env = match own_name {
@@ -108,7 +108,7 @@ pub fn create_closure(
             } else {
                 "%GeneratorPrototype%"
             };
-            let proto_proto = agent.intrinsic(intrinsic);
+            let proto_proto = agent.intrinsic_c(intrinsic);
             let prototype = agent.ordinary_object_create(Some(proto_proto));
             let key = PropertyKey::String(agent.names.prototype);
             agent.obj_mut(f).properties.insert(
@@ -212,7 +212,14 @@ fn ecma_mut(agent: &mut Agent, f: Object) -> &mut EcmaFunction {
 
 /// PrepareForOrdinaryCall(F, newTarget) (§10.2.1.1): pushes the callee
 /// context and returns the new function environment.
-fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) -> EnvId {
+fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) -> JsResult<EnvId> {
+    // (A lazy function is compiled first: whether the call gets a function
+    // environment depends on its code, and every call of the code must
+    // agree, since its binding caches count environments.)
+    let code = ecma(agent, f).code.clone();
+    if code.lazy.is_some() {
+        compile_lazy(agent, f, &code)?;
+    }
     let e = ecma(agent, f);
     let (realm, script_or_module, outer, lexical) = (
         e.realm,
@@ -220,12 +227,26 @@ fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) ->
         e.environment,
         e.this_mode == ThisMode::Lexical,
     );
+    let skip = e.code.skips_function_env;
     agent.contexts.push(ExecutionContext {
         function: Some(f),
         realm,
         script_or_module,
     });
-    Environment::new_function(agent, f, new_target, outer, lexical)
+    if skip {
+        // (`FunctionCode::skips_function_env`; callers tell by the result
+        // being the closure's environment.)
+        return Ok(outer);
+    }
+    Ok(Environment::new_function(
+        agent, f, new_target, outer, lexical,
+    ))
+}
+
+/// Whether `env`, from `prepare_for_ordinary_call`, is a function
+/// environment of its own for the call of `f`.
+fn own_function_env(agent: &Agent, f: Object, env: EnvId) -> bool {
+    ecma(agent, f).environment != env
 }
 
 /// OrdinaryCallBindThis(F, calleeContext, thisArgument) (§10.2.1.2)
@@ -235,7 +256,9 @@ fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value
         (e.this_mode, e.realm)
     };
     // 2. If thisMode is lexical, return unused.
-    if this_mode == ThisMode::Lexical {
+    //    (Nor is there anything to bind for code that skips its function
+    //    environment.)
+    if this_mode == ThisMode::Lexical || !own_function_env(agent, f, env) {
         return Ok(());
     }
     let this_value = if this_mode == ThisMode::Strict {
@@ -255,6 +278,7 @@ fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value
 /// Compiles the lazy function `f` on its first call (`FunctionCode::lazy`):
 /// reparses it from its script's source, keeps the code for every closure
 /// made from the same function, and gives it to `f`.
+#[inline(never)]
 fn compile_lazy(
     agent: &mut Agent,
     f: Object,
@@ -264,10 +288,23 @@ fn compile_lazy(
     let code = match lazy.compiled.get() {
         Some(code) => code.clone(),
         None => {
-            let ast = match kahvi_parser::parse_lazy_function(
+            let cache_key = agent.scripts[stub.script as usize].cache_key;
+            let cached = cache_key.as_ref().and_then(|key| {
+                let bytes = crate::code_cache::function(key, stub.span.0)?;
+                crate::compiler::decode_lazy_function(agent, &bytes, stub)
+            });
+            if let Some(code) = cached {
+                let code = lazy.compiled.get_or_init(|| code).clone();
+                stub.constants.add_lazy(code.clone());
+                ecma_mut(agent, f).code = code.clone();
+                return Ok(code);
+            }
+            let preparse = agent.scripts[stub.script as usize].preparse.clone();
+            let ast = match kahvi_parser::parse_lazy_function_preparsed(
                 &stub.source,
                 stub.span.0 as usize,
                 lazy.function,
+                preparse,
             ) {
                 Ok(ast) => ast,
                 // The first parse found no early errors in this source.
@@ -279,6 +316,19 @@ fn compile_lazy(
                 code.lazy.is_none(),
                 "a reparsed function is compiled eagerly"
             );
+            if let Some(key) = &cache_key
+                && let Some(bytes) = crate::compiler::codec::encode(agent, &code)
+            {
+                crate::code_cache::store_function(key, stub.span.0, bytes);
+            }
+            let code = match crate::code_cache::stress()
+                .then(|| crate::compiler::codec::encode(agent, &code))
+                .flatten()
+            {
+                Some(bytes) => crate::compiler::decode_lazy_function(agent, &bytes, stub)
+                    .expect("code cache stress: the encoding of compiled code decodes"),
+                None => code,
+            };
             let code = lazy.compiled.get_or_init(|| code).clone();
             stub.constants.add_lazy(code.clone());
             code
@@ -286,6 +336,34 @@ fn compile_lazy(
     };
     ecma_mut(agent, f).code = code.clone();
     Ok(code)
+}
+
+/// A frame for the body of `f`.
+fn body_frame(
+    code: Arc<FunctionCode>,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+    f: Object,
+    args: &[Value],
+) -> Frame {
+    let mut frame = Frame::new(code, env, private_env, Some(f));
+    init_locals(&mut frame);
+    frame.args.extend_from_slice(args);
+    frame
+}
+
+/// Gives a new frame its locals: `var` ones start undefined, the rest
+/// uninitialized.
+#[inline(always)]
+fn init_locals(frame: &mut Frame) {
+    let Frame { code, locals, .. } = frame;
+    if let Some(infos) = &code.locals {
+        locals.extend(
+            infos
+                .iter()
+                .map(|l| (l.kind == LocalKind::Var).then_some(Value::Undefined)),
+        );
+    }
 }
 
 /// OrdinaryCallEvaluateBody: runs the body in a new frame. Returns the
@@ -305,39 +383,83 @@ fn evaluate_body(
     } else {
         code
     };
-    let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
-    frame.stack = agent.spare_vec();
-    frame.args = agent.spare_vec();
+    if code.is_async || code.is_generator {
+        return evaluate_suspendable_body(agent, f, code, env, private_env, args);
+    }
+    // A pooled frame: no allocation, and no large frame on the native stack.
+    let mut frame = match agent.spare_frames.pop() {
+        Some(mut frame) => {
+            frame.reinit(code, env, private_env, Some(f));
+            frame
+        }
+        None => Box::new(Frame::new(code, env, private_env, Some(f))),
+    };
+    init_locals(&mut frame);
     frame.args.extend_from_slice(args);
-    frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
+    // FunctionDeclarationInstantiation up to the parameter bindings.
+    instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
+    let result = run_frame(agent, &mut frame);
+    if frame.code.envs_die_with_call {
+        free_scopes_between(agent, frame.env, env);
+    }
+    let result = result?;
+    if agent.spare_frames.len() < 256 && frame.empty_for_pool() {
+        agent.spare_frames.push(frame);
+    }
+    Ok(result)
+}
+
+/// Frees the environments a call created inside its function environment
+/// `function_env` that are still on the chain from `env` (blocks it left
+/// by returning or throwing, and a separate var environment), for code whose
+/// environments die with its call.
+fn free_scopes_between(agent: &mut Agent, env: EnvId, function_env: EnvId) {
+    // The chain must lead to the function environment; anything else is
+    // left to the collector.
+    let mut e = env;
+    while e != function_env {
+        match e.outer(agent) {
+            Some(outer) => e = outer,
+            None => return,
+        }
+    }
+    let mut e = env;
+    while e != function_env {
+        let outer = e.outer(agent).expect("checked above");
+        agent.free_env(e);
+        e = outer;
+    }
+}
+
+/// The rest of OrdinaryCallEvaluateBody for async and generator functions,
+/// kept out of `evaluate_body` so its locals take no native stack in every
+/// JavaScript call.
+#[inline(never)]
+fn evaluate_suspendable_body(
+    agent: &mut Agent,
+    f: Object,
+    code: Arc<FunctionCode>,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+    args: &[Value],
+) -> JsResult<FrameResult> {
+    let mut frame = body_frame(code.clone(), env, private_env, f, args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
-    if code.is_async && !code.is_generator {
+    if !code.is_generator {
         // EvaluateAsyncFunctionBody: errors reject the returned promise.
         let promise = super::async_function::start_async_function(agent, f, frame, decl)?;
         return Ok(FrameResult::Return(promise));
     }
     decl?;
-    let result = run_frame(agent, &mut frame)?;
-    if !code.is_generator {
-        agent.give_back_vec(std::mem::take(&mut frame.stack));
-        agent.give_back_vec(std::mem::take(&mut frame.args));
-        let mut handlers = std::mem::take(&mut frame.handlers);
-        if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
-            handlers.clear();
-            agent.spare_handlers.push(handlers);
-        }
-    }
-    if code.is_generator {
-        // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
-        let g = if code.is_async {
-            super::async_generator::create_async_generator(agent, f, frame)?
-        } else {
-            generator::create_generator(agent, f, frame)?
-        };
-        return Ok(FrameResult::Return(Value::Object(g)));
-    }
-    Ok(result)
+    run_frame(agent, &mut frame)?;
+    // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
+    let g = if code.is_async {
+        super::async_generator::create_async_generator(agent, f, frame)?
+    } else {
+        generator::create_generator(agent, f, frame)?
+    };
+    Ok(FrameResult::Return(Value::Object(g)))
 }
 
 /// [[Call]] of an ECMAScript function object (§10.2.1).
@@ -348,7 +470,7 @@ pub fn call_ecma_function(
     args: &[Value],
 ) -> JsResult<Value> {
     // 2. Let calleeContext be PrepareForOrdinaryCall(F, undefined).
-    let env = prepare_for_ordinary_call(agent, f, Value::Undefined);
+    let env = prepare_for_ordinary_call(agent, f, Value::Undefined)?;
     // 4. If F.[[IsClassConstructor]] is true, then throw a TypeError (in the callee's realm).
     if ecma(agent, f).is_class_constructor {
         let err = agent.throw_type_error("Class constructor cannot be invoked without 'new'");
@@ -360,6 +482,9 @@ pub fn call_ecma_function(
         .and_then(|_| evaluate_body(agent, f, env, args));
     // 7. Remove calleeContext from the execution context stack.
     agent.contexts.pop();
+    if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
+        agent.free_env(env);
+    }
     match result? {
         FrameResult::Return(v) => Ok(v),
         FrameResult::Yield(_) | FrameResult::YieldDelegate(_) | FrameResult::Await(_) => {
@@ -389,7 +514,27 @@ pub fn construct_ecma_function(
         None
     };
     // 4. Let calleeContext be PrepareForOrdinaryCall(F, newTarget).
-    let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target));
+    let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target))?;
+    // (thisArgument is rooted for the call: code that skips its function
+    // environment has no this binding to hold it.)
+    let roots = this_argument.map(Value::Object);
+    let result = agent.with_roots(roots.as_slice(), |agent| {
+        construct_in_env(agent, f, args, this_argument, env)
+    });
+    if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
+        agent.free_env(env);
+    }
+    result
+}
+
+/// [[Construct]] steps 5-12, in the callee's function environment `env`.
+fn construct_in_env(
+    agent: &mut Agent,
+    f: Object,
+    args: &[Value],
+    this_argument: Option<Object>,
+    env: EnvId,
+) -> JsResult<Object> {
     let result = (|| {
         // 6. If kind is base, then
         if let Some(this) = this_argument {
@@ -655,7 +800,7 @@ pub(super) fn class_heritage(
 ) -> JsResult<(Option<Object>, Object)> {
     match superclass {
         // g. If superclass is null, then protoParent = null, constructorParent = %Function.prototype%.
-        Value::Null => Ok((None, agent.intrinsic("%Function.prototype%"))),
+        Value::Null => Ok((None, agent.intrinsic_c("%Function.prototype%"))),
         Value::Object(s) if s.is_constructor(agent) => {
             // i. Let protoParent be ? Get(superclass, "prototype").
             let key = PropertyKey::String(agent.names.prototype);

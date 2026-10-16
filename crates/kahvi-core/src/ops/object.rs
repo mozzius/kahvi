@@ -27,12 +27,12 @@ pub fn get_v(agent: &mut Agent, v: Value, key: PropertyKey) -> JsResult<Value> {
             {
                 return Ok(Value::String(agent.intern(&[u])));
             }
-            agent.intrinsic("%String.prototype%")
+            agent.intrinsic_c("%String.prototype%")
         }
-        Value::Number(_) => agent.intrinsic("%Number.prototype%"),
-        Value::Boolean(_) => agent.intrinsic("%Boolean.prototype%"),
-        Value::Symbol(_) => agent.intrinsic("%Symbol.prototype%"),
-        Value::BigInt(_) => agent.intrinsic("%BigInt.prototype%"),
+        Value::Number(_) => agent.intrinsic_c("%Number.prototype%"),
+        Value::Boolean(_) => agent.intrinsic_c("%Boolean.prototype%"),
+        Value::Symbol(_) => agent.intrinsic_c("%Symbol.prototype%"),
+        Value::BigInt(_) => agent.intrinsic_c("%BigInt.prototype%"),
         // 1. Let O be ? ToObject(V).
         Value::Undefined | Value::Null => to_object(agent, v)?,
     };
@@ -546,7 +546,7 @@ pub fn from_property_descriptor(agent: &mut Agent, desc: Option<PropertyDescript
         return Value::Undefined;
     };
     // 2. Let obj be OrdinaryObjectCreate(%Object.prototype%).
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let obj = agent.ordinary_object_create(Some(proto));
     let names = agent.names;
     let put = |agent: &mut Agent, name, v: Value| {

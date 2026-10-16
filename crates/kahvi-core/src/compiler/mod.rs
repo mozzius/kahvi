@@ -8,6 +8,7 @@
 
 pub mod bytecode;
 mod class;
+pub(crate) mod codec;
 mod expr;
 mod function;
 mod pattern;
@@ -83,6 +84,44 @@ pub(crate) struct Compiler<'a> {
     /// Annex B.3.2: the block-level function declarations whose evaluation
     /// sets the var binding of their name (`Op::AnnexBFunction`).
     annex_b: Vec<*const ast::Function>,
+    /// Compiling the bindings as frame locals (`FunctionCode::locals`).
+    locals: Option<LocalScopes>,
+}
+
+/// The frame locals of code compiled with them: every slot so far, and the
+/// slots of the scopes around the instruction being emitted.
+#[derive(Default)]
+struct LocalScopes {
+    slots: Vec<LocalInfo>,
+    /// For each scope, innermost last: (name, slot).
+    scopes: Vec<Vec<(JsString, u32)>>,
+    /// Something the locals cannot represent was emitted.
+    failed: bool,
+}
+
+impl LocalScopes {
+    /// The slot that `name` resolves to here, if it is a local.
+    fn resolve(&self, name: JsString) -> Option<u32> {
+        self.scopes
+            .iter()
+            .rev()
+            .find_map(|s| s.iter().find(|(n, _)| *n == name).map(|&(_, slot)| slot))
+    }
+
+    /// A new scope with a fresh slot for each binding. Returns the first slot.
+    fn push(&mut self, bindings: impl IntoIterator<Item = (JsString, LocalKind)>) -> u32 {
+        let start = self.slots.len() as u32;
+        let mut scope = Vec::new();
+        for (name, kind) in bindings {
+            if scope.iter().any(|&(n, _)| n == name) {
+                continue;
+            }
+            scope.push((name, self.slots.len() as u32));
+            self.slots.push(LocalInfo { name, kind });
+        }
+        self.scopes.push(scope);
+        start
+    }
 }
 
 /// Errors detected while compiling (things the parser accepts but that are
@@ -120,6 +159,9 @@ impl<'a> Compiler<'a> {
                 decls: Declarations::default(),
                 uses_arguments: false,
                 has_direct_eval: false,
+                envs_die_with_call: false,
+                locals: None,
+                skips_function_env: false,
                 binds_own_name: false,
                 ops: Vec::new(),
                 positions: Vec::new(),
@@ -143,10 +185,21 @@ impl<'a> Compiler<'a> {
             optional_exits: Vec::new(),
             name_cache_count: 0,
             annex_b: Vec::new(),
+            locals: None,
         }
     }
 
     fn finish(mut self) -> Arc<FunctionCode> {
+        let c = &self.code;
+        let envs_die_with_call = c.kind == CodeKind::Function
+            && !c.is_async
+            && !c.is_generator
+            && !c.uses_arguments
+            && !c.has_direct_eval
+            && c.functions.is_empty()
+            && c.classes.is_empty()
+            && !c.ops.iter().any(|op| matches!(op, Op::PushWith));
+        self.code.envs_die_with_call = envs_die_with_call;
         self.code.name_caches = (0..self.name_cache_count)
             .map(|_| std::sync::atomic::AtomicU64::new(0))
             .collect();
@@ -193,8 +246,90 @@ impl<'a> Compiler<'a> {
     // ---- emitting -----------------------------------------------------------
 
     fn emit(&mut self, op: Op) -> usize {
+        if self.locals.is_some() {
+            self.emit_with_locals(op);
+            return self.code.ops.len().wrapping_sub(1);
+        }
         self.code.ops.push(op);
         self.code.ops.len() - 1
+    }
+
+    /// `emit` for code compiled with frame locals: the name instructions for
+    /// locals become local instructions, and scopes allocate slots instead
+    /// of environments.
+    fn emit_with_locals(&mut self, op: Op) {
+        let locals = self.locals.as_mut().expect("compiling with locals");
+        let ops = &mut self.code.ops;
+        match op {
+            Op::GetName(name, _) => match locals.resolve(name) {
+                Some(slot) => ops.push(Op::GetLocal(slot)),
+                None => ops.push(op),
+            },
+            // typeof of a binding in its dead zone throws, as GetValue does.
+            Op::TypeofName(name, _) => match locals.resolve(name) {
+                Some(slot) => ops.extend([Op::GetLocal(slot), Op::Typeof]),
+                None => ops.push(op),
+            },
+            // A declarative record's WithBaseObject() is undefined.
+            Op::GetNameForCall(name, _) => match locals.resolve(name) {
+                Some(slot) => ops.extend([Op::GetLocal(slot), Op::Undefined]),
+                None => ops.push(op),
+            },
+            Op::ResolveName(name, _) => match locals.resolve(name) {
+                Some(slot) => ops.push(Op::ResolveLocal(slot)),
+                None => ops.push(op),
+            },
+            // InitName targets a binding of the running lexical environment,
+            // which here is always a local.
+            Op::InitName(name) => match locals.resolve(name) {
+                Some(slot) => ops.push(Op::InitLocal(slot)),
+                None => {
+                    locals.failed = true;
+                    ops.push(op);
+                }
+            },
+            // A declarative record's DeleteBinding(N) of a binding it has
+            // returns false (only non-strict code can delete a name).
+            Op::DeleteName(name) => match locals.resolve(name) {
+                Some(_) => ops.push(Op::False),
+                None => ops.push(op),
+            },
+            Op::PushScope(i) => {
+                let scope = &self.code.scopes[i as usize];
+                if !scope.functions.is_empty() {
+                    locals.failed = true;
+                }
+                let bindings = scope.lexical.iter().map(|&(name, is_const)| {
+                    let kind = if is_const {
+                        LocalKind::Const
+                    } else {
+                        LocalKind::Let
+                    };
+                    (name, kind)
+                });
+                let start = locals.push(bindings);
+                let count = locals.slots.len() as u32 - start;
+                if count > 0 {
+                    ops.push(Op::ClearLocals(start, count));
+                }
+            }
+            Op::PopScope => {
+                locals.scopes.pop();
+            }
+            // Without closures nothing can tell a per-iteration copy from
+            // the last iteration's bindings.
+            Op::CopyScope => {}
+            // These need environments (or an environment's resource stack).
+            Op::PushWith
+            | Op::PushEmptyScope
+            | Op::AnnexBFunction(_)
+            | Op::AddDisposable(_)
+            | Op::PushPrivateScope(_) => {
+                locals.failed = true;
+                ops.push(op);
+            }
+            _ => ops.push(op),
+        }
     }
 
     /// Records that the following instructions come from source offset `pos`.
@@ -281,9 +416,11 @@ impl<'a> Compiler<'a> {
         while i > depth {
             i -= 1;
             match &self.scopes[i] {
-                JumpScope::Env | JumpScope::With => {
-                    self.emit(Op::PopScope);
+                // (A scope of locals has no environment to leave.)
+                JumpScope::Env | JumpScope::With if self.locals.is_none() => {
+                    self.code.ops.push(Op::PopScope);
                 }
+                JumpScope::Env | JumpScope::With => {}
                 JumpScope::Handler => {
                     self.emit(Op::PopHandler);
                 }
@@ -530,7 +667,10 @@ pub fn compile_eval(
         let mut c = Compiler::new(agent, CodeKind::Eval, source, script_id, script.span);
         c.code.strict = script.strict;
         c.completion = true;
-        c.compile_toplevel(&script.body);
+        // A direct eval runs in environments that another eval can give
+        // new var bindings, so the functions it creates get no binding
+        // caches (`name_cache`) either.
+        c.dynamic_scope(|c| c.compile_toplevel(&script.body));
         c.finish()
     })
 }
@@ -585,6 +725,26 @@ pub fn compile_lazy_function(
             stub.script,
             lazy.is_expression,
         )
+    })
+}
+
+/// The code cached as `bytes` (`codec::encode` of an earlier compilation of
+/// the same function) for lazy function `stub`, as its own compilation unit
+/// like [`compile_lazy_function`]; `None` if `bytes` does not decode.
+pub fn decode_lazy_function(
+    agent: &mut Agent,
+    bytes: &[u8],
+    stub: &FunctionCode,
+) -> Option<Arc<FunctionCode>> {
+    pinned(agent, |agent| {
+        let constants = agent
+            .gc
+            .compiling
+            .as_ref()
+            .expect("compiling")
+            .constants
+            .clone();
+        codec::decode(agent, bytes, stub, &constants).map(Arc::new)
     })
 }
 

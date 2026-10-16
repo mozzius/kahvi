@@ -12,7 +12,9 @@ use crate::value::{BigInt, JsString};
 /// Index of an instruction in [`FunctionCode::ops`].
 pub type Label = u32;
 
+/// (`repr(u32)`: an explicit tag the interpreter dispatches on directly.)
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[repr(u32)]
 pub enum Op {
     // ---- constants -------------------------------------------------------
     /// [] -> [undefined]
@@ -86,6 +88,21 @@ pub enum Op {
     CopyScope,
     /// [obj] -> []: a `with` object environment becomes the running one.
     PushWith,
+
+    // ---- frame locals ------------------------------------------------------
+    // The bindings of code with `FunctionCode::locals` live in its frame,
+    // one slot each, instead of in environment records; these instructions
+    // replace the name instructions for them.
+    /// [] -> [value]: GetValue of local `slot` (a ReferenceError before its
+    /// initialization).
+    GetLocal(u32),
+    /// [] -> []: a reference to local `slot`, pushed on the reference stack.
+    ResolveLocal(u32),
+    /// [value] -> []: InitializeReferencedBinding of local `slot`.
+    InitLocal(u32),
+    /// Locals `start..start + count` become uninitialized: the bindings of a
+    /// scope entered again (a loop body) start out in their dead zone.
+    ClearLocals(u32, u32),
 
     // ---- properties --------------------------------------------------------
     /// [base] -> [value]
@@ -474,6 +491,9 @@ pub enum FunctionFlavor {
     ClassFieldInit,
 }
 
+// Instructions stay two words.
+const _: () = assert!(std::mem::size_of::<Op>() == 16);
+
 /// A declaration to instantiate in a scope.
 #[derive(Debug, Clone)]
 pub struct ScopeInfo {
@@ -483,6 +503,26 @@ pub struct ScopeInfo {
     pub functions: Vec<(JsString, u32)>,
     /// The scope of a Catch clause's parameter.
     pub is_catch: bool,
+}
+
+/// What kind of binding a frame local is (`FunctionCode::locals`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LocalKind {
+    /// A formal parameter: initialized by the parameter binding code.
+    Param,
+    /// A var: initialized to undefined on entry.
+    Var,
+    /// let, or a catch parameter: uninitialized until its declaration runs.
+    Let,
+    /// const: like let, and assignment is a TypeError.
+    Const,
+}
+
+/// A binding kept in a frame slot instead of an environment record.
+#[derive(Debug, Clone)]
+pub struct LocalInfo {
+    pub name: JsString,
+    pub kind: LocalKind,
 }
 
 /// Declarations of a script, function body or eval code, for the
@@ -598,6 +638,22 @@ pub struct FunctionCode {
     pub has_direct_eval: bool,
     /// A named function expression binds its own name in a scope between it and its closure.
     pub binds_own_name: bool,
+    /// Nothing can keep this function's environments alive past its call:
+    /// it creates no closures or classes, has no arguments object, direct
+    /// eval or `with`, and is not a generator or async. A call then frees
+    /// its environments as they go out of scope instead of leaving them to
+    /// the garbage collector (see `Agent::free_env`).
+    pub envs_die_with_call: bool,
+    /// The bindings of a function whose environments die with its call and
+    /// whose bindings no code can reach by name at run time (see
+    /// `compiler::function::compile_function`): each is a slot of the
+    /// call's frame, and its function environment gets no bindings.
+    pub locals: Option<Box<[LocalInfo]>>,
+    /// Code with locals that nothing in needs its function environment
+    /// (an arrow function, or one without `this`, `super` or `new.target`):
+    /// a call runs it in its closure's environment instead, as nothing can
+    /// observe the empty environment's absence.
+    pub skips_function_env: bool,
     pub ops: Vec<Op>,
     /// (op index, source offset) pairs, ascending, for error positions.
     pub positions: Vec<(u32, u32)>,

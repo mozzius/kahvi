@@ -16,7 +16,7 @@ pub fn array_create(agent: &mut Agent, length: f64, proto: Option<Object>) -> Js
     // 2. If proto is not present, set proto to %Array.prototype%.
     let proto = match proto {
         Some(p) => p,
-        None => agent.intrinsic("%Array.prototype%"),
+        None => agent.intrinsic_c("%Array.prototype%"),
     };
     // 3. Let A be MakeBasicObject(« [[Prototype]], [[Extensible]] »).
     // 4. Set A.[[Prototype]] to proto.

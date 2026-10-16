@@ -127,16 +127,11 @@ const _: () = {
     __impl_decimal_digits_v1!(BakedDigits, ITER);
 };
 
-/// AvailableCanonicalNumberingSystems ( ): the numbering systems with digits
-/// in ICU4X's decimal data, sorted.
-fn available_canonical_numbering_systems(agent: &mut Agent) -> JsResult<Vec<String>> {
+/// The numbering systems with digits in ICU4X's decimal data, sorted.
+pub(crate) fn numbering_systems_with_digits() -> Option<Vec<String>> {
     let ids =
         IterableDataProvider::<icu::decimal::provider::DecimalDigitsV1>::iter_ids(&BakedDigits)
-            .map_err(|_| {
-                agent.not_implemented(
-                    "AvailableCanonicalNumberingSystems: ICU4X decimal data cannot be enumerated",
-                )
-            })?;
+            .ok()?;
     let mut list: Vec<String> = ids
         .into_iter()
         .map(|id| {
@@ -151,7 +146,17 @@ fn available_canonical_numbering_systems(agent: &mut Agent) -> JsResult<Vec<Stri
         .collect();
     list.sort();
     list.dedup();
-    Ok(list)
+    Some(list)
+}
+
+/// AvailableCanonicalNumberingSystems ( ): the numbering systems with digits
+/// in ICU4X's decimal data, sorted.
+fn available_canonical_numbering_systems(agent: &mut Agent) -> JsResult<Vec<String>> {
+    numbering_systems_with_digits().ok_or_else(|| {
+        agent.not_implemented(
+            "AvailableCanonicalNumberingSystems: ICU4X decimal data cannot be enumerated",
+        )
+    })
 }
 
 /// AvailablePrimaryTimeZoneIdentifiers ( ): the canonical IANA identifiers of
