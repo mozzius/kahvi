@@ -388,7 +388,7 @@ pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) 
         }
         p
     });
-    let source: Arc<str> = Arc::from(source);
+    let source = crate::code_cache::shared_source(cache_key.as_ref(), source);
     let script = register_script(agent, realm, source.clone(), key, false);
     agent.scripts[script as usize].module = Some(id);
     agent.scripts[script as usize].preparse = Some(preparse);
