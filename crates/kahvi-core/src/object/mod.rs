@@ -6,10 +6,14 @@ pub mod host_object;
 pub mod internal;
 pub mod namespace;
 pub mod proxy;
+pub(crate) mod shape;
 pub mod typed_array;
 pub mod weak;
 
 use std::any::Any;
+use std::sync::Arc;
+
+use shape::{EMPTY_SHAPE_ID, MAX_SHAPE_KEYS, Shape};
 
 use crate::gc::{Liveness, Trace, Tracer};
 
@@ -159,17 +163,42 @@ impl PropertyDescriptor {
 /// Own properties in creation order, with O(1) lookup.
 ///
 /// Array-index keys `0..elements.len()` live in a dense vector (holes are
-/// `None`); every other key, including larger indices, lives in the
-/// insertion-ordered map. The split is invisible to callers.
-///
-/// A map with at most [`SMALL_MAP`] entries has no hash index: lookups scan
-/// `entries`, which is faster at that size and saves an allocation per
-/// object.
+/// `None`). Other keys are named: an object's string and symbol keys
+/// normally come from a shared [`Shape`] (`shape.rs`), with the properties
+/// at the keys' positions; an object that deletes a named property, has a
+/// sparse array index or gains very many keys keeps them in a map of its
+/// own instead. The split is invisible to callers.
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
     elements: Vec<Option<Property>>,
     /// How many of `elements` are present.
     element_count: usize,
+    named: Named,
+}
+
+#[derive(Debug, Clone)]
+enum Named {
+    /// `values[i]` is the property of `shape.keys[i]`; `None` is the empty
+    /// shape.
+    Shaped {
+        shape: Option<Arc<Shape>>,
+        values: Vec<Property>,
+    },
+    Own(Box<OwnMap>),
+}
+
+impl Default for Named {
+    fn default() -> Self {
+        Named::Shaped {
+            shape: None,
+            values: Vec::new(),
+        }
+    }
+}
+
+/// Named properties an object keeps for itself, in insertion order.
+#[derive(Debug, Default, Clone)]
+struct OwnMap {
     /// Key to position in `entries`; empty while `entries` has at most
     /// [`SMALL_MAP`] slots.
     index: crate::hash::FxHashMap<PropertyKey, usize>,
@@ -183,11 +212,11 @@ pub struct PropertyMap {
 /// still extend them (filling the gap with holes).
 const DENSE_GAP: usize = 64;
 
-/// The most entries a map keeps without a hash index.
+/// The most entries an own map keeps without a hash index.
 const SMALL_MAP: usize = 8;
 
-impl PropertyMap {
-    /// The position of a map key in `entries`.
+impl OwnMap {
+    /// The position of a key in `entries`.
     fn find(&self, key: &PropertyKey) -> Option<usize> {
         if self.entries.len() <= SMALL_MAP {
             self.entries
@@ -198,6 +227,154 @@ impl PropertyMap {
         }
     }
 
+    fn push(&mut self, key: PropertyKey, prop: Property) {
+        if key.as_index().is_some() {
+            self.sparse_indices += 1;
+        }
+        self.entries.push(Some((key, prop)));
+        let len = self.entries.len();
+        if len == SMALL_MAP + 1 {
+            self.rebuild_index();
+        } else if len > SMALL_MAP + 1 {
+            self.index.insert(key, len - 1);
+        }
+    }
+
+    fn remove(&mut self, key: &PropertyKey) -> Option<Property> {
+        let i = self.find(key)?;
+        if self.entries.len() > SMALL_MAP {
+            self.index.remove(key);
+        }
+        if key.as_index().is_some() {
+            self.sparse_indices -= 1;
+        }
+        let old = self.entries[i].take().map(|(_, p)| p);
+        self.removed += 1;
+        if self.removed > 16 && self.removed * 2 > self.entries.len() {
+            self.entries.retain(Option::is_some);
+            self.removed = 0;
+            self.rebuild_index();
+        }
+        old
+    }
+
+    /// Rebuilds `index` from `entries`, or drops it when the map is small.
+    fn rebuild_index(&mut self) {
+        self.index.clear();
+        if self.entries.len() <= SMALL_MAP {
+            self.index.shrink_to_fit();
+            return;
+        }
+        for (i, e) in self.entries.iter().enumerate() {
+            if let Some((k, _)) = e {
+                self.index.insert(*k, i);
+            }
+        }
+    }
+}
+
+impl Named {
+    fn find(&self, key: &PropertyKey) -> Option<usize> {
+        match self {
+            Named::Shaped { shape, .. } => match key {
+                PropertyKey::Index(_) => None,
+                _ => shape.as_ref()?.find(key),
+            },
+            Named::Own(m) => m.find(key),
+        }
+    }
+
+    fn get(&self, key: &PropertyKey) -> Option<&Property> {
+        let i = self.find(key)?;
+        match self {
+            Named::Shaped { values, .. } => Some(&values[i]),
+            Named::Own(m) => m.entries[i].as_ref().map(|(_, p)| p),
+        }
+    }
+
+    fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
+        let i = self.find(key)?;
+        match self {
+            Named::Shaped { values, .. } => Some(&mut values[i]),
+            Named::Own(m) => m.entries[i].as_mut().map(|(_, p)| p),
+        }
+    }
+
+    /// Moves the properties into an own map, for changes a shape cannot
+    /// describe.
+    fn own_map(&mut self) -> &mut OwnMap {
+        if let Named::Shaped { shape, values } = self {
+            let mut m = OwnMap::default();
+            if let Some(shape) = shape {
+                m.entries.reserve(values.len() + 1);
+                for (k, p) in shape.keys.iter().zip(values.iter()) {
+                    m.push(*k, *p);
+                }
+            }
+            *self = Named::Own(Box::new(m));
+        }
+        match self {
+            Named::Own(m) => m,
+            Named::Shaped { .. } => unreachable!("converted above"),
+        }
+    }
+
+    /// Adds a property for a key not present.
+    fn add(&mut self, key: PropertyKey, prop: Property) {
+        match self {
+            Named::Shaped { shape, values }
+                if key.as_index().is_none() && values.len() < MAX_SHAPE_KEYS =>
+            {
+                *shape = Some(Shape::child(shape.as_ref(), key));
+                values.push(prop);
+            }
+            _ => self.own_map().push(key, prop),
+        }
+    }
+
+    fn remove(&mut self, key: &PropertyKey) -> Option<Property> {
+        self.find(key)?;
+        self.own_map().remove(key)
+    }
+
+    fn len(&self) -> usize {
+        match self {
+            Named::Shaped { values, .. } => values.len(),
+            Named::Own(m) => m.entries.len() - m.removed,
+        }
+    }
+
+    fn sparse_indices(&self) -> usize {
+        match self {
+            Named::Shaped { .. } => 0,
+            Named::Own(m) => m.sparse_indices,
+        }
+    }
+
+    /// The keys and properties, in insertion order.
+    fn iter(&self) -> impl Iterator<Item = (PropertyKey, &Property)> {
+        let (shaped, own) = match self {
+            Named::Shaped { shape, values } => (
+                Some(
+                    shape
+                        .as_deref()
+                        .map_or(&[][..], |s| &s.keys[..])
+                        .iter()
+                        .copied()
+                        .zip(values.iter()),
+                ),
+                None,
+            ),
+            Named::Own(m) => (
+                None,
+                Some(m.entries.iter().flatten().map(|(k, p)| (*k, p))),
+            ),
+        };
+        shaped.into_iter().flatten().chain(own.into_iter().flatten())
+    }
+}
+
+impl PropertyMap {
     fn dense_slot(&self, key: &PropertyKey) -> Option<usize> {
         match key {
             PropertyKey::Index(i) if (*i as usize) < self.elements.len() => Some(*i as usize),
@@ -205,27 +382,26 @@ impl PropertyMap {
         }
     }
 
+    #[inline]
     pub fn get(&self, key: &PropertyKey) -> Option<&Property> {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].as_ref();
         }
-        self.find(key)
-            .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
+        self.named.get(key)
     }
 
     pub fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].as_mut();
         }
-        let i = self.find(key)?;
-        self.entries[i].as_mut().map(|(_, p)| p)
+        self.named.get_mut(key)
     }
 
     pub fn contains(&self, key: &PropertyKey) -> bool {
         if let Some(i) = self.dense_slot(key) {
             return self.elements[i].is_some();
         }
-        self.find(key).is_some()
+        self.named.find(key).is_some()
     }
 
     /// Inserts or replaces, keeping the original position on replacement.
@@ -239,30 +415,16 @@ impl PropertyMap {
                 self.elements[i] = Some(prop);
                 return;
             }
-            if i <= self.elements.len() + DENSE_GAP && self.find(&key).is_none() {
+            if i <= self.elements.len() + DENSE_GAP && self.named.find(&key).is_none() {
                 self.grow_elements(i + 1);
                 self.elements[i] = Some(prop);
                 self.element_count += 1;
                 return;
             }
         }
-        match self.find(&key) {
-            Some(i) => self.entries[i] = Some((key, prop)),
-            None => {
-                if key.as_index().is_some() {
-                    self.sparse_indices += 1;
-                }
-                if self.entries.capacity() == 0 {
-                    self.entries.reserve_exact(2);
-                }
-                self.entries.push(Some((key, prop)));
-                let len = self.entries.len();
-                if len == SMALL_MAP + 1 {
-                    self.rebuild_index();
-                } else if len > SMALL_MAP + 1 {
-                    self.index.insert(key, len - 1);
-                }
-            }
+        match self.named.get_mut(&key) {
+            Some(p) => *p = prop,
+            None => self.named.add(key, prop),
         }
     }
 
@@ -271,9 +433,9 @@ impl PropertyMap {
     fn grow_elements(&mut self, len: usize) {
         let old = self.elements.len();
         self.elements.resize(len, None);
-        if self.sparse_indices > 0 {
+        if self.named.sparse_indices() > 0 {
             for i in old..len {
-                if let Some(p) = self.remove_from_map(&PropertyKey::Index(i as u32)) {
+                if let Some(p) = self.named.remove(&PropertyKey::Index(i as u32)) {
                     self.elements[i] = Some(p);
                     self.element_count += 1;
                 }
@@ -292,51 +454,62 @@ impl PropertyMap {
             }
             return old;
         }
-        self.remove_from_map(key)
-    }
-
-    fn remove_from_map(&mut self, key: &PropertyKey) -> Option<Property> {
-        let i = self.find(key)?;
-        if self.entries.len() > SMALL_MAP {
-            self.index.remove(key);
-        }
-        if key.as_index().is_some() {
-            self.sparse_indices -= 1;
-        }
-        let old = self.entries[i].take().map(|(_, p)| p);
-        self.removed += 1;
-        if self.removed > 16 && self.removed * 2 > self.entries.len() {
-            self.compact();
-        }
-        old
-    }
-
-    fn compact(&mut self) {
-        self.entries.retain(Option::is_some);
-        self.removed = 0;
-        self.rebuild_index();
-    }
-
-    /// Rebuilds `index` from `entries`, or drops it when the map is small.
-    fn rebuild_index(&mut self) {
-        self.index.clear();
-        if self.entries.len() <= SMALL_MAP {
-            self.index.shrink_to_fit();
-            return;
-        }
-        for (i, e) in self.entries.iter().enumerate() {
-            if let Some((k, _)) = e {
-                self.index.insert(*k, i);
-            }
-        }
+        self.named.remove(key)
     }
 
     pub fn len(&self) -> usize {
-        self.element_count + self.entries.len() - self.removed
+        self.element_count + self.named.len()
     }
 
     pub fn is_empty(&self) -> bool {
         self.len() == 0
+    }
+
+    /// The id of the shape the named properties have, `None` for an object
+    /// keeping its own map (see `shape.rs`).
+    #[inline]
+    pub(crate) fn shape_id(&self) -> Option<u64> {
+        match &self.named {
+            Named::Shaped { shape, .. } => Some(shape.as_ref().map_or(EMPTY_SHAPE_ID, |s| s.id)),
+            Named::Own(_) => None,
+        }
+    }
+
+    /// The shape id and the key's position in it, for a key of a shaped
+    /// object.
+    #[inline]
+    pub(crate) fn shape_slot(&self, key: &PropertyKey) -> Option<(u64, usize)> {
+        match &self.named {
+            Named::Shaped {
+                shape: Some(shape), ..
+            } if key.as_index().is_none() => Some((shape.id, shape.find(key)?)),
+            _ => None,
+        }
+    }
+
+    /// The property at position `slot` of the shape with id `shape_id`, if
+    /// that is this object's shape.
+    #[inline]
+    pub(crate) fn get_in_shape(&self, shape_id: u64, slot: usize) -> Option<&Property> {
+        match &self.named {
+            Named::Shaped {
+                shape: Some(shape),
+                values,
+            } if shape.id == shape_id => values.get(slot),
+            _ => None,
+        }
+    }
+
+    /// [`get_in_shape`](Self::get_in_shape), mutably.
+    #[inline]
+    pub(crate) fn get_in_shape_mut(&mut self, shape_id: u64, slot: usize) -> Option<&mut Property> {
+        match &mut self.named {
+            Named::Shaped {
+                shape: Some(shape),
+                values,
+            } if shape.id == shape_id => values.get_mut(slot),
+            _ => None,
+        }
     }
 
     /// Keys in OrdinaryOwnPropertyKeys order: array indices ascending, then
@@ -351,18 +524,19 @@ impl PropertyMap {
                 .map(|(i, _)| PropertyKey::Index(i as u32)),
         );
         let mut indices: Vec<u32> = Vec::new();
-        let mut strings = Vec::new();
+        let start = keys.len();
         let mut symbols = Vec::new();
-        for (k, _) in self.entries.iter().flatten() {
+        for (k, _) in self.named.iter() {
             match k {
-                PropertyKey::Index(i) => indices.push(*i),
-                PropertyKey::String(_) => strings.push(*k),
-                PropertyKey::Symbol(_) => symbols.push(*k),
+                PropertyKey::Index(i) => indices.push(i),
+                PropertyKey::String(_) => keys.push(k),
+                PropertyKey::Symbol(_) => symbols.push(k),
             }
         }
-        indices.sort_unstable();
-        keys.extend(indices.into_iter().map(PropertyKey::Index));
-        keys.extend(strings);
+        if !indices.is_empty() {
+            indices.sort_unstable();
+            keys.splice(start..start, indices.into_iter().map(PropertyKey::Index));
+        }
         keys.extend(symbols);
         keys
     }
@@ -370,9 +544,8 @@ impl PropertyMap {
     /// Array-index keys at or above `from`, descending (for ArraySetLength).
     pub fn index_keys_from(&self, from: u32) -> Vec<u32> {
         let mut v: Vec<u32> = self
-            .entries
+            .named
             .iter()
-            .flatten()
             .filter_map(|(k, _)| k.as_index())
             .filter(|&i| i >= from)
             .collect();
@@ -473,8 +646,8 @@ impl Trace for PropertyMap {
         for p in self.elements.iter().flatten() {
             p.trace(t);
         }
-        for (k, p) in self.entries.iter().flatten() {
-            t.key(*k);
+        for (k, p) in self.named.iter() {
+            t.key(k);
             p.trace(t);
         }
     }

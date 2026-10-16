@@ -105,19 +105,21 @@ pub enum Op {
     ClearLocals(u32, u32),
 
     // ---- properties --------------------------------------------------------
-    /// [base] -> [value]
-    GetProp(PropertyKey),
+    /// [base] -> [value]. The `u32` of the named property instructions is
+    /// their cache ([`FunctionCode::prop_caches`]), numbered when the code
+    /// is finished (emitted as 0).
+    GetProp(PropertyKey, u32),
     /// [base key] -> [value]: GetValue; ToObject(base) happens before ToPropertyKey(key).
     GetElem,
     /// [base key] -> [base propertyKey value]: GetElem keeping the converted key
     /// for a following SetElem (compound assignment, update expressions).
     GetElemForUpdate,
     /// [base] -> [func base]: method lookup for calls.
-    GetPropForCall(PropertyKey),
+    GetPropForCall(PropertyKey, u32),
     /// [base key] -> [func base]
     GetElemForCall,
     /// [base value] -> [value]: PutValue to base.key.
-    SetProp(PropertyKey),
+    SetProp(PropertyKey, u32),
     /// [base key value] -> [value]
     SetElem,
     /// [base] -> [bool]
@@ -681,8 +683,26 @@ pub struct FunctionCode {
     /// no direct eval in or around them, not eval code) get one: there a
     /// binding, once found, is always found in the same place.
     pub name_caches: Box<[std::sync::atomic::AtomicU64]>,
+    /// The caches of the named property instructions (`GetProp`,
+    /// `GetPropForCall`, `SetProp`), see [`PropCache`].
+    pub prop_caches: Box<[PropCache]>,
     /// Set for a function not compiled yet.
     pub lazy: Option<Box<LazyCode>>,
+}
+
+/// Where a property instruction found its property last time, in terms of
+/// object shapes (`object/shape.rs`): either on objects of shape `S` at
+/// position `P`, or missing from objects of shape `S` and found on their
+/// prototype, of shape `T`, at position `P`.
+///
+/// `recv` is `S << 8 | P << 2 | 1` for the first, `S << 8 | 2` for the
+/// second, and then `holder` is `T << 8 | P << 2 | 1`; 0 is empty. Each word
+/// states a fact that stays true on its own, so a reader seeing one word
+/// of an older entry and one of a newer still reads only true facts.
+#[derive(Debug, Default)]
+pub struct PropCache {
+    pub recv: std::sync::atomic::AtomicU64,
+    pub holder: std::sync::atomic::AtomicU64,
 }
 
 /// The cache index of a name instruction that has no binding cache.

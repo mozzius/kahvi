@@ -2,7 +2,10 @@
 //! the exotic objects in §10.4). Named `internal_*` so they can't be confused
 //! with the abstract operations of the same name in [`crate::ops`].
 
+use std::sync::atomic::Ordering;
+
 use super::{ObjectKind, Property, PropertyDescriptor, PropertyKey};
+use crate::compiler::PropCache;
 use crate::agent::Agent;
 use crate::error::JsResult;
 use crate::ops;
@@ -718,10 +721,6 @@ pub fn ordinary_delete(agent: &mut Agent, o: Object, key: PropertyKey) -> JsResu
     Ok(false)
 }
 
-/// Whether objects of this kind have the ordinary [[GetPrototypeOf]],
-/// [[GetOwnProperty]], [[Get]] and [[Set]] (proxies and host objects are
-/// `Native`; namespaces, typed arrays, String objects and mapped arguments
-/// objects are exotic).
 /// [[Get]](key, o) when it is a data property found on objects with the
 /// ordinary [[Get]] (`internal_get`'s first loop): `None` where that would
 /// call a getter or reach another kind of object.
@@ -744,6 +743,140 @@ pub(crate) fn ordinary_get_data(agent: &Agent, o: Object, key: PropertyKey) -> O
     }
 }
 
+/// [`ordinary_get_data`] for a property instruction with cache `cache`:
+/// a lookup the cache describes takes no search, and a successful search
+/// of the shapes a cache can describe fills it.
+#[inline]
+pub(crate) fn ordinary_get_data_cached(
+    agent: &Agent,
+    o: Object,
+    key: PropertyKey,
+    cache: &PropCache,
+) -> Option<Value> {
+    let obj = agent.obj(o);
+    if has_ordinary_get(&obj.kind) {
+        let recv = cache.recv.load(Ordering::Relaxed);
+        match recv & 3 {
+            // Own property of objects of this shape.
+            1 => {
+                if let Some(Property::Data { value, .. }) = obj
+                    .properties
+                    .get_in_shape(recv >> 8, (recv >> 2 & 63) as usize)
+                {
+                    return Some(*value);
+                }
+            }
+            // Missing from objects of this shape, on their prototype.
+            2 => {
+                if obj.properties.shape_id() == Some(recv >> 8)
+                    && let Some(proto) = obj.prototype
+                {
+                    let holder = cache.holder.load(Ordering::Relaxed);
+                    let p = agent.obj(proto);
+                    if has_ordinary_get(&p.kind)
+                        && let Some(Property::Data { value, .. }) = p
+                            .properties
+                            .get_in_shape(holder >> 8, (holder >> 2 & 63) as usize)
+                    {
+                        return Some(*value);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    let v = ordinary_get_data(agent, o, key)?;
+    fill_get_cache(agent, o, key, cache);
+    Some(v)
+}
+
+/// Records in `cache` where [[Get]](key) found a data property on `o`, if
+/// it is somewhere a cache can describe.
+#[cold]
+fn fill_get_cache(agent: &Agent, o: Object, key: PropertyKey, cache: &PropCache) {
+    let obj = agent.obj(o);
+    if !has_ordinary_get(&obj.kind) {
+        return;
+    }
+    if let Some((shape, slot)) = obj.properties.shape_slot(&key) {
+        if matches!(obj.properties.get(&key), Some(Property::Data { .. })) {
+            cache
+                .recv
+                .store(shape << 8 | (slot as u64) << 2 | 1, Ordering::Relaxed);
+        }
+        return;
+    }
+    let (Some(shape), Some(proto)) = (obj.properties.shape_id(), obj.prototype) else {
+        return;
+    };
+    if obj.properties.contains(&key) {
+        return;
+    }
+    let p = agent.obj(proto);
+    if !has_ordinary_get(&p.kind) {
+        return;
+    }
+    if let Some((holder, slot)) = p.properties.shape_slot(&key)
+        && matches!(p.properties.get(&key), Some(Property::Data { .. }))
+    {
+        cache
+            .holder
+            .store(holder << 8 | (slot as u64) << 2 | 1, Ordering::Relaxed);
+        cache.recv.store(shape << 8 | 2, Ordering::Relaxed);
+    }
+}
+
+/// The value of an own writable data property of `o`, which [[Set]] would
+/// just change, found through the cache of a `SetProp` instruction where
+/// it can be: on ordinary objects only (other kinds may have an exotic
+/// [[DefineOwnProperty]], like array `length`).
+#[inline]
+pub(crate) fn own_writable_data_cached<'a>(
+    agent: &'a mut Agent,
+    o: Object,
+    key: PropertyKey,
+    cache: &PropCache,
+) -> Option<&'a mut Value> {
+    let obj = agent.obj_mut(o);
+    if !matches!(obj.kind, ObjectKind::Ordinary) {
+        return None;
+    }
+    let Some(shape) = obj.properties.shape_id() else {
+        // An object keeping its own map.
+        return match obj.properties.get_mut(&key) {
+            Some(Property::Data {
+                value,
+                writable: true,
+                ..
+            }) => Some(value),
+            _ => None,
+        };
+    };
+    let recv = cache.recv.load(Ordering::Relaxed);
+    let slot = if recv & 3 == 1 && recv >> 8 == shape {
+        (recv >> 2 & 63) as usize
+    } else {
+        let (_, slot) = obj.properties.shape_slot(&key)?;
+        cache
+            .recv
+            .store(shape << 8 | (slot as u64) << 2 | 1, Ordering::Relaxed);
+        slot
+    };
+    match obj.properties.get_in_shape_mut(shape, slot) {
+        Some(Property::Data {
+            value,
+            writable: true,
+            ..
+        }) => Some(value),
+        _ => None,
+    }
+}
+
+/// Whether objects of this kind have the ordinary [[GetPrototypeOf]],
+/// [[GetOwnProperty]], [[Get]] and [[Set]] (proxies and host objects are
+/// `Native`; namespaces, typed arrays, String objects and mapped arguments
+/// objects are exotic).
+#[inline]
 fn has_ordinary_get(kind: &ObjectKind) -> bool {
     matches!(
         kind,
