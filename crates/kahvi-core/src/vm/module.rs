@@ -931,7 +931,7 @@ fn initialize_environment(agent: &mut Agent, module: u32) -> JsResult<()> {
         let code = m(agent, module).code.clone();
         // 21-22. Var declarations: mutable bindings initialized to undefined.
         let mut declared: Vec<JsString> = Vec::new();
-        for &name in &code.decls.var_names {
+        for &name in &code.decls().var_names {
             if !declared.contains(&name) {
                 env.create_mutable_binding(agent, name, false)?;
                 env.initialize_binding(agent, name, Value::Undefined)?;
@@ -939,7 +939,7 @@ fn initialize_environment(agent: &mut Agent, module: u32) -> JsResult<()> {
             }
         }
         // 23-24. Lexical declarations: const are immutable, the rest mutable.
-        for &(name, is_const) in &code.decls.lexical {
+        for &(name, is_const) in &code.decls().lexical {
             if is_const {
                 env.create_immutable_binding(agent, name, true)?;
             } else {
@@ -948,7 +948,7 @@ fn initialize_environment(agent: &mut Agent, module: u32) -> JsResult<()> {
         }
         // Function declarations: created and initialized now (InstantiateFunctionObject).
         let star_default = agent.string("*default*");
-        for &(name, index) in &code.decls.functions {
+        for &(name, index) in &code.decls().functions {
             env.create_mutable_binding(agent, name, false)?;
             let fname = (name == star_default).then(|| agent.key("default"));
             let fo = create_closure(

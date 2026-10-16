@@ -32,8 +32,8 @@ pub(super) fn function_declaration_instantiation(
     let this_mode = super::this_mode_of(agent, func).unwrap_or(ThisMode::Strict);
     // (An arguments object nothing can observe is skipped.)
     let shadowed = !params.has_expressions
-        && (code.decls.functions.iter().any(|(n, _)| *n == arguments)
-            || code.decls.lexical.iter().any(|(n, _)| *n == arguments));
+        && (code.decls().functions.iter().any(|(n, _)| *n == arguments)
+            || code.decls().lexical.iter().any(|(n, _)| *n == arguments));
     let arguments_needed = (code.uses_arguments || code.has_direct_eval)
         && this_mode != ThisMode::Lexical
         && !params.names.contains(&arguments)
@@ -56,7 +56,7 @@ pub(super) fn function_declaration_instantiation(
     };
     // (Room for the bindings steps 21-34 create here, so the list grows once.)
     if let Environment::Declarative { bindings, .. } = agent.env_mut(env_record) {
-        let d = &code.decls;
+        let d = code.decls();
         let mut n = params.names.len() + 1;
         if !params.has_expressions {
             n += d.var_names.len() + d.functions.len();
@@ -128,7 +128,7 @@ pub(super) fn function_body_instantiation(agent: &mut Agent, frame: &mut Frame) 
     let arguments_bound = std::mem::take(&mut frame.pending.arguments_bound);
     let is_param_binding =
         |n: JsString| code.params.names.contains(&n) || (arguments_bound && n == arguments);
-    let decls = &code.decls;
+    let decls = code.decls();
     let is_func_name = |n: JsString| decls.functions.iter().any(|&(f, _)| f == n);
     // VarDeclaredNames includes the function declarations' names.
     let var_names = decls.var_names.iter().copied().chain(
@@ -377,7 +377,7 @@ pub(crate) fn global_declaration_instantiation(
     code: &FunctionCode,
     env: EnvId,
 ) -> JsResult<Vec<JsString>> {
-    let decls = &code.decls;
+    let decls = code.decls();
     let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
     // 3. For each element name of lexNames, do
     for &(name, _) in &decls.lexical {
@@ -488,7 +488,7 @@ pub(super) fn eval_declaration_instantiation(
     private_env: Option<std::sync::Arc<super::PrivateEnv>>,
     strict: bool,
 ) -> JsResult<Vec<JsString>> {
-    let decls = &code.decls;
+    let decls = code.decls();
     let func_names: Vec<JsString> = decls.functions.iter().map(|(n, _)| *n).collect();
     let var_names: Vec<JsString> = decls
         .var_names

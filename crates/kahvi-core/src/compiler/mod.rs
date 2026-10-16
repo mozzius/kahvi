@@ -174,7 +174,7 @@ impl<'a> Compiler<'a> {
                 name: None,
                 length: 0,
                 params: Params::default(),
-                decls: Declarations::default(),
+                decls: None,
                 uses_arguments: false,
                 has_direct_eval: false,
                 envs_die_with_call: false,
@@ -184,12 +184,7 @@ impl<'a> Compiler<'a> {
                 ops: Box::default(),
                 positions: Box::default(),
                 functions: Box::default(),
-                scopes: Box::default(),
-                templates: Box::default(),
-                classes: Box::default(),
-                messages: Box::default(),
-                finally_targets: Box::default(),
-                strict_ranges: Box::default(),
+                tables: None,
                 source,
                 span: (span.start, span.end),
                 script,
@@ -235,12 +230,29 @@ impl<'a> Compiler<'a> {
         c.ops = v.ops.into();
         c.positions = v.positions.into();
         c.functions = v.functions.into();
-        c.scopes = v.scopes.into();
-        c.templates = v.templates.into();
-        c.classes = v.classes.into();
-        c.messages = v.messages.into();
-        c.finally_targets = v.finally_targets.into();
-        c.strict_ranges = v.strict_ranges.into();
+        c.tables = CodeTables {
+            scopes: v.scopes.into(),
+            templates: v.templates.into(),
+            classes: v.classes.into(),
+            messages: v.messages.into(),
+            finally_targets: v.finally_targets.into(),
+            strict_ranges: v.strict_ranges.into(),
+        }
+        .boxed();
+        if let Some(d) = &mut c.decls {
+            if d.var_names.is_empty()
+                && d.functions.is_empty()
+                && d.lexical.is_empty()
+                && d.annex_b_functions.is_empty()
+            {
+                c.decls = None;
+            } else {
+                d.var_names.shrink_to_fit();
+                d.functions.shrink_to_fit();
+                d.lexical.shrink_to_fit();
+                d.annex_b_functions.shrink_to_fit();
+            }
+        }
         Arc::new(self.code)
     }
 

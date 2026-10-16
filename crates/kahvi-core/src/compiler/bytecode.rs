@@ -629,14 +629,16 @@ impl FunctionCode {
             + size_of_val(&*self.ops)
             + size_of_val(&*self.positions)
             + size_of_val(&*self.functions)
-            + size_of_val(&*self.scopes)
-            + size_of_val(&*self.templates)
-            + size_of_val(&*self.classes)
-            + size_of_val(&*self.strict_ranges)
+            + self.decls.as_ref().map_or(0, |d| size_of_val(&**d))
+            + self.tables.as_ref().map_or(0, |t| size_of_val(&**t))
+            + size_of_val(self.scopes())
+            + size_of_val(self.templates())
+            + size_of_val(self.classes())
+            + size_of_val(self.strict_ranges())
             + self.locals.as_deref().map_or(0, size_of_val)
-            + self.messages.iter().map(|m| m.len() + 24).sum::<usize>()
+            + self.messages().iter().map(|m| m.len() + 24).sum::<usize>()
             + self
-                .finally_targets
+                .finally_targets()
                 .iter()
                 .map(|t| size_of_val(&**t) + 24)
                 .sum::<usize>();
@@ -675,7 +677,8 @@ pub struct FunctionCode {
     /// ExpectedArgumentCount, for the `length` property.
     pub length: u32,
     pub params: Params,
-    pub decls: Declarations,
+    /// The body's declarations (`None`: none; see [`FunctionCode::decls`]).
+    pub decls: Option<Box<Declarations>>,
     /// Whether the body needs an arguments object if FunctionDeclarationInstantiation allows it.
     pub uses_arguments: bool,
     /// Whether the code contains a direct eval.
@@ -702,15 +705,9 @@ pub struct FunctionCode {
     /// (op index, source offset) pairs, ascending, for error positions.
     pub positions: Box<[(u32, u32)]>,
     pub functions: Box<[Arc<FunctionCode>]>,
-    pub scopes: Box<[ScopeInfo]>,
-    pub templates: Box<[TemplateInfo]>,
-    pub classes: Box<[ClassStatic]>,
-    pub messages: Box<[String]>,
-    pub finally_targets: Box<[Vec<Label>]>,
-    /// Instruction ranges `[start, end)` that are strict mode code inside
-    /// non-strict code: a class's heritage and element keys (all parts of a
-    /// ClassDeclaration or ClassExpression are strict mode code).
-    pub strict_ranges: Box<[(u32, u32)]>,
+    /// The tables few functions need (`None`: all empty; see the accessors
+    /// such as [`FunctionCode::scopes`]).
+    pub tables: Option<Box<CodeTables>>,
     /// The whole source text and this code's span in it (Function.prototype.toString).
     pub source: Arc<str>,
     pub span: (u32, u32),
@@ -732,6 +729,44 @@ pub struct FunctionCode {
     pub lazy: Option<Box<LazyCode>>,
 }
 
+/// The tables of a [`FunctionCode`] that most functions leave empty, kept
+/// apart so that those functions do not carry them.
+#[derive(Debug, Default)]
+pub struct CodeTables {
+    pub scopes: Box<[ScopeInfo]>,
+    pub templates: Box<[TemplateInfo]>,
+    pub classes: Box<[ClassStatic]>,
+    pub messages: Box<[String]>,
+    pub finally_targets: Box<[Vec<Label>]>,
+    /// Instruction ranges `[start, end)` that are strict mode code inside
+    /// non-strict code: a class's heritage and element keys (all parts of a
+    /// ClassDeclaration or ClassExpression are strict mode code).
+    pub strict_ranges: Box<[(u32, u32)]>,
+}
+
+impl CodeTables {
+    fn is_empty(&self) -> bool {
+        self.scopes.is_empty()
+            && self.templates.is_empty()
+            && self.classes.is_empty()
+            && self.messages.is_empty()
+            && self.finally_targets.is_empty()
+            && self.strict_ranges.is_empty()
+    }
+
+    /// The tables, or `None` when all are empty.
+    pub(crate) fn boxed(self) -> Option<Box<CodeTables>> {
+        (!self.is_empty()).then(|| Box::new(self))
+    }
+}
+
+static NO_DECLARATIONS: Declarations = Declarations {
+    var_names: Vec::new(),
+    functions: Vec::new(),
+    lexical: Vec::new(),
+    annex_b_functions: Vec::new(),
+};
+
 /// Where a property instruction last found its property: the position of
 /// the key among the named properties of the object that had it, plus 1
 /// (0 when unknown). Objects built the same way keep their keys in the same
@@ -743,6 +778,40 @@ pub type PropCache = std::sync::atomic::AtomicU32;
 pub const NO_NAME_CACHE: u32 = u32::MAX;
 
 impl FunctionCode {
+    /// The body's declarations.
+    pub fn decls(&self) -> &Declarations {
+        self.decls.as_deref().unwrap_or(&NO_DECLARATIONS)
+    }
+
+    /// The body's declarations, to fill in while compiling.
+    pub(crate) fn decls_mut(&mut self) -> &mut Declarations {
+        self.decls.get_or_insert_with(Default::default)
+    }
+
+    pub fn scopes(&self) -> &[ScopeInfo] {
+        self.tables.as_ref().map_or(&[], |t| &t.scopes)
+    }
+
+    pub fn templates(&self) -> &[TemplateInfo] {
+        self.tables.as_ref().map_or(&[], |t| &t.templates)
+    }
+
+    pub fn classes(&self) -> &[ClassStatic] {
+        self.tables.as_ref().map_or(&[], |t| &t.classes)
+    }
+
+    pub fn messages(&self) -> &[String] {
+        self.tables.as_ref().map_or(&[], |t| &t.messages)
+    }
+
+    pub fn finally_targets(&self) -> &[Vec<Label>] {
+        self.tables.as_ref().map_or(&[], |t| &t.finally_targets)
+    }
+
+    pub fn strict_ranges(&self) -> &[(u32, u32)] {
+        self.tables.as_ref().map_or(&[], |t| &t.strict_ranges)
+    }
+
     /// The source text of the function (for Function.prototype.toString).
     pub fn source_text(&self) -> &str {
         self.source
