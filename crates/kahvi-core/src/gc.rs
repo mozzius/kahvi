@@ -42,6 +42,28 @@ impl BitSet {
     }
 }
 
+/// After a sweep: drops the free slots at the end of a table (giving back
+/// its allocation once it is mostly unused), and lists the other free
+/// slots so that the lowest is reused first. New things then fill the
+/// table from the start, and its end, where the newest things are, is
+/// left free to be dropped at the next collection.
+fn compact_tail<T>(table: &mut Vec<T>, is_free: &mut BitSet, free: &mut Vec<u32>) {
+    while let Some(last) = table.len().checked_sub(1)
+        && is_free.get(last as u32)
+    {
+        table.pop();
+        is_free.remove(last as u32);
+    }
+    free.clear();
+    free.extend((0..table.len() as u32).rev().filter(|&i| is_free.get(i)));
+    if table.capacity() >= 2 * table.len().max(4096) {
+        table.shrink_to(table.len() + table.len() / 4);
+    }
+    if free.capacity() >= 2 * free.len().max(4096) {
+        free.shrink_to(free.len() + free.len() / 4);
+    }
+}
+
 /// Marks reachable handles. Objects, environments and symbols found live are
 /// queued and their contents traced by the collector's drain loop.
 /// What the compiler has referred to so far in the unit being compiled.
@@ -744,9 +766,13 @@ impl Agent {
             } else if !self.gc.is_free_object.get(i) {
                 self.objects[i as usize] = ObjectData::new(None, ObjectKind::Ordinary);
                 self.gc.is_free_object.insert(i);
-                self.gc.free_objects.push(i);
             }
         }
+        compact_tail(
+            &mut self.objects,
+            &mut self.gc.is_free_object,
+            &mut self.gc.free_objects,
+        );
         // A collected object's native state goes with it.
         self.native_states.retain(|o, _| t.objects.get(o.0));
         self.error_stacks.retain(|o, _| t.objects.get(o.0));
@@ -770,9 +796,13 @@ impl Agent {
                     e => *e = Environment::dead(),
                 }
                 self.gc.is_free_env.insert(i);
-                self.gc.free_envs.push(i);
             }
         }
+        compact_tail(
+            &mut self.envs,
+            &mut self.gc.is_free_env,
+            &mut self.gc.free_envs,
+        );
         for i in 0..self.strings.len() as u32 {
             if t.strings.get(i) || self.gc.pinned_strings.get(i) {
                 live_count += 1;
@@ -780,9 +810,13 @@ impl Agent {
                 self.string_index.remove(&self.strings, i);
                 self.strings[i as usize] = Default::default();
                 self.gc.is_free_string.insert(i);
-                self.gc.free_strings.push(i);
             }
         }
+        compact_tail(
+            &mut self.strings,
+            &mut self.gc.is_free_string,
+            &mut self.gc.free_strings,
+        );
         for i in self.gc.pinned_symbols..self.symbols.len() as u32 {
             if t.symbols.get(i) {
                 live_count += 1;
