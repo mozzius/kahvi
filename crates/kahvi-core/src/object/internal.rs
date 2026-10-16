@@ -187,8 +187,8 @@ impl Object {
         while has_ordinary_get(&agent.obj(o).kind) {
             let obj = agent.obj(o);
             match obj.properties.get(&key) {
-                Some(Property::Data { value, .. }) => return Ok(*value),
-                Some(&Property::Accessor { get, .. }) => {
+                Some(Property::Data { value, .. }) => return Ok(value),
+                Some(Property::Accessor { get, .. }) => {
                     return match get {
                         Some(g) => ops::call(agent, Value::Object(g), receiver, &[]),
                         None => Ok(Value::Undefined),
@@ -240,11 +240,7 @@ impl Object {
         {
             let is_array = matches!(agent.obj(self).kind, ObjectKind::Array);
             if !(is_array && key == PropertyKey::String(agent.names.length))
-                && let Some(Property::Data {
-                    value: slot,
-                    writable: true,
-                    ..
-                }) = agent.obj_mut(self).properties.get_mut(&key)
+                && let Some((slot, true)) = agent.obj_mut(self).properties.data_value_mut(&key)
             {
                 *slot = value;
                 return Ok(true);
@@ -733,9 +729,9 @@ pub(crate) fn ordinary_get_data(agent: &Agent, o: Object, key: PropertyKey) -> O
         if !has_ordinary_get(&obj.kind) {
             return None;
         }
-        match obj.properties.get(&key) {
-            Some(Property::Data { value, .. }) => return Some(*value),
-            Some(Property::Accessor { .. }) => return None,
+        match obj.properties.value_of(&key, None) {
+            Some(Some(value)) => return Some(value),
+            Some(None) => return None,
             None => match obj.prototype {
                 Some(parent) => o = parent,
                 None => return Some(Value::Undefined),
@@ -759,9 +755,9 @@ pub(crate) fn ordinary_get_data_hinted(
         if !has_ordinary_get(&obj.kind) {
             return None;
         }
-        match obj.properties.get_hinted(&key, hint) {
-            Some(Property::Data { value, .. }) => return Some(*value),
-            Some(Property::Accessor { .. }) => return None,
+        match obj.properties.value_of(&key, Some(hint)) {
+            Some(Some(value)) => return Some(value),
+            Some(None) => return None,
             None => match obj.prototype {
                 Some(parent) => o = parent,
                 None => return Some(Value::Undefined),

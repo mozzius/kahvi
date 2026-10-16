@@ -778,7 +778,7 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             let obj = agent.obj_mut(o);
             if !matches!(obj.kind, ObjectKind::Ordinary)
                 || !obj.extensible
-                || obj.properties.get(&key).is_some()
+                || obj.properties.contains(&key)
             {
                 return false;
             }
@@ -807,13 +807,9 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             if !matches!(obj.kind, ObjectKind::Ordinary) {
                 return false;
             }
-            let Some(Property::Data {
-                value,
-                writable: true,
-                ..
-            }) = obj
+            let Some((value, true)) = obj
                 .properties
-                .get_mut_hinted(&key, &frame.code.prop_caches[ic as usize])
+                .data_value_mut_hinted(&key, &frame.code.prop_caches[ic as usize])
             else {
                 return false;
             };

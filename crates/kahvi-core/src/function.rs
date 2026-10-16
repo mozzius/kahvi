@@ -198,7 +198,6 @@ pub fn create_builtin_function(
         .obj(func)
         .properties
         .get(&PropertyKey::String(agent.names.name))
-        .copied()
         && let ObjectKind::Builtin(b) = &mut agent.obj_mut(func).kind
     {
         b.initial_name = Some(s);
