@@ -521,7 +521,7 @@ op_code! {
     100 GetRestArgs(a: u32),
     101 InstantiateFunctionBody,
     102 NewObject,
-    103 NewArray,
+    103 NewArray(a: u32),
     104 DefineField(a: PropertyKey),
     105 DefineFieldComputed,
     106 ArrayPush,
