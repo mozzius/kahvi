@@ -1,0 +1,17 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "demo/Dockerfile",
+    "watchPatterns": [
+      "crates/**",
+      "demo/**",
+      "Cargo.lock",
+      "conformance/expected-pass.txt"
+    ]
+  },
+  "deploy": {
+    "healthcheckPath": "/healthz",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
