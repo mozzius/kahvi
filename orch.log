@@ -5809,3 +5809,19 @@ test262 at last merge: 83371/84983 runs passing
 [00:04:01] I-date-to-locale-string: attempt on slot 3 with sonnet
 [00:04:53] I-date-to-locale-string: attempt 562 finished ($0.235, 22 turns)
 [00:05:30] I-date-to-locale-string: verifier: accept The three Date.prototype.toLocale{,Date,Time}String changes gate on agent.intl and follow ECMA-402 steps 1-6 in order with the spec's comments. Requir
+[00:06:41] stack: stack/0080 (#121) green: 83895/84983 passing, +0
+[00:06:52] stack: pushed stack/0081 as #122 with arch-intl-dtf
+[00:10:14] stack: stack/0081 (#122) green: 83913/84983 passing, +18
+[00:10:26] stack: pushed stack/0082 as #123 with arch-social-android
+[00:13:48] stack: stack/0082 (#123) green: 83913/84983 passing, +0
+[00:14:01] stack: pushed stack/0083 as #124 with arch-intl-dtf
+[00:17:25] stack: stack/0083 (#124) green: 83913/84983 passing, +0
+[00:17:38] stack: pushed stack/0084 as #125 with arch-intl-display-names
+[00:21:04] stack: stack/0084 (#125) green: 84003/84983 passing, +90
+[00:21:19] stack: pushed stack/0085 as #126 with I-date-time-format, I-date-to-locale-string
+[00:24:49] stack: stack/0085 (#126) green: 84067/84983 passing, +64
+[00:24:49] I-date-time-format: merged (+60, 84067 total)
+[00:24:49] I-date-to-locale-string: merged (+4, 84067 total)
+[00:24:49] I-date-time-format: attempt on slot 3 with sonnet
+[00:25:24] I-date-time-format: attempt 563 finished ($0.202, 14 turns)
+[00:25:24] I-date-time-format: blocked: `support/intl_dtf_icu.rs` must be added to this ticket's scope, to make `field_set_for` throw not-implemented for minute/second/fractionalSecondDigits without an hour. `writeable` must be added to the `kahvi-builtins` manifest, for `formatToParts` and `formatRangeToParts`. dayPeriod can't be done because ICU4X has no field set for it.

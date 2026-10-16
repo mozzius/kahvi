@@ -1,0 +1,132 @@
+{
+  "duration_api_ms": 30612,
+  "stop_reason": "end_turn",
+  "session_id": "353276cc-5010-4b00-aef0-9fbcd26dffa5",
+  "total_cost_usd": 0.20220970000000002,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 35898,
+    "cache_read_input_tokens": 244274,
+    "output_tokens": 3253,
+    "output_tokens_details": {
+      "thinking_tokens": 1254
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 35898,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 768,
+        "cache_read_input_tokens": 41508,
+        "cache_creation_input_tokens": 1367,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1367
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [
+    {
+      "tool_name": "Edit",
+      "tool_use_id": "toolu_01ERGwSAnLFL3BD8JSmjf2bz",
+      "tool_input": {
+        "file_path": "/home/user/kahvi/work/slots/slot-3/crates/kahvi-builtins/src/support/intl_dtf_icu.rs",
+        "old_string": "    fields.time_precision = if let Some(n) = options.fractional_second_digits {",
+        "new_string": "    // ICU4X time field sets always include the hour: a minute or second\n    // without an hour would be formatted with one the options did not ask for.\n    if options.hour.is_none()\n        && (options.minute.is_some()\n            || options.second.is_some()\n            || options.fractional_second_digits.is_some())\n    {\n        return Err(\"a format with minutes or seconds and no hour\".to_string());\n    }\n    fields.time_precision = if let Some(n) = options.fractional_second_digits {",
+        "replace_all": false
+      }
+    }
+  ],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 14,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I made no changes. The 10 remaining failures come from two ICU4X gaps in a file outside this ticket's scope.\n\n- **dayPeriod:** ICU4X has no field set for a day period, so the dayPeriod tests (8 of the 10 failures) can't format. The matcher that rejects them is `best_fit_format_matcher` in `support/intl_dtf_icu.rs`.\n- **Minute and second without an hour:** ICU4X time field sets always include the hour, so `fractionalSecondDigits.js` gets \"1:02:03 AM\" instead of \"02:03\". The right fix, which I couldn't make, is to throw not-implemented for that combination in `field_set_for` in `intl_dtf_icu.rs`. That file is outside this ticket's scope, and the edit hook rejected my attempt.\n- **Parts and ranges:** I didn't touch `formatToParts`, `formatRange` or `formatRangeToParts`. The earlier attempts found they can't be done without the `writeable` crate, which isn't a `kahvi-builtins` dependency, and without ICU4X range patterns.\n\nI didn't run any tests, since there was nothing to test.\n\nBLOCKED: `support/intl_dtf_icu.rs` must be added to this ticket's scope, to make `field_set_for` throw not-implemented for minute/second/fractionalSecondDigits without an hour. `writeable` must be added to the `kahvi-builtins` manifest, for `formatToParts` and `formatRangeToParts`. dayPeriod can't be done because ICU4X has no field set for it.",
+  "ttft_ms": 1816,
+  "type": "result",
+  "duration_ms": 33320,
+  "uuid": "71b5d5c5-8890-4338-b9ed-60b38c8e0f86",
+  "ttft_stream_ms": 1715,
+  "time_to_request_ms": 454,
+  "time_to_request_phases_ms": {
+    "other": 17,
+    "system_prompt": 313,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 8,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 4,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 82,
+    "autocompact": 2,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 9,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 49,
+  "time_to_request_cpu_ms": 278,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 128,
+  "process_rss_mib_result": 257,
+  "process_anon_mib_result": 137,
+  "process_peak_rss_mib": 269,
+  "process_cpu_ms_turn": 2338,
+  "process_wall_ms_turn": 33320,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 5,
+    "cpu_ms": 10,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1716,
+  "time_to_request_from_spawn_ms": 3745006,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792110290342.553,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792659600,
+    "rateLimitType": "seven_day",
+    "utilization": 0.37,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.72,
+        "resetsAt": 1792124400
+      },
+      "seven_day": {
+        "utilization": 0.37,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

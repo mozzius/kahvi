@@ -5233,25 +5233,25 @@
  },
  {
   "id": "I-date-time-format",
-  "status": "stacked",
+  "status": "blocked",
   "tier": "sonnet",
-  "attempts": 3,
+  "attempts": 4,
   "strikes": 0,
-  "reason": "",
+  "reason": "`support/intl_dtf_icu.rs` must be added to this ticket's scope, to make `field_set_for` throw not-implemented for minute/second/fractionalSecondDigits without an hour. `writeable` must be added to the `kahvi-builtins` manifest, for `formatToParts` and `formatRangeToParts`. dayPeriod can't be done because ICU4X has no field set for it.",
   "salvage_attempt": null,
-  "updated": 1792109039.0549343,
+  "updated": 1792110324.7443237,
   "errors": 0,
   "resume_attempt": null
  },
  {
   "id": "I-date-to-locale-string",
-  "status": "stacked",
+  "status": "done",
   "tier": "sonnet",
   "attempts": 1,
   "strikes": 0,
   "reason": "",
   "salvage_attempt": null,
-  "updated": 1792109130.1326954,
+  "updated": 1792110289.1713958,
   "errors": 0,
   "resume_attempt": null
  },
@@ -5417,9 +5417,9 @@
   "tier": "sonnet",
   "attempts": 2,
   "strikes": 0,
-  "reason": "20 target runs still failing: AvailableCanonicalCurrencies (6), AvailableCanonicalCollations (4), AvailableCanonicalUnits (4), Intl.DisplayNames (2), 2 other failures",
+  "reason": "20 target runs still failing: AvailableCanonicalCurrencies (6), AvailableCanonicalCollations (4), AvailableCanonicalUnits (4), Intl.DisplayNames names for type \"calendar\" (no ICU4X data wired up) (2), 2 other failures",
   "salvage_attempt": null,
-  "updated": 1792108717.050511,
+  "updated": 1792110064.556955,
   "errors": 0,
   "resume_attempt": null
  }
