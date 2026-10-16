@@ -10,6 +10,7 @@ pub mod typed_array;
 pub mod weak;
 
 use std::any::Any;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use crate::gc::{Liveness, Trace, Tracer};
 
@@ -211,6 +212,47 @@ impl PropertyMap {
         }
         self.find(key)
             .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
+    }
+
+    /// The position of a map key in `entries`, looked for first at the
+    /// position `hint` remembers (a property instruction's cache), which
+    /// is updated when the key is found elsewhere.
+    #[inline]
+    fn find_hinted(&self, key: &PropertyKey, hint: &AtomicU32) -> Option<usize> {
+        let h = hint.load(Ordering::Relaxed) as usize;
+        if let Some(Some((k, _))) = h.checked_sub(1).and_then(|i| self.entries.get(i))
+            && k == key
+        {
+            return Some(h - 1);
+        }
+        let i = self.find(key)?;
+        hint.store(i as u32 + 1, Ordering::Relaxed);
+        Some(i)
+    }
+
+    /// [`get`](Self::get) for a named key, with a position hint (see
+    /// `find_hinted`).
+    #[inline]
+    pub(crate) fn get_hinted(&self, key: &PropertyKey, hint: &AtomicU32) -> Option<&Property> {
+        if let Some(i) = self.dense_slot(key) {
+            return self.elements[i].as_ref();
+        }
+        self.find_hinted(key, hint)
+            .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
+    }
+
+    /// [`get_mut`](Self::get_mut) with a position hint.
+    #[inline]
+    pub(crate) fn get_mut_hinted(
+        &mut self,
+        key: &PropertyKey,
+        hint: &AtomicU32,
+    ) -> Option<&mut Property> {
+        if let Some(i) = self.dense_slot(key) {
+            return self.elements[i].as_mut();
+        }
+        let i = self.find_hinted(key, hint)?;
+        self.entries[i].as_mut().map(|(_, p)| p)
     }
 
     pub fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
