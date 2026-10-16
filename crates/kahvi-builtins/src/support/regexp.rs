@@ -13,7 +13,7 @@ pub(crate) struct RegExpData {
     pub original_source: JsString,
     pub original_flags: JsString,
     /// The compiled pattern; `None` between RegExpAlloc and RegExpInitialize.
-    pub matcher: Option<kahvi_regexp::Regex>,
+    pub matcher: Option<std::sync::Arc<kahvi_regexp::Regex>>,
     /// [[Realm]] (legacy RegExp features)
     pub realm: RealmId,
     /// [[LegacyFeaturesEnabled]] (legacy RegExp features)
@@ -24,6 +24,46 @@ impl std::fmt::Debug for RegExpData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("RegExpData").finish_non_exhaustive()
     }
+}
+
+/// The most patterns `compile_cached` keeps.
+const COMPILED_CACHE: usize = 512;
+
+/// Compiled patterns by pattern text and flags.
+type CompiledCache =
+    std::collections::HashMap<(Box<[u16]>, u8), std::sync::Arc<kahvi_regexp::Regex>>;
+
+thread_local! {
+    /// A pattern and its flags always compile to the same matcher, which
+    /// nothing changes after.
+    static COMPILED: std::cell::RefCell<CompiledCache> = Default::default();
+}
+
+/// `kahvi_regexp::compile`, reusing the matcher of an earlier compilation
+/// of the same pattern and flags (a regular expression literal makes a new
+/// RegExp object, and RegExpInitialize, each time it is evaluated).
+fn compile_cached(
+    pattern: &[u16],
+    flags: kahvi_regexp::Flags,
+) -> Result<std::sync::Arc<kahvi_regexp::Regex>, kahvi_regexp::Error> {
+    let bits = flags.ignore_case as u8
+        | (flags.multiline as u8) << 1
+        | (flags.dot_all as u8) << 2
+        | (flags.unicode as u8) << 3
+        | (flags.unicode_sets as u8) << 4;
+    let key = (Box::<[u16]>::from(pattern), bits);
+    if let Some(m) = COMPILED.with(|c| c.borrow().get(&key).cloned()) {
+        return Ok(m);
+    }
+    let m = std::sync::Arc::new(kahvi_regexp::compile(pattern, flags)?);
+    COMPILED.with(|c| {
+        let mut c = c.borrow_mut();
+        if c.len() >= COMPILED_CACHE {
+            c.clear();
+        }
+        c.insert(key, m.clone());
+    });
+    Ok(m)
 }
 
 /// Whether `o` has a [[RegExpMatcher]] internal slot (installed as the
@@ -125,7 +165,7 @@ pub(crate) fn regexp_initialize(
     if flags.unicode && flags.unicode_sets {
         return Err(agent.throw_syntax_error("regular expression flags 'u' and 'v' are exclusive"));
     }
-    let matcher = match kahvi_regexp::compile(agent.str(p), flags) {
+    let matcher = match compile_cached(agent.str(p), flags) {
         Ok(m) => m,
         Err(e) => {
             let msg = format!(
