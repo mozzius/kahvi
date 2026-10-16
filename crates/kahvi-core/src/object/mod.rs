@@ -169,15 +169,16 @@ impl PropertyDescriptor {
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
     elements: Vec<Option<Property>>,
-    /// How many of `elements` are present.
-    element_count: usize,
-    /// Key to position in `entries`; empty while `entries` has at most
-    /// [`SMALL_MAP`] slots.
-    index: crate::hash::FxHashMap<PropertyKey, usize>,
     entries: Vec<Option<(PropertyKey, Property)>>,
-    removed: usize,
+    /// Key to position in `entries`; `None` while `entries` has at most
+    /// [`SMALL_MAP`] slots. (Boxed, like the other rarely used parts, to
+    /// keep every object small.)
+    index: Option<Box<crate::hash::FxHashMap<PropertyKey, u32>>>,
+    /// How many of `elements` are present.
+    element_count: u32,
+    removed: u32,
     /// How many index keys are in the map rather than in `elements`.
-    sparse_indices: usize,
+    sparse_indices: u32,
 }
 
 /// How far past the end of the dense elements a new index may land and
@@ -195,7 +196,10 @@ impl PropertyMap {
                 .iter()
                 .position(|e| matches!(e, Some((k, _)) if k == key))
         } else {
-            self.index.get(key).copied()
+            self.index
+                .as_ref()
+                .and_then(|m| m.get(key))
+                .map(|&i| i as usize)
         }
     }
 
@@ -301,8 +305,10 @@ impl PropertyMap {
                 let len = self.entries.len();
                 if len == SMALL_MAP + 1 {
                     self.rebuild_index();
-                } else if len > SMALL_MAP + 1 {
-                    self.index.insert(key, len - 1);
+                } else if len > SMALL_MAP + 1
+                    && let Some(m) = &mut self.index
+                {
+                    m.insert(key, len as u32 - 1);
                 }
             }
         }
@@ -339,15 +345,17 @@ impl PropertyMap {
 
     fn remove_from_map(&mut self, key: &PropertyKey) -> Option<Property> {
         let i = self.find(key)?;
-        if self.entries.len() > SMALL_MAP {
-            self.index.remove(key);
+        if self.entries.len() > SMALL_MAP
+            && let Some(m) = &mut self.index
+        {
+            m.remove(key);
         }
         if key.as_index().is_some() {
             self.sparse_indices -= 1;
         }
         let old = self.entries[i].take().map(|(_, p)| p);
         self.removed += 1;
-        if self.removed > 16 && self.removed * 2 > self.entries.len() {
+        if self.removed > 16 && self.removed as usize * 2 > self.entries.len() {
             self.compact();
         }
         old
@@ -361,20 +369,21 @@ impl PropertyMap {
 
     /// Rebuilds `index` from `entries`, or drops it when the map is small.
     fn rebuild_index(&mut self) {
-        self.index.clear();
         if self.entries.len() <= SMALL_MAP {
-            self.index.shrink_to_fit();
+            self.index = None;
             return;
         }
+        let m = self.index.get_or_insert_with(Default::default);
+        m.clear();
         for (i, e) in self.entries.iter().enumerate() {
             if let Some((k, _)) = e {
-                self.index.insert(*k, i);
+                m.insert(*k, i as u32);
             }
         }
     }
 
     pub fn len(&self) -> usize {
-        self.element_count + self.entries.len() - self.removed
+        self.element_count as usize + self.entries.len() - self.removed as usize
     }
 
     pub fn is_empty(&self) -> bool {
@@ -486,6 +495,37 @@ impl<T: Any + std::fmt::Debug + Send + Trace> NativeData for T {
     }
 }
 
+/// An object's [[PrivateElements]]: boxed, as most objects have none (a
+/// box is 8 bytes of the object, a `Vec` 24).
+#[allow(clippy::box_collection)]
+#[derive(Debug, Default)]
+pub struct PrivateElements(Option<Box<Vec<crate::function::PrivateElement>>>);
+
+impl PrivateElements {
+    pub fn push(&mut self, e: crate::function::PrivateElement) {
+        self.0.get_or_insert_with(Default::default).push(e);
+    }
+}
+
+impl std::ops::Deref for PrivateElements {
+    type Target = [crate::function::PrivateElement];
+    fn deref(&self) -> &Self::Target {
+        self.0.as_deref().map_or(&[], |v| v.as_slice())
+    }
+}
+
+impl std::ops::DerefMut for PrivateElements {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.0.as_deref_mut().map_or(&mut [], |v| v.as_mut_slice())
+    }
+}
+
+impl Trace for PrivateElements {
+    fn trace(&self, t: &mut Tracer) {
+        (**self).trace(t);
+    }
+}
+
 #[derive(Debug)]
 pub struct ObjectData {
     /// [[Prototype]]
@@ -494,7 +534,7 @@ pub struct ObjectData {
     pub extensible: bool,
     pub properties: PropertyMap,
     /// [[PrivateElements]]
-    pub private_elements: Vec<crate::function::PrivateElement>,
+    pub private_elements: PrivateElements,
     pub kind: ObjectKind,
 }
 
@@ -572,8 +612,11 @@ impl ObjectData {
             prototype,
             extensible: true,
             properties: PropertyMap::default(),
-            private_elements: Vec::new(),
+            private_elements: PrivateElements::default(),
             kind,
         }
     }
 }
+
+// Every object is a slot of this size in the heap, live or not.
+const _: () = assert!(std::mem::size_of::<ObjectData>() <= 120);
