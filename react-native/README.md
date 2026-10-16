@@ -52,7 +52,7 @@ In `MainApplication`, pass the factory to the React host:
 import dev.kahvi.reactnative.KahviRuntimeFactory
 
 override val reactHost: ReactHost
-  get() = getDefaultReactHost(applicationContext, reactNativeHost, KahviRuntimeFactory())
+  get() = getDefaultReactHost(applicationContext, reactNativeHost, KahviRuntimeFactory(applicationContext))
 ```
 
 ### react-native-worklets (Reanimated 4)

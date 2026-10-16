@@ -7,6 +7,7 @@
 #include <react/runtime/jni/JJSRuntimeFactory.h>
 
 #include "KahviInstance.h"
+#include "kahvi.h"
 
 namespace kahvi {
 
@@ -19,9 +20,14 @@ class KahviRuntimeFactoryJni
     return makeCxxInstance();
   }
 
+  static void setCodeCacheDir(facebook::jni::alias_ref<jclass>, std::string path) {
+    kahvi_set_code_cache_dir(path.data(), path.size());
+  }
+
   static void registerNatives() {
     registerHybrid({
         makeNativeMethod("initHybrid", KahviRuntimeFactoryJni::initHybrid),
+        makeNativeMethod("setCodeCacheDir", KahviRuntimeFactoryJni::setCodeCacheDir),
     });
   }
 

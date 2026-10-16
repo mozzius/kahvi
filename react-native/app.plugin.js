@@ -25,12 +25,14 @@ function withKahviMainApplication(config) {
     if (!src.includes(IMPORT)) {
       src = src.replace(/^(package [^\n]+\n)/m, `$1\n${IMPORT}\n`);
     }
-    if (!src.includes("KahviRuntimeFactory()")) {
+    // The context lets kahvi keep its parse cache in the app's code cache dir.
+    src = src.replace("KahviRuntimeFactory()", "KahviRuntimeFactory(applicationContext)");
+    if (!src.includes("KahviRuntimeFactory(applicationContext)")) {
       const call = "ExpoReactHostFactory.getDefaultReactHost(";
       if (!src.includes(call)) {
         throw new Error("react-native-kahvi: no ExpoReactHostFactory.getDefaultReactHost call in MainApplication.kt");
       }
-      src = src.replace(call, `${call}\n      jsRuntimeFactory = KahviRuntimeFactory(),`);
+      src = src.replace(call, `${call}\n      jsRuntimeFactory = KahviRuntimeFactory(applicationContext),`);
     }
     config.modResults.contents = src;
     return config;

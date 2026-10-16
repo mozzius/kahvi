@@ -68,6 +68,11 @@ fn main() -> ExitCode {
     if args.parse_only {
         return parse_only(&args);
     }
+    // KAHVI_CODE_CACHE_DIR keeps what parsing large sources learned between
+    // runs (kahvi_core::code_cache).
+    if let Some(dir) = std::env::var_os("KAHVI_CODE_CACHE_DIR") {
+        kahvi_core::code_cache::set_dir(Some(dir.into()));
+    }
     // Deep JavaScript recursion recurses on the Rust stack.
     let runner = std::thread::Builder::new()
         .stack_size(512 << 20)

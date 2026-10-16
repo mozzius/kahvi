@@ -287,6 +287,22 @@ pub extern "C" fn kahvi_set_thread_wrapper(wrap: Option<KahviThreadWrapper>) {
     THREAD_WRAPPER.store(p, Ordering::Release);
 }
 
+/// Keeps what parsing large sources (an app bundle) learned in the directory
+/// at `path` (`len` bytes of UTF-8), so later runtimes and launches skip the
+/// work (`kahvi_core::code_cache`). Returns false if `path` is not UTF-8.
+///
+/// # Safety
+/// `path` points to `len` readable bytes.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_set_code_cache_dir(path: *const u8, len: usize) -> bool {
+    let bytes = unsafe { std::slice::from_raw_parts(path, len) };
+    let Ok(dir) = std::str::from_utf8(bytes) else {
+        return false;
+    };
+    kahvi_core::code_cache::set_dir(Some(dir.into()));
+    true
+}
+
 fn wrap_thread(run: &mut dyn FnMut()) {
     extern "C" fn trampoline(data: *mut c_void) {
         let run = unsafe { &mut *(data as *mut &mut dyn FnMut()) };

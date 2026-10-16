@@ -106,7 +106,7 @@ pub struct Token {
 }
 
 impl Token {
-    fn new(kind: Tok, start: usize) -> Token {
+    pub(crate) fn new(kind: Tok, start: usize) -> Token {
         Token {
             kind,
             start,

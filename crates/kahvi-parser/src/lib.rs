@@ -9,9 +9,11 @@ pub mod early;
 pub mod lexer;
 pub mod number;
 mod parser;
+pub mod preparse;
 
 pub use parser::{
-    ParseOptions, parse_dynamic_function, parse_lazy_function, parse_module, parse_script,
+    ParseOptions, parse_dynamic_function, parse_lazy_function, parse_lazy_function_preparsed,
+    parse_module, parse_module_preparsed, parse_script, parse_script_preparsed,
 };
 
 /// An early (parse-time) error. `pos` is a byte offset into the source.
