@@ -90,7 +90,9 @@ override func createJSRuntimeFactory() -> JSRuntimeFactoryRef {
 }
 ```
 
-Learned from Bluesky's app running in an iOS Release build (2026-10-16):
+Learned from Bluesky's app running in an iOS Release build (2026-10-16; the
+config plugin, pnpm patches and app config that build used are in
+`ios-app-notes/`):
 
 - Don't set `USE_THIRD_PARTY_JSC=1` to turn Hermes off on RN 0.86: it makes
   the pods depend on `React-jsc`. The pods (Expo's too) need the non-Hermes

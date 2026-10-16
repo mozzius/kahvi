@@ -1,0 +1,61 @@
+diff --git a/app.config.js b/app.config.js
+index 08535c4b5..c6a639516 100644
+--- a/app.config.js
++++ b/app.config.js
+@@ -64,6 +64,7 @@ module.exports = function (_config) {
+       primaryColor: '#006AFF',
+       ios: {
+         supportsTablet: false,
++        jsEngine: 'jsc',
+         bundleIdentifier: 'xyz.blueskyweb.app',
+         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
+         config: {
+@@ -342,6 +343,7 @@ module.exports = function (_config) {
+           },
+         ],
+         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
++        './plugins/withKahviRuntime.js',
+         './plugins/withGradleJVMHeapSizeIncrease.js',
+         './plugins/withAndroidManifestLargeHeapPlugin.js',
+         './plugins/withAndroidManifestFCMIconPlugin.js',
+diff --git a/package.json b/package.json
+index 8baa27b1f..1521960c7 100644
+--- a/package.json
++++ b/package.json
+@@ -54,7 +54,7 @@
+     "android": "expo run:android --variant debugOptimized",
+     "android:prod": "expo run:android --variant release",
+     "android:profile": "BSKY_PROFILE=1 expo run:android --variant release",
+-    "ios": "expo run:ios",
++    "ios": "USE_HERMES=0 USE_KAHVI=1 expo run:ios",
+     "web": "expo start --web",
+     "use-build-number": "./scripts/useBuildNumberEnv.sh",
+     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
+@@ -259,6 +259,7 @@
+     "react-native-drawer-layout": "5.0.0-alpha.19",
+     "react-native-edge-to-edge": "^1.8.1",
+     "react-native-gesture-handler": "~3.3.0",
++    "react-native-kahvi": "link:/Users/samuel/.local/share/opencode/worktree/d87157/ios-runtime/react-native",
+     "react-native-keyboard-controller": "1.22.7",
+     "react-native-mmkv": "^3.3.3",
+     "react-native-nano-icons": "1.0.1",
+diff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml
+index a2673752d..6e49644ee 100644
+--- a/pnpm-workspace.yaml
++++ b/pnpm-workspace.yaml
+@@ -38,6 +38,7 @@ patchedDependencies:
+   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
+   'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
+   'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch
++  expo-modules-jsi@57.1.0: patches/expo-modules-jsi@57.1.0.patch
+   expo-notifications@57.0.20: patches/expo-notifications@57.0.20.patch
+   expo-updates@57.0.23: patches/expo-updates@57.0.23.patch
+   expo@57.0.24: patches/expo@57.0.24.patch
+@@ -47,6 +48,7 @@ patchedDependencies:
+   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
+   react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
+   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
++  react-native-worklets@0.13.0: patches/react-native-worklets@0.13.0.patch
+   'react-native@0.86.3': patches/react-native@0.86.3.patch
+ minimumReleaseAgeExclude:
+   - '@atproto/*'
