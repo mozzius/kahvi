@@ -495,7 +495,9 @@ impl<T: Any + std::fmt::Debug + Send + Trace> NativeData for T {
     }
 }
 
-/// An object's [[PrivateElements]]: boxed, as most objects have none.
+/// An object's [[PrivateElements]]: boxed, as most objects have none (a
+/// box is 8 bytes of the object, a `Vec` 24).
+#[allow(clippy::box_collection)]
 #[derive(Debug, Default)]
 pub struct PrivateElements(Option<Box<Vec<crate::function::PrivateElement>>>);
 
