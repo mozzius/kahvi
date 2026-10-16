@@ -438,7 +438,7 @@ impl Agent {
             Some(crate::object::Property::Data {
                 value: Value::Number(n),
                 ..
-            }) if n.is_nan() || *n <= 0.0 => 0,
+            }) if n.is_nan() || n <= 0.0 => 0,
             Some(crate::object::Property::Data {
                 value: Value::Number(n),
                 ..
@@ -453,7 +453,7 @@ impl Agent {
             Some(crate::object::Property::Data {
                 value: Value::String(s),
                 ..
-            }) => self.str_lossy(*s),
+            }) => self.str_lossy(s),
             _ => String::new(),
         };
         let is_native = |f: Object| matches!(self.obj(f).kind, ObjectKind::Builtin(_));
