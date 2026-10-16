@@ -690,8 +690,8 @@ fn add_restricted_function_properties(agent: &mut Agent, func: Object, thrower: 
         agent.obj_mut(func).properties.insert(
             key,
             Property::Accessor {
-                get: Value::Object(thrower),
-                set: Value::Object(thrower),
+                get: Some(thrower),
+                set: Some(thrower),
                 enumerable: false,
                 configurable: true,
             },
@@ -910,12 +910,12 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
                 let existing = agent.obj(owner).properties.get(&key).copied();
                 let (mut get, mut set) = match existing {
                     Some(Property::Accessor { get, set, .. }) => (get, set),
-                    _ => (Value::Undefined, Value::Undefined),
+                    _ => (None, None),
                 };
                 if entry.kind == Kind::Getter {
-                    get = Value::Object(f);
+                    get = Some(f);
                 } else {
-                    set = Value::Object(f);
+                    set = Some(f);
                 }
                 agent.obj_mut(owner).properties.insert(
                     key,
