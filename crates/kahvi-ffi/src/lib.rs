@@ -13,6 +13,12 @@
 
 mod hermes_internal;
 
+// Parsing an app bundle and the heap allocate many small blocks; mimalloc
+// does that in a fraction of the platform allocator's time (Android's Scudo
+// especially).
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use std::cell::{Cell, RefCell};
 use std::ffi::c_void;
 use std::sync::atomic::{AtomicPtr, Ordering};
