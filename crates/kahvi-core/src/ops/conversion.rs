@@ -454,7 +454,7 @@ pub fn to_object(agent: &mut Agent, v: Value) -> JsResult<Object> {
         Value::Number(n) => ("%Number.prototype%", ObjectKind::NumberObject(n)),
         Value::String(s) => {
             // A String exotic object with a "length" own property.
-            let proto = agent.intrinsic("%String.prototype%");
+            let proto = agent.intrinsic_c("%String.prototype%");
             return Ok(string_create(agent, s, proto));
         }
         Value::Symbol(s) => ("%Symbol.prototype%", ObjectKind::SymbolObject(s)),

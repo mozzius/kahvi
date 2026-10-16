@@ -26,7 +26,7 @@ pub fn create_async_from_sync_iterator(
     sync: IteratorRecord,
 ) -> JsResult<IteratorRecord> {
     // 1. Let asyncIterator be OrdinaryObjectCreate(%AsyncFromSyncIteratorPrototype%, « [[SyncIteratorRecord]] »).
-    let proto = agent.intrinsic("%AsyncFromSyncIteratorPrototype%");
+    let proto = agent.intrinsic_c("%AsyncFromSyncIteratorPrototype%");
     // 2. Set asyncIterator.[[SyncIteratorRecord]] to syncIteratorRecord.
     let it = agent.object_with_kind(
         Some(proto),
@@ -46,7 +46,7 @@ pub fn create_async_from_sync_iterator(
 /// The method's capability and the receiver's sync iterator record.
 fn begin(agent: &mut Agent, this: Value) -> JsResult<(PromiseCapability, IteratorRecord)> {
     // 3. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(promise_ctor))?;
     // 2. Assert: O is an Object that has a [[SyncIteratorRecord]] internal slot.
     let sync = match this {
@@ -206,7 +206,7 @@ fn continuation(
         Err(p) => return Ok(p),
     };
     // 5. Let valueWrapper be Completion(PromiseResolve(%Promise%, value)).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let mut wrapper = promise_resolve(agent, promise_ctor, value);
     // 6. If valueWrapper is an abrupt completion, done is false, and closeOnRejection is true, then
     //    set valueWrapper to Completion(IteratorClose(syncIteratorRecord, valueWrapper)).

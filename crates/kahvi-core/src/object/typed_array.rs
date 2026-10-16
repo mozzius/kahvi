@@ -418,7 +418,7 @@ pub fn clone_array_buffer(
     length: usize,
 ) -> JsResult<Object> {
     // 2. Let targetBuffer be ? AllocateArrayBuffer(%ArrayBuffer%, srcLength).
-    let ctor = agent.intrinsic("%ArrayBuffer%");
+    let ctor = agent.intrinsic_c("%ArrayBuffer%");
     let target = allocate_array_buffer(agent, ctor, length as f64, None)?;
     // 3-6. Copy srcLength bytes from srcBlock at srcByteOffset.
     let bytes = array_buffer_data(agent, src)

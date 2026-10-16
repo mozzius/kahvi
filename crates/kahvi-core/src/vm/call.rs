@@ -80,7 +80,7 @@ pub fn create_closure(
     code: Arc<FunctionCode>,
     name: Option<PropertyKey>,
 ) -> JsResult<Object> {
-    let proto = agent.intrinsic(function_prototype_intrinsic(&code));
+    let proto = agent.intrinsic_c(function_prototype_intrinsic(&code));
     // A named function expression binds its own name in funcEnv.
     let own_name = code.name.filter(|_| code.binds_own_name);
     let func_env = match own_name {
@@ -108,7 +108,7 @@ pub fn create_closure(
             } else {
                 "%GeneratorPrototype%"
             };
-            let proto_proto = agent.intrinsic(intrinsic);
+            let proto_proto = agent.intrinsic_c(intrinsic);
             let prototype = agent.ordinary_object_create(Some(proto_proto));
             let key = PropertyKey::String(agent.names.prototype);
             agent.obj_mut(f).properties.insert(
@@ -365,6 +365,7 @@ fn body_frame(
     frame.args = agent.spare_vec();
     frame.args.extend_from_slice(args);
     frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
+    frame.refs = agent.spare_refs.pop().unwrap_or_default();
     frame
 }
 
@@ -402,6 +403,11 @@ fn evaluate_body(
     if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
         handlers.clear();
         agent.spare_handlers.push(handlers);
+    }
+    let mut refs = std::mem::take(&mut frame.refs);
+    if agent.spare_refs.len() < 64 && refs.capacity() <= 64 && refs.capacity() > 0 {
+        refs.clear();
+        agent.spare_refs.push(refs);
     }
     let mut locals = std::mem::take(&mut frame.locals);
     if agent.spare_locals.len() < 64 && locals.capacity() <= 1024 && locals.capacity() > 0 {
@@ -802,7 +808,7 @@ pub(super) fn class_heritage(
 ) -> JsResult<(Option<Object>, Object)> {
     match superclass {
         // g. If superclass is null, then protoParent = null, constructorParent = %Function.prototype%.
-        Value::Null => Ok((None, agent.intrinsic("%Function.prototype%"))),
+        Value::Null => Ok((None, agent.intrinsic_c("%Function.prototype%"))),
         Value::Object(s) if s.is_constructor(agent) => {
             // i. Let protoParent be ? Get(superclass, "prototype").
             let key = PropertyKey::String(agent.names.prototype);

@@ -334,7 +334,7 @@ pub fn make_constructor(
         Some(p) => p,
         None => {
             // a. Set prototype to OrdinaryObjectCreate(%Object.prototype%).
-            let op = agent.intrinsic("%Object.prototype%");
+            let op = agent.intrinsic_c("%Object.prototype%");
             let p = agent.ordinary_object_create(Some(op));
             // b. Perform ! DefinePropertyOrThrow(prototype, "constructor", PropertyDescriptor
             //    { [[Value]]: F, [[Writable]]: writablePrototype, [[Enumerable]]: false, [[Configurable]]: true }).
@@ -764,7 +764,7 @@ pub fn plain_get(
 
 /// CreateUnmappedArgumentsObject(argumentsList) (§10.4.4.6)
 pub fn create_unmapped_arguments_object(agent: &mut Agent, args: &[Value]) -> JsResult<Object> {
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let obj = agent.alloc(ObjectData::new(Some(proto), ObjectKind::Arguments(None)));
     let len_key = PropertyKey::String(agent.names.length);
     agent.obj_mut(obj).properties.insert(
@@ -781,7 +781,7 @@ pub fn create_unmapped_arguments_object(agent: &mut Agent, args: &[Value]) -> Js
         ops::create_data_property_or_throw(agent, obj, key, *v)?;
     }
     let iter_key = PropertyKey::Symbol(agent.symbols_wk.iterator);
-    let values = agent.intrinsic("%Array.prototype.values%");
+    let values = agent.intrinsic_c("%Array.prototype.values%");
     agent.obj_mut(obj).properties.insert(
         iter_key,
         Property::Data {
@@ -791,7 +791,7 @@ pub fn create_unmapped_arguments_object(agent: &mut Agent, args: &[Value]) -> Js
             configurable: true,
         },
     );
-    let thrower = agent.intrinsic("%ThrowTypeError%");
+    let thrower = agent.intrinsic_c("%ThrowTypeError%");
     let callee_key = PropertyKey::String(agent.names.callee);
     agent.obj_mut(obj).properties.insert(
         callee_key,
@@ -813,7 +813,7 @@ pub fn create_mapped_arguments_object(
     args: &[Value],
     env: EnvId,
 ) -> JsResult<Object> {
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let mut mapped = vec![None; args.len()];
     // 15-17. Map each argument index to the last formal with that name, if any.
     let mut seen: Vec<JsString> = Vec::new();
@@ -852,7 +852,7 @@ pub fn create_mapped_arguments_object(
         },
     );
     let iter_key = PropertyKey::Symbol(agent.symbols_wk.iterator);
-    let values = agent.intrinsic("%Array.prototype.values%");
+    let values = agent.intrinsic_c("%Array.prototype.values%");
     agent.obj_mut(obj).properties.insert(
         iter_key,
         Property::Data {

@@ -48,7 +48,7 @@ impl Trace for HostObjectData {
 
 /// A new host object with %Object.prototype% as its prototype.
 pub fn create_host_object(agent: &mut Agent, host: Arc<dyn HostObject>) -> Object {
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let o = agent.ordinary_object_create(Some(proto));
     agent.obj_mut(o).kind = ObjectKind::Native(Box::new(HostObjectData(host)));
     o
