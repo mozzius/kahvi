@@ -55,6 +55,37 @@ fn length_writable(agent: &Agent, a: Object) -> bool {
     )
 }
 
+/// CreateDataPropertyOrThrow(A, ! ToString(𝔽(length)), value) for an array
+/// that can grow, done directly: an array has no own index property at or
+/// past its length, so the definition adds a new writable, enumerable,
+/// configurable property and sets "length" one higher (§10.4.2.1 steps
+/// 2.f-h). Returns false, changing nothing, when `a` is not such an array.
+pub(crate) fn array_append_data(agent: &mut Agent, a: Object, value: Value) -> bool {
+    let o = agent.obj(a);
+    if !matches!(o.kind, ObjectKind::Array) || !o.extensible || !length_writable(agent, a) {
+        return false;
+    }
+    let len = array_length(agent, a);
+    if len == u32::MAX {
+        return false;
+    }
+    let len_key = PropertyKey::String(agent.names.length);
+    let props = &mut agent.obj_mut(a).properties;
+    props.insert(
+        PropertyKey::Index(len),
+        Property::Data {
+            value,
+            writable: true,
+            enumerable: true,
+            configurable: true,
+        },
+    );
+    if let Some((length, _)) = props.data_value_mut(&len_key) {
+        *length = Value::Number(len as f64 + 1.0);
+    }
+    true
+}
+
 /// A.[[DefineOwnProperty]](P, Desc) for arrays (§10.4.2.1)
 pub fn array_define_own_property(
     agent: &mut Agent,
