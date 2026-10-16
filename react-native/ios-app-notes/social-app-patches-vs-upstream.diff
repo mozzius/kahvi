@@ -1,0 +1,266 @@
+diff --git a/patches/expo-modules-core@57.0.18.patch b/patches/expo-modules-core@57.0.18.patch
+index 7de1337aa..07ffa9364 100644
+--- a/patches/expo-modules-core@57.0.18.patch
++++ b/patches/expo-modules-core@57.0.18.patch
+@@ -1,3 +1,16 @@
++diff --git a/ExpoModulesCore.podspec b/ExpoModulesCore.podspec
++index 2b5d405a4a55e0e3bfe2415067847d75f155ab83..61548b2aa83dd449f90511942317bee25031e438 100644
++--- a/ExpoModulesCore.podspec
+++++ b/ExpoModulesCore.podspec
++@@ -101,6 +101,8 @@ Pod::Spec.new do |s|
++   if use_hermes
++     s.dependency 'hermes-engine'
++     add_dependency(s, "React-jsinspector", :framework_name => 'jsinspector_modern')
+++  elsif use_kahvi
+++    s.dependency 'react-native-kahvi'
++   else
++     s.dependency 'React-jsc'
++   end
+ diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+ index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8454eab96 100644
+ --- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+diff --git a/patches/expo-modules-core@57.0.18.patch.md b/patches/expo-modules-core@57.0.18.patch.md
+index 56ba6d08b..90feeb6b5 100644
+--- a/patches/expo-modules-core@57.0.18.patch.md
++++ b/patches/expo-modules-core@57.0.18.patch.md
+@@ -3,3 +3,9 @@
+ ### Android: bitdrift interceptor
+ 
+ Fixes an issue where bitdrift's API stream gets blocked by the Expo interceptor used to power the devtools.
++
++### iOS: Kahvi runtime
++
++When `USE_KAHVI=1`, ExpoModulesCore must depend on `react-native-kahvi` instead
++of selecting Hermes or the removed-from-core `React-jsc` pod. React Native's
++Kahvi-aware CocoaPods helpers define this engine flag.
+diff --git a/patches/expo@57.0.24.patch b/patches/expo@57.0.24.patch
+index 2a469f8b1..bfc2e1ab8 100644
+--- a/patches/expo@57.0.24.patch
++++ b/patches/expo@57.0.24.patch
+@@ -1,3 +1,17 @@
++diff --git a/Expo.podspec b/Expo.podspec
++index a10ac3ee583c2c602858d58e66d44001bd27c46a..48819fd4c2c478499065d72f453c7182f28b6a6f 100644
++--- a/Expo.podspec
+++++ b/Expo.podspec
++@@ -19,6 +19,9 @@ end
++ reactNativeTargetVersion = reactNativeVersion.split('.')[1].to_i
++ 
++ compiler_flags = get_folly_config()[:compiler_flags]
+++if ENV['USE_KAHVI'] == '1'
+++  compiler_flags = "#{compiler_flags} -DUSE_HERMES=0 -DUSE_THIRD_PARTY_JSC=1"
+++end
++ 
++ package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
++ 
+ diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
+ index 85c4227e4e37003dd3769a590e73a69874de5fac..e389ca8edd2310df9ce29684991465c275e804c5 100644
+ --- a/build/winter/runtime.native.d.ts
+diff --git a/patches/expo@57.0.24.patch.md b/patches/expo@57.0.24.patch.md
+index b6037fdbb..6d8ba9659 100644
+--- a/patches/expo@57.0.24.patch.md
++++ b/patches/expo@57.0.24.patch.md
+@@ -84,3 +84,12 @@ handled this with `publicPath: 'auto'`; the Metro migration lost it.
+ 
+ Upstream: proposed against `packages/expo`; drop this section once an SDK
+ ships it.
++
++## iOS: Kahvi compile flags
++
++`ExpoReactNativeFactory.mm` includes `RCTAppSetupUtils.h`, which selects its
++Hermes executor include unless `USE_THIRD_PARTY_JSC=1` is defined. The Expo pod
++does not inherit React Native's engine-specific flags, so when `USE_KAHVI=1`
++its podspec adds `USE_HERMES=0` and `USE_THIRD_PARTY_JSC=1` for this target.
++The latter selects RN's non-Hermes compile path; the app's delegate supplies
++the Kahvi runtime factory.
+diff --git a/patches/react-native-reanimated@4.7.1.patch b/patches/react-native-reanimated@4.7.1.patch
+index 069e31df4..36d0a4bc8 100644
+--- a/patches/react-native-reanimated@4.7.1.patch
++++ b/patches/react-native-reanimated@4.7.1.patch
+@@ -1,3 +1,30 @@
++diff --git a/RNReanimated.podspec b/RNReanimated.podspec
++index 38a036f08f5e0352decf1061326729bf37039056..335afc9c461c5caeabacb3ea47a26b097cd01afe 100644
++--- a/RNReanimated.podspec
+++++ b/RNReanimated.podspec
++@@ -68,7 +68,6 @@ Pod::Spec.new do |s|
++       '"$(PODS_ROOT)/Headers/Private/Yoga"',
++       '"$(PODS_ROOT)/Headers/Public/RNWorklets"',
++     ].join(' '),
++-    "FRAMEWORK_SEARCH_PATHS" => '"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes"',
++     "CLANG_CXX_LANGUAGE_STANDARD" => "c++20",
++     "GCC_PREPROCESSOR_DEFINITIONS[config=*Debug*]" => '$(inherited)',
++     "GCC_PREPROCESSOR_DEFINITIONS[config=*Release*]" => '$(inherited)',
++@@ -80,8 +79,6 @@ Pod::Spec.new do |s|
++       '"$(PODS_ROOT)/boost-for-react-native"',
++       '"$(PODS_ROOT)/glog"',
++       '"$(PODS_ROOT)/RCT-Folly"',
++-      '"$(PODS_ROOT)/Headers/Public/React-hermes"',
++-      '"$(PODS_ROOT)/Headers/Public/hermes-engine"',
++       '"$(PODS_ROOT)/Headers/Public/RNWorklets"',
++       # for static frameworks
++       "\"$(PODS_ROOT)/#{config[:react_native_common_dir]}\"",
++@@ -94,5 +91,4 @@ Pod::Spec.new do |s|
++   install_modules_dependencies(s)
++ 
++   s.dependency 'React-jsi'
++-  s.dependency 'React-hermes'
++ end
+ diff --git a/android/src/main/cpp/reanimated/android/NativeProxy.cpp b/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+ index c9e9b874376b9ae85be98362cf18ddfa57cc4563..81dc2be5998c74df26152e0cc5bfd88ff079766a 100644
+ --- a/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+diff --git a/patches/react-native-reanimated@4.7.1.patch.md b/patches/react-native-reanimated@4.7.1.patch.md
+index 8cf427268..35298ff41 100644
+--- a/patches/react-native-reanimated@4.7.1.patch.md
++++ b/patches/react-native-reanimated@4.7.1.patch.md
+@@ -44,3 +44,10 @@ The changelog fragment from the PR is left out, because it is not part of the
+ published package.
+ 
+ Remove once we upgrade to a Reanimated release that includes the PR.
++
++## iOS: Kahvi runtime
++
++Reanimated's podspec hard-coded `React-hermes` and Hermes header search paths.
++The Kahvi worklets runtime is JSI-based and does not use Hermes headers; remove
++those references and let `install_modules_dependencies` select the active
++runtime (`react-native-kahvi` in this app).
+diff --git a/patches/react-native@0.86.3.patch b/patches/react-native@0.86.3.patch
+index 9c2e2441f..b93e47ec2 100644
+--- a/patches/react-native@0.86.3.patch
++++ b/patches/react-native@0.86.3.patch
+@@ -259,7 +259,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
+  
+  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
+ diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
++index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
+ --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+ +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+ @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
+@@ -344,6 +344,19 @@ index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d
+      layer.contents = (id)image.CGImage;
+      layer.contentsScale = image.scale;
+  
++diff --git a/React/Runtime/React-RCTRuntime.podspec b/React/Runtime/React-RCTRuntime.podspec
++index f2383d342336b5701f3fdf7e3267fbb4c7cbf56b..070b75f44dfac99b710b55cb42972d53331222c7 100644
++--- a/React/Runtime/React-RCTRuntime.podspec
+++++ b/React/Runtime/React-RCTRuntime.podspec
++@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
++   add_dependency(s, "React-RuntimeApple")
++   add_dependency(s, "React-utils", :additional_framework_paths => ["react/utils/platform/ios"])
++ 
++-  if use_third_party_jsc()
+++  if !use_hermes()
++     s.exclude_files = ["RCTHermesInstanceFactory.{mm,h}", "RCTJscInstanceFactory.{mm,h}"]
++   else
++     s.dependency "hermes-engine"
+ diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
+ index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
+ --- a/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -515,3 +528,91 @@ index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc6
+  
+      if (rootShadowNode != nullptr) {
+        const auto& children = rootShadowNode->getChildren();
++diff --git a/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec b/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
++index ea9094c02568024377b42ec5ff1ec55d964a643f..ad02d7d92e0528d7e0589d9c3d13f80a77459882 100644
++--- a/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
+++++ b/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
++@@ -59,7 +59,7 @@ Pod::Spec.new do |s|
++   add_dependency(s, "React-RCTFBReactNativeSpec")
++   add_dependency(s, "React-utils", :additional_framework_paths => ["react/utils/platform/ios"])
++ 
++-  if use_third_party_jsc()
+++  if !use_hermes()
++     s.exclude_files = ["ReactCommon/RCTHermesInstance.{mm,h}", "ReactCommon/RCTJscInstance.{mm,h}"]
++   else
++     s.dependency "hermes-engine"
++diff --git a/scripts/cocoapods/jsengine.rb b/scripts/cocoapods/jsengine.rb
++index a15c92897bb07a15b3289e9fe5231f9f4cd1776e..d4eb40542269c37cfd3ed036cc677322ce7a1a74 100644
++--- a/scripts/cocoapods/jsengine.rb
+++++ b/scripts/cocoapods/jsengine.rb
++@@ -24,10 +24,13 @@ def use_third_party_jsc
++   return ENV['USE_THIRD_PARTY_JSC'] == '1'
++ end
++ 
++-# use Hermes is the default. The only other option is the third-party JSC
++-# if the 3rd party JSC is not true, we always want to use Hermes.
+++def use_kahvi
+++  return ENV['USE_KAHVI'] == '1'
+++end
+++
+++# Kahvi is supplied through a JSI runtime factory, not a JSC pod.
++ def use_hermes
++-  return !use_third_party_jsc()
+++  return !use_third_party_jsc() && !use_kahvi()
++ end
++ 
++ def use_hermes_flags
++@@ -35,7 +38,7 @@ def use_hermes_flags
++ end
++ 
++ def use_third_party_jsc_flags
++-  return "-DUSE_THIRD_PARTY_JSC=1"
+++  return "-DUSE_HERMES=0 -DUSE_THIRD_PARTY_JSC=1"
++ end
++ 
++ def js_engine_flags()
++@@ -50,6 +53,8 @@ end
++ def depend_on_js_engine(s)
++   if use_hermes()
++     s.dependency 'hermes-engine'
+++  elsif use_kahvi()
+++    s.dependency 'react-native-kahvi'
++   elsif use_third_party_jsc()
++     s.dependency 'React-jsc'
++   end
++diff --git a/scripts/cocoapods/utils.rb b/scripts/cocoapods/utils.rb
++index 6d151e441052b6b2b2d369fbfcf47381affc7712..3ad458f545f851eb50de6621b91e66102f5f5e6f 100644
++--- a/scripts/cocoapods/utils.rb
+++++ b/scripts/cocoapods/utils.rb
++@@ -656,7 +656,7 @@ class ReactNativePodsUtils
++             "hermes-engine",
++             "React-hermes",
++         ]
++-        if ENV['USE_THIRD_PARTY_JSC'] != '1'
+++        if ENV['USE_THIRD_PARTY_JSC'] != '1' && ENV['USE_KAHVI'] != '1'
++             pods << "React-jsc"
++         end
++ 
++diff --git a/scripts/react_native_pods.rb b/scripts/react_native_pods.rb
++index a32bb5b7b84ef6a228f51e4ac5c5aa20db92ed1e..65d2f26d60defab0d1565907655edd207e876b4b 100644
++--- a/scripts/react_native_pods.rb
+++++ b/scripts/react_native_pods.rb
++@@ -78,7 +78,7 @@ def use_react_native! (
++   react_native_path = Pod::Config.instance.installation_root.join(path)
++   prefix = react_native_path.relative_path_from(Pod::Config.instance.installation_root)
++ 
++-  hermes_enabled= !use_third_party_jsc()
+++  hermes_enabled= use_hermes()
++   # Set the app_path as env variable so the podspecs can access it.
++   ENV['APP_PATH'] = app_path
++   ENV['REACT_NATIVE_PATH'] = react_native_path.to_s
++@@ -494,7 +494,8 @@ end
++ def error_if_try_to_use_jsc_from_core()
++   explicitly_not_use_hermes = ENV['USE_HERMES'] != nil && ENV['USE_HERMES'] == '0'
++   not_use_3rd_party_jsc = ENV['USE_THIRD_PARTY_JSC'] == nil || ENV['USE_THIRD_PARTY_JSC'] == '0'
++-  if (explicitly_not_use_hermes && not_use_3rd_party_jsc)
+++  not_use_kahvi = ENV['USE_KAHVI'] != '1'
+++  if (explicitly_not_use_hermes && not_use_3rd_party_jsc && not_use_kahvi)
++     message = "Hermes is the default engine and JSC has been moved to community support.\n" +
++     "Please remove the USE_HERMES=0, as it is not supported anymore.\n" +
++     "If you want to use JSC, you can install it from `@react-native-community/javascriptcore`.\n" +
+diff --git a/patches/react-native@0.86.3.patch.md b/patches/react-native@0.86.3.patch.md
+index 8281f0262..3e578eb53 100644
+--- a/patches/react-native@0.86.3.patch.md
++++ b/patches/react-native@0.86.3.patch.md
+@@ -205,3 +205,12 @@ there is no child.
+ 
+ **TODO: Remove after upgrading to a React Native release containing this fix.**
+ The upstream PR is still open as of September 9, 2026.
++
++## Kahvi iOS runtime selection
++
++React Native 0.86's CocoaPods scripts default to Hermes and reject
++`USE_HERMES=0` unless the third-party JSC runtime is selected. Kahvi is neither
++Hermes nor JSC, so this patch adds `USE_KAHVI=1` as a third engine selection:
++it disables Hermes, routes engine-dependent pods to `react-native-kahvi`, and
++keeps the non-Hermes runtime-factory code path. The app's AppDelegate supplies
++Kahvi's `JSRuntimeFactory`.
