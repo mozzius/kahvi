@@ -1,7 +1,7 @@
 // The web classes a fetch-style server needs (Headers, Request, Response)
 // and the `Kahvi` global, for kahvi-serve. Bodies are kept whole in memory:
 // `body` is a Uint8Array (or null), not a ReadableStream.
-(function (global, register, respond, readFile) {
+(function (global, register, respond, readFile, svgToPng) {
   "use strict";
   const define = (name, value) =>
     Object.defineProperty(global, name, { value, writable: true, enumerable: false, configurable: true });
@@ -218,6 +218,11 @@
     // The bytes of a file, as an ArrayBuffer.
     readFile(path) {
       return readFile(`${path}`);
+    },
+    // A PNG of an SVG document, as an ArrayBuffer (rasterized by resvg, in
+    // the host; text must already be paths).
+    svgToPng(svg) {
+      return svgToPng(`${svg}`);
     },
   }));
 
