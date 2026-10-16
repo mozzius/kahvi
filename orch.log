@@ -5746,3 +5746,62 @@ test262 at last merge: 82439/82439 runs passing
 [19:26:11] stack: stack/0071 (#111) merged into stack/0070
 [19:31:27] stack: arch-load-speed conflicts with the stack; land it again after merging the stack top into it
 [19:31:31] stack: stack/0072 (#112) green: 83371/84983 passing, +0
+[19:31:36] nothing left to do
+tickets: blocked 3, done 432, needs-architect 5, open 10, partial 1
+  B-iterator-prototype-chunks open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-includes open             tier=haiku   attempts=2 strikes=0
+  B-iterator-prototype-windows open             tier=haiku   attempts=2 strikes=0
+  B-set-constructor blocked          tier=haiku   attempts=3 strikes=0  `get Set.prototype.size` and the other Set.prototype methods (has, delete, clear, entries,
+  B-typed-array-prototype-to-string blocked          tier=haiku   attempts=1 strikes=0  none. The dead stub in `typed_array/prototype_to_string.rs` could be removed by whoever ow
+  I-array-to-locale-string open             tier=sonnet  attempts=0 strikes=0
+  I-collator needs-architect  tier=sonnet  attempts=2 strikes=2  failed at the top tier; last: rejected (made_up_results, contradicts_spec): The constructo
+  I-date-time-format needs-architect  tier=sonnet  attempts=2 strikes=2  failed at the top tier; last: rejected (made_up_results, swallows_errors, contradicts_spec
+  I-date-to-locale-string open             tier=sonnet  attempts=0 strikes=0
+  I-display-names needs-architect  tier=sonnet  attempts=1 strikes=2  failed at the top tier; last: rejected (special_cases_inputs, made_up_results, swallows_er
+  I-duration-format open             tier=sonnet  attempts=0 strikes=0
+  I-locale   needs-architect  tier=sonnet  attempts=3 strikes=2  failed at the top tier; last: rejected (made_up_results, contradicts_spec): The constructo
+  I-locale-canonicalization blocked          tier=sonnet  attempts=1 strikes=0  CLDR common/bcp47 alias data (`-u-` `tz` aliases and the `-t-` field value aliases such as
+  I-number-format needs-architect  tier=sonnet  attempts=2 strikes=2  failed at the top tier; last: rejected (made_up_results, contradicts_spec): The change fol
+  I-number-to-locale-string open             tier=sonnet  attempts=0 strikes=0
+  I-plural-rules open             tier=sonnet  attempts=0 strikes=0
+  I-relative-time-format open             tier=sonnet  attempts=0 strikes=0
+  I-string-locale-compare open             tier=sonnet  attempts=0 strikes=0
+  I-supported-values-of partial          tier=sonnet  attempts=2 strikes=0  32 target runs still failing: Intl.DateTimeFormat (6), AvailableCanonicalCurrencies (6), I
+attempts: 559  merged: 416  spend: $36.36 (workers $20.74, verifier $15.62)  new test262 passes: 20058  ($0.002 per pass)
+  haiku   accept       410
+  haiku   blocked      6
+  haiku   gate-reject  42
+  haiku   no-diff      16
+  haiku   reject       1
+  haiku   revise       17
+  sonnet  accept       16
+  sonnet  blocked      2
+  sonnet  gate-reject  32
+  sonnet  interrupted  1
+  sonnet  no-diff      8
+  sonnet  reject       5
+  sonnet  revise       3
+plan usage at last run: allowed; five_hour 56% (resets Thu 23:20), seven_day 22% (resets Thu 09:00)
+test262 at last merge: 83371/84983 runs passing
+[23:25:34] building trusted runner; integration branch stack, 4 slots
+[23:25:53] stack: stack/0072 (#112) was closed on GitHub; dropped from the stack
+[23:25:59] stack: pushed stack/0073 as #113 with arch-intl-locale
+[23:29:12] stack: stack/0073 (#113) green: 83549/84983 passing, +178
+[23:29:21] stack: pushed stack/0074 as #114 with arch-intl-collator
+[23:32:32] stack: stack/0074 (#114) green: 83625/84983 passing, +76
+[23:32:40] stack: pushed stack/0075 as #116 with arch-intl-number-format
+[23:35:52] stack: stack/0075 (#116) green: 83761/84983 passing, +136
+[23:36:00] stack: pushed stack/0076 as #117 with arch-worklets
+[23:39:15] stack: stack/0076 (#117) green: 83761/84983 passing, +0
+[23:39:24] stack: pushed stack/0077 as #118 with arch-load-speed
+[23:47:05] stack: stack/0077 (#118) green: 83761/84983 passing, +0
+[23:47:15] stack: pushed stack/0078 as #119 with arch-social-android
+[23:55:06] stack: stack/0078 (#119) green: 83761/84983 passing, +0
+[23:55:16] stack: pushed stack/0079 as #120 with arch-intl-dtf
+[23:57:11] I-date-time-format: attempt on slot 3 with sonnet
+[23:58:11] I-number-format: attempt on slot 2 with sonnet
+[23:58:37] stack: stack/0079 (#120) green: 83895/84983 passing, +134
+[23:58:48] stack: pushed stack/0080 as #121 with arch-social-android
+[00:01:06] I-date-time-format: attempt 560 finished ($0.748, 50 turns)
+[00:02:06] I-number-format: attempt 561 finished ($0.841, 47 turns)
+[00:02:06] I-number-format: blocked: `kahvi-builtins` needs `fixed_decimal` and `writeable` as direct dependencies (or `icu::decimal::input` needs to re-export `UnsignedRoundingMode`, `SignedRoundingMode`, `RoundingIncrement` and `Sign`) so that FormatNumericToString and formatToParts can be written.

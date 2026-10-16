@@ -1,0 +1,318 @@
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range.rs
+index f1dec92..0e219a2 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_date_time_format::DateTimeFormatSlots;
++
+ /// Intl.DateTimeFormat.prototype.formatRange
+ pub(crate) fn prototype_format_range(
+     agent: &mut Agent,
+@@ -19,6 +21,24 @@ pub(crate) fn prototype_format_range(
+     // 4. Let _x_ be ? ToNumber(_startDate_).
+     // 5. Let _y_ be ? ToNumber(_endDate_).
+     // 6. Return ? FormatDateTimeRange(_dtf_, _x_, _y_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DateTimeFormat.prototype.formatRange"))
++    let _ = new_target;
++    // 1. Let _dtf_ be *this* value.
++    // 2. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    match this {
++        Value::Object(o) if agent.native::<DateTimeFormatSlots>(o).is_some() => {}
++        _ => return Err(agent.throw_type_error("not an Intl.DateTimeFormat")),
++    }
++    // 3. If _startDate_ is *undefined* or _endDate_ is *undefined*, throw a *TypeError* exception.
++    let (start_date, end_date) = (args.get_or_undefined(0), args.get_or_undefined(1));
++    if matches!(start_date, Value::Undefined) || matches!(end_date, Value::Undefined) {
++        return Err(agent.throw_type_error("formatRange requires a start and an end date"));
++    }
++    // 4. Let _x_ be ? ToNumber(_startDate_).
++    let _x = ops::to_number(agent, start_date)?;
++    // 5. Let _y_ be ? ToNumber(_endDate_).
++    let _y = ops::to_number(agent, end_date)?;
++    // 6. Return ? FormatDateTimeRange(_dtf_, _x_, _y_).
++    Err(agent.not_implemented(
++        "Intl.DateTimeFormat formatRange: PartitionDateTimeRangePattern (ICU4X has no date interval patterns)",
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range_to_parts.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range_to_parts.rs
+index 6651184..ca82093 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range_to_parts.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range_to_parts.rs
+@@ -4,6 +4,8 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::intl_date_time_format::DateTimeFormatSlots;
++
+ /// Intl.DateTimeFormat.prototype.formatRangeToParts
+ pub(crate) fn prototype_format_range_to_parts(
+     agent: &mut Agent,
+@@ -19,6 +21,24 @@ pub(crate) fn prototype_format_range_to_parts(
+     // 4. Let _x_ be ? ToNumber(_startDate_).
+     // 5. Let _y_ be ? ToNumber(_endDate_).
+     // 6. Return ? FormatDateTimeRangeToParts(_dtf_, _x_, _y_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DateTimeFormat.prototype.formatRangeToParts"))
++    let _ = new_target;
++    // 1. Let _dtf_ be *this* value.
++    // 2. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    match this {
++        Value::Object(o) if agent.native::<DateTimeFormatSlots>(o).is_some() => {}
++        _ => return Err(agent.throw_type_error("not an Intl.DateTimeFormat")),
++    }
++    // 3. If _startDate_ is *undefined* or _endDate_ is *undefined*, throw a *TypeError* exception.
++    let (start_date, end_date) = (args.get_or_undefined(0), args.get_or_undefined(1));
++    if matches!(start_date, Value::Undefined) || matches!(end_date, Value::Undefined) {
++        return Err(agent.throw_type_error("formatRangeToParts requires a start and an end date"));
++    }
++    // 4. Let _x_ be ? ToNumber(_startDate_).
++    let _x = ops::to_number(agent, start_date)?;
++    // 5. Let _y_ be ? ToNumber(_endDate_).
++    let _y = ops::to_number(agent, end_date)?;
++    // 6. Return ? FormatDateTimeRangeToParts(_dtf_, _x_, _y_).
++    Err(agent.not_implemented(
++        "Intl.DateTimeFormat formatRangeToParts: PartitionDateTimeRangePattern (ICU4X has no date interval patterns)",
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_to_parts.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_to_parts.rs
+index c2a0434..dda29b7 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_to_parts.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_format_to_parts.rs
+@@ -4,6 +4,9 @@
+ 
+ use kahvi_core::prelude::*;
+ 
++use crate::support::date;
++use crate::support::intl_date_time_format::DateTimeFormatSlots;
++
+ /// Intl.DateTimeFormat.prototype.formatToParts
+ pub(crate) fn prototype_format_to_parts(
+     agent: &mut Agent,
+@@ -20,6 +23,23 @@ pub(crate) fn prototype_format_to_parts(
+     // 4. Else,
+     //    a. Let _x_ be ? ToNumber(_date_).
+     // 5. Return ? FormatDateTimeToParts(_dtf_, _x_).
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("Intl.DateTimeFormat.prototype.formatToParts"))
++    let _ = new_target;
++    // 1. Let _dtf_ be the *this* value.
++    // 2. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    match this {
++        Value::Object(o) if agent.native::<DateTimeFormatSlots>(o).is_some() => {}
++        _ => return Err(agent.throw_type_error("not an Intl.DateTimeFormat")),
++    }
++    // 3. If _date_ is *undefined*, then
++    //    a. Let _x_ be ! Call(%Date.now%, *undefined*).
++    // 4. Else,
++    //    a. Let _x_ be ? ToNumber(_date_).
++    let _x = match args.get_or_undefined(0) {
++        Value::Undefined => date::now(agent),
++        date => ops::to_number(agent, date)?,
++    };
++    // 5. Return ? FormatDateTimeToParts(_dtf_, _x_).
++    Err(agent.not_implemented(
++        "Intl.DateTimeFormat formatToParts: ICU4X's formatted parts need the writeable crate, which kahvi-builtins does not depend on",
++    ))
+ }
+diff --git a/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs b/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
+index 930f961..2a6a8a6 100644
+--- a/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
++++ b/crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs
+@@ -2,8 +2,37 @@
+ //!
+ //! Spec: https://tc39.es/ecma402/#sec-intl.datetimeformat.prototype.format
+ 
++use kahvi_core::function::{builtin_slots, create_builtin_function};
+ use kahvi_core::prelude::*;
+ 
++use crate::support::date;
++use crate::support::intl_date_time_format::{
++    DateTimeFormatSlots, format_date_time, unwrap_date_time_format,
++};
++
++/// The closure of step 4.a.
++fn bound_format(
++    agent: &mut Agent,
++    _this: Value,
++    args: &[Value],
++    _new_target: Option<Object>,
++) -> JsResult<Value> {
++    let Some(f) = agent.active_function() else {
++        return Err(agent.throw_type_error("no running built-in function"));
++    };
++    let Some(Value::Object(dtf)) = builtin_slots(agent, f).first().copied() else {
++        return Err(agent.throw_type_error("format function without its DateTimeFormat"));
++    };
++    // i. If _date_ is *undefined*, let _x_ be ! Call(%Date.now%, *undefined*); else let _x_ be ? ToNumber(_date_).
++    let x = match args.get_or_undefined(0) {
++        Value::Undefined => date::now(agent),
++        date => ops::to_number(agent, date)?,
++    };
++    // ii. Return ? FormatDateTime(_dtf_, _x_).
++    let result = format_date_time(agent, dtf, x)?;
++    Ok(Value::String(agent.string(&result)))
++}
++
+ /// get Intl.DateTimeFormat.prototype.format
+ pub(crate) fn prototype_get_format(
+     agent: &mut Agent,
+@@ -27,6 +56,43 @@ pub(crate) fn prototype_get_format(
+     // NOTE:
+     // The returned function is bound to _dtf_ so that it can be passed directly to `Array.prototype.map` or other functions.
+     // This is considered a historical artefact, as part of a convention which is no longer followed for new features, but is preserved to maintain compatibility with existing programs.
+-    let _ = (this, args, new_target);
+-    Err(agent.not_implemented("get Intl.DateTimeFormat.prototype.format"))
++    let _ = (args, new_target);
++    // 1. Let _dtf_ be the *this* value.
++    // 2. If the implementation supports the normative optional constructor mode of [legacy-constructor], then
++    //    a. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
++    let dtf = unwrap_date_time_format(agent, this)?;
++    // 3. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
++    let dtf = match dtf {
++        Value::Object(o) if agent.native::<DateTimeFormatSlots>(o).is_some() => o,
++        _ => return Err(agent.throw_type_error("not an Intl.DateTimeFormat")),
++    };
++    // 4. If _dtf_.[[BoundFormat]] is *undefined*, then
++    let bound = agent
++        .native::<DateTimeFormatSlots>(dtf)
++        .and_then(|s| s.bound_format);
++    let bound = match bound {
++        Some(b) => b,
++        None => {
++            // a. Let _closure_ be a new Abstract Closure with parameters (_date_) that captures _dtf_ and performs the steps of bound_format.
++            // b. Set _dtf_.[[BoundFormat]] to CreateBuiltinFunction(_closure_, 1, *""*, « »).
++            let name = PropertyKey::String(agent.names.empty);
++            let f = create_builtin_function(
++                agent,
++                bound_format,
++                1,
++                name,
++                vec![Value::Object(dtf)],
++                None,
++                None,
++                None,
++                false,
++            );
++            if let Some(slots) = agent.native_mut::<DateTimeFormatSlots>(dtf) {
++                slots.bound_format = Some(f);
++            }
++            f
++        }
++    };
++    // 5. Return _dtf_.[[BoundFormat]].
++    Ok(Value::Object(bound))
+ }
+diff --git a/crates/kahvi-builtins/src/support/intl_date_time_format.rs b/crates/kahvi-builtins/src/support/intl_date_time_format.rs
+index ca2a6c6..4e75875 100644
+--- a/crates/kahvi-builtins/src/support/intl_date_time_format.rs
++++ b/crates/kahvi-builtins/src/support/intl_date_time_format.rs
+@@ -564,6 +564,105 @@ fn get_available_named_time_zone_identifier(time_zone_identifier: &str) -> Optio
+     Some(parsed.canonical.to_string())
+ }
+ 
++/// The ICU4X zoned date-time for a time value in a [[TimeZone]] (a UTC
++/// offset or a named zone with a fixed offset).
++fn zoned_date_time(
++    time_zone: &str,
++    epoch_milliseconds: i64,
++) -> Result<
++    icu::time::ZonedDateTime<
++        icu::calendar::Iso,
++        icu::time::TimeZoneInfo<icu::time::zone::models::AtTime>,
++    >,
++    String,
++> {
++    use icu::time::zone::{IanaParser, UtcOffset};
++    use icu::time::{DateTime, ZonedDateTime};
++    // 1. If IsTimeZoneOffsetString(_timeZoneIdentifier_) is *true*, then
++    //    a. Let _offsetNs_ be ParseTimeZoneOffsetString(_timeZoneIdentifier_).
++    let (zone, fixed_offset) = if let Some((_, offset_minutes)) = parse_utc_offset(time_zone) {
++        let offset = UtcOffset::try_from_seconds(offset_minutes * 60)
++            .map_err(|e| format!("the UTC offset {time_zone:?}: {e}"))?;
++        (TimeZone::UNKNOWN, Some(offset))
++    } else {
++        // 2. Else,
++        //    b. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_timeZoneIdentifier_, _epochNs_).
++        let zone = IanaParser::new().parse(time_zone);
++        (zone, zone.without_offset().offset())
++    };
++    // ICU4X has no time zone transitions: only zones with one fixed offset
++    // (UTC, Etc/*) have an offset to give.
++    let Some(offset) = fixed_offset else {
++        return Err(format!(
++            "GetNamedTimeZoneOffsetNanoseconds for {time_zone:?} (ICU4X has no time zone transition data)"
++        ));
++    };
++    // 3. Let _tz_ be ℝ(_epochNs_) + _offsetNs_.
++    let local = ZonedDateTime::from_epoch_milliseconds_and_utc_offset(epoch_milliseconds, offset);
++    let (date, time) = (local.date, local.time);
++    Ok(ZonedDateTime {
++        date,
++        time,
++        zone: zone
++            .with_offset(Some(offset))
++            .at_date_time(DateTime { date, time }),
++    })
++}
++
++/// FormatDateTime ( _dateTimeFormat_, _x_ ), through PartitionDateTimePattern
++/// and FormatDateTimePattern. ICU4X formats the whole pattern, so the result
++/// is the concatenation of the parts' values.
++pub(crate) fn format_date_time(
++    agent: &mut Agent,
++    date_time_format: Object,
++    x: f64,
++) -> JsResult<String> {
++    // 1. Set _x_ to TimeClip(_x_).
++    let x = crate::support::date::time_clip(x);
++    // 2. If _x_ is *NaN*, throw a *RangeError* exception.
++    if x.is_nan() {
++        return Err(agent.throw_range_error("invalid time value"));
++    }
++    // 3. Let _epochNanoseconds_ be ℤ(ℝ(_x_) × 10^6).
++    // 4. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
++    let Some(slots) = agent.native::<DateTimeFormatSlots>(date_time_format) else {
++        return Err(agent.throw_type_error("not an Intl.DateTimeFormat"));
++    };
++    let (locale, calendar, numbering_system) = (
++        slots.locale.clone(),
++        slots.calendar.clone(),
++        slots.numbering_system.clone(),
++    );
++    let (time_zone, hour_cycle, fields) = (
++        slots.time_zone.clone(),
++        slots.hour_cycle.clone(),
++        slots.fields.clone(),
++    );
++    // 5. If _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
++    //    a. Let _pattern_ be _format_.[[pattern12]].
++    // 6. Else,
++    //    a. Let _pattern_ be _format_.[[pattern]].
++    if hour_cycle.as_deref() == Some("h24") {
++        return Err(
++            agent.not_implemented("Intl.DateTimeFormat hourCycle h24 (ICU4X has no h24 pattern)")
++        );
++    }
++    // 7. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_).
++    let prefs = Prefs {
++        locale: &locale,
++        calendar: &calendar,
++        numbering_system: &numbering_system,
++        hour_cycle: hour_cycle.as_deref(),
++    };
++    let formatter = crate::support::intl_dtf_icu::formatter(&prefs, &fields)
++        .map_err(|what| agent.not_implemented(&format!("Intl.DateTimeFormat format: {what}")))?;
++    // 12. Let _localTime_ be ToLocalTime(_epochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
++    let zoned = zoned_date_time(&time_zone, x as i64)
++        .map_err(|what| agent.not_implemented(&format!("Intl.DateTimeFormat format: {what}")))?;
++    // 8. Return _result_.
++    Ok(formatter.format(&zoned).to_string())
++}
++
+ /// UnwrapDateTimeFormat ( _dtf_ )
+ pub(crate) fn unwrap_date_time_format(agent: &mut Agent, dtf: Value) -> JsResult<Value> {
+     // 1. If _dtf_ is not an Object, throw a *TypeError* exception.
