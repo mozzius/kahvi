@@ -493,6 +493,106 @@ pub fn call_ecma_function(
     }
 }
 
+/// A [[Call]] of an ECMAScript function that the interpreter runs in its
+/// own loop (`run_frame`) instead of a nested Rust call: the callee's frame
+/// and what ending the call must undo.
+pub(crate) struct InlineCall {
+    pub(crate) frame: Box<Frame>,
+    /// The frame's code (a handle of the run loop's own, see
+    /// `run_frame_loop`).
+    pub(crate) code: Arc<FunctionCode>,
+    f: Object,
+    env: EnvId,
+}
+
+/// [[Call]] of `f` (§10.2.1) up to running its body, as an [`InlineCall`],
+/// when `f` is an ECMAScript function whose body runs to completion in one
+/// frame (not async, a generator or a class constructor); `None` for any
+/// other callee, which the caller calls the usual way.
+pub(crate) fn begin_inline_call(
+    agent: &mut Agent,
+    f: Object,
+    this: Value,
+    args: &[Value],
+) -> JsResult<Option<InlineCall>> {
+    let ObjectKind::Function(e) = &agent.obj(f).kind else {
+        return Ok(None);
+    };
+    if e.is_class_constructor {
+        return Ok(None);
+    }
+    let code = e.code.clone();
+    let code = if code.lazy.is_some() {
+        compile_lazy(agent, f, &code)?
+    } else {
+        code
+    };
+    if code.is_async || code.is_generator {
+        return Ok(None);
+    }
+    crate::function::enter_inline_call(agent)?;
+    // 2. Let calleeContext be PrepareForOrdinaryCall(F, undefined).
+    let env = match prepare_for_ordinary_call(agent, f, Value::Undefined) {
+        Ok(env) => env,
+        Err(e) => {
+            agent.call_depth -= 1;
+            return Err(e);
+        }
+    };
+    let private_env = ecma(agent, f).private_environment.clone();
+    let mut frame = match agent.spare_frames.pop() {
+        Some(mut frame) => {
+            frame.reinit(code.clone(), env, private_env, Some(f));
+            frame
+        }
+        None => Box::new(Frame::new(code.clone(), env, private_env, Some(f))),
+    };
+    init_locals(&mut frame);
+    frame.args.extend_from_slice(args);
+    // 5. Perform OrdinaryCallBindThis(F, calleeContext, thisArgument).
+    // (Then OrdinaryCallEvaluateBody's FunctionDeclarationInstantiation up
+    // to the parameter bindings.)
+    let r = ordinary_call_bind_this(agent, f, env, this)
+        .and_then(|()| instantiate::function_declaration_instantiation(agent, &mut frame, f, args));
+    match r {
+        Ok(()) => Ok(Some(InlineCall {
+            frame,
+            code,
+            f,
+            env,
+        })),
+        Err(e) => {
+            // 7. Remove calleeContext from the execution context stack.
+            agent.contexts.pop();
+            if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
+                agent.free_env(env);
+            }
+            agent.call_depth -= 1;
+            Err(e)
+        }
+    }
+}
+
+/// Ends an [`InlineCall`] whose frame has returned or thrown: what
+/// `call_ecma_function` does after the body.
+pub(crate) fn finish_inline_call(agent: &mut Agent, call: InlineCall) {
+    let InlineCall {
+        mut frame, f, env, ..
+    } = call;
+    if frame.code.envs_die_with_call {
+        free_scopes_between(agent, frame.env, env);
+    }
+    // 7. Remove calleeContext from the execution context stack.
+    agent.contexts.pop();
+    if frame.code.envs_die_with_call && own_function_env(agent, f, env) {
+        agent.free_env(env);
+    }
+    agent.call_depth -= 1;
+    if agent.spare_frames.len() < 256 && frame.empty_for_pool() {
+        agent.spare_frames.push(frame);
+    }
+}
+
 /// [[Construct]] of an ECMAScript function object (§10.2.2).
 pub fn construct_ecma_function(
     agent: &mut Agent,

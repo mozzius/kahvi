@@ -289,7 +289,7 @@ impl Frame {
 
     /// Makes a pooled frame (one `empty_for_pool` left) a new frame like
     /// `Frame::new`, keeping its buffers' capacity.
-    #[inline]
+    #[inline(always)]
     pub(crate) fn reinit(
         &mut self,
         code: Arc<FunctionCode>,
@@ -345,7 +345,7 @@ impl Frame {
     /// Empties the frame for the pool: it keeps no values (the collector
     /// does not trace pooled frames) and buffers of reasonable size.
     /// Returns false for a frame not worth keeping.
-    #[inline]
+    #[inline(always)]
     pub(crate) fn empty_for_pool(&mut self) -> bool {
         self.stack.clear();
         self.refs.clear();
@@ -432,14 +432,108 @@ enum Flow {
     Done(FrameResult),
 }
 
+/// Why `run_frame_loop` stopped running a frame.
+enum Exit {
+    /// The frame returned or yielded.
+    Done(FrameResult),
+    /// The frame's `Call` instruction (at its `pc`) began a call for
+    /// `run_frame` to run.
+    Call(call::InlineCall),
+}
+
 /// Runs a frame until it returns, yields, or throws an exception it does
 /// not handle.
+///
+/// Calls of ordinary ECMAScript functions it makes run here too, one frame
+/// after another, rather than in nested Rust calls: they take no native
+/// stack, and cost less to enter and leave.
 pub fn run_frame(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
     // The frame is a root while it runs (docs/GC.md).
     agent.gc.frames.push(crate::gc::FramePtr(&*frame));
-    let r = run_frame_loop(agent, frame);
+    let r = run_frames(agent, frame);
     agent.gc.frames.pop();
     r
+}
+
+fn run_frames(agent: &mut Agent, root: &mut Frame) -> JsResult<FrameResult> {
+    // The calls in progress, innermost last; each callee frame is a root
+    // while it runs.
+    let mut calls: Vec<call::InlineCall> = Vec::new();
+    let root_code = root.code.clone();
+    let mut entering = true;
+    loop {
+        let (frame, code) = match calls.last_mut() {
+            Some(c) => (&mut *c.frame, &c.code),
+            None => (&mut *root, &root_code),
+        };
+        match run_frame_loop(agent, frame, &code.ops, entering) {
+            Ok(Exit::Call(c)) => {
+                agent.gc.frames.push(crate::gc::FramePtr(&*c.frame));
+                calls.push(c);
+                entering = true;
+            }
+            Ok(Exit::Done(result)) => {
+                let Some(c) = calls.pop() else {
+                    return Ok(result);
+                };
+                agent.gc.frames.pop();
+                call::finish_inline_call(agent, c);
+                let FrameResult::Return(v) = result else {
+                    unreachable!("only generator frames yield")
+                };
+                // The caller's `Call` instruction completes with the value.
+                let caller = match calls.last_mut() {
+                    Some(c) => &mut *c.frame,
+                    None => &mut *root,
+                };
+                caller.stack.push(v);
+                caller.pc += 1;
+                entering = false;
+            }
+            Err(e) => {
+                // The exception propagates out of callee frames until one
+                // handles it.
+                loop {
+                    let Some(c) = calls.pop() else {
+                        return Err(e);
+                    };
+                    agent.gc.frames.pop();
+                    call::finish_inline_call(agent, c);
+                    let caller = match calls.last_mut() {
+                        Some(c) => &mut *c.frame,
+                        None => &mut *root,
+                    };
+                    if let JsError::Throw(v) = e
+                        && caller.handle_throw(v)
+                    {
+                        break;
+                    }
+                }
+                entering = false;
+            }
+        }
+    }
+}
+
+/// Op::Call of an ordinary ECMAScript function, begun as a call for
+/// `run_frame` to run: the callee and `this` are taken off the stack and
+/// the arguments copied into the callee's frame. `None` for other callees.
+#[inline]
+fn begin_call_op(
+    agent: &mut Agent,
+    frame: &mut Frame,
+    argc: u32,
+) -> JsResult<Option<call::InlineCall>> {
+    let base = frame.stack.len() - argc as usize - 2;
+    let Value::Object(f) = frame.stack[base] else {
+        return Ok(None);
+    };
+    let this = frame.stack[base + 1];
+    let c = call::begin_inline_call(agent, f, this, &frame.stack[base + 2..])?;
+    if c.is_some() {
+        frame.stack.truncate(base);
+    }
+    Ok(c)
 }
 
 /// A safe point in `frame` (function entry, loop back-edges): collects if
@@ -454,12 +548,19 @@ fn safe_point(agent: &mut Agent, frame: &Frame) {
     }
 }
 
-fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
-    safe_point(agent, frame);
-    // (The frame's code never changes while it runs; a handle of our own
-    // keeps the instructions in a register instead of behind the frame.)
-    let code = frame.code.clone();
-    let ops = &code.ops[..];
+/// Runs `frame`, whose instructions are `ops`, from its `pc`; `entering`
+/// for a frame just begun rather than resumed after a call it made.
+/// (The frame's code never changes while it runs; the caller's handle on
+/// it keeps the instructions in a register instead of behind the frame.)
+fn run_frame_loop(
+    agent: &mut Agent,
+    frame: &mut Frame,
+    ops: &[Op],
+    entering: bool,
+) -> JsResult<Exit> {
+    if entering {
+        safe_point(agent, frame);
+    }
     loop {
         let pc = frame.pc;
         let op = ops[pc];
@@ -470,7 +571,14 @@ fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult>
         // otherwise stay on the stack for the whole callee (React Native's
         // JavaScript thread has 1 MiB of stack).
         let flow = match op {
-            Op::Call(argc) => call_op(agent, frame, argc).map(|()| Flow::Next),
+            Op::Call(argc) => match begin_call_op(agent, frame, argc) {
+                Ok(Some(c)) => {
+                    frame.pc = pc;
+                    return Ok(Exit::Call(c));
+                }
+                Ok(None) => call_op(agent, frame, argc).map(|()| Flow::Next),
+                Err(e) => Err(e),
+            },
             Op::CallSpread => call_spread_op(agent, frame).map(|()| Flow::Next),
             Op::New(argc) => new_op(agent, frame, argc).map(|()| Flow::Next),
             // (Here rather than in `execute`, which costs more to enter.)
@@ -494,7 +602,7 @@ fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult>
             }
             Ok(Flow::Done(result)) => {
                 frame.pc = frame.resume_pc.take().unwrap_or(pc + 1);
-                return Ok(result);
+                return Ok(Exit::Done(result));
             }
             Err(JsError::Throw(v)) => {
                 if !frame.handle_throw(v) {
