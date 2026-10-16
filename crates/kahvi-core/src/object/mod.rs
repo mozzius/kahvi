@@ -556,6 +556,14 @@ impl PropertyMap {
         }
     }
 
+    /// Makes room for `n` more dense elements.
+    pub(crate) fn reserve_elements(&mut self, n: usize) {
+        if n > 0 {
+            let e = self.elements.get_or_insert_with(Default::default);
+            e.items.reserve_exact(n);
+        }
+    }
+
     /// Inserts or replaces, keeping the original position on replacement.
     pub fn insert(&mut self, key: PropertyKey, prop: Property) {
         if let PropertyKey::Index(i) = key {

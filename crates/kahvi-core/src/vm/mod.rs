@@ -2041,8 +2041,9 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let o = agent.ordinary_object_create(Some(proto));
             frame.push(Value::Object(o));
         }
-        Op::NewArray => {
+        Op::NewArray(room) => {
             let a = crate::object::array::array_create(agent, 0.0, None)?;
+            agent.obj_mut(a).properties.reserve_elements(room as usize);
             frame.push(Value::Object(a));
         }
         Op::DefineField(key) => {
