@@ -79,6 +79,10 @@ bool kahvi_run_jobs(KahviRuntime *rt);
 void kahvi_queue_microtask(KahviRuntime *rt, KahviValue function);
 KahviValue kahvi_take_exception(KahviRuntime *rt);
 void kahvi_collect_garbage(KahviRuntime *rt);
+/* One line on the runtime's heap (live objects, strings, environments and
+ * their sizes) and the process's allocator (RSS, committed memory), for
+ * measuring memory. Walks the whole heap. Free with kahvi_utf8_free. */
+char *kahvi_heap_report(KahviRuntime *rt, size_t *len);
 KahviValue kahvi_global(KahviRuntime *rt);
 
 /* Values */

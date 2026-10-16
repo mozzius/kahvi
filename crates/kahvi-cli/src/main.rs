@@ -188,6 +188,10 @@ fn run(args: &Args) -> u8 {
     }
     let jobs = agent.run_jobs();
     agent.contexts.pop();
+    // KAHVI_HEAP_REPORT prints a census of the heap once the jobs are done.
+    if std::env::var_os("KAHVI_HEAP_REPORT").is_some() {
+        eprintln!("{:?}", agent.heap_stats());
+    }
     if let Err(e) = jobs {
         return report(&mut agent, e);
     }

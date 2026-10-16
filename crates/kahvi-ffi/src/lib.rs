@@ -457,6 +457,56 @@ pub unsafe extern "C" fn kahvi_collect_garbage(rt: *mut KahviRuntime) {
     unsafe { agent(rt).collect_garbage_if_safe() };
 }
 
+unsafe extern "C" {
+    fn mi_process_info(
+        elapsed_msecs: *mut usize,
+        user_msecs: *mut usize,
+        system_msecs: *mut usize,
+        current_rss: *mut usize,
+        peak_rss: *mut usize,
+        current_commit: *mut usize,
+        peak_commit: *mut usize,
+        page_faults: *mut usize,
+    );
+}
+
+/// One line on the runtime's heap and the process's allocator, for hosts
+/// measuring memory: the engine's own tables (a walk of the heap) and what
+/// mimalloc has committed. Free with kahvi_utf8_free.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usize) -> *mut u8 {
+    let h = unsafe { agent(rt).heap_stats() };
+    let mut v = [0usize; 8];
+    unsafe {
+        let [a, b, c, d, e, f, g, i] = &mut v;
+        mi_process_info(a, b, c, d, e, f, g, i);
+    }
+    let mb = |b: usize| b as f64 / (1 << 20) as f64;
+    let line = format!(
+        "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB | \
+         sources {:.1} MB | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
+        h.collections,
+        h.objects_live,
+        h.object_slots,
+        mb(h.object_slot_bytes),
+        mb(h.property_bytes),
+        h.strings_live,
+        h.string_slots,
+        mb(h.string_bytes),
+        h.envs_live,
+        h.env_slots,
+        mb(h.env_slot_bytes),
+        mb(h.source_bytes),
+        mb(v[3]),
+        mb(v[4]),
+        mb(v[5]),
+        mb(v[6]),
+    );
+    let bytes = line.into_bytes().into_boxed_slice();
+    unsafe { *len = bytes.len() };
+    Box::into_raw(bytes) as *mut u8
+}
+
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_global(rt: *mut KahviRuntime) -> KahviValue {
     let realm = unsafe { (*rt).realm };

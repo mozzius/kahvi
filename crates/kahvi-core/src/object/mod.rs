@@ -426,6 +426,21 @@ impl PropertyMap {
         self.len() == 0
     }
 
+    /// The bytes this map holds outside its object's slot (for
+    /// [`crate::gc::HeapStats`]).
+    pub(crate) fn heap_bytes(&self) -> usize {
+        use std::mem::size_of;
+        let elements = self.elements.as_ref().map_or(0, |e| {
+            size_of::<Elements>() + e.items.capacity() * size_of::<Option<Property>>()
+        });
+        let entries = self.entries.capacity() * size_of::<Option<(PropertyKey, Property)>>();
+        let index = self
+            .index
+            .as_ref()
+            .map_or(0, |m| m.capacity() * (size_of::<(PropertyKey, u32)>() + 1));
+        elements + entries + index
+    }
+
     /// Keys in OrdinaryOwnPropertyKeys order: array indices ascending, then
     /// strings in creation order, then symbols in creation order.
     pub fn keys_in_spec_order(&self) -> Vec<PropertyKey> {
