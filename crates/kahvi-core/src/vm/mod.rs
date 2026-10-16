@@ -1305,6 +1305,9 @@ fn array_append(agent: &mut Agent, array: Value, value: Value) -> JsResult<()> {
     let Value::Object(a) = array else {
         return Ok(());
     };
+    if crate::object::array::array_append_data(agent, a, value) {
+        return Ok(());
+    }
     let len = crate::object::array::array_length(agent, a);
     let key = agent.key_from_index(len as f64);
     ops::create_data_property_or_throw(agent, a, key, value)
