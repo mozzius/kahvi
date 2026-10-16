@@ -192,9 +192,15 @@ class Stacker:
             return
         self._prepare(start)
         for item in todo:
+            before = git("rev-parse", "HEAD", cwd=TREE)
             commit = self._apply(item)
             if commit is None:
                 self._conflict(item)
+                continue
+            if item["kind"] == "land" and commit == before:
+                # Landed twice, or already merged: a layer of it would be empty.
+                self.db.q("DELETE FROM stack_queue WHERE pos = ?", item["pos"])
+                log(f"stack: {item['ticket']} ({item['source'][:10]}) is already on the stack; dropped")
                 continue
             self.db.q("UPDATE stack_queue SET composed = ? WHERE pos = ?", commit, item["pos"])
         self._set_branch(git("rev-parse", "HEAD", cwd=TREE))
@@ -219,6 +225,15 @@ class Stacker:
         return p.read_text() if p.exists() else None
 
     def push_next(self):
+        # A layer whose PR was never opened (the process stopped, or GitHub
+        # refused it): its items are still queued, so drop it and recompose.
+        orphans = self.db.q("SELECT * FROM layers WHERE status = 'pending' AND pr IS NULL")
+        for layer in orphans:
+            self.db.q("UPDATE layers SET status = 'closed', updated = ? WHERE id = ?", time.time(), layer["id"])
+            log(f"stack: {layer['branch']} never got a PR; dropped, its items are stacked again")
+        if orphans:
+            self.compose()
+            return False
         if self.db.one("SELECT 1 FROM layers WHERE status IN ('pending', 'stuck')"):
             return False
         items = self.queue()
