@@ -211,6 +211,14 @@ impl StringTable {
         }
     }
 
+    /// Rebuilds the table smaller when most of it is empty (after many
+    /// strings were collected).
+    pub(crate) fn shrink(&mut self, strings: &[crate::units::Units]) {
+        if self.slots.len() > 1024 && (self.live + 1) * 8 < self.slots.len() {
+            self.rebuild(strings);
+        }
+    }
+
     /// Re-inserts the live handles into a table sized for twice as many.
     fn rebuild(&mut self, strings: &[crate::units::Units]) {
         let capacity = ((self.live + 1) * 2).next_power_of_two().max(64);

@@ -817,6 +817,7 @@ impl Agent {
             &mut self.gc.is_free_string,
             &mut self.gc.free_strings,
         );
+        self.string_index.shrink(&self.strings);
         for i in self.gc.pinned_symbols..self.symbols.len() as u32 {
             if t.symbols.get(i) {
                 live_count += 1;
