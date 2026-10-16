@@ -42,13 +42,7 @@ impl ScriptRecord {
     pub fn line_col(&self, pos: usize) -> (usize, usize) {
         let starts = self.line_starts.get_or_init(|| {
             std::iter::once(0)
-                .chain(
-                    self.source
-                        .bytes()
-                        .enumerate()
-                        .filter(|&(_, b)| b == b'\n')
-                        .map(|(i, _)| i as u32 + 1),
-                )
+                .chain(self.source.match_indices('\n').map(|(i, _)| i as u32 + 1))
                 .collect()
         });
         let pos = pos.min(self.source.len());
