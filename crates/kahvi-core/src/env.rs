@@ -33,6 +33,16 @@ pub struct Bindings {
 const INDEX_FROM: usize = 16;
 
 impl Bindings {
+    /// Bytes allocated for the list and its index, for heap statistics.
+    pub(crate) fn heap_bytes(&self) -> usize {
+        use std::mem::size_of;
+        self.list.capacity() * size_of::<(JsString, Binding)>()
+            + self
+                .index
+                .as_ref()
+                .map_or(0, |ix| ix.capacity() * (size_of::<(JsString, usize)>() + 1))
+    }
+
     pub(crate) fn position(&self, name: &JsString) -> Option<usize> {
         match &self.index {
             Some(ix) => ix.get(name).copied(),
@@ -180,6 +190,28 @@ enum Kind {
 }
 
 impl Environment {
+    /// Bytes this record keeps outside its slot, for heap statistics.
+    pub(crate) fn heap_bytes(&self) -> usize {
+        use std::mem::size_of;
+        match self {
+            Environment::Declarative {
+                bindings,
+                function,
+                imports,
+                disposable_resource_stack,
+                ..
+            } => {
+                bindings.heap_bytes()
+                    + function
+                        .as_ref()
+                        .map_or(0, |_| size_of::<FunctionEnvData>())
+                    + imports.capacity() * (size_of::<(JsString, (u32, JsString))>() + 1)
+                    + disposable_resource_stack.capacity() * size_of::<DisposableResource>()
+            }
+            _ => 0,
+        }
+    }
+
     /// What a collected environment's slot holds until it is reused.
     pub(crate) fn dead() -> Environment {
         Environment::Declarative {

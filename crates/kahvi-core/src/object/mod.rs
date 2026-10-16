@@ -868,6 +868,32 @@ pub enum ObjectKind {
     Native(Box<dyn NativeData>),
 }
 
+impl ObjectKind {
+    /// Bytes of the boxed internal-slot data, for heap statistics: the box
+    /// itself, plus an ArrayBuffer's owned bytes.
+    pub(crate) fn boxed_bytes(&self) -> usize {
+        use std::mem::{size_of, size_of_val};
+        match self {
+            ObjectKind::Function(b) => size_of_val(&**b),
+            ObjectKind::Builtin(b) => size_of_val(&**b),
+            ObjectKind::BoundFunction(b) => size_of_val(&**b),
+            ObjectKind::Arguments(Some(b)) => size_of_val(&**b),
+            ObjectKind::ModuleNamespace(b) => size_of_val(&**b),
+            ObjectKind::ArrayBuffer(b) => {
+                size_of::<typed_array::ArrayBufferData>()
+                    + match &b.data {
+                        Some(typed_array::DataBlock::Owned(v)) => v.capacity(),
+                        _ => 0,
+                    }
+            }
+            ObjectKind::TypedArray(b) => size_of_val(&**b),
+            ObjectKind::DataView(b) => size_of_val(&**b),
+            ObjectKind::Native(b) => size_of_val(&**b),
+            _ => 0,
+        }
+    }
+}
+
 /// Data for built-in objects whose internal methods are all ordinary. It
 /// must report its handles to the garbage collector ([`Trace`]).
 pub trait NativeData: Any + std::fmt::Debug + Send + Trace {
