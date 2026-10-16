@@ -548,8 +548,8 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
     }
     let mb = |b: usize| b as f64 / (1 << 20) as f64;
     let line = format!(
-        "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB | \
-         sources {:.1} MB | code {} fns {:.1} MB | allocated {} | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
+        "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB +{:.1} MB | \
+         string table {:.1} MB | object data {:.1} MB | sources {:.1} MB | code {} fns {:.1} MB | allocated {} | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
         h.collections,
         h.objects_live,
         h.object_slots,
@@ -561,6 +561,9 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
         h.envs_live,
         h.env_slots,
         mb(h.env_slot_bytes),
+        mb(h.env_bytes),
+        mb(h.string_table_bytes),
+        mb(h.kind_bytes),
         mb(h.source_bytes),
         h.code_functions,
         mb(h.code_bytes),

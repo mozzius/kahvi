@@ -383,6 +383,14 @@ pub struct HeapStats {
     /// roughly the bytes of their code.
     pub code_functions: usize,
     pub code_bytes: usize,
+    /// The string table (a boxed slice per slot) and its intern index.
+    pub string_table_bytes: usize,
+    /// What the live environments keep outside their slots (bindings,
+    /// function data, imports).
+    pub env_bytes: usize,
+    /// The boxed internal-slot data of the live objects (functions, Maps,
+    /// buffers' records…), shallowly: not what that data points to in turn.
+    pub kind_bytes: usize,
 }
 
 pub(crate) struct GcState {
@@ -589,6 +597,8 @@ impl Agent {
             string_slots: self.strings.len(),
             env_slots: self.envs.len(),
             env_slot_bytes: self.envs.capacity() * size_of::<crate::env::Environment>(),
+            string_table_bytes: self.strings.capacity() * size_of::<Box<[u16]>>()
+                + self.string_index.heap_bytes(),
             ..HeapStats::default()
         };
         let mut seen_code = crate::hash::FxHashSet::default();
@@ -596,6 +606,7 @@ impl Agent {
             if !self.gc.is_free_object.get(i as u32) {
                 h.objects_live += 1;
                 h.property_bytes += o.properties.heap_bytes();
+                h.kind_bytes += o.kind.boxed_bytes();
                 if let crate::object::ObjectKind::Function(f) = &o.kind {
                     f.code
                         .census(&mut seen_code, &mut h.code_bytes, &mut h.code_functions);
@@ -608,9 +619,12 @@ impl Agent {
                 h.string_bytes += s.len() * 2;
             }
         }
-        h.envs_live = (0..self.envs.len() as u32)
-            .filter(|&i| !self.gc.is_free_env.get(i))
-            .count();
+        for (i, e) in self.envs.iter().enumerate() {
+            if !self.gc.is_free_env.get(i as u32) {
+                h.envs_live += 1;
+                h.env_bytes += e.heap_bytes();
+            }
+        }
         let mut sources: Vec<*const u8> = Vec::new();
         for s in &self.scripts {
             let p = s.source.as_ptr();
