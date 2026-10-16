@@ -483,7 +483,7 @@ fn all_import_attributes_supported(agent: &Agent, attributes: &[(JsString, JsStr
 /// LoadRequestedModules([hostDefined]) (§16.2.1.5.1): the promise it returns.
 pub fn load_requested_modules(agent: &mut Agent, module: u32) -> JsResult<Value> {
     // 2. Let pc be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     // 3. Let state be the GraphLoadingState Record { [[IsLoading]]: true, [[PendingModulesCount]]: 1, ... }.
     let mut state = GraphLoadingState {
@@ -988,7 +988,7 @@ pub fn evaluate(agent: &mut Agent, module: u32) -> JsResult<Value> {
     }
     // 5-7. Let stack be empty; promiseCapability be ! NewPromiseCapability(%Promise%).
     let mut stack = Vec::new();
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     m_mut(agent, module).top_level_capability = Some(capability);
     // 8. Let result be Completion(InnerModuleEvaluation(module, stack, 0)).
@@ -1184,7 +1184,7 @@ fn module_of_active(agent: &Agent) -> u32 {
 /// ExecuteAsyncModule(module) (§16.2.1.6.1.3.2)
 fn execute_async_module(agent: &mut Agent, module: u32) -> JsResult<()> {
     // 3. Let capability be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     // 4-7. onFulfilled and onRejected run AsyncModuleExecutionFulfilled/Rejected.
     let on_fulfilled = module_closure(agent, async_fulfilled_closure, module, 0);
@@ -1418,7 +1418,7 @@ pub fn evaluate_import_call(
         None => Referrer::Realm(agent.current_realm()),
     };
     // 7. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let ctor = agent.intrinsic("%Promise%");
+    let ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(ctor))?;
     let reject = |agent: &mut Agent, e: JsError| -> JsResult<Value> {
         let v = throw_value(e)?;

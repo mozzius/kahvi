@@ -258,7 +258,7 @@ pub fn iterator_close<T>(
 /// CreateIteratorResultObject(value, done) (§7.4.14)
 pub fn create_iter_result_object(agent: &mut Agent, value: Value, done: bool) -> Object {
     // 1. Let obj be OrdinaryObjectCreate(%Object.prototype%).
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let obj = agent.ordinary_object_create(Some(proto));
     // 2. Perform ! CreateDataPropertyOrThrow(obj, "value", value).
     let _ =

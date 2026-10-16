@@ -42,7 +42,7 @@ pub(super) fn start_async_function(
     decl_result: JsResult<()>,
 ) -> JsResult<Value> {
     // 1. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let capability = new_promise_capability(agent, Value::Object(promise_ctor))?;
     match decl_result {
         // 3. If declResult is an abrupt completion, then perform ! Call(promiseCapability.[[Reject]], undefined, « declResult.[[Value]] »).
@@ -52,7 +52,7 @@ pub(super) fn start_async_function(
         Err(e) => return Err(e),
         // 4. Else, perform AsyncFunctionStart(promiseCapability, FunctionBody).
         Ok(()) => {
-            let proto = agent.intrinsic("%Object.prototype%");
+            let proto = agent.intrinsic_c("%Object.prototype%");
             let (realm, script_or_module) = match &agent.obj(f).kind {
                 ObjectKind::Function(e) => (e.realm, e.script_or_module),
                 _ => (agent.current_realm(), None),
@@ -80,7 +80,7 @@ pub(super) fn start_async_module(
     frame: Frame,
     capability: PromiseCapability,
 ) -> JsResult<()> {
-    let proto = agent.intrinsic("%Object.prototype%");
+    let proto = agent.intrinsic_c("%Object.prototype%");
     let realm = agent.modules[module as usize].realm;
     let ctx = AsyncContext {
         frame: Some(Box::new(frame)),
@@ -182,7 +182,7 @@ fn resume_rooted(agent: &mut Agent, ctx: Object, mut how: Resumption) -> JsResul
 /// `ctx` is the suspended async function context or async generator.
 pub(super) fn await_value(agent: &mut Agent, ctx: Object, value: Value) -> JsResult<()> {
     // 2. Let promise be ? PromiseResolve(%Promise%, value).
-    let promise_ctor = agent.intrinsic("%Promise%");
+    let promise_ctor = agent.intrinsic_c("%Promise%");
     let promise = promise_resolve(agent, promise_ctor, value)?;
     // 3-6. onFulfilled and onRejected resume the async context.
     let empty = PropertyKey::String(agent.names.empty);

@@ -163,7 +163,7 @@ fn sync_dispose_as_async(
     let sync_method = builtin_slots(agent, f)[0];
     // a. Let obj be the this value.
     // b. Let promiseCapability be ! NewPromiseCapability(%Promise%).
-    let promise_ctor = Value::Object(agent.intrinsic("%Promise%"));
+    let promise_ctor = Value::Object(agent.intrinsic_c("%Promise%"));
     let capability = ops::promise::new_promise_capability(agent, promise_ctor)?;
     // c. Let result be Completion(Call(syncMethod, obj)).
     match ops::call(agent, sync_method, this, &[]) {
@@ -280,7 +280,7 @@ impl DisposeResources {
             // 1. If outputCompletion is a throw completion, then
             Err(suppressed) => {
                 // c. Let error be a newly created SuppressedError object.
-                let proto = agent.intrinsic("%SuppressedError.prototype%");
+                let proto = agent.intrinsic_c("%SuppressedError.prototype%");
                 let error = agent.object_with_kind(Some(proto), ObjectKind::Error);
                 // d. Perform CreateNonEnumerableDataPropertyOrThrow(error, "error", result).
                 let key = agent.key("error");

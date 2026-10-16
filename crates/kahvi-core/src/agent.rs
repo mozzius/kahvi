@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::object::{ObjectData, ObjectKind, PropertyKey};
-use crate::realm::{Realm, RealmId};
+use crate::realm::{INTRINSIC_CACHE, Realm, RealmId};
 use crate::value::{JsString, Object, Symbol, Value};
 
 /// Maximum nesting of calls before a RangeError (the Rust stack is finite).
@@ -169,6 +169,8 @@ pub struct Agent {
     pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
     /// Frame-local lists kept for reuse, like `spare_vecs`.
     pub(crate) spare_locals: Vec<Vec<Option<Value>>>,
+    /// Reference stacks kept for reuse, like `spare_vecs`.
+    pub(crate) spare_refs: Vec<Vec<crate::vm::Reference>>,
     /// Collect at one safe point in `gc_stress` on average, regardless of
     /// heap growth (finds rooting bugs; set by the host, see
     /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
@@ -278,6 +280,7 @@ impl Agent {
             spare_vecs: Vec::new(),
             spare_handlers: Vec::new(),
             spare_locals: Vec::new(),
+            spare_refs: Vec::new(),
             gc_stress: 0,
             intl: false,
             kept_objects: Vec::new(),
@@ -820,7 +823,7 @@ impl Agent {
     }
 
     /// An intrinsic of the current realm by its spec name, e.g.
-    /// `agent.intrinsic("%Array.prototype%")`.
+    /// `agent.intrinsic_c("%Array.prototype%")`.
     pub fn intrinsic(&self, name: &str) -> Object {
         self.intrinsic_in(self.current_realm(), name)
     }
@@ -829,6 +832,29 @@ impl Agent {
         match self.realm(realm).intrinsics.get(name) {
             Some(&o) => o,
             None => panic!("intrinsic {name} is not installed"),
+        }
+    }
+
+    /// `intrinsic_const` in the current realm.
+    #[inline]
+    pub fn intrinsic_c(&self, name: &'static str) -> Object {
+        self.intrinsic_const(self.current_realm(), name)
+    }
+
+    /// `intrinsic_in` for a name that is a string constant, looked up first
+    /// by the constant's address in a small cache per realm (for the
+    /// lookups made on every call, closure or primitive property access).
+    #[inline]
+    pub fn intrinsic_const(&self, realm: RealmId, name: &'static str) -> Object {
+        let r = self.realm(realm);
+        let slot = &r.intrinsic_cache[(name.as_ptr() as usize >> 3) % INTRINSIC_CACHE];
+        match slot.get() {
+            (ptr, len, Some(o)) if ptr == name.as_ptr() as usize && len == name.len() => o,
+            _ => {
+                let o = self.intrinsic_in(realm, name);
+                slot.set((name.as_ptr() as usize, name.len(), Some(o)));
+                o
+            }
         }
     }
 
@@ -940,7 +966,7 @@ impl Agent {
 
     /// A new error object from the current realm's `%NativeError%` constructor.
     pub fn create_error(&mut self, kind: ErrorKind, message: &str) -> Object {
-        let proto = self.intrinsic(kind.prototype_intrinsic());
+        let proto = self.intrinsic_c(kind.prototype_intrinsic());
         let o = self.object_with_kind(Some(proto), ObjectKind::Error);
         let msg = self.string(message);
         let key = PropertyKey::String(self.names.message);

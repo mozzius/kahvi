@@ -1656,7 +1656,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
 
         // ---- literals
         Op::NewObject => {
-            let proto = agent.intrinsic("%Object.prototype%");
+            let proto = agent.intrinsic_c("%Object.prototype%");
             let o = agent.ordinary_object_create(Some(proto));
             frame.push(Value::Object(o));
         }
@@ -1755,7 +1755,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(Value::Object(t));
         }
         Op::RegExp(pattern, flags) => {
-            let ctor = agent.intrinsic("%RegExp%");
+            let ctor = agent.intrinsic_c("%RegExp%");
             let r = ops::construct(
                 agent,
                 ctor,
@@ -2065,8 +2065,8 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 call::class_heritage(agent, superclass)?
             } else {
                 (
-                    Some(agent.intrinsic("%Object.prototype%")),
-                    agent.intrinsic("%Function.prototype%"),
+                    Some(agent.intrinsic_c("%Object.prototype%")),
+                    agent.intrinsic_c("%Function.prototype%"),
                 )
             };
             frame.push(proto_parent.map(Value::Object).unwrap_or(Value::Null));
@@ -2290,7 +2290,7 @@ fn call_maybe_eval(
 ) -> JsResult<Value> {
     if let Value::Object(o) = f
         && agent.has_intrinsic("%eval%")
-        && o == agent.intrinsic("%eval%")
+        && o == agent.intrinsic_c("%eval%")
     {
         // a. If argList has no elements, return undefined.
         let Some(&arg) = args.first() else {
