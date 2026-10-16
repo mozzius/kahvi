@@ -493,22 +493,236 @@ pub fn call_ecma_function(
     }
 }
 
-/// A [[Call]] of an ECMAScript function that the interpreter runs in its
-/// own loop (`run_frame`) instead of a nested Rust call: the callee's frame
-/// and what ending the call must undo.
+/// A [[Call]] (or base [[Construct]]) of an ECMAScript function that the
+/// interpreter runs in its own loop (`run_frame`) instead of a nested Rust
+/// call: the callee's frame and what ending the call must undo.
 pub(crate) struct InlineCall {
     pub(crate) frame: Box<Frame>,
     /// The frame's code (a handle of the run loop's own, see
     /// `run_frame_loop`).
     pub(crate) code: Arc<FunctionCode>,
-    f: Object,
+    /// A [[Construct]]: its thisArgument is in the frame's `completion`
+    /// (unused by function code), which keeps it rooted.
+    pub(crate) construct: bool,
+    /// The callee's function environment (the function object is the
+    /// frame's).
     env: EnvId,
+}
+
+/// A frame for code `code` of function `f`, running in `env`.
+#[inline(always)]
+fn inline_frame(agent: &mut Agent, f: Object, code: &Arc<FunctionCode>, env: EnvId) -> Box<Frame> {
+    let private_env = ecma(agent, f).private_environment.clone();
+    let mut frame = match agent.spare_frames.pop() {
+        Some(mut frame) => {
+            frame.reinit(code.clone(), env, private_env, Some(f));
+            frame
+        }
+        None => Box::new(Frame::new(code.clone(), env, private_env, Some(f))),
+    };
+    init_locals(&mut frame);
+    frame
+}
+
+/// Undoes `begin_inline_call` / `begin_inline_construct` from
+/// PrepareForOrdinaryCall on, for a call that threw before its body ran.
+#[cold]
+fn abandon_inline_call(agent: &mut Agent, f: Object, env: EnvId) {
+    // Remove calleeContext from the execution context stack.
+    agent.contexts.pop();
+    if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
+        agent.free_env(env);
+    }
+    agent.call_depth -= 1;
+}
+
+/// [[Construct]](argumentsList, F) of `f` (§10.2.2) for Op::New, begun as an
+/// [`InlineCall`] when `f` is an ECMAScript function of kind base; `None`
+/// (with nothing done) for every other constructor.
+pub(crate) fn begin_inline_construct(
+    agent: &mut Agent,
+    f: Object,
+    args: &[Value],
+) -> JsResult<Option<InlineCall>> {
+    let ObjectKind::Function(e) = &agent.obj(f).kind else {
+        return Ok(None);
+    };
+    // 2. Let kind be F.[[ConstructorKind]].
+    if !e.is_constructor() || e.constructor_kind != ConstructorKind::Base {
+        return Ok(None);
+    }
+    let code = e.code.clone();
+    let code = if code.lazy.is_some() {
+        compile_lazy(agent, f, &code)?
+    } else {
+        code
+    };
+    crate::function::enter_inline_call(agent)?;
+    // 3. If kind is base, then
+    // a. Let thisArgument be ? OrdinaryCreateFromConstructor(newTarget, "%Object.prototype%").
+    let this = match ops::ordinary_create_from_constructor(
+        agent,
+        f,
+        "%Object.prototype%",
+        ObjectKind::Ordinary,
+    ) {
+        Ok(o) => o,
+        Err(e) => {
+            agent.call_depth -= 1;
+            return Err(e);
+        }
+    };
+    // 4. Let calleeContext be PrepareForOrdinaryCall(F, newTarget).
+    let env = match prepare_for_ordinary_call(agent, f, Value::Object(f)) {
+        Ok(env) => env,
+        Err(e) => {
+            agent.call_depth -= 1;
+            return Err(e);
+        }
+    };
+    let mut frame = inline_frame(agent, f, &code, env);
+    frame.completion = Value::Object(this);
+    frame.args.extend_from_slice(args);
+    let r = (|| {
+        // 6. If kind is base, then
+        // a. Perform OrdinaryCallBindThis(F, calleeContext, thisArgument).
+        ordinary_call_bind_this(agent, f, env, Value::Object(this))?;
+        // b. Let initializeResult be Completion(InitializeInstanceElements(thisArgument, F)).
+        // (Field initializers run code; thisArgument is not in a running
+        // frame yet.)
+        agent.with_roots(&[Value::Object(this)], |agent| {
+            initialize_instance_elements(agent, this, f)
+        })?;
+        // 8. Let result be Completion(OrdinaryCallEvaluateBody(F, argumentsList)).
+        // (Its FunctionDeclarationInstantiation up to the parameter bindings.)
+        instantiate::function_declaration_instantiation(agent, &mut frame, f, args)
+    })();
+    match r {
+        Ok(()) => Ok(Some(InlineCall {
+            frame,
+            code,
+            construct: true,
+            env,
+        })),
+        Err(e) => {
+            abandon_inline_call(agent, f, env);
+            Err(e)
+        }
+    }
+}
+
+/// `begin_inline_call` through a bound function, Function.prototype.call
+/// or Function.prototype.apply whose target is an ordinary ECMAScript
+/// function: the steps of those [[Call]]s that come before their own
+/// Call(target, ...) are done here, so the target runs inline. `None`
+/// (with nothing observable done) for every other callee, and for an
+/// apply whose argument list could only be read by running code.
+#[inline(never)]
+pub(crate) fn begin_indirect_call(
+    agent: &mut Agent,
+    f: Object,
+    this: Value,
+    args: &[Value],
+) -> JsResult<Option<InlineCall>> {
+    let plain = |agent: &Agent, v: Value| match v {
+        Value::Object(o) => match &agent.obj(o).kind {
+            ObjectKind::Function(e) if !e.is_class_constructor => Some(o),
+            _ => None,
+        },
+        _ => None,
+    };
+    match &agent.obj(f).kind {
+        ObjectKind::BoundFunction(b) => {
+            // §10.4.1.1 [[Call]] ( thisArgument, argumentsList )
+            // 1. Let target be F.[[BoundTargetFunction]].
+            let Some(target) = plain(agent, Value::Object(b.target)) else {
+                return Ok(None);
+            };
+            // 2. Let boundThis be F.[[BoundThis]].
+            let bound_this = b.bound_this;
+            // 3. Let boundArgs be F.[[BoundArguments]].
+            // 4. Let args be the list-concatenation of boundArgs and argumentsList.
+            let mut all = b.bound_args.clone();
+            all.extend_from_slice(args);
+            // 5. Return ? Call(target, boundThis, args).
+            begin_inline_call(agent, target, bound_this, &all)
+        }
+        ObjectKind::Builtin(_) => {
+            let [call, apply] = agent.realm(agent.current_realm()).call_apply;
+            if Some(f) == call {
+                // §20.2.3.3 Function.prototype.call ( thisArg, ...args )
+                // 1. Let func be the this value.
+                // 2. If IsCallable(func) is false, throw a TypeError exception.
+                let Some(func) = plain(agent, this) else {
+                    return Ok(None);
+                };
+                // 4. Return ? Call(func, thisArg, args).
+                let this_arg = args.first().copied().unwrap_or(Value::Undefined);
+                begin_inline_call(agent, func, this_arg, args.get(1..).unwrap_or(&[]))
+            } else if Some(f) == apply {
+                // §20.2.3.1 Function.prototype.apply ( thisArg, argArray )
+                // 1. Let func be the this value.
+                // 2. If IsCallable(func) is false, throw a TypeError exception.
+                let Some(func) = plain(agent, this) else {
+                    return Ok(None);
+                };
+                let this_arg = args.first().copied().unwrap_or(Value::Undefined);
+                let arg_array = args.get(1).copied().unwrap_or(Value::Undefined);
+                // 3. If argArray is either undefined or null, then
+                if arg_array.is_nullish() {
+                    // b. Return ? Call(func, thisArg).
+                    return begin_inline_call(agent, func, this_arg, &[]);
+                }
+                // 4. Let argList be ? CreateListFromArrayLike(argArray).
+                let Some(arg_list) = own_data_elements(agent, arg_array) else {
+                    return Ok(None);
+                };
+                // 6. Return ? Call(func, thisArg, argList).
+                begin_inline_call(agent, func, this_arg, &arg_list)
+            } else {
+                Ok(None)
+            }
+        }
+        _ => Ok(None),
+    }
+}
+
+/// CreateListFromArrayLike(obj) for an array or unmapped arguments object
+/// whose `length` and elements are all own data properties, read without
+/// running any code; `None` for any other value.
+fn own_data_elements(agent: &Agent, v: Value) -> Option<Vec<Value>> {
+    let Value::Object(o) = v else {
+        return None;
+    };
+    let data = agent.obj(o);
+    if !matches!(data.kind, ObjectKind::Array | ObjectKind::Arguments(None)) {
+        return None;
+    }
+    // 3. Let len be ? LengthOfArrayLike(obj).
+    let len = match data
+        .properties
+        .get(&PropertyKey::String(agent.names.length))?
+    {
+        Property::Data {
+            value: Value::Number(n),
+            ..
+        } if *n >= 0.0 && *n <= u32::MAX as f64 && n.fract() == 0.0 => *n as u32,
+        _ => return None,
+    };
+    // 5-6. For each index < len, append ? Get(obj, ! ToString(𝔽(index))).
+    (0..len)
+        .map(|i| match data.properties.get(&PropertyKey::Index(i)) {
+            Some(Property::Data { value, .. }) => Some(*value),
+            _ => None,
+        })
+        .collect()
 }
 
 /// [[Call]] of `f` (§10.2.1) up to running its body, as an [`InlineCall`],
 /// when `f` is an ECMAScript function whose body runs to completion in one
-/// frame (not async, a generator or a class constructor); `None` for any
-/// other callee, which the caller calls the usual way.
+/// frame (not async, a generator or a class constructor), directly or
+/// through `begin_indirect_call`; `None` for any other callee, which the
+/// caller calls the usual way.
 pub(crate) fn begin_inline_call(
     agent: &mut Agent,
     f: Object,
@@ -516,7 +730,7 @@ pub(crate) fn begin_inline_call(
     args: &[Value],
 ) -> JsResult<Option<InlineCall>> {
     let ObjectKind::Function(e) = &agent.obj(f).kind else {
-        return Ok(None);
+        return begin_indirect_call(agent, f, this, args);
     };
     if e.is_class_constructor {
         return Ok(None);
@@ -539,15 +753,7 @@ pub(crate) fn begin_inline_call(
             return Err(e);
         }
     };
-    let private_env = ecma(agent, f).private_environment.clone();
-    let mut frame = match agent.spare_frames.pop() {
-        Some(mut frame) => {
-            frame.reinit(code.clone(), env, private_env, Some(f));
-            frame
-        }
-        None => Box::new(Frame::new(code.clone(), env, private_env, Some(f))),
-    };
-    init_locals(&mut frame);
+    let mut frame = inline_frame(agent, f, &code, env);
     frame.args.extend_from_slice(args);
     // 5. Perform OrdinaryCallBindThis(F, calleeContext, thisArgument).
     // (Then OrdinaryCallEvaluateBody's FunctionDeclarationInstantiation up
@@ -558,27 +764,36 @@ pub(crate) fn begin_inline_call(
         Ok(()) => Ok(Some(InlineCall {
             frame,
             code,
-            f,
+            construct: false,
             env,
         })),
         Err(e) => {
             // 7. Remove calleeContext from the execution context stack.
-            agent.contexts.pop();
-            if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
-                agent.free_env(env);
-            }
-            agent.call_depth -= 1;
+            abandon_inline_call(agent, f, env);
             Err(e)
         }
     }
 }
 
-/// Ends an [`InlineCall`] whose frame has returned or thrown: what
-/// `call_ecma_function` does after the body.
-pub(crate) fn finish_inline_call(agent: &mut Agent, call: InlineCall) {
+/// Ends an [`InlineCall`] whose frame has returned `value` (or thrown,
+/// for which the value is unused): what `call_ecma_function` and
+/// `construct_ecma_function` do after the body. The call's result.
+pub(crate) fn finish_inline_call(agent: &mut Agent, call: InlineCall, value: Value) -> Value {
     let InlineCall {
-        mut frame, f, env, ..
+        mut frame,
+        env,
+        construct,
+        ..
     } = call;
+    let f = frame.function.expect("function code");
+    // [[Construct]] 10. If result is a return completion, then
+    // a. If result.[[Value]] is an Object, return result.[[Value]].
+    // b. If kind is base, return thisArgument.
+    let value = match value {
+        Value::Object(_) => value,
+        _ if construct => frame.completion,
+        _ => value,
+    };
     if frame.code.envs_die_with_call {
         free_scopes_between(agent, frame.env, env);
     }
@@ -591,6 +806,7 @@ pub(crate) fn finish_inline_call(agent: &mut Agent, call: InlineCall) {
     if agent.spare_frames.len() < 256 && frame.empty_for_pool() {
         agent.spare_frames.push(frame);
     }
+    value
 }
 
 /// [[Construct]] of an ECMAScript function object (§10.2.2).

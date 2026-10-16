@@ -237,7 +237,8 @@ pub struct Frame {
     /// The function object, for function code.
     pub function: Option<Object>,
     pub args: Vec<Value>,
-    /// The completion value of script and eval code.
+    /// The completion value of script and eval code; for a [[Construct]]
+    /// run inline, its thisArgument (`call::InlineCall::construct`).
     pub completion: Value,
     pub pending: PendingBody,
     /// Where a return resumption of the current `yield` continues.
@@ -477,10 +478,10 @@ fn run_frames(agent: &mut Agent, root: &mut Frame) -> JsResult<FrameResult> {
                     return Ok(result);
                 };
                 agent.gc.frames.pop();
-                call::finish_inline_call(agent, c);
                 let FrameResult::Return(v) = result else {
                     unreachable!("only generator frames yield")
                 };
+                let v = call::finish_inline_call(agent, c, v);
                 // The caller's `Call` instruction completes with the value.
                 let caller = match calls.last_mut() {
                     Some(c) => &mut *c.frame,
@@ -498,7 +499,7 @@ fn run_frames(agent: &mut Agent, root: &mut Frame) -> JsResult<FrameResult> {
                         return Err(e);
                     };
                     agent.gc.frames.pop();
-                    call::finish_inline_call(agent, c);
+                    call::finish_inline_call(agent, c, Value::Undefined);
                     let caller = match calls.last_mut() {
                         Some(c) => &mut *c.frame,
                         None => &mut *root,
@@ -515,7 +516,8 @@ fn run_frames(agent: &mut Agent, root: &mut Frame) -> JsResult<FrameResult> {
     }
 }
 
-/// Op::Call of an ordinary ECMAScript function, begun as a call for
+/// Op::Call of an ordinary ECMAScript function (directly, or through a
+/// bound function, Function.prototype.call or .apply), begun as a call for
 /// `run_frame` to run: the callee and `this` are taken off the stack and
 /// the arguments copied into the callee's frame. `None` for other callees.
 #[inline]
@@ -530,6 +532,25 @@ fn begin_call_op(
     };
     let this = frame.stack[base + 1];
     let c = call::begin_inline_call(agent, f, this, &frame.stack[base + 2..])?;
+    if c.is_some() {
+        frame.stack.truncate(base);
+    }
+    Ok(c)
+}
+
+/// Op::New of an ECMAScript function of kind base, begun as a
+/// [[Construct]] for `run_frame` to run. `None` for other constructors.
+#[inline(never)]
+fn begin_new_op(
+    agent: &mut Agent,
+    frame: &mut Frame,
+    argc: u32,
+) -> JsResult<Option<call::InlineCall>> {
+    let base = frame.stack.len() - argc as usize - 1;
+    let Value::Object(f) = frame.stack[base] else {
+        return Ok(None);
+    };
+    let c = call::begin_inline_construct(agent, f, &frame.stack[base + 1..])?;
     if c.is_some() {
         frame.stack.truncate(base);
     }
@@ -580,7 +601,14 @@ fn run_frame_loop(
                 Err(e) => Err(e),
             },
             Op::CallSpread => call_spread_op(agent, frame).map(|()| Flow::Next),
-            Op::New(argc) => new_op(agent, frame, argc).map(|()| Flow::Next),
+            Op::New(argc) => match begin_new_op(agent, frame, argc) {
+                Ok(Some(c)) => {
+                    frame.pc = pc;
+                    return Ok(Exit::Call(c));
+                }
+                Ok(None) => new_op(agent, frame, argc).map(|()| Flow::Next),
+                Err(e) => Err(e),
+            },
             // (Here rather than in `execute`, which costs more to enter.)
             Op::Return => {
                 let v = frame.pop();
