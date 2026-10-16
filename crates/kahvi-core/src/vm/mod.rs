@@ -56,7 +56,7 @@ use crate::value::{JsString, Object, Value};
 #[derive(Debug)]
 pub struct ScriptRecord {
     pub realm: RealmId,
-    pub source: Arc<str>,
+    pub source: Arc<crate::source::SourceText>,
     /// The file name or URL the host gave, for error messages.
     pub name: String,
     /// The module this is the source of, for module code.

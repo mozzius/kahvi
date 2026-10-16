@@ -38,7 +38,7 @@ pub struct StackFrame {
 #[derive(Debug, Clone)]
 pub struct StackLocation {
     pub script: u32,
-    pub source: Arc<str>,
+    pub source: Arc<crate::source::SourceText>,
     pub offset: u32,
 }
 

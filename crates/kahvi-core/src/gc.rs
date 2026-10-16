@@ -842,7 +842,7 @@ impl Agent {
         for (i, r) in self.scripts.iter_mut().enumerate() {
             let i = i as u32;
             if r.collectable && !t.scripts.get(i) && !r.source.is_empty() {
-                r.source = Arc::from("");
+                r.source = crate::source::SourceText::new("");
                 freed.insert(i);
                 self.gc
                     .free_scripts
