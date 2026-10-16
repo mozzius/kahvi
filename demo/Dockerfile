@@ -20,15 +20,17 @@ RUN cargo build --release --locked -p kahvi-serve \
 
 FROM node:22-bookworm-slim AS packages
 WORKDIR /app
-COPY demo/app/package.json demo/app/package-lock.json ./
-RUN npm ci --omit=dev --no-audit --no-fund
+COPY demo/app/package.json demo/app/package-lock.json demo/app/build-satori.mjs ./
+# satori is bundled for kahvi (build-satori.mjs); Hono is used as installed.
+RUN npm ci --no-audit --no-fund && npm run build && npm prune --omit=dev
 
 FROM debian:bookworm-slim
 RUN useradd --system --no-create-home kahvi
 COPY --from=rust /src/demo/target/release/kahvi-serve /usr/local/bin/kahvi-serve
 WORKDIR /app
 COPY --from=packages /app/node_modules node_modules
-COPY demo/app/server.mjs demo/app/package.json ./
+COPY --from=packages /app/vendor vendor
+COPY demo/app/server.mjs demo/app/og.mjs demo/app/package.json ./
 COPY demo/app/public public
 COPY --from=rust /src/demo/kahvi.wasm.gz public/kahvi.wasm.gz
 COPY conformance/expected-pass.txt ./

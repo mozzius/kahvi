@@ -2,7 +2,15 @@
   "name": "kahvi-demo",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "node build-satori.mjs"
+  },
   "dependencies": {
+    "@fontsource/inter": "5.3.0",
     "hono": "4.10.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "satori": "0.0.44"
   }
 }

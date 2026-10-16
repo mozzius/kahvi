@@ -2,9 +2,10 @@
 //! running on kahvi.
 //!
 //! It is kahvi-run's host (console, timers, modules and packages from
-//! node_modules, process.env) plus `Headers`, `Request`, `Response` and
-//! `Kahvi.serve(handler)` / `Kahvi.readFile(path)` (web.js). The app module
-//! calls `Kahvi.serve` with a fetch handler, as a Hono app's `fetch` is.
+//! node_modules, process.env, Intl) plus `Headers`, `Request`, `Response`,
+//! `Kahvi.serve(handler)`, `Kahvi.readFile(path)` and `Kahvi.svgToPng(svg)`
+//! (web.js; the last is resvg, in Rust). The app module calls `Kahvi.serve`
+//! with a fetch handler, as a Hono app's `fetch` is.
 //!
 //! One thread, one request at a time: each connection carries one HTTP/1.1
 //! request (`Connection: close`). The handler's promise is driven by the
@@ -60,8 +61,9 @@ fn string_arg(agent: &mut Agent, args: &[Value], i: usize) -> JsResult<String> {
 
 impl Server {
     fn new() -> Server {
-        // As kahvi-run's Host::new.
-        let mut rt = Runtime::new();
+        // As kahvi-run's Host::new, with Intl on: satori segments text with
+        // Intl.Segmenter.
+        let mut rt = Runtime::with_intl(true);
         let agent = rt.agent();
         agent.host_now = Some(kahvi_runtime::now_ms);
         agent.host_load_module = Some(loader::load_module);
@@ -106,6 +108,13 @@ impl Server {
                 }
             }
         });
+        let svg_to_png = rt.function("svgToPng", 1, |agent, _, args| {
+            let svg = string_arg(agent, args, 0)?;
+            match svg_to_png(&svg) {
+                Ok(png) => new_buffer(agent, png),
+                Err(e) => Err(agent.throw_error(ErrorKind::Error, &format!("svgToPng: {e}"))),
+            }
+        });
         let install = rt
             .eval_script(include_str!("web.js"), "kahvi-serve:web.js")
             .expect("web.js evaluates");
@@ -119,6 +128,7 @@ impl Server {
                     Value::Object(register),
                     Value::Object(respond),
                     Value::Object(read_file),
+                    Value::Object(svg_to_png),
                 ],
             )
             .expect("web.js installs");
@@ -257,6 +267,22 @@ impl Server {
                 )
             })
     }
+}
+
+/// Rasterizes an SVG with resvg. Text must already be paths (as satori
+/// draws it): no fonts are loaded.
+fn svg_to_png(svg: &str) -> Result<Vec<u8>, String> {
+    let tree = resvg::usvg::Tree::from_str(svg, &resvg::usvg::Options::default())
+        .map_err(|e| e.to_string())?;
+    let size = tree.size().to_int_size();
+    let mut pixmap = resvg::tiny_skia::Pixmap::new(size.width(), size.height())
+        .ok_or("the image has no area")?;
+    resvg::render(
+        &tree,
+        resvg::tiny_skia::Transform::default(),
+        &mut pixmap.as_mut(),
+    );
+    pixmap.encode_png().map_err(|e| e.to_string())
 }
 
 struct Incoming {
