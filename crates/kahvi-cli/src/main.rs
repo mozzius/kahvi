@@ -18,7 +18,9 @@ unsafe extern "C" {
 
 // mimalloc keeps memory it frees for a second before returning it, and
 // commits its arenas eagerly: the parse and the collector free a great deal
-// of memory while an app starts, and kept, it doubled the resident size.
+// of memory while an app starts, and kept, it was a quarter of the resident
+// size. 10 ms (mimalloc 2's default) returns it as soon; purging on every
+// free (0) made code that regrows large strings a hundred times slower.
 // Set as the program loads, before anything allocates.
 #[used]
 #[cfg_attr(
@@ -35,7 +37,7 @@ extern "C" fn tune_allocator() {
     // mimalloc's `mi_option_e`: arena_eager_commit = 4, purge_delay = 15.
     unsafe {
         mi_option_set(4, 0);
-        mi_option_set(15, 0);
+        mi_option_set(15, 10);
     }
 }
 
