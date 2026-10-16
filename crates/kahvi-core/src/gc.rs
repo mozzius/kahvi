@@ -437,12 +437,6 @@ pub(crate) struct GcState {
 
 const MIN_THRESHOLD: usize = 200_000;
 
-/// The next collection comes after allocating this share of what the last
-/// one kept (as 1/N): half, so the heap peaks near 1.5x its live size
-/// rather than 2x. Freed cells are reused sooner and the allocator keeps
-/// fewer half-empty pages, for a few percent more time collecting.
-const GROWTH_DIVISOR: usize = 2;
-
 impl Default for GcState {
     fn default() -> GcState {
         GcState {
@@ -652,7 +646,7 @@ impl Agent {
         crate::object::weak::schedule_cleanups(self, &Liveness { tracer: &t });
         self.gc.collections += 1;
         self.gc.allocated = 0;
-        self.gc.threshold = MIN_THRESHOLD.max(live / GROWTH_DIVISOR);
+        self.gc.threshold = MIN_THRESHOLD.max(live);
     }
 
     fn trace_roots(&self, t: &mut Tracer) {
