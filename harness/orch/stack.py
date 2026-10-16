@@ -226,11 +226,19 @@ class Stacker:
 
     def push_next(self):
         # A layer whose PR was never opened (the process stopped, or GitHub
-        # refused it): its items are still queued, so drop it and recompose.
-        orphans = self.db.q("SELECT * FROM layers WHERE status = 'pending' AND pr IS NULL")
+        # refused it as empty): its items are still queued, so drop it and
+        # recompose. One whose head the trunk already has counts as merged,
+        # so the PR above it retargets past it.
+        orphans = self.db.q(f"SELECT * FROM layers WHERE status IN {LIVE} AND pr IS NULL")
+        if orphans:
+            trunk = self.trunk_branch()
+            run(["git", "fetch", "-q", self.cfg.remote, trunk], check=False)
         for layer in orphans:
-            self.db.q("UPDATE layers SET status = 'closed', updated = ? WHERE id = ?", time.time(), layer["id"])
-            log(f"stack: {layer['branch']} never got a PR; dropped, its items are stacked again")
+            merged = run(["git", "merge-base", "--is-ancestor", layer["head"], f"{self.cfg.remote}/{trunk}"],
+                         check=False).returncode == 0
+            status = "merged" if merged else "closed"
+            self.db.q("UPDATE layers SET status = ?, updated = ? WHERE id = ?", status, time.time(), layer["id"])
+            log(f"stack: {layer['branch']} never got a PR; {'already in ' + trunk if merged else 'dropped'}")
         if orphans:
             self.compose()
             return False
