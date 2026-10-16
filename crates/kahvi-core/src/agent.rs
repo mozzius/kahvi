@@ -167,6 +167,8 @@ pub struct Agent {
     pub(crate) spare_vecs: Vec<Vec<Value>>,
     /// Exception-handler lists kept for reuse, like `spare_vecs`.
     pub(crate) spare_handlers: Vec<Vec<crate::vm::Handler>>,
+    /// Frame-local lists kept for reuse, like `spare_vecs`.
+    pub(crate) spare_locals: Vec<Vec<Option<Value>>>,
     /// Collect at one safe point in `gc_stress` on average, regardless of
     /// heap growth (finds rooting bugs; set by the host, see
     /// [`Agent::gc_stress_from_env`]). 0 is off, 1 collects at every safe
@@ -275,6 +277,7 @@ impl Agent {
             gc: Default::default(),
             spare_vecs: Vec::new(),
             spare_handlers: Vec::new(),
+            spare_locals: Vec::new(),
             gc_stress: 0,
             intl: false,
             kept_objects: Vec::new(),
