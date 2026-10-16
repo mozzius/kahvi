@@ -89,3 +89,16 @@ override func createJSRuntimeFactory() -> JSRuntimeFactoryRef {
   jsrt_create_kahvi_factory()
 }
 ```
+
+Learned from Bluesky's app running in an iOS Release build (2026-10-16):
+
+- Don't set `USE_THIRD_PARTY_JSC=1` to turn Hermes off on RN 0.86: it makes
+  the pods depend on `React-jsc`. The pods (Expo's too) need the non-Hermes
+  compile flags instead, including `-DUSE_HERMES=0`.
+- Expo's "Eager bundle does not match new options" message does not mean
+  the engine changed. If `ios/Podfile.lock` still lists Hermes, the Release
+  bundle is Hermes bytecode, which kahvi rejects: regenerate the pods with
+  Hermes off.
+- Expo 57 apps also need a patch to `ExpoModulesJSI` 57.1.0 so its
+  standalone runtime helper makes kahvi runtimes, besides the worklets
+  patch above.

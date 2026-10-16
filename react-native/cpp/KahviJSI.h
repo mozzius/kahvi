@@ -1,6 +1,10 @@
 // A jsi::Runtime over kahvi's C ABI (crates/kahvi-ffi/include/kahvi.h).
 #pragma once
 
+// C++ only: Swift's module scan of the pod's public headers reads this
+// header as C and must not reach <memory> or jsi.
+#ifdef __cplusplus
+
 #include <memory>
 
 #include <jsi/jsi.h>
@@ -12,3 +16,5 @@ namespace kahvi {
 std::unique_ptr<facebook::jsi::Runtime> makeKahviRuntime();
 
 } // namespace kahvi
+
+#endif // __cplusplus

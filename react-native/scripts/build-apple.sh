@@ -4,6 +4,9 @@
 # with Xcode (`rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 # x86_64-apple-ios`).
 set -euo pipefail
+# The pod's minimum iOS version. Rust's default (iOS 10) links against
+# symbols such as ___chkstk_darwin that the app's newer target hides.
+export IPHONEOS_DEPLOYMENT_TARGET="${IPHONEOS_DEPLOYMENT_TARGET:-15.1}"
 pkg="$(cd "$(dirname "$0")/.." && pwd)"
 repo="$(cd "$pkg/.." && pwd)"
 mkdir -p "$pkg/include"
