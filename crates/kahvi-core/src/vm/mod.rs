@@ -287,6 +287,84 @@ impl Frame {
         }
     }
 
+    /// Makes a pooled frame (one `empty_for_pool` left) a new frame like
+    /// `Frame::new`, keeping its buffers' capacity.
+    #[inline]
+    pub(crate) fn reinit(
+        &mut self,
+        code: Arc<FunctionCode>,
+        env: EnvId,
+        private_env: Option<Arc<PrivateEnv>>,
+        function: Option<Object>,
+    ) {
+        // (Every field is named, so a new one cannot be missed here.)
+        let Frame {
+            code: c,
+            pc,
+            stack,
+            refs,
+            iters,
+            handlers,
+            env: e,
+            var_env,
+            private_env: p,
+            function: f,
+            args,
+            completion,
+            pending,
+            yield_return_pc,
+            delegating,
+            delegate_kind,
+            resume_pc,
+            annex_b,
+            locals,
+        } = self;
+        debug_assert!(
+            stack.is_empty()
+                && refs.is_empty()
+                && iters.is_empty()
+                && handlers.is_empty()
+                && args.is_empty()
+                && annex_b.is_empty()
+                && locals.is_empty()
+        );
+        *c = code;
+        *pc = 0;
+        *e = env;
+        *var_env = env;
+        *p = private_env;
+        *f = function;
+        *completion = Value::Undefined;
+        *pending = PendingBody::default();
+        *yield_return_pc = 0;
+        *delegating = false;
+        *delegate_kind = 0;
+        *resume_pc = None;
+    }
+
+    /// Empties the frame for the pool: it keeps no values (the collector
+    /// does not trace pooled frames) and buffers of reasonable size.
+    /// Returns false for a frame not worth keeping.
+    #[inline]
+    pub(crate) fn empty_for_pool(&mut self) -> bool {
+        self.stack.clear();
+        self.refs.clear();
+        self.iters.clear();
+        self.handlers.clear();
+        self.args.clear();
+        self.annex_b.clear();
+        self.locals.clear();
+        self.function = None;
+        self.private_env = None;
+        self.completion = Value::Undefined;
+        self.stack.capacity() <= 1024
+            && self.args.capacity() <= 1024
+            && self.locals.capacity() <= 1024
+            && self.refs.capacity() <= 64
+            && self.handlers.capacity() <= 64
+            && self.iters.capacity() <= 64
+    }
+
     #[inline]
     fn pop(&mut self) -> Value {
         self.stack.pop().expect("operand stack underflow")
