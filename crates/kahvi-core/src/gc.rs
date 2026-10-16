@@ -402,6 +402,13 @@ pub(crate) struct GcState {
 
 const MIN_THRESHOLD: usize = 200_000;
 
+/// How many allocations, per thing that survived the last collection,
+/// the next collection waits for. Each collection costs about as much as
+/// the heap it traces and sweeps, so this sets how much of that cost each
+/// allocation pays (1/GROWTH of a trace) against how far the heap grows
+/// past its live size (1+GROWTH times).
+const GROWTH: usize = 2;
+
 impl Default for GcState {
     fn default() -> GcState {
         GcState {
@@ -561,7 +568,7 @@ impl Agent {
         crate::object::weak::schedule_cleanups(self, &Liveness { tracer: &t });
         self.gc.collections += 1;
         self.gc.allocated = 0;
-        self.gc.threshold = MIN_THRESHOLD.max(live);
+        self.gc.threshold = MIN_THRESHOLD.max(live * GROWTH);
     }
 
     fn trace_roots(&self, t: &mut Tracer) {
