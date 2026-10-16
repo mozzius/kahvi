@@ -16,8 +16,73 @@ mod hermes_internal;
 // Parsing an app bundle and the heap allocate many small blocks; mimalloc
 // does that in a fraction of the platform allocator's time (Android's Scudo
 // especially).
+#[cfg(not(feature = "alloc-stats"))]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
+#[cfg(feature = "alloc-stats")]
+#[global_allocator]
+static GLOBAL: alloc_stats::Counting = alloc_stats::Counting;
+
+/// With the `alloc-stats` feature, mimalloc wrapped to count the bytes
+/// allocated and not yet freed, so that kahvi_heap_report can tell the
+/// allocator's overhead apart from what the engine holds.
+#[cfg(feature = "alloc-stats")]
+mod alloc_stats {
+    use std::alloc::{GlobalAlloc, Layout};
+    use std::sync::atomic::{AtomicIsize, Ordering};
+
+    pub static LIVE: AtomicIsize = AtomicIsize::new(0);
+
+    pub struct Counting;
+
+    unsafe impl GlobalAlloc for Counting {
+        unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+            let p = unsafe { mimalloc::MiMalloc.alloc(layout) };
+            if !p.is_null() {
+                LIVE.fetch_add(layout.size() as isize, Ordering::Relaxed);
+            }
+            p
+        }
+        unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
+            let p = unsafe { mimalloc::MiMalloc.alloc_zeroed(layout) };
+            if !p.is_null() {
+                LIVE.fetch_add(layout.size() as isize, Ordering::Relaxed);
+            }
+            p
+        }
+        unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+            unsafe { mimalloc::MiMalloc.dealloc(ptr, layout) };
+            LIVE.fetch_sub(layout.size() as isize, Ordering::Relaxed);
+        }
+        unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+            let p = unsafe { mimalloc::MiMalloc.realloc(ptr, layout, new_size) };
+            if !p.is_null() {
+                LIVE.fetch_add(
+                    new_size as isize - layout.size() as isize,
+                    Ordering::Relaxed,
+                );
+            }
+            p
+        }
+    }
+}
+
+/// The bytes Rust code holds allocated, when counted (`alloc-stats`).
+fn allocated_bytes() -> Option<usize> {
+    #[cfg(feature = "alloc-stats")]
+    {
+        Some(
+            alloc_stats::LIVE
+                .load(std::sync::atomic::Ordering::Relaxed)
+                .max(0) as usize,
+        )
+    }
+    #[cfg(not(feature = "alloc-stats"))]
+    {
+        None
+    }
+}
 
 unsafe extern "C" {
     fn mi_option_set(option: std::ffi::c_int, value: std::ffi::c_long);
@@ -484,7 +549,7 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
     let mb = |b: usize| b as f64 / (1 << 20) as f64;
     let line = format!(
         "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB | \
-         sources {:.1} MB | code {} fns {:.1} MB | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
+         sources {:.1} MB | code {} fns {:.1} MB | allocated {} | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
         h.collections,
         h.objects_live,
         h.object_slots,
@@ -499,6 +564,7 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
         mb(h.source_bytes),
         h.code_functions,
         mb(h.code_bytes),
+        allocated_bytes().map_or("not counted".to_string(), |b| format!("{:.1} MB", mb(b))),
         mb(v[3]),
         mb(v[4]),
         mb(v[5]),
