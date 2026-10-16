@@ -29,12 +29,14 @@ impl std::fmt::Debug for RegExpData {
 /// The most patterns `compile_cached` keeps.
 const COMPILED_CACHE: usize = 512;
 
+/// Compiled patterns by pattern text and flags.
+type CompiledCache =
+    std::collections::HashMap<(Box<[u16]>, u8), std::sync::Arc<kahvi_regexp::Regex>>;
+
 thread_local! {
-    /// Compiled patterns by pattern text and flags: a pattern and its flags
-    /// always compile to the same matcher, which nothing changes after.
-    static COMPILED: std::cell::RefCell<
-        std::collections::HashMap<(Box<[u16]>, u8), std::sync::Arc<kahvi_regexp::Regex>>,
-    > = Default::default();
+    /// A pattern and its flags always compile to the same matcher, which
+    /// nothing changes after.
+    static COMPILED: std::cell::RefCell<CompiledCache> = Default::default();
 }
 
 /// `kahvi_regexp::compile`, reusing the matcher of an earlier compilation
