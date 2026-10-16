@@ -358,6 +358,29 @@ pub(crate) struct FramePtr(pub(crate) *const Frame);
 unsafe impl Send for FramePtr {}
 
 /// Collector state kept on the agent.
+/// A census of an agent's heap ([`Agent::heap_stats`]). Byte counts are of
+/// the engine's own tables, not of what the allocator keeps around them.
+#[derive(Debug, Default, Clone, Copy)]
+pub struct HeapStats {
+    pub collections: u64,
+    pub object_slots: usize,
+    pub objects_live: usize,
+    /// The object table's allocation, slots in use or not.
+    pub object_slot_bytes: usize,
+    /// Property storage of the live objects, outside their slots.
+    pub property_bytes: usize,
+    pub string_slots: usize,
+    pub strings_live: usize,
+    /// The live strings' UTF-16 contents.
+    pub string_bytes: usize,
+    pub env_slots: usize,
+    pub envs_live: usize,
+    pub env_slot_bytes: usize,
+    /// The source texts of the loaded scripts and modules (each counted
+    /// once, though another runtime may share it).
+    pub source_bytes: usize,
+}
+
 pub(crate) struct GcState {
     pub(crate) free_objects: Vec<u32>,
     pub(crate) free_strings: Vec<u32>,
@@ -543,6 +566,45 @@ impl Agent {
         if self.gc.holds == 0 {
             self.collect_garbage();
         }
+    }
+
+    /// What the heap holds now, live and free (a walk of the whole heap;
+    /// for hosts measuring memory).
+    pub fn heap_stats(&self) -> HeapStats {
+        use std::mem::size_of;
+        let mut h = HeapStats {
+            collections: self.gc.collections,
+            object_slots: self.objects.len(),
+            object_slot_bytes: self.objects.capacity() * size_of::<crate::object::ObjectData>(),
+            string_slots: self.strings.len(),
+            env_slots: self.envs.len(),
+            env_slot_bytes: self.envs.capacity() * size_of::<crate::env::Environment>(),
+            ..HeapStats::default()
+        };
+        for (i, o) in self.objects.iter().enumerate() {
+            if !self.gc.is_free_object.get(i as u32) {
+                h.objects_live += 1;
+                h.property_bytes += o.properties.heap_bytes();
+            }
+        }
+        for (i, s) in self.strings.iter().enumerate() {
+            if !self.gc.is_free_string.get(i as u32) {
+                h.strings_live += 1;
+                h.string_bytes += s.len() * 2;
+            }
+        }
+        h.envs_live = (0..self.envs.len() as u32)
+            .filter(|&i| !self.gc.is_free_env.get(i))
+            .count();
+        let mut sources: Vec<*const u8> = Vec::new();
+        for s in &self.scripts {
+            let p = s.source.as_ptr();
+            if !sources.contains(&p) {
+                sources.push(p);
+                h.source_bytes += s.source.len();
+            }
+        }
+        h
     }
 
     /// How many collections have run.
