@@ -46,7 +46,7 @@ use crate::compiler::{BinOp, CodeKind, ErrorType, FunctionCode, LocalKind, Op};
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
-use crate::object::{ObjectKind, PropertyKey};
+use crate::object::{ObjectKind, Property, PropertyKey};
 use crate::ops::dispose::{DisposeKind, DisposeResources, DisposeStep};
 use crate::ops::{self, IteratorRecord};
 use crate::realm::RealmId;
@@ -287,6 +287,7 @@ impl Frame {
         }
     }
 
+    #[inline]
     fn pop(&mut self) -> Value {
         self.stack.pop().expect("operand stack underflow")
     }
@@ -539,6 +540,80 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             };
             *frame.stack.last_mut().expect("checked") = f;
             frame.stack.push(Value::Object(o));
+        }
+        // CreateDataPropertyOrThrow on an object literal's ordinary object
+        // that lacks the key: ValidateAndApplyPropertyDescriptor creates
+        // the data property.
+        Op::DefineField(key) => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&v)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            let obj = agent.obj_mut(o);
+            if !matches!(obj.kind, ObjectKind::Ordinary)
+                || !obj.extensible
+                || obj.properties.get(&key).is_some()
+            {
+                return false;
+            }
+            obj.properties.insert(
+                key,
+                Property::Data {
+                    value: v,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true,
+                },
+            );
+            frame.stack.pop();
+        }
+        // PutValue to an ordinary object's own writable data property:
+        // OrdinarySet's [[DefineOwnProperty]] of { [[Value]]: V } on the
+        // object itself only changes the value.
+        Op::SetProp(key) => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&v)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            let obj = agent.obj_mut(o);
+            if !matches!(obj.kind, ObjectKind::Ordinary) {
+                return false;
+            }
+            let Some(Property::Data {
+                value,
+                writable: true,
+                ..
+            }) = obj.properties.get_mut(&key)
+            else {
+                return false;
+            };
+            *value = v;
+            frame.stack.truncate(n - 2);
+            frame.stack.push(v);
+        }
+        // (ToPropertyKey of a primitive runs no user code.)
+        Op::GetElem => {
+            let n = frame.stack.len();
+            let (Some(&Value::Object(o)), Some(&key)) =
+                (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
+            else {
+                return false;
+            };
+            if !matches!(key, Value::Number(_) | Value::String(_) | Value::Symbol(_)) {
+                return false;
+            }
+            let Ok(key) = ops::to_property_key(agent, key) else {
+                return false;
+            };
+            let Some(v) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            frame.stack.truncate(n - 2);
+            frame.stack.push(v);
         }
         Op::Undefined => frame.stack.push(Value::Undefined),
         Op::Null => frame.stack.push(Value::Null),
