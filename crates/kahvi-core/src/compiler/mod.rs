@@ -542,7 +542,10 @@ pub fn compile_eval(
         let mut c = Compiler::new(agent, CodeKind::Eval, source, script_id, script.span);
         c.code.strict = script.strict;
         c.completion = true;
-        c.compile_toplevel(&script.body);
+        // A direct eval runs in environments that another eval can give
+        // new var bindings, so the functions it creates get no binding
+        // caches (`name_cache`) either.
+        c.dynamic_scope(|c| c.compile_toplevel(&script.body));
         c.finish()
     })
 }
