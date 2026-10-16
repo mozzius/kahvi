@@ -52,13 +52,23 @@ pub enum Property {
         enumerable: bool,
         configurable: bool,
     },
-    /// `get`/`set` are undefined or a function object.
+    /// `get`/`set`: a function object, or `None` for undefined (8 bytes
+    /// each rather than a Value's 16, which keeps every property small).
     Accessor {
-        get: Value,
-        set: Value,
+        get: Option<Object>,
+        set: Option<Object>,
         enumerable: bool,
         configurable: bool,
     },
+}
+
+/// An accessor property's [[Get]] or [[Set]] from a descriptor's field
+/// value: a function object, or undefined (`None`).
+pub fn accessor_function(v: Option<Value>) -> Option<Object> {
+    match v {
+        Some(Value::Object(o)) => Some(o),
+        _ => None,
+    }
 }
 
 impl Property {
@@ -97,8 +107,8 @@ impl Property {
                 enumerable,
                 configurable,
             } => PropertyDescriptor {
-                get: Some(get),
-                set: Some(set),
+                get: Some(get.map_or(Value::Undefined, Value::Object)),
+                set: Some(set.map_or(Value::Undefined, Value::Object)),
                 enumerable: Some(enumerable),
                 configurable: Some(configurable),
                 ..Default::default()
@@ -543,8 +553,8 @@ impl Trace for Property {
         match self {
             Property::Data { value, .. } => t.value(*value),
             Property::Accessor { get, set, .. } => {
-                t.value(*get);
-                t.value(*set);
+                get.trace(t);
+                set.trace(t);
             }
         }
     }
@@ -620,3 +630,5 @@ impl ObjectData {
 
 // Every object is a slot of this size in the heap, live or not.
 const _: () = assert!(std::mem::size_of::<ObjectData>() <= 120);
+// Every property (and array element) is one of these.
+const _: () = assert!(std::mem::size_of::<Property>() <= 24);

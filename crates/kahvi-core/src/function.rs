@@ -807,8 +807,8 @@ pub fn create_unmapped_arguments_object(agent: &mut Agent, args: &[Value]) -> Js
     agent.obj_mut(obj).properties.insert(
         callee_key,
         Property::Accessor {
-            get: Value::Object(thrower),
-            set: Value::Object(thrower),
+            get: Some(thrower),
+            set: Some(thrower),
             enumerable: false,
             configurable: false,
         },

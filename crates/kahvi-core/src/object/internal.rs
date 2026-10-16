@@ -190,8 +190,8 @@ impl Object {
                 Some(Property::Data { value, .. }) => return Ok(*value),
                 Some(&Property::Accessor { get, .. }) => {
                     return match get {
-                        Value::Object(_) => ops::call(agent, get, receiver, &[]),
-                        _ => Ok(Value::Undefined),
+                        Some(g) => ops::call(agent, Value::Object(g), receiver, &[]),
+                        None => Ok(Value::Undefined),
                     };
                 }
                 None => match obj.prototype {
@@ -454,8 +454,8 @@ pub fn validate_and_apply_property_descriptor(
         //    with absent fields defaulting to undefined / false.
         let prop = if desc.is_accessor_descriptor() {
             Property::Accessor {
-                get: desc.get.unwrap_or(Value::Undefined),
-                set: desc.set.unwrap_or(Value::Undefined),
+                get: super::accessor_function(desc.get),
+                set: super::accessor_function(desc.set),
                 enumerable: desc.enumerable.unwrap_or(false),
                 configurable: desc.configurable.unwrap_or(false),
             }
@@ -536,8 +536,8 @@ pub fn validate_and_apply_property_descriptor(
             // a. If IsDataDescriptor(current) is true and IsAccessorDescriptor(Desc) is true, then
             //    replace with an accessor property, keeping configurable/enumerable unless given.
             Property::Accessor {
-                get: desc.get.unwrap_or(Value::Undefined),
-                set: desc.set.unwrap_or(Value::Undefined),
+                get: super::accessor_function(desc.get),
+                set: super::accessor_function(desc.set),
                 enumerable,
                 configurable,
             }
@@ -553,8 +553,8 @@ pub fn validate_and_apply_property_descriptor(
         } else if current.is_accessor_descriptor() {
             // c. Else, for each field of Desc, set the corresponding attribute.
             Property::Accessor {
-                get: desc.get.or(current.get).unwrap_or(Value::Undefined),
-                set: desc.set.or(current.set).unwrap_or(Value::Undefined),
+                get: super::accessor_function(desc.get.or(current.get)),
+                set: super::accessor_function(desc.set.or(current.set)),
                 enumerable,
                 configurable,
             }

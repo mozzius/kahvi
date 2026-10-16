@@ -161,8 +161,8 @@ fn add_legacy_caller(agent: &mut Agent, f: Object) {
     agent.obj_mut(f).properties.insert(
         key,
         Property::Accessor {
-            get: Value::Object(getter),
-            set: Value::Undefined,
+            get: Some(getter),
+            set: None,
             enumerable: false,
             configurable: false,
         },
