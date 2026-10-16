@@ -186,7 +186,7 @@ pub fn perform_eval(
                 opts.allow_super_property = e.home_object.is_some();
                 opts.allow_super_call =
                     e.constructor_kind == crate::function::ConstructorKind::Derived;
-                opts.in_class_field_init = e.class_field_initializer_name.is_some();
+                opts.in_class_field_init = e.class_field_initializer_name().is_some();
                 opts.allow_arguments = !opts.in_class_field_init;
             }
         }
