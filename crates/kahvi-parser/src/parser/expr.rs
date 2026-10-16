@@ -157,9 +157,10 @@ impl Parser<'_> {
             let tok = self.next()?;
             // ArrowParameters : BindingIdentifier
             self.check_identifier(&tok.ident, tok.start, false)?;
+            let span = tok.span();
             let param = Ident {
-                name: tok.ident.clone(),
-                span: tok.span(),
+                name: tok.ident,
+                span,
             };
             return self.parse_arrow_from_params(
                 start,
@@ -619,7 +620,8 @@ impl Parser<'_> {
         match self.tok.kind {
             Tok::Ident => {
                 let t = self.next()?;
-                Ok(MemberProp::Ident(t.ident.clone(), t.span()))
+                let span = t.span();
+                Ok(MemberProp::Ident(t.ident, span))
             }
             Tok::PrivateName => {
                 let t = self.next()?;
@@ -719,7 +721,8 @@ impl Parser<'_> {
                     match self.tok.kind {
                         Tok::Ident => {
                             let t = self.next()?;
-                            MemberProp::Ident(t.ident.clone(), t.span())
+                            let span = t.span();
+                            MemberProp::Ident(t.ident, span)
                         }
                         _ => return self.unexpected(),
                     }
@@ -1072,7 +1075,7 @@ impl Parser<'_> {
         if accessor.is_none() && self.eat(P::Star)? {
             is_generator = true;
         }
-        let key_tok = self.tok.clone();
+        let key_escaped = self.tok.escaped;
         let key = self.parse_property_key()?;
         if let PropKey::Private(_, span) = &key {
             return self.err(
@@ -1104,7 +1107,7 @@ impl Parser<'_> {
         let PropKey::Ident(name, span) = key else {
             return self.unexpected();
         };
-        if key_tok.escaped
+        if key_escaped
             && crate::RESERVED_WORDS.contains(&name.as_str())
             && !matches!(name.as_str(), "yield" | "await")
         {

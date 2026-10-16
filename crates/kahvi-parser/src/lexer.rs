@@ -256,7 +256,25 @@ impl<'a> Lexer<'a> {
             self.skip_line();
         }
         let at_start = self.pos == 0;
-        while let Some(c) = self.peek_char() {
+        let bytes = self.src.as_bytes();
+        loop {
+            // ASCII fast path: spaces, tabs and newlines, and the end of
+            // trivia at any ASCII byte that cannot start a comment.
+            match bytes.get(self.pos) {
+                Some(b' ' | b'\t') => {
+                    self.pos += 1;
+                    continue;
+                }
+                Some(b'\n' | b'\r') => {
+                    self.pos += 1;
+                    nl = true;
+                    continue;
+                }
+                Some(&b) if b < 0x80 && !matches!(b, b'/' | b'<' | b'-' | 0x0B | 0x0C) => break,
+                None => break,
+                _ => {}
+            }
+            let Some(c) = self.peek_char() else { break };
             if is_whitespace(c) {
                 self.bump();
             } else if is_line_terminator(c) {
@@ -415,6 +433,24 @@ impl<'a> Lexer<'a> {
             return Ok(QDot);
         }
         let first = self.src.as_bytes().get(self.pos).copied();
+        // Single-character punctuators no longer one can start with.
+        let single = match first {
+            Some(b'{') => Some(LBrace),
+            Some(b'}') => Some(RBrace),
+            Some(b'(') => Some(LParen),
+            Some(b')') => Some(RParen),
+            Some(b'[') => Some(LBracket),
+            Some(b']') => Some(RBracket),
+            Some(b';') => Some(Semi),
+            Some(b',') => Some(Comma),
+            Some(b'~') => Some(Tilde),
+            Some(b':') => Some(Colon),
+            _ => None,
+        };
+        if let Some(p) = single {
+            self.pos += 1;
+            return Ok(p);
+        }
         for &(s, p) in TABLE {
             if Some(s.as_bytes()[0]) == first && self.starts_with(s) {
                 self.pos += s.len();
@@ -427,9 +463,24 @@ impl<'a> Lexer<'a> {
 
     /// IdentifierName, decoding `\u` escapes. Returns (name, contained an escape).
     fn lex_identifier_name(&mut self) -> LexResult<(String, bool)> {
-        let mut name = String::new();
+        // ASCII fast path: the leading run of [A-Za-z0-9_$] is copied at once
+        // (the caller has checked the first character starts an identifier).
+        let bytes = self.src.as_bytes();
+        let begin = self.pos;
+        let mut end = begin;
+        while end < bytes.len()
+            && (bytes[end].is_ascii_alphanumeric() || bytes[end] == b'_' || bytes[end] == b'$')
+        {
+            end += 1;
+        }
+        let mut name = String::with_capacity(end - begin);
+        name.push_str(&self.src[begin..end]);
+        self.pos = end;
+        if bytes.get(end).is_none_or(|&b| b < 0x80 && b != b'\\') {
+            return Ok((name, false));
+        }
         let mut escaped = false;
-        let mut first = true;
+        let mut first = begin == end;
         while let Some(c) = self.peek_char() {
             let c = if c == '\\' {
                 let at = self.pos;
@@ -652,7 +703,19 @@ impl<'a> Lexer<'a> {
         let mut tok = Token::new(Tok::String, start);
         self.bump();
         let mut buf: Utf16 = Vec::new();
+        let bytes = self.src.as_bytes();
+        let q = quote as u8;
         loop {
+            // ASCII fast path: bytes other than the quote, `\\` and newlines
+            // are code units of the value.
+            let run = self.pos;
+            while let Some(&b) = bytes.get(self.pos) {
+                if b >= 0x80 || b == q || b == b'\\' || b == b'\n' || b == b'\r' {
+                    break;
+                }
+                self.pos += 1;
+            }
+            buf.extend(bytes[run..self.pos].iter().map(|&b| b as u16));
             let Some(c) = self.bump() else {
                 return self.err_at("unterminated string literal", start);
             };
