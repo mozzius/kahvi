@@ -178,17 +178,24 @@ impl PropertyDescriptor {
 /// object.
 #[derive(Debug, Default, Clone)]
 pub struct PropertyMap {
-    elements: Vec<Option<Property>>,
+    elements: Option<Box<Elements>>,
     entries: Vec<Option<(PropertyKey, Property)>>,
     /// Key to position in `entries`; `None` while `entries` has at most
     /// [`SMALL_MAP`] slots. (Boxed, like the other rarely used parts, to
     /// keep every object small.)
     index: Option<Box<crate::hash::FxHashMap<PropertyKey, u32>>>,
-    /// How many of `elements` are present.
-    element_count: u32,
     removed: u32,
     /// How many index keys are in the map rather than in `elements`.
     sparse_indices: u32,
+}
+
+/// The dense elements of a map that has any (boxed, as most objects have
+/// none).
+#[derive(Debug, Default, Clone)]
+struct Elements {
+    items: Vec<Option<Property>>,
+    /// How many of `items` are present.
+    count: u32,
 }
 
 /// How far past the end of the dense elements a new index may land and
@@ -213,16 +220,26 @@ impl PropertyMap {
         }
     }
 
+    fn dense(&self) -> &[Option<Property>] {
+        self.elements.as_deref().map_or(&[], |e| &e.items)
+    }
+
+    fn dense_mut(&mut self) -> &mut [Option<Property>] {
+        self.elements
+            .as_deref_mut()
+            .map_or(&mut [], |e| &mut e.items)
+    }
+
     fn dense_slot(&self, key: &PropertyKey) -> Option<usize> {
         match key {
-            PropertyKey::Index(i) if (*i as usize) < self.elements.len() => Some(*i as usize),
+            PropertyKey::Index(i) if (*i as usize) < self.dense().len() => Some(*i as usize),
             _ => None,
         }
     }
 
     pub fn get(&self, key: &PropertyKey) -> Option<&Property> {
         if let Some(i) = self.dense_slot(key) {
-            return self.elements[i].as_ref();
+            return self.dense()[i].as_ref();
         }
         self.find(key)
             .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
@@ -249,7 +266,7 @@ impl PropertyMap {
     #[inline]
     pub(crate) fn get_hinted(&self, key: &PropertyKey, hint: &AtomicU32) -> Option<&Property> {
         if let Some(i) = self.dense_slot(key) {
-            return self.elements[i].as_ref();
+            return self.dense()[i].as_ref();
         }
         self.find_hinted(key, hint)
             .and_then(|i| self.entries[i].as_ref().map(|(_, p)| p))
@@ -263,7 +280,7 @@ impl PropertyMap {
         hint: &AtomicU32,
     ) -> Option<&mut Property> {
         if let Some(i) = self.dense_slot(key) {
-            return self.elements[i].as_mut();
+            return self.dense_mut()[i].as_mut();
         }
         let i = self.find_hinted(key, hint)?;
         self.entries[i].as_mut().map(|(_, p)| p)
@@ -271,7 +288,7 @@ impl PropertyMap {
 
     pub fn get_mut(&mut self, key: &PropertyKey) -> Option<&mut Property> {
         if let Some(i) = self.dense_slot(key) {
-            return self.elements[i].as_mut();
+            return self.dense_mut()[i].as_mut();
         }
         let i = self.find(key)?;
         self.entries[i].as_mut().map(|(_, p)| p)
@@ -279,7 +296,7 @@ impl PropertyMap {
 
     pub fn contains(&self, key: &PropertyKey) -> bool {
         if let Some(i) = self.dense_slot(key) {
-            return self.elements[i].is_some();
+            return self.dense()[i].is_some();
         }
         self.find(key).is_some()
     }
@@ -288,17 +305,19 @@ impl PropertyMap {
     pub fn insert(&mut self, key: PropertyKey, prop: Property) {
         if let PropertyKey::Index(i) = key {
             let i = i as usize;
-            if i < self.elements.len() {
-                if self.elements[i].is_none() {
-                    self.element_count += 1;
+            if i < self.dense().len() {
+                let e = self.elements.as_mut().expect("a dense index");
+                if e.items[i].is_none() {
+                    e.count += 1;
                 }
-                self.elements[i] = Some(prop);
+                e.items[i] = Some(prop);
                 return;
             }
-            if i <= self.elements.len() + DENSE_GAP && self.find(&key).is_none() {
+            if i <= self.dense().len() + DENSE_GAP && self.find(&key).is_none() {
                 self.grow_elements(i + 1);
-                self.elements[i] = Some(prop);
-                self.element_count += 1;
+                let e = self.elements.as_mut().expect("grown elements");
+                e.items[i] = Some(prop);
+                e.count += 1;
                 return;
             }
         }
@@ -327,13 +346,15 @@ impl PropertyMap {
     /// Extends the dense elements to `len`, moving any map entries for the
     /// newly covered indices into them.
     fn grow_elements(&mut self, len: usize) {
-        let old = self.elements.len();
-        self.elements.resize(len, None);
+        let e = self.elements.get_or_insert_with(Default::default);
+        let old = e.items.len();
+        e.items.resize(len, None);
         if self.sparse_indices > 0 {
             for i in old..len {
                 if let Some(p) = self.remove_from_map(&PropertyKey::Index(i as u32)) {
-                    self.elements[i] = Some(p);
-                    self.element_count += 1;
+                    let e = self.elements.as_mut().expect("grown elements");
+                    e.items[i] = Some(p);
+                    e.count += 1;
                 }
             }
         }
@@ -341,12 +362,16 @@ impl PropertyMap {
 
     pub fn remove(&mut self, key: &PropertyKey) -> Option<Property> {
         if let Some(i) = self.dense_slot(key) {
-            let old = self.elements[i].take();
+            let e = self.elements.as_mut().expect("a dense index");
+            let old = e.items[i].take();
             if old.is_some() {
-                self.element_count -= 1;
+                e.count -= 1;
             }
-            while matches!(self.elements.last(), Some(None)) {
-                self.elements.pop();
+            while matches!(e.items.last(), Some(None)) {
+                e.items.pop();
+            }
+            if e.items.is_empty() {
+                self.elements = None;
             }
             return old;
         }
@@ -393,7 +418,8 @@ impl PropertyMap {
     }
 
     pub fn len(&self) -> usize {
-        self.element_count as usize + self.entries.len() - self.removed as usize
+        self.elements.as_ref().map_or(0, |e| e.count as usize) + self.entries.len()
+            - self.removed as usize
     }
 
     pub fn is_empty(&self) -> bool {
@@ -405,7 +431,7 @@ impl PropertyMap {
     pub fn keys_in_spec_order(&self) -> Vec<PropertyKey> {
         let mut keys: Vec<PropertyKey> = Vec::with_capacity(self.len());
         keys.extend(
-            self.elements
+            self.dense()
                 .iter()
                 .enumerate()
                 .filter(|(_, p)| p.is_some())
@@ -438,11 +464,12 @@ impl PropertyMap {
             .filter(|&i| i >= from)
             .collect();
         v.sort_unstable_by(|a, b| b.cmp(a));
-        let dense_from = (from as usize).min(self.elements.len());
+        let dense = self.dense();
+        let dense_from = (from as usize).min(dense.len());
         v.extend(
-            (dense_from..self.elements.len())
+            (dense_from..dense.len())
                 .rev()
-                .filter(|&i| self.elements[i].is_some())
+                .filter(|&i| dense[i].is_some())
                 .map(|i| i as u32),
         );
         v
@@ -562,7 +589,7 @@ impl Trace for Property {
 
 impl Trace for PropertyMap {
     fn trace(&self, t: &mut Tracer) {
-        for p in self.elements.iter().flatten() {
+        for p in self.dense().iter().flatten() {
             p.trace(t);
         }
         for (k, p) in self.entries.iter().flatten() {
@@ -629,6 +656,6 @@ impl ObjectData {
 }
 
 // Every object is a slot of this size in the heap, live or not.
-const _: () = assert!(std::mem::size_of::<ObjectData>() <= 120);
+const _: () = assert!(std::mem::size_of::<ObjectData>() <= 96);
 // Every property (and array element) is one of these.
 const _: () = assert!(std::mem::size_of::<Property>() <= 24);

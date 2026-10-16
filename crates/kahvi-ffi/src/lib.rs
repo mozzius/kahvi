@@ -19,6 +19,34 @@ mod hermes_internal;
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+unsafe extern "C" {
+    fn mi_option_set(option: std::ffi::c_int, value: std::ffi::c_long);
+}
+
+// mimalloc keeps memory it frees for a second before returning it, and
+// commits its arenas eagerly: the parse and the collector free a great deal
+// of memory while an app starts, and kept, it doubled the resident size.
+// Set as the library loads, before anything allocates, and again by the
+// first calls in case the linker left the loader entry out.
+#[used]
+#[cfg_attr(
+    any(target_os = "linux", target_os = "android"),
+    unsafe(link_section = ".init_array")
+)]
+#[cfg_attr(
+    target_vendor = "apple",
+    unsafe(link_section = "__DATA,__mod_init_func")
+)]
+static TUNE_ALLOCATOR: extern "C" fn() = tune_allocator;
+
+extern "C" fn tune_allocator() {
+    // mimalloc's `mi_option_e`: arena_eager_commit = 4, purge_delay = 15.
+    unsafe {
+        mi_option_set(4, 0);
+        mi_option_set(15, 0);
+    }
+}
+
 use std::cell::{Cell, RefCell};
 use std::ffi::c_void;
 use std::sync::atomic::{AtomicPtr, Ordering};
@@ -251,6 +279,7 @@ unsafe fn enter_callback<T>(
 
 #[unsafe(no_mangle)]
 pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
+    tune_allocator();
     // Hermes has Intl, and React Native apps (Bluesky's, for one) use it
     // without feature-testing it.
     let mut runtime = Box::new(Runtime::with_intl(true));
@@ -301,6 +330,7 @@ pub extern "C" fn kahvi_set_thread_wrapper(wrap: Option<KahviThreadWrapper>) {
 /// `path` points to `len` readable bytes.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_set_code_cache_dir(path: *const u8, len: usize) -> bool {
+    tune_allocator();
     let bytes = unsafe { std::slice::from_raw_parts(path, len) };
     let Ok(dir) = std::str::from_utf8(bytes) else {
         return false;
