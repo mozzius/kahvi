@@ -4,6 +4,8 @@
 # with Xcode (`rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 # x86_64-apple-ios`).
 set -euo pipefail
+# Rust defaults its iOS linker target to 10.0, where __chkstk_darwin is hidden.
+export IPHONEOS_DEPLOYMENT_TARGET="${IPHONEOS_DEPLOYMENT_TARGET:-15.1}"
 pkg="$(cd "$(dirname "$0")/.." && pwd)"
 repo="$(cd "$pkg/.." && pwd)"
 mkdir -p "$pkg/include"

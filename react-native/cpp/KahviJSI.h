@@ -1,6 +1,7 @@
 // A jsi::Runtime over kahvi's C ABI (crates/kahvi-ffi/include/kahvi.h).
 #pragma once
 
+#ifdef __cplusplus
 #include <memory>
 
 #include <jsi/jsi.h>
@@ -12,3 +13,4 @@ namespace kahvi {
 std::unique_ptr<facebook::jsi::Runtime> makeKahviRuntime();
 
 } // namespace kahvi
+#endif
