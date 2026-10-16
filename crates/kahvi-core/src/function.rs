@@ -518,6 +518,15 @@ impl Object {
                 r
             }
             ObjectKind::Function(_) => crate::vm::call_ecma_function(agent, self, this, args),
+            _ => self.call_exotic(agent, this, args),
+        }
+    }
+
+    /// [[Call]] of a bound function or proxy, kept out of `call_inner` so
+    /// its locals take no native stack in every JavaScript call.
+    #[inline(never)]
+    fn call_exotic(self, agent: &mut Agent, this: Value, args: &[Value]) -> JsResult<Value> {
+        match &agent.obj(self).kind {
             ObjectKind::BoundFunction(b) => {
                 // §10.4.1.1: Call(target, boundThis, boundArgs ++ args)
                 let (target, bound_this) = (b.target, b.bound_this);
@@ -553,8 +562,12 @@ impl Object {
         args: &[Value],
         new_target: Object,
     ) -> JsResult<Object> {
-        enter_call(agent)?;
-        let result = self.construct_inner(agent, args, new_target);
+        let result = match enter_call_or_switch(agent, true)? {
+            CallStack::Here => self.construct_inner(agent, args, new_target),
+            CallStack::Switch => {
+                on_large_stack(agent, |agent| self.construct_inner(agent, args, new_target))
+            }
+        };
         agent.call_depth -= 1;
         result
     }

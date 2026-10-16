@@ -255,6 +255,7 @@ fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value
 /// Compiles the lazy function `f` on its first call (`FunctionCode::lazy`):
 /// reparses it from its script's source, keeps the code for every closure
 /// made from the same function, and gives it to `f`.
+#[inline(never)]
 fn compile_lazy(
     agent: &mut Agent,
     f: Object,
@@ -288,6 +289,24 @@ fn compile_lazy(
     Ok(code)
 }
 
+/// A frame for the body of `f`, reusing spare buffers.
+#[inline(always)]
+fn body_frame(
+    agent: &mut Agent,
+    code: Arc<FunctionCode>,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+    f: Object,
+    args: &[Value],
+) -> Frame {
+    let mut frame = Frame::new(code, env, private_env, Some(f));
+    frame.stack = agent.spare_vec();
+    frame.args = agent.spare_vec();
+    frame.args.extend_from_slice(args);
+    frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
+    frame
+}
+
 /// OrdinaryCallEvaluateBody: runs the body in a new frame. Returns the
 /// frame's result; generator functions return their generator object.
 fn evaluate_body(
@@ -305,39 +324,52 @@ fn evaluate_body(
     } else {
         code
     };
-    let mut frame = Frame::new(code.clone(), env, private_env, Some(f));
-    frame.stack = agent.spare_vec();
-    frame.args = agent.spare_vec();
-    frame.args.extend_from_slice(args);
-    frame.handlers = agent.spare_handlers.pop().unwrap_or_default();
+    if code.is_async || code.is_generator {
+        return evaluate_suspendable_body(agent, f, code, env, private_env, args);
+    }
+    let mut frame = body_frame(agent, code, env, private_env, f, args);
+    // FunctionDeclarationInstantiation up to the parameter bindings.
+    instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
+    let result = run_frame(agent, &mut frame)?;
+    agent.give_back_vec(std::mem::take(&mut frame.stack));
+    agent.give_back_vec(std::mem::take(&mut frame.args));
+    let mut handlers = std::mem::take(&mut frame.handlers);
+    if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
+        handlers.clear();
+        agent.spare_handlers.push(handlers);
+    }
+    Ok(result)
+}
+
+/// The rest of OrdinaryCallEvaluateBody for async and generator functions,
+/// kept out of `evaluate_body` so its locals take no native stack in every
+/// JavaScript call.
+#[inline(never)]
+fn evaluate_suspendable_body(
+    agent: &mut Agent,
+    f: Object,
+    code: Arc<FunctionCode>,
+    env: EnvId,
+    private_env: Option<Arc<PrivateEnv>>,
+    args: &[Value],
+) -> JsResult<FrameResult> {
+    let mut frame = body_frame(agent, code.clone(), env, private_env, f, args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     let decl = instantiate::function_declaration_instantiation(agent, &mut frame, f, args);
-    if code.is_async && !code.is_generator {
+    if !code.is_generator {
         // EvaluateAsyncFunctionBody: errors reject the returned promise.
         let promise = super::async_function::start_async_function(agent, f, frame, decl)?;
         return Ok(FrameResult::Return(promise));
     }
     decl?;
-    let result = run_frame(agent, &mut frame)?;
-    if !code.is_generator {
-        agent.give_back_vec(std::mem::take(&mut frame.stack));
-        agent.give_back_vec(std::mem::take(&mut frame.args));
-        let mut handlers = std::mem::take(&mut frame.handlers);
-        if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
-            handlers.clear();
-            agent.spare_handlers.push(handlers);
-        }
-    }
-    if code.is_generator {
-        // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
-        let g = if code.is_async {
-            super::async_generator::create_async_generator(agent, f, frame)?
-        } else {
-            generator::create_generator(agent, f, frame)?
-        };
-        return Ok(FrameResult::Return(Value::Object(g)));
-    }
-    Ok(result)
+    run_frame(agent, &mut frame)?;
+    // EvaluateGeneratorBody / EvaluateAsyncGeneratorBody: the frame stopped at GeneratorStart.
+    let g = if code.is_async {
+        super::async_generator::create_async_generator(agent, f, frame)?
+    } else {
+        generator::create_generator(agent, f, frame)?
+    };
+    Ok(FrameResult::Return(Value::Object(g)))
 }
 
 /// [[Call]] of an ECMAScript function object (§10.2.1).
