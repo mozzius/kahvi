@@ -371,7 +371,8 @@ pub struct HeapStats {
     pub property_bytes: usize,
     pub string_slots: usize,
     pub strings_live: usize,
-    /// The live strings' UTF-16 contents.
+    /// The live strings' allocations (their UTF-16 code units, after their
+    /// length).
     pub string_bytes: usize,
     pub env_slots: usize,
     pub envs_live: usize,
@@ -591,7 +592,7 @@ impl Agent {
             string_slots: self.strings.len(),
             env_slots: self.envs.len(),
             env_slot_bytes: self.envs.capacity() * size_of::<crate::env::Environment>(),
-            string_table_bytes: self.strings.capacity() * size_of::<Box<[u16]>>()
+            string_table_bytes: self.strings.capacity() * size_of::<crate::units::Units>()
                 + self.string_index.heap_bytes(),
             ..HeapStats::default()
         };
@@ -610,7 +611,7 @@ impl Agent {
         for (i, s) in self.strings.iter().enumerate() {
             if !self.gc.is_free_string.get(i as u32) {
                 h.strings_live += 1;
-                h.string_bytes += s.len() * 2;
+                h.string_bytes += s.heap_bytes();
             }
         }
         for (i, e) in self.envs.iter().enumerate() {
@@ -777,7 +778,7 @@ impl Agent {
                 live_count += 1;
             } else if !self.gc.is_free_string.get(i) {
                 self.string_index.remove(&self.strings, i);
-                self.strings[i as usize] = Box::default();
+                self.strings[i as usize] = Default::default();
                 self.gc.is_free_string.insert(i);
                 self.gc.free_strings.push(i);
             }

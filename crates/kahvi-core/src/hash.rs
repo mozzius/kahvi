@@ -148,7 +148,7 @@ impl StringTable {
     }
 
     /// The handle whose contents equal `units`, if one is interned.
-    pub fn find(&self, strings: &[Box<[u16]>], units: &[u16]) -> Option<u32> {
+    pub(crate) fn find(&self, strings: &[crate::units::Units], units: &[u16]) -> Option<u32> {
         if self.slots.is_empty() {
             return None;
         }
@@ -170,7 +170,7 @@ impl StringTable {
 
     /// Adds handle `id`, whose contents are `strings[id]` and not yet in
     /// the table.
-    pub fn insert(&mut self, strings: &[Box<[u16]>], id: u32) {
+    pub(crate) fn insert(&mut self, strings: &[crate::units::Units], id: u32) {
         if (self.live + self.tombstones + 1) * 4 > self.slots.len() * 3 {
             self.rebuild(strings);
         }
@@ -191,7 +191,7 @@ impl StringTable {
     }
 
     /// Removes handle `id`; `strings[id]` must still hold its contents.
-    pub fn remove(&mut self, strings: &[Box<[u16]>], id: u32) {
+    pub(crate) fn remove(&mut self, strings: &[crate::units::Units], id: u32) {
         if self.slots.is_empty() {
             return;
         }
@@ -212,7 +212,7 @@ impl StringTable {
     }
 
     /// Re-inserts the live handles into a table sized for twice as many.
-    fn rebuild(&mut self, strings: &[Box<[u16]>]) {
+    fn rebuild(&mut self, strings: &[crate::units::Units]) {
         let capacity = ((self.live + 1) * 2).next_power_of_two().max(64);
         let old = std::mem::replace(&mut self.slots, vec![EMPTY; capacity]);
         self.live = 0;
