@@ -156,7 +156,7 @@ pub type IntrinsicsInstaller = fn(&mut Agent, RealmId) -> JsResult<()>;
 
 pub struct Agent {
     pub(crate) objects: Vec<ObjectData>,
-    pub(crate) strings: Vec<Box<[u16]>>,
+    pub(crate) strings: Vec<crate::units::Units>,
     /// The intern table: handles hashed by the contents they name (stored once, in `strings`).
     pub(crate) string_index: crate::hash::StringTable,
     pub(crate) symbols: Vec<SymbolData>,
