@@ -379,6 +379,10 @@ pub struct HeapStats {
     /// The source texts of the loaded scripts and modules (each counted
     /// once, though another runtime may share it).
     pub source_bytes: usize,
+    /// Compiled functions reachable from live function objects, and
+    /// roughly the bytes of their code.
+    pub code_functions: usize,
+    pub code_bytes: usize,
 }
 
 pub(crate) struct GcState {
@@ -581,10 +585,15 @@ impl Agent {
             env_slot_bytes: self.envs.capacity() * size_of::<crate::env::Environment>(),
             ..HeapStats::default()
         };
+        let mut seen_code = crate::hash::FxHashSet::default();
         for (i, o) in self.objects.iter().enumerate() {
             if !self.gc.is_free_object.get(i as u32) {
                 h.objects_live += 1;
                 h.property_bytes += o.properties.heap_bytes();
+                if let crate::object::ObjectKind::Function(f) = &o.kind {
+                    f.code
+                        .census(&mut seen_code, &mut h.code_bytes, &mut h.code_functions);
+                }
             }
         }
         for (i, s) in self.strings.iter().enumerate() {

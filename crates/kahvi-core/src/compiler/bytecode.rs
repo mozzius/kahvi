@@ -610,6 +610,45 @@ impl CodeConstants {
     }
 }
 
+impl FunctionCode {
+    /// Adds this code and the code nested in it (counted once each, by
+    /// address, in `seen`) to `bytes` and `count`: the code's own record
+    /// and arrays, for [`crate::gc::HeapStats`].
+    pub(crate) fn census(
+        self: &Arc<Self>,
+        seen: &mut crate::hash::FxHashSet<usize>,
+        bytes: &mut usize,
+        count: &mut usize,
+    ) {
+        use std::mem::size_of_val;
+        if !seen.insert(Arc::as_ptr(self) as usize) {
+            return;
+        }
+        *count += 1;
+        *bytes += std::mem::size_of::<Self>()
+            + size_of_val(&*self.ops)
+            + size_of_val(&*self.positions)
+            + size_of_val(&*self.functions)
+            + size_of_val(&*self.scopes)
+            + size_of_val(&*self.templates)
+            + size_of_val(&*self.classes)
+            + size_of_val(&*self.strict_ranges)
+            + self.locals.as_deref().map_or(0, size_of_val)
+            + self.messages.iter().map(|m| m.len() + 24).sum::<usize>()
+            + self
+                .finally_targets
+                .iter()
+                .map(|t| size_of_val(&**t) + 24)
+                .sum::<usize>();
+        for f in self.functions.iter() {
+            f.census(seen, bytes, count);
+        }
+        if let Some(code) = self.lazy.as_ref().and_then(|l| l.compiled.get()) {
+            code.census(seen, bytes, count);
+        }
+    }
+}
+
 /// A function compiled when it is first called (`ast::Function::lazy`):
 /// its `FunctionCode` holds only what creating a closure needs.
 #[derive(Debug)]
