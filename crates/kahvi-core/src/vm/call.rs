@@ -265,6 +265,17 @@ fn compile_lazy(
     let code = match lazy.compiled.get() {
         Some(code) => code.clone(),
         None => {
+            let cache_key = agent.scripts[stub.script as usize].cache_key;
+            let cached = cache_key.as_ref().and_then(|key| {
+                let bytes = crate::code_cache::function(key, stub.span.0)?;
+                crate::compiler::decode_lazy_function(agent, &bytes, stub)
+            });
+            if let Some(code) = cached {
+                let code = lazy.compiled.get_or_init(|| code).clone();
+                stub.constants.add_lazy(code.clone());
+                ecma_mut(agent, f).code = code.clone();
+                return Ok(code);
+            }
             let preparse = agent.scripts[stub.script as usize].preparse.clone();
             let ast = match kahvi_parser::parse_lazy_function_preparsed(
                 &stub.source,
@@ -282,6 +293,19 @@ fn compile_lazy(
                 code.lazy.is_none(),
                 "a reparsed function is compiled eagerly"
             );
+            if let Some(key) = &cache_key
+                && let Some(bytes) = crate::compiler::codec::encode(agent, &code)
+            {
+                crate::code_cache::store_function(key, stub.span.0, bytes);
+            }
+            let code = match crate::code_cache::stress()
+                .then(|| crate::compiler::codec::encode(agent, &code))
+                .flatten()
+            {
+                Some(bytes) => crate::compiler::decode_lazy_function(agent, &bytes, stub)
+                    .expect("code cache stress: the encoding of compiled code decodes"),
+                None => code,
+            };
             let code = lazy.compiled.get_or_init(|| code).clone();
             stub.constants.add_lazy(code.clone());
             code

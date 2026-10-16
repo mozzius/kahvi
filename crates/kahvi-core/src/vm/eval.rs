@@ -71,6 +71,7 @@ pub(super) fn register_script(
             agent.scripts[id as usize].source = source;
             agent.scripts[id as usize].preparse = None;
             agent.scripts[id as usize].line_starts = std::sync::OnceLock::new();
+            agent.scripts[id as usize].cache_key = None;
             return id;
         }
     }
@@ -82,6 +83,7 @@ pub(super) fn register_script(
         collectable,
         preparse: None,
         line_starts: std::sync::OnceLock::new(),
+        cache_key: None,
     });
     (agent.scripts.len() - 1) as u32
 }
@@ -94,7 +96,8 @@ pub fn parse_script(
     name: &str,
     realm: RealmId,
 ) -> JsResult<ParsedScript> {
-    let cached = crate::code_cache::lookup(source, false);
+    let cache_key = crate::code_cache::key(source, false);
+    let cached = cache_key.as_ref().and_then(crate::code_cache::lookup);
     let opts = ParseOptions {
         lazy: true,
         preparse: cached.clone(),
@@ -115,12 +118,15 @@ pub fn parse_script(
     };
     let preparse = cached.unwrap_or_else(|| {
         let p = Arc::new(preparse);
-        crate::code_cache::store(source, false, &p);
+        if let Some(key) = &cache_key {
+            crate::code_cache::store(key, &p);
+        }
         p
     });
     let source: Arc<str> = Arc::from(source);
     let id = register_script(agent, realm, source.clone(), name, false);
     agent.scripts[id as usize].preparse = Some(preparse);
+    agent.scripts[id as usize].cache_key = cache_key;
     let code = compiler::compile_script(agent, &ast, source, id);
     Ok(ParsedScript { id, code })
 }

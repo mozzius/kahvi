@@ -8,12 +8,20 @@
 //! parses checks the bodies of the bundle's functions; the others skip
 //! them, and each body is parsed when its function is first called.
 //!
+//! It also keeps the compiled code of the lazy functions that were called
+//! (`compiler::codec`), so the next runtime or run that calls one skips
+//! parsing and compiling it. On disk that code is appended to a file per
+//! source as functions are compiled, under a header naming the compiler
+//! build, so a different build ignores and replaces it.
+//!
 //! Entries are keyed by the source text's length and a 128-bit hash of it,
 //! and by the goal (script or module); the parser also checks that each
 //! skipped body starts with `{` and ends with `}` in the text it is given.
 
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::io::{Read, Seek, Write};
+use std::ops::{Deref, Range};
+use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, OnceLock};
 
 use kahvi_parser::preparse::Preparse;
@@ -22,8 +30,9 @@ use kahvi_parser::preparse::Preparse;
 /// costs about what it saves.
 const MIN_SOURCE_LEN: usize = 256 << 10;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-struct Key {
+/// Identifies a source text and goal in the cache.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub(crate) struct Key {
     hash: [u64; 2],
     len: usize,
     module: bool,
@@ -44,6 +53,94 @@ impl Key {
 struct Cache {
     dir: Option<PathBuf>,
     entries: HashMap<Key, Arc<Preparse>>,
+    functions: HashMap<Key, Functions>,
+}
+
+/// The cached code of one source's functions, by the offset of each.
+#[derive(Default)]
+struct Functions {
+    code: HashMap<u32, CodeBytes>,
+    /// The file new code is appended to.
+    file: Option<std::fs::File>,
+}
+
+/// One function's encoded code, in a buffer it may share with others.
+#[derive(Clone)]
+pub(crate) struct CodeBytes {
+    blob: Arc<[u8]>,
+    range: Range<usize>,
+}
+
+impl Deref for CodeBytes {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        &self.blob[self.range.clone()]
+    }
+}
+
+/// Starts the code file: the format of the code in it.
+fn code_file_header() -> Vec<u8> {
+    let mut h = b"kvbc\0\0\0\x01".to_vec();
+    h.extend_from_slice(crate::compiler::codec::FORMAT.as_bytes());
+    h
+}
+
+fn checksum(bytes: &[u8]) -> u32 {
+    bytes.iter().fold(0x811c_9dc5u32, |h, &b| {
+        (h ^ u32::from(b)).wrapping_mul(0x0100_0193)
+    })
+}
+
+/// Reads the code file at `path`, keeping its valid records in `f`, and
+/// opens it for appending: a file from another build is started afresh,
+/// and a record cut short (the process ended while writing it) is dropped.
+fn open_code_file(path: &Path, f: &mut Functions) -> Option<()> {
+    let mut file = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .open(path)
+        .ok()?;
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes).ok()?;
+    let header = code_file_header();
+    let mut valid = 0;
+    if bytes.starts_with(&header) {
+        let blob: Arc<[u8]> = bytes.into();
+        let mut pos = header.len();
+        valid = pos;
+        while let Some(head) = blob.get(pos..pos + 8) {
+            let start = u32::from_le_bytes(head[..4].try_into().expect("4 bytes"));
+            let len = u32::from_le_bytes(head[4..].try_into().expect("4 bytes")) as usize;
+            let body = pos + 8..pos + 8 + len;
+            let Some(sum) = blob.get(body.end..body.end + 4) else {
+                break;
+            };
+            if checksum(&blob[body.clone()]).to_le_bytes() != sum {
+                break;
+            }
+            f.code.insert(
+                start,
+                CodeBytes {
+                    blob: blob.clone(),
+                    range: body.clone(),
+                },
+            );
+            pos = body.end + 4;
+            valid = pos;
+        }
+    }
+    if valid == 0 {
+        file.set_len(0).ok()?;
+        file.seek(std::io::SeekFrom::Start(0)).ok()?;
+        file.write_all(&header).ok()?;
+    } else {
+        file.set_len(valid as u64).ok()?;
+        file.seek(std::io::SeekFrom::Start(valid as u64)).ok()?;
+    }
+    f.file = Some(file);
+    Some(())
 }
 
 fn cache() -> &'static Mutex<Cache> {
@@ -52,6 +149,7 @@ fn cache() -> &'static Mutex<Cache> {
         Mutex::new(Cache {
             dir: None,
             entries: HashMap::new(),
+            functions: HashMap::new(),
         })
     })
 }
@@ -93,7 +191,17 @@ fn hash(s: &str) -> [u64; 2] {
     [fin(a ^ bytes.len() as u64), fin(b)]
 }
 
-fn key(source: &str, module: bool) -> Option<Key> {
+/// `KAHVI_CODE_CACHE_STRESS` set: every lazily compiled function runs the
+/// code its encoding decodes to, cached or not (finds codec bugs, the way
+/// `KAHVI_GC_STRESS` finds rooting bugs).
+pub(crate) fn stress() -> bool {
+    static STRESS: OnceLock<bool> = OnceLock::new();
+    *STRESS.get_or_init(|| std::env::var_os("KAHVI_CODE_CACHE_STRESS").is_some())
+}
+
+/// The cache's key for `source` with the given goal, if it is large enough
+/// to cache.
+pub(crate) fn key(source: &str, module: bool) -> Option<Key> {
     (source.len() >= MIN_SOURCE_LEN).then(|| Key {
         hash: hash(source),
         len: source.len(),
@@ -101,27 +209,24 @@ fn key(source: &str, module: bool) -> Option<Key> {
     })
 }
 
-/// The [`Preparse`] of an earlier parse of `source` with the given goal
-/// (and lazy compilation), from memory or the cache directory.
-pub(crate) fn lookup(source: &str, module: bool) -> Option<Arc<Preparse>> {
-    let key = key(source, module)?;
+/// The [`Preparse`] of an earlier parse of the source `key` names (with
+/// lazy compilation), from memory or the cache directory.
+pub(crate) fn lookup(key: &Key) -> Option<Arc<Preparse>> {
     let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
-    if let Some(p) = c.entries.get(&key) {
+    if let Some(p) = c.entries.get(key) {
         return Some(p.clone());
     }
     let path = c.dir.as_ref()?.join(key.file_name());
     let p = Arc::new(Preparse::from_bytes(&std::fs::read(path).ok()?)?);
-    c.entries.insert(key, p.clone());
+    c.entries.insert(*key, p.clone());
     Some(p)
 }
 
-/// Records what a parse of `source` learned, for the next parse of it.
-pub(crate) fn store(source: &str, module: bool, preparse: &Arc<Preparse>) {
-    let Some(key) = key(source, module) else {
-        return;
-    };
+/// Records what a parse of the source `key` names learned, for the next
+/// parse of it.
+pub(crate) fn store(key: &Key, preparse: &Arc<Preparse>) {
     let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
-    if c.entries.insert(key, preparse.clone()).is_some() {
+    if c.entries.insert(*key, preparse.clone()).is_some() {
         return;
     }
     if let Some(dir) = &c.dir {
@@ -135,4 +240,56 @@ pub(crate) fn store(source: &str, module: bool, preparse: &Arc<Preparse>) {
             let _ = std::fs::remove_file(&tmp);
         }
     }
+}
+
+/// The source's functions, read from the cache directory the first time.
+fn functions<'a>(c: &'a mut Cache, key: &Key) -> &'a mut Functions {
+    let dir = c.dir.clone();
+    c.functions.entry(*key).or_insert_with(|| {
+        let mut f = Functions::default();
+        if let Some(dir) = dir {
+            let path = dir.join(key.file_name().replace(".kvpp", ".kvbc"));
+            if open_code_file(&path, &mut f).is_none() {
+                f.file = None;
+            }
+        }
+        f
+    })
+}
+
+/// The encoded code of the function at offset `start` of the source `key`
+/// names, if it was cached.
+pub(crate) fn function(key: &Key, start: u32) -> Option<CodeBytes> {
+    let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
+    functions(&mut c, key).code.get(&start).cloned()
+}
+
+/// Caches `code`, the encoded code of the function at offset `start` of the
+/// source `key` names.
+pub(crate) fn store_function(key: &Key, start: u32, code: Vec<u8>) {
+    let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
+    let f = functions(&mut c, key);
+    if f.code.contains_key(&start) {
+        return;
+    }
+    if let Some(file) = &mut f.file {
+        let mut record = Vec::with_capacity(code.len() + 12);
+        record.extend_from_slice(&start.to_le_bytes());
+        record.extend_from_slice(&(code.len() as u32).to_le_bytes());
+        record.extend_from_slice(&code);
+        record.extend_from_slice(&checksum(&code).to_le_bytes());
+        // A failed write leaves at most a cut-short record, dropped when the
+        // file is next read; stop writing to it.
+        if file.write_all(&record).is_err() {
+            f.file = None;
+        }
+    }
+    let len = code.len();
+    f.code.insert(
+        start,
+        CodeBytes {
+            blob: code.into(),
+            range: 0..len,
+        },
+    );
 }

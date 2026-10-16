@@ -71,6 +71,8 @@ pub struct ScriptRecord {
     /// time a position in it is turned into a line and column (an error
     /// stack), so later ones need not scan the source.
     pub line_starts: std::sync::OnceLock<Box<[u32]>>,
+    /// The source's key in `code_cache`, if it is large enough to cache.
+    pub(crate) cache_key: Option<crate::code_cache::Key>,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.
