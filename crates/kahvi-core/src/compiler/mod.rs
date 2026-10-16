@@ -8,6 +8,7 @@
 
 pub mod bytecode;
 mod class;
+pub(crate) mod codec;
 mod expr;
 mod function;
 mod pattern;
@@ -596,6 +597,26 @@ pub fn compile_lazy_function(
             stub.script,
             lazy.is_expression,
         )
+    })
+}
+
+/// The code cached as `bytes` (`codec::encode` of an earlier compilation of
+/// the same function) for lazy function `stub`, as its own compilation unit
+/// like [`compile_lazy_function`]; `None` if `bytes` does not decode.
+pub fn decode_lazy_function(
+    agent: &mut Agent,
+    bytes: &[u8],
+    stub: &FunctionCode,
+) -> Option<Arc<FunctionCode>> {
+    pinned(agent, |agent| {
+        let constants = agent
+            .gc
+            .compiling
+            .as_ref()
+            .expect("compiling")
+            .constants
+            .clone();
+        codec::decode(agent, bytes, stub, &constants).map(Arc::new)
     })
 }
 
