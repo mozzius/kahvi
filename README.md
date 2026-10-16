@@ -1,7 +1,7 @@
 # kahvi
 
 A JavaScript engine written from scratch in Rust: parser, bytecode VM, garbage
-collector, regex engine and every built-in. It passes all of
+collector, regex engine and every built-in. It passes ~~all~~ *almost all* of
 [test262](https://github.com/tc39/test262) that is in scope, runs real npm
 packages, and embeds in Rust, C and React Native.
 
