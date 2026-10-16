@@ -432,12 +432,12 @@ op_code! {
     29 PopScope,
     30 CopyScope,
     31 PushWith,
-    32 GetProp(a: PropertyKey),
+    32 GetProp(a: PropertyKey, b: u32),
     33 GetElem,
     34 GetElemForUpdate,
-    35 GetPropForCall(a: PropertyKey),
+    35 GetPropForCall(a: PropertyKey, b: u32),
     36 GetElemForCall,
-    37 SetProp(a: PropertyKey),
+    37 SetProp(a: PropertyKey, b: u32),
     38 SetElem,
     39 DeleteProp(a: PropertyKey),
     40 DeleteElem,
@@ -596,6 +596,7 @@ fn put_code(code: &FunctionCode, w: &mut Writer) -> Option<()> {
     code.strict_ranges.put(w)?;
     code.span.put(w)?;
     w.len(code.name_caches.len())?;
+    w.len(code.prop_caches.len())?;
     match &code.lazy {
         None => w.u8(0),
         Some(lazy) => {
@@ -643,6 +644,7 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
     let name_caches = (0..r.u32()?)
         .map(|_| std::sync::atomic::AtomicU64::new(0))
         .collect();
+    let prop_caches = (0..r.u32()?).map(|_| PropCache::default()).collect();
     let lazy = match r.u8()? {
         0 => None,
         1 => Some(Box::new(LazyCode {
@@ -687,6 +689,7 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
         script: cx.script,
         constants: cx.constants.clone(),
         name_caches,
+        prop_caches,
         lazy,
     })
 }

@@ -177,6 +177,7 @@ impl<'a> Compiler<'a> {
                 script,
                 constants,
                 name_caches: Box::default(),
+                prop_caches: Box::default(),
                 lazy: None,
             },
             scopes: Vec::new(),
@@ -203,6 +204,14 @@ impl<'a> Compiler<'a> {
         self.code.name_caches = (0..self.name_cache_count)
             .map(|_| std::sync::atomic::AtomicU64::new(0))
             .collect();
+        let mut prop_caches = 0;
+        for op in &mut self.code.ops {
+            if let Op::GetProp(_, ic) | Op::GetPropForCall(_, ic) | Op::SetProp(_, ic) = op {
+                *ic = prop_caches;
+                prop_caches += 1;
+            }
+        }
+        self.code.prop_caches = (0..prop_caches).map(|_| PropCache::default()).collect();
         Arc::new(self.code)
     }
 

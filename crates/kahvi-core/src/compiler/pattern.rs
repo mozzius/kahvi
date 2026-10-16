@@ -75,7 +75,7 @@ impl Compiler<'_> {
                     MemberProp::Ident(name, _) => {
                         let k = self.agent.key(name);
                         self.emit(Op::Swap);
-                        self.emit(Op::SetProp(k));
+                        self.emit(Op::SetProp(k, 0));
                     }
                     MemberProp::Computed(k) => {
                         self.compile_expr(k);
@@ -155,7 +155,7 @@ impl Compiler<'_> {
                     let k = self.agent.key(name);
                     fetch(self, 1);
                     self.apply_default(elem);
-                    self.emit(Op::SetProp(k));
+                    self.emit(Op::SetProp(k, 0));
                 }
                 MemberProp::Computed(k) => {
                     self.compile_expr(k);
@@ -229,7 +229,7 @@ impl Compiler<'_> {
                     let depth = kept;
                     self.bind_element(&prop.value, mode, &mut |c: &mut Self, extra: u32| {
                         c.emit(Op::Pick(depth + extra));
-                        c.emit(Op::GetProp(k));
+                        c.emit(Op::GetProp(k, 0));
                     });
                 }
             }
