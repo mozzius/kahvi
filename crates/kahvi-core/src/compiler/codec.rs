@@ -218,6 +218,19 @@ impl<T: Code> Code for Vec<T> {
     }
 }
 
+impl<T: Code> Code for Box<[T]> {
+    fn put(&self, w: &mut Writer) -> Option<()> {
+        w.len(self.len())?;
+        for v in self {
+            v.put(w)?;
+        }
+        Some(())
+    }
+    fn get(r: &mut Reader) -> Option<Self> {
+        Vec::get(r).map(Vec::into_boxed_slice)
+    }
+}
+
 impl<A: Code, B: Code> Code for (A, B) {
     fn put(&self, w: &mut Writer) -> Option<()> {
         self.0.put(w)?;
@@ -677,7 +690,7 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
         skips_function_env,
         ops,
         positions,
-        functions,
+        functions: functions.into(),
         scopes,
         templates,
         classes,

@@ -216,7 +216,7 @@ fn compile_function_with(
             // environment holds the this binding its return checks.)
             c.code.skips_function_env = f.kind == FunctionKind::Arrow
                 || (f.kind != FunctionKind::DerivedConstructor
-                    && !c.code.ops.iter().any(|op| {
+                    && !c.vecs.ops.iter().any(|op| {
                         matches!(
                             op,
                             Op::This
@@ -443,12 +443,12 @@ impl Compiler<'_> {
         if lexical.is_empty() && functions.is_empty() {
             return None;
         }
-        self.code.scopes.push(ScopeInfo {
+        self.vecs.scopes.push(ScopeInfo {
             lexical,
             functions,
             is_catch: false,
         });
-        Some((self.code.scopes.len() - 1) as u32)
+        Some((self.vecs.scopes.len() - 1) as u32)
     }
 
     pub(super) fn compile_nested_function(&mut self, f: &Function, is_expression: bool) -> u32 {
