@@ -42,16 +42,16 @@ impl Compiler<'_> {
 
         // classEnv, with the class binding (immutable) if the class has a name.
         let lexical = own_name.map(|n| vec![(n, true)]).unwrap_or_default();
-        self.code.scopes.push(ScopeInfo {
+        self.vecs.scopes.push(ScopeInfo {
             lexical,
             functions: Vec::new(),
             is_catch: false,
         });
-        let scope = (self.code.scopes.len() - 1) as u32;
+        let scope = (self.vecs.scopes.len() - 1) as u32;
         self.emit(Op::PushScope(scope));
         self.scopes.push(JumpScope::Env);
         // All parts of a class are strict mode code (sec-strict-mode-code).
-        let strict_start = self.code.ops.len() as u32;
+        let strict_start = self.vecs.ops.len() as u32;
 
         // ClassHeritage, evaluated in classEnv with the outer private environment.
         if let Some(h) = &c.super_class {
@@ -76,12 +76,12 @@ impl Compiler<'_> {
                 }
             }
         }
-        self.code.classes.push(ClassStatic {
+        self.vecs.classes.push(ClassStatic {
             name: own_name,
             private_names,
             span: (c.span.start, c.span.end),
         });
-        let class_index = (self.code.classes.len() - 1) as u32;
+        let class_index = (self.vecs.classes.len() - 1) as u32;
         self.emit(Op::PushPrivateScope(class_index));
         self.scopes.push(JumpScope::PrivateScope);
 
@@ -110,8 +110,8 @@ impl Compiler<'_> {
         self.emit(Op::PopScope);
         self.emit(Op::FinishClass);
         if !self.code.strict {
-            let end = self.code.ops.len() as u32;
-            self.code.strict_ranges.push((strict_start, end));
+            let end = self.vecs.ops.len() as u32;
+            self.vecs.strict_ranges.push((strict_start, end));
         }
     }
 
