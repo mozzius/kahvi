@@ -5806,3 +5806,6 @@ test262 at last merge: 83371/84983 runs passing
 [00:02:06] I-number-format: attempt 561 finished ($0.841, 47 turns)
 [00:02:06] I-number-format: blocked: `kahvi-builtins` needs `fixed_decimal` and `writeable` as direct dependencies (or `icu::decimal::input` needs to re-export `UnsignedRoundingMode`, `SignedRoundingMode`, `RoundingIncrement` and `Sign`) so that FormatNumericToString and formatToParts can be written.
 [00:03:59] I-date-time-format: verifier: accept The diff implements the format getter (UnwrapDateTimeFormat, RequireInternalSlot, the cached BoundFormat closure with Date.now/ToNumber handling) and 
+[00:04:01] I-date-to-locale-string: attempt on slot 3 with sonnet
+[00:04:53] I-date-to-locale-string: attempt 562 finished ($0.235, 22 turns)
+[00:05:30] I-date-to-locale-string: verifier: accept The three Date.prototype.toLocale{,Date,Time}String changes gate on agent.intl and follow ECMA-402 steps 1-6 in order with the spec's comments. Requir

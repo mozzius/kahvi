@@ -1,0 +1,135 @@
+{
+  "duration_api_ms": 12451,
+  "stop_reason": "tool_use",
+  "session_id": "ce9ee996-367f-4de9-b0cc-b5e3b8990e2e",
+  "total_cost_usd": 0.0036889899999999996,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8075,
+    "cache_read_input_tokens": 4999,
+    "output_tokens": 2583,
+    "output_tokens_details": {
+      "thinking_tokens": 2086
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8075,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2583,
+        "cache_read_input_tokens": 4999,
+        "cache_creation_input_tokens": 8075,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8075
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 2,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"answers\":{\"special_cases_inputs\":false,\"made_up_results\":false,\"swallows_errors\":false,\"skips_observable_steps\":false,\"contradicts_spec\":false,\"unrelated_changes\":false},\"worth_keeping\":true,\"summary\":\"The three Date.prototype.toLocale{,Date,Time}String changes gate on agent.intl and follow ECMA-402 steps 1-6 in order with the spec's comments. RequireInternalSlot is covered by date::this_time_value, NaN returns \\\"Invalid Date\\\", CreateDateTimeFormat is called on %Intl.DateTimeFormat% with the right required/defaults pairs (any/all, date/date, time/time), and FormatDateTime is applied to x. The ECMA-262 fallback is untouched when agent.intl is false. No special-casing, no swallowed errors, and no unrelated edits. The support helpers (create_date_time_format, format_date_time, date::this_time_value) are not in the diff, so I could not verify that they perform the construct without extra observable lookups; this is an unverified assumption, not a detected defect.\",\"problems\":[],\"notes_for_next_attempt\":\"\"}",
+  "structured_output": {
+    "answers": {
+      "special_cases_inputs": false,
+      "made_up_results": false,
+      "swallows_errors": false,
+      "skips_observable_steps": false,
+      "contradicts_spec": false,
+      "unrelated_changes": false
+    },
+    "worth_keeping": true,
+    "summary": "The three Date.prototype.toLocale{,Date,Time}String changes gate on agent.intl and follow ECMA-402 steps 1-6 in order with the spec's comments. RequireInternalSlot is covered by date::this_time_value, NaN returns \"Invalid Date\", CreateDateTimeFormat is called on %Intl.DateTimeFormat% with the right required/defaults pairs (any/all, date/date, time/time), and FormatDateTime is applied to x. The ECMA-262 fallback is untouched when agent.intl is false. No special-casing, no swallowed errors, and no unrelated edits. The support helpers (create_date_time_format, format_date_time, date::this_time_value) are not in the diff, so I could not verify that they perform the construct without extra observable lookups; this is an unverified assumption, not a detected defect.",
+    "problems": [],
+    "notes_for_next_attempt": ""
+  },
+  "ttft_ms": 10463,
+  "type": "result",
+  "duration_ms": 12199,
+  "uuid": "5d41d46a-6f24-4d31-bad9-34eb08a654c7",
+  "ttft_stream_ms": 1169,
+  "time_to_request_ms": 407,
+  "time_to_request_phases_ms": {
+    "other": 18,
+    "system_prompt": 291,
+    "resume_other": 0,
+    "process_user_input": 4,
+    "input_attachments": 12,
+    "input_hooks": 3,
+    "tool_pool_refresh": 2,
+    "init_message": 5,
+    "engine_pickup": 1,
+    "message_prep": 1,
+    "model_config_wait": 56,
+    "autocompact": 2,
+    "query_setup": 1,
+    "model_gates": 0,
+    "tool_schema_build": 3,
+    "message_normalization": 1,
+    "client_creation": 3,
+    "request_build": 4
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 3,
+  "time_to_request_cpu_ms": 236,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 248,
+  "process_anon_mib_turn_start": 131,
+  "process_rss_mib_result": 241,
+  "process_anon_mib_result": 122,
+  "process_peak_rss_mib": 258,
+  "process_cpu_ms_turn": 821,
+  "process_wall_ms_turn": 12199,
+  "input_attachments_detail": {
+    "slowest_producer": "session_settings",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 16,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1170,
+  "time_to_request_from_spawn_ms": 2561705,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792109107036.689,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792659600,
+    "rateLimitType": "seven_day",
+    "utilization": 0.35,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1792124400
+      },
+      "seven_day": {
+        "utilization": 0.35,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

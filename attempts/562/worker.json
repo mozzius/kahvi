@@ -1,0 +1,121 @@
+{
+  "duration_api_ms": 34036,
+  "stop_reason": "end_turn",
+  "session_id": "ba3996ee-3e10-4c49-9481-5c2bb9757cf1",
+  "total_cost_usd": 0.23464490000000005,
+  "usage": {
+    "input_tokens": 19,
+    "cache_creation_input_tokens": 38409,
+    "cache_read_input_tokens": 342757,
+    "output_tokens": 4629,
+    "output_tokens_details": {
+      "thinking_tokens": 219
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 38409,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 252,
+        "cache_read_input_tokens": 44955,
+        "cache_creation_input_tokens": 431,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 431
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 22,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "`toLocaleString`, `toLocaleDateString` and `toLocaleTimeString` now follow the ECMA-402 steps when `agent.intl` is true. With it off they behave as before. All 24 runs under `./t262 intl402/Date/` pass, and `cargo build` and `cargo clippy` are clean. I didn't run anything outside that directory.\n\nEach one reads the date value, returns `\"Invalid Date\"` for NaN, calls `create_date_time_format` with the `%Intl.DateTimeFormat%` intrinsic and the spec's required/defaults pair, then formats with `format_date_time`. I used `create_date_time_format` directly, as the spec does, instead of `ops::construct`. The change is limited to the three allowed files.",
+  "ttft_ms": 2735,
+  "type": "result",
+  "duration_ms": 50197,
+  "uuid": "5b61e7b2-8e63-4fd2-845f-b8fa6b172735",
+  "ttft_stream_ms": 1575,
+  "time_to_request_ms": 468,
+  "time_to_request_phases_ms": {
+    "other": 24,
+    "system_prompt": 344,
+    "resume_other": 1,
+    "process_user_input": 6,
+    "input_attachments": 9,
+    "input_hooks": 5,
+    "tool_pool_refresh": 2,
+    "init_message": 6,
+    "engine_pickup": 2,
+    "message_prep": 2,
+    "model_config_wait": 42,
+    "autocompact": 3,
+    "query_setup": 0,
+    "model_gates": 0,
+    "tool_schema_build": 12,
+    "message_normalization": 2,
+    "client_creation": 3,
+    "request_build": 5
+  },
+  "turn_start_resume_kind": "none",
+  "process_turn_index": 0,
+  "time_to_request_loop_lag_ms": 38,
+  "time_to_request_cpu_ms": 340,
+  "time_to_request_major_faults": 0,
+  "process_rss_mib_turn_start": 244,
+  "process_anon_mib_turn_start": 128,
+  "process_rss_mib_result": 262,
+  "process_anon_mib_result": 142,
+  "process_peak_rss_mib": 267,
+  "process_cpu_ms_turn": 3594,
+  "process_wall_ms_turn": 50197,
+  "input_attachments_detail": {
+    "slowest_producer": "queued_commands",
+    "slowest_producer_ms": 6,
+    "cpu_ms": 11,
+    "major_faults": 0
+  },
+  "first_content_frame_ms": 1576,
+  "time_to_request_from_spawn_ms": 2496889,
+  "warm_spare_claimed": false,
+  "flag_fetch_kick": "not_asked_warm",
+  "time_origin_ms": 1792109042168.885,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "kind": null,
+  "rate_limit_info": {
+    "status": "allowed_warning",
+    "resetsAt": 1792659600,
+    "rateLimitType": "seven_day",
+    "utilization": 0.35,
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+      "five_hour": {
+        "utilization": 0.61,
+        "resetsAt": 1792124400
+      },
+      "seven_day": {
+        "utilization": 0.35,
+        "resetsAt": 1792659600
+      }
+    }
+  }
+}

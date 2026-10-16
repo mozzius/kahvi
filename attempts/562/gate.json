@@ -1,0 +1,42 @@
+{
+  "ticket": "I-date-to-locale-string",
+  "base": "3723ab0abf0443e973398f556cd0f6f01b731e6e",
+  "head": "b8bf060464bc5d4f55904ee525263f54b8f74aea",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_locale_date_string.rs",
+      "added": 30,
+      "removed": 0
+    },
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_locale_string.rs",
+      "added": 24,
+      "removed": 0
+    },
+    {
+      "path": "crates/kahvi-builtins/src/date/prototype_to_locale_time_string.rs",
+      "added": 30,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 24,
+    "before": 20,
+    "after": 24,
+    "new_passes": 4,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 0,
+    "canaries_ok": true,
+    "failing_sample": []
+  },
+  "decision": "pass"
+}
