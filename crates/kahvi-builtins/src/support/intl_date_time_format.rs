@@ -564,6 +564,105 @@ fn get_available_named_time_zone_identifier(time_zone_identifier: &str) -> Optio
     Some(parsed.canonical.to_string())
 }
 
+/// The ICU4X zoned date-time for a time value in a [[TimeZone]] (a UTC
+/// offset or a named zone with a fixed offset).
+fn zoned_date_time(
+    time_zone: &str,
+    epoch_milliseconds: i64,
+) -> Result<
+    icu::time::ZonedDateTime<
+        icu::calendar::Iso,
+        icu::time::TimeZoneInfo<icu::time::zone::models::AtTime>,
+    >,
+    String,
+> {
+    use icu::time::zone::{IanaParser, UtcOffset};
+    use icu::time::{DateTime, ZonedDateTime};
+    // 1. If IsTimeZoneOffsetString(_timeZoneIdentifier_) is *true*, then
+    //    a. Let _offsetNs_ be ParseTimeZoneOffsetString(_timeZoneIdentifier_).
+    let (zone, fixed_offset) = if let Some((_, offset_minutes)) = parse_utc_offset(time_zone) {
+        let offset = UtcOffset::try_from_seconds(offset_minutes * 60)
+            .map_err(|e| format!("the UTC offset {time_zone:?}: {e}"))?;
+        (TimeZone::UNKNOWN, Some(offset))
+    } else {
+        // 2. Else,
+        //    b. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_timeZoneIdentifier_, _epochNs_).
+        let zone = IanaParser::new().parse(time_zone);
+        (zone, zone.without_offset().offset())
+    };
+    // ICU4X has no time zone transitions: only zones with one fixed offset
+    // (UTC, Etc/*) have an offset to give.
+    let Some(offset) = fixed_offset else {
+        return Err(format!(
+            "GetNamedTimeZoneOffsetNanoseconds for {time_zone:?} (ICU4X has no time zone transition data)"
+        ));
+    };
+    // 3. Let _tz_ be ℝ(_epochNs_) + _offsetNs_.
+    let local = ZonedDateTime::from_epoch_milliseconds_and_utc_offset(epoch_milliseconds, offset);
+    let (date, time) = (local.date, local.time);
+    Ok(ZonedDateTime {
+        date,
+        time,
+        zone: zone
+            .with_offset(Some(offset))
+            .at_date_time(DateTime { date, time }),
+    })
+}
+
+/// FormatDateTime ( _dateTimeFormat_, _x_ ), through PartitionDateTimePattern
+/// and FormatDateTimePattern. ICU4X formats the whole pattern, so the result
+/// is the concatenation of the parts' values.
+pub(crate) fn format_date_time(
+    agent: &mut Agent,
+    date_time_format: Object,
+    x: f64,
+) -> JsResult<String> {
+    // 1. Set _x_ to TimeClip(_x_).
+    let x = crate::support::date::time_clip(x);
+    // 2. If _x_ is *NaN*, throw a *RangeError* exception.
+    if x.is_nan() {
+        return Err(agent.throw_range_error("invalid time value"));
+    }
+    // 3. Let _epochNanoseconds_ be ℤ(ℝ(_x_) × 10^6).
+    // 4. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
+    let Some(slots) = agent.native::<DateTimeFormatSlots>(date_time_format) else {
+        return Err(agent.throw_type_error("not an Intl.DateTimeFormat"));
+    };
+    let (locale, calendar, numbering_system) = (
+        slots.locale.clone(),
+        slots.calendar.clone(),
+        slots.numbering_system.clone(),
+    );
+    let (time_zone, hour_cycle, fields) = (
+        slots.time_zone.clone(),
+        slots.hour_cycle.clone(),
+        slots.fields.clone(),
+    );
+    // 5. If _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+    //    a. Let _pattern_ be _format_.[[pattern12]].
+    // 6. Else,
+    //    a. Let _pattern_ be _format_.[[pattern]].
+    if hour_cycle.as_deref() == Some("h24") {
+        return Err(
+            agent.not_implemented("Intl.DateTimeFormat hourCycle h24 (ICU4X has no h24 pattern)")
+        );
+    }
+    // 7. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_).
+    let prefs = Prefs {
+        locale: &locale,
+        calendar: &calendar,
+        numbering_system: &numbering_system,
+        hour_cycle: hour_cycle.as_deref(),
+    };
+    let formatter = crate::support::intl_dtf_icu::formatter(&prefs, &fields)
+        .map_err(|what| agent.not_implemented(&format!("Intl.DateTimeFormat format: {what}")))?;
+    // 12. Let _localTime_ be ToLocalTime(_epochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+    let zoned = zoned_date_time(&time_zone, x as i64)
+        .map_err(|what| agent.not_implemented(&format!("Intl.DateTimeFormat format: {what}")))?;
+    // 8. Return _result_.
+    Ok(formatter.format(&zoned).to_string())
+}
+
 /// UnwrapDateTimeFormat ( _dtf_ )
 pub(crate) fn unwrap_date_time_format(agent: &mut Agent, dtf: Value) -> JsResult<Value> {
     // 1. If _dtf_ is not an Object, throw a *TypeError* exception.
