@@ -68,10 +68,27 @@ enum Continuation {
     Return,
 }
 
+/// The tables of a [`FunctionCode`] being compiled, moved into it as boxed
+/// slices when it is finished.
+#[derive(Default)]
+struct CodeVecs {
+    ops: Vec<Op>,
+    positions: Vec<(u32, u32)>,
+    functions: Vec<Arc<FunctionCode>>,
+    scopes: Vec<ScopeInfo>,
+    templates: Vec<TemplateInfo>,
+    classes: Vec<ClassStatic>,
+    messages: Vec<String>,
+    finally_targets: Vec<Vec<Label>>,
+    strict_ranges: Vec<(u32, u32)>,
+}
+
 /// Compiles one function body (or script / eval code).
 pub(crate) struct Compiler<'a> {
     agent: &'a mut Agent,
     code: FunctionCode,
+    /// The tables of `code` while they grow.
+    vecs: CodeVecs,
     scopes: Vec<JumpScope>,
     /// Labels for the next statement (`a: b: while (...)`).
     pending_labels: Vec<String>,
@@ -146,6 +163,7 @@ impl<'a> Compiler<'a> {
             .clone();
         Compiler {
             agent,
+            vecs: CodeVecs::default(),
             code: FunctionCode {
                 kind,
                 flavor: FunctionFlavor::Normal,
@@ -163,15 +181,15 @@ impl<'a> Compiler<'a> {
                 locals: None,
                 skips_function_env: false,
                 binds_own_name: false,
-                ops: Vec::new(),
-                positions: Vec::new(),
-                functions: Vec::new(),
-                scopes: Vec::new(),
-                templates: Vec::new(),
-                classes: Vec::new(),
-                messages: Vec::new(),
-                finally_targets: Vec::new(),
-                strict_ranges: Vec::new(),
+                ops: Box::default(),
+                positions: Box::default(),
+                functions: Box::default(),
+                scopes: Box::default(),
+                templates: Box::default(),
+                classes: Box::default(),
+                messages: Box::default(),
+                finally_targets: Box::default(),
+                strict_ranges: Box::default(),
                 source,
                 span: (span.start, span.end),
                 script,
@@ -191,27 +209,38 @@ impl<'a> Compiler<'a> {
     }
 
     fn finish(mut self) -> Arc<FunctionCode> {
+        let mut v = std::mem::take(&mut self.vecs);
         let c = &self.code;
         let envs_die_with_call = c.kind == CodeKind::Function
             && !c.is_async
             && !c.is_generator
             && !c.uses_arguments
             && !c.has_direct_eval
-            && c.functions.is_empty()
-            && c.classes.is_empty()
-            && !c.ops.iter().any(|op| matches!(op, Op::PushWith));
+            && v.functions.is_empty()
+            && v.classes.is_empty()
+            && !v.ops.iter().any(|op| matches!(op, Op::PushWith));
         self.code.envs_die_with_call = envs_die_with_call;
         self.code.name_caches = (0..self.name_cache_count)
             .map(|_| std::sync::atomic::AtomicU64::new(0))
             .collect();
         let mut prop_caches = 0;
-        for op in &mut self.code.ops {
+        for op in &mut v.ops {
             if let Op::GetProp(_, ic) | Op::GetPropForCall(_, ic) | Op::SetProp(_, ic) = op {
                 *ic = prop_caches;
                 prop_caches += 1;
             }
         }
         self.code.prop_caches = (0..prop_caches).map(|_| PropCache::default()).collect();
+        let c = &mut self.code;
+        c.ops = v.ops.into();
+        c.positions = v.positions.into();
+        c.functions = v.functions.into();
+        c.scopes = v.scopes.into();
+        c.templates = v.templates.into();
+        c.classes = v.classes.into();
+        c.messages = v.messages.into();
+        c.finally_targets = v.finally_targets.into();
+        c.strict_ranges = v.strict_ranges.into();
         Arc::new(self.code)
     }
 
@@ -257,10 +286,10 @@ impl<'a> Compiler<'a> {
     fn emit(&mut self, op: Op) -> usize {
         if self.locals.is_some() {
             self.emit_with_locals(op);
-            return self.code.ops.len().wrapping_sub(1);
+            return self.vecs.ops.len().wrapping_sub(1);
         }
-        self.code.ops.push(op);
-        self.code.ops.len() - 1
+        self.vecs.ops.push(op);
+        self.vecs.ops.len() - 1
     }
 
     /// `emit` for code compiled with frame locals: the name instructions for
@@ -268,7 +297,7 @@ impl<'a> Compiler<'a> {
     /// of environments.
     fn emit_with_locals(&mut self, op: Op) {
         let locals = self.locals.as_mut().expect("compiling with locals");
-        let ops = &mut self.code.ops;
+        let ops = &mut self.vecs.ops;
         match op {
             Op::GetName(name, _) => match locals.resolve(name) {
                 Some(slot) => ops.push(Op::GetLocal(slot)),
@@ -304,7 +333,7 @@ impl<'a> Compiler<'a> {
                 None => ops.push(op),
             },
             Op::PushScope(i) => {
-                let scope = &self.code.scopes[i as usize];
+                let scope = &self.vecs.scopes[i as usize];
                 if !scope.functions.is_empty() {
                     locals.failed = true;
                 }
@@ -343,15 +372,15 @@ impl<'a> Compiler<'a> {
 
     /// Records that the following instructions come from source offset `pos`.
     fn position(&mut self, span: Span) {
-        let pc = self.code.ops.len() as u32;
-        match self.code.positions.last_mut() {
+        let pc = self.vecs.ops.len() as u32;
+        match self.vecs.positions.last_mut() {
             Some(last) if last.0 == pc => last.1 = span.start,
-            _ => self.code.positions.push((pc, span.start)),
+            _ => self.vecs.positions.push((pc, span.start)),
         }
     }
 
     fn here(&self) -> Label {
-        self.code.ops.len() as Label
+        self.vecs.ops.len() as Label
     }
 
     /// Points the jump at `at` to the current position.
@@ -361,7 +390,7 @@ impl<'a> Compiler<'a> {
     }
 
     fn patch_to(&mut self, at: usize, target: Label) {
-        match &mut self.code.ops[at] {
+        match &mut self.vecs.ops[at] {
             Op::Jump(l)
             | Op::JumpIfFalse(l)
             | Op::JumpIfTrue(l)
@@ -396,8 +425,8 @@ impl<'a> Compiler<'a> {
     }
 
     fn message(&mut self, msg: impl Into<String>) -> u32 {
-        self.code.messages.push(msg.into());
-        (self.code.messages.len() - 1) as u32
+        self.vecs.messages.push(msg.into());
+        (self.vecs.messages.len() - 1) as u32
     }
 
     /// Emits a run-time "not implemented" failure for `what`.
@@ -427,7 +456,7 @@ impl<'a> Compiler<'a> {
             match &self.scopes[i] {
                 // (A scope of locals has no environment to leave.)
                 JumpScope::Env | JumpScope::With if self.locals.is_none() => {
-                    self.code.ops.push(Op::PopScope);
+                    self.vecs.ops.push(Op::PopScope);
                 }
                 JumpScope::Env | JumpScope::With => {}
                 JumpScope::Handler => {
@@ -639,12 +668,12 @@ impl<'a> Compiler<'a> {
                 }
             }
         }
-        self.code.finally_targets[index as usize] = targets;
+        self.vecs.finally_targets[index as usize] = targets;
     }
 
     fn add_function(&mut self, f: Arc<FunctionCode>) -> u32 {
-        self.code.functions.push(f);
-        (self.code.functions.len() - 1) as u32
+        self.vecs.functions.push(f);
+        (self.vecs.functions.len() - 1) as u32
     }
 }
 
@@ -696,7 +725,7 @@ pub fn compile_module(
         c.code.strict = true;
         c.compile_module_body(&module.body);
         // [[HasTLA]]: the module's own code awaits.
-        c.code.is_async = c.code.ops.iter().any(|op| matches!(op, Op::Await));
+        c.code.is_async = c.vecs.ops.iter().any(|op| matches!(op, Op::Await));
         c.finish()
     })
 }

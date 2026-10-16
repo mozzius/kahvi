@@ -53,6 +53,9 @@ struct Cache {
     dir: Option<PathBuf>,
     entries: crate::hash::FxHashMap<Key, Arc<Preparse>>,
     functions: crate::hash::FxHashMap<Key, Functions>,
+    /// The source texts that runtimes hold, so another runtime evaluating
+    /// the same text shares the copy instead of making its own.
+    sources: crate::hash::FxHashMap<Key, std::sync::Weak<str>>,
 }
 
 /// The cached code of one source's functions, by the offset of each.
@@ -149,6 +152,7 @@ fn cache() -> &'static Mutex<Cache> {
             dir: None,
             entries: Default::default(),
             functions: Default::default(),
+            sources: Default::default(),
         })
     })
 }
@@ -261,6 +265,24 @@ fn read_functions(dir: Option<&Path>, key: &Key) -> Functions {
         }
         f
     }
+}
+
+/// `source` as a shared string: the copy another runtime holds of the same
+/// text when there is one, else a new copy that later ones share.
+pub(crate) fn shared_source(key: Option<&Key>, source: &str) -> Arc<str> {
+    let Some(key) = key else {
+        return Arc::from(source);
+    };
+    let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
+    if let Some(s) = c.sources.get(key).and_then(std::sync::Weak::upgrade)
+        && *s == *source
+    {
+        return s;
+    }
+    let s: Arc<str> = Arc::from(source);
+    c.sources.retain(|_, w| w.strong_count() > 0);
+    c.sources.insert(*key, Arc::downgrade(&s));
+    s
 }
 
 /// The encoded code of the function at offset `start` of the source `key`

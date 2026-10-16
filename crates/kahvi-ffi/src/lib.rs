@@ -19,6 +19,36 @@ mod hermes_internal;
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+unsafe extern "C" {
+    fn mi_option_set(option: std::ffi::c_int, value: std::ffi::c_long);
+}
+
+// mimalloc keeps memory it frees for a second before returning it, and
+// commits its arenas eagerly: the parse and the collector free a great deal
+// of memory while an app starts, and kept, it was a quarter of the resident
+// size. 10 ms (mimalloc 2's default) returns it as soon; purging on every
+// free (0) made code that regrows large strings a hundred times slower.
+// Set as the library loads, before anything allocates, and again by the
+// first calls in case the linker left the loader entry out.
+#[used]
+#[cfg_attr(
+    any(target_os = "linux", target_os = "android"),
+    unsafe(link_section = ".init_array")
+)]
+#[cfg_attr(
+    target_vendor = "apple",
+    unsafe(link_section = "__DATA,__mod_init_func")
+)]
+static TUNE_ALLOCATOR: extern "C" fn() = tune_allocator;
+
+extern "C" fn tune_allocator() {
+    // mimalloc's `mi_option_e`: arena_eager_commit = 4, purge_delay = 15.
+    unsafe {
+        mi_option_set(4, 0);
+        mi_option_set(15, 10);
+    }
+}
+
 use std::cell::{Cell, RefCell};
 use std::ffi::c_void;
 use std::sync::atomic::{AtomicPtr, Ordering};
@@ -251,6 +281,7 @@ unsafe fn enter_callback<T>(
 
 #[unsafe(no_mangle)]
 pub extern "C" fn kahvi_runtime_new() -> *mut KahviRuntime {
+    tune_allocator();
     // Hermes has Intl, and React Native apps (Bluesky's, for one) use it
     // without feature-testing it.
     let mut runtime = Box::new(Runtime::with_intl(true));
@@ -301,6 +332,7 @@ pub extern "C" fn kahvi_set_thread_wrapper(wrap: Option<KahviThreadWrapper>) {
 /// `path` points to `len` readable bytes.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_set_code_cache_dir(path: *const u8, len: usize) -> bool {
+    tune_allocator();
     let bytes = unsafe { std::slice::from_raw_parts(path, len) };
     let Ok(dir) = std::str::from_utf8(bytes) else {
         return false;
@@ -423,6 +455,56 @@ pub unsafe extern "C" fn kahvi_take_exception(rt: *mut KahviRuntime) -> KahviVal
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_collect_garbage(rt: *mut KahviRuntime) {
     unsafe { agent(rt).collect_garbage_if_safe() };
+}
+
+unsafe extern "C" {
+    fn mi_process_info(
+        elapsed_msecs: *mut usize,
+        user_msecs: *mut usize,
+        system_msecs: *mut usize,
+        current_rss: *mut usize,
+        peak_rss: *mut usize,
+        current_commit: *mut usize,
+        peak_commit: *mut usize,
+        page_faults: *mut usize,
+    );
+}
+
+/// One line on the runtime's heap and the process's allocator, for hosts
+/// measuring memory: the engine's own tables (a walk of the heap) and what
+/// mimalloc has committed. Free with kahvi_utf8_free.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usize) -> *mut u8 {
+    let h = unsafe { agent(rt).heap_stats() };
+    let mut v = [0usize; 8];
+    unsafe {
+        let [a, b, c, d, e, f, g, i] = &mut v;
+        mi_process_info(a, b, c, d, e, f, g, i);
+    }
+    let mb = |b: usize| b as f64 / (1 << 20) as f64;
+    let line = format!(
+        "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB | \
+         sources {:.1} MB | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
+        h.collections,
+        h.objects_live,
+        h.object_slots,
+        mb(h.object_slot_bytes),
+        mb(h.property_bytes),
+        h.strings_live,
+        h.string_slots,
+        mb(h.string_bytes),
+        h.envs_live,
+        h.env_slots,
+        mb(h.env_slot_bytes),
+        mb(h.source_bytes),
+        mb(v[3]),
+        mb(v[4]),
+        mb(v[5]),
+        mb(v[6]),
+    );
+    let bytes = line.into_bytes().into_boxed_slice();
+    unsafe { *len = bytes.len() };
+    Box::into_raw(bytes) as *mut u8
 }
 
 #[unsafe(no_mangle)]

@@ -226,8 +226,8 @@ impl Compiler<'_> {
         has_await_using: bool,
         body: impl FnOnce(&mut Self),
     ) {
-        self.code.finally_targets.push(Vec::new());
-        let index = (self.code.finally_targets.len() - 1) as u32;
+        self.vecs.finally_targets.push(Vec::new());
+        let index = (self.vecs.finally_targets.len() - 1) as u32;
         self.scopes.push(JumpScope::Finally {
             entry_jumps: Vec::new(),
             continuations: Vec::new(),
@@ -360,12 +360,12 @@ impl Compiler<'_> {
                     }
                 }
                 per_iteration = !is_const && !lexical.is_empty();
-                self.code.scopes.push(ScopeInfo {
+                self.vecs.scopes.push(ScopeInfo {
                     lexical,
                     functions: Vec::new(),
                     is_catch: false,
                 });
-                let scope = (self.code.scopes.len() - 1) as u32;
+                let scope = (self.vecs.scopes.len() - 1) as u32;
                 self.emit(Op::PushScope(scope));
                 self.scopes.push(JumpScope::Env);
                 pushed_env = true;
@@ -456,12 +456,12 @@ impl Compiler<'_> {
         };
         let tdz_scope = (!lexical_names.is_empty()).then(|| {
             let names = lexical_names.iter().map(|(n, _)| (*n, false)).collect();
-            self.code.scopes.push(ScopeInfo {
+            self.vecs.scopes.push(ScopeInfo {
                 lexical: names,
                 functions: Vec::new(),
                 is_catch: false,
             });
-            (self.code.scopes.len() - 1) as u32
+            (self.vecs.scopes.len() - 1) as u32
         });
         // Annex B: `for (var x = init in obj)`.
         if let ForHead::Var {
@@ -488,12 +488,12 @@ impl Compiler<'_> {
         }
 
         let iteration_scope = (!lexical_names.is_empty()).then(|| {
-            self.code.scopes.push(ScopeInfo {
+            self.vecs.scopes.push(ScopeInfo {
                 lexical: lexical_names.clone(),
                 functions: Vec::new(),
                 is_catch: false,
             });
-            (self.code.scopes.len() - 1) as u32
+            (self.vecs.scopes.len() - 1) as u32
         });
 
         if is_await {
@@ -692,8 +692,8 @@ impl Compiler<'_> {
     ) {
         self.reset_completion();
         let finally_index = finalizer.map(|_| {
-            self.code.finally_targets.push(Vec::new());
-            let index = (self.code.finally_targets.len() - 1) as u32;
+            self.vecs.finally_targets.push(Vec::new());
+            let index = (self.vecs.finally_targets.len() - 1) as u32;
             self.scopes.push(JumpScope::Finally {
                 entry_jumps: Vec::new(),
                 continuations: Vec::new(),
@@ -726,12 +726,12 @@ impl Compiler<'_> {
                         .into_iter()
                         .map(|n| (self.agent.string(n), false))
                         .collect();
-                    self.code.scopes.push(ScopeInfo {
+                    self.vecs.scopes.push(ScopeInfo {
                         lexical,
                         functions: Vec::new(),
                         is_catch: true,
                     });
-                    let scope = (self.code.scopes.len() - 1) as u32;
+                    let scope = (self.vecs.scopes.len() - 1) as u32;
                     self.emit(Op::PushScope(scope));
                     self.scopes.push(JumpScope::Env);
                     self.compile_binding(param, true);

@@ -495,6 +495,9 @@ pub enum FunctionFlavor {
 
 // Instructions stay two words.
 const _: () = assert!(std::mem::size_of::<Op>() == 16);
+// Every function has one, called or not (a lazy stub, or decoded with the
+// cached code of the function around it).
+const _: () = assert!(std::mem::size_of::<FunctionCode>() <= 392);
 
 /// A declaration to instantiate in a scope.
 #[derive(Debug, Clone)]
@@ -656,19 +659,19 @@ pub struct FunctionCode {
     /// a call runs it in its closure's environment instead, as nothing can
     /// observe the empty environment's absence.
     pub skips_function_env: bool,
-    pub ops: Vec<Op>,
+    pub ops: Box<[Op]>,
     /// (op index, source offset) pairs, ascending, for error positions.
-    pub positions: Vec<(u32, u32)>,
-    pub functions: Vec<Arc<FunctionCode>>,
-    pub scopes: Vec<ScopeInfo>,
-    pub templates: Vec<TemplateInfo>,
-    pub classes: Vec<ClassStatic>,
-    pub messages: Vec<String>,
-    pub finally_targets: Vec<Vec<Label>>,
+    pub positions: Box<[(u32, u32)]>,
+    pub functions: Box<[Arc<FunctionCode>]>,
+    pub scopes: Box<[ScopeInfo]>,
+    pub templates: Box<[TemplateInfo]>,
+    pub classes: Box<[ClassStatic]>,
+    pub messages: Box<[String]>,
+    pub finally_targets: Box<[Vec<Label>]>,
     /// Instruction ranges `[start, end)` that are strict mode code inside
     /// non-strict code: a class's heritage and element keys (all parts of a
     /// ClassDeclaration or ClassExpression are strict mode code).
-    pub strict_ranges: Vec<(u32, u32)>,
+    pub strict_ranges: Box<[(u32, u32)]>,
     /// The whole source text and this code's span in it (Function.prototype.toString).
     pub source: Arc<str>,
     pub span: (u32, u32),

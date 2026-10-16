@@ -644,12 +644,12 @@ impl Compiler<'_> {
             .map(|c| c.as_ref().map(|c| self.agent.intern(c)))
             .collect();
         let raw = t.raw.iter().map(|r| self.agent.intern(r)).collect();
-        self.code.templates.push(TemplateInfo {
+        self.vecs.templates.push(TemplateInfo {
             cooked,
             raw,
             site: t.span.start,
         });
-        (self.code.templates.len() - 1) as u32
+        (self.vecs.templates.len() - 1) as u32
     }
 
     fn compile_object(&mut self, props: &[ObjectProp]) {

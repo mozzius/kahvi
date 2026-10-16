@@ -12,6 +12,35 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::process::ExitCode;
 
+unsafe extern "C" {
+    fn mi_option_set(option: std::ffi::c_int, value: std::ffi::c_long);
+}
+
+// mimalloc keeps memory it frees for a second before returning it, and
+// commits its arenas eagerly: the parse and the collector free a great deal
+// of memory while an app starts, and kept, it was a quarter of the resident
+// size. 10 ms (mimalloc 2's default) returns it as soon; purging on every
+// free (0) made code that regrows large strings a hundred times slower.
+// Set as the program loads, before anything allocates.
+#[used]
+#[cfg_attr(
+    any(target_os = "linux", target_os = "android"),
+    unsafe(link_section = ".init_array")
+)]
+#[cfg_attr(
+    target_vendor = "apple",
+    unsafe(link_section = "__DATA,__mod_init_func")
+)]
+static TUNE_ALLOCATOR: extern "C" fn() = tune_allocator;
+
+extern "C" fn tune_allocator() {
+    // mimalloc's `mi_option_e`: arena_eager_commit = 4, purge_delay = 15.
+    unsafe {
+        mi_option_set(4, 0);
+        mi_option_set(15, 10);
+    }
+}
+
 use kahvi_core::prelude::*;
 use kahvi_core::vm;
 
@@ -159,6 +188,10 @@ fn run(args: &Args) -> u8 {
     }
     let jobs = agent.run_jobs();
     agent.contexts.pop();
+    // KAHVI_HEAP_REPORT prints a census of the heap once the jobs are done.
+    if std::env::var_os("KAHVI_HEAP_REPORT").is_some() {
+        eprintln!("{:?}", agent.heap_stats());
+    }
     if let Err(e) = jobs {
         return report(&mut agent, e);
     }

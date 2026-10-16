@@ -123,7 +123,7 @@ pub fn parse_script(
         }
         p
     });
-    let source: Arc<str> = Arc::from(source);
+    let source = crate::code_cache::shared_source(cache_key.as_ref(), source);
     let id = register_script(agent, realm, source.clone(), name, false);
     agent.scripts[id as usize].preparse = Some(preparse);
     agent.scripts[id as usize].cache_key = cache_key;

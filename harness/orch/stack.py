@@ -192,9 +192,15 @@ class Stacker:
             return
         self._prepare(start)
         for item in todo:
+            before = git("rev-parse", "HEAD", cwd=TREE)
             commit = self._apply(item)
             if commit is None:
                 self._conflict(item)
+                continue
+            if item["kind"] == "land" and commit == before:
+                # Landed twice, or already merged: a layer of it would be empty.
+                self.db.q("DELETE FROM stack_queue WHERE pos = ?", item["pos"])
+                log(f"stack: {item['ticket']} ({item['source'][:10]}) is already on the stack; dropped")
                 continue
             self.db.q("UPDATE stack_queue SET composed = ? WHERE pos = ?", commit, item["pos"])
         self._set_branch(git("rev-parse", "HEAD", cwd=TREE))
@@ -219,6 +225,23 @@ class Stacker:
         return p.read_text() if p.exists() else None
 
     def push_next(self):
+        # A layer whose PR was never opened (the process stopped, or GitHub
+        # refused it as empty): its items are still queued, so drop it and
+        # recompose. One whose head the trunk already has counts as merged,
+        # so the PR above it retargets past it.
+        orphans = self.db.q(f"SELECT * FROM layers WHERE status IN {LIVE} AND pr IS NULL")
+        if orphans:
+            trunk = self.trunk_branch()
+            run(["git", "fetch", "-q", self.cfg.remote, trunk], check=False)
+        for layer in orphans:
+            merged = run(["git", "merge-base", "--is-ancestor", layer["head"], f"{self.cfg.remote}/{trunk}"],
+                         check=False).returncode == 0
+            status = "merged" if merged else "closed"
+            self.db.q("UPDATE layers SET status = ?, updated = ? WHERE id = ?", status, time.time(), layer["id"])
+            log(f"stack: {layer['branch']} never got a PR; {'already in ' + trunk if merged else 'dropped'}")
+        if orphans:
+            self.compose()
+            return False
         if self.db.one("SELECT 1 FROM layers WHERE status IN ('pending', 'stuck')"):
             return False
         items = self.queue()
