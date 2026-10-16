@@ -1,0 +1,68 @@
+{
+  "ticket": "I-date-time-format",
+  "base": "a853c2eab265b8abea8d8d2fe032216827a7c7f5",
+  "head": "d13007745cc725d1db04783ab3edea17eeb62f2f",
+  "reject": [],
+  "flags": [],
+  "files": [
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_format_range_to_parts.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_format_to_parts.rs",
+      "added": 22,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/intl_date_time_format/prototype_get_format.rs",
+      "added": 68,
+      "removed": 2
+    },
+    {
+      "path": "crates/kahvi-builtins/src/support/intl_date_time_format.rs",
+      "added": 99,
+      "removed": 0
+    }
+  ],
+  "lint_reject": [],
+  "lint_flag": [],
+  "build": "ok",
+  "clippy": "ok",
+  "checks": [],
+  "t262": {
+    "runs": 342,
+    "before": 186,
+    "after": 244,
+    "new_passes": 58,
+    "regressions": [],
+    "timeout": 0,
+    "crash": 0,
+    "not_implemented": 86,
+    "canaries_ok": true,
+    "failing_sample": [
+      "intl402/DateTimeFormat/constructor-options-dayPeriod-valid.js:sloppy  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/constructor-options-dayPeriod-valid.js:strict  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/date-time-options.js:sloppy  Uncaught Test262Error: Function toLocaleString did not return expected string for locales , options undefined; expected one of 10/16/2026, 12:02:36\u202fAM,Fri, Oct ",
+      "intl402/DateTimeFormat/date-time-options.js:strict  Uncaught Test262Error: Function toLocaleString did not return expected string for locales , options undefined; expected one of 10/16/2026, 12:02:36\u202fAM,Fri, Oct ",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-long-en.js:sloppy  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-long-en.js:strict  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-narrow-en.js:sloppy  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-narrow-en.js:strict  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-short-en.js:sloppy  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/dayPeriod-short-en.js:strict  Uncaught InternalError: not implemented: BestFitFormatMatcher: a format with a day period and no hour",
+      "intl402/DateTimeFormat/prototype/format/fractionalSecondDigits.js:sloppy  Uncaught Test262Error: no fractionalSecondDigits Expected SameValue(\u00ab\"1:02:03\u202fAM\"\u00bb, \u00ab\"02:03\"\u00bb) to be true",
+      "intl402/DateTimeFormat/prototype/format/fractionalSecondDigits.js:strict  Uncaught Test262Error: no fractionalSecondDigits Expected SameValue(\u00ab\"1:02:03\u202fAM\"\u00bb, \u00ab\"02:03\"\u00bb) to be true",
+      "intl402/DateTimeFormat/prototype/format/german-weekday-no-year.js:sloppy  Uncaught Test262Error: German weekday without year Expected SameValue(\u00abfalse\u00bb, \u00abtrue\u00bb) to be true",
+      "intl402/DateTimeFormat/prototype/format/german-weekday-no-year.js:strict  Uncaught Test262Error: German weekday without year Expected SameValue(\u00abfalse\u00bb, \u00abtrue\u00bb) to be true",
+      "intl402/DateTimeFormat/prototype/format/numbering-system.js:sloppy  Uncaught Test262Error: en-US: display all time units in 2-digit Expected SameValue(\u00abfalse\u00bb, \u00abtrue\u00bb) to be true"
+    ]
+  },
+  "decision": "pass"
+}

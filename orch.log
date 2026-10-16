@@ -5805,3 +5805,4 @@ test262 at last merge: 83371/84983 runs passing
 [00:01:06] I-date-time-format: attempt 560 finished ($0.748, 50 turns)
 [00:02:06] I-number-format: attempt 561 finished ($0.841, 47 turns)
 [00:02:06] I-number-format: blocked: `kahvi-builtins` needs `fixed_decimal` and `writeable` as direct dependencies (or `icu::decimal::input` needs to re-export `UnsignedRoundingMode`, `SignedRoundingMode`, `RoundingIncrement` and `Sign`) so that FormatNumericToString and formatToParts can be written.
+[00:03:59] I-date-time-format: verifier: accept The diff implements the format getter (UnwrapDateTimeFormat, RequireInternalSlot, the cached BoundFormat closure with Date.now/ToNumber handling) and 
