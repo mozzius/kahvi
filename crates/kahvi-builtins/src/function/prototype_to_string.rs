@@ -19,13 +19,15 @@ pub(crate) fn prototype_to_string(
     };
     let text = match &agent.obj(func).kind {
         // 2. If func is an Object, func has a [[SourceText]] internal slot, ... return CodePointsToString(func.[[SourceText]]).
-        ObjectKind::Function(e) => match &e.source_override {
-            Some((source, start, end)) => source
-                .get(*start as usize..*end as usize)
-                .unwrap_or("")
-                .to_string(),
-            None => e.code.source_text().to_string(),
-        },
+        ObjectKind::Function(e) => {
+            match e.class.as_ref().and_then(|c| c.source_override.as_ref()) {
+                Some((source, start, end)) => source
+                    .get(*start as usize..*end as usize)
+                    .unwrap_or("")
+                    .to_string(),
+                None => e.code.source_text().to_string(),
+            }
+        }
         // 3. If func is a built-in function object, return an implementation-defined
         //    String source code representation of func matching NativeFunction.
         ObjectKind::Builtin(b) => {

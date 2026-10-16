@@ -1668,7 +1668,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 return Err(agent.throw_type_error("right-hand side of 'in' must be an object"));
             };
             let n = resolve_private(agent, frame, name)?;
-            let found = agent.obj(o).private_elements.iter().any(|e| e.key == n);
+            let found = agent.obj(o).private_elements().iter().any(|e| e.key == n);
             frame.push(Value::Boolean(found));
         }
 
@@ -1905,7 +1905,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let name = frame
                 .function
                 .and_then(|f| match &agent.obj(f).kind {
-                    ObjectKind::Function(e) => e.class_field_initializer_name,
+                    ObjectKind::Function(e) => e.class_field_initializer_name(),
                     _ => None,
                 })
                 .map(|n| match n {

@@ -13,9 +13,9 @@ use crate::compiler::{
 use crate::env::{EnvId, Environment};
 use crate::error::JsResult;
 use crate::function::{
-    ClassFieldDefinition, ClassPending, ConstructorKind, EcmaFunction, FieldName, PrivateElement,
-    PrivateElementKind, PrivateName, ThisMode, make_constructor, set_function_length,
-    set_function_name,
+    ClassFieldDefinition, ClassPending, ClassSlots, ConstructorKind, EcmaFunction, FieldName,
+    PrivateElement, PrivateElementKind, PrivateName, ThisMode, make_constructor,
+    set_function_length, set_function_name,
 };
 use crate::object::{ObjectData, ObjectKind, Property, PropertyDescriptor, PropertyKey};
 use crate::ops;
@@ -49,7 +49,6 @@ pub(crate) fn ordinary_function_create(
         ObjectKind::Function(Box::new(EcmaFunction {
             code,
             environment: env,
-            private_environment: private_env,
             home_object: None,
             this_mode,
             constructor_kind: ConstructorKind::Base,
@@ -57,11 +56,12 @@ pub(crate) fn ordinary_function_create(
             constructor: false,
             realm,
             script_or_module,
-            fields: Vec::new(),
-            private_methods: Vec::new(),
-            class_field_initializer_name: None,
-            source_override: None,
-            class_pending: None,
+            class: private_env.map(|p| {
+                Box::new(ClassSlots {
+                    private_environment: Some(p),
+                    ..ClassSlots::default()
+                })
+            }),
         })),
     ));
     // 22. Perform SetFunctionLength(F, len).
@@ -376,7 +376,7 @@ fn evaluate_body(
 ) -> JsResult<FrameResult> {
     let (code, private_env) = {
         let e = ecma(agent, f);
-        (e.code.clone(), e.private_environment.clone())
+        (e.code.clone(), e.private_environment().cloned())
     };
     let code = if code.lazy.is_some() {
         compile_lazy(agent, f, &code)?
@@ -512,7 +512,7 @@ pub(crate) struct InlineCall {
 /// A frame for code `code` of function `f`, running in `env`.
 #[inline(always)]
 fn inline_frame(agent: &mut Agent, f: Object, code: &Arc<FunctionCode>, env: EnvId) -> Box<Frame> {
-    let private_env = ecma(agent, f).private_environment.clone();
+    let private_env = ecma(agent, f).private_environment().cloned();
     let mut frame = match agent.spare_frames.pop() {
         Some(mut frame) => {
             frame.reinit(code.clone(), env, private_env, Some(f));
@@ -926,7 +926,7 @@ pub(super) fn super_call(
 fn private_element_find(agent: &Agent, o: Object, p: PrivateName) -> Option<usize> {
     agent
         .obj(o)
-        .private_elements
+        .private_elements()
         .iter()
         .position(|e| e.key == p)
 }
@@ -950,7 +950,7 @@ pub fn private_field_add(
             "has already been declared on this object",
         ));
     }
-    agent.obj_mut(o).private_elements.push(PrivateElement {
+    agent.obj_mut(o).push_private_element(PrivateElement {
         key: p,
         kind: PrivateElementKind::Field,
         value,
@@ -973,7 +973,7 @@ pub fn private_method_or_accessor_add(
             "has already been declared on this object",
         ));
     }
-    agent.obj_mut(o).private_elements.push(method);
+    agent.obj_mut(o).push_private_element(method);
     Ok(())
 }
 
@@ -986,7 +986,7 @@ pub fn private_get(agent: &mut Agent, o: Object, p: PrivateName) -> JsResult<Val
             "is not present on this object",
         ));
     };
-    let e = agent.obj(o).private_elements[i];
+    let e = agent.obj(o).private_elements()[i];
     match e.kind {
         PrivateElementKind::Field | PrivateElementKind::Method => Ok(e.value),
         PrivateElementKind::Accessor => {
@@ -1007,10 +1007,10 @@ pub fn private_set(agent: &mut Agent, o: Object, p: PrivateName, value: Value) -
             "is not present on this object",
         ));
     };
-    let e = agent.obj(o).private_elements[i];
+    let e = agent.obj(o).private_elements()[i];
     match e.kind {
         PrivateElementKind::Field => {
-            agent.obj_mut(o).private_elements[i].value = value;
+            agent.obj_mut(o).private_elements_mut()[i].value = value;
             Ok(())
         }
         PrivateElementKind::Method => Err(private_name_error(
@@ -1054,7 +1054,10 @@ pub fn initialize_instance_elements(
     constructor: Object,
 ) -> JsResult<()> {
     let (methods, fields) = match &agent.obj(constructor).kind {
-        ObjectKind::Function(e) => (e.private_methods.clone(), e.fields.clone()),
+        ObjectKind::Function(e) => match &e.class {
+            Some(c) => (c.private_methods.clone(), c.fields.clone()),
+            None => return Ok(()),
+        },
         _ => return Ok(()),
     };
     // 2. For each PrivateElement method of methods, perform ? PrivateMethodOrAccessorAdd(O, method).
@@ -1169,10 +1172,10 @@ pub(super) fn create_class(
         if derived {
             e.constructor_kind = ConstructorKind::Derived;
         }
-        e.class_pending = Some(Box::default());
+        e.class_mut().class_pending = Some(Box::default());
     }
     let source = frame.code.source.clone();
-    ecma_mut(agent, f).source_override = Some((source, class.span.0, class.span.1));
+    ecma_mut(agent, f).class_mut().source_override = Some((source, class.span.0, class.span.1));
     // 17. Perform SetFunctionName(F, className).
     let key = ops::to_property_key(agent, name)?;
     set_function_name(agent, f, key, None);
@@ -1221,21 +1224,21 @@ pub(super) fn define_class_field(
     if let Some(i) = initializer {
         let e = ecma_mut(agent, i);
         e.home_object = Some(home);
-        e.class_field_initializer_name = Some(name);
+        e.class_mut().class_field_initializer_name = Some(name);
     }
     let field = ClassFieldDefinition {
         name,
         initializer,
         is_static_block: def.static_block,
     };
-    let e = ecma_mut(agent, f);
+    let c = ecma_mut(agent, f).class_mut();
     if def.is_static {
-        e.class_pending
+        c.class_pending
             .get_or_insert_with(Box::default)
             .static_elements
             .push(field);
     } else {
-        e.fields.push(field);
+        c.fields.push(field);
     }
     Ok(())
 }
@@ -1289,14 +1292,14 @@ pub(super) fn define_private_method(
             }
         }
     };
-    let e = ecma_mut(agent, f);
+    let c = ecma_mut(agent, f).class_mut();
     let list = if def.is_static {
-        &mut e
+        &mut c
             .class_pending
             .get_or_insert_with(Box::default)
             .static_private_methods
     } else {
-        &mut e.private_methods
+        &mut c.private_methods
     };
     // A getter and setter with the same name combine into one accessor.
     match list
@@ -1320,8 +1323,9 @@ pub(super) fn define_private_method(
 /// static fields and blocks in order.
 pub(super) fn finish_class(agent: &mut Agent, f: Object) -> JsResult<()> {
     let pending: ClassPending = ecma_mut(agent, f)
-        .class_pending
-        .take()
+        .class
+        .as_mut()
+        .and_then(|c| c.class_pending.take())
         .map(|b| *b)
         .unwrap_or_default();
     for m in pending.static_private_methods {
