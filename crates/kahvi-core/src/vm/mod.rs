@@ -547,6 +547,22 @@ fn resolve_binding_cached(
     if let Some((id, slot)) = cached_binding(agent, code, env, name, ic) {
         return Ok(Reference::Slot(id, slot as u32, name));
     }
+    // A binding without a slot (the global object's) is cached as its
+    // environment's distance with slot `ENV_BINDING`: the declarative
+    // environments in between cannot gain the name, so only that one
+    // environment needs asking again.
+    let cached = cache.load(Relaxed);
+    if cached != 0 && (cached - 1) as u32 == ENV_BINDING {
+        let mut id = Some(env);
+        for _ in 0..(cached - 1) >> 32 {
+            id = id.and_then(|e| e.outer(agent));
+        }
+        if let Some(id) = id
+            && id.has_binding(agent, name)?
+        {
+            return Ok(Reference::Env(id, name));
+        }
+    }
     let mut e = Some(env);
     let mut hops = 0u64;
     while let Some(id) = e {
@@ -555,6 +571,7 @@ fn resolve_binding_cached(
                 cache.store(((hops << 32) | slot as u64) + 1, Relaxed);
                 return Ok(Reference::Slot(id, slot as u32, name));
             }
+            cache.store(((hops << 32) | u64::from(ENV_BINDING)) + 1, Relaxed);
             return Ok(Reference::Env(id, name));
         }
         e = id.outer(agent);
@@ -562,6 +579,10 @@ fn resolve_binding_cached(
     }
     Ok(Reference::Unresolvable(name))
 }
+
+/// The slot of a binding cache entry for a binding found in an object
+/// environment record (see `resolve_binding_cached`).
+const ENV_BINDING: u32 = u32::MAX;
 
 /// The environment and slot where name instruction `ic` found `name` last
 /// time, if it is still there (see `resolve_binding_cached`).

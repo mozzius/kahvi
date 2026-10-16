@@ -18,7 +18,6 @@
 //! and by the goal (script or module); the parser also checks that each
 //! skipped body starts with `{` and ends with `}` in the text it is given.
 
-use std::collections::HashMap;
 use std::io::{Read, Seek, Write};
 use std::ops::{Deref, Range};
 use std::path::{Path, PathBuf};
@@ -52,14 +51,14 @@ impl Key {
 
 struct Cache {
     dir: Option<PathBuf>,
-    entries: HashMap<Key, Arc<Preparse>>,
-    functions: HashMap<Key, Functions>,
+    entries: crate::hash::FxHashMap<Key, Arc<Preparse>>,
+    functions: crate::hash::FxHashMap<Key, Functions>,
 }
 
 /// The cached code of one source's functions, by the offset of each.
 #[derive(Default)]
 struct Functions {
-    code: HashMap<u32, CodeBytes>,
+    code: crate::hash::FxHashMap<u32, CodeBytes>,
     /// The file new code is appended to.
     file: Option<std::fs::File>,
 }
@@ -148,8 +147,8 @@ fn cache() -> &'static Mutex<Cache> {
     CACHE.get_or_init(|| {
         Mutex::new(Cache {
             dir: None,
-            entries: HashMap::new(),
-            functions: HashMap::new(),
+            entries: Default::default(),
+            functions: Default::default(),
         })
     })
 }
@@ -244,8 +243,15 @@ pub(crate) fn store(key: &Key, preparse: &Arc<Preparse>) {
 
 /// The source's functions, read from the cache directory the first time.
 fn functions<'a>(c: &'a mut Cache, key: &Key) -> &'a mut Functions {
-    let dir = c.dir.clone();
-    c.functions.entry(*key).or_insert_with(|| {
+    if !c.functions.contains_key(key) {
+        c.functions
+            .insert(*key, read_functions(c.dir.as_deref(), key));
+    }
+    c.functions.get_mut(key).expect("inserted above")
+}
+
+fn read_functions(dir: Option<&Path>, key: &Key) -> Functions {
+    {
         let mut f = Functions::default();
         if let Some(dir) = dir {
             let path = dir.join(key.file_name().replace(".kvpp", ".kvbc"));
@@ -254,7 +260,7 @@ fn functions<'a>(c: &'a mut Cache, key: &Key) -> &'a mut Functions {
             }
         }
         f
-    })
+    }
 }
 
 /// The encoded code of the function at offset `start` of the source `key`

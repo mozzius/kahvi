@@ -309,6 +309,16 @@ pub unsafe extern "C" fn kahvi_set_code_cache_dir(path: *const u8, len: usize) -
     true
 }
 
+/// `bytes` as UTF-8, with U+FFFD for invalid sequences. Valid text (the
+/// usual case) is checked by `from_utf8`, which is much faster than the
+/// lossy decoder on large inputs such as an app bundle.
+fn utf8_lossy(bytes: &[u8]) -> std::borrow::Cow<'_, str> {
+    match std::str::from_utf8(bytes) {
+        Ok(s) => std::borrow::Cow::Borrowed(s),
+        Err(_) => String::from_utf8_lossy(bytes),
+    }
+}
+
 fn wrap_thread(run: &mut dyn FnMut()) {
     extern "C" fn trampoline(data: *mut c_void) {
         let run = unsafe { &mut *(data as *mut &mut dyn FnMut()) };
@@ -349,7 +359,7 @@ pub unsafe extern "C" fn kahvi_eval(
 ) -> bool {
     let source = unsafe { std::slice::from_raw_parts(source, len) };
     // Borrowed when valid UTF-8: an app bundle is tens of megabytes.
-    let source = String::from_utf8_lossy(source);
+    let source = utf8_lossy(source);
     let name = if name.is_null() {
         String::from("<eval>")
     } else {
@@ -467,7 +477,7 @@ pub unsafe extern "C" fn kahvi_string_new(
     utf8: *const u8,
     len: usize,
 ) -> KahviValue {
-    let s = String::from_utf8_lossy(unsafe { std::slice::from_raw_parts(utf8, len) }).into_owned();
+    let s = utf8_lossy(unsafe { std::slice::from_raw_parts(utf8, len) }).into_owned();
     unsafe {
         with_agent(rt, |agent| {
             let js = agent.string(&s);

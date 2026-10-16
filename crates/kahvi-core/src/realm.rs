@@ -1,7 +1,5 @@
 //! Realms (ECMA-262 §9.3).
 
-use std::collections::HashMap;
-
 use crate::agent::{Agent, ExecutionContext};
 use crate::env::{EnvId, Environment};
 use crate::error::JsResult;
@@ -15,13 +13,13 @@ pub struct RealmId(pub u32);
 #[derive(Debug)]
 pub struct Realm {
     /// [[Intrinsics]] by spec name, e.g. "%Array.prototype%".
-    pub intrinsics: HashMap<Box<str>, Object>,
+    pub intrinsics: crate::hash::FxHashMap<Box<str>, Object>,
     /// [[GlobalObject]]
     pub global_object: Object,
     /// [[GlobalEnv]]
     pub global_env: EnvId,
     /// [[TemplateMap]]: template site (script id, span start) to its array.
-    pub template_map: HashMap<(u32, u32), Object>,
+    pub template_map: crate::hash::FxHashMap<(u32, u32), Object>,
     /// The legacy static properties of this realm's %RegExp% (Annex B
     /// proposal "Legacy RegExp features"): its [[RegExpInput]] ...
     /// [[RegExpParen9]] internal slots.
@@ -63,10 +61,10 @@ impl Agent {
         // below once %Object.prototype% exists.
         let placeholder = self.alloc(ObjectData::new(None, ObjectKind::Ordinary));
         self.realms.push(Realm {
-            intrinsics: HashMap::new(),
+            intrinsics: Default::default(),
             global_object: placeholder,
             global_env: EnvId(0),
-            template_map: HashMap::new(),
+            template_map: Default::default(),
             // The initial value of all these internal slots is the empty String.
             legacy_regexp: LegacyRegExpStatics {
                 input: Some(self.names.empty),
