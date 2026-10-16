@@ -54,6 +54,7 @@ pub(super) fn register_script(
             .and_then(|v| v.pop())
         {
             agent.scripts[id as usize].source = source;
+            agent.scripts[id as usize].preparse = None;
             return id;
         }
     }
@@ -63,6 +64,7 @@ pub(super) fn register_script(
         name: name.to_string(),
         module: None,
         collectable,
+        preparse: None,
     });
     (agent.scripts.len() - 1) as u32
 }
@@ -75,12 +77,14 @@ pub fn parse_script(
     name: &str,
     realm: RealmId,
 ) -> JsResult<ParsedScript> {
+    let cached = crate::code_cache::lookup(source, false);
     let opts = ParseOptions {
         lazy: true,
+        preparse: cached.clone(),
         ..ParseOptions::default()
     };
-    let ast = match kahvi_parser::parse_script(source, &opts) {
-        Ok(ast) => ast,
+    let (ast, preparse) = match kahvi_parser::parse_script_preparsed(source, &opts) {
+        Ok(parsed) => parsed,
         Err(e) => {
             agent.contexts.push(ExecutionContext {
                 function: None,
@@ -92,8 +96,14 @@ pub fn parse_script(
             return Err(err);
         }
     };
+    let preparse = cached.unwrap_or_else(|| {
+        let p = Arc::new(preparse);
+        crate::code_cache::store(source, false, &p);
+        p
+    });
     let source: Arc<str> = Arc::from(source);
     let id = register_script(agent, realm, source.clone(), name, false);
+    agent.scripts[id as usize].preparse = Some(preparse);
     let code = compiler::compile_script(agent, &ast, source, id);
     Ok(ParsedScript { id, code })
 }

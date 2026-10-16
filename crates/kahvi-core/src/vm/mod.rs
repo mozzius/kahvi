@@ -64,6 +64,9 @@ pub struct ScriptRecord {
     /// An eval or dynamic function's record: freed (and its index reused by
     /// a record with the same realm and name) once no code refers to it.
     pub collectable: bool,
+    /// What parsing the source learned about its lazy function bodies, for
+    /// reparsing them (`kahvi_parser::preparse`).
+    pub preparse: Option<Arc<kahvi_parser::preparse::Preparse>>,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.

@@ -5,7 +5,8 @@ use std::rc::Rc;
 use super::{ClassScope, FnCtx, PResult, Parser, PrivateKind};
 use crate::ast::*;
 use crate::early;
-use crate::lexer::{P, Tok};
+use crate::lexer::{P, Tok, Token};
+use crate::preparse::SkippedBody;
 
 impl Parser<'_> {
     fn child_ctx(&self, is_async: bool, is_generator: bool) -> FnCtx {
@@ -82,10 +83,54 @@ impl Parser<'_> {
         self.push_fn(ctx);
         let result = (|| {
             let (params, rest) = self.parse_formal_parameters()?;
+            let body_start = self.tok.start;
+            if lazy
+                && self.is(P::LBrace)
+                && let Some(skip) = self
+                    .preparse_in
+                    .as_ref()
+                    .and_then(|pp| pp.body_at(body_start, self.lx.source()))
+            {
+                // An earlier parse of this source checked the body: take
+                // what it learned and continue after the body's `}`.
+                self.lx.pos = skip.end as usize;
+                let mut close = Token::new(Tok::Punct(P::RBrace), skip.end as usize - 1);
+                close.end = skip.end as usize;
+                self.tok = close;
+                let ctx = self.fn_ctx_mut();
+                ctx.uses_arguments |= skip.has(SkippedBody::USES_ARGUMENTS);
+                ctx.uses_this |= skip.has(SkippedBody::USES_THIS);
+                ctx.has_direct_eval |= skip.has(SkippedBody::HAS_DIRECT_EVAL);
+                self.strict |= skip.has(SkippedBody::STRICT);
+                let use_strict = skip.has(SkippedBody::HAS_USE_STRICT);
+                self.saw_use_strict = use_strict;
+                self.expect(P::RBrace)?;
+                self.preparse_out.record(skip);
+                return Ok((params, rest, Vec::new(), use_strict));
+            }
             self.expect(P::LBrace)?;
             let body = self.parse_directives_and_statements(true, |p| p.is(P::RBrace))?;
             let use_strict = self.saw_use_strict;
+            let body_end = self.tok.end;
             self.expect(P::RBrace)?;
+            if lazy {
+                let ctx = self.fn_ctx();
+                let flags = [
+                    (self.strict, SkippedBody::STRICT),
+                    (use_strict, SkippedBody::HAS_USE_STRICT),
+                    (ctx.uses_arguments, SkippedBody::USES_ARGUMENTS),
+                    (ctx.uses_this, SkippedBody::USES_THIS),
+                    (ctx.has_direct_eval, SkippedBody::HAS_DIRECT_EVAL),
+                ]
+                .iter()
+                .filter(|(on, _)| *on)
+                .fold(0, |acc, (_, flag)| acc | flag);
+                self.preparse_out.record(SkippedBody {
+                    start: body_start as u32,
+                    end: body_end as u32,
+                    flags,
+                });
+            }
             Ok((params, rest, body, use_strict))
         })();
         let fctx = self.pop_fn();

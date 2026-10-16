@@ -209,8 +209,10 @@ fn declared_names(agent: &mut Agent, s: &ast::Stmt) -> Vec<JsString> {
 pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) -> JsResult<u32> {
     // 1. Let body be ParseText(sourceText, Module).
     // 2. If body is a List of errors, return body.
-    let body = match kahvi_parser::parse_module(source, true) {
-        Ok(b) => b,
+    let cached = crate::code_cache::lookup(source, true);
+    let (body, preparse) = match kahvi_parser::parse_module_preparsed(source, true, cached.clone())
+    {
+        Ok(parsed) => parsed,
         Err(e) => {
             let (line, col) = line_col(source, e.pos);
             let msg = format!("{} ({}:{}:{})", e.message, key, line, col);
@@ -378,9 +380,15 @@ pub fn parse_module(agent: &mut Agent, source: &str, realm: RealmId, key: &str) 
             Some(_) => indirect_export_entries.push(ee),
         }
     }
+    let preparse = cached.unwrap_or_else(|| {
+        let p = Arc::new(preparse);
+        crate::code_cache::store(source, true, &p);
+        p
+    });
     let source: Arc<str> = Arc::from(source);
     let script = register_script(agent, realm, source.clone(), key, false);
     agent.scripts[script as usize].module = Some(id);
+    agent.scripts[script as usize].preparse = Some(preparse);
     let code = compiler::compile_module(agent, &body, source, script);
     // 11. Let async be body Contains await.
     let has_tla = code.is_async;

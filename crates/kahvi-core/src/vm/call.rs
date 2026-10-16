@@ -265,10 +265,12 @@ fn compile_lazy(
     let code = match lazy.compiled.get() {
         Some(code) => code.clone(),
         None => {
-            let ast = match kahvi_parser::parse_lazy_function(
+            let preparse = agent.scripts[stub.script as usize].preparse.clone();
+            let ast = match kahvi_parser::parse_lazy_function_preparsed(
                 &stub.source,
                 stub.span.0 as usize,
                 lazy.function,
+                preparse,
             ) {
                 Ok(ast) => ast,
                 // The first parse found no early errors in this source.
