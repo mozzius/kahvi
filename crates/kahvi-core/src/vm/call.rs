@@ -7,8 +7,8 @@ use std::sync::Arc;
 use super::{Frame, FrameResult, PrivateEnv, generator, instantiate, run_frame};
 use crate::agent::{Agent, ExecutionContext};
 use crate::compiler::{
-    ClassStatic, FieldDef, FunctionCode, FunctionFlavor, MethodDef, MethodKind, PrivateMethodDef,
-    TemplateInfo,
+    ClassStatic, FieldDef, FunctionCode, FunctionFlavor, LocalKind, MethodDef, MethodKind,
+    PrivateMethodDef, TemplateInfo,
 };
 use crate::env::{EnvId, Environment};
 use crate::error::JsResult;
@@ -212,7 +212,14 @@ fn ecma_mut(agent: &mut Agent, f: Object) -> &mut EcmaFunction {
 
 /// PrepareForOrdinaryCall(F, newTarget) (§10.2.1.1): pushes the callee
 /// context and returns the new function environment.
-fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) -> EnvId {
+fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) -> JsResult<EnvId> {
+    // (A lazy function is compiled first: whether the call gets a function
+    // environment depends on its code, and every call of the code must
+    // agree, since its binding caches count environments.)
+    let code = ecma(agent, f).code.clone();
+    if code.lazy.is_some() {
+        compile_lazy(agent, f, &code)?;
+    }
     let e = ecma(agent, f);
     let (realm, script_or_module, outer, lexical) = (
         e.realm,
@@ -220,12 +227,26 @@ fn prepare_for_ordinary_call(agent: &mut Agent, f: Object, new_target: Value) ->
         e.environment,
         e.this_mode == ThisMode::Lexical,
     );
+    let skip = e.code.skips_function_env;
     agent.contexts.push(ExecutionContext {
         function: Some(f),
         realm,
         script_or_module,
     });
-    Environment::new_function(agent, f, new_target, outer, lexical)
+    if skip {
+        // (`FunctionCode::skips_function_env`; callers tell by the result
+        // being the closure's environment.)
+        return Ok(outer);
+    }
+    Ok(Environment::new_function(
+        agent, f, new_target, outer, lexical,
+    ))
+}
+
+/// Whether `env`, from `prepare_for_ordinary_call`, is a function
+/// environment of its own for the call of `f`.
+fn own_function_env(agent: &Agent, f: Object, env: EnvId) -> bool {
+    ecma(agent, f).environment != env
 }
 
 /// OrdinaryCallBindThis(F, calleeContext, thisArgument) (§10.2.1.2)
@@ -235,7 +256,9 @@ fn ordinary_call_bind_this(agent: &mut Agent, f: Object, env: EnvId, this: Value
         (e.this_mode, e.realm)
     };
     // 2. If thisMode is lexical, return unused.
-    if this_mode == ThisMode::Lexical {
+    //    (Nor is there anything to bind for code that skips its function
+    //    environment.)
+    if this_mode == ThisMode::Lexical || !own_function_env(agent, f, env) {
         return Ok(());
     }
     let this_value = if this_mode == ThisMode::Strict {
@@ -325,7 +348,19 @@ fn body_frame(
     f: Object,
     args: &[Value],
 ) -> Frame {
+    let locals = code.locals.as_ref().map(|locals| {
+        let mut v = agent.spare_locals.pop().unwrap_or_default();
+        v.extend(
+            locals
+                .iter()
+                .map(|l| (l.kind == LocalKind::Var).then_some(Value::Undefined)),
+        );
+        v
+    });
     let mut frame = Frame::new(code, env, private_env, Some(f));
+    if let Some(locals) = locals {
+        frame.locals = locals;
+    }
     frame.stack = agent.spare_vec();
     frame.args = agent.spare_vec();
     frame.args.extend_from_slice(args);
@@ -367,6 +402,11 @@ fn evaluate_body(
     if agent.spare_handlers.len() < 64 && handlers.capacity() <= 64 {
         handlers.clear();
         agent.spare_handlers.push(handlers);
+    }
+    let mut locals = std::mem::take(&mut frame.locals);
+    if agent.spare_locals.len() < 64 && locals.capacity() <= 1024 && locals.capacity() > 0 {
+        locals.clear();
+        agent.spare_locals.push(locals);
     }
     Ok(result)
 }
@@ -432,7 +472,7 @@ pub fn call_ecma_function(
     args: &[Value],
 ) -> JsResult<Value> {
     // 2. Let calleeContext be PrepareForOrdinaryCall(F, undefined).
-    let env = prepare_for_ordinary_call(agent, f, Value::Undefined);
+    let env = prepare_for_ordinary_call(agent, f, Value::Undefined)?;
     // 4. If F.[[IsClassConstructor]] is true, then throw a TypeError (in the callee's realm).
     if ecma(agent, f).is_class_constructor {
         let err = agent.throw_type_error("Class constructor cannot be invoked without 'new'");
@@ -444,7 +484,7 @@ pub fn call_ecma_function(
         .and_then(|_| evaluate_body(agent, f, env, args));
     // 7. Remove calleeContext from the execution context stack.
     agent.contexts.pop();
-    if ecma(agent, f).code.envs_die_with_call {
+    if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
         agent.free_env(env);
     }
     match result? {
@@ -476,9 +516,14 @@ pub fn construct_ecma_function(
         None
     };
     // 4. Let calleeContext be PrepareForOrdinaryCall(F, newTarget).
-    let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target));
-    let result = construct_in_env(agent, f, args, this_argument, env);
-    if ecma(agent, f).code.envs_die_with_call {
+    let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target))?;
+    // (thisArgument is rooted for the call: code that skips its function
+    // environment has no this binding to hold it.)
+    let roots = this_argument.map(Value::Object);
+    let result = agent.with_roots(roots.as_slice(), |agent| {
+        construct_in_env(agent, f, args, this_argument, env)
+    });
+    if ecma(agent, f).code.envs_die_with_call && own_function_env(agent, f, env) {
         agent.free_env(env);
     }
     result

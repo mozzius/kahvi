@@ -309,6 +309,12 @@ unit_enum_code!(FunctionFlavor {
     DerivedConstructor,
     ClassFieldInit,
 });
+unit_enum_code!(LocalKind {
+    Param,
+    Var,
+    Let,
+    Const
+});
 unit_enum_code!(ThisMode {
     Lexical,
     Strict,
@@ -331,6 +337,7 @@ macro_rules! struct_code {
 }
 
 struct_code!(MethodDef { kind, enumerable });
+struct_code!(LocalInfo { name, kind });
 struct_code!(ClassInfo { constructor, class });
 struct_code!(FieldDef {
     is_static,
@@ -545,6 +552,10 @@ op_code! {
     149 NotImplemented(a: u32),
     150 Debugger,
     151 Nop,
+    152 GetLocal(a: u32),
+    153 ResolveLocal(a: u32),
+    154 InitLocal(a: u32),
+    155 ClearLocals(a: u32, b: u32),
 }
 
 /// The surroundings every function of a decoded tree shares.
@@ -569,6 +580,8 @@ fn put_code(code: &FunctionCode, w: &mut Writer) -> Option<()> {
     code.has_direct_eval.put(w)?;
     code.binds_own_name.put(w)?;
     code.envs_die_with_call.put(w)?;
+    code.locals.as_deref().map(<[LocalInfo]>::to_vec).put(w)?;
+    code.skips_function_env.put(w)?;
     code.ops.put(w)?;
     code.positions.put(w)?;
     w.len(code.functions.len())?;
@@ -611,6 +624,8 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
     let has_direct_eval = Code::get(r)?;
     let binds_own_name = Code::get(r)?;
     let envs_die_with_call = Code::get(r)?;
+    let locals: Option<Vec<LocalInfo>> = Code::get(r)?;
+    let skips_function_env = Code::get(r)?;
     let ops = Code::get(r)?;
     let positions = Code::get(r)?;
     let n = r.len()?;
@@ -656,6 +671,8 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
         has_direct_eval,
         binds_own_name,
         envs_die_with_call,
+        locals: locals.map(Vec::into_boxed_slice),
+        skips_function_env,
         ops,
         positions,
         functions,

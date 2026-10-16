@@ -42,7 +42,7 @@ pub use operators::{apply_binary_operator, number_exponentiate, type_of};
 
 use crate::ScriptOrModule;
 use crate::agent::Agent;
-use crate::compiler::{CodeKind, ErrorType, FunctionCode, Op};
+use crate::compiler::{CodeKind, ErrorType, FunctionCode, LocalKind, Op};
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
@@ -110,6 +110,8 @@ pub enum Reference {
     /// while it still holds `name`).
     Slot(EnvId, u32, JsString),
     Unresolvable(JsString),
+    /// A frame local of the running code (`FunctionCode::locals`).
+    Local(u32),
 }
 
 /// An exception handler installed by `PushHandler`.
@@ -250,6 +252,9 @@ pub struct Frame {
     /// instantiation gave a var binding (from `code.decls`, which keeps the
     /// strings alive).
     pub annex_b: Vec<JsString>,
+    /// The values of the code's frame locals (`FunctionCode::locals`),
+    /// `None` for one not initialized yet.
+    pub locals: Vec<Option<Value>>,
 }
 
 impl Frame {
@@ -278,6 +283,7 @@ impl Frame {
             delegate_kind: 0,
             resume_pc: None,
             annex_b: Vec::new(),
+            locals: Vec::new(),
         }
     }
 
@@ -429,6 +435,26 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             };
             frame.refs.push(Reference::Slot(env, slot as u32, name));
         }
+        Op::GetLocal(slot) => {
+            let Some(v) = frame.locals[slot as usize] else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
+        Op::ResolveLocal(slot) => frame.refs.push(Reference::Local(slot)),
+        Op::InitLocal(slot) => {
+            let v = frame.pop();
+            frame.locals[slot as usize] = Some(v);
+        }
+        Op::GetRef if matches!(frame.refs.last(), Some(Reference::Local(_))) => {
+            let Some(&Reference::Local(slot)) = frame.refs.last() else {
+                unreachable!()
+            };
+            let Some(v) = frame.locals[slot as usize] else {
+                return false;
+            };
+            frame.stack.push(v);
+        }
         Op::GetRef => {
             let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
                 return false;
@@ -440,6 +466,19 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
                 return false;
             };
             frame.stack.push(v);
+        }
+        Op::PutRef if matches!(frame.refs.last(), Some(Reference::Local(_))) => {
+            let Some(&Reference::Local(slot)) = frame.refs.last() else {
+                unreachable!()
+            };
+            let locals = frame.code.locals.as_ref().expect("code with locals");
+            if frame.locals[slot as usize].is_none()
+                || locals[slot as usize].kind == LocalKind::Const
+            {
+                return false;
+            }
+            frame.locals[slot as usize] = Some(frame.peek());
+            frame.refs.pop();
         }
         Op::PutRef => {
             let Some(&Reference::Slot(env, slot, name)) = frame.refs.last() else {
@@ -626,6 +665,7 @@ pub fn get_reference(agent: &mut Agent, r: Reference, strict: bool) -> JsResult<
             }
         }
         Reference::Unresolvable(name) => Err(not_defined(agent, name)),
+        Reference::Local(_) => unreachable!("a local reference outside its frame"),
     }
 }
 
@@ -645,7 +685,48 @@ pub fn put_reference(agent: &mut Agent, r: Reference, value: Value, strict: bool
             let key = agent.key_from_string(name);
             ops::set(agent, global, key, value, false)
         }
+        Reference::Local(_) => unreachable!("a local reference outside its frame"),
     }
+}
+
+/// GetValue of frame local `slot`: GetBindingValue of a declarative
+/// record's binding (§9.1.1.1.6).
+#[inline]
+fn get_local(agent: &mut Agent, frame: &Frame, slot: u32) -> JsResult<Value> {
+    match frame.locals[slot as usize] {
+        Some(v) => Ok(v),
+        // 2. If the binding for N in envRec is an uninitialized binding, throw a ReferenceError exception.
+        None => Err(uninitialized_local(agent, frame, slot)),
+    }
+}
+
+/// PutValue to frame local `slot`: SetMutableBinding of a declarative
+/// record's binding (§9.1.1.1.5).
+fn put_local(agent: &mut Agent, frame: &mut Frame, slot: u32, value: Value) -> JsResult<()> {
+    let info = &frame.code.locals.as_ref().expect("code with locals")[slot as usize];
+    // 4. If the binding for N in envRec has not yet been initialized, throw a ReferenceError exception.
+    if frame.locals[slot as usize].is_none() {
+        return Err(uninitialized_local(agent, frame, slot));
+    }
+    // 6. Else, (an immutable binding, created strict by const declarations)
+    //    if S is true, throw a TypeError exception.
+    if info.kind == LocalKind::Const {
+        let msg = format!("assignment to constant '{}'", agent.str_lossy(info.name));
+        return Err(agent.throw_type_error(&msg));
+    }
+    // 5. Else if the binding for N in envRec is a mutable binding, change its bound value to V.
+    frame.locals[slot as usize] = Some(value);
+    Ok(())
+}
+
+#[cold]
+fn uninitialized_local(agent: &mut Agent, frame: &Frame, slot: u32) -> JsError {
+    let name = frame.code.locals.as_ref().expect("code with locals")[slot as usize].name;
+    let msg = format!(
+        "cannot access '{}' before initialization",
+        agent.str_lossy(name)
+    );
+    agent.throw_reference_error(&msg)
 }
 
 /// ResolveThisBinding (§9.4.4)
@@ -933,7 +1014,9 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let this = match r {
                 Reference::Env(env, _) => env.with_base_object(agent),
                 // A declarative record's WithBaseObject() is undefined.
-                Reference::Slot(..) | Reference::Unresolvable(_) => Value::Undefined,
+                Reference::Slot(..) | Reference::Unresolvable(_) | Reference::Local(_) => {
+                    Value::Undefined
+                }
             };
             frame.push(v);
             frame.push(this);
@@ -944,13 +1027,31 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
         Op::GetRef => {
             let r = *frame.refs.last().expect("reference stack underflow");
-            let v = get_reference(agent, r, frame.strict())?;
+            let v = match r {
+                Reference::Local(slot) => get_local(agent, frame, slot)?,
+                r => get_reference(agent, r, frame.strict())?,
+            };
             frame.push(v);
         }
         Op::PutRef => {
             let r = frame.refs.pop().expect("reference stack underflow");
             let v = frame.peek();
-            put_reference(agent, r, v, frame.strict())?;
+            match r {
+                Reference::Local(slot) => put_local(agent, frame, slot, v)?,
+                r => put_reference(agent, r, v, frame.strict())?,
+            }
+        }
+        Op::GetLocal(slot) => {
+            let v = get_local(agent, frame, slot)?;
+            frame.push(v);
+        }
+        Op::ResolveLocal(slot) => frame.refs.push(Reference::Local(slot)),
+        Op::InitLocal(slot) => {
+            let v = frame.pop();
+            frame.locals[slot as usize] = Some(v);
+        }
+        Op::ClearLocals(start, count) => {
+            frame.locals[start as usize..(start + count) as usize].fill(None);
         }
         Op::DropRef => {
             frame.refs.pop();
@@ -978,6 +1079,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 Reference::Env(env, name) | Reference::Slot(env, _, name) => {
                     env.delete_binding(agent, name)?
                 }
+                Reference::Local(_) => unreachable!("resolve_binding finds no locals"),
             };
             frame.push(Value::Boolean(result));
         }
@@ -2233,6 +2335,8 @@ impl Trace for Reference {
                 t.string(*name);
             }
             Reference::Unresolvable(name) => t.string(*name),
+            // (The frame traces its locals.)
+            Reference::Local(_) => {}
         }
     }
 }
@@ -2281,6 +2385,9 @@ impl Trace for Frame {
         self.args.trace(t);
         t.value(self.completion);
         self.pending.trace(t);
+        for v in self.locals.iter().flatten() {
+            t.value(*v);
+        }
     }
 }
 

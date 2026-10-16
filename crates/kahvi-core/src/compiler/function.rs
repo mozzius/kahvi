@@ -6,12 +6,19 @@ use std::sync::Arc;
 use kahvi_parser::ast::{self, Function, FunctionBody, FunctionKind, Pattern, Stmt, VarKind};
 use kahvi_parser::early;
 
-use super::{CodeKind, Compiler, FunctionCode, FunctionFlavor, LazyCode, Op, ScopeInfo};
+use super::{CodeKind, Compiler, FunctionCode, FunctionFlavor, LazyCode, LocalKind, Op, ScopeInfo};
 use crate::agent::Agent;
 use crate::function::ThisMode;
 use crate::value::JsString;
 
 /// Compiles a function's body into its own [`FunctionCode`].
+///
+/// A function whose environments die with its call has no closures, eval,
+/// `with` or arguments object: nothing can look its bindings up by name at
+/// run time. Where its declaration instantiation is also simple (no
+/// parameter expressions or duplicates, no Annex B functions), it is
+/// compiled again with its bindings as frame locals (`FunctionCode::locals`),
+/// which behave as the environment record's bindings would.
 pub(super) fn compile_function(
     agent: &mut Agent,
     f: &Function,
@@ -19,6 +26,30 @@ pub(super) fn compile_function(
     script: u32,
     is_expression: bool,
 ) -> Arc<FunctionCode> {
+    let code = compile_function_with(agent, f, source.clone(), script, is_expression, false)
+        .expect("compiling without locals");
+    let simple = code.envs_die_with_call
+        && code.lazy.is_none()
+        && !code.params.has_expressions
+        && !code.params.has_duplicates
+        && code.decls.functions.is_empty()
+        && code.decls.annex_b_functions.is_empty();
+    if !simple {
+        return code;
+    }
+    compile_function_with(agent, f, source, script, is_expression, true).unwrap_or(code)
+}
+
+/// `compile_function`, with frame locals or not. Returns `None` if the code
+/// needed something frame locals cannot represent.
+fn compile_function_with(
+    agent: &mut Agent,
+    f: &Function,
+    source: Arc<str>,
+    script: u32,
+    is_expression: bool,
+    with_locals: bool,
+) -> Option<Arc<FunctionCode>> {
     let mut c = Compiler::new(agent, CodeKind::Function, source, script, f.span);
     c.code.strict = f.strict;
     c.code.is_async = f.is_async;
@@ -59,7 +90,7 @@ pub(super) fn compile_function(
             is_expression,
             compiled: std::sync::OnceLock::new(),
         }));
-        return c.finish();
+        return Some(c.finish());
     }
 
     // Parameters (BoundNames of the formals, in order).
@@ -117,6 +148,25 @@ pub(super) fn compile_function(
             .expect("compiling")
             .dynamic_scopes += 1;
     }
+    if with_locals {
+        // The bindings FunctionDeclarationInstantiation would create in the
+        // function's environment (steps 21, 27 and 34).
+        let d = &c.code.decls;
+        let bindings = (c.code.params.names.iter().map(|&n| (n, LocalKind::Param)))
+            .chain(d.var_names.iter().map(|&n| (n, LocalKind::Var)))
+            .chain(d.lexical.iter().map(|&(n, is_const)| {
+                let kind = if is_const {
+                    LocalKind::Const
+                } else {
+                    LocalKind::Let
+                };
+                (n, kind)
+            }))
+            .collect::<Vec<_>>();
+        let mut locals = super::LocalScopes::default();
+        locals.push(bindings);
+        c.locals = Some(locals);
+    }
     // FunctionDeclarationInstantiation steps 24-28: bind the parameters.
     c.compile_parameters(f);
     // Steps 29-36.
@@ -156,7 +206,33 @@ pub(super) fn compile_function(
             .expect("compiling")
             .dynamic_scopes -= 1;
     }
-    c.finish()
+    match c.locals.take() {
+        None => Some(c.finish()),
+        Some(locals) if locals.failed => None,
+        Some(locals) => {
+            c.code.locals = Some(locals.slots.into_boxed_slice());
+            // Arrow functions have no this binding, so their function
+            // environment is empty with locals. (A derived constructor's
+            // environment holds the this binding its return checks.)
+            c.code.skips_function_env = f.kind == FunctionKind::Arrow
+                || (f.kind != FunctionKind::DerivedConstructor
+                    && !c.code.ops.iter().any(|op| {
+                        matches!(
+                            op,
+                            Op::This
+                                | Op::NewTarget
+                                | Op::GetSuperProp(_)
+                                | Op::GetSuperPropForCall(_)
+                                | Op::SuperBase
+                                | Op::GetSuperConstructor
+                                | Op::SuperCall(_)
+                                | Op::SuperCallSpread
+                                | Op::SuperCallForward
+                        )
+                    }));
+            Some(c.finish())
+        }
+    }
 }
 
 /// ContainsExpression of a binding pattern.
