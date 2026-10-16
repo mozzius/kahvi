@@ -408,7 +408,7 @@ impl Frame {
         self.code.strict || {
             let pc = self.pc as u32;
             self.code
-                .strict_ranges
+                .strict_ranges()
                 .iter()
                 .any(|&(s, e)| s <= pc && pc < e)
         }
@@ -1305,6 +1305,9 @@ fn array_append(agent: &mut Agent, array: Value, value: Value) -> JsResult<()> {
     let Value::Object(a) = array else {
         return Ok(());
     };
+    if crate::object::array::array_append_data(agent, a, value) {
+        return Ok(());
+    }
     let len = crate::object::array::array_length(agent, a);
     let key = agent.key_from_index(len as f64);
     ops::create_data_property_or_throw(agent, a, key, value)
@@ -1465,7 +1468,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         // ---- environments
         Op::PushScope(i) => {
             let code = frame.code.clone();
-            let env = if code.scopes[i as usize].is_catch {
+            let env = if code.scopes()[i as usize].is_catch {
                 Environment::new_catch(agent, Some(frame.env))
             } else {
                 Environment::new_declarative(agent, Some(frame.env))
@@ -1474,7 +1477,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 agent,
                 frame,
                 &code,
-                &code.scopes[i as usize],
+                &code.scopes()[i as usize],
                 env,
             )?;
             frame.env = env;
@@ -1780,7 +1783,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             return Err(JsError::Throw(v));
         }
         Op::ThrowError(kind, m) => {
-            let msg = frame.code.messages[m as usize].clone();
+            let msg = frame.code.messages()[m as usize].clone();
             return Err(match kind {
                 ErrorType::Type => agent.throw_type_error(&msg),
                 ErrorType::Reference => agent.throw_reference_error(&msg),
@@ -1807,7 +1810,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
                 1 => return Err(JsError::Throw(value)),
                 k => {
                     frame.push(value);
-                    let target = frame.code.finally_targets[index as usize][k - 2];
+                    let target = frame.code.finally_targets()[index as usize][k - 2];
                     return Ok(Flow::Jump(target as usize));
                 }
             }
@@ -2129,7 +2132,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
         Op::GetTemplateObject(i) => {
             let code = frame.code.clone();
-            let t = call::get_template_object(agent, &code, &code.templates[i as usize])?;
+            let t = call::get_template_object(agent, &code, &code.templates()[i as usize])?;
             frame.push(Value::Object(t));
         }
         Op::RegExp(pattern, flags) => {
@@ -2457,7 +2460,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             let code = frame.code.clone();
             let ctor_code =
                 code.functions[info.constructor.expect("class constructor") as usize].clone();
-            let class = &code.classes[info.class as usize];
+            let class = &code.classes()[info.class as usize];
             let (f, proto) = call::create_class(
                 agent,
                 frame,
@@ -2471,7 +2474,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(Value::Object(proto));
         }
         Op::PushPrivateScope(i) => {
-            let names = frame.code.classes[i as usize].private_names.clone();
+            let names = frame.code.classes()[i as usize].private_names.clone();
             let names = names
                 .into_iter()
                 .map(|d| agent.new_private_name(d))
@@ -2495,7 +2498,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
 
         // ---- misc
         Op::NotImplemented(m) => {
-            let msg = frame.code.messages[m as usize].clone();
+            let msg = frame.code.messages()[m as usize].clone();
             return Err(agent.not_implemented(&msg));
         }
         Op::Debugger | Op::Nop => {}

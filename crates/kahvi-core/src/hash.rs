@@ -121,6 +121,11 @@ impl Default for StringTable {
 }
 
 impl StringTable {
+    /// Bytes allocated for the table, for heap statistics.
+    pub(crate) fn heap_bytes(&self) -> usize {
+        self.slots.capacity() * std::mem::size_of::<u32>()
+    }
+
     fn hash(&self, units: &[u16]) -> u64 {
         let mut h = FxHasher { hash: self.seed };
         let mut chunks = units.chunks_exact(4);
