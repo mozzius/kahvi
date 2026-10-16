@@ -971,15 +971,22 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
         Op::PushEmptyScope => frame.env = Environment::new_declarative(agent, Some(frame.env)),
         Op::PopScope => {
-            frame.env = frame
-                .env
+            let scope = frame.env;
+            frame.env = scope
                 .outer(agent)
-                .expect("PopScope at the outermost environment")
+                .expect("PopScope at the outermost environment");
+            if frame.code.envs_die_with_call {
+                agent.free_env(scope);
+            }
         }
         Op::CopyScope => {
-            // CreatePerIterationEnvironment
-            let copy = agent.env(frame.env).clone();
-            frame.env = agent.alloc_env(copy);
+            // CreatePerIterationEnvironment. Without closures nothing can
+            // tell the copy from the last iteration's environment, so a
+            // function whose environments die with its call keeps that one.
+            if !frame.code.envs_die_with_call {
+                let copy = agent.env(frame.env).clone();
+                frame.env = agent.alloc_env(copy);
+            }
         }
         Op::PushWith => {
             let v = frame.pop();

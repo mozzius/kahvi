@@ -330,7 +330,11 @@ fn evaluate_body(
     let mut frame = body_frame(agent, code, env, private_env, f, args);
     // FunctionDeclarationInstantiation up to the parameter bindings.
     instantiate::function_declaration_instantiation(agent, &mut frame, f, args)?;
-    let result = run_frame(agent, &mut frame)?;
+    let result = run_frame(agent, &mut frame);
+    if frame.code.envs_die_with_call {
+        free_scopes_between(agent, frame.env, env);
+    }
+    let result = result?;
     agent.give_back_vec(std::mem::take(&mut frame.stack));
     agent.give_back_vec(std::mem::take(&mut frame.args));
     let mut handlers = std::mem::take(&mut frame.handlers);
@@ -339,6 +343,28 @@ fn evaluate_body(
         agent.spare_handlers.push(handlers);
     }
     Ok(result)
+}
+
+/// Frees the environments a call created inside its function environment
+/// `function_env` that are still on the chain from `env` (blocks it left
+/// by returning or throwing, and a separate var environment), for code whose
+/// environments die with its call.
+fn free_scopes_between(agent: &mut Agent, env: EnvId, function_env: EnvId) {
+    // The chain must lead to the function environment; anything else is
+    // left to the collector.
+    let mut e = env;
+    while e != function_env {
+        match e.outer(agent) {
+            Some(outer) => e = outer,
+            None => return,
+        }
+    }
+    let mut e = env;
+    while e != function_env {
+        let outer = e.outer(agent).expect("checked above");
+        agent.free_env(e);
+        e = outer;
+    }
 }
 
 /// The rest of OrdinaryCallEvaluateBody for async and generator functions,
@@ -392,6 +418,9 @@ pub fn call_ecma_function(
         .and_then(|_| evaluate_body(agent, f, env, args));
     // 7. Remove calleeContext from the execution context stack.
     agent.contexts.pop();
+    if ecma(agent, f).code.envs_die_with_call {
+        agent.free_env(env);
+    }
     match result? {
         FrameResult::Return(v) => Ok(v),
         FrameResult::Yield(_) | FrameResult::YieldDelegate(_) | FrameResult::Await(_) => {
@@ -422,6 +451,21 @@ pub fn construct_ecma_function(
     };
     // 4. Let calleeContext be PrepareForOrdinaryCall(F, newTarget).
     let env = prepare_for_ordinary_call(agent, f, Value::Object(new_target));
+    let result = construct_in_env(agent, f, args, this_argument, env);
+    if ecma(agent, f).code.envs_die_with_call {
+        agent.free_env(env);
+    }
+    result
+}
+
+/// [[Construct]] steps 5-12, in the callee's function environment `env`.
+fn construct_in_env(
+    agent: &mut Agent,
+    f: Object,
+    args: &[Value],
+    this_argument: Option<Object>,
+    env: EnvId,
+) -> JsResult<Object> {
     let result = (|| {
         // 6. If kind is base, then
         if let Some(this) = this_argument {

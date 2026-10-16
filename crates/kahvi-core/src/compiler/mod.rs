@@ -120,6 +120,7 @@ impl<'a> Compiler<'a> {
                 decls: Declarations::default(),
                 uses_arguments: false,
                 has_direct_eval: false,
+                envs_die_with_call: false,
                 binds_own_name: false,
                 ops: Vec::new(),
                 positions: Vec::new(),
@@ -147,6 +148,16 @@ impl<'a> Compiler<'a> {
     }
 
     fn finish(mut self) -> Arc<FunctionCode> {
+        let c = &self.code;
+        let envs_die_with_call = c.kind == CodeKind::Function
+            && !c.is_async
+            && !c.is_generator
+            && !c.uses_arguments
+            && !c.has_direct_eval
+            && c.functions.is_empty()
+            && c.classes.is_empty()
+            && !c.ops.iter().any(|op| matches!(op, Op::PushWith));
+        self.code.envs_die_with_call = envs_die_with_call;
         self.code.name_caches = (0..self.name_cache_count)
             .map(|_| std::sync::atomic::AtomicU64::new(0))
             .collect();

@@ -895,6 +895,33 @@ impl Agent {
         })
     }
 
+    /// Frees environment `id` now, for code that knows nothing references
+    /// it any more (`FunctionCode::envs_die_with_call`): its slot and
+    /// allocations go back to `alloc_declarative` without waiting for a
+    /// collection.
+    pub(crate) fn free_env(&mut self, id: EnvId) {
+        let i = id.0;
+        debug_assert!(!self.gc.is_free_env.get(i), "environment freed twice");
+        match &mut self.envs[i as usize] {
+            Environment::Declarative {
+                bindings,
+                outer,
+                imports,
+                disposable_resource_stack,
+                ..
+            } if bindings.capacity() <= 64 => {
+                bindings.clear();
+                *outer = None;
+                imports.clear();
+                disposable_resource_stack.clear();
+            }
+            e => *e = Environment::dead(),
+        }
+        self.gc.is_free_env.insert(i);
+        self.gc.free_envs.push(i);
+        self.gc.allocated = self.gc.allocated.saturating_sub(1);
+    }
+
     pub fn env(&self, id: EnvId) -> &Environment {
         &self.envs[id.0 as usize]
     }
