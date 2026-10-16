@@ -218,13 +218,18 @@ impl<T: Code> Code for Vec<T> {
     }
 }
 
+/// Writes a slice as a `Vec` or boxed slice reads it back.
+fn put_slice<T: Code>(items: &[T], w: &mut Writer) -> Option<()> {
+    w.len(items.len())?;
+    for v in items {
+        v.put(w)?;
+    }
+    Some(())
+}
+
 impl<T: Code> Code for Box<[T]> {
     fn put(&self, w: &mut Writer) -> Option<()> {
-        w.len(self.len())?;
-        for v in self {
-            v.put(w)?;
-        }
-        Some(())
+        put_slice(self, w)
     }
     fn get(r: &mut Reader) -> Option<Self> {
         Vec::get(r).map(Vec::into_boxed_slice)
@@ -588,7 +593,7 @@ fn put_code(code: &FunctionCode, w: &mut Writer) -> Option<()> {
     code.name.put(w)?;
     code.length.put(w)?;
     code.params.put(w)?;
-    code.decls.put(w)?;
+    code.decls().put(w)?;
     code.uses_arguments.put(w)?;
     code.has_direct_eval.put(w)?;
     code.binds_own_name.put(w)?;
@@ -601,12 +606,12 @@ fn put_code(code: &FunctionCode, w: &mut Writer) -> Option<()> {
     for f in &code.functions {
         put_code(f, w)?;
     }
-    code.scopes.put(w)?;
-    code.templates.put(w)?;
-    code.classes.put(w)?;
-    code.messages.put(w)?;
-    code.finally_targets.put(w)?;
-    code.strict_ranges.put(w)?;
+    put_slice(code.scopes(), w)?;
+    put_slice(code.templates(), w)?;
+    put_slice(code.classes(), w)?;
+    put_slice(code.messages(), w)?;
+    put_slice(code.finally_targets(), w)?;
+    put_slice(code.strict_ranges(), w)?;
     code.span.put(w)?;
     w.len(code.name_caches.len())?;
     w.len(code.prop_caches.len())?;
@@ -633,7 +638,7 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
     let name = Code::get(r)?;
     let length = Code::get(r)?;
     let params = Code::get(r)?;
-    let decls = Code::get(r)?;
+    let decls: Declarations = Code::get(r)?;
     let uses_arguments = Code::get(r)?;
     let has_direct_eval = Code::get(r)?;
     let binds_own_name = Code::get(r)?;
@@ -647,12 +652,14 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
     for _ in 0..n {
         functions.push(Arc::new(get_code(r, cx)?));
     }
-    let scopes = Code::get(r)?;
-    let templates = Code::get(r)?;
-    let classes = Code::get(r)?;
-    let messages = Code::get(r)?;
-    let finally_targets = Code::get(r)?;
-    let strict_ranges = Code::get(r)?;
+    let tables = CodeTables {
+        scopes: Code::get(r)?,
+        templates: Code::get(r)?,
+        classes: Code::get(r)?,
+        messages: Code::get(r)?,
+        finally_targets: Code::get(r)?,
+        strict_ranges: Code::get(r)?,
+    };
     let span = Code::get(r)?;
     let name_caches = (0..r.u32()?)
         .map(|_| std::sync::atomic::AtomicU64::new(0))
@@ -681,7 +688,12 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
         name,
         length,
         params,
-        decls,
+        decls: (decls.var_names.len()
+            + decls.functions.len()
+            + decls.lexical.len()
+            + decls.annex_b_functions.len()
+            > 0)
+        .then(|| Box::new(decls)),
         uses_arguments,
         has_direct_eval,
         binds_own_name,
@@ -691,12 +703,7 @@ fn get_code(r: &mut Reader, cx: &Context) -> Option<FunctionCode> {
         ops,
         positions,
         functions: functions.into(),
-        scopes,
-        templates,
-        classes,
-        messages,
-        finally_targets,
-        strict_ranges,
+        tables: tables.boxed(),
         source: cx.source.clone(),
         span,
         script: cx.script,

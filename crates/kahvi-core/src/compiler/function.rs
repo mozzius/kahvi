@@ -32,8 +32,8 @@ pub(super) fn compile_function(
         && code.lazy.is_none()
         && !code.params.has_expressions
         && !code.params.has_duplicates
-        && code.decls.functions.is_empty()
-        && code.decls.annex_b_functions.is_empty();
+        && code.decls().functions.is_empty()
+        && code.decls().annex_b_functions.is_empty();
     if !simple {
         return code;
     }
@@ -151,7 +151,7 @@ fn compile_function_with(
     if with_locals {
         // The bindings FunctionDeclarationInstantiation would create in the
         // function's environment (steps 21, 27 and 34).
-        let d = &c.code.decls;
+        let d = c.code.decls();
         let bindings = (c.code.params.names.iter().map(|&n| (n, LocalKind::Param)))
             .chain(d.var_names.iter().map(|&n| (n, LocalKind::Var)))
             .chain(d.lexical.iter().map(|&(n, is_const)| {
@@ -291,7 +291,7 @@ impl Compiler<'_> {
         self.collect_declarations(&declaring);
         // `export default function () {}` binds "*default*".
         let empty = self.string("");
-        for (name, _) in self.code.decls.functions.iter_mut() {
+        for (name, _) in self.code.decls_mut().functions.iter_mut() {
             if *name == empty {
                 *name = default_name;
             }
@@ -300,10 +300,10 @@ impl Compiler<'_> {
         for item in items {
             match item {
                 ModuleItem::Export(ExportDecl::DefaultExpr(..)) => {
-                    self.code.decls.lexical.push((default_name, false));
+                    self.code.decls_mut().lexical.push((default_name, false));
                 }
                 ModuleItem::Export(ExportDecl::DefaultDecl(Stmt::Class(c))) if c.id.is_none() => {
-                    self.code.decls.lexical.push((default_name, false));
+                    self.code.decls_mut().lexical.push((default_name, false));
                 }
                 _ => {}
             }
@@ -377,9 +377,9 @@ impl Compiler<'_> {
             functions.insert(0, (name, index));
         }
         let lexical = self.lexical_declarations(body);
-        self.code.decls.var_names = var_names;
-        self.code.decls.functions = functions;
-        self.code.decls.lexical = lexical;
+        self.code.decls_mut().var_names = var_names;
+        self.code.decls_mut().functions = functions;
+        self.code.decls_mut().lexical = lexical;
     }
 
     /// Annex B.3.2: the block-level function declarations of a non-strict
@@ -389,8 +389,8 @@ impl Compiler<'_> {
             self.annex_b.push(std::rc::Rc::as_ptr(f));
             let name = f.id.as_ref().map(|i| i.name.as_str()).unwrap_or("");
             let name = self.string(name);
-            if !self.code.decls.annex_b_functions.contains(&name) {
-                self.code.decls.annex_b_functions.push(name);
+            if !self.code.decls_mut().annex_b_functions.contains(&name) {
+                self.code.decls_mut().annex_b_functions.push(name);
             }
         }
     }
