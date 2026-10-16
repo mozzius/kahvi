@@ -67,6 +67,10 @@ pub struct ScriptRecord {
     /// What parsing the source learned about its lazy function bodies, for
     /// reparsing them (`kahvi_parser::preparse`).
     pub preparse: Option<Arc<kahvi_parser::preparse::Preparse>>,
+    /// Byte offsets of the starts of the source's lines, built the first
+    /// time a position in it is turned into a line and column (an error
+    /// stack), so later ones need not scan the source.
+    pub line_starts: std::sync::OnceLock<Box<[u32]>>,
 }
 
 /// The [[ScriptOrModule]] of code compiled from `agent.scripts[script]`.

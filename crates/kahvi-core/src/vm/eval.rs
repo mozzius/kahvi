@@ -37,6 +37,27 @@ pub fn line_col(source: &str, pos: usize) -> (usize, usize) {
     (line, col)
 }
 
+impl ScriptRecord {
+    /// [`line_col`] of byte offset `pos` in this record's source.
+    pub fn line_col(&self, pos: usize) -> (usize, usize) {
+        let starts = self.line_starts.get_or_init(|| {
+            std::iter::once(0)
+                .chain(
+                    self.source
+                        .bytes()
+                        .enumerate()
+                        .filter(|&(_, b)| b == b'\n')
+                        .map(|(i, _)| i as u32 + 1),
+                )
+                .collect()
+        });
+        let pos = pos.min(self.source.len());
+        // The last line start at or before `pos`.
+        let line = starts.partition_point(|&s| s as usize <= pos);
+        (line, pos - starts[line - 1] as usize + 1)
+    }
+}
+
 pub(super) fn register_script(
     agent: &mut Agent,
     realm: RealmId,
@@ -55,6 +76,7 @@ pub(super) fn register_script(
         {
             agent.scripts[id as usize].source = source;
             agent.scripts[id as usize].preparse = None;
+            agent.scripts[id as usize].line_starts = std::sync::OnceLock::new();
             return id;
         }
     }
@@ -65,6 +87,7 @@ pub(super) fn register_script(
         module: None,
         collectable,
         preparse: None,
+        line_starts: std::sync::OnceLock::new(),
     });
     (agent.scripts.len() - 1) as u32
 }

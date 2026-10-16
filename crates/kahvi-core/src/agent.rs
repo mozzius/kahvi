@@ -565,11 +565,14 @@ impl Agent {
             out.push_str("    at ");
             let place = match &frame.location {
                 Some(l) => {
-                    let (line, col) = crate::vm::line_col(&l.source, l.offset as usize);
-                    let file = self
-                        .scripts
-                        .get(l.script as usize)
-                        .map_or("<anonymous>", |s| s.name.as_str());
+                    let record = self.scripts.get(l.script as usize);
+                    let (line, col) = match record {
+                        Some(r) if Arc::ptr_eq(&r.source, &l.source) => {
+                            r.line_col(l.offset as usize)
+                        }
+                        _ => crate::vm::line_col(&l.source, l.offset as usize),
+                    };
+                    let file = record.map_or("<anonymous>", |s| s.name.as_str());
                     format!("{file}:{line}:{col}")
                 }
                 None if frame.native => "native".to_string(),
