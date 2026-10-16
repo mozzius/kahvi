@@ -417,6 +417,17 @@ enum CallStack {
     Switch,
 }
 
+/// Counts a call the interpreter runs without a nested Rust call (so it
+/// takes no native stack) against [`MAX_CALL_DEPTH`]; the caller decrements
+/// `call_depth` when it ends.
+pub(crate) fn enter_inline_call(agent: &mut Agent) -> JsResult<()> {
+    if agent.call_depth >= MAX_CALL_DEPTH {
+        return Err(agent.throw_range_error("Maximum call stack size exceeded"));
+    }
+    agent.call_depth += 1;
+    Ok(())
+}
+
 fn enter_call(agent: &mut Agent) -> JsResult<()> {
     match enter_call_or_switch(agent, false)? {
         CallStack::Here => Ok(()),
