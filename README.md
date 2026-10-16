@@ -19,7 +19,7 @@ Each suite's CI job on main rewrites its own row.
 | Suite | Passing | Pass rate | |
 |---|--:|--:|---|
 | [test262](https://github.com/tc39/test262) | 84,067 / 84,983 | 98.92% | 52,074 files, 864 not implemented |
-| [mjsunit](mjsunit/run.py) | 5,241 / 5,534 | 94.71% | V8 [758f9aba526b](https://chromium.googlesource.com/v8/v8/+/758f9aba526bfbd1183e18f420096e5b4cf9df07/test/mjsunit); 4,319 skipped (need d8 or V8 internals) |
+| [mjsunit](mjsunit/run.py) | 5,238 / 5,534 | 94.65% | V8 [758f9aba526b](https://chromium.googlesource.com/v8/v8/+/758f9aba526bfbd1183e18f420096e5b4cf9df07/test/mjsunit); 4,319 skipped (need d8 or V8 internals) |
 | [realworld](realworld/README.md) | 17 / 17 | 100.00% | npm packages and programs, checked byte for byte against Node |
 
 <!-- results:end -->
