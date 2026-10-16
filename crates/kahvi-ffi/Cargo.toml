@@ -11,3 +11,4 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [dependencies]
 kahvi = { path = "../kahvi" }
 kahvi-core = { path = "../kahvi-core" }
+mimalloc = { version = "0.1", default-features = false }

@@ -5,6 +5,11 @@
 
 mod host;
 
+// Parsing and the heap allocate many small blocks; mimalloc does that in a
+// fraction of the system allocator's time.
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use std::process::ExitCode;
 
 use kahvi_core::prelude::*;
