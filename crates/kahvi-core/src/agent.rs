@@ -874,10 +874,9 @@ impl Agent {
                 bindings,
                 outer: o,
                 function: f,
-                imports,
+                extra,
                 is_module: m,
                 is_catch,
-                disposable_resource_stack,
             } = &mut self.envs[i as usize]
         {
             self.gc.free_envs.pop();
@@ -889,20 +888,18 @@ impl Agent {
                 (Some(b), Some(data)) => **b = data,
                 (_, data) => *f = data.map(Box::new),
             }
-            imports.clear();
+            *extra = None;
             *m = is_module;
             *is_catch = false;
-            disposable_resource_stack.clear();
             return EnvId(i);
         }
         self.alloc_env(Environment::Declarative {
             bindings: Default::default(),
             outer,
             function: function.map(Box::new),
-            imports: Default::default(),
+            extra: None,
             is_module,
             is_catch: false,
-            disposable_resource_stack: Vec::new(),
         })
     }
 
@@ -917,14 +914,12 @@ impl Agent {
             Environment::Declarative {
                 bindings,
                 outer,
-                imports,
-                disposable_resource_stack,
+                extra,
                 ..
             } if bindings.capacity() <= 64 => {
                 bindings.clear();
                 *outer = None;
-                imports.clear();
-                disposable_resource_stack.clear();
+                *extra = None;
             }
             e => *e = Environment::dead(),
         }
