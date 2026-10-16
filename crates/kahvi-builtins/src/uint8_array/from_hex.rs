@@ -15,7 +15,7 @@ pub(crate) fn fromhex(
     max_length: Option<usize>,
 ) -> (usize, Vec<u8>, Option<JsError>) {
     // 1. If _maxLength_ is not present, set _maxLength_ to 2^53 - 1.
-    let max_length = max_length.unwrap_or((1usize << 53) - 1);
+    let max_length = max_length.unwrap_or(usize::try_from((1u64 << 53) - 1).unwrap_or(usize::MAX));
     // 2. Let _length_ be the length of _string_.
     let units: Vec<u16> = agent.str(string).to_vec();
     let length = units.len();

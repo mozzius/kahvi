@@ -1,19 +1,22 @@
-# kahvi playground
+# kahvi demo site
 
-A web page where you type JavaScript and kahvi runs it.
+Everything here runs on kahvi:
 
-- `render.mjs` renders the page. It runs on `kahvi-run` when the image is
-  built, with the commit and the number of test262 runs in
-  `conformance/expected-pass.txt`.
-- `server.py` serves the page and `POST /run` (`{"code": "..."}`). Each run
-  is a fresh `kahvi-run main.mjs` in an empty temporary directory with no
-  environment, limited to 5 s wall time, 4 s CPU, 1.25 GB of address space
-  (512 MB of it is kahvi-run's reserved stack) and 1 MB of output, two runs
-  at a time (`RUN_SLOTS`).
+- **The server** is a [Hono](https://hono.dev) app (`app/server.mjs`),
+  unbundled from `node_modules`, run by `kahvi-serve` (`serve/`). That is
+  kahvi-run's host (console, timers, ES modules and packages) plus an HTTP
+  listener and the web classes a fetch handler needs (`serve/src/web.js`:
+  `Headers`, `Request`, `Response`, `Kahvi.serve(handler)`,
+  `Kahvi.readFile(path)`). Bodies are whole byte arrays, not streams. One
+  request at a time, one request per connection.
+- **The playground** runs code in the browser with kahvi compiled to
+  WebAssembly (`wasm/`, served gzipped as `/kahvi.wasm`). Each run gets a
+  new Web Worker and a new instance; the page terminates the worker after
+  5 seconds. Timers are the browser's, driven through the worker
+  (`app/public/worker.js`).
 
-The process limits are the sandbox: kahvi-run has no network or file APIs,
-but a module can still `import` a `.js` or `.json` file by absolute path, so
-run the image as it is built (unprivileged user, nothing else in it).
+`demo/` is a Cargo workspace of its own; its crates use the engine crates by
+path.
 
 ## Running
 
@@ -22,13 +25,18 @@ docker build -f demo/Dockerfile -t kahvi-demo .
 docker run --rm -p 8080:8080 kahvi-demo
 ```
 
-Without Docker: `cargo build --release -p kahvi-runtime`, render the page
-with `COMMIT=$(git rev-parse HEAD) TEST262_PASSING=$(grep -cv '^#'
-conformance/expected-pass.txt) target/release/kahvi-run demo/render.mjs >
-demo/index.html`, then `KAHVI_RUN=target/release/kahvi-run python3
-demo/server.py`.
+Without Docker, from `demo/`:
+
+```sh
+cargo build --release -p kahvi-serve
+cargo build --release --target wasm32-unknown-unknown -p kahvi-playground
+gzip -9c target/wasm32-unknown-unknown/release/kahvi_playground.wasm > app/public/kahvi.wasm.gz
+cp ../conformance/expected-pass.txt app/
+cd app && npm ci && ../target/release/kahvi-serve server.mjs
+```
 
 ## Railway
 
 `railway.json` at the repository root points Railway at `demo/Dockerfile`
-and health-checks `/healthz`. Railway sets `PORT`.
+and health-checks `/healthz`. Railway sets `PORT` and passes the commit as
+`RAILWAY_GIT_COMMIT_SHA`.

@@ -1,0 +1,13 @@
+[package]
+name = "kahvi-playground"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+kahvi = { path = "../../crates/kahvi" }
+kahvi-core = { path = "../../crates/kahvi-core" }
+kahvi-runtime = { path = "../../crates/kahvi-runtime" }

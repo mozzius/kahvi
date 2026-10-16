@@ -1,0 +1,10 @@
+# The demo site's Rust parts. A workspace of its own, outside kahvi's.
+[workspace]
+resolver = "3"
+members = ["serve", "wasm"]
+
+[profile.release]
+opt-level = 3
+
+[profile.release.package.kahvi-playground]
+opt-level = "s"

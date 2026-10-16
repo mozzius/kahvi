@@ -1,0 +1,3 @@
+[target.wasm32-unknown-unknown]
+# kahvi recurses on the native stack (up to 2,000 JavaScript calls deep).
+rustflags = ["-C", "link-arg=-zstack-size=67108864"]

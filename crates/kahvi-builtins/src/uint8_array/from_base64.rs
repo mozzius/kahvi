@@ -177,7 +177,7 @@ pub(crate) fn from_base64_bytes(
 ) -> (usize, Vec<u8>, Option<JsError>) {
     // 1. If _maxLength_ is not present, then
     //    a. Set _maxLength_ to 2^53 - 1.
-    let max_length = max_length.unwrap_or((1usize << 53) - 1);
+    let max_length = max_length.unwrap_or(usize::try_from((1u64 << 53) - 1).unwrap_or(usize::MAX));
     // 3. If _maxLength_ = 0, then
     if max_length == 0 {
         // a. Return the Record { [[Read]]: 0, [[Bytes]]: « », [[Error]]: ~none~ }.
