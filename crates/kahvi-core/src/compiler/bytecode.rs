@@ -598,6 +598,12 @@ pub struct FunctionCode {
     pub has_direct_eval: bool,
     /// A named function expression binds its own name in a scope between it and its closure.
     pub binds_own_name: bool,
+    /// Nothing can keep this function's environments alive past its call:
+    /// it creates no closures or classes, has no arguments object, direct
+    /// eval or `with`, and is not a generator or async. A call then frees
+    /// its environments as they go out of scope instead of leaving them to
+    /// the garbage collector (see `Agent::free_env`).
+    pub envs_die_with_call: bool,
     pub ops: Vec<Op>,
     /// (op index, source offset) pairs, ascending, for error positions.
     pub positions: Vec<(u32, u32)>,
