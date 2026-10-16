@@ -12,7 +12,9 @@ use crate::value::{BigInt, JsString};
 /// Index of an instruction in [`FunctionCode::ops`].
 pub type Label = u32;
 
+/// (`repr(u32)`: an explicit tag the interpreter dispatches on directly.)
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[repr(u32)]
 pub enum Op {
     // ---- constants -------------------------------------------------------
     /// [] -> [undefined]
@@ -488,6 +490,9 @@ pub enum FunctionFlavor {
     DerivedConstructor,
     ClassFieldInit,
 }
+
+// Instructions stay two words.
+const _: () = assert!(std::mem::size_of::<Op>() == 16);
 
 /// A declaration to instantiate in a scope.
 #[derive(Debug, Clone)]

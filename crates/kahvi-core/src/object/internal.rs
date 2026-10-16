@@ -722,6 +722,28 @@ pub fn ordinary_delete(agent: &mut Agent, o: Object, key: PropertyKey) -> JsResu
 /// [[GetOwnProperty]], [[Get]] and [[Set]] (proxies and host objects are
 /// `Native`; namespaces, typed arrays, String objects and mapped arguments
 /// objects are exotic).
+/// [[Get]](key, o) when it is a data property found on objects with the
+/// ordinary [[Get]] (`internal_get`'s first loop): `None` where that would
+/// call a getter or reach another kind of object.
+#[inline]
+pub(crate) fn ordinary_get_data(agent: &Agent, o: Object, key: PropertyKey) -> Option<Value> {
+    let mut o = o;
+    loop {
+        let obj = agent.obj(o);
+        if !has_ordinary_get(&obj.kind) {
+            return None;
+        }
+        match obj.properties.get(&key) {
+            Some(Property::Data { value, .. }) => return Some(*value),
+            Some(Property::Accessor { .. }) => return None,
+            None => match obj.prototype {
+                Some(parent) => o = parent,
+                None => return Some(Value::Undefined),
+            },
+        }
+    }
+}
+
 fn has_ordinary_get(kind: &ObjectKind) -> bool {
     matches!(
         kind,

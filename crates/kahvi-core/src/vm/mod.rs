@@ -42,7 +42,7 @@ pub use operators::{apply_binary_operator, number_exponentiate, type_of};
 
 use crate::ScriptOrModule;
 use crate::agent::Agent;
-use crate::compiler::{CodeKind, ErrorType, FunctionCode, LocalKind, Op};
+use crate::compiler::{BinOp, CodeKind, ErrorType, FunctionCode, LocalKind, Op};
 use crate::env::{EnvId, Environment};
 use crate::error::{JsError, JsResult};
 use crate::function::{PrivateName, ThisMode};
@@ -377,9 +377,13 @@ fn safe_point(agent: &mut Agent, frame: &Frame) {
 
 fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult> {
     safe_point(agent, frame);
+    // (The frame's code never changes while it runs; a handle of our own
+    // keeps the instructions in a register instead of behind the frame.)
+    let code = frame.code.clone();
+    let ops = &code.ops[..];
     loop {
         let pc = frame.pc;
-        let op = frame.code.ops[pc];
+        let op = ops[pc];
         if fast_step(agent, frame, op, pc) {
             continue;
         }
@@ -390,6 +394,15 @@ fn run_frame_loop(agent: &mut Agent, frame: &mut Frame) -> JsResult<FrameResult>
             Op::Call(argc) => call_op(agent, frame, argc).map(|()| Flow::Next),
             Op::CallSpread => call_spread_op(agent, frame).map(|()| Flow::Next),
             Op::New(argc) => new_op(agent, frame, argc).map(|()| Flow::Next),
+            // (Here rather than in `execute`, which costs more to enter.)
+            Op::Return => {
+                let v = frame.pop();
+                let v = match frame.code.kind {
+                    CodeKind::Script | CodeKind::Eval => frame.completion,
+                    _ => v,
+                };
+                Ok(Flow::Done(FrameResult::Return(v)))
+            }
             _ => execute(agent, frame, op),
         };
         match flow {
@@ -508,7 +521,78 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             let v = frame.peek();
             frame.stack.push(v);
         }
+        Op::GetProp(key) => {
+            let Some(&Value::Object(o)) = frame.stack.last() else {
+                return false;
+            };
+            let Some(v) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            *frame.stack.last_mut().expect("checked") = v;
+        }
+        Op::GetPropForCall(key) => {
+            let Some(&Value::Object(o)) = frame.stack.last() else {
+                return false;
+            };
+            let Some(f) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+                return false;
+            };
+            *frame.stack.last_mut().expect("checked") = f;
+            frame.stack.push(Value::Object(o));
+        }
         Op::Undefined => frame.stack.push(Value::Undefined),
+        Op::Null => frame.stack.push(Value::Null),
+        Op::String(s) => frame.stack.push(Value::String(s)),
+        Op::GetArg(i) => {
+            let v = frame
+                .args
+                .get(i as usize)
+                .copied()
+                .unwrap_or(Value::Undefined);
+            frame.stack.push(v);
+        }
+        Op::Not => {
+            let v = frame.pop();
+            let b = ops::to_boolean(agent, v);
+            frame.stack.push(Value::Boolean(!b));
+        }
+        // (IsStrictlyEqual runs no user code and cannot throw.)
+        Op::Binary(bop @ (BinOp::StrictEq | BinOp::StrictNotEq)) => {
+            let b = frame.pop();
+            let a = frame.pop();
+            let eq = ops::is_strictly_equal(agent, a, b);
+            frame
+                .stack
+                .push(Value::Boolean(eq == (bop == BinOp::StrictEq)));
+        }
+        Op::JumpIfTrue(l) => {
+            let v = frame.pop();
+            if ops::to_boolean(agent, v) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        Op::JumpIfFalseKeep(l) => {
+            if !ops::to_boolean(agent, frame.peek()) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        Op::JumpIfTrueKeep(l) => {
+            if ops::to_boolean(agent, frame.peek()) {
+                fast_jump(agent, frame, l, pc);
+                return true;
+            }
+        }
+        // FunctionDeclarationInstantiation steps 27-36 for code with
+        // locals (see `instantiate::function_body_instantiation`).
+        Op::InstantiateFunctionBody if frame.code.locals.is_some() => {
+            let Some(env_record) = frame.pending.env_record.take() else {
+                return false;
+            };
+            frame.var_env = env_record;
+            frame.env = env_record;
+        }
         Op::Number(n) => frame.stack.push(Value::Number(n)),
         Op::Binary(bop) => {
             let n = frame.stack.len();
@@ -529,11 +613,8 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             return true;
         }
         Op::JumpIfFalse(l) => {
-            let Some(&Value::Boolean(b)) = frame.stack.last() else {
-                return false;
-            };
-            frame.stack.pop();
-            if !b {
+            let v = frame.pop();
+            if !ops::to_boolean(agent, v) {
                 fast_jump(agent, frame, l, pc);
                 return true;
             }
