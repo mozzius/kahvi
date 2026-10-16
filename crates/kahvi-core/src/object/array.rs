@@ -41,11 +41,8 @@ pub fn array_create(agent: &mut Agent, length: f64, proto: Option<Object>) -> Js
 /// The current value of an array's "length" (always a valid uint32 number).
 pub fn array_length(agent: &Agent, a: Object) -> u32 {
     let key = PropertyKey::String(agent.names.length);
-    match agent.obj(a).properties.get(&key) {
-        Some(Property::Data {
-            value: Value::Number(n),
-            ..
-        }) => *n as u32,
+    match agent.obj(a).properties.value_of(&key, None) {
+        Some(Some(Value::Number(n))) => n as u32,
         _ => 0,
     }
 }
@@ -90,9 +87,7 @@ pub fn array_define_own_property(
             // i. Set lengthDesc.[[Value]] to index + 1𝔽.
             // ii. Set succeeded to ! OrdinaryDefineOwnProperty(A, "length", lengthDesc).
             let len_key = PropertyKey::String(agent.names.length);
-            if let Some(Property::Data { value, .. }) =
-                agent.obj_mut(a).properties.get_mut(&len_key)
-            {
+            if let Some((value, _)) = agent.obj_mut(a).properties.data_value_mut(&len_key) {
                 *value = Value::Number(index as f64 + 1.0);
             }
         }

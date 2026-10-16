@@ -706,13 +706,13 @@ fn own_data_elements(agent: &Agent, v: Value) -> Option<Vec<Value>> {
         Property::Data {
             value: Value::Number(n),
             ..
-        } if *n >= 0.0 && *n <= u32::MAX as f64 && n.fract() == 0.0 => *n as u32,
+        } if n >= 0.0 && n <= u32::MAX as f64 && n.fract() == 0.0 => n as u32,
         _ => return None,
     };
     // 5-6. For each index < len, append ? Get(obj, ! ToString(𝔽(index))).
     (0..len)
         .map(|i| match data.properties.get(&PropertyKey::Index(i)) {
-            Some(Property::Data { value, .. }) => Some(*value),
+            Some(Property::Data { value, .. }) => Some(value),
             _ => None,
         })
         .collect()

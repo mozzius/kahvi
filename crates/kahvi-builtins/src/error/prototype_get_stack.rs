@@ -48,7 +48,7 @@ fn string_data_property(agent: &mut Agent, o: Object, name: &str) -> Option<Stri
             Some(Property::Data {
                 value: Value::String(s),
                 ..
-            }) => return Some(agent.str_lossy(*s)),
+            }) => return Some(agent.str_lossy(s)),
             Some(_) => return None,
             None => cur = agent.obj(c).prototype,
         }

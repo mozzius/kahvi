@@ -907,7 +907,7 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
                 }
             }
             Kind::Getter | Kind::Setter => {
-                let existing = agent.obj(owner).properties.get(&key).copied();
+                let existing = agent.obj(owner).properties.get(&key);
                 let (mut get, mut set) = match existing {
                     Some(Property::Accessor { get, set, .. }) => (get, set),
                     _ => (None, None),
@@ -1061,12 +1061,23 @@ pub fn install(agent: &mut Agent, realm: RealmId) -> JsResult<()> {
         false,
     );
     for k in [agent.names.length, agent.names.name] {
-        if let Some(Property::Data { configurable, .. }) = agent
-            .obj_mut(tte)
-            .properties
-            .get_mut(&PropertyKey::String(k))
+        let key = PropertyKey::String(k);
+        if let Some(Property::Data {
+            value,
+            writable,
+            enumerable,
+            ..
+        }) = agent.obj(tte).properties.get(&key)
         {
-            *configurable = false;
+            agent.obj_mut(tte).properties.insert(
+                key,
+                Property::Data {
+                    value,
+                    writable,
+                    enumerable,
+                    configurable: false,
+                },
+            );
         }
     }
     agent.obj_mut(tte).extensible = false;
