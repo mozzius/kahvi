@@ -386,7 +386,7 @@ pub struct HeapStats {
     /// The string table (a boxed slice per slot) and its intern index.
     pub string_table_bytes: usize,
     /// What the live environments keep outside their slots (bindings,
-    /// function data, imports).
+    /// function data, imports, disposable resources).
     pub env_bytes: usize,
     /// The boxed internal-slot data of the live objects (functions, Maps,
     /// buffers' records…), shallowly: not what that data points to in turn.
@@ -759,14 +759,12 @@ impl Agent {
                     Environment::Declarative {
                         bindings,
                         outer,
-                        imports,
-                        disposable_resource_stack,
+                        extra,
                         ..
                     } if bindings.capacity() <= 64 => {
                         bindings.clear();
                         *outer = None;
-                        imports.clear();
-                        disposable_resource_stack.clear();
+                        *extra = None;
                     }
                     e => *e = Environment::dead(),
                 }

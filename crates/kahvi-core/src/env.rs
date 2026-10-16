@@ -22,11 +22,13 @@ pub struct Binding {
 }
 
 /// A declarative record's bindings: a short list searched linearly (most
-/// scopes have a handful of names), with a hash index once it grows.
+/// scopes have a handful of names), with a hash index once it grows (boxed,
+/// as few scopes grow that large).
 #[derive(Debug, Clone, Default)]
 pub struct Bindings {
     list: Vec<(JsString, Binding)>,
-    index: Option<crate::hash::FxHashMap<JsString, usize>>,
+    #[allow(clippy::box_collection)]
+    index: Option<Box<crate::hash::FxHashMap<JsString, usize>>>,
 }
 
 /// The size at which a scope's bindings get a hash index.
@@ -69,13 +71,13 @@ impl Bindings {
         if let Some(ix) = &mut self.index {
             ix.insert(name, self.list.len() - 1);
         } else if self.list.len() >= INDEX_FROM {
-            self.index = Some(
+            self.index = Some(Box::new(
                 self.list
                     .iter()
                     .enumerate()
                     .map(|(i, (n, _))| (*n, i))
                     .collect(),
-            );
+            ));
         }
     }
 
@@ -88,13 +90,13 @@ impl Bindings {
         if let Some(ix) = &mut self.index {
             ix.insert(name, self.list.len() - 1);
         } else if self.list.len() >= INDEX_FROM {
-            self.index = Some(
+            self.index = Some(Box::new(
                 self.list
                     .iter()
                     .enumerate()
                     .map(|(i, (n, _))| (*n, i))
                     .collect(),
-            );
+            ));
         }
         None
     }
@@ -117,13 +119,13 @@ impl Bindings {
         let i = self.position(name)?;
         let (_, b) = self.list.remove(i);
         if self.index.is_some() {
-            self.index = Some(
+            self.index = Some(Box::new(
                 self.list
                     .iter()
                     .enumerate()
                     .map(|(i, (n, _))| (*n, i))
                     .collect(),
-            );
+            ));
         }
         Some(b)
     }
@@ -152,14 +154,13 @@ pub enum Environment {
         bindings: Bindings,
         outer: Option<EnvId>,
         function: Option<Box<FunctionEnvData>>,
-        /// Module environments resolve imports through other modules' environments.
-        imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
+        /// What only module environments and scopes with `using`
+        /// declarations have (`None`: nothing).
+        extra: Option<Box<DeclarativeExtra>>,
         is_module: bool,
         /// The environment of a Catch clause's parameter (Annex B.3.4 lets a
         /// direct eval's `var` redeclare its names).
         is_catch: bool,
-        /// [[DisposableResourceStack]]: the resources of its `using` declarations.
-        disposable_resource_stack: Vec<DisposableResource>,
     },
     /// Object environment records (`with` and the global object part).
     Object {
@@ -173,6 +174,16 @@ pub enum Environment {
         global_this: Object,
         declarative_record: EnvId,
     },
+}
+
+/// The parts of a declarative record that few records use, boxed so that
+/// the others do not carry them.
+#[derive(Debug, Clone, Default)]
+pub struct DeclarativeExtra {
+    /// Module environments resolve imports through other modules' environments.
+    imports: crate::hash::FxHashMap<JsString, (u32, JsString)>,
+    /// [[DisposableResourceStack]]: the resources of its `using` declarations.
+    disposable_resource_stack: Vec<DisposableResource>,
 }
 
 /// A cheap, copyable view of which kind of record an environment is.
@@ -197,16 +208,19 @@ impl Environment {
             Environment::Declarative {
                 bindings,
                 function,
-                imports,
-                disposable_resource_stack,
+                extra,
                 ..
             } => {
                 bindings.heap_bytes()
                     + function
                         .as_ref()
                         .map_or(0, |_| size_of::<FunctionEnvData>())
-                    + imports.capacity() * (size_of::<(JsString, (u32, JsString))>() + 1)
-                    + disposable_resource_stack.capacity() * size_of::<DisposableResource>()
+                    + extra.as_ref().map_or(0, |x| {
+                        size_of::<DeclarativeExtra>()
+                            + x.imports.capacity() * (size_of::<(JsString, (u32, JsString))>() + 1)
+                            + x.disposable_resource_stack.capacity()
+                                * size_of::<DisposableResource>()
+                    })
             }
             _ => 0,
         }
@@ -218,10 +232,9 @@ impl Environment {
             bindings: Default::default(),
             outer: None,
             function: None,
-            imports: Default::default(),
+            extra: None,
             is_module: false,
             is_catch: false,
-            disposable_resource_stack: Vec::new(),
         }
     }
 
@@ -331,7 +344,9 @@ impl EnvId {
 
     fn import_of(self, agent: &Agent, name: JsString) -> Option<(u32, JsString)> {
         match agent.env(self) {
-            Environment::Declarative { imports, .. } => imports.get(&name).copied(),
+            Environment::Declarative { extra, .. } => {
+                extra.as_ref().and_then(|x| x.imports.get(&name).copied())
+            }
             _ => None,
         }
     }
@@ -344,8 +359,11 @@ impl EnvId {
         module: u32,
         target: JsString,
     ) {
-        if let Environment::Declarative { imports, .. } = agent.env_mut(self) {
-            imports.insert(name, (module, target));
+        if let Environment::Declarative { extra, .. } = agent.env_mut(self) {
+            extra
+                .get_or_insert_with(Default::default)
+                .imports
+                .insert(name, (module, target));
         }
     }
 
@@ -850,10 +868,11 @@ impl EnvId {
     /// The record's [[DisposableResourceStack]] (declarative records only).
     pub fn disposable_resource_stack_mut(self, agent: &mut Agent) -> &mut Vec<DisposableResource> {
         match agent.env_mut(self) {
-            Environment::Declarative {
-                disposable_resource_stack,
-                ..
-            } => disposable_resource_stack,
+            Environment::Declarative { extra, .. } => {
+                &mut extra
+                    .get_or_insert_with(Default::default)
+                    .disposable_resource_stack
+            }
             _ => unreachable!("[[DisposableResourceStack]] of a non-declarative environment"),
         }
     }
@@ -911,20 +930,21 @@ impl Trace for Environment {
                 bindings,
                 outer,
                 function,
-                imports,
+                extra,
                 is_module: _,
                 is_catch: _,
-                disposable_resource_stack,
             } => {
                 bindings.trace(t);
                 outer.trace(t);
                 function.trace(t);
-                // Imports name bindings of other modules' environments (modules are roots).
-                for (local, (_, imported)) in imports {
-                    t.string(*local);
-                    t.string(*imported);
+                if let Some(x) = extra {
+                    // Imports name bindings of other modules' environments (modules are roots).
+                    for (local, (_, imported)) in &x.imports {
+                        t.string(*local);
+                        t.string(*imported);
+                    }
+                    x.disposable_resource_stack.trace(t);
                 }
-                disposable_resource_stack.trace(t);
             }
             Environment::Object {
                 binding_object,
