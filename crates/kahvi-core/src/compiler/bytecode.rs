@@ -275,8 +275,9 @@ pub enum Op {
     // ---- object and array literals -------------------------------------------
     /// [] -> [new ordinary object]
     NewObject,
-    /// [] -> [new empty array]
-    NewArray,
+    /// [] -> [new empty array], with room for this many elements (those
+    /// the literal or argument list lists before any spread).
+    NewArray(u32),
     /// [obj value] -> [obj]: CreateDataPropertyOrThrow(obj, key, value).
     DefineField(PropertyKey),
     /// [obj key value] -> [obj]

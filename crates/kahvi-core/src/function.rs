@@ -79,8 +79,6 @@ pub struct EcmaFunction {
     pub code: Arc<crate::compiler::FunctionCode>,
     /// [[Environment]]
     pub environment: EnvId,
-    /// [[PrivateEnvironment]]: private names visible to the code.
-    pub private_environment: Option<Arc<crate::vm::PrivateEnv>>,
     /// [[HomeObject]]
     pub home_object: Option<Object>,
     /// [[ThisMode]]
@@ -95,6 +93,17 @@ pub struct EcmaFunction {
     pub realm: RealmId,
     /// [[ScriptOrModule]]
     pub script_or_module: Option<crate::ScriptOrModule>,
+    /// The slots that only code in or of a class uses (`None`: all empty).
+    pub class: Option<Box<ClassSlots>>,
+}
+
+/// The internal slots of an ECMAScript function object that only class
+/// constructors, class element functions and code that sees private names
+/// use: boxed, so that other functions do not carry them.
+#[derive(Debug, Default)]
+pub struct ClassSlots {
+    /// [[PrivateEnvironment]]: private names visible to the code.
+    pub private_environment: Option<Arc<crate::vm::PrivateEnv>>,
     /// [[Fields]]
     pub fields: Vec<ClassFieldDefinition>,
     /// [[PrivateMethods]]
@@ -116,6 +125,21 @@ pub struct ClassPending {
 }
 
 impl EcmaFunction {
+    /// [[PrivateEnvironment]]
+    pub fn private_environment(&self) -> Option<&Arc<crate::vm::PrivateEnv>> {
+        self.class.as_ref()?.private_environment.as_ref()
+    }
+
+    /// [[ClassFieldInitializerName]]
+    pub fn class_field_initializer_name(&self) -> Option<FieldName> {
+        self.class.as_ref()?.class_field_initializer_name
+    }
+
+    /// The class slots, to set one.
+    pub fn class_mut(&mut self) -> &mut ClassSlots {
+        self.class.get_or_insert_with(Default::default)
+    }
+
     pub fn is_constructor(&self) -> bool {
         self.constructor
     }
@@ -932,12 +956,14 @@ impl Trace for EcmaFunction {
         // Realms and scripts are not collected.
         t.code(&self.code);
         t.env(self.environment);
-        self.private_environment.trace(t);
         self.home_object.trace(t);
-        self.fields.trace(t);
-        self.private_methods.trace(t);
-        self.class_field_initializer_name.trace(t);
-        self.class_pending.trace(t);
+        if let Some(c) = &self.class {
+            c.private_environment.trace(t);
+            c.fields.trace(t);
+            c.private_methods.trace(t);
+            c.class_field_initializer_name.trace(t);
+            c.class_pending.trace(t);
+        }
     }
 }
 

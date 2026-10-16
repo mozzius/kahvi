@@ -258,6 +258,11 @@ struct Elements {
     items: Vec<Option<Property>>,
     /// How many of `items` are present.
     count: u32,
+    /// The object's [[PrivateElements]] (kept here, as few objects have
+    /// any, so that objects need no field of their own for them; boxed, as
+    /// few arrays have any either).
+    #[allow(clippy::box_collection)]
+    private: Option<Box<Vec<crate::function::PrivateElement>>>,
 }
 
 /// How far past the end of the dense elements a new index may land and
@@ -402,6 +407,13 @@ impl Dict {
 }
 
 impl PropertyMap {
+    fn private_elements(&self) -> &[crate::function::PrivateElement] {
+        self.elements
+            .as_deref()
+            .and_then(|e| e.private.as_deref())
+            .map_or(&[], |p| p.as_slice())
+    }
+
     fn dense(&self) -> &[Option<Property>] {
         self.elements.as_deref().map_or(&[], |e| &e.items)
     }
@@ -556,6 +568,14 @@ impl PropertyMap {
         }
     }
 
+    /// Makes room for `n` more dense elements.
+    pub(crate) fn reserve_elements(&mut self, n: usize) {
+        if n > 0 {
+            let e = self.elements.get_or_insert_with(Default::default);
+            e.items.reserve_exact(n);
+        }
+    }
+
     /// Inserts or replaces, keeping the original position on replacement.
     pub fn insert(&mut self, key: PropertyKey, prop: Property) {
         if let PropertyKey::Index(i) = key {
@@ -657,7 +677,7 @@ impl PropertyMap {
             while matches!(e.items.last(), Some(None)) {
                 e.items.pop();
             }
-            if e.items.is_empty() {
+            if e.items.is_empty() && e.private.is_none() {
                 self.elements = None;
             }
             return old;
@@ -701,7 +721,12 @@ impl PropertyMap {
     pub(crate) fn heap_bytes(&self) -> usize {
         use std::mem::size_of;
         let elements = self.elements.as_ref().map_or(0, |e| {
-            size_of::<Elements>() + e.items.capacity() * size_of::<Option<Property>>()
+            size_of::<Elements>()
+                + e.items.capacity() * size_of::<Option<Property>>()
+                + e.private.as_ref().map_or(0, |p| {
+                    size_of::<Vec<crate::function::PrivateElement>>()
+                        + p.capacity() * size_of::<crate::function::PrivateElement>()
+                })
         });
         let named = match &self.named {
             Named::Shaped { slots, .. } => slots.capacity() * size_of::<Slot>(),
@@ -910,46 +935,15 @@ impl<T: Any + std::fmt::Debug + Send + Trace> NativeData for T {
     }
 }
 
-/// An object's [[PrivateElements]]: boxed, as most objects have none (a
-/// box is 8 bytes of the object, a `Vec` 24).
-#[allow(clippy::box_collection)]
-#[derive(Debug, Default)]
-pub struct PrivateElements(Option<Box<Vec<crate::function::PrivateElement>>>);
-
-impl PrivateElements {
-    pub fn push(&mut self, e: crate::function::PrivateElement) {
-        self.0.get_or_insert_with(Default::default).push(e);
-    }
-}
-
-impl std::ops::Deref for PrivateElements {
-    type Target = [crate::function::PrivateElement];
-    fn deref(&self) -> &Self::Target {
-        self.0.as_deref().map_or(&[], |v| v.as_slice())
-    }
-}
-
-impl std::ops::DerefMut for PrivateElements {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        self.0.as_deref_mut().map_or(&mut [], |v| v.as_mut_slice())
-    }
-}
-
-impl Trace for PrivateElements {
-    fn trace(&self, t: &mut Tracer) {
-        (**self).trace(t);
-    }
-}
-
 #[derive(Debug)]
 pub struct ObjectData {
     /// [[Prototype]]
     pub prototype: Option<Object>,
     /// [[Extensible]]
     pub extensible: bool,
+    /// The properties, and the [[PrivateElements]] (see
+    /// [`ObjectData::private_elements`]).
     pub properties: PropertyMap,
-    /// [[PrivateElements]]
-    pub private_elements: PrivateElements,
     pub kind: ObjectKind,
 }
 
@@ -970,6 +964,7 @@ impl Trace for PropertyMap {
         for p in self.dense().iter().flatten() {
             p.trace(t);
         }
+        self.private_elements().trace(t);
         match &self.named {
             Named::Shaped { shape, slots } => {
                 for k in shape.iter().flat_map(|s| s.keys()) {
@@ -1030,7 +1025,6 @@ impl Trace for ObjectData {
     fn trace(&self, t: &mut Tracer) {
         self.prototype.trace(t);
         self.properties.trace(t);
-        self.private_elements.trace(t);
         self.kind.trace(t);
     }
 
@@ -1040,19 +1034,41 @@ impl Trace for ObjectData {
 }
 
 impl ObjectData {
+    /// [[PrivateElements]]
+    pub fn private_elements(&self) -> &[crate::function::PrivateElement] {
+        self.properties.private_elements()
+    }
+
+    pub fn private_elements_mut(&mut self) -> &mut [crate::function::PrivateElement] {
+        self.properties
+            .elements
+            .as_deref_mut()
+            .and_then(|e| e.private.as_deref_mut())
+            .map_or(&mut [], |p| p.as_mut_slice())
+    }
+
+    /// Appends to [[PrivateElements]].
+    pub fn push_private_element(&mut self, e: crate::function::PrivateElement) {
+        self.properties
+            .elements
+            .get_or_insert_with(Default::default)
+            .private
+            .get_or_insert_with(Default::default)
+            .push(e);
+    }
+
     pub fn new(prototype: Option<Object>, kind: ObjectKind) -> ObjectData {
         ObjectData {
             prototype,
             extensible: true,
             properties: PropertyMap::default(),
-            private_elements: PrivateElements::default(),
             kind,
         }
     }
 }
 
 // Every object is a slot of this size in the heap, live or not.
-const _: () = assert!(std::mem::size_of::<ObjectData>() <= 88);
+const _: () = assert!(std::mem::size_of::<ObjectData>() <= 80);
 // A shaped object's property value.
 const _: () = assert!(std::mem::size_of::<Slot>() == 16);
 // Every property (and array element) is one of these.

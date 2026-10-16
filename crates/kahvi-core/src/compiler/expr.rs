@@ -133,7 +133,11 @@ impl Compiler<'_> {
                 self.emit(Op::Call(quasi.exprs.len() as u32 + 1));
             }
             Expr::Array(elems, _) => {
-                self.emit(Op::NewArray);
+                let room = elems
+                    .iter()
+                    .take_while(|el| !matches!(el, Some(ArrayElem::Spread(_))))
+                    .count();
+                self.emit(Op::NewArray(room as u32));
                 for el in elems {
                     match el {
                         None => {
@@ -605,7 +609,11 @@ impl Compiler<'_> {
 
     /// [] -> [array of the argument values]
     fn compile_args_array(&mut self, args: &[Arg]) {
-        self.emit(Op::NewArray);
+        let room = args
+            .iter()
+            .take_while(|a| matches!(a, Arg::Expr(_)))
+            .count();
+        self.emit(Op::NewArray(room as u32));
         for a in args {
             match a {
                 Arg::Expr(e) => {
