@@ -457,7 +457,7 @@ impl Compiler<'_> {
         match property {
             MemberProp::Ident(name, _) => {
                 let k = self.agent.key(name);
-                self.emit(Op::GetProp(k));
+                self.emit(Op::GetProp(k, 0));
             }
             MemberProp::Computed(e) => {
                 self.compile_expr(e);
@@ -513,7 +513,7 @@ impl Compiler<'_> {
                 match property {
                     MemberProp::Ident(name, _) => {
                         let k = self.agent.key(name);
-                        self.emit(Op::GetPropForCall(k));
+                        self.emit(Op::GetPropForCall(k, 0));
                     }
                     MemberProp::Computed(e) => {
                         self.compile_expr(e);
@@ -909,7 +909,7 @@ impl Compiler<'_> {
                     MemberProp::Ident(name, _) => {
                         let k = self.agent.key(name);
                         self.emit(Op::Dup);
-                        self.emit(Op::GetProp(k));
+                        self.emit(Op::GetProp(k, 0));
                         self.emit(Op::ToNumeric);
                         if prefix {
                             self.emit(step);
@@ -920,7 +920,7 @@ impl Compiler<'_> {
                             self.emit(Op::Swap);
                             self.emit(Op::RotRight3);
                         }
-                        self.emit(Op::SetProp(k));
+                        self.emit(Op::SetProp(k, 0));
                     }
                     MemberProp::Computed(e) => {
                         self.compile_expr(e);
@@ -1046,11 +1046,11 @@ impl Compiler<'_> {
                                 MemberProp::Ident(name, _) => {
                                     let k = self.agent.key(name);
                                     self.emit(Op::Dup);
-                                    self.emit(Op::GetProp(k));
+                                    self.emit(Op::GetProp(k, 0));
                                     self.compile_expr(value);
                                     self.position(span);
                                     self.emit(Op::Binary(bop));
-                                    self.emit(Op::SetProp(k));
+                                    self.emit(Op::SetProp(k, 0));
                                 }
                                 MemberProp::Computed(k) => {
                                     self.compile_expr(k);
@@ -1133,11 +1133,11 @@ impl Compiler<'_> {
                                 MemberProp::Ident(name, _) => {
                                     let k = self.agent.key(name);
                                     self.emit(Op::Dup);
-                                    self.emit(Op::GetProp(k));
+                                    self.emit(Op::GetProp(k, 0));
                                     let skip = self.emit(jump(lop));
                                     self.emit(Op::Pop);
                                     self.compile_expr(value);
-                                    self.emit(Op::SetProp(k));
+                                    self.emit(Op::SetProp(k, 0));
                                     let end = self.emit(Op::Jump(0));
                                     self.patch(skip);
                                     // [base value] -> [value]
@@ -1201,7 +1201,7 @@ impl Compiler<'_> {
                         let k = self.agent.key(name);
                         self.compile_expr(value);
                         self.position(span);
-                        self.emit(Op::SetProp(k));
+                        self.emit(Op::SetProp(k, 0));
                     }
                     MemberProp::Computed(k) => {
                         self.compile_expr(k);

@@ -105,19 +105,21 @@ pub enum Op {
     ClearLocals(u32, u32),
 
     // ---- properties --------------------------------------------------------
-    /// [base] -> [value]
-    GetProp(PropertyKey),
+    /// [base] -> [value]. The `u32` of the named property instructions is
+    /// their cache ([`FunctionCode::prop_caches`]), numbered when the code
+    /// is finished (emitted as 0).
+    GetProp(PropertyKey, u32),
     /// [base key] -> [value]: GetValue; ToObject(base) happens before ToPropertyKey(key).
     GetElem,
     /// [base key] -> [base propertyKey value]: GetElem keeping the converted key
     /// for a following SetElem (compound assignment, update expressions).
     GetElemForUpdate,
     /// [base] -> [func base]: method lookup for calls.
-    GetPropForCall(PropertyKey),
+    GetPropForCall(PropertyKey, u32),
     /// [base key] -> [func base]
     GetElemForCall,
     /// [base value] -> [value]: PutValue to base.key.
-    SetProp(PropertyKey),
+    SetProp(PropertyKey, u32),
     /// [base key value] -> [value]
     SetElem,
     /// [base] -> [bool]
@@ -681,9 +683,19 @@ pub struct FunctionCode {
     /// no direct eval in or around them, not eval code) get one: there a
     /// binding, once found, is always found in the same place.
     pub name_caches: Box<[std::sync::atomic::AtomicU64]>,
+    /// The caches of the named property instructions (`GetProp`,
+    /// `GetPropForCall`, `SetProp`), see [`PropCache`].
+    pub prop_caches: Box<[PropCache]>,
     /// Set for a function not compiled yet.
     pub lazy: Option<Box<LazyCode>>,
 }
+
+/// Where a property instruction last found its property: the position of
+/// the key among the named properties of the object that had it, plus 1
+/// (0 when unknown). Objects built the same way keep their keys in the same
+/// order, so the key is usually at that position again; a lookup checks
+/// there first and falls back to a search (see `PropertyMap::get_hinted`).
+pub type PropCache = std::sync::atomic::AtomicU32;
 
 /// The cache index of a name instruction that has no binding cache.
 pub const NO_NAME_CACHE: u32 = u32::MAX;

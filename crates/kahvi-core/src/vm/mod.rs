@@ -600,20 +600,30 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             let v = frame.peek();
             frame.stack.push(v);
         }
-        Op::GetProp(key) => {
+        Op::GetProp(key, ic) => {
             let Some(&Value::Object(o)) = frame.stack.last() else {
                 return false;
             };
-            let Some(v) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+            let Some(v) = crate::object::internal::ordinary_get_data_hinted(
+                agent,
+                o,
+                key,
+                &frame.code.prop_caches[ic as usize],
+            ) else {
                 return false;
             };
             *frame.stack.last_mut().expect("checked") = v;
         }
-        Op::GetPropForCall(key) => {
+        Op::GetPropForCall(key, ic) => {
             let Some(&Value::Object(o)) = frame.stack.last() else {
                 return false;
             };
-            let Some(f) = crate::object::internal::ordinary_get_data(agent, o, key) else {
+            let Some(f) = crate::object::internal::ordinary_get_data_hinted(
+                agent,
+                o,
+                key,
+                &frame.code.prop_caches[ic as usize],
+            ) else {
                 return false;
             };
             *frame.stack.last_mut().expect("checked") = f;
@@ -650,7 +660,7 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
         // PutValue to an ordinary object's own writable data property:
         // OrdinarySet's [[DefineOwnProperty]] of { [[Value]]: V } on the
         // object itself only changes the value.
-        Op::SetProp(key) => {
+        Op::SetProp(key, ic) => {
             let n = frame.stack.len();
             let (Some(&Value::Object(o)), Some(&v)) =
                 (frame.stack.get(n.wrapping_sub(2)), frame.stack.last())
@@ -665,7 +675,9 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
                 value,
                 writable: true,
                 ..
-            }) = obj.properties.get_mut(&key)
+            }) = obj
+                .properties
+                .get_mut_hinted(&key, &frame.code.prop_caches[ic as usize])
             else {
                 return false;
             };
@@ -1361,7 +1373,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
         }
 
         // ---- properties
-        Op::GetProp(key) => {
+        Op::GetProp(key, _) => {
             let base = frame.pop();
             let v = get_property(agent, base, key)?;
             frame.push(v);
@@ -1380,7 +1392,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(kv);
             frame.push(v);
         }
-        Op::GetPropForCall(key) => {
+        Op::GetPropForCall(key, _) => {
             let base = frame.pop();
             let f = get_property(agent, base, key)?;
             frame.push(f);
@@ -1393,7 +1405,7 @@ fn execute(agent: &mut Agent, frame: &mut Frame, op: Op) -> JsResult<Flow> {
             frame.push(f);
             frame.push(base);
         }
-        Op::SetProp(key) => {
+        Op::SetProp(key, _) => {
             let v = frame.pop();
             let base = frame.pop();
             put_property(agent, base, key, v, frame.strict())?;
