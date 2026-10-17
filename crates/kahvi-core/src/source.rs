@@ -67,7 +67,7 @@ impl std::fmt::Debug for SourceText {
 }
 
 #[cfg(all(unix, target_pointer_width = "64"))]
-mod map {
+pub(crate) mod map {
     use std::ffi::c_void;
     use std::io::Write;
     use std::os::fd::AsRawFd;
@@ -92,9 +92,9 @@ mod map {
         fn madvise(addr: *mut c_void, len: usize, advice: i32) -> i32;
     }
 
-    /// A read-only private mapping of a whole file whose bytes are a
-    /// `str`.
-    pub(super) struct Mapping {
+    /// A read-only private mapping of a whole file (for a [`super::SourceText`],
+    /// one whose bytes are a `str`).
+    pub(crate) struct Mapping {
         ptr: NonNull<u8>,
         len: usize,
     }
@@ -128,8 +128,21 @@ mod map {
         }
 
         fn open(path: &Path, text: &str) -> Option<Mapping> {
-            let file = std::fs::File::open(path).ok()?;
-            if file.metadata().ok()?.len() != text.len() as u64 {
+            let m = Mapping::file(&std::fs::File::open(path).ok()?)?;
+            // The bytes must be `text`'s: only then are they valid UTF-8.
+            if m.bytes() != text.as_bytes() {
+                return None;
+            }
+            m.release_pages();
+            Some(m)
+        }
+
+        /// Maps the whole of `file`, unless it is empty. The engine only
+        /// ever appends to a file it maps, or replaces it whole by rename,
+        /// so the mapped bytes never change.
+        pub(crate) fn file(file: &std::fs::File) -> Option<Mapping> {
+            let len = usize::try_from(file.metadata().ok()?.len()).ok()?;
+            if len == 0 {
                 return None;
             }
             // SAFETY: a read-only private mapping of a file we opened; it
@@ -137,7 +150,7 @@ mod map {
             let p = unsafe {
                 mmap(
                     std::ptr::null_mut(),
-                    text.len(),
+                    len,
                     PROT_READ,
                     MAP_PRIVATE,
                     file.as_raw_fd(),
@@ -147,19 +160,13 @@ mod map {
             if p as isize == -1 {
                 return None;
             }
-            let m = Mapping {
+            Some(Mapping {
                 ptr: NonNull::new(p as *mut u8)?,
-                len: text.len(),
-            };
-            // The bytes must be `text`'s: only then are they valid UTF-8.
-            if m.bytes() != text.as_bytes() {
-                return None;
-            }
-            m.release_pages();
-            Some(m)
+                len,
+            })
         }
 
-        fn bytes(&self) -> &[u8] {
+        pub(crate) fn bytes(&self) -> &[u8] {
             // SAFETY: `len` bytes are mapped for reading.
             unsafe { std::slice::from_raw_parts(self.ptr.as_ptr(), self.len) }
         }
@@ -171,7 +178,7 @@ mod map {
             unsafe { std::str::from_utf8_unchecked(self.bytes()) }
         }
 
-        pub(super) fn release_pages(&self) {
+        pub(crate) fn release_pages(&self) {
             // SAFETY: advice on our own mapping; its pages are read back
             // from the file when touched again.
             unsafe { madvise(self.ptr.as_ptr() as *mut c_void, self.len, MADV_DONTNEED) };
