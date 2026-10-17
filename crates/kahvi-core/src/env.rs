@@ -6,19 +6,62 @@ use crate::error::JsResult;
 use crate::object::PropertyKey;
 use crate::ops;
 use crate::ops::dispose::DisposableResource;
-use crate::value::{JsString, Object, Value};
+use crate::value::{JsString, Object, PackedValue, Value};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct EnvId(pub u32);
 
-#[derive(Debug, Clone)]
+/// A binding of a declarative record: its name, value and flags, in 16
+/// bytes (scopes hold many).
+#[derive(Debug, Clone, Copy)]
 pub struct Binding {
-    /// `None` while uninitialized (the temporal dead zone).
-    pub value: Option<Value>,
-    pub mutable: bool,
-    /// Immutable binding that throws on assignment even in sloppy code.
-    pub strict: bool,
-    pub deletable: bool,
+    /// [`PackedValue::EMPTY`] while uninitialized (the temporal dead zone).
+    value: PackedValue,
+    name: JsString,
+    flags: u8,
+}
+
+const MUTABLE: u8 = 1;
+/// An immutable binding that throws on assignment even in sloppy code.
+const STRICT: u8 = 2;
+const DELETABLE: u8 = 4;
+
+impl Binding {
+    /// A binding (named when it is added to a record).
+    pub fn new(value: Option<Value>, mutable: bool, strict: bool, deletable: bool) -> Binding {
+        Binding {
+            value: PackedValue::pack_option(value),
+            name: JsString(0),
+            flags: (mutable as u8 * MUTABLE)
+                | (strict as u8 * STRICT)
+                | (deletable as u8 * DELETABLE),
+        }
+    }
+    /// The value, `None` while uninitialized (the temporal dead zone).
+    #[inline]
+    pub fn value(&self) -> Option<Value> {
+        self.value.unpack_option()
+    }
+    #[inline]
+    pub fn set_value(&mut self, value: Value) {
+        self.value = PackedValue::pack(value);
+    }
+    #[inline]
+    pub fn is_initialized(&self) -> bool {
+        self.value.unpack_option().is_some()
+    }
+    #[inline]
+    pub fn mutable(&self) -> bool {
+        self.flags & MUTABLE != 0
+    }
+    #[inline]
+    pub fn strict(&self) -> bool {
+        self.flags & STRICT != 0
+    }
+    #[inline]
+    pub fn deletable(&self) -> bool {
+        self.flags & DELETABLE != 0
+    }
 }
 
 /// A declarative record's bindings: a short list searched linearly (most
@@ -26,7 +69,7 @@ pub struct Binding {
 /// as few scopes grow that large).
 #[derive(Debug, Clone, Default)]
 pub struct Bindings {
-    list: Vec<(JsString, Binding)>,
+    list: Vec<Binding>,
     #[allow(clippy::box_collection)]
     index: Option<Box<crate::hash::FxHashMap<JsString, usize>>>,
 }
@@ -38,7 +81,7 @@ impl Bindings {
     /// Bytes allocated for the list and its index, for heap statistics.
     pub(crate) fn heap_bytes(&self) -> usize {
         use std::mem::size_of;
-        self.list.capacity() * size_of::<(JsString, Binding)>()
+        self.list.capacity() * size_of::<Binding>()
             + self
                 .index
                 .as_ref()
@@ -48,16 +91,16 @@ impl Bindings {
     pub(crate) fn position(&self, name: &JsString) -> Option<usize> {
         match &self.index {
             Some(ix) => ix.get(name).copied(),
-            None => self.list.iter().position(|(n, _)| n == name),
+            None => self.list.iter().position(|b| b.name == *name),
         }
     }
 
     pub fn get(&self, name: &JsString) -> Option<&Binding> {
-        self.position(name).map(|i| &self.list[i].1)
+        self.position(name).map(|i| &self.list[i])
     }
 
     pub fn get_mut(&mut self, name: &JsString) -> Option<&mut Binding> {
-        self.position(name).map(|i| &mut self.list[i].1)
+        self.position(name).map(|i| &mut self.list[i])
     }
 
     pub fn contains_key(&self, name: &JsString) -> bool {
@@ -65,9 +108,10 @@ impl Bindings {
     }
 
     /// Adds a binding for a name the list does not have yet.
-    fn push_new(&mut self, name: JsString, binding: Binding) {
+    fn push_new(&mut self, name: JsString, mut binding: Binding) {
         debug_assert!(self.position(&name).is_none());
-        self.list.push((name, binding));
+        binding.name = name;
+        self.list.push(binding);
         if let Some(ix) = &mut self.index {
             ix.insert(name, self.list.len() - 1);
         } else if self.list.len() >= INDEX_FROM {
@@ -75,18 +119,19 @@ impl Bindings {
                 self.list
                     .iter()
                     .enumerate()
-                    .map(|(i, (n, _))| (*n, i))
+                    .map(|(i, b)| (b.name, i))
                     .collect(),
             ));
         }
     }
 
     /// Adds or replaces a binding.
-    pub fn insert(&mut self, name: JsString, binding: Binding) -> Option<Binding> {
+    pub fn insert(&mut self, name: JsString, mut binding: Binding) -> Option<Binding> {
+        binding.name = name;
         if let Some(i) = self.position(&name) {
-            return Some(std::mem::replace(&mut self.list[i].1, binding));
+            return Some(std::mem::replace(&mut self.list[i], binding));
         }
-        self.list.push((name, binding));
+        self.list.push(binding);
         if let Some(ix) = &mut self.index {
             ix.insert(name, self.list.len() - 1);
         } else if self.list.len() >= INDEX_FROM {
@@ -94,7 +139,7 @@ impl Bindings {
                 self.list
                     .iter()
                     .enumerate()
-                    .map(|(i, (n, _))| (*n, i))
+                    .map(|(i, b)| (b.name, i))
                     .collect(),
             ));
         }
@@ -117,13 +162,13 @@ impl Bindings {
 
     pub fn remove(&mut self, name: &JsString) -> Option<Binding> {
         let i = self.position(name)?;
-        let (_, b) = self.list.remove(i);
+        let b = self.list.remove(i);
         if self.index.is_some() {
             self.index = Some(Box::new(
                 self.list
                     .iter()
                     .enumerate()
-                    .map(|(i, (n, _))| (*n, i))
+                    .map(|(i, b)| (b.name, i))
                     .collect(),
             ));
         }
@@ -433,15 +478,8 @@ impl EnvId {
         name: JsString,
         value: Option<Value>,
     ) {
-        self.decl_bindings(agent).push_new(
-            name,
-            Binding {
-                value,
-                mutable: true,
-                strict: false,
-                deletable: false,
-            },
-        );
+        self.decl_bindings(agent)
+            .push_new(name, Binding::new(value, true, false, false));
     }
 
     pub fn create_mutable_binding(
@@ -452,15 +490,8 @@ impl EnvId {
     ) -> JsResult<()> {
         match self.kind(agent) {
             Kind::Declarative => {
-                self.decl_bindings(agent).insert(
-                    name,
-                    Binding {
-                        value: None,
-                        mutable: true,
-                        strict: false,
-                        deletable,
-                    },
-                );
+                self.decl_bindings(agent)
+                    .insert(name, Binding::new(None, true, false, deletable));
                 Ok(())
             }
             Kind::Object { binding_object, .. } => {
@@ -496,15 +527,8 @@ impl EnvId {
     ) -> JsResult<()> {
         match self.kind(agent) {
             Kind::Declarative => {
-                self.decl_bindings(agent).insert(
-                    name,
-                    Binding {
-                        value: None,
-                        mutable: false,
-                        strict,
-                        deletable: false,
-                    },
-                );
+                self.decl_bindings(agent)
+                    .insert(name, Binding::new(None, false, strict, false));
                 Ok(())
             }
             Kind::Global {
@@ -530,7 +554,7 @@ impl EnvId {
         match self.kind(agent) {
             Kind::Declarative => {
                 if let Some(b) = self.decl_bindings(agent).get_mut(&name) {
-                    b.value = Some(value);
+                    b.set_value(value);
                 }
                 Ok(())
             }
@@ -570,17 +594,17 @@ impl EnvId {
                     self.create_mutable_binding(agent, name, true)?;
                     return self.initialize_binding(agent, name, value);
                 };
-                let strict = strict || binding.strict;
-                if binding.value.is_none() {
+                let strict = strict || binding.strict();
+                if !binding.is_initialized() {
                     let msg = format!(
                         "cannot access '{}' before initialization",
                         agent.str_lossy(name)
                     );
                     return Err(agent.throw_reference_error(&msg));
                 }
-                if binding.mutable {
+                if binding.mutable() {
                     if let Some(b) = self.decl_bindings(agent).get_mut(&name) {
-                        b.value = Some(value);
+                        b.set_value(value);
                     }
                 } else if strict {
                     let msg = format!("assignment to constant '{}'", agent.str_lossy(name));
@@ -631,7 +655,7 @@ impl EnvId {
                     };
                     return env.get_binding_value(agent, target, true);
                 }
-                match self.binding(agent, name).and_then(|b| b.value) {
+                match self.binding(agent, name).and_then(|b| b.value()) {
                     Some(v) => Ok(v),
                     None => {
                         let msg = format!(
@@ -675,7 +699,7 @@ impl EnvId {
     pub fn delete_binding(self, agent: &mut Agent, name: JsString) -> JsResult<bool> {
         match self.kind(agent) {
             Kind::Declarative => match self.binding(agent, name) {
-                Some(b) if !b.deletable => Ok(false),
+                Some(b) if !b.deletable() => Ok(false),
                 _ => {
                     self.decl_bindings(agent).remove(&name);
                     Ok(true)
@@ -793,8 +817,9 @@ impl EnvId {
         let Environment::Declarative { bindings, .. } = agent.env(self) else {
             unreachable!("a binding slot of a declarative record")
         };
-        let (name, binding) = &bindings.list[slot];
-        match binding.value {
+        let binding = &bindings.list[slot];
+        let name = &binding.name;
+        match binding.value() {
             Some(v) => Ok(v),
             None => {
                 let name = *name;
@@ -810,7 +835,7 @@ impl EnvId {
     /// The name of the binding in `slot` of a declarative record.
     pub(crate) fn binding_name_at(self, agent: &Agent, slot: usize) -> Option<JsString> {
         match agent.env(self) {
-            Environment::Declarative { bindings, .. } => bindings.list.get(slot).map(|(n, _)| *n),
+            Environment::Declarative { bindings, .. } => bindings.list.get(slot).map(|b| b.name),
             _ => None,
         }
     }
@@ -820,7 +845,7 @@ impl EnvId {
     #[inline]
     pub(crate) fn initialized_value_at(self, agent: &Agent, slot: usize) -> Option<Value> {
         match agent.env(self) {
-            Environment::Declarative { bindings, .. } => bindings.list[slot].1.value,
+            Environment::Declarative { bindings, .. } => bindings.list[slot].value(),
             _ => None,
         }
     }
@@ -854,12 +879,12 @@ impl EnvId {
         value: Value,
     ) -> bool {
         if let Environment::Declarative { bindings, .. } = agent.env_mut(self)
-            && let Some((n, b)) = bindings.list.get_mut(slot)
-            && *n == name
-            && b.mutable
-            && b.value.is_some()
+            && let Some(b) = bindings.list.get_mut(slot)
+            && b.name == name
+            && b.mutable()
+            && b.is_initialized()
         {
-            b.value = Some(value);
+            b.set_value(value);
             return true;
         }
         false
@@ -908,9 +933,9 @@ use crate::gc::{Trace, Tracer};
 
 impl Trace for Bindings {
     fn trace(&self, t: &mut Tracer) {
-        for (name, b) in &self.list {
-            t.string(*name);
-            b.value.trace(t);
+        for b in &self.list {
+            t.string(b.name);
+            b.value().trace(t);
         }
     }
 }
@@ -966,3 +991,5 @@ impl Trace for Environment {
         }
     }
 }
+
+const _: () = assert!(std::mem::size_of::<Binding>() == 16);
