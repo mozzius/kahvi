@@ -25,6 +25,8 @@ use std::sync::{Arc, Mutex, OnceLock};
 
 use kahvi_parser::preparse::Preparse;
 
+use crate::source::SourceText;
+
 /// Sources shorter than this are parsed in full: hashing and storing them
 /// costs about what it saves.
 const MIN_SOURCE_LEN: usize = 256 << 10;
@@ -55,7 +57,7 @@ struct Cache {
     functions: crate::hash::FxHashMap<Key, Functions>,
     /// The source texts that runtimes hold, so another runtime evaluating
     /// the same text shares the copy instead of making its own.
-    sources: crate::hash::FxHashMap<Key, std::sync::Weak<str>>,
+    sources: crate::hash::FxHashMap<Key, std::sync::Weak<SourceText>>,
 }
 
 /// The cached code of one source's functions, by the offset of each.
@@ -269,17 +271,22 @@ fn read_functions(dir: Option<&Path>, key: &Key) -> Functions {
 
 /// `source` as a shared string: the copy another runtime holds of the same
 /// text when there is one, else a new copy that later ones share.
-pub(crate) fn shared_source(key: Option<&Key>, source: &str) -> Arc<str> {
+pub(crate) fn shared_source(key: Option<&Key>, source: &str) -> Arc<SourceText> {
     let Some(key) = key else {
-        return Arc::from(source);
+        return SourceText::new(source);
     };
     let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
     if let Some(s) = c.sources.get(key).and_then(std::sync::Weak::upgrade)
-        && *s == *source
+        && **s == *source
     {
         return s;
     }
-    let s: Arc<str> = Arc::from(source);
+    // In the cache directory, the text is kept as a mapping of a copy there
+    // (see `SourceText`).
+    let mapped = c.dir.as_ref().and_then(|d| {
+        SourceText::mapped(&d.join(key.file_name().replace(".kvpp", ".src")), source)
+    });
+    let s = mapped.map_or_else(|| SourceText::new(source), Arc::new);
     c.sources.retain(|_, w| w.strong_count() > 0);
     c.sources.insert(*key, Arc::downgrade(&s));
     s

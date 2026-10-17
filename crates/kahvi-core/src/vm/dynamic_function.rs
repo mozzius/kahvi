@@ -1,8 +1,6 @@
 //! CreateDynamicFunction (§20.2.1.1.1): the `Function`, `GeneratorFunction`,
 //! `AsyncFunction` and `AsyncGeneratorFunction` constructors.
 
-use std::sync::Arc;
-
 use super::call::ordinary_function_create;
 use super::eval::{line_col, register_script};
 use crate::agent::Agent;
@@ -88,7 +86,7 @@ pub fn create_dynamic_function(
     let env = agent.realm(current_realm).global_env;
     // 27. Let privateEnv be null.
     // 28. Let F be OrdinaryFunctionCreate(funcProto, sourceText, params, body, non-lexical-this, envRecord, privateEnv).
-    let source: Arc<str> = Arc::from(source_string);
+    let source = crate::source::SourceText::new(&source_string);
     let script = register_script(agent, current_realm, source.clone(), "anonymous", true);
     let code = compiler::compile_dynamic_function(agent, &f, source, script);
     let func = ordinary_function_create(agent, func_proto, code, env, None);

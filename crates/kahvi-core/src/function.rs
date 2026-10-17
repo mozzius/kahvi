@@ -111,7 +111,7 @@ pub struct ClassSlots {
     /// [[ClassFieldInitializerName]] (for anonymous function naming in fields).
     pub class_field_initializer_name: Option<FieldName>,
     /// The class source text, for class constructors' toString.
-    pub source_override: Option<(Arc<str>, u32, u32)>,
+    pub source_override: Option<(Arc<crate::source::SourceText>, u32, u32)>,
     /// Static elements of a class still being defined (run by FinishClass).
     pub class_pending: Option<Box<ClassPending>>,
 }

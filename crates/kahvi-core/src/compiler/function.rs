@@ -22,7 +22,7 @@ use crate::value::JsString;
 pub(super) fn compile_function(
     agent: &mut Agent,
     f: &Function,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script: u32,
     is_expression: bool,
 ) -> Arc<FunctionCode> {
@@ -45,7 +45,7 @@ pub(super) fn compile_function(
 fn compile_function_with(
     agent: &mut Agent,
     f: &Function,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script: u32,
     is_expression: bool,
     with_locals: bool,

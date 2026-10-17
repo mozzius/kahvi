@@ -578,7 +578,7 @@ op_code! {
 
 /// The surroundings every function of a decoded tree shares.
 struct Context<'a> {
-    source: &'a Arc<str>,
+    source: &'a Arc<crate::source::SourceText>,
     script: u32,
     constants: &'a Arc<CodeConstants>,
 }

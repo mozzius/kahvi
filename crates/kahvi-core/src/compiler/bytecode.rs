@@ -710,7 +710,7 @@ pub struct FunctionCode {
     /// such as [`FunctionCode::scopes`]).
     pub tables: Option<Box<CodeTables>>,
     /// The whole source text and this code's span in it (Function.prototype.toString).
-    pub source: Arc<str>,
+    pub source: Arc<crate::source::SourceText>,
     pub span: (u32, u32),
     /// Index of the script/module this code belongs to.
     pub script: u32,
