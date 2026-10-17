@@ -533,11 +533,72 @@ unsafe extern "C" {
         peak_commit: *mut usize,
         page_faults: *mut usize,
     );
+    fn mi_heap_main() -> *mut std::ffi::c_void;
+    fn mi_heap_visit_blocks(
+        heap: *mut std::ffi::c_void,
+        visit_blocks: bool,
+        visitor: MiBlockVisitor,
+        arg: *mut std::ffi::c_void,
+    ) -> bool;
+}
+
+/// mimalloc's `mi_heap_area_t`: one page of blocks of one size.
+#[repr(C)]
+struct MiHeapArea {
+    blocks: *mut std::ffi::c_void,
+    reserved: usize,
+    committed: usize,
+    used: usize,
+    block_size: usize,
+    full_block_size: usize,
+    reserved1: *mut std::ffi::c_void,
+}
+
+type MiBlockVisitor = extern "C" fn(
+    *const std::ffi::c_void,
+    *const MiHeapArea,
+    *mut std::ffi::c_void,
+    usize,
+    *mut std::ffi::c_void,
+) -> bool;
+
+/// Adds an area's blocks in use and its room for blocks to the pair `arg`
+/// points to.
+extern "C" fn add_area(
+    _heap: *const std::ffi::c_void,
+    area: *const MiHeapArea,
+    _block: *mut std::ffi::c_void,
+    _size: usize,
+    arg: *mut std::ffi::c_void,
+) -> bool {
+    // SAFETY: mimalloc passes an area when visiting areas, and `arg` is
+    // the pair `mimalloc_pages` passed.
+    let (area, sums) = unsafe { (&*area, &mut *(arg as *mut (usize, usize))) };
+    sums.0 += area.used * area.block_size;
+    sums.1 += area.committed;
+    true
+}
+
+/// The bytes of mimalloc's pages in use by blocks, and the bytes of the
+/// blocks those pages have room for: the difference is what mimalloc holds
+/// in pages partly free. (mimalloc's own count of committed memory does
+/// not go down when it returns memory on Linux and Android, so it says
+/// what was committed at most.) Pages another thread is changing meanwhile
+/// may be counted as they were a moment before.
+fn mimalloc_pages() -> (usize, usize) {
+    let mut sums = (0usize, 0usize);
+    let arg = &mut sums as *mut (usize, usize) as *mut std::ffi::c_void;
+    // SAFETY: visits areas only (no blocks), with a visitor that reads the
+    // area it is given.
+    unsafe {
+        mi_heap_visit_blocks(mi_heap_main(), false, add_area, arg);
+    }
+    sums
 }
 
 /// One line on the runtime's heap and the process's allocator, for hosts
 /// measuring memory: the engine's own tables (a walk of the heap) and what
-/// mimalloc has committed. Free with kahvi_utf8_free.
+/// mimalloc holds. Free with kahvi_utf8_free.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usize) -> *mut u8 {
     let h = unsafe { agent(rt).heap_stats() };
@@ -546,10 +607,11 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
         let [a, b, c, d, e, f, g, i] = &mut v;
         mi_process_info(a, b, c, d, e, f, g, i);
     }
+    let (in_use, room) = mimalloc_pages();
     let mb = |b: usize| b as f64 / (1 << 20) as f64;
     let line = format!(
         "gcs {} | objects {}/{} slots {:.1} MB props {:.1} MB | strings {}/{} {:.1} MB | envs {}/{} {:.1} MB +{:.1} MB | \
-         string table {:.1} MB | object data {:.1} MB | sources {:.1} MB | code {} fns {:.1} MB | allocated {} | process rss {:.1} MB peak {:.1} MB, commit {:.1} MB peak {:.1} MB",
+         string table {:.1} MB | object data {:.1} MB | sources {:.1} MB | code {} fns {:.1} MB | allocated {} | mimalloc blocks {:.1} MB in pages for {:.1} MB | process rss {:.1} MB peak {:.1} MB, peak commit {:.1} MB",
         h.collections,
         h.objects_live,
         h.object_slots,
@@ -568,9 +630,10 @@ pub unsafe extern "C" fn kahvi_heap_report(rt: *mut KahviRuntime, len: *mut usiz
         h.code_functions,
         mb(h.code_bytes),
         allocated_bytes().map_or("not counted".to_string(), |b| format!("{:.1} MB", mb(b))),
+        mb(in_use),
+        mb(room),
         mb(v[3]),
         mb(v[4]),
-        mb(v[5]),
         mb(v[6]),
     );
     let bytes = line.into_bytes().into_boxed_slice();
