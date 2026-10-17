@@ -103,4 +103,4 @@ impl std::fmt::Debug for Units {
     }
 }
 
-const _: () = assert!(size_of::<Units>() == 8);
+const _: () = assert!(size_of::<Units>() == size_of::<usize>());
