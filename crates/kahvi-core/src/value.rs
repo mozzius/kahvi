@@ -98,6 +98,22 @@ impl PackedValue {
         }
     }
 
+    /// No value (an uninitialized binding): a NaN neither a Number nor any
+    /// other value is.
+    pub(crate) const EMPTY: PackedValue = PackedValue(PACKED_TAG << 48);
+
+    /// `v`, or [`EMPTY`](Self::EMPTY) for `None`.
+    #[inline]
+    pub(crate) fn pack_option(v: Option<Value>) -> PackedValue {
+        v.map_or(Self::EMPTY, Self::pack)
+    }
+
+    /// The value, `None` for [`EMPTY`](Self::EMPTY).
+    #[inline]
+    pub(crate) fn unpack_option(self) -> Option<Value> {
+        (self.0 != Self::EMPTY.0).then(|| self.unpack())
+    }
+
     /// The bits, for a container keeping something else in the same 8
     /// bytes where it knows which it keeps.
     #[inline]
