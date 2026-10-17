@@ -186,13 +186,12 @@ pub struct PropertyMap {
     named: Named,
 }
 
-#[derive(Debug, Clone)]
 enum Named {
-    /// `slots[i]` holds the value of `shape.keys[i]`; `None` is the empty
-    /// shape.
+    /// `slots` holds the value of each of the keys of `shape`; `None` is
+    /// the empty shape.
     Shaped {
         shape: Option<Arc<Shape>>,
-        slots: Vec<Slot>,
+        slots: Slots,
     },
     Dict(Box<Dict>),
 }
@@ -201,8 +200,199 @@ impl Default for Named {
     fn default() -> Self {
         Named::Shaped {
             shape: None,
-            slots: Vec::new(),
+            slots: Slots::EMPTY,
         }
+    }
+}
+
+impl Drop for Named {
+    fn drop(&mut self) {
+        if let Named::Shaped { shape, slots } = self {
+            // SAFETY: `slots` holds a slot per key of `shape`.
+            unsafe { slots.free(shape_len(shape)) }
+        }
+    }
+}
+
+impl Clone for Named {
+    fn clone(&self) -> Self {
+        match self {
+            Named::Shaped { shape, slots } => Named::Shaped {
+                shape: shape.clone(),
+                // SAFETY: `slots` holds a slot per key of `shape`.
+                slots: unsafe { slots.clone(shape_len(shape)) },
+            },
+            Named::Dict(d) => Named::Dict(d.clone()),
+        }
+    }
+}
+
+impl std::fmt::Debug for Named {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Named::Shaped { shape, slots } => f
+                .debug_struct("Shaped")
+                .field("shape", shape)
+                .field("slots", &shaped(shape, slots))
+                .finish(),
+            Named::Dict(d) => f.debug_tuple("Dict").field(d).finish(),
+        }
+    }
+}
+
+fn shape_len(shape: &Option<Arc<Shape>>) -> usize {
+    shape.as_ref().map_or(0, |s| s.len())
+}
+
+/// The slots of a shaped object.
+#[inline]
+fn shaped<'a>(shape: &Option<Arc<Shape>>, slots: &'a Slots) -> &'a [Slot] {
+    // SAFETY: a shaped object's `slots` holds a slot per key of its shape.
+    unsafe { slots.as_slice(shape_len(shape)) }
+}
+
+/// The slots of a shaped object, to change.
+#[inline]
+fn shaped_mut<'a>(shape: &Option<Arc<Shape>>, slots: &'a mut Slots) -> &'a mut [Slot] {
+    // SAFETY: a shaped object's `slots` holds a slot per key of its shape.
+    unsafe { slots.as_mut_slice(shape_len(shape)) }
+}
+
+/// The values of a shaped object's keys, in the order of its shape's keys:
+/// a single pointer, as the shape says how many there are and the
+/// allocation's size follows from that ([`slot_capacity`]).
+struct Slots(std::ptr::NonNull<Slot>);
+
+// SAFETY: `Slots` owns its allocation like a `Box<[Slot]>`.
+unsafe impl Send for Slots {}
+unsafe impl Sync for Slots {}
+
+/// How many slots are allocated for `len`: doubling while small, then
+/// growing by half, up to [`MAX_SHAPE_KEYS`].
+fn slot_capacity(len: usize) -> usize {
+    let mut cap = 0;
+    while cap < len {
+        cap = if cap < 8 {
+            (cap * 2).max(2)
+        } else {
+            cap + cap / 2
+        };
+    }
+    cap.min(MAX_SHAPE_KEYS.max(len))
+}
+
+impl Slots {
+    const EMPTY: Slots = Slots(std::ptr::NonNull::dangling());
+
+    fn layout(cap: usize) -> std::alloc::Layout {
+        std::alloc::Layout::array::<Slot>(cap).expect("at most MAX_SHAPE_KEYS slots")
+    }
+
+    /// # Safety
+    /// `len` slots are initialized.
+    unsafe fn as_slice(&self, len: usize) -> &[Slot] {
+        unsafe { std::slice::from_raw_parts(self.0.as_ptr(), len) }
+    }
+
+    /// # Safety
+    /// `len` slots are initialized.
+    unsafe fn as_mut_slice(&mut self, len: usize) -> &mut [Slot] {
+        unsafe { std::slice::from_raw_parts_mut(self.0.as_ptr(), len) }
+    }
+
+    /// Reallocates for `new_cap` slots, keeping the first `keep`.
+    ///
+    /// # Safety
+    /// The allocation is for `old_cap` slots and `keep` of them, at most
+    /// both capacities, are initialized.
+    unsafe fn resize(&mut self, old_cap: usize, new_cap: usize, keep: usize) {
+        use std::alloc::{alloc, dealloc, handle_alloc_error};
+        let new = if new_cap == 0 {
+            std::ptr::NonNull::dangling()
+        } else {
+            let layout = Self::layout(new_cap);
+            // SAFETY: the layout has a non-zero size.
+            let p = unsafe { alloc(layout) } as *mut Slot;
+            let Some(p) = std::ptr::NonNull::new(p) else {
+                handle_alloc_error(layout)
+            };
+            // SAFETY: both allocations hold at least `keep` slots.
+            unsafe { std::ptr::copy_nonoverlapping(self.0.as_ptr(), p.as_ptr(), keep) };
+            p
+        };
+        if old_cap != 0 {
+            // SAFETY: the old allocation was made with this layout.
+            unsafe { dealloc(self.0.as_ptr() as *mut u8, Self::layout(old_cap)) };
+        }
+        self.0 = new;
+    }
+
+    /// Slot `i`.
+    ///
+    /// # Safety
+    /// Slot `i` is initialized.
+    #[inline]
+    unsafe fn get(&self, i: usize) -> Slot {
+        unsafe { *self.0.as_ptr().add(i) }
+    }
+
+    /// Slot `i`, to change.
+    ///
+    /// # Safety
+    /// Slot `i` is initialized.
+    #[inline]
+    unsafe fn get_mut(&mut self, i: usize) -> &mut Slot {
+        unsafe { &mut *self.0.as_ptr().add(i) }
+    }
+
+    /// Appends `slot` after the `len` slots.
+    ///
+    /// # Safety
+    /// `len` slots are initialized (and the allocation is the one
+    /// [`slot_capacity`] gives for `len`).
+    unsafe fn push(&mut self, len: usize, slot: Slot) {
+        let cap = slot_capacity(len);
+        if len == cap {
+            unsafe { self.resize(cap, slot_capacity(len + 1), len) };
+        }
+        // SAFETY: there is room for `len + 1` slots.
+        unsafe { self.0.as_ptr().add(len).write(slot) };
+    }
+
+    /// Removes and returns the last of the `len` slots.
+    ///
+    /// # Safety
+    /// `len` > 0 slots are initialized.
+    unsafe fn pop(&mut self, len: usize) -> Slot {
+        // SAFETY: slot `len - 1` is initialized.
+        let slot = unsafe { self.0.as_ptr().add(len - 1).read() };
+        let (cap, new_cap) = (slot_capacity(len), slot_capacity(len - 1));
+        if new_cap != cap {
+            unsafe { self.resize(cap, new_cap, len - 1) };
+        }
+        slot
+    }
+
+    /// Frees the allocation for `len` slots.
+    ///
+    /// # Safety
+    /// `len` is the number of slots, and the slots are not used again.
+    unsafe fn free(&mut self, len: usize) {
+        unsafe { self.resize(slot_capacity(len), 0, 0) };
+    }
+
+    /// A copy of the `len` slots.
+    ///
+    /// # Safety
+    /// `len` slots are initialized.
+    unsafe fn clone(&self, len: usize) -> Slots {
+        let mut out = Slots::EMPTY;
+        // SAFETY: the copy is allocated for `len` and gets `len` slots.
+        unsafe {
+            out.resize(0, slot_capacity(len), 0);
+            std::ptr::copy_nonoverlapping(self.0.as_ptr(), out.0.as_ptr(), len);
+        }
+        out
     }
 }
 
@@ -438,7 +628,8 @@ impl PropertyMap {
             Named::Shaped { shape, slots } => {
                 let shape = shape.as_ref()?;
                 let i = shape_find_hinted(shape, key, hint)?;
-                Some(join(shape.attrs(i), slots[i]))
+                // SAFETY: `i` is a position in the shape.
+                Some(join(shape.attrs(i), unsafe { slots.get(i) }))
             }
             Named::Dict(d) => d.get_hinted(key, hint),
         }
@@ -465,7 +656,8 @@ impl PropertyMap {
             Named::Shaped { shape, slots } => {
                 let shape = shape.as_ref()?;
                 let i = shape_find_hinted(shape, key, hint)?;
-                Some(match slots[i] {
+                // SAFETY: `i` is a position in the shape.
+                Some(match unsafe { slots.get(i) } {
                     Slot::Data(v) => Some(v),
                     Slot::Accessor(_) => None,
                 })
@@ -485,7 +677,8 @@ impl PropertyMap {
             Named::Shaped { shape, slots } => {
                 let shape = shape.as_ref()?;
                 let i = shape_find_hinted(shape, key, hint)?;
-                match &mut slots[i] {
+                // SAFETY: `i` is a position in the shape.
+                match unsafe { slots.get_mut(i) } {
                     Slot::Data(v) => Some((v, shape.attrs(i) & WRITABLE != 0)),
                     Slot::Accessor(..) => None,
                 }
@@ -604,20 +797,20 @@ impl PropertyMap {
                 PropertyKey::Index(_) => None,
                 _ => shape.as_ref().and_then(|s| s.find(key_bits(&key))),
             };
+            let len = shape_len(shape);
             match found {
                 Some(i) if shape.as_ref().expect("found in it").attrs(i) == a => {
-                    slots[i] = slot;
+                    shaped_mut(shape, slots)[i] = slot;
                     return;
                 }
                 Some(_) => {}
-                None if key.as_index().is_none() && slots.len() < MAX_SHAPE_KEYS => {
-                    *shape = Some(Shape::child(shape.as_ref(), key, a));
-                    // Double while small, then grow by half.
-                    let cap = slots.capacity();
-                    if slots.len() == cap {
-                        slots.reserve_exact(if cap < 8 { cap.max(2) } else { cap / 2 });
-                    }
-                    slots.push(slot);
+                None if key.as_index().is_none() && len < MAX_SHAPE_KEYS => {
+                    let child = Shape::child(shape.as_ref(), key, a);
+                    // SAFETY: `slots` holds a slot per key of `shape`, and
+                    // gets the new key's next to them as `shape` becomes
+                    // the child with that key.
+                    unsafe { slots.push(len, slot) };
+                    *shape = Some(child);
                     return;
                 }
                 None => {}
@@ -637,6 +830,7 @@ impl PropertyMap {
             return;
         };
         let mut d = Dict::default();
+        let slots = shaped(shape, slots);
         if let Some(shape) = shape {
             d.entries.reserve_exact(slots.len() + 1);
             for (i, &slot) in slots.iter().enumerate() {
@@ -689,10 +883,13 @@ impl PropertyMap {
             }
             let i = shape_ref.find(key_bits(key))?;
             // The last key added goes back to the shape before it.
-            if i + 1 == slots.len() {
+            let len = shape_ref.len();
+            if i + 1 == len {
                 let a = shape_ref.attrs(i);
                 let parent = shape_ref.parent().cloned();
-                let slot = slots.pop().expect("a slot per key");
+                // SAFETY: `slots` holds a slot per key of `shape`, and
+                // gives up the last as `shape` becomes its parent.
+                let slot = unsafe { slots.pop(len) };
                 *shape = parent;
                 return Some(join(a, slot));
             }
@@ -707,7 +904,7 @@ impl PropertyMap {
     pub fn len(&self) -> usize {
         self.elements.as_ref().map_or(0, |e| e.count as usize)
             + match &self.named {
-                Named::Shaped { slots, .. } => slots.len(),
+                Named::Shaped { shape, .. } => shape_len(shape),
                 Named::Dict(d) => d.entries.len() - d.removed as usize,
             }
     }
@@ -729,7 +926,7 @@ impl PropertyMap {
                 })
         });
         let named = match &self.named {
-            Named::Shaped { slots, .. } => slots.capacity() * size_of::<Slot>(),
+            Named::Shaped { shape, .. } => slot_capacity(shape_len(shape)) * size_of::<Slot>(),
             Named::Dict(d) => {
                 size_of::<Dict>()
                     + d.entries.capacity() * size_of::<Option<(PropertyKey, Property)>>()
@@ -970,7 +1167,7 @@ impl Trace for PropertyMap {
                 for k in shape.iter().flat_map(|s| s.keys()) {
                     t.key(k);
                 }
-                for slot in slots {
+                for slot in shaped(shape, slots) {
                     match slot {
                         Slot::Data(v) => t.value(*v),
                         Slot::Accessor(pair) => {
@@ -1068,7 +1265,7 @@ impl ObjectData {
 }
 
 // Every object is a slot of this size in the heap, live or not.
-const _: () = assert!(std::mem::size_of::<ObjectData>() <= 80);
+const _: () = assert!(std::mem::size_of::<ObjectData>() <= 64);
 // A shaped object's property value.
 const _: () = assert!(std::mem::size_of::<Slot>() == 16);
 // Every property (and array element) is one of these.
