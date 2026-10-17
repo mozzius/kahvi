@@ -18,7 +18,7 @@ use shape::{ACCESSOR, Attrs, CONFIGURABLE, ENUMERABLE, MAX_SHAPE_KEYS, Shape, WR
 
 use crate::gc::{Liveness, Trace, Tracer};
 
-use crate::value::{BigInt, JsString, Object, Symbol, Value};
+use crate::value::{BigInt, JsString, Object, PackedValue, Symbol, Value};
 
 /// A property key. Canonical array indices (0 ..= 2^32 - 2) are always
 /// `Index`, never `String`, so lookups agree however the key was written.
@@ -396,12 +396,50 @@ impl Slots {
     }
 }
 
-/// A property's value in a shaped object; its attributes, which say which
-/// variant it is, are in the shape.
+/// A property's value in a shaped object, in 8 bytes: a data property's
+/// value (a [`PackedValue`]) or an accessor's [`AccessorPair`]. Its
+/// attributes, which say which it is, are in the shape.
 #[derive(Debug, Clone, Copy)]
-enum Slot {
-    Data(Value),
-    Accessor(AccessorPair),
+struct Slot(u64);
+
+impl Slot {
+    #[inline]
+    fn data(value: Value) -> Slot {
+        Slot(PackedValue::pack(value).bits())
+    }
+    #[inline]
+    fn accessor(pair: AccessorPair) -> Slot {
+        Slot(pair.0 as u64 | (pair.1 as u64) << 32)
+    }
+    /// The value of a data property's slot.
+    #[inline]
+    fn value(self) -> Value {
+        PackedValue::from_bits(self.0).unpack()
+    }
+    /// The getter and setter of an accessor's slot.
+    #[inline]
+    fn pair(self) -> AccessorPair {
+        AccessorPair(self.0 as u32, (self.0 >> 32) as u32)
+    }
+}
+
+/// A data property's value, to replace.
+pub struct ValueMut<'a>(ValueRef<'a>);
+
+enum ValueRef<'a> {
+    Value(&'a mut Value),
+    Slot(&'a mut Slot),
+}
+
+impl ValueMut<'_> {
+    /// Replaces the value.
+    #[inline]
+    pub fn set(self, value: Value) {
+        match self.0 {
+            ValueRef::Value(v) => *v = value,
+            ValueRef::Slot(s) => *s = Slot::data(value),
+        }
+    }
 }
 
 /// An accessor's getter and setter object handles, [`NO_FUNCTION`] for
@@ -470,7 +508,7 @@ fn split(prop: Property) -> (Attrs, Slot) {
             writable,
             enumerable,
             configurable,
-        } => (attrs(writable, enumerable, configurable), Slot::Data(value)),
+        } => (attrs(writable, enumerable, configurable), Slot::data(value)),
         Property::Accessor {
             get,
             set,
@@ -478,7 +516,7 @@ fn split(prop: Property) -> (Attrs, Slot) {
             configurable,
         } => (
             ACCESSOR | attrs(false, enumerable, configurable),
-            Slot::Accessor(AccessorPair::new(get, set)),
+            Slot::accessor(AccessorPair::new(get, set)),
         ),
     }
 }
@@ -492,19 +530,21 @@ fn attrs(writable: bool, enumerable: bool, configurable: bool) -> Attrs {
 /// The property a shape's attributes and a slot make up.
 #[inline]
 fn join(a: Attrs, slot: Slot) -> Property {
-    match slot {
-        Slot::Data(value) => Property::Data {
-            value,
-            writable: a & WRITABLE != 0,
-            enumerable: a & ENUMERABLE != 0,
-            configurable: a & CONFIGURABLE != 0,
-        },
-        Slot::Accessor(pair) => Property::Accessor {
+    if a & ACCESSOR != 0 {
+        let pair = slot.pair();
+        Property::Accessor {
             get: pair.get(),
             set: pair.set(),
             enumerable: a & ENUMERABLE != 0,
             configurable: a & CONFIGURABLE != 0,
-        },
+        }
+    } else {
+        Property::Data {
+            value: slot.value(),
+            writable: a & WRITABLE != 0,
+            enumerable: a & ENUMERABLE != 0,
+            configurable: a & CONFIGURABLE != 0,
+        }
     }
 }
 
@@ -657,10 +697,7 @@ impl PropertyMap {
                 let shape = shape.as_ref()?;
                 let i = shape_find_hinted(shape, key, hint)?;
                 // SAFETY: `i` is a position in the shape.
-                Some(match unsafe { slots.get(i) } {
-                    Slot::Data(v) => Some(v),
-                    Slot::Accessor(_) => None,
-                })
+                Some((shape.attrs(i) & ACCESSOR == 0).then(|| unsafe { slots.get(i) }.value()))
             }
             Named::Dict(d) => d.get_hinted(key, hint).as_ref().map(value),
         }
@@ -672,16 +709,18 @@ impl PropertyMap {
         &mut self,
         key: &PropertyKey,
         hint: Option<&AtomicU32>,
-    ) -> Option<(&mut Value, bool)> {
+    ) -> Option<(ValueMut<'_>, bool)> {
         match &mut self.named {
             Named::Shaped { shape, slots } => {
                 let shape = shape.as_ref()?;
                 let i = shape_find_hinted(shape, key, hint)?;
-                // SAFETY: `i` is a position in the shape.
-                match unsafe { slots.get_mut(i) } {
-                    Slot::Data(v) => Some((v, shape.attrs(i) & WRITABLE != 0)),
-                    Slot::Accessor(..) => None,
+                let a = shape.attrs(i);
+                if a & ACCESSOR != 0 {
+                    return None;
                 }
+                // SAFETY: `i` is a position in the shape.
+                let slot = unsafe { slots.get_mut(i) };
+                Some((ValueMut(ValueRef::Slot(slot)), a & WRITABLE != 0))
             }
             Named::Dict(d) => {
                 let i = find_hinted(
@@ -697,7 +736,7 @@ impl PropertyMap {
                         Property::Data {
                             value, writable, ..
                         },
-                    )) => Some((value, *writable)),
+                    )) => Some((ValueMut(ValueRef::Value(value)), *writable)),
                     _ => None,
                 }
             }
@@ -714,7 +753,7 @@ impl PropertyMap {
 
     /// The value of the data property `key`, to replace it, and whether
     /// the property is writable.
-    pub fn data_value_mut(&mut self, key: &PropertyKey) -> Option<(&mut Value, bool)> {
+    pub fn data_value_mut(&mut self, key: &PropertyKey) -> Option<(ValueMut<'_>, bool)> {
         self.data_value_mut_inner(key, None)
     }
 
@@ -725,7 +764,7 @@ impl PropertyMap {
         &mut self,
         key: &PropertyKey,
         hint: &AtomicU32,
-    ) -> Option<(&mut Value, bool)> {
+    ) -> Option<(ValueMut<'_>, bool)> {
         self.data_value_mut_inner(key, Some(hint))
     }
 
@@ -734,12 +773,12 @@ impl PropertyMap {
         &mut self,
         key: &PropertyKey,
         hint: Option<&AtomicU32>,
-    ) -> Option<(&mut Value, bool)> {
+    ) -> Option<(ValueMut<'_>, bool)> {
         if let Some(i) = self.dense_slot(key) {
             return match &mut self.dense_mut()[i] {
                 Some(Property::Data {
                     value, writable, ..
-                }) => Some((value, *writable)),
+                }) => Some((ValueMut(ValueRef::Value(value)), *writable)),
                 _ => None,
             };
         }
@@ -1167,12 +1206,14 @@ impl Trace for PropertyMap {
                 for k in shape.iter().flat_map(|s| s.keys()) {
                     t.key(k);
                 }
-                for slot in shaped(shape, slots) {
-                    match slot {
-                        Slot::Data(v) => t.value(*v),
-                        Slot::Accessor(pair) => {
+                if let Some(sh) = shape {
+                    for (i, slot) in shaped(shape, slots).iter().enumerate() {
+                        if sh.attrs(i) & ACCESSOR != 0 {
+                            let pair = slot.pair();
                             pair.get().trace(t);
                             pair.set().trace(t);
+                        } else {
+                            t.value(slot.value());
                         }
                     }
                 }
@@ -1267,6 +1308,6 @@ impl ObjectData {
 // Every object is a slot of this size in the heap, live or not.
 const _: () = assert!(std::mem::size_of::<ObjectData>() <= 64);
 // A shaped object's property value.
-const _: () = assert!(std::mem::size_of::<Slot>() == 16);
+const _: () = assert!(std::mem::size_of::<Slot>() == 8);
 // Every property (and array element) is one of these.
 const _: () = assert!(std::mem::size_of::<Property>() <= 24);
