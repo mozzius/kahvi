@@ -41,9 +41,12 @@ impl ScriptRecord {
     /// [`line_col`] of byte offset `pos` in this record's source.
     pub fn line_col(&self, pos: usize) -> (usize, usize) {
         let starts = self.line_starts.get_or_init(|| {
-            std::iter::once(0)
+            let starts = std::iter::once(0)
                 .chain(self.source.match_indices('\n').map(|(i, _)| i as u32 + 1))
-                .collect()
+                .collect();
+            // That read all of the text; most of it is not needed again.
+            self.source.release_pages();
+            starts
         });
         let pos = pos.min(self.source.len());
         // The last line start at or before `pos`.
@@ -55,7 +58,7 @@ impl ScriptRecord {
 pub(super) fn register_script(
     agent: &mut Agent,
     realm: RealmId,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     name: &str,
     collectable: bool,
 ) -> u32 {
@@ -218,7 +221,7 @@ pub fn perform_eval(
     };
     // 13. strictEval.
     let strict_eval = ast.strict;
-    let source: Arc<str> = Arc::from(source.as_str());
+    let source = crate::source::SourceText::new(&source);
     let id = register_script(agent, realm, source.clone(), "eval", true);
     let code = compiler::compile_eval(agent, &ast, source, id);
     // 16-17. The environments.

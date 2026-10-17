@@ -38,7 +38,7 @@ pub struct StackFrame {
 #[derive(Debug, Clone)]
 pub struct StackLocation {
     pub script: u32,
-    pub source: Arc<str>,
+    pub source: Arc<crate::source::SourceText>,
     pub offset: u32,
 }
 
@@ -155,8 +155,8 @@ pub struct Names {
 pub type IntrinsicsInstaller = fn(&mut Agent, RealmId) -> JsResult<()>;
 
 pub struct Agent {
-    pub(crate) objects: Vec<ObjectData>,
-    pub(crate) strings: Vec<crate::units::Units>,
+    pub(crate) objects: crate::table::Table<ObjectData>,
+    pub(crate) strings: crate::table::Table<crate::units::Units>,
     /// The intern table: handles hashed by the contents they name (stored once, in `strings`).
     pub(crate) string_index: crate::hash::StringTable,
     pub(crate) symbols: Vec<SymbolData>,
@@ -180,7 +180,7 @@ pub struct Agent {
     pub(crate) kept_symbols: Vec<Value>,
     /// Live FinalizationRegistry objects (held weakly), for cleanup scheduling.
     pub(crate) finalization_registries: Vec<Object>,
-    pub(crate) envs: Vec<Environment>,
+    pub(crate) envs: crate::table::Table<Environment>,
     pub realms: Vec<Realm>,
     pub contexts: Vec<ExecutionContext>,
     pub jobs: VecDeque<Job>,
@@ -254,8 +254,8 @@ impl Agent {
     pub fn new() -> Agent {
         let placeholder = JsString(0);
         let mut agent = Agent {
-            objects: Vec::new(),
-            strings: Vec::new(),
+            objects: Default::default(),
+            strings: Default::default(),
             string_index: Default::default(),
             symbols: Vec::new(),
             gc: Default::default(),
@@ -265,7 +265,7 @@ impl Agent {
             kept_objects: Vec::new(),
             kept_symbols: Vec::new(),
             finalization_registries: Vec::new(),
-            envs: Vec::new(),
+            envs: Default::default(),
             realms: Vec::new(),
             contexts: Vec::new(),
             jobs: VecDeque::new(),
@@ -406,11 +406,10 @@ impl Agent {
         let is_error = matches!(data.kind, ObjectKind::Error);
         let o = if let Some(i) = self.gc.free_objects.pop() {
             self.gc.is_free_object.remove(i);
-            self.objects[i as usize] = data;
+            self.objects.set(i, data);
             Object(i)
         } else {
-            self.objects.push(data);
-            Object((self.objects.len() - 1) as u32)
+            Object(self.objects.push(data))
         };
         if is_error && let Some(stack) = self.capture_stack(None) {
             self.error_stacks.insert(o, stack);
@@ -643,13 +642,10 @@ impl Agent {
         let id = match self.gc.free_strings.pop() {
             Some(i) => {
                 self.gc.is_free_string.remove(i);
-                self.strings[i as usize] = units.into();
+                self.strings.set(i, units.into());
                 i
             }
-            None => {
-                self.strings.push(units.into());
-                (self.strings.len() - 1) as u32
-            }
+            None => self.strings.push(units.into()),
         };
         self.string_index.insert(&self.strings, id);
         if self.gc.pinning {
@@ -854,11 +850,10 @@ impl Agent {
         self.gc.allocated += 1;
         if let Some(i) = self.gc.free_envs.pop() {
             self.gc.is_free_env.remove(i);
-            self.envs[i as usize] = env;
+            self.envs.set(i, env);
             return EnvId(i);
         }
-        self.envs.push(env);
-        EnvId((self.envs.len() - 1) as u32)
+        EnvId(self.envs.push(env))
     }
 
     /// A new declarative (function, module) environment record. A collected
@@ -870,14 +865,14 @@ impl Agent {
         is_module: bool,
     ) -> EnvId {
         if let Some(&i) = self.gc.free_envs.last()
-            && let Environment::Declarative {
+            && let Some(Environment::Declarative {
                 bindings,
                 outer: o,
                 function: f,
                 extra,
                 is_module: m,
                 is_catch,
-            } = &mut self.envs[i as usize]
+            }) = self.envs.get_mut(i)
         {
             self.gc.free_envs.pop();
             self.gc.is_free_env.remove(i);

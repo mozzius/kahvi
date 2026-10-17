@@ -18,12 +18,14 @@
 //! and by the goal (script or module); the parser also checks that each
 //! skipped body starts with `{` and ends with `}` in the text it is given.
 
-use std::io::{Read, Seek, Write};
+use std::io::{Read, Write};
 use std::ops::{Deref, Range};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, OnceLock};
 
 use kahvi_parser::preparse::Preparse;
+
+use crate::source::SourceText;
 
 /// Sources shorter than this are parsed in full: hashing and storing them
 /// costs about what it saves.
@@ -55,7 +57,7 @@ struct Cache {
     functions: crate::hash::FxHashMap<Key, Functions>,
     /// The source texts that runtimes hold, so another runtime evaluating
     /// the same text shares the copy instead of making its own.
-    sources: crate::hash::FxHashMap<Key, std::sync::Weak<str>>,
+    sources: crate::hash::FxHashMap<Key, std::sync::Weak<SourceText>>,
 }
 
 /// The cached code of one source's functions, by the offset of each.
@@ -69,8 +71,39 @@ struct Functions {
 /// One function's encoded code, in a buffer it may share with others.
 #[derive(Clone)]
 pub(crate) struct CodeBytes {
-    blob: Arc<[u8]>,
+    blob: Arc<Blob>,
     range: Range<usize>,
+}
+
+/// The bytes [`CodeBytes`] are part of: code compiled in this process, or a
+/// code file. A code file is kept as a read-only mapping (as large source
+/// texts are, see [`SourceText`]): the system loads the pages of a
+/// function's code when it is decoded and can drop them again, where a
+/// copy would hold all of it for as long as the process runs.
+enum Blob {
+    Heap(Box<[u8]>),
+    #[cfg(all(unix, target_pointer_width = "64"))]
+    Mapped(crate::source::map::Mapping),
+}
+
+impl Blob {
+    fn release_pages(&self) {
+        #[cfg(all(unix, target_pointer_width = "64"))]
+        if let Blob::Mapped(m) = self {
+            m.release_pages();
+        }
+    }
+}
+
+impl Deref for Blob {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        match self {
+            Blob::Heap(b) => b,
+            #[cfg(all(unix, target_pointer_width = "64"))]
+            Blob::Mapped(m) => m.bytes(),
+        }
+    }
 }
 
 impl Deref for CodeBytes {
@@ -93,55 +126,91 @@ fn checksum(bytes: &[u8]) -> u32 {
     })
 }
 
+/// The bytes of the code file at `path`, mapped where the system allows
+/// it.
+fn read_code_file(path: &Path) -> Option<Blob> {
+    let mut file = std::fs::File::open(path).ok()?;
+    #[cfg(all(unix, target_pointer_width = "64"))]
+    if let Some(m) = crate::source::map::Mapping::file(&file) {
+        return Some(Blob::Mapped(m));
+    }
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes).ok()?;
+    Some(Blob::Heap(bytes.into()))
+}
+
+/// The records of a code file's `bytes` (each function's offset and where
+/// its code is), up to the first that is cut short or damaged, and the
+/// length of the bytes they take; 0 if the file is from another build.
+fn code_records(bytes: &[u8], header: &[u8]) -> (usize, Vec<(u32, Range<usize>)>) {
+    let mut records = Vec::new();
+    if !bytes.starts_with(header) {
+        return (0, records);
+    }
+    let mut pos = header.len();
+    while let Some(head) = bytes.get(pos..pos + 8) {
+        let start = u32::from_le_bytes(head[..4].try_into().expect("4 bytes"));
+        let len = u32::from_le_bytes(head[4..].try_into().expect("4 bytes")) as usize;
+        let body = pos + 8..pos + 8 + len;
+        let Some(sum) = bytes.get(body.end..body.end + 4) else {
+            break;
+        };
+        if checksum(&bytes[body.clone()]).to_le_bytes() != sum {
+            break;
+        }
+        pos = body.end + 4;
+        records.push((start, body));
+    }
+    (pos, records)
+}
+
 /// Reads the code file at `path`, keeping its valid records in `f`, and
 /// opens it for appending: a file from another build is started afresh,
 /// and a record cut short (the process ended while writing it) is dropped.
+///
+/// The file is mapped, so it is only ever appended to or replaced whole by
+/// rename, never changed in place: another process may have it mapped.
 fn open_code_file(path: &Path, f: &mut Functions) -> Option<()> {
-    let mut file = std::fs::OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .truncate(false)
-        .open(path)
-        .ok()?;
-    let mut bytes = Vec::new();
-    file.read_to_end(&mut bytes).ok()?;
     let header = code_file_header();
-    let mut valid = 0;
-    if bytes.starts_with(&header) {
-        let blob: Arc<[u8]> = bytes.into();
-        let mut pos = header.len();
-        valid = pos;
-        while let Some(head) = blob.get(pos..pos + 8) {
-            let start = u32::from_le_bytes(head[..4].try_into().expect("4 bytes"));
-            let len = u32::from_le_bytes(head[4..].try_into().expect("4 bytes")) as usize;
-            let body = pos + 8..pos + 8 + len;
-            let Some(sum) = blob.get(body.end..body.end + 4) else {
-                break;
-            };
-            if checksum(&blob[body.clone()]).to_le_bytes() != sum {
-                break;
-            }
-            f.code.insert(
-                start,
-                CodeBytes {
-                    blob: blob.clone(),
-                    range: body.clone(),
-                },
-            );
-            pos = body.end + 4;
-            valid = pos;
+    let mut blob = read_code_file(path);
+    let (mut valid, mut records) = blob
+        .as_deref()
+        .map_or((0, Vec::new()), |b| code_records(b, &header));
+    if valid == 0 || blob.as_ref().is_some_and(|b| b.len() != valid) {
+        let keep = match &blob {
+            Some(b) if valid > 0 => &b[..valid],
+            _ => &header[..],
+        };
+        let tmp = path.with_extension(format!("tmp{}", std::process::id()));
+        if std::fs::write(&tmp, keep)
+            .and_then(|()| std::fs::rename(&tmp, path))
+            .is_err()
+        {
+            let _ = std::fs::remove_file(&tmp);
+            return None;
         }
+        blob = read_code_file(path);
+        (valid, records) = blob
+            .as_deref()
+            .map_or((0, Vec::new()), |b| code_records(b, &header));
+    }
+    let blob = Arc::new(blob?);
+    // Checking the records read every page; the system reads them back
+    // from the file as functions' code is decoded.
+    blob.release_pages();
+    for (start, range) in records {
+        f.code.insert(
+            start,
+            CodeBytes {
+                blob: blob.clone(),
+                range,
+            },
+        );
     }
     if valid == 0 {
-        file.set_len(0).ok()?;
-        file.seek(std::io::SeekFrom::Start(0)).ok()?;
-        file.write_all(&header).ok()?;
-    } else {
-        file.set_len(valid as u64).ok()?;
-        file.seek(std::io::SeekFrom::Start(valid as u64)).ok()?;
+        return None;
     }
-    f.file = Some(file);
+    f.file = Some(std::fs::OpenOptions::new().append(true).open(path).ok()?);
     Some(())
 }
 
@@ -269,17 +338,22 @@ fn read_functions(dir: Option<&Path>, key: &Key) -> Functions {
 
 /// `source` as a shared string: the copy another runtime holds of the same
 /// text when there is one, else a new copy that later ones share.
-pub(crate) fn shared_source(key: Option<&Key>, source: &str) -> Arc<str> {
+pub(crate) fn shared_source(key: Option<&Key>, source: &str) -> Arc<SourceText> {
     let Some(key) = key else {
-        return Arc::from(source);
+        return SourceText::new(source);
     };
     let mut c = cache().lock().unwrap_or_else(|e| e.into_inner());
     if let Some(s) = c.sources.get(key).and_then(std::sync::Weak::upgrade)
-        && *s == *source
+        && **s == *source
     {
         return s;
     }
-    let s: Arc<str> = Arc::from(source);
+    // In the cache directory, the text is kept as a mapping of a copy there
+    // (see `SourceText`).
+    let mapped = c.dir.as_ref().and_then(|d| {
+        SourceText::mapped(&d.join(key.file_name().replace(".kvpp", ".src")), source)
+    });
+    let s = mapped.map_or_else(|| SourceText::new(source), Arc::new);
     c.sources.retain(|_, w| w.strong_count() > 0);
     c.sources.insert(*key, Arc::downgrade(&s));
     s
@@ -316,7 +390,7 @@ pub(crate) fn store_function(key: &Key, start: u32, code: Vec<u8>) {
     f.code.insert(
         start,
         CodeBytes {
-            blob: code.into(),
+            blob: Arc::new(Blob::Heap(code.into())),
             range: 0..len,
         },
     );

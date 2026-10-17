@@ -15,6 +15,8 @@ pub mod host;
 pub mod object;
 pub mod ops;
 pub mod realm;
+pub mod source;
+mod table;
 mod units;
 pub mod value;
 pub mod vm;

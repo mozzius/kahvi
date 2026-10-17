@@ -584,21 +584,19 @@ impl Agent {
     /// What the heap holds now, live and free (a walk of the whole heap;
     /// for hosts measuring memory).
     pub fn heap_stats(&self) -> HeapStats {
-        use std::mem::size_of;
         let mut h = HeapStats {
             collections: self.gc.collections,
             object_slots: self.objects.len(),
-            object_slot_bytes: self.objects.capacity() * size_of::<crate::object::ObjectData>(),
+            object_slot_bytes: self.objects.heap_bytes(),
             string_slots: self.strings.len(),
             env_slots: self.envs.len(),
-            env_slot_bytes: self.envs.capacity() * size_of::<crate::env::Environment>(),
-            string_table_bytes: self.strings.capacity() * size_of::<crate::units::Units>()
-                + self.string_index.heap_bytes(),
+            env_slot_bytes: self.envs.heap_bytes(),
+            string_table_bytes: self.strings.heap_bytes() + self.string_index.heap_bytes(),
             ..HeapStats::default()
         };
         let mut seen_code = crate::hash::FxHashSet::default();
-        for (i, o) in self.objects.iter().enumerate() {
-            if !self.gc.is_free_object.get(i as u32) {
+        for (i, o) in self.objects.iter() {
+            if !self.gc.is_free_object.get(i) {
                 h.objects_live += 1;
                 h.property_bytes += o.properties.heap_bytes();
                 h.kind_bytes += o.kind.boxed_bytes();
@@ -608,14 +606,14 @@ impl Agent {
                 }
             }
         }
-        for (i, s) in self.strings.iter().enumerate() {
-            if !self.gc.is_free_string.get(i as u32) {
+        for (i, s) in self.strings.iter() {
+            if !self.gc.is_free_string.get(i) {
                 h.strings_live += 1;
                 h.string_bytes += s.heap_bytes();
             }
         }
-        for (i, e) in self.envs.iter().enumerate() {
-            if !self.gc.is_free_env.get(i as u32) {
+        for (i, e) in self.envs.iter() {
+            if !self.gc.is_free_env.get(i) {
                 h.envs_live += 1;
                 h.env_bytes += e.heap_bytes();
             }
@@ -744,9 +742,10 @@ impl Agent {
             } else if !self.gc.is_free_object.get(i) {
                 self.objects[i as usize] = ObjectData::new(None, ObjectKind::Ordinary);
                 self.gc.is_free_object.insert(i);
-                self.gc.free_objects.push(i);
             }
         }
+        self.objects
+            .compact(&mut self.gc.is_free_object, &mut self.gc.free_objects);
         // A collected object's native state goes with it.
         self.native_states.retain(|o, _| t.objects.get(o.0));
         self.error_stacks.retain(|o, _| t.objects.get(o.0));
@@ -770,9 +769,10 @@ impl Agent {
                     e => *e = Environment::dead(),
                 }
                 self.gc.is_free_env.insert(i);
-                self.gc.free_envs.push(i);
             }
         }
+        self.envs
+            .compact(&mut self.gc.is_free_env, &mut self.gc.free_envs);
         for i in 0..self.strings.len() as u32 {
             if t.strings.get(i) || self.gc.pinned_strings.get(i) {
                 live_count += 1;
@@ -780,9 +780,11 @@ impl Agent {
                 self.string_index.remove(&self.strings, i);
                 self.strings[i as usize] = Default::default();
                 self.gc.is_free_string.insert(i);
-                self.gc.free_strings.push(i);
             }
         }
+        self.strings
+            .compact(&mut self.gc.is_free_string, &mut self.gc.free_strings);
+        self.string_index.shrink(&self.strings);
         for i in self.gc.pinned_symbols..self.symbols.len() as u32 {
             if t.symbols.get(i) {
                 live_count += 1;
@@ -807,7 +809,7 @@ impl Agent {
         for (i, r) in self.scripts.iter_mut().enumerate() {
             let i = i as u32;
             if r.collectable && !t.scripts.get(i) && !r.source.is_empty() {
-                r.source = Arc::from("");
+                r.source = crate::source::SourceText::new("");
                 freed.insert(i);
                 self.gc
                     .free_scripts

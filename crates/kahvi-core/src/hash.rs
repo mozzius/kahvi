@@ -148,7 +148,11 @@ impl StringTable {
     }
 
     /// The handle whose contents equal `units`, if one is interned.
-    pub(crate) fn find(&self, strings: &[crate::units::Units], units: &[u16]) -> Option<u32> {
+    pub(crate) fn find(
+        &self,
+        strings: &crate::table::Table<crate::units::Units>,
+        units: &[u16],
+    ) -> Option<u32> {
         if self.slots.is_empty() {
             return None;
         }
@@ -170,7 +174,7 @@ impl StringTable {
 
     /// Adds handle `id`, whose contents are `strings[id]` and not yet in
     /// the table.
-    pub(crate) fn insert(&mut self, strings: &[crate::units::Units], id: u32) {
+    pub(crate) fn insert(&mut self, strings: &crate::table::Table<crate::units::Units>, id: u32) {
         if (self.live + self.tombstones + 1) * 4 > self.slots.len() * 3 {
             self.rebuild(strings);
         }
@@ -191,7 +195,7 @@ impl StringTable {
     }
 
     /// Removes handle `id`; `strings[id]` must still hold its contents.
-    pub(crate) fn remove(&mut self, strings: &[crate::units::Units], id: u32) {
+    pub(crate) fn remove(&mut self, strings: &crate::table::Table<crate::units::Units>, id: u32) {
         if self.slots.is_empty() {
             return;
         }
@@ -211,8 +215,16 @@ impl StringTable {
         }
     }
 
+    /// Rebuilds the table smaller when most of it is empty (after many
+    /// strings were collected).
+    pub(crate) fn shrink(&mut self, strings: &crate::table::Table<crate::units::Units>) {
+        if self.slots.len() > 1024 && (self.live + 1) * 8 < self.slots.len() {
+            self.rebuild(strings);
+        }
+    }
+
     /// Re-inserts the live handles into a table sized for twice as many.
-    fn rebuild(&mut self, strings: &[crate::units::Units]) {
+    fn rebuild(&mut self, strings: &crate::table::Table<crate::units::Units>) {
         let capacity = ((self.live + 1) * 2).next_power_of_two().max(64);
         let old = std::mem::replace(&mut self.slots, vec![EMPTY; capacity]);
         self.live = 0;

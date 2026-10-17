@@ -83,6 +83,12 @@ impl Shape {
         self.parent.as_ref()
     }
 
+    /// How many keys the shape has.
+    #[inline]
+    pub(crate) fn len(&self) -> usize {
+        self.bits.len()
+    }
+
     /// The key at position `i`.
     #[inline]
     pub(crate) fn key(&self, i: usize) -> PropertyKey {

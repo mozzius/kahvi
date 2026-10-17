@@ -150,7 +150,7 @@ impl<'a> Compiler<'a> {
     fn new(
         agent: &'a mut Agent,
         kind: CodeKind,
-        source: Arc<str>,
+        source: Arc<crate::source::SourceText>,
         script: u32,
         span: Span,
     ) -> Compiler<'a> {
@@ -693,7 +693,7 @@ impl<'a> Compiler<'a> {
 pub fn compile_script(
     agent: &mut Agent,
     script: &ast::Script,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
     pinned(agent, |agent| {
@@ -710,7 +710,7 @@ pub fn compile_script(
 pub fn compile_eval(
     agent: &mut Agent,
     script: &ast::Script,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
     pinned(agent, |agent| {
@@ -729,7 +729,7 @@ pub fn compile_eval(
 pub fn compile_module(
     agent: &mut Agent,
     module: &ast::Module,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
     pinned(agent, |agent| {
@@ -746,7 +746,7 @@ pub fn compile_module(
 pub fn compile_dynamic_function(
     agent: &mut Agent,
     f: &ast::Function,
-    source: Arc<str>,
+    source: Arc<crate::source::SourceText>,
     script_id: u32,
 ) -> Arc<FunctionCode> {
     pinned(agent, |agent| {
