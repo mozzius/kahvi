@@ -81,7 +81,7 @@ pub(crate) fn array_append_data(agent: &mut Agent, a: Object, value: Value) -> b
         },
     );
     if let Some((length, _)) = props.data_value_mut(&len_key) {
-        *length = Value::Number(len as f64 + 1.0);
+        length.set(Value::Number(len as f64 + 1.0));
     }
     true
 }
@@ -119,7 +119,7 @@ pub fn array_define_own_property(
             // ii. Set succeeded to ! OrdinaryDefineOwnProperty(A, "length", lengthDesc).
             let len_key = PropertyKey::String(agent.names.length);
             if let Some((value, _)) = agent.obj_mut(a).properties.data_value_mut(&len_key) {
-                *value = Value::Number(index as f64 + 1.0);
+                value.set(Value::Number(index as f64 + 1.0));
             }
         }
         // i. Return true.

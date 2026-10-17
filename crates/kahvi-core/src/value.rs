@@ -46,6 +46,77 @@ pub enum Value {
     Object(Object),
 }
 
+/// A [`Value`] in 8 bytes, for where many are kept (an object's property
+/// values). A Number is its own bits, every NaN as the one NaN; any other
+/// value is a NaN no Number is: its kind in the top 16 bits and its handle
+/// (or boolean) in the low 32.
+#[derive(Clone, Copy)]
+pub(crate) struct PackedValue(u64);
+
+/// The bits of every NaN Number.
+const PACKED_NAN: u64 = 0x7FF8_0000_0000_0000;
+/// The top 16 bits of the NaNs that are other values, less their kind
+/// (1 to 7); no Number has top bits above this one.
+const PACKED_TAG: u64 = 0xFFF8;
+
+impl PackedValue {
+    #[inline]
+    const fn tagged(kind: u64, payload: u32) -> PackedValue {
+        PackedValue((PACKED_TAG + kind) << 48 | payload as u64)
+    }
+
+    #[inline]
+    pub(crate) fn pack(v: Value) -> PackedValue {
+        match v {
+            Value::Number(n) if n.is_nan() => PackedValue(PACKED_NAN),
+            Value::Number(n) => PackedValue(n.to_bits()),
+            Value::Undefined => Self::tagged(1, 0),
+            Value::Null => Self::tagged(2, 0),
+            Value::Boolean(b) => Self::tagged(3, b as u32),
+            Value::String(s) => Self::tagged(4, s.0),
+            Value::Symbol(s) => Self::tagged(5, s.0),
+            Value::BigInt(b) => Self::tagged(6, b.0),
+            Value::Object(o) => Self::tagged(7, o.0),
+        }
+    }
+
+    #[inline]
+    pub(crate) fn unpack(self) -> Value {
+        let top = self.0 >> 48;
+        if top <= PACKED_TAG {
+            return Value::Number(f64::from_bits(self.0));
+        }
+        let payload = self.0 as u32;
+        match top - PACKED_TAG {
+            1 => Value::Undefined,
+            2 => Value::Null,
+            3 => Value::Boolean(payload != 0),
+            4 => Value::String(JsString(payload)),
+            5 => Value::Symbol(Symbol(payload)),
+            6 => Value::BigInt(BigInt(payload)),
+            _ => Value::Object(Object(payload)),
+        }
+    }
+
+    /// The bits, for a container keeping something else in the same 8
+    /// bytes where it knows which it keeps.
+    #[inline]
+    pub(crate) fn bits(self) -> u64 {
+        self.0
+    }
+
+    #[inline]
+    pub(crate) fn from_bits(bits: u64) -> PackedValue {
+        PackedValue(bits)
+    }
+}
+
+impl std::fmt::Debug for PackedValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.unpack().fmt(f)
+    }
+}
+
 impl Value {
     pub fn is_undefined(self) -> bool {
         matches!(self, Value::Undefined)

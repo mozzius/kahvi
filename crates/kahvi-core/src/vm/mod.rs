@@ -813,7 +813,7 @@ fn fast_step(agent: &mut Agent, frame: &mut Frame, op: Op, pc: usize) -> bool {
             else {
                 return false;
             };
-            *value = v;
+            value.set(v);
             frame.stack.truncate(n - 2);
             frame.stack.push(v);
         }

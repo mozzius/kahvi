@@ -242,7 +242,7 @@ impl Object {
             if !(is_array && key == PropertyKey::String(agent.names.length))
                 && let Some((slot, true)) = agent.obj_mut(self).properties.data_value_mut(&key)
             {
-                *slot = value;
+                slot.set(value);
                 return Ok(true);
             }
         }
