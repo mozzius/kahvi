@@ -117,7 +117,7 @@ impl PackedValue {
     /// The bits, for a container keeping something else in the same 8
     /// bytes where it knows which it keeps.
     #[inline]
-    pub(crate) fn bits(self) -> u64 {
+    pub(crate) const fn bits(self) -> u64 {
         self.0
     }
 

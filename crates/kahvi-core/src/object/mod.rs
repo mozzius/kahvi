@@ -483,7 +483,14 @@ struct Dict {
 /// none).
 #[derive(Debug, Default, Clone)]
 struct Elements {
-    items: Vec<Option<Property>>,
+    /// Each element's [`Slot`], or [`HOLE`].
+    items: Vec<Slot>,
+    /// Each element's attributes ([`HOLE_ATTRS`] for a hole), once any
+    /// element is other than a writable, enumerable, configurable data
+    /// property; until then a slot is a value or [`HOLE`] (boxed, as few
+    /// arrays have any such element).
+    #[allow(clippy::box_collection)]
+    attrs: Option<Box<Vec<Attrs>>>,
     /// How many of `items` are present.
     count: u32,
     /// The object's [[PrivateElements]] (kept here, as few objects have
@@ -491,6 +498,125 @@ struct Elements {
     /// few arrays have any either).
     #[allow(clippy::box_collection)]
     private: Option<Box<Vec<crate::function::PrivateElement>>>,
+}
+
+/// A plain element's attributes.
+const PLAIN: Attrs = WRITABLE | ENUMERABLE | CONFIGURABLE;
+/// The attributes of a hole in [`Elements::attrs`].
+const HOLE_ATTRS: Attrs = 0x80;
+/// A hole's slot while elements have no attributes of their own (no value
+/// packs to these bits).
+const HOLE: Slot = Slot(PackedValue::EMPTY.bits());
+
+impl Elements {
+    fn len(&self) -> usize {
+        self.items.len()
+    }
+
+    #[inline]
+    fn is_hole(&self, i: usize) -> bool {
+        match &self.attrs {
+            None => self.items[i].0 == HOLE.0,
+            Some(a) => a[i] == HOLE_ATTRS,
+        }
+    }
+
+    #[inline]
+    fn get(&self, i: usize) -> Option<Property> {
+        let a = match &self.attrs {
+            None => PLAIN,
+            Some(a) => a[i],
+        };
+        (!self.is_hole(i)).then(|| join(a, self.items[i]))
+    }
+
+    /// The value of element `i` if it is a data property.
+    #[inline]
+    fn value(&self, i: usize) -> Option<Option<Value>> {
+        match &self.attrs {
+            None => (self.items[i].0 != HOLE.0).then(|| Some(self.items[i].value())),
+            Some(a) => match a[i] {
+                HOLE_ATTRS => None,
+                a if a & ACCESSOR != 0 => Some(None),
+                _ => Some(Some(self.items[i].value())),
+            },
+        }
+    }
+
+    /// The value of data element `i`, to replace it, and whether it is
+    /// writable.
+    #[inline]
+    fn data_mut(&mut self, i: usize) -> Option<(ValueMut<'_>, bool)> {
+        let a = match &self.attrs {
+            None if self.items[i].0 == HOLE.0 => return None,
+            None => PLAIN,
+            Some(a) if a[i] == HOLE_ATTRS || a[i] & ACCESSOR != 0 => return None,
+            Some(a) => a[i],
+        };
+        Some((
+            ValueMut(ValueRef::Slot(&mut self.items[i])),
+            a & WRITABLE != 0,
+        ))
+    }
+
+    /// Makes element `i` `prop`, or a hole; keeps `count`.
+    fn set(&mut self, i: usize, prop: Option<Property>) {
+        let was = !self.is_hole(i);
+        let (a, slot) = match prop {
+            Some(p) => split(p),
+            None => (HOLE_ATTRS, HOLE),
+        };
+        if a != PLAIN && a != HOLE_ATTRS && self.attrs.is_none() {
+            let attrs = self
+                .items
+                .iter()
+                .map(|s| if s.0 == HOLE.0 { HOLE_ATTRS } else { PLAIN })
+                .collect();
+            self.attrs = Some(Box::new(attrs));
+        }
+        self.items[i] = slot;
+        if let Some(attrs) = &mut self.attrs {
+            attrs[i] = a;
+        }
+        match (was, prop.is_some()) {
+            (false, true) => self.count += 1,
+            (true, false) => self.count -= 1,
+            _ => {}
+        }
+    }
+
+    /// Extends the elements to `len` with holes.
+    fn grow(&mut self, len: usize) {
+        self.items.resize(len, HOLE);
+        if let Some(a) = &mut self.attrs {
+            a.resize(len, HOLE_ATTRS);
+        }
+    }
+
+    /// Drops the holes at the end.
+    fn trim(&mut self) {
+        while !self.items.is_empty() && self.is_hole(self.items.len() - 1) {
+            self.items.pop();
+            if let Some(a) = &mut self.attrs {
+                a.pop();
+            }
+        }
+        if self.items.is_empty() {
+            self.attrs = None;
+        }
+    }
+
+    fn reserve_exact(&mut self, n: usize) {
+        self.items.reserve_exact(n);
+        if let Some(a) = &mut self.attrs {
+            a.reserve_exact(n);
+        }
+    }
+
+    /// The present elements, by index.
+    fn present(&self) -> impl Iterator<Item = (usize, Property)> + '_ {
+        (0..self.len()).filter_map(|i| self.get(i).map(|p| (i, p)))
+    }
 }
 
 /// How far past the end of the dense elements a new index may land and
@@ -644,19 +770,22 @@ impl PropertyMap {
             .map_or(&[], |p| p.as_slice())
     }
 
-    fn dense(&self) -> &[Option<Property>] {
-        self.elements.as_deref().map_or(&[], |e| &e.items)
+    fn dense_len(&self) -> usize {
+        self.elements.as_deref().map_or(0, Elements::len)
     }
 
-    fn dense_mut(&mut self) -> &mut [Option<Property>] {
-        self.elements
-            .as_deref_mut()
-            .map_or(&mut [], |e| &mut e.items)
+    /// The dense elements (`dense_slot` found an index in them).
+    fn dense(&self) -> &Elements {
+        self.elements.as_deref().expect("a dense index")
+    }
+
+    fn dense_mut(&mut self) -> &mut Elements {
+        self.elements.as_deref_mut().expect("a dense index")
     }
 
     fn dense_slot(&self, key: &PropertyKey) -> Option<usize> {
         match key {
-            PropertyKey::Index(i) if (*i as usize) < self.dense().len() => Some(*i as usize),
+            PropertyKey::Index(i) if (*i as usize) < self.dense_len() => Some(*i as usize),
             _ => None,
         }
     }
@@ -685,13 +814,13 @@ impl PropertyMap {
         key: &PropertyKey,
         hint: Option<&AtomicU32>,
     ) -> Option<Option<Value>> {
+        if let Some(i) = self.dense_slot(key) {
+            return self.dense().value(i);
+        }
         let value = |p: &Property| match p {
             Property::Data { value, .. } => Some(*value),
             Property::Accessor { .. } => None,
         };
-        if let Some(i) = self.dense_slot(key) {
-            return self.dense()[i].as_ref().map(value);
-        }
         match &self.named {
             Named::Shaped { shape, slots } => {
                 let shape = shape.as_ref()?;
@@ -746,7 +875,7 @@ impl PropertyMap {
     #[inline]
     pub fn get(&self, key: &PropertyKey) -> Option<Property> {
         if let Some(i) = self.dense_slot(key) {
-            return self.dense()[i];
+            return self.dense().get(i);
         }
         self.get_named(key, None)
     }
@@ -775,19 +904,14 @@ impl PropertyMap {
         hint: Option<&AtomicU32>,
     ) -> Option<(ValueMut<'_>, bool)> {
         if let Some(i) = self.dense_slot(key) {
-            return match &mut self.dense_mut()[i] {
-                Some(Property::Data {
-                    value, writable, ..
-                }) => Some((ValueMut(ValueRef::Value(value)), *writable)),
-                _ => None,
-            };
+            return self.dense_mut().data_mut(i);
         }
         self.named_data_mut(key, hint)
     }
 
     pub fn contains(&self, key: &PropertyKey) -> bool {
         if let Some(i) = self.dense_slot(key) {
-            return self.dense()[i].is_some();
+            return !self.dense().is_hole(i);
         }
         match &self.named {
             Named::Shaped { shape, .. } => {
@@ -804,7 +928,7 @@ impl PropertyMap {
     pub(crate) fn reserve_elements(&mut self, n: usize) {
         if n > 0 {
             let e = self.elements.get_or_insert_with(Default::default);
-            e.items.reserve_exact(n);
+            e.reserve_exact(n);
         }
     }
 
@@ -812,21 +936,15 @@ impl PropertyMap {
     pub fn insert(&mut self, key: PropertyKey, prop: Property) {
         if let PropertyKey::Index(i) = key {
             let i = i as usize;
-            if i < self.dense().len() {
-                let e = self.elements.as_mut().expect("a dense index");
-                if e.items[i].is_none() {
-                    e.count += 1;
-                }
-                e.items[i] = Some(prop);
+            if i < self.dense_len() {
+                self.dense_mut().set(i, Some(prop));
                 return;
             }
-            if i <= self.dense().len() + DENSE_GAP
+            if i <= self.dense_len() + DENSE_GAP
                 && !matches!(&self.named, Named::Dict(d) if d.find(&key).is_some())
             {
                 self.grow_elements(i + 1);
-                let e = self.elements.as_mut().expect("grown elements");
-                e.items[i] = Some(prop);
-                e.count += 1;
+                self.dense_mut().set(i, Some(prop));
                 return;
             }
         }
@@ -885,16 +1003,15 @@ impl PropertyMap {
     /// newly covered indices into them.
     fn grow_elements(&mut self, len: usize) {
         let e = self.elements.get_or_insert_with(Default::default);
-        let old = e.items.len();
-        e.items.resize(len, None);
+        let old = e.len();
+        e.grow(len);
         if let Named::Dict(d) = &mut self.named
             && d.sparse_indices > 0
         {
             for i in old..len {
                 if let Some(p) = d.remove(&PropertyKey::Index(i as u32)) {
                     let e = self.elements.as_mut().expect("grown elements");
-                    e.items[i] = Some(p);
-                    e.count += 1;
+                    e.set(i, Some(p));
                 }
             }
         }
@@ -903,13 +1020,9 @@ impl PropertyMap {
     pub fn remove(&mut self, key: &PropertyKey) -> Option<Property> {
         if let Some(i) = self.dense_slot(key) {
             let e = self.elements.as_mut().expect("a dense index");
-            let old = e.items[i].take();
-            if old.is_some() {
-                e.count -= 1;
-            }
-            while matches!(e.items.last(), Some(None)) {
-                e.items.pop();
-            }
+            let old = e.get(i);
+            e.set(i, None);
+            e.trim();
             if e.items.is_empty() && e.private.is_none() {
                 self.elements = None;
             }
@@ -958,7 +1071,10 @@ impl PropertyMap {
         use std::mem::size_of;
         let elements = self.elements.as_ref().map_or(0, |e| {
             size_of::<Elements>()
-                + e.items.capacity() * size_of::<Option<Property>>()
+                + e.items.capacity() * size_of::<Slot>()
+                + e.attrs
+                    .as_ref()
+                    .map_or(0, |a| size_of::<Vec<Attrs>>() + a.capacity())
                 + e.private.as_ref().map_or(0, |p| {
                     size_of::<Vec<crate::function::PrivateElement>>()
                         + p.capacity() * size_of::<crate::function::PrivateElement>()
@@ -997,13 +1113,13 @@ impl PropertyMap {
     /// strings in creation order, then symbols in creation order.
     pub fn keys_in_spec_order(&self) -> Vec<PropertyKey> {
         let mut keys: Vec<PropertyKey> = Vec::with_capacity(self.len());
-        keys.extend(
-            self.dense()
-                .iter()
-                .enumerate()
-                .filter(|(_, p)| p.is_some())
-                .map(|(i, _)| PropertyKey::Index(i as u32)),
-        );
+        if let Some(e) = self.elements.as_deref() {
+            keys.extend(
+                (0..e.len())
+                    .filter(|&i| !e.is_hole(i))
+                    .map(|i| PropertyKey::Index(i as u32)),
+            );
+        }
         let mut indices: Vec<u32> = Vec::new();
         let mut strings = Vec::new();
         let mut symbols = Vec::new();
@@ -1030,14 +1146,15 @@ impl PropertyMap {
             }
         });
         v.sort_unstable_by(|a, b| b.cmp(a));
-        let dense = self.dense();
-        let dense_from = (from as usize).min(dense.len());
-        v.extend(
-            (dense_from..dense.len())
-                .rev()
-                .filter(|&i| dense[i].is_some())
-                .map(|i| i as u32),
-        );
+        if let Some(e) = self.elements.as_deref() {
+            let dense_from = (from as usize).min(e.len());
+            v.extend(
+                (dense_from..e.len())
+                    .rev()
+                    .filter(|&i| !e.is_hole(i))
+                    .map(|i| i as u32),
+            );
+        }
         v
     }
 }
@@ -1197,8 +1314,10 @@ impl Trace for Property {
 
 impl Trace for PropertyMap {
     fn trace(&self, t: &mut Tracer) {
-        for p in self.dense().iter().flatten() {
-            p.trace(t);
+        if let Some(e) = self.elements.as_deref() {
+            for (_, p) in e.present() {
+                p.trace(t);
+            }
         }
         self.private_elements().trace(t);
         match &self.named {
