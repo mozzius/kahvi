@@ -438,6 +438,14 @@ pub fn numeric_to_raw_bytes(
     value: Value,
     little_endian: bool,
 ) -> Vec<u8> {
+    // A NaN may be written as "any implementation chosen ... Not-a-Number
+    // encoding", the same one "for each implementation-distinguishable NaN
+    // value". Values keep only one NaN where the engine stores them packed
+    // (`PackedValue`), so every NaN is written as that one.
+    let value = match value {
+        Value::Number(n) if n.is_nan() => Value::Number(f64::NAN),
+        v => v,
+    };
     let mut bytes = match (ty, value) {
         (ElementType::Float16, Value::Number(n)) => f64_to_f16_bits(n).to_le_bytes().to_vec(),
         (ElementType::Float32, Value::Number(n)) => (n as f32).to_le_bytes().to_vec(),
