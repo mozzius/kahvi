@@ -8,34 +8,34 @@ Geometric mean of Kahvi's time relative to quickjs, across the workloads both ra
 
 ```mermaid
 xychart-beta
-  x-axis ["10-16", "10-18", "10-20", "10-21", "10-22", "10-23"]
+  x-axis ["10-16", "10-18", "10-20", "10-21", "10-22", "10-23", "10-24"]
   y-axis "times quickjs"
-  line [3.80, 3.11, 2.93, 3.07, 2.71, 2.89]
+  line [3.80, 3.11, 2.93, 3.07, 2.71, 2.89, 2.88]
 ```
 
-## Latest run: 2026-10-23T07:37:01Z
+## Latest run: 2026-10-24T07:22:14Z
 
-Kahvi git 7071998, 3 runs each, on Linux-6.17.0-1022-azure-x86_64-with-glibc2.39.
+Kahvi git 965eed5, 3 runs each, on Linux-6.17.0-1022-azure-x86_64-with-glibc2.39.
 
 | Workload | kahvi | node | node-jitless | quickjs | boa | hermes |
 |---|---|---|---|---|---|---|
-| startup/empty | 0.004s (2.769x) | 0.022s (14.8x) | 0.022s (14.933x) | 0.002s | 0.011s (7.4x) | 0.004s (2.733x) |
-| octane/richards | 7.864s (3.922x) | 0.088s (0.03x) | 0.997s (0.497x) | 2.005s | 11.145s (3.798x) | 1.292s (0.44x) |
-| octane/deltablue | 5.764s (4.117x) | 0.101s (0.038x) | 0.547s (0.39x) | 1.400s | 12.163s (4.528x) | 1.372s (0.511x) |
-| octane/crypto | 18.486s (1.455x) | 0.213s (0.016x) | 3.628s (0.286x) | 12.709s | 25.897s (1.996x) | 2.641s (0.204x) |
-| octane/raytrace | 8.169s (4.076x) | 0.178s (0.044x) | 0.705s (0.352x) | 2.004s | 18.462s (4.608x) | 2.880s (0.719x) |
-| octane/earley-boyer | 33.716s (3.846x) | 0.351s (0.043x) | 2.680s (0.306x) | 8.768s | 49.789s (6.049x) | 4.556s (0.553x) |
-| octane/regexp | 14.577s (2.856x) | 0.326s (0.048x) | 0.653s (0.128x) | 5.103s | 43.645s (6.375x) | 3.463s (0.506x) |
-| octane/splay | 1.240s (2.059x) | 0.197s (0.275x) | 0.332s (0.464x) | 0.715s | 2.047s (2.861x) | 0.419s (0.586x) |
-| octane/navier-stokes | 3.610s (2.336x) | 0.132s (0.05x) | 1.708s (0.651x) | 2.623s | 8.251s (3.146x) | 1.470s (0.561x) |
-| realworld/acorn | 3.568s | 0.213s | 0.612s | – | – | – |
-| realworld/marked | 1.134s | 0.124s | 0.135s | – | – | – |
-| realworld/prettier | 7.893s | 0.601s | 1.540s | – | – | – |
-| realworld/terser | 6.381s | 0.749s | 1.280s | – | – | – |
+| startup/empty | 0.004s (2.4x) | 0.022s (14.4x) | 0.022s (14.867x) | 0.002s | 0.010s (6.8x) | 0.003s (1.867x) |
+| octane/richards | 6.096s (4.06x) | 0.083s (0.028x) | 0.612s (0.408x) | 1.501s | 11.340s (3.847x) | 1.278s (0.433x) |
+| octane/deltablue | 9.596s (3.574x) | 0.095s (0.035x) | 1.048s (0.39x) | 2.685s | 12.464s (4.666x) | 1.370s (0.513x) |
+| octane/crypto | 23.711s (1.726x) | 0.203s (0.015x) | 4.837s (0.352x) | 13.735s | 33.429s (2.432x) | 3.675s (0.267x) |
+| octane/raytrace | 14.489s (3.684x) | 0.171s (0.044x) | 1.326s (0.337x) | 3.933s | 18.976s (4.858x) | 2.833s (0.725x) |
+| octane/earley-boyer | 30.475s (3.795x) | 0.349s (0.052x) | 2.412s (0.3x) | 8.031s | 41.432s (6.196x) | 3.587s (0.536x) |
+| octane/regexp | 11.735s (3.583x) | 0.203s (0.055x) | 0.483s (0.147x) | 3.275s | 27.057s (7.268x) | 2.247s (0.604x) |
+| octane/splay | 1.483s (1.986x) | 0.187s (0.274x) | 0.320s (0.469x) | 0.681s | 2.007s (2.946x) | 0.378s (0.555x) |
+| octane/navier-stokes | 3.664s (2.308x) | 0.134s (0.051x) | 1.685s (0.646x) | 2.609s | 8.331s (3.193x) | 1.468s (0.563x) |
+| realworld/acorn | 4.682s | 0.207s | 0.607s | – | – | – |
+| realworld/marked | 1.260s | 0.121s | 0.132s | – | – | – |
+| realworld/prettier | 8.617s | 0.582s | 1.527s | – | – | – |
+| realworld/terser | 7.133s | 0.698s | 1.253s | – | – | – |
 
 | Engine | Version |
 |---|---|
-| kahvi | git 7071998 |
+| kahvi | git 965eed5 |
 | node | v22.23.3 |
 | node-jitless | v22.23.3 |
 | quickjs | 0.17.0 |
@@ -46,6 +46,7 @@ Kahvi git 7071998, 3 runs each, on Linux-6.17.0-1022-azure-x86_64-with-glibc2.39
 
 | Date | Kahvi commit | Kahvi vs quickjs (geomean) | Workloads | File |
 |---|---|---|---|---|
+| 2026-10-24T07:22:14Z | git 965eed5 | 2.88x | 9 | [json](results/20261024T072214Z-965eed51be.json) |
 | 2026-10-23T07:37:01Z | git 7071998 | 2.89x | 9 | [json](results/20261023T073701Z-707199806e.json) |
 | 2026-10-22T07:39:32Z | git f9066d9 | 2.71x | 9 | [json](results/20261022T073932Z-f9066d9e0c.json) |
 | 2026-10-21T07:43:58Z | git 6195d71 | 3.07x | 9 | [json](results/20261021T074358Z-6195d71ab0.json) |
