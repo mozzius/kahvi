@@ -8,36 +8,36 @@ Geometric mean of Kahvi's time relative to quickjs, across the workloads both ra
 
 ```mermaid
 xychart-beta
-  x-axis ["10-16", "10-18", "10-20", "10-21", "10-22", "10-23", "10-24", "10-25", "10-26", "10-27", "10-28", "10-30", "10-31", "11-01", "11-03"]
+  x-axis ["10-16", "10-18", "10-20", "10-21", "10-22", "10-23", "10-24", "10-25", "10-26", "10-27", "10-28", "10-30", "10-31", "11-01", "11-03", "11-04"]
   y-axis "times quickjs"
-  line [3.80, 3.11, 2.93, 3.07, 2.71, 2.89, 2.88, 2.91, 3.03, 2.95, 2.99, 2.95, 2.84, 2.85, 3.77]
+  line [3.80, 3.11, 2.93, 3.07, 2.71, 2.89, 2.88, 2.91, 3.03, 2.95, 2.99, 2.95, 2.84, 2.85, 3.77, 3.35]
 ```
 
-## Latest run: 2026-11-03T09:38:44Z
+## Latest run: 2026-11-04T09:22:01Z
 
-Kahvi git b236288, 3 runs each, on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39.
+Kahvi git 98ed7da, 3 runs each, on Linux-7.0.0-1017-azure-x86_64-with-glibc2.43, Linux-7.0.0-1019-azure-x86_64-with-glibc2.43.
 
 | Workload | kahvi | node | node-jitless | quickjs | boa | hermes |
 |---|---|---|---|---|---|---|
-| startup/empty | 0.006s (3.867x) | 0.018s (13.0x) | 0.019s (13.286x) | 0.001s | 0.009s (6.5x) | 0.003s (1.857x) |
-| octane/richards | 10.260s (4.379x) | 0.085s (0.036x) | 1.143s (0.488x) | 2.343s | 11.086s (4.754x) | 1.282s (0.55x) |
-| octane/deltablue | 9.381s (4.016x) | 0.097s (0.041x) | 1.072s (0.459x) | 2.336s | 12.357s (5.292x) | 1.380s (0.591x) |
-| octane/crypto | 24.482s (3.403x) | 0.118s (0.038x) | 4.745s (0.66x) | 7.194s | 18.312s (5.885x) | 2.274s (0.731x) |
-| octane/raytrace | 14.751s (4.135x) | 0.175s (0.049x) | 1.322s (0.371x) | 3.567s | 18.351s (5.134x) | 2.817s (0.788x) |
-| octane/earley-boyer | 18.774s (4.896x) | 0.339s (0.047x) | 1.325s (0.346x) | 3.834s | 50.464s (6.928x) | 4.577s (0.628x) |
-| octane/regexp | 20.389s (3.062x) | 0.184s (0.056x) | 0.883s (0.133x) | 6.658s | 24.676s (7.557x) | 2.005s (0.614x) |
-| octane/splay | 1.520s (2.647x) | 0.158s (0.321x) | 0.254s (0.517x) | 0.491s | 1.847s (3.763x) | 0.321s (0.653x) |
-| octane/navier-stokes | 7.030s (4.048x) | 0.112s (0.078x) | 1.342s (0.938x) | 1.430s | 6.527s (4.563x) | 1.174s (0.821x) |
-| realworld/acorn | 4.798s | 0.164s | 0.463s | – | – | – |
-| realworld/marked | 1.257s | 0.093s | 0.095s | – | – | – |
-| realworld/prettier | 12.660s | 0.437s | 1.055s | – | – | – |
-| realworld/terser | 11.048s | 0.533s | 0.915s | – | – | – |
+| startup/empty | 0.003s (1.765x) | 0.025s (14.111x) | 0.026s (14.389x) | 0.002s | 0.011s (6.167x) | 0.003s (1.5x) |
+| octane/richards | 10.126s (4.384x) | 0.056s (0.032x) | 1.119s (0.485x) | 2.310s | 8.346s (4.816x) | 1.055s (0.609x) |
+| octane/deltablue | 9.505s (4.051x) | 0.074s (0.043x) | 1.030s (0.439x) | 2.346s | 9.527s (5.477x) | 1.086s (0.624x) |
+| octane/crypto | 23.822s (3.494x) | 0.174s (0.025x) | 4.731s (0.694x) | 6.817s | 35.570s (5.051x) | 3.692s (0.524x) |
+| octane/raytrace | 14.635s (4.037x) | 0.126s (0.05x) | 1.297s (0.358x) | 3.625s | 14.488s (5.745x) | 1.842s (0.731x) |
+| octane/earley-boyer | 18.912s (4.849x) | 0.289s (0.053x) | 1.315s (0.337x) | 3.900s | 39.597s (7.242x) | 3.421s (0.626x) |
+| octane/regexp | 20.196s (3.037x) | 0.296s (0.044x) | 0.897s (0.135x) | 6.649s | 43.907s (6.587x) | 3.466s (0.52x) |
+| octane/splay | 1.041s (2.011x) | 0.165s (0.264x) | 0.292s (0.468x) | 0.624s | 2.354s (3.775x) | 0.453s (0.726x) |
+| octane/navier-stokes | 6.944s (4.021x) | 0.121s (0.071x) | 1.711s (0.999x) | 1.714s | 8.382s (4.891x) | 1.480s (0.864x) |
+| realworld/acorn | 2.758s | 0.204s | 0.625s | – | – | – |
+| realworld/marked | 0.824s | 0.105s | 0.133s | – | – | – |
+| realworld/prettier | 12.158s | 0.531s | 1.566s | – | – | – |
+| realworld/terser | 10.809s | 0.611s | 1.274s | – | – | – |
 
 | Engine | Version |
 |---|---|
-| kahvi | git b236288 |
-| node | v22.23.4 |
-| node-jitless | v22.23.4 |
+| kahvi | git 98ed7da |
+| node | v24.22.1 |
+| node-jitless | v24.22.1 |
 | quickjs | 0.18.0 |
 | boa | boa 0.22.0 |
 | hermes | LLVM (http://llvm.org/): |
@@ -46,6 +46,7 @@ Kahvi git b236288, 3 runs each, on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39.
 
 | Date | Kahvi commit | Kahvi vs quickjs (geomean) | Workloads | File |
 |---|---|---|---|---|
+| 2026-11-04T09:22:01Z | git 98ed7da | 3.35x | 9 | [json](results/20261104T092201Z-98ed7da385.json) |
 | 2026-11-03T09:38:44Z | git b236288 | 3.77x | 9 | [json](results/20261103T093844Z-b236288e30.json) |
 | 2026-11-01T09:20:36Z | git 100ced3 | 2.85x | 9 | [json](results/20261101T092036Z-100ced3d4d.json) |
 | 2026-10-31T08:29:36Z | git a3dc6de | 2.84x | 9 | [json](results/20261031T082936Z-a3dc6de88e.json) |
