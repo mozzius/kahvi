@@ -37,25 +37,25 @@ Each suite's CI job on main rewrites its own row.
 
 <!-- benchmarks:start -->
 
-Benchmarks from the last run on main (2026-11-07, Kahvi bee1b4ebd9, GitHub-hosted runners):
+Benchmarks from the last run on main (2026-11-09, Kahvi 0ee82a5dcc, GitHub-hosted runners):
 median wall time per workload, with each engine's ratio to the baseline in brackets; lower is faster.
 History and engine versions are on the [bench-results](https://github.com/mozzius/kahvi/tree/bench-results) branch; see [bench/](bench/README.md).
 
 | Workload | kahvi | node | node-jitless | quickjs | boa | hermes |
 |---|---|---|---|---|---|---|
-| startup/empty | 0.003s (2.538x) | 0.025s (15.875x) | 0.026s (16.062x) | 0.002s | 0.011s (7.187x) | 0.003s (1.625x) |
-| octane/richards | 9.976s (4.28x) | 0.082s (0.035x) | 1.111s (0.477x) | 2.331s | 11.119s (4.79x) | 1.263s (0.544x) |
-| octane/deltablue | 9.622s (4.141x) | 0.096s (0.041x) | 1.010s (0.435x) | 2.324s | 12.069s (5.148x) | 1.412s (0.602x) |
-| octane/crypto | 12.755s (3.871x) | 0.182s (0.027x) | 2.527s (0.767x) | 3.295s | 36.032s (5.384x) | 3.680s (0.55x) |
-| octane/raytrace | 14.594s (4.072x) | 0.159s (0.044x) | 1.277s (0.356x) | 3.584s | 18.581s (5.166x) | 2.885s (0.802x) |
-| octane/earley-boyer | 27.248s (5.001x) | 0.362s (0.049x) | 1.748s (0.321x) | 5.449s | 50.859s (6.908x) | 4.596s (0.624x) |
-| octane/regexp | 19.951s (2.987x) | 0.177s (0.055x) | 0.895s (0.134x) | 6.680s | 24.455s (7.552x) | 2.019s (0.624x) |
-| octane/splay | 1.324s (2.614x) | 0.160s (0.259x) | 0.288s (0.465x) | 0.618s | 2.297s (3.716x) | 0.443s (0.716x) |
-| octane/navier-stokes | 3.618s (4.816x) | 0.123s (0.073x) | 1.714s (1.014x) | 1.690s | 8.240s (4.874x) | 1.478s (0.874x) |
-| realworld/acorn | 3.690s | 0.197s | 0.619s | – | – | – |
-| realworld/marked | 1.016s | 0.104s | 0.129s | – | – | – |
-| realworld/prettier | 7.066s | 0.519s | 1.541s | – | – | – |
-| realworld/terser | 6.347s | 0.589s | 1.249s | – | – | – |
+| startup/empty | 0.004s (1.483x) | 0.023s (14.437x) | 0.025s (15.375x) | 0.002s | 0.009s (5.688x) | 0.002s (1.438x) |
+| octane/richards | 6.325s (4.774x) | 0.082s (0.035x) | 0.582s (0.439x) | 1.325s | 11.246s (4.818x) | 1.278s (0.547x) |
+| octane/deltablue | 9.326s (3.949x) | 0.093s (0.04x) | 1.018s (0.431x) | 2.362s | 12.128s (5.215x) | 1.377s (0.592x) |
+| octane/crypto | 23.776s (3.456x) | 0.179s (0.026x) | 4.863s (0.707x) | 6.879s | 32.697s (4.809x) | 3.689s (0.543x) |
+| octane/raytrace | 14.617s (4.077x) | 0.158s (0.044x) | 1.290s (0.36x) | 3.586s | 18.513s (5.197x) | 2.830s (0.794x) |
+| octane/earley-boyer | 30.814s (4.212x) | 0.349s (0.056x) | 2.386s (0.326x) | 7.316s | 44.942s (7.225x) | 4.070s (0.654x) |
+| octane/regexp | 13.054s (3.913x) | 0.280s (0.05x) | 0.496s (0.149x) | 3.336s | 34.829s (6.169x) | 2.877s (0.51x) |
+| octane/splay | 1.451s (2.523x) | 0.159s (0.261x) | 0.275s (0.452x) | 0.608s | 2.155s (3.543x) | 0.459s (0.754x) |
+| octane/navier-stokes | 7.130s (4.154x) | 0.139s (0.127x) | 1.465s (1.334x) | 1.098s | 7.790s (7.095x) | 1.326s (1.208x) |
+| realworld/acorn | 4.529s | 0.183s | 0.571s | – | – | – |
+| realworld/marked | 1.211s | 0.101s | 0.122s | – | – | – |
+| realworld/prettier | 12.342s | 0.477s | 1.354s | – | – | – |
+| realworld/terser | 10.700s | 0.538s | 1.169s | – | – | – |
 
 <!-- benchmarks:end -->
 
