@@ -1,0 +1,819 @@
+{
+ "meta": {
+  "date": "2026-11-27T10:56:26Z",
+  "machine": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+  "octane_scale": 0.05,
+  "cpu": "x86_64",
+  "runs": 3,
+  "baseline": "quickjs",
+  "engines": {
+   "kahvi": {
+    "path": "/home/runner/work/kahvi/kahvi/target/release/kahvi",
+    "version": "git 19aac9e"
+   },
+   "node": {
+    "path": "/usr/local/bin/node",
+    "version": "v24.22.3"
+   },
+   "node-jitless": {
+    "path": "/usr/local/bin/node",
+    "version": "v24.22.3"
+   },
+   "quickjs": {
+    "path": "/home/runner/.jsvu/bin/qjs",
+    "version": "0.18.0"
+   },
+   "boa": {
+    "path": "/home/runner/.boa/bin/boa",
+    "version": "boa 0.22.0"
+   },
+   "hermes": {
+    "path": "/home/runner/.jsvu/bin/hermes",
+    "version": "LLVM (http://llvm.org/):"
+   }
+  },
+  "merged_from": 11
+ },
+ "results": [
+  {
+   "workload": "startup/empty",
+   "engine": "kahvi",
+   "times": [
+    0.0035,
+    0.0031,
+    0.0029
+   ],
+   "median": 0.0031,
+   "rss_kib": 18800,
+   "ratio_to_baseline": 2.067
+  },
+  {
+   "workload": "startup/empty",
+   "engine": "node",
+   "times": [
+    0.0168,
+    0.0169,
+    0.0156
+   ],
+   "median": 0.0168,
+   "rss_kib": 43916,
+   "ratio_to_baseline": 10.5
+  },
+  {
+   "workload": "startup/empty",
+   "engine": "node-jitless",
+   "times": [
+    0.0168,
+    0.0152,
+    0.0148
+   ],
+   "median": 0.0152,
+   "rss_kib": 41552,
+   "ratio_to_baseline": 9.5
+  },
+  {
+   "workload": "startup/empty",
+   "engine": "quickjs",
+   "times": [
+    0.0016,
+    0.0011,
+    0.0016
+   ],
+   "median": 0.0016,
+   "rss_kib": 19044,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "startup/empty",
+   "engine": "boa",
+   "times": [
+    0.0083,
+    0.0078,
+    0.0076
+   ],
+   "median": 0.0078,
+   "rss_kib": 20204,
+   "ratio_to_baseline": 4.875
+  },
+  {
+   "workload": "startup/empty",
+   "engine": "hermes",
+   "times": [
+    0.0019,
+    0.0018,
+    0.0017
+   ],
+   "median": 0.0018,
+   "rss_kib": 19044,
+   "ratio_to_baseline": 1.125
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "kahvi",
+   "times": [
+    8.7946,
+    8.779,
+    8.7452
+   ],
+   "median": 8.779,
+   "rss_kib": 19228,
+   "ratio_to_baseline": 5.069
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "node",
+   "times": [
+    0.0816,
+    0.0776,
+    0.0719
+   ],
+   "median": 0.0776,
+   "rss_kib": 56932,
+   "ratio_to_baseline": 0.042
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "node-jitless",
+   "times": [
+    0.766,
+    0.7616,
+    0.7532
+   ],
+   "median": 0.7616,
+   "rss_kib": 45356,
+   "ratio_to_baseline": 0.44
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "quickjs",
+   "times": [
+    1.732,
+    1.7317,
+    1.7422
+   ],
+   "median": 1.732,
+   "rss_kib": 19228,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "boa",
+   "times": [
+    10.9321,
+    11.2025,
+    11.1892
+   ],
+   "median": 11.1892,
+   "rss_kib": 24804,
+   "ratio_to_baseline": 5.994
+  },
+  {
+   "workload": "octane/richards",
+   "engine": "hermes",
+   "times": [
+    1.0625,
+    1.0811,
+    1.0686
+   ],
+   "median": 1.0686,
+   "rss_kib": 19008,
+   "ratio_to_baseline": 0.572
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "kahvi",
+   "times": [
+    8.1274,
+    8.3847,
+    8.1914
+   ],
+   "median": 8.1914,
+   "rss_kib": 44368,
+   "ratio_to_baseline": 4.694
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "node",
+   "times": [
+    0.0877,
+    0.0902,
+    0.0896
+   ],
+   "median": 0.0896,
+   "rss_kib": 69148,
+   "ratio_to_baseline": 0.047
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "node-jitless",
+   "times": [
+    0.7567,
+    0.7694,
+    0.7626
+   ],
+   "median": 0.7626,
+   "rss_kib": 49408,
+   "ratio_to_baseline": 0.437
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "quickjs",
+   "times": [
+    1.7451,
+    1.7725,
+    1.7382
+   ],
+   "median": 1.7451,
+   "rss_kib": 19080,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "boa",
+   "times": [
+    11.1913,
+    11.3563,
+    11.052
+   ],
+   "median": 11.1913,
+   "rss_kib": 25316,
+   "ratio_to_baseline": 5.884
+  },
+  {
+   "workload": "octane/deltablue",
+   "engine": "hermes",
+   "times": [
+    1.2533,
+    1.2531,
+    1.2926
+   ],
+   "median": 1.2533,
+   "rss_kib": 19008,
+   "ratio_to_baseline": 0.659
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "kahvi",
+   "times": [
+    19.7638,
+    19.3346,
+    19.4333
+   ],
+   "median": 19.4333,
+   "rss_kib": 37192,
+   "ratio_to_baseline": 3.47
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "node",
+   "times": [
+    0.1636,
+    0.156,
+    0.1509
+   ],
+   "median": 0.156,
+   "rss_kib": 58712,
+   "ratio_to_baseline": 0.029
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "node-jitless",
+   "times": [
+    3.4046,
+    3.5691,
+    3.644
+   ],
+   "median": 3.5691,
+   "rss_kib": 47608,
+   "ratio_to_baseline": 0.637
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "quickjs",
+   "times": [
+    5.6009,
+    5.4681,
+    5.6191
+   ],
+   "median": 5.6009,
+   "rss_kib": 19044,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "boa",
+   "times": [
+    25.9528,
+    26.0221,
+    25.8822
+   ],
+   "median": 25.9528,
+   "rss_kib": 31804,
+   "ratio_to_baseline": 4.767
+  },
+  {
+   "workload": "octane/crypto",
+   "engine": "hermes",
+   "times": [
+    3.0231,
+    3.0004,
+    3.0144
+   ],
+   "median": 3.0144,
+   "rss_kib": 19068,
+   "ratio_to_baseline": 0.554
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "kahvi",
+   "times": [
+    12.4749,
+    12.4583,
+    12.4232
+   ],
+   "median": 12.4583,
+   "rss_kib": 59824,
+   "ratio_to_baseline": 4.787
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "node",
+   "times": [
+    0.1595,
+    0.1559,
+    0.1501
+   ],
+   "median": 0.1559,
+   "rss_kib": 64524,
+   "ratio_to_baseline": 0.048
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "node-jitless",
+   "times": [
+    0.9034,
+    0.9077,
+    0.9005
+   ],
+   "median": 0.9034,
+   "rss_kib": 49716,
+   "ratio_to_baseline": 0.347
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "quickjs",
+   "times": [
+    2.6131,
+    2.6027,
+    2.5172
+   ],
+   "median": 2.6027,
+   "rss_kib": 19080,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "boa",
+   "times": [
+    16.2936,
+    16.4711,
+    16.3164
+   ],
+   "median": 16.3164,
+   "rss_kib": 25416,
+   "ratio_to_baseline": 5.073
+  },
+  {
+   "workload": "octane/raytrace",
+   "engine": "hermes",
+   "times": [
+    2.6116,
+    2.6037,
+    2.6016
+   ],
+   "median": 2.6037,
+   "rss_kib": 19008,
+   "ratio_to_baseline": 0.81
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "kahvi",
+   "times": [
+    26.8931,
+    26.85,
+    26.7585
+   ],
+   "median": 26.85,
+   "rss_kib": 69224,
+   "ratio_to_baseline": 4.943
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "node",
+   "times": [
+    0.2488,
+    0.2608,
+    0.2453
+   ],
+   "median": 0.2488,
+   "rss_kib": 128216,
+   "ratio_to_baseline": 0.063
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "node-jitless",
+   "times": [
+    1.7367,
+    1.7357,
+    1.7451
+   ],
+   "median": 1.7367,
+   "rss_kib": 113848,
+   "ratio_to_baseline": 0.32
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "quickjs",
+   "times": [
+    5.4307,
+    5.4316,
+    5.4472
+   ],
+   "median": 5.4316,
+   "rss_kib": 27892,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "boa",
+   "times": [
+    28.3104,
+    28.5424,
+    29.2664
+   ],
+   "median": 28.5424,
+   "rss_kib": 47964,
+   "ratio_to_baseline": 7.219
+  },
+  {
+   "workload": "octane/earley-boyer",
+   "engine": "hermes",
+   "times": [
+    2.4906,
+    2.5157,
+    2.4796
+   ],
+   "median": 2.4906,
+   "rss_kib": 31584,
+   "ratio_to_baseline": 0.63
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "kahvi",
+   "times": [
+    16.9107,
+    17.0224,
+    16.9969
+   ],
+   "median": 16.9969,
+   "rss_kib": 82548,
+   "ratio_to_baseline": 3.309
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "node",
+   "times": [
+    0.2261,
+    0.2191,
+    0.2272
+   ],
+   "median": 0.2261,
+   "rss_kib": 78432,
+   "ratio_to_baseline": 0.045
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "node-jitless",
+   "times": [
+    0.6603,
+    0.6636,
+    0.6598
+   ],
+   "median": 0.6603,
+   "rss_kib": 56464,
+   "ratio_to_baseline": 0.129
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "quickjs",
+   "times": [
+    5.1645,
+    5.1359,
+    5.1123
+   ],
+   "median": 5.1359,
+   "rss_kib": 23848,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "boa",
+   "times": [
+    34.6473,
+    34.5797,
+    34.7228
+   ],
+   "median": 34.6473,
+   "rss_kib": 35792,
+   "ratio_to_baseline": 6.846
+  },
+  {
+   "workload": "octane/regexp",
+   "engine": "hermes",
+   "times": [
+    2.5561,
+    2.5728,
+    2.5968
+   ],
+   "median": 2.5728,
+   "rss_kib": 19160,
+   "ratio_to_baseline": 0.508
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "kahvi",
+   "times": [
+    1.3079,
+    1.2855,
+    1.3042
+   ],
+   "median": 1.3042,
+   "rss_kib": 269940,
+   "ratio_to_baseline": 2.662
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "node",
+   "times": [
+    0.1075,
+    0.1053,
+    0.1097
+   ],
+   "median": 0.1075,
+   "rss_kib": 165608,
+   "ratio_to_baseline": 0.248
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "node-jitless",
+   "times": [
+    0.1782,
+    0.1766,
+    0.1788
+   ],
+   "median": 0.1782,
+   "rss_kib": 160248,
+   "ratio_to_baseline": 0.412
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "quickjs",
+   "times": [
+    0.4327,
+    0.4329,
+    0.4121
+   ],
+   "median": 0.4327,
+   "rss_kib": 171244,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "boa",
+   "times": [
+    1.3646,
+    1.3892,
+    1.3865
+   ],
+   "median": 1.3865,
+   "rss_kib": 260940,
+   "ratio_to_baseline": 3.204
+  },
+  {
+   "workload": "octane/splay",
+   "engine": "hermes",
+   "times": [
+    0.2504,
+    0.256,
+    0.2609
+   ],
+   "median": 0.256,
+   "rss_kib": 103764,
+   "ratio_to_baseline": 0.592
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "kahvi",
+   "times": [
+    6.9644,
+    6.946,
+    6.9798
+   ],
+   "median": 6.9644,
+   "rss_kib": 20308,
+   "ratio_to_baseline": 4.029
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "node",
+   "times": [
+    0.0792,
+    0.0741,
+    0.0758
+   ],
+   "median": 0.0758,
+   "rss_kib": 60320,
+   "ratio_to_baseline": 0.1
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "node-jitless",
+   "times": [
+    0.8227,
+    0.8294,
+    0.8223
+   ],
+   "median": 0.8227,
+   "rss_kib": 50388,
+   "ratio_to_baseline": 1.086
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "quickjs",
+   "times": [
+    0.7579,
+    0.7547,
+    0.7574
+   ],
+   "median": 0.7574,
+   "rss_kib": 23532,
+   "ratio_to_baseline": 1.0
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "boa",
+   "times": [
+    4.718,
+    4.7366,
+    4.8938
+   ],
+   "median": 4.7366,
+   "rss_kib": 26596,
+   "ratio_to_baseline": 6.254
+  },
+  {
+   "workload": "octane/navier-stokes",
+   "engine": "hermes",
+   "times": [
+    0.8095,
+    0.8,
+    0.8052
+   ],
+   "median": 0.8052,
+   "rss_kib": 19552,
+   "ratio_to_baseline": 1.063
+  },
+  {
+   "workload": "realworld/acorn",
+   "engine": "kahvi",
+   "times": [
+    3.6624,
+    3.7336,
+    3.9178
+   ],
+   "median": 3.7336,
+   "rss_kib": 103736
+  },
+  {
+   "workload": "realworld/acorn",
+   "engine": "node",
+   "times": [
+    0.1115,
+    0.1104,
+    0.1097
+   ],
+   "median": 0.1104,
+   "rss_kib": 86440
+  },
+  {
+   "workload": "realworld/acorn",
+   "engine": "node-jitless",
+   "times": [
+    0.3493,
+    0.3424,
+    0.339
+   ],
+   "median": 0.3424,
+   "rss_kib": 83788
+  },
+  {
+   "workload": "realworld/marked",
+   "engine": "kahvi",
+   "times": [
+    1.01,
+    1.0142,
+    1.0193
+   ],
+   "median": 1.0142,
+   "rss_kib": 307708
+  },
+  {
+   "workload": "realworld/marked",
+   "engine": "node",
+   "times": [
+    0.0648,
+    0.0661,
+    0.0682
+   ],
+   "median": 0.0661,
+   "rss_kib": 68044
+  },
+  {
+   "workload": "realworld/marked",
+   "engine": "node-jitless",
+   "times": [
+    0.0714,
+    0.072,
+    0.0714
+   ],
+   "median": 0.0714,
+   "rss_kib": 52244
+  },
+  {
+   "workload": "realworld/prettier",
+   "engine": "kahvi",
+   "times": [
+    12.511,
+    12.3675,
+    12.4071
+   ],
+   "median": 12.4071,
+   "rss_kib": 118908
+  },
+  {
+   "workload": "realworld/prettier",
+   "engine": "node",
+   "times": [
+    0.2937,
+    0.2956,
+    0.2891
+   ],
+   "median": 0.2937,
+   "rss_kib": 132132
+  },
+  {
+   "workload": "realworld/prettier",
+   "engine": "node-jitless",
+   "times": [
+    0.8192,
+    0.818,
+    0.8233
+   ],
+   "median": 0.8192,
+   "rss_kib": 136816
+  },
+  {
+   "workload": "realworld/terser",
+   "engine": "kahvi",
+   "times": [
+    10.7477,
+    10.7785,
+    10.8005
+   ],
+   "median": 10.7785,
+   "rss_kib": 296792
+  },
+  {
+   "workload": "realworld/terser",
+   "engine": "node",
+   "times": [
+    0.3351,
+    0.3309,
+    0.3329
+   ],
+   "median": 0.3329,
+   "rss_kib": 126664
+  },
+  {
+   "workload": "realworld/terser",
+   "engine": "node-jitless",
+   "times": [
+    0.6623,
+    0.6558,
+    0.7217
+   ],
+   "median": 0.6623,
+   "rss_kib": 109944
+  }
+ ]
+}
